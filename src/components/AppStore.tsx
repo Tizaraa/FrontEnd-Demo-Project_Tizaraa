@@ -1,5 +1,6 @@
 import Box from "./Box";
 import Icon from "./icon/Icon";
+// import { Icon } from "next/dist/lib/metadata/types/metadata-types";
 import FlexBox from "./FlexBox";
 import Typography from "./Typography";
 

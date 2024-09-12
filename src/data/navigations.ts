@@ -215,10 +215,10 @@ const navigations = [
           ]
         }
       ],
-      rightImage: {
-        imgUrl: "/assets/images/promotion/offer-1.png",
-        href: "/sale-page-1"
-      }
+      // rightImage: {
+      //   imgUrl: "/assets/images/promotion/offer-1.png",
+      //   href: "/sale-page-1"
+      // }
     }
   },
   {
