@@ -117,7 +117,7 @@ export default function Footer1() {
 
   <Grid item lg={4} md={12} sm={12} xs={12}>
     <Link href="/">
-      <Image alt="logo" mb="1.25rem" src="/assets/images/logo.svg" />
+      <Image alt="logo" mb="1.25rem" src="/assets/images/tizaraa_logo.webp" />
     </Link>
 
     <Paragraph mb="1.25rem" color="gray.500">
