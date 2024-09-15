@@ -15,7 +15,7 @@ import useWindowSize from "@hook/useWindowSize";
 
 import styles from './JustForYouParoducts.module.css';
 
-import ApiBaseUrl from "../../../api/ApiBaseUrl";
+
 
 const JustForYouProducts = () => {
   const [products, setProducts] = useState([]); 
@@ -32,7 +32,7 @@ const JustForYouProducts = () => {
     setLoading(page === 1); 
     setLoadingMore(page > 1); 
     try {
-      const response = await axios.get(`${ApiBaseUrl.baseUrl}frontend/latest/justoforyou/product/view/'+number?page`);
+      const response = await axios.get(`https://seller.tizaraa.com/api/frontend/latest/justoforyou/product/view/'+number?page`);
       const data = response.data;
 
 
@@ -68,63 +68,67 @@ const JustForYouProducts = () => {
   return (
     <CategorySectionCreator title="Just For You">
       <Box my="-0.25rem">
-        <FlexBox flexWrap="wrap" justifyContent="space-between">
-          {products.length > 0 ? (
-            products.map((item) => (
-              <Box
-                py="0.25rem"
-                key={item.product_slug}
-                width="20%" 
-                minWidth="200px" 
-                maxWidth="250px" 
-              >
-                <Card p="1rem" borderRadius={8} style={{ height: '300px' }}>
-                  <Link href={`/product/${item.product_slug}`}>
-                    <HoverBox
-                      borderRadius={8}
-                      mb="0.5rem"
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                      style={{ height: '150px', overflow: 'hidden' }} 
-                    >
-                      <img 
-                        src={item.product_thumbnail} 
-                        alt={item.product_name} 
-                        style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
-                      />
-                    </HoverBox>
+      <FlexBox flexWrap="wrap" justifyContent="space-between">
+  {products.length > 0 ? (
+    products.map((item) => (
+      <Box
+        py="0.25rem"
+        key={item.product_slug}
+        width="calc(20% - 16px)" // Each product takes up 20% of the row minus the margin
+        minWidth="200px"
+        maxWidth="250px"
+        mb="16px" // Vertical spacing between rows
+        style={{ marginRight: '16px' }} // Horizontal spacing between items
+      >
+        <Card p="1rem" borderRadius={8} style={{ height: '300px' }}>
+          <Link href={`/product/${item.product_slug}`}>
+            <HoverBox
+              borderRadius={8}
+              mb="0.5rem"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              style={{ height: '150px', overflow: 'hidden' }} 
+            >
+              <img 
+                src={item.product_thumbnail} 
+                alt={item.product_name} 
+                style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
+              />
+            </HoverBox>
 
-                    <H4
-                      fontWeight="600"
-                      fontSize="18px"
-                      mb="0.25rem"
-                      style={{
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis', 
-                      }}
-                    >
-                      {item.product_name}
-                    </H4>
+            <H4
+              fontWeight="600"
+              fontSize="18px"
+              mb="0.25rem"
+              style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {item.product_name}
+            </H4>
 
-                    <FlexBox>
-                      <H4 fontWeight="600" fontSize="14px" color="text.muted">
-                        BDT <del>{item.seeling_price}</del> 
-                      </H4>
-                    </FlexBox>
+            <FlexBox>
+              <H4 fontWeight="600" fontSize="14px" color="text.muted">
+                BDT <del>{item.selling_price}</del>
+              </H4>
+            </FlexBox>
 
-                    <H4 fontWeight="600" fontSize="14px" color="primary.main" mr="0.5rem">
-                      {currency(item.discount_price)}
-                    </H4>
-                  </Link>
-                </Card>
-              </Box>
-            ))
-          ) : (
-            <p>No products available</p> // Message for no products
-          )}
-        </FlexBox>
+            <H4 fontWeight="600" fontSize="14px" color="primary.main" mr="0.5rem">
+              {currency(item.discount_price)}
+            </H4>
+          </Link>
+        </Card>
+      </Box>
+    ))
+  ) : (
+    <p>No products available</p>
+  )}
+</FlexBox>
+
+
       </Box>
 
    
