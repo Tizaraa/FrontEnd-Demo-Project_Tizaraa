@@ -112,7 +112,7 @@ const JustForYouProducts = () => {
 
             <FlexBox>
               <H4 fontWeight="600" fontSize="14px" color="text.muted">
-                BDT <del>{item.selling_price}</del>
+                BDT <del>{item.seeling_price}</del>
               </H4>
             </FlexBox>
 
