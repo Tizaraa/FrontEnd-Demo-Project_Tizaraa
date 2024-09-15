@@ -4,11 +4,22 @@ import Icon from "@component/icon/Icon";
 import FlexBox from "@component/FlexBox";
 import NextImage from "@component/NextImage";
 import Typography from "@component/Typography";
+import Image from 'next/image';
 
 // STYLED COMPONENT
 const StyledImage = styled(NextImage)`
   border-radius: 5px;
   object-fit: cover;
+`;
+
+const DefaultIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  border-radius: 50%;
+  width: 69px;
+  height: 60px;
 `;
 
 // ==============================================================
@@ -24,13 +35,24 @@ export default function MobileCategoryImageBox({
   title,
   imgUrl
 }: MobileCategoryImageBoxProps) {
+
+  console.log(imgUrl);
   return (
     <FlexBox flexDirection="column" alignItems="center" justifyContent="center">
-      {imgUrl ? (
+      {/* {imgUrl ? (
         <StyledImage src={imgUrl} width={69} height={60} alt="bonik" />
       ) : (
-        icon && <Icon size="48px">{icon}</Icon>
-      )}
+        
+        // icon && <Icon size="48px">{icon}</Icon>
+        <DefaultIconContainer>
+        <Image
+          src="/icons/default-icon.png"
+          width={48}
+          height={48}
+          alt="Default Icon"
+        />
+      </DefaultIconContainer>
+      )} */}
 
       <Typography
         className="ellipsis"
