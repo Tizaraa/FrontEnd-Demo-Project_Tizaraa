@@ -33,9 +33,8 @@ export default function NewArrivalsProduct() {
           `https://seller.tizaraa.com/api/frontend/remark/product/items`
         );
 
-        // Simply set the array of products from the response
         if (response.data && response.data.newarrival) {
-          setBigDiscountList(response.data.newarrival); // Directly use response data
+          setBigDiscountList(response.data.newarrival);
         } else {
           console.error("Unexpected response format:", response.data);
         }
@@ -48,12 +47,12 @@ export default function NewArrivalsProduct() {
   }, []);
 
   return (
-    <CategorySectionCreator  title="New Arrivals" seeMoreLink="#">
+    <CategorySectionCreator title="New Arrivals" seeMoreLink="#">
       <Box my="-0.25rem">
         <Carousel totalSlides={bigDiscountList.length} visibleSlides={visibleSlides}>
           {bigDiscountList.map((item) => (
             <Box py="0.25rem" key={item.product_slug}>
-              <Card p="1rem" borderRadius={8} style={{ height: '300px' }}> {/* Fixed height */}
+              <Card p="1rem" borderRadius={8} style={{ height: '300px' }}>
                 <Link href={`/product/${item.product_slug}`}>
                   <HoverBox
                     borderRadius={8}
@@ -61,7 +60,7 @@ export default function NewArrivalsProduct() {
                     display="flex"
                     justifyContent="center"
                     alignItems="center"
-                    style={{ height: '150px', overflow: 'hidden' }} // Fix image height
+                    style={{ height: '150px', overflow: 'hidden' }}
                   >
                     <img 
                       src={item.product_thumbnail} 
@@ -77,29 +76,21 @@ export default function NewArrivalsProduct() {
                     style={{
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
-                      textOverflow: 'ellipsis', // Handle long text with ellipsis
+                      textOverflow: 'ellipsis',
                     }}
                   >
                     {item.product_name}
                   </H4>
 
                   <FlexBox>
-                  <H4 fontWeight="600" fontSize="14px" color="text.muted">
+                    <H4 fontWeight="600" fontSize="14px" color="text.muted">
                       BDT <del>{(item.seeling_price)}</del>
                     </H4>
-                    
                   </FlexBox>
 
-                  {/* <H4 fontWeight="600" fontSize="14px" color="primary.main" mr="0.5rem">
-                      {currency(item.discount_price)}
-                    </H4> */}
-
-                   <H4 fontWeight="600" fontSize="14px" color="text.muted" mr="0.5rem">
-                      {currency(item.discount_price)}
-                    </H4>
-
-
-                 
+                  <H4 fontWeight="600" fontSize="14px" color="primary.main" mr="0.5rem">
+                    {currency(item.discount_price)}
+                  </H4>
                 </Link>
               </Card>
             </Box>

@@ -61,7 +61,7 @@ export default function HeaderTwo({ className }: HeaderProps) {
       <Container display="flex" alignItems="center" justifyContent="space-between" height="100%">
         <FlexBox className="logo" alignItems="center" mr="1rem">
           <Link href="/">
-            <img src="/assets/images/logo.svg" alt="logo" />
+            <img src="/assets/images/tizaraa_logo.webp" alt="logo" />
           </Link>
         </FlexBox>
 
