@@ -1,31 +1,46 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+import Box from "@component/Box";
+import Card from "@component/Card";
+import FlexBox from "@component/FlexBox";
+import HoverBox from "@component/HoverBox";
+import { H4 } from "@component/Typography";
+import CategorySectionCreator from "@component/CategorySectionCreator";
+import { currency } from "@utils/utils";
+import useWindowSize from "@hook/useWindowSize";
 
 import styles from './JustForYouParoducts.module.css';
 
-const JustForYouProducts = () => {
-  const [products, setProducts] = useState([]); // Store all the products
-  const [currentPage, setCurrentPage] = useState(1); // Track the current page
-  const [lastPage, setLastPage] = useState(1); // Track the last page
-  const [loading, setLoading] = useState(false); // Loading state for data fetching
-  const [loadingMore, setLoadingMore] = useState(false); // Loading state for "Load More"
+import ApiBaseUrl from "../../../api/ApiBaseUrl";
 
-  // Function to fetch products based on page number
+const JustForYouProducts = () => {
+  const [products, setProducts] = useState([]); 
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [lastPage, setLastPage] = useState(1);
+  const [loading, setLoading] = useState(false); 
+  const [loadingMore, setLoadingMore] = useState(false); 
+
+  const width = useWindowSize();
+
   const fetchProducts = async (page = 1) => {
     if (loadingMore || loading) return;
 
-    setLoading(page === 1); // Show loading only for the first load
-    setLoadingMore(page > 1); // Show loading for "Load More"
+    setLoading(page === 1); 
+    setLoadingMore(page > 1); 
     try {
-      const response = await axios.get(`https://seller.tizaraa.com/api/frontend/latest/justoforyou/product/view/'+number?page=${page}`);
+      const response = await axios.get(`${ApiBaseUrl.baseUrl}frontend/latest/justoforyou/product/view/'+number?page`);
       const data = response.data;
 
-      console.log(data);
 
-      // If page is 1, replace the products list. For other pages, append new products.
+      console.log("API Response:", data);
+
+     
       if (page === 1) {
-        setProducts(data.data);
+        setProducts(data.data); 
       } else {
         setProducts(prevProducts => [...prevProducts, ...data.data]);
       }
@@ -40,51 +55,79 @@ const JustForYouProducts = () => {
     }
   };
 
-  // Fetch initial data when the component mounts
+
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  // Function to load more products when button is clicked
+
   const handleLoadMore = () => {
-    fetchProducts(currentPage + 1); // Load the next page
+    fetchProducts(currentPage + 1); 
   };
 
   return (
-    <div>
-      {/* Display the product list */}
-      <div className={styles.productCard}>
-        <div className={styles.container}>
-          <div className={styles.title}>
-            <h1>Just for you</h1>
-          </div>
-          <div className={styles.gridContainer}>
-            {products.map((product, index) => (
-              <div className={styles.gridItem} key={`${product.product_slug}-${index}`}>
-                <a href="#">
-                  <div className={styles.product}>
-                    <div className={styles.imgPart}>
-                      <img src={product.product_thumbnail} alt={product.product_name} />
-                    </div>
-                    <div className={styles.contentPart}>
-                      <p>{product.product_name}</p>
-                      <div className={styles.discountPrice}>
-                        <h5><del>৳ {product.seeling_price}</del></h5>
-                        <span>{product.sellerPurprice}</span>
-                      </div>
-                      <div className={styles.price}>
-                        <h3>৳ {product.profiteprice}</h3>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+    <CategorySectionCreator title="Just For You">
+      <Box my="-0.25rem">
+        <FlexBox flexWrap="wrap" justifyContent="space-between">
+          {products.length > 0 ? (
+            products.map((item) => (
+              <Box
+                py="0.25rem"
+                key={item.product_slug}
+                width="20%" 
+                minWidth="200px" 
+                maxWidth="250px" 
+              >
+                <Card p="1rem" borderRadius={8} style={{ height: '300px' }}>
+                  <Link href={`/product/${item.product_slug}`}>
+                    <HoverBox
+                      borderRadius={8}
+                      mb="0.5rem"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      style={{ height: '150px', overflow: 'hidden' }} 
+                    >
+                      <img 
+                        src={item.product_thumbnail} 
+                        alt={item.product_name} 
+                        style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
+                      />
+                    </HoverBox>
 
-      {/* Show "Load More" button only if there are more pages */}
+                    <H4
+                      fontWeight="600"
+                      fontSize="18px"
+                      mb="0.25rem"
+                      style={{
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis', 
+                      }}
+                    >
+                      {item.product_name}
+                    </H4>
+
+                    <FlexBox>
+                      <H4 fontWeight="600" fontSize="14px" color="text.muted">
+                        BDT <del>{item.seeling_price}</del> 
+                      </H4>
+                    </FlexBox>
+
+                    <H4 fontWeight="600" fontSize="14px" color="primary.main" mr="0.5rem">
+                      {currency(item.discount_price)}
+                    </H4>
+                  </Link>
+                </Card>
+              </Box>
+            ))
+          ) : (
+            <p>No products available</p> // Message for no products
+          )}
+        </FlexBox>
+      </Box>
+
+   
       {currentPage < lastPage && (
         <div className={styles.buttonStyle}>
           <button className={styles.loadMore} onClick={handleLoadMore} disabled={loadingMore}>
@@ -93,9 +136,9 @@ const JustForYouProducts = () => {
         </div>
       )}
 
-      {/* Loading message for first load */}
+     
       {loading && <p>Loading products...</p>}
-    </div>
+    </CategorySectionCreator>
   );
 };
 

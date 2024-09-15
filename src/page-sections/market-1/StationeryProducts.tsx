@@ -14,6 +14,9 @@ import CategorySectionCreator from "@component/CategorySectionCreator";
 import { currency } from "@utils/utils";
 import useWindowSize from "@hook/useWindowSize";
 
+
+import ApiBaseUrl from "../../api/ApiBaseUrl";
+
 export default function StationeryProducts() {
   const [flashSale, setFlashSale] = useState([]);
   const width = useWindowSize();
@@ -30,7 +33,7 @@ export default function StationeryProducts() {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          `https://seller.tizaraa.com/api/frontend/category/product/view`
+          `${ApiBaseUrl.baseUrl}frontend/category/product/view`
         );
 
         // Simply set the array of products from the response
@@ -94,7 +97,7 @@ export default function StationeryProducts() {
                       {currency(item.discount_price)}
                     </H4> */}
 
-                   <H4 fontWeight="600" fontSize="14px" color="text.muted" mr="0.5rem">
+                   <H4 fontWeight="600" fontSize="14px" color="primary.main" mr="0.5rem">
                       {currency(item.discount_price)}
                     </H4>
 

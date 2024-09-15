@@ -14,6 +14,10 @@ import CategorySectionCreator from "@component/CategorySectionCreator";
 import { currency } from "@utils/utils";
 import useWindowSize from "@hook/useWindowSize";
 
+
+
+import ApiBaseUrl from "../../../api/ApiBaseUrl";
+
 export default function NewArrivalsProduct() {
   const [bigDiscountList, setBigDiscountList] = useState([]);
   const width = useWindowSize();
@@ -30,7 +34,7 @@ export default function NewArrivalsProduct() {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          `https://seller.tizaraa.com/api/frontend/remark/product/items`
+          `${ApiBaseUrl.baseUrl}frontend/remark/product/items`
         );
 
         if (response.data && response.data.newarrival) {

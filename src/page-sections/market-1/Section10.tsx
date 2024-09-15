@@ -10,7 +10,12 @@ import Container from "@component/Container";
 import Typography from "@component/Typography";
 import CategorySectionHeader from "@component/CategorySectionHeader";
 
+import ApiBaseUrl from "../../api/ApiBaseUrl";
+
 // ============================================================
+
+
+
 type Category = {
   id: number;
   categorie_name: string;
@@ -19,13 +24,18 @@ type Category = {
 // ============================================================
 
 export default function Section10() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     // Fetch categories from the API
-    fetch("https://seller.tizaraa.com/api/frontend/home/categorie/all")
+    // fetch("https://seller.tizaraa.com/api/frontend/home/categorie/all")
+
+    fetch (`${ApiBaseUrl.baseUrl}frontend/home/categorie/all`)
       .then((response) => response.json())
-      .then((data) => setCategories(data))
+      .then((data) => {
+        // console.log("Fetched categories:", data); 
+        setCategories(data); 
+      })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
