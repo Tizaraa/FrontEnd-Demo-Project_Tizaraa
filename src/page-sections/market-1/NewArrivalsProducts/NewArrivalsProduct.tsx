@@ -17,6 +17,7 @@ import useWindowSize from "@hook/useWindowSize";
 
 
 import ApiBaseUrl from "../../../api/ApiBaseUrl";
+import Rating from "@component/rating";
 
 export default function NewArrivalsProduct() {
   const [bigDiscountList, setBigDiscountList] = useState([]);
@@ -85,6 +86,8 @@ export default function NewArrivalsProduct() {
                   >
                     {item.product_name}
                   </H4>
+
+                  <Rating value={item.rating || 0} outof={5} color="warn" readOnly />
 
                   <FlexBox>
                     <H4 fontWeight="600" fontSize="14px" color="text.muted">

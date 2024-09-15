@@ -14,6 +14,7 @@ import { currency } from "@utils/utils";
 import useWindowSize from "@hook/useWindowSize";
 
 import styles from './JustForYouParoducts.module.css';
+import Rating from "@component/rating";
 
 
 
@@ -80,22 +81,15 @@ const JustForYouProducts = () => {
         mb="16px" // Vertical spacing between rows
         style={{ marginRight: '16px' }} // Horizontal spacing between items
       >
-        <Card p="1rem" borderRadius={8} style={{ height: '300px' }}>
+        <Card p="2rem" borderRadius={8} style={{ height: '300px' }}>
           <Link href={`/product/${item.product_slug}`}>
-            <HoverBox
-              borderRadius={8}
-              mb="0.5rem"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              style={{ height: '150px', overflow: 'hidden' }} 
-            >
+            
               <img 
                 src={item.product_thumbnail} 
                 alt={item.product_name} 
                 style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
               />
-            </HoverBox>
+
 
             <H4
               fontWeight="600"
@@ -109,6 +103,8 @@ const JustForYouProducts = () => {
             >
               {item.product_name}
             </H4>
+
+            <Rating value={item.rating || 0} outof={5} color="warn" readOnly />
 
             <FlexBox>
               <H4 fontWeight="600" fontSize="14px" color="text.muted">
