@@ -32,7 +32,7 @@ const JustForYouProducts = () => {
     setLoading(page === 1); 
     setLoadingMore(page > 1); 
     try {
-      const response = await axios.get(`https://seller.tizaraa.com/api/frontend/latest/justoforyou/product/view/'+number?page`);
+      const response = await axios.get(`https://seller.tizaraa.com/api/frontend/latest/justoforyou/product/view/'?page=${page}`);
       const data = response.data;
 
 
