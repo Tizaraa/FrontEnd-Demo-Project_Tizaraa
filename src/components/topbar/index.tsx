@@ -29,7 +29,7 @@ export default function Topbar() {
       <Container display="flex" justifyContent="space-between" alignItems="center" height="100%">
         <FlexBox className="topbar-left">
           <div className="logo">
-            <img src="/assets/images/logo.svg" alt="logo" />
+            <img src="/assets/images/tizaraa_logo.webp" alt="logo" />
           </div>
 
           <FlexBox alignItems="center">
