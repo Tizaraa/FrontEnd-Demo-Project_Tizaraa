@@ -75,11 +75,11 @@ export default async function ProductDetails({ params }: Props) {
            rating={product.product_rating} // Pass the rating
         />
 
-        {/* <ProductView
-          shops={shops}
+        <ProductView
+          // shops={shops}
           relatedProducts={relatedProducts}
-          frequentlyBought={frequentlyBought}
-        /> */}
+          // frequentlyBought={frequentlyBought}
+        />
       </Fragment>
     );
   } catch (error) {

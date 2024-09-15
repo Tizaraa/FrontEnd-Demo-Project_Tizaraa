@@ -15,13 +15,13 @@ import ProductDescription from "@component/products/ProductDescription";
 
 // ==============================================================
 type Props = {
-  shops: Shop[];
+  // shops: Shop[];
   relatedProducts: Product[];
-  frequentlyBought: Product[];
+  // frequentlyBought: Product[];
 };
 // ==============================================================
 
-export default function ProductView({ shops, frequentlyBought , relatedProducts }: Props) {
+export default function ProductView({  relatedProducts }: Props) {
   const [selectedOption, setSelectedOption] = useState("description");
   const handleOptionClick = (opt: any) => () => setSelectedOption(opt);
 
@@ -57,13 +57,13 @@ export default function ProductView({ shops, frequentlyBought , relatedProducts 
       </Box>
 
       {/* FREQUENTLY BOUGHT TOGETHER PRODUCTS */}
-      {frequentlyBought && <FrequentlyBought products={frequentlyBought} />}
+      {/* {frequentlyBought && <FrequentlyBought products={frequentlyBought} />} */}
 
       {/* AVAILABLE SHOPS */}
-      {shops && <AvailableShops shops={shops} />}
+      {/* {shops && <AvailableShops shops={shops} />} */}
 
       {/* RELATED PRODUCTS */}
-      {relatedProducts && <RelatedProducts products={relatedProducts} />}
+      {/* {relatedProducts && <RelatedProducts products={relatedProducts} />} */}
     </>
   );
 }
