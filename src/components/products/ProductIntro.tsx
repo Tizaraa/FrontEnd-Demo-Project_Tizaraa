@@ -21,10 +21,12 @@ type ProductIntroProps = {
   title: string;
   images: string[];
   id: string | number;
+  sellerShopName: string; 
+  rating: number; // Add rating prop
 };
 // ========================================
 
-export default function ProductIntro({ images, title, price, id }: ProductIntroProps) {
+export default function ProductIntro({ images, title, price, id, sellerShopName , rating  }: ProductIntroProps) {
   const param = useParams();
   const { state, dispatch } = useAppContext();
   const [selectedImage, setSelectedImage] = useState(0);
@@ -54,10 +56,10 @@ export default function ProductIntro({ images, title, price, id }: ProductIntroP
           <div>
             <FlexBox mb="50px" overflow="hidden" borderRadius={16} justifyContent="center">
               <Image
-                width={300}
-                height={300}
+                width={200}
+                height={200}
                 src={images[selectedImage]}
-                style={{ display: "block", width: "100%", height: "auto" }}
+                style={{ display: "block", width: "70%", height: "auto" }}
               />
             </FlexBox>
 
@@ -88,17 +90,17 @@ export default function ProductIntro({ images, title, price, id }: ProductIntroP
         <Grid item md={6} xs={12} alignItems="center">
           <H1 mb="1rem">{title}</H1>
 
-          <FlexBox alignItems="center" mb="1rem">
+          {/* <FlexBox alignItems="center" mb="1rem">
             <SemiSpan>Brand:</SemiSpan>
             <H6 ml="8px">Ziaomi</H6>
-          </FlexBox>
+          </FlexBox> */}
 
-          <FlexBox alignItems="center" mb="1rem">
+<FlexBox alignItems="center" mb="1rem">
             <SemiSpan>Rated:</SemiSpan>
             <Box ml="8px" mr="8px">
-              <Rating color="warn" value={4} outof={5} />
+              <Rating color="warn" value={rating} outof={5} /> {/* Use rating from props */}
             </Box>
-            <H6>(50)</H6>
+            {/* <H6>(50)</H6> */}
           </FlexBox>
 
           <Box mb="24px">
@@ -144,11 +146,12 @@ export default function ProductIntro({ images, title, price, id }: ProductIntroP
             </FlexBox>
           )}
 
-          <FlexBox alignItems="center" mb="1rem">
+<FlexBox alignItems="center" mb="1rem">
             <SemiSpan>Sold By:</SemiSpan>
-            <Link href="/shops/scarlett-beauty">
+            {/* <Link href={`/shops/${sellerShopName}`}> */}
+            <Link href="#">
               <H6 lineHeight="1" ml="8px">
-                Mobile Store
+                {sellerShopName} 
               </H6>
             </Link>
           </FlexBox>

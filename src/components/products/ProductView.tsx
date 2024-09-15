@@ -21,7 +21,7 @@ type Props = {
 };
 // ==============================================================
 
-export default function ProductView({ shops, relatedProducts, frequentlyBought }: Props) {
+export default function ProductView({ shops, frequentlyBought , relatedProducts }: Props) {
   const [selectedOption, setSelectedOption] = useState("description");
   const handleOptionClick = (opt: any) => () => setSelectedOption(opt);
 
