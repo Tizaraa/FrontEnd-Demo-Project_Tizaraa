@@ -59,10 +59,7 @@ export default async function ProductDetails({ params }: Props) {
     // Extract image URLs from the productmultiimages array
     const images = productImages.map((img: any) => img.product_img);
 
-    // Populate additional fields if needed
-    const shops = []; // Add shop details if necessary
-    const relatedProducts = response.data.relatedproduct; // Access related products
-    const frequentlyBought = []; // Populate frequently bought products if applicable
+    
 
     return (
       <Fragment>
@@ -76,9 +73,7 @@ export default async function ProductDetails({ params }: Props) {
         />
 
         <ProductView
-          // shops={shops}
-          relatedProducts={relatedProducts}
-          // frequentlyBought={frequentlyBought}
+         
         />
       </Fragment>
     );
