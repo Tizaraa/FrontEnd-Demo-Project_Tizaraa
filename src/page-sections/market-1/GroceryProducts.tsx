@@ -16,6 +16,7 @@ import useWindowSize from "@hook/useWindowSize";
 
 
 import ApiBaseUrl from "../../api/ApiBaseUrl";
+import Rating from "@component/rating";
 
 export default function GroceryProducts() {
   const [flashSale, setFlashSale] = useState([]);
@@ -86,22 +87,31 @@ export default function GroceryProducts() {
                     {item.product_name}
                   </H4>
 
-                  <FlexBox>
-                  <H4 fontWeight="600" fontSize="14px" color="text.muted">
-                      BDT <del>{(item.seeling_price)}</del>
-                    </H4>
-                    
-                  </FlexBox>
-
-                  {/* <H4 fontWeight="600" fontSize="14px" color="primary.main" mr="0.5rem">
-                      {currency(item.discount_price)}
-                    </H4> */}
-
-                   <H4 fontWeight="600" fontSize="14px" color="primary.main" mr="0.5rem">
-                      {currency(item.discount_price)}
-                    </H4>
+                  {item.rating > 0 && (
+  <Rating value={item.rating} outof={5} color="warn" readOnly />
+)}
 
 
+{item.discount_price == null && (
+  <FlexBox>
+    <H4 fontWeight="600" fontSize="14px" color="primary.main">
+       {currency(item.seeling_price)}
+    </H4>
+  </FlexBox>
+)}
+
+{item.discount_price != null && (
+  <FlexBox flexDirection="column">
+    <H4 fontWeight="600" fontSize="14px" color="text.muted">
+     BDT <del>{(item.seeling_price)}</del>
+    </H4>
+    <Box marginTop="4px"> {/* Adjust margin as needed */}
+      <H4 fontWeight="600" fontSize="14px" color="primary.main">
+        {currency(item.discount_price)}
+      </H4>
+    </Box>
+  </FlexBox>
+)}
                  
                 </Link>
               </Card>

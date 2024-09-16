@@ -151,15 +151,37 @@ const JustForYouProducts = () => {
             >
               {item.product_name}
             </H4>
-            <Rating value={item.rating || 0} outof={5} color="warn" readOnly />
-            <FlexBox>
-              <H4 fontWeight="600" fontSize="14px" color="text.muted">
-                BDT <del>{item.seeling_price}</del>
-              </H4>
-            </FlexBox>
-            <H4 fontWeight="600" fontSize="14px" color="primary.main" mr="0.5rem">
-              {currency(item.discount_price)}
-            </H4>
+            {/* <Rating value={item.rating || 0} outof={5} color="warn" readOnly /> */}
+
+            {item.rating > 0 && (
+  <Rating value={item.rating} outof={5} color="warn" readOnly />
+)}
+
+{item.discount_price == null && (
+  <FlexBox>
+    <H4 fontWeight="600" fontSize="14px" color="primary.main">
+       {currency(item.seeling_price)}
+    </H4>
+  </FlexBox>
+)}
+
+{item.discount_price != null && (
+  <FlexBox flexDirection="column">
+    <H4 fontWeight="600" fontSize="14px" color="text.muted">
+     BDT <del>{(item.seeling_price)}</del>
+    </H4>
+    <Box marginTop="4px"> {/* Adjust margin as needed */}
+      <H4 fontWeight="600" fontSize="14px" color="primary.main">
+        {currency(item.discount_price)}
+      </H4>
+    </Box>
+  </FlexBox>
+)}
+
+{/* <H4 fontWeight="600" fontSize="14px" color="primary.main" mr="0.5rem">
+  {currency(item.seeling_price)}
+</H4> */}
+
           </Link>
         </Card>
       </Box>
