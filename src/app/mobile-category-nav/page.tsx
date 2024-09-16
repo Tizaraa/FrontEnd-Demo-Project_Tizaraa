@@ -308,9 +308,9 @@ export default function MobileCategoryNav() {
       </div>
 
       <div className="container">
-        <Typography fontWeight="600" fontSize="15px" mb="1rem">
+        {/* <Typography fontWeight="600" fontSize="15px" mb="1rem">
           Recommended Categories
-        </Typography>
+        </Typography> */}
 
       
 
