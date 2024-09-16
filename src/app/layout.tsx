@@ -11,9 +11,9 @@ const openSans = Open_Sans({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Tizaraa - The Best React eCommerce Template",
   description:
-    "Bonik is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
+    "Tizaraa is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
   authors: [{ name: "UI-LIB", url: "https://ui-lib.com" }],
-  keywords: ["e-commerce", "e-commerce template", "next.js", "react", "bonik"]
+  keywords: ["e-commerce", "e-commerce template", "next.js", "react", "tizaraa"]
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

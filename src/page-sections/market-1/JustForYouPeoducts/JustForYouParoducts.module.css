@@ -112,7 +112,25 @@
     border: none;
   
   }
+
   
+  /* Default styles for larger screens */
+.productBox {
+  width: calc(20% - 16px); 
+  min-width: 179px;
+  max-width: 250px;
+  margin-bottom: 16px;
+  margin-right: 16px;
+}
+
+/* Styles for mobile screens (two products per row) */
+@media (max-width: 600px) {
+  .productBox {
+    width: calc(50% - 8px); /* Two products per row */
+    margin-right: 8px; /* Adjust margin for mobile */
+  }
+}
+
   
   @media (max-width: 767px) {
     .productCard .gridContainer {

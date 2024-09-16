@@ -191,14 +191,18 @@ export default function SearchInputWithCategory() {
 
       {!!resultList.length && (
         <Card position="absolute" top="100%" py="0.5rem" width="100%" boxShadow="large" zIndex={99}>
-          {resultList.map((item) => (
+
+          {/* for search box  */}
+
+          {/* {resultList.map((item) => (
             // {`/product/search/${item}`} 
             <Link href="#" key={item}>
               <MenuItem key={item}>
                 <Span fontSize="14px">{item}</Span>
               </MenuItem>
             </Link>
-          ))}
+          ))} */}
+          
         </Card>
       )}
     </Box>

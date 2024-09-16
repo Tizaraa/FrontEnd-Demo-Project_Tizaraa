@@ -69,18 +69,19 @@ const JustForYouProducts = () => {
   return (
     <CategorySectionCreator title="Just For You">
       <Box my="-0.25rem">
-      <FlexBox flexWrap="wrap" justifyContent="space-between">
+      {/* <FlexBox flexWrap="wrap" justifyContent="space-between">
   {products.length > 0 ? (
     products.map((item) => (
       <Box
-        py="0.25rem"
-        key={item.product_slug}
-        width="calc(20% - 16px)" // Each product takes up 20% of the row minus the margin
-        minWidth="200px"
-        maxWidth="250px"
-        mb="16px" // Vertical spacing between rows
-        style={{ marginRight: '16px' }} // Horizontal spacing between items
-      >
+  py="0.25rem"
+  key={item.product_slug}
+  width={width < 600 ? 'calc(50% - 8px)' : 'calc(20% - 16px)'} // Adjust width for mobile
+  minWidth="200px"
+  maxWidth={width < 600 ? '100%' : '250px'} // Max width for mobile
+  mb="16px"
+  style={{ marginRight: '16px' }}
+>
+
         <Card p="2rem" borderRadius={8} style={{ height: '300px' }}>
           <Link href={`/product/${item.product_slug}`}>
             
@@ -122,7 +123,52 @@ const JustForYouProducts = () => {
   ) : (
     <p>No products available</p>
   )}
+</FlexBox> */}
+<FlexBox flexWrap="wrap" justifyContent="space-between">
+  {products.length > 0 ? (
+    products.map((item) => (
+      <Box
+        py="0.25rem"
+        key={item.product_slug}
+        className={styles.productBox}  // Using CSS class for width
+      >
+        <Card p="2rem" borderRadius={8} style={{ height: '300px' }}>
+          <Link href={`/product/${item.product_slug}`}>
+            <img 
+              src={item.product_thumbnail} 
+              alt={item.product_name} 
+              style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
+            />
+            <H4
+              fontWeight="600"
+              fontSize="18px"
+              mb="0.25rem"
+              style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {item.product_name}
+            </H4>
+            <Rating value={item.rating || 0} outof={5} color="warn" readOnly />
+            <FlexBox>
+              <H4 fontWeight="600" fontSize="14px" color="text.muted">
+                BDT <del>{item.seeling_price}</del>
+              </H4>
+            </FlexBox>
+            <H4 fontWeight="600" fontSize="14px" color="primary.main" mr="0.5rem">
+              {currency(item.discount_price)}
+            </H4>
+          </Link>
+        </Card>
+      </Box>
+    ))
+  ) : (
+    <p>No products available</p>
+  )}
 </FlexBox>
+
 
 
       </Box>
