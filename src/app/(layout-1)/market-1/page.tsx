@@ -46,7 +46,7 @@ export default async function Market1() {
     <main>
       {/* HERO CAROUSEL AREA */}
 
-      <Section1 carouselData={mainCarouselData} />
+      <Section1 />
 
         {/* CATEGORIES AREA */}
         {/* <Section10 categories={bottomCategories} /> */}
