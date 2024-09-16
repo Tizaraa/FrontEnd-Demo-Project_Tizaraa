@@ -88,7 +88,12 @@ export default function FlashSaleProducts() {
                     {item.product_name}
                   </H4>
 
-                  <Rating value={item.rating || 0} outof={5} color="warn" readOnly />
+                  {/* <Rating value={item.rating || 0} outof={5} color="warn" readOnly /> */}
+
+                  {item.rating > 0 && (
+  <Rating value={item.rating} outof={5} color="warn" readOnly />
+)}
+
 
                   <FlexBox>
                   <H4 fontWeight="600" fontSize="14px" color="text.muted">
