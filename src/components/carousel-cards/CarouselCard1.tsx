@@ -62,8 +62,13 @@ const StyledCarouselCard1 = styled.div`
 
   .image-holder {
     position: relative;
+    width: 100%;
     img {
       width: 100%;
+       height: 420px;
+    object-fit: fill;
+      
+      
     }
   }
 
@@ -92,25 +97,25 @@ const StyledCarouselCard1 = styled.div`
 
 // ===============================================
 interface Props {
-  title: string;
+  // title: string;
   image: string;
-  buttonText: string;
-  description: string;
+  // buttonText: string;
+  // description: string;
 }
 // ===============================================
 
-export default function CarouselCard1({ title, image, buttonText, description }: Props) {
+export default function CarouselCard1({ image }: Props) {
   return (
     <StyledCarouselCard1>
       <div>
-        <h1 className="title">{title}</h1>
-        <Typography color="secondary.main" mb="1.35rem">
+        {/* <h1 className="title">{title}</h1> */}
+        {/* <Typography color="secondary.main" mb="1.35rem">
           {description}
-        </Typography>
+        </Typography> */}
 
-        <Button className="button-link" variant="contained" color="primary" p="1rem 1.5rem">
+        {/* <Button className="button-link" variant="contained" color="primary" p="1rem 1.5rem">
           {buttonText}
-        </Button>
+        </Button> */}
       </div>
 
       <div className="image-holder">
