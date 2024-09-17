@@ -82,7 +82,7 @@ export default function StationeryProducts() {
               />
 
               {/* Discount Badge */}
-              {item.discount_price < item.seeling_price && (
+              {item.discount_price != null && item.discount_price < item.seeling_price && (
                 <Box
                   position="absolute"
                   top="1rem"

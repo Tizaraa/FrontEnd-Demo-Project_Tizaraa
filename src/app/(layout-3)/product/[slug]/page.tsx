@@ -116,6 +116,9 @@ export default async function ProductDetails({ params }: Props) {
         <ProductIntro
           id={product.product_slug}
           price={product.seeling_price}
+          discountPrice={product.discount_price}
+          totalDiscount={product.total_discount}
+          productStock={product.product_stock}
           title={product.product_name}
           images={images}
           sellerShopName={product.seller_shop_name}

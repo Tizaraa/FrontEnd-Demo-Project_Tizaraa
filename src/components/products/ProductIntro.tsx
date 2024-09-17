@@ -1,4 +1,5 @@
 "use client";
+import { Fragment } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
@@ -18,15 +19,28 @@ import { currency } from "@utils/utils";
 // ========================================
 type ProductIntroProps = {
   price: number;
+  discountPrice?: number; // Optional discount price
+  totalDiscount?: number; // Optional total discount
   title: string;
   images: string[];
   id: string | number;
   sellerShopName: string; 
   rating: number; // Add rating prop
+  productStock: number
 };
 // ========================================
 
-export default function ProductIntro({ images, title, price, id, sellerShopName , rating  }: ProductIntroProps) {
+export default function ProductIntro({
+  images,
+  title,
+  price,
+  id,
+  sellerShopName,
+  rating,
+  discountPrice,
+  totalDiscount,
+  productStock
+}: ProductIntroProps) {
   const param = useParams();
   const { state, dispatch } = useAppContext();
   const [selectedImage, setSelectedImage] = useState(0);
@@ -79,7 +93,8 @@ export default function ProductIntro({ images, title, price, id, sellerShopName 
                   ml={ind === 0 ? "auto" : ""}
                   mr={ind === images.length - 1 ? "auto" : "10px"}
                   borderColor={selectedImage === ind ? "primary.main" : "gray.400"}
-                  onClick={handleImageClick(ind)}>
+                  onClick={handleImageClick(ind)}
+                >
                   <Avatar src={url} borderRadius="10px" size={65} />
                 </Box>
               ))}
@@ -90,28 +105,50 @@ export default function ProductIntro({ images, title, price, id, sellerShopName 
         <Grid item md={6} xs={12} alignItems="center">
           <H1 mb="1rem">{title}</H1>
 
-          {/* <FlexBox alignItems="center" mb="1rem">
-            <SemiSpan>Brand:</SemiSpan>
-            <H6 ml="8px">Ziaomi</H6>
-          </FlexBox> */}
-
-<FlexBox alignItems="center" mb="1rem">
-            {/* <SemiSpan>Rated:</SemiSpan> */}
+          <FlexBox alignItems="center" mb="1rem">
             <Box ml="8px" mr="8px">
-              {/* <Rating color="warn" value={rating} outof={5} /> */}
               {rating > 0 && (
-  <Rating value={rating} outof={5} color="warn" readOnly />
-)}   
+                <Rating value={rating} outof={5} color="warn" readOnly />
+              )}
             </Box>
-            {/* <H6>(50)</H6> */}
           </FlexBox>
 
           <Box mb="24px">
+            <FlexBox alignItems="center">
             <H2 color="primary.main" mb="4px" lineHeight="1">
-              {currency(price)}
-            </H2>
+  {discountPrice ? (
+    <>
+     {currency(discountPrice)} {/* Discounted price */}
+      <span style={{ textDecoration: 'line-through', color: 'gray', marginRight: '10px' }}>
+        {currency(price)} {/* Original selling price */}
+      </span>
+     
+    </>
+  ) : (
+    currency(price) 
+  )}
+</H2>
 
-            <SemiSpan color="inherit">Stock Available</SemiSpan>
+{discountPrice && totalDiscount && (
+  <Box
+    bg="red"
+    color="white"
+    px="0.5rem"
+    py="0.25rem"
+    borderRadius="50%"
+    ml="1rem"
+    fontWeight="600"
+    fontSize="12px"
+    textAlign="center"
+  >
+    {totalDiscount}%
+  </Box>
+)}
+</FlexBox>
+<SemiSpan color="inherit">
+    {productStock > 0 ? "Stock Available" : "Stock Out"}
+  </SemiSpan>
+
           </Box>
 
           {!cartItem?.qty ? (
@@ -120,7 +157,8 @@ export default function ProductIntro({ images, title, price, id, sellerShopName 
               size="small"
               color="primary"
               variant="contained"
-              onClick={handleCartAmountChange(1)}>
+              onClick={handleCartAmountChange(1)}
+            >
               Add to Cart
             </Button>
           ) : (
@@ -130,7 +168,8 @@ export default function ProductIntro({ images, title, price, id, sellerShopName 
                 size="small"
                 color="primary"
                 variant="outlined"
-                onClick={handleCartAmountChange(cartItem?.qty - 1)}>
+                onClick={handleCartAmountChange(cartItem?.qty - 1)}
+              >
                 <Icon variant="small">minus</Icon>
               </Button>
 
@@ -143,15 +182,15 @@ export default function ProductIntro({ images, title, price, id, sellerShopName 
                 size="small"
                 color="primary"
                 variant="outlined"
-                onClick={handleCartAmountChange(cartItem?.qty + 1)}>
+                onClick={handleCartAmountChange(cartItem?.qty + 1)}
+              >
                 <Icon variant="small">plus</Icon>
               </Button>
             </FlexBox>
           )}
 
-<FlexBox alignItems="center" mb="1rem">
+          <FlexBox alignItems="center" mb="1rem">
             <SemiSpan>Sold By:</SemiSpan>
-            {/* <Link href={`/shops/${sellerShopName}`}> */}
             <Link href="#">
               <H6 lineHeight="1" ml="8px">
                 {sellerShopName} 
