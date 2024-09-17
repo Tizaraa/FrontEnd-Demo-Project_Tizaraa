@@ -134,11 +134,37 @@ const JustForYouProducts = () => {
       >
         <Card p="2rem" borderRadius={8} style={{ height: '300px' }}>
           <Link href={`/product/${item.product_slug}`}>
-            <img 
+            {/* <img 
               src={item.product_thumbnail} 
               alt={item.product_name} 
               style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
-            />
+            /> */}
+            <Box position="relative">
+              <img 
+                src={item.product_thumbnail} 
+                alt={item.product_name} 
+                style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
+              />
+
+              {/* Discount Badge */}
+              {item.discount_price < item.seeling_price && (
+                <Box
+                  position="absolute"
+                  top="1rem"
+                  left="1rem"
+                  bg="red"
+                  color="white"
+                  px="0.5rem"
+                  py="0.25rem"
+                  borderRadius="50%"
+                  fontWeight="600"
+                  fontSize="12px"
+                  textAlign="center"
+                >
+                  {Math.round(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}%
+                </Box>
+              )}
+            </Box>
             <H4
               fontWeight="600"
               fontSize="18px"
