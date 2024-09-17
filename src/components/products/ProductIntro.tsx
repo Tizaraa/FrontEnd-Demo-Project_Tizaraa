@@ -96,9 +96,12 @@ export default function ProductIntro({ images, title, price, id, sellerShopName 
           </FlexBox> */}
 
 <FlexBox alignItems="center" mb="1rem">
-            <SemiSpan>Rated:</SemiSpan>
+            {/* <SemiSpan>Rated:</SemiSpan> */}
             <Box ml="8px" mr="8px">
-              <Rating color="warn" value={rating} outof={5} /> {/* Use rating from props */}
+              {/* <Rating color="warn" value={rating} outof={5} /> */}
+              {rating > 0 && (
+  <Rating value={rating} outof={5} color="warn" readOnly />
+)}   
             </Box>
             {/* <H6>(50)</H6> */}
           </FlexBox>
