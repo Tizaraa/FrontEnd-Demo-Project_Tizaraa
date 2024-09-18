@@ -1,0 +1,33 @@
+.productList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Align items to the start to prevent gaps */
+    gap: 16px;
+  }
+  
+  .productCard {
+    flex: 1 1 calc(20% - 16px); /* Flex-grow to allow items to grow, 5 products per row */
+    min-width: 190px;
+    max-width: 250px;
+    margin-bottom: 16px; /* Ensure proper spacing between rows */
+  }
+  
+  @media (max-width: 767px) {
+    .productCard {
+      flex: 1 1 calc(50% - 8px); /* 2 products per row on mobile */
+      min-width: 160px;
+    }
+  }
+  
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .productCard {
+      flex: 1 1 calc(33.33% - 16px); /* 3 products per row on tablets */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .productCard {
+      flex: 1 1 calc(20% - 16px); /* 5 products per row on desktop */
+    }
+  }
+  
