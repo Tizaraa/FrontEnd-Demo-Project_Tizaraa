@@ -148,7 +148,7 @@ export default function Navbar({ navListOpen }: NavbarProps) {
           </Button>
         </Categories>
 
-        <FlexBox style={{ gap: 32 }}>{renderNestedNav(navbarNavigations, true)}</FlexBox>
+        {/* <FlexBox style={{ gap: 32 }}>{renderNestedNav(navbarNavigations, true)}</FlexBox> */}
       </Container>
     </StyledNavbar>
   );
