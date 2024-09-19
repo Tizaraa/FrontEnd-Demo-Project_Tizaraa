@@ -20,6 +20,7 @@ type Category = {
   id: number;
   categorie_name: string;
   categorie_image: string;
+  categorie_name_slug: string;
 };
 // ============================================================
 
@@ -55,7 +56,7 @@ export default function Section10() {
             xs={6} 
             key={item.id}
           >
-            <Link href={`/categoryPage/${item.categorie_name}`}>
+            <Link href={`/categoryPage/${item.id}/${item.categorie_name_slug}`}>
               <Card
                 hoverEffect
                 p="1rem"
