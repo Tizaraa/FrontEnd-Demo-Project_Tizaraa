@@ -56,7 +56,9 @@ export default function Section10() {
             xs={6} 
             key={item.id}
           >
+            {/* <Link href={`/categoryPage/${item.id}/${item.categorie_name_slug}`}> */}
             <Link href={`/categoryPage/${item.id}/${item.categorie_name_slug}`}>
+
               <Card
                 hoverEffect
                 p="1rem"
