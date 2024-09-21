@@ -20,8 +20,8 @@ export default function ProductDetails({ shop }: Props) {
 
   return (
     <Fragment>
-      {/* SHOW IN SMALL DEVICE */}
-      {isTablet && (
+     
+      {/* {isTablet && (
         <Sidenav
           scroll={true}
           position="left"
@@ -32,9 +32,9 @@ export default function ProductDetails({ shop }: Props) {
           }>
           <ProductFilterCard />
         </Sidenav>
-      )}
+      )} */}
 
-      <ProductGridView products={shop.products?.slice(0, 9) as Product[]} />
+      {/* <ProductGridView products={shop.products?.slice(0, 9) as Product[]} /> */}
     </Fragment>
   );
 }
