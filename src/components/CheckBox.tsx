@@ -98,7 +98,7 @@ const CheckBox = ({
 
   return (
     <Wrapper
-      size={18}
+      // size={18}
       color={`${labelColor}.main`}
       labelPlacement={labelPlacement}
     >
