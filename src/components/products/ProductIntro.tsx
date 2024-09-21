@@ -141,9 +141,10 @@ export default function ProductIntro({
     fontSize="12px"
     textAlign="center"
   >
-    {totalDiscount}%
+    {Math.floor(totalDiscount)}%
   </Box>
 )}
+
 </FlexBox>
 <SemiSpan color="inherit">
     {productStock > 0 ? "Stock Available" : "Stock Out"}

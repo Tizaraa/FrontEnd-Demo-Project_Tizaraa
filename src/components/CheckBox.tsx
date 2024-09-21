@@ -20,7 +20,6 @@ type CheckBoxProps = {
 // ==============================================================
 
 type WrapperProps = { labelPlacement?: "start" | "end" };
-
 const StyledCheckBox = styled.input.withConfig({
   shouldForwardProp: (prop: string) => isValidProp(prop)
 })<CheckBoxProps & InputHTMLAttributes<HTMLInputElement>>(
@@ -38,30 +37,37 @@ const StyledCheckBox = styled.input.withConfig({
       position: "relative",
       transition: "border-color 150ms",
 
-      "&:checked": { borderColor: `${color}.main` },
+      "&:checked": { borderColor: `${color}.main` }, // Border color changes when checked
 
       "&:after": {
-        content: '""',
+        content: '""', // Initially empty
         width: "100%", // Fill the entire square
         height: "100%",
         position: "absolute",
         top: 0,
         left: 0,
-        background: "transparent", // Set background to transparent initially
+        background: "transparent", // Transparent when not checked
         borderRadius: "2px", // Match the border radius of the checkbox
         transition: "background-color 150ms",
       },
 
       "&:checked:after": {
-        background: "green", // Color of the checkbox when checked
+        content: "'✔'", // Display the checkmark when checked
+        fontSize: `${size ? size - 9 : 12}px`, // Adjust font size relative to the checkbox size
+        color: `${color}.main`, // Use the specified color for the checkmark
+        position: "absolute",
+        top: "50%",
+        left: "70%",
+        transform: "translate(-50%, -50%)", // Center the checkmark inside the box
       },
 
       "&:disabled": {
         borderColor: `text.disabled`,
+        cursor: "not-allowed",
       },
 
       "&:checked:disabled:after": {
-        background: `text.disabled`,
+        color: `text.disabled`, // Grey out the checkmark if disabled
       },
     }),
   compose(color)
