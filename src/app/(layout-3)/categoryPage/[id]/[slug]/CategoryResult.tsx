@@ -195,9 +195,9 @@ export default function CategoryResult({ categoryid }) {
 
   return (
     <Grid container spacing={6}>
-      <Grid item lg={3} xs={12}>
+      {/* <Grid item lg={3} xs={12}>
         <ProductFilterCard />
-      </Grid>
+      </Grid> */}
 
       <Grid item lg={9} xs={12}>
         <CategoryRelatedProducts products={products} />
