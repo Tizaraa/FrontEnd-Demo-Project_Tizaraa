@@ -14,10 +14,10 @@ import FlexBox from "@component/FlexBox";
 import { Button } from "@component/buttons";
 import NextImage from "@component/NextImage";
 import Card, { CardProps } from "@component/Card";
-import { H3, SemiSpan } from "@component/Typography";
+import { H3, H4, SemiSpan } from "@component/Typography";
 import ProductQuickView from "@component/products/ProductQuickView";
 
-import { calculateDiscount, currency, getTheme } from "@utils/utils";
+import { calculateDiscount, currency, getTheme, DiscountPercentage } from "@utils/utils";
 import { deviceSize } from "@utils/constants";
 
 // STYLED COMPONENT
@@ -126,7 +126,7 @@ export default function ProductCard1({
   price,
   imgUrl,
   images,
-  rating = 4,
+  rating,
   ...props
 }: ProductCard1Props) {
   const [open, setOpen] = useState(false);
@@ -153,6 +153,7 @@ export default function ProductCard1({
     <>
       <Wrapper borderRadius={8} {...props}>
         <div className="image-holder">
+
           {!!off && (
             <Chip
               top="10px"
@@ -164,7 +165,8 @@ export default function ProductCard1({
               position="absolute"
               color="primary.text"
               zIndex={1}>
-              {off}% off
+              {/* {off}%  */}
+              {DiscountPercentage(price, off as number)}% off
             </Chip>
           )}
 
@@ -199,20 +201,31 @@ export default function ProductCard1({
                 </H3>
               </Link>
 
-              <Rating value={rating || 0} outof={5} color="warn" readOnly />
+                         
+            {rating > 0 && (
+  <Rating value={rating} outof={5} color="warn" readOnly />
+)}
 
-              <FlexBox alignItems="center" mt="10px">
-                <SemiSpan pr="0.5rem" fontWeight="600" color="primary.main">
-                  {calculateDiscount(price, off as number)}
-                </SemiSpan>
+              {/* <Rating value={rating || 0} outof={5} color="warn" readOnly /> */}
 
-                {!!off && (
-                  <SemiSpan color="text.muted" fontWeight="600">
-                    <del>{currency(price)}</del>
-                  </SemiSpan>
-                )}
-              </FlexBox>
+
+    <Box marginTop="4px"> 
+      <H4 fontWeight="600" fontSize="14px" color="primary.main">
+      <del>{currency(price)}</del>
+      </H4>
+    </Box>
+
+    <FlexBox>
+    <H4 fontWeight="600" fontSize="14px" color="primary.main">
+    {calculateDiscount(price, off as number)}
+    </H4>
+  </FlexBox>
+
+    
             </Box>
+
+          
+            
 
             <FlexBox
               width="30px"

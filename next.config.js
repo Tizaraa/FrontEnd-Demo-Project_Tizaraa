@@ -9,6 +9,9 @@ const nextConfig = {
     // Available on both server and client
     theme: "DEFAULT",
   },
+  images: {
+    domains: ['seller.tizaraa.com'], // Add the domain here
+  },
 };
 
 module.exports = nextConfig;

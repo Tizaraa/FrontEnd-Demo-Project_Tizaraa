@@ -63,8 +63,17 @@ export const renderProductCount = (
  * @returns - RETURN NEW PRICE
  */
 export function calculateDiscount(price: number, discount: number) {
-  const afterDiscount = Number((price - price * (discount / 100)).toFixed(2));
+  // const afterDiscount = Number((price - price * (discount / 100)).toFixed(2));
+  const afterDiscount = Number((price - discount).toFixed(2));
   return currency(afterDiscount, 2, "BDT"); // Always return in BDT
+}
+
+
+export function DiscountPercentage(price: number, discount: number) {
+
+
+  return Number((discount/price)*100).toFixed(2);
+ 
 }
 
 /**

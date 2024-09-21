@@ -57,7 +57,9 @@ export default function Section10() {
             key={item.id}
           >
             {/* <Link href={`/categoryPage/${item.id}/${item.categorie_name_slug}`}> */}
-            <Link href={`/categoryPage/${item.id}/${item.categorie_name_slug}`}>
+            {/* <Link href={`/categoryPage/${item.id}/${item.categorie_name_slug}`}> */}
+
+            <Link href={`/category/${item.categorie_name_slug}`}>
 
               <Card
                 hoverEffect

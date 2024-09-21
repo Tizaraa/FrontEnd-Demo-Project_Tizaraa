@@ -88,7 +88,7 @@ export default function Section12() {
   <Grid container spacing={0} >
     {serviceList.map((item) => (
       <Grid item lg={2} md={2} sm={4} xs={6} key={item.id} style={{ textAlign: 'center' }}>
-        <Image src={item.image} alt={item.location} width={64} height={64} />
+        <Image src={item.image} alt={item.location} width={100} height={64} />
         <H4 mt="10px" mb="5px" textAlign="center">
           {item.location}
         </H4>

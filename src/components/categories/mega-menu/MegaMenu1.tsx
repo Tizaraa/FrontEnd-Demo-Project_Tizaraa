@@ -23,7 +23,8 @@ export default function MegaMenu1({
               {categories?.map((item, ind) => (
                 <Grid item md={3} key={ind}>
                   {item.href ? (
-                    <NavLink className="title-link" href={item.href}>
+                    // <NavLink className="title-link" href={item.title}>
+                    <NavLink className="title-link" href={`/category/${item.href}`}>
                       {item.title}
                     </NavLink>
                   ) : (
@@ -31,7 +32,8 @@ export default function MegaMenu1({
                   )}
 
                   {item.subCategories?.map((sub, ind) => (
-                    <NavLink key={ind} className="child-link" href={sub.href}>
+                    <NavLink key={ind} className="child-link" href={`/category/${sub.href}`}>
+                    {/* // <NavLink key={ind} className="child-link" href={sub.title}> */}
                       {sub.title}
                     </NavLink>
                   ))}

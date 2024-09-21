@@ -1,5 +1,6 @@
-import { Fragment } from "react";
 
+"use client";
+import { Fragment } from "react";
 import FlexBox from "@component/FlexBox";
 import Pagination from "@component/pagination";
 import { SemiSpan } from "@component/Typography";
@@ -7,10 +8,16 @@ import { ProductCard9 } from "@component/product-cards";
 import Product from "@models/product.model";
 
 // ==========================================================
-type Props = { products: Product[] };
+type Props = {
+  products: Product[];
+  totalProducts: number; // Total number of products from API
+  currentPage: number; // Current page number
+  productsPerPage: number; // Number of products per page
+  onPageChange: (page: number) => void; // Handler for page change
+};
 // ==========================================================
 
-export default function ProductListView({ products }: Props) {
+export default function ProductListView({ products, totalProducts, currentPage, productsPerPage, onPageChange }: Props) {
   return (
     <Fragment>
       {products.map((item) => (
@@ -29,10 +36,15 @@ export default function ProductListView({ products }: Props) {
         />
       ))}
 
-      <FlexBox flexWrap="wrap" justifyContent="space-between" alignItems="center" mt="32px">
-        <SemiSpan>Showing 1-9 of 1.3k Products</SemiSpan>
-        <Pagination pageCount={10} />
-      </FlexBox>
+      {/* <FlexBox flexWrap="wrap" justifyContent="space-between" alignItems="center" mt="32px">
+        <SemiSpan>
+          Showing {(currentPage - 1) * productsPerPage + 1}-{Math.min(currentPage * productsPerPage, totalProducts)} of {totalProducts} Products
+        </SemiSpan>
+        <Pagination 
+          pageCount={Math.ceil(totalProducts / productsPerPage)} 
+          onChange={onPageChange} 
+        />
+      </FlexBox> */}
     </Fragment>
   );
 }

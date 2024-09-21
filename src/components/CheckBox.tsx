@@ -7,14 +7,16 @@ import { colorOptions } from "../interfaces";
 import { isValidProp } from "@utils/utils";
 
 // ==============================================================
+
 type CheckBoxProps = {
   color?: colorOptions;
   labelColor?: colorOptions;
   labelPlacement?: "start" | "end";
   label?: any;
-  id?: any;
+  id?: string; // Changed to string for better consistency
   size?: number;
 };
+
 // ==============================================================
 
 type WrapperProps = { labelPlacement?: "start" | "end" };
@@ -24,54 +26,43 @@ const StyledCheckBox = styled.input.withConfig({
 })<CheckBoxProps & InputHTMLAttributes<HTMLInputElement>>(
   ({ color, size }) =>
     systemCss({
-      /* remove standard background appearance */
-      // "-webkit-appearance": "none",
-      // "-moz-appearance": "none",
-      // "-webkit-user-select": "none",
-      // "-moz-user-select": "none",
-      // "-ms-user-select": "none",
-      // "user-select": "none",
-      appearance: "none",
+      appearance: "none", // Remove default styling
       outline: "none",
       cursor: "pointer",
-
       margin: 0,
-      width: size,
-      height: size,
+      width: size || "20px", // Set width and height for square shape
+      height: size || "20px",
       border: "2px solid",
       borderColor: "text.hint",
-      borderRadius: 2,
+      borderRadius: "2px", // Optional: you can change this for sharper corners
       position: "relative",
+      transition: "border-color 150ms",
 
       "&:checked": { borderColor: `${color}.main` },
 
-      /* create custom radiobutton appearance */
       "&:after": {
-        width: "calc(100% - 5px)",
-        height: "calc(100% - 5px)",
-        top: "50%",
-        left: "50%",
-        transform: "translateX(-50%) translateY(-50%)",
+        content: '""',
+        width: "100%", // Fill the entire square
+        height: "100%",
         position: "absolute",
-        bg: "transparent",
-        content: '" "',
-        visibility: "visible",
-        borderRadius: 1,
-        transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
+        top: 0,
+        left: 0,
+        background: "transparent", // Set background to transparent initially
+        borderRadius: "2px", // Match the border radius of the checkbox
+        transition: "background-color 150ms",
       },
 
-      /* appearance for checked radiobutton */
       "&:checked:after": {
-        bg: `${color}.main`
+        background: "green", // Color of the checkbox when checked
       },
 
       "&:disabled": {
-        borderColor: `text.disabled`
+        borderColor: `text.disabled`,
       },
 
       "&:checked:disabled:after": {
-        bg: `text.disabled`
-      }
+        background: `text.disabled`,
+      },
     }),
   compose(color)
 );
@@ -89,11 +80,9 @@ const Wrapper = styled.div.withConfig({
     cursor: pointer;
   }
   input[disabled] + label {
-    /* color: text.disabled; */
     color: disabled;
     cursor: unset;
   }
-
   ${color}
   ${space}
 `;
@@ -105,23 +94,14 @@ const CheckBox = ({
   labelColor = "secondary",
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & CheckBoxProps & SpaceProps) => {
-  const [checkboxId, setCheckboxId] = useState(id);
-
-  // extract spacing props
-  let spacingProps: any = {};
-  for (const key in props) {
-    const propKey = key as "color" | "size";
-    if (key.startsWith("m") || key.startsWith("p")) spacingProps[propKey] = props[propKey];
-  }
-
-  useEffect(() => setCheckboxId(Math.random()), []);
+  const checkboxId = id || `checkbox-${Math.random()}`; // Use provided id or generate a unique one
 
   return (
     <Wrapper
       size={18}
       color={`${labelColor}.main`}
       labelPlacement={labelPlacement}
-      {...spacingProps}>
+    >
       <StyledCheckBox id={checkboxId} type="checkbox" {...props} />
       <label htmlFor={checkboxId}>{label}</label>
     </Wrapper>

@@ -17,7 +17,7 @@ export default function CategoryMenuItem(props: CategoryMenuItemProps) {
 
   return (
     <StyledCategoryMenuItem>
-      <Link href={href}>
+      <Link href={`/category/${href}`}>
         <div className="category-dropdown-link">
           {icon && <Icon variant="small">{icon}</Icon>}
           <span className="title">{title}</span>

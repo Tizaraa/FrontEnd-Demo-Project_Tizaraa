@@ -97,7 +97,7 @@ export default function FlashSaleProducts() {
                   fontSize="12px"
                   textAlign="center"
                 >
-                  {Math.round(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}%
+                  {Math.floor(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}%
                 </Box>
               )}
             </Box>
