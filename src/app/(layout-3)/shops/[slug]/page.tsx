@@ -23,9 +23,9 @@ export default async function ShopDetails({ params }: SlugParams) {
           <ProductFilterCard />
         </Hidden> */}
 
-        <Grid item md={3} xs={12}>
+        {/* <Grid item md={3} xs={12}>
           <ProductFilterCard />
-        </Grid>
+        </Grid> */}
 
         <Grid item md={9} xs={12}>
           <ProductDetails shop={shop} />
