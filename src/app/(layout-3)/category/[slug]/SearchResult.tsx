@@ -426,7 +426,9 @@ export default function SearchResult({ sortOptions, slug }) {
         justifyContent="space-between"
       >
         <div>
-          <H5>Searching for {slug}</H5>
+          {/* <H5>Searching for {slug}</H5> */}
+          <H5>Searching for {decodeURIComponent(slug)}</H5>
+
           <Paragraph color="text.muted">{totalProducts} results found</Paragraph>
         </div>
 
