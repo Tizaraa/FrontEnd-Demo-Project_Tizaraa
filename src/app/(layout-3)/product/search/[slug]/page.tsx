@@ -10,9 +10,7 @@ interface Props {
 export default function ProductSearchResult({ params }: Props) {
   const { slug } = params;
 
-  // useEffect(() => {
-  //   console.log("Slug:", slug); // Should log the slug
-  // }, [slug]);
+
 
   return (
     <Box pt="20px">

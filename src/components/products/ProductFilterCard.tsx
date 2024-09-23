@@ -355,7 +355,7 @@ type ProductFilterCardProps = {
   slug: string;
 };
 
-const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, onCategoryChange, slug }) => {
+const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, onCategoryChange, slug,pageType = 'default' }) => {
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [countryList, setCountryList] = useState<Country[]>([]); // State for countries
@@ -368,7 +368,13 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, on
   useEffect(() => {
     const fetchFilters = async () => {
       try {
-        const response = await axios.get(`https://tizaraa.com/api/category-filter/${slug}`);
+        if(pageType=='default'){
+          const response = await axios.get(`https://tizaraa.com/api/category-filter/${slug}`);
+        }
+        else if(pageType=='search'){
+          const response = await axios.get(`https://tizaraa.com/api/category-filter/${slug}`);
+        }
+      
         console.log("Filter Api:", response.data); // Log the API response
 
         setBrandList(response.data.brand_filter);

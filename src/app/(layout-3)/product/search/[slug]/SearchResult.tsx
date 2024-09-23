@@ -475,6 +475,7 @@ export default function SearchResult({ sortOptions, slug }) {
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
                 slug={slug}
+                pageType="search"
               />
             </Sidenav>
           )}
