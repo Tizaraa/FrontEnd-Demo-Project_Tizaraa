@@ -336,6 +336,145 @@
 
 
 
+// import { useCallback, useEffect, useState } from "react";
+// import Link from "next/link";
+// import { debounce } from "lodash";
+// import axios from "axios";
+// import Box from "@component/Box";
+// import Menu from "@component/Menu";
+// import Card from "@component/Card";
+// import Icon from "@component/icon/Icon";
+// import FlexBox from "@component/FlexBox";
+// import MenuItem from "@component/MenuItem";
+// import { Span } from "@component/Typography";
+// import TextField from "@component/text-field";
+// import StyledSearchBox from "./styled";
+
+// export default function SearchInputWithCategory() {
+//   const [resultList, setResultList] = useState<any[]>([]);
+//   const [category, setCategory] = useState("All Categories");
+//   const [categories, setCategories] = useState<any[]>([]);
+//   const [searchValue, setSearchValue] = useState(() => {
+//     // Get the search value from local storage when the component is loaded
+//     return localStorage.getItem("searchValue") || "";
+//   });
+
+//   const handleCategoryChange = (cat: string) => () => setCategory(cat);
+
+//   const fetchCategories = async () => {
+//     try {
+//       const response = await axios.get("https://tizaraa.com/api/categories");
+//       setCategories(response.data || []);
+//     } catch (error) {
+//       console.error("Error fetching categories:", error);
+//     }
+//   };
+
+//   const fetchSearchResults = async (query: string) => {
+//     try {
+//       const response = await axios.get(`https://tizaraa.com/api/search/suggestion/${query}`);
+//       const results = response.data || [];
+
+//       const uniqueResults = Array.from(new Set(results.map(item => item.keyword)))
+//         .map(keyword => results.find(item => item.keyword === keyword));
+
+//       setResultList(uniqueResults);
+//     } catch (error) {
+//       console.error("Error fetching search results:", error);
+//       setResultList([]);
+//     }
+//   };
+
+//   const search = debounce((value: string) => {
+//     if (!value) {
+//       setResultList([]);
+//     } else {
+//       fetchSearchResults(value);
+//     }
+//   }, 300);
+
+//   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     const value = event.target.value;
+//     setSearchValue(value);
+//     search(value);
+//   };
+
+//   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+//     if (event.key === "Enter") {
+//       fetchSearchResults(searchValue);
+//       setResultList([]);
+//     }
+//   };
+
+//   const handleSuggestionClick = (keyword: string) => {
+//     setSearchValue(keyword);
+//     localStorage.setItem("searchValue", keyword); 
+//     setResultList([]);
+//   };
+
+//   const handleDocumentClick = () => setResultList([]);
+
+//   useEffect(() => {
+//     fetchCategories();
+//     window.addEventListener("click", handleDocumentClick);
+//     return () => window.removeEventListener("click", handleDocumentClick);
+//   }, []);
+
+//   return (
+//     <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
+//       <StyledSearchBox>
+//         <Icon className="search-icon" size="18px">
+//           search
+//         </Icon>
+
+//         <TextField
+//           fullwidth
+//           value={searchValue} 
+//           onChange={handleSearchChange}
+//           onKeyDown={handleKeyDown}
+//           className="search-field"
+//           placeholder="Search and hit enter"
+//         />
+
+//         <Menu
+//           direction="right"
+//           className="category-dropdown"
+//           handler={
+//             <FlexBox className="dropdown-handler" alignItems="center">
+//               <span>{category}</span>
+//               <Icon variant="small">chevron-down</Icon>
+//             </FlexBox>
+//           }
+//         >
+//           {categories.map((item) => (
+//             <MenuItem key={item.id} onClick={handleCategoryChange(item.title)}>
+//               {item.title}
+//             </MenuItem>
+//           ))}
+//         </Menu>
+//       </StyledSearchBox>
+
+//       {!!resultList.length && (
+//         <Card position="absolute" top="100%" py="0.5rem" width="100%" boxShadow="large" zIndex={99}>
+//           {resultList.map((item: any, index: number) => (
+//             <Link 
+//               href={`/product/search/${item.keyword || item.product_id}`} 
+//               key={index}
+//             >
+//               <MenuItem
+//                 onClick={() => handleSuggestionClick(item.keyword || `Product ${item.product_id}`)}
+//               >
+//                 <Span fontSize="14px">{item.keyword || `Product ${item.product_id}`}</Span>
+//               </MenuItem>
+//             </Link>
+//           ))}
+//         </Card>
+//       )}
+//     </Box>
+//   );
+// }
+
+
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { debounce } from "lodash";
@@ -354,10 +493,7 @@ export default function SearchInputWithCategory() {
   const [resultList, setResultList] = useState<any[]>([]);
   const [category, setCategory] = useState("All Categories");
   const [categories, setCategories] = useState<any[]>([]);
-  const [searchValue, setSearchValue] = useState(() => {
-    // Get the search value from local storage when the component is loaded
-    return localStorage.getItem("searchValue") || "";
-  });
+  const [searchValue, setSearchValue] = useState("");
 
   const handleCategoryChange = (cat: string) => () => setCategory(cat);
 
@@ -406,12 +542,6 @@ export default function SearchInputWithCategory() {
     }
   };
 
-  const handleSuggestionClick = (keyword: string) => {
-    setSearchValue(keyword);
-    // localStorage.setItem("searchValue", keyword); 
-    setResultList([]);
-  };
-
   const handleDocumentClick = () => setResultList([]);
 
   useEffect(() => {
@@ -428,12 +558,12 @@ export default function SearchInputWithCategory() {
         </Icon>
 
         <TextField
-          fullwidth
+          fullWidth
           value={searchValue} 
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
           className="search-field"
-          placeholder="Search and hit enter"
+          placeholder="Search and hit enter..."
         />
 
         <Menu
@@ -462,7 +592,10 @@ export default function SearchInputWithCategory() {
               key={index}
             >
               <MenuItem
-                onClick={() => handleSuggestionClick(item.keyword || `Product ${item.product_id}`)}
+                onClick={() => {
+                  setSearchValue(item.keyword || `Product ${item.product_id}`); // Set selected suggestion in input
+                  setResultList([]);  // Clear the result list after selection
+                }}
               >
                 <Span fontSize="14px">{item.keyword || `Product ${item.product_id}`}</Span>
               </MenuItem>
@@ -473,5 +606,3 @@ export default function SearchInputWithCategory() {
     </Box>
   );
 }
-
-
