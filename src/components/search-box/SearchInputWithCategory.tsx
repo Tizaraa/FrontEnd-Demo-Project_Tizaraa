@@ -433,7 +433,7 @@ export default function SearchInputWithCategory() {
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
           className="search-field"
-          placeholder="Search and hit enter"
+          placeholder="Search and hit enter..."
         />
 
         <Menu
