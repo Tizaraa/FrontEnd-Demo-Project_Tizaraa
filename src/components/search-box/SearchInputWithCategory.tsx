@@ -558,7 +558,7 @@ export default function SearchInputWithCategory() {
         </Icon>
 
         <TextField
-          fullWidth
+          fullwidth
           value={searchValue} 
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
