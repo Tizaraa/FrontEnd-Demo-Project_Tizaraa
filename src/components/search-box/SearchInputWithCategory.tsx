@@ -744,7 +744,7 @@ export default function SearchInputWithCategory() {
       <StyledSearchBox>
         <Icon className="search-icon" size="18px">search</Icon>
         <TextField
-          fullWidth
+          fullwidth
           value={searchValue} 
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
