@@ -408,7 +408,7 @@ export default function SearchInputWithCategory() {
 
   const handleSuggestionClick = (keyword: string) => {
     setSearchValue(keyword);
-    localStorage.setItem("searchValue", keyword); // Save the selected suggestion to local storage
+    // localStorage.setItem("searchValue", keyword); 
     setResultList([]);
   };
 
@@ -433,7 +433,7 @@ export default function SearchInputWithCategory() {
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
           className="search-field"
-          placeholder="Search and hit enter..."
+          placeholder="Search and hit enter"
         />
 
         <Menu
@@ -473,3 +473,5 @@ export default function SearchInputWithCategory() {
     </Box>
   );
 }
+
+
