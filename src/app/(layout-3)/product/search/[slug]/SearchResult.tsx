@@ -351,6 +351,7 @@ export default function SearchResult({ sortOptions, slug }) {
   const [loading, setLoading] = useState(false); 
   const [totalProducts, setTotalProducts] = useState(0); 
   const [currentPage, setCurrentPage] = useState(1); 
+  let pageType="search";
 
   const isTablet = width < 1025;
 
@@ -475,7 +476,7 @@ export default function SearchResult({ sortOptions, slug }) {
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
                 slug={slug}
-                pageType="search"
+                pageType={pageType}
               />
             </Sidenav>
           )}
@@ -488,6 +489,7 @@ export default function SearchResult({ sortOptions, slug }) {
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
             slug={slug}
+            pageType={pageType}
           />
         </Grid>
 

@@ -353,9 +353,10 @@ type ProductFilterCardProps = {
   onBrandChange: (brands: number[]) => void; // Array of selected brand IDs
   onCategoryChange: (category: string) => void;
   slug: string;
+  pageType: string;
 };
 
-const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, onCategoryChange, slug,pageType = 'default' }) => {
+const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, onCategoryChange, slug,pageType='default'  }) => {
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [countryList, setCountryList] = useState<Country[]>([]); // State for countries
@@ -367,19 +368,23 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, on
 
   useEffect(() => {
     const fetchFilters = async () => {
+      // console.log(pageType);
       try {
+        
         if(pageType=='default'){
-          const response = await axios.get(`https://tizaraa.com/api/category-filter/${slug}`);
+       
+          var response = await axios.get(`https://tizaraa.com/api/category-filter/${slug}`);
         }
         else if(pageType=='search'){
-          const response = await axios.get(`https://tizaraa.com/api/category-filter/${slug}`);
+         
+          var response = await axios.get(`https://tizaraa.com/api/search-filter/${slug}`);
         }
-      
-        console.log("Filter Api:", response.data); // Log the API response
+
 
         setBrandList(response.data.brand_filter);
         setCategoryList(response.data.category_filter);
-        setCountryList(response.data.location_filter); 
+        console.log(response.data.location_filter);
+        // setCountryList(response.data.location_filter); 
       } catch (error) {
         console.error("Error fetching filters:", error);
       }
