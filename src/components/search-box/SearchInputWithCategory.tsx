@@ -658,7 +658,7 @@ export default function SearchInputWithCategory() {
     // Check if the current pathname is for search
     if (pathname.startsWith("/product/search")) {
       const searchTerm = pathname.split("/").pop(); // Get the last segment of the path
-      setSearchValue(searchTerm); // Set the search value
+      setSearchValue(decodeURIComponent(searchTerm)); // Set the search value
       console.log("Search term from URL:", searchTerm);
     }
   }, [pathname]);
@@ -714,20 +714,14 @@ export default function SearchInputWithCategory() {
 
 
 
-  // useEffect(() => {
-  //   fetchCategories();
+  useEffect(() => {
+    fetchCategories();
 
-    
-  //   // Set searchValue from the router query if available
-  //   // const { query } = router;
-  //   // console.log("Router asPath:", router.asPath);
-  //   // if (query.search) {
-  //   //   setSearchValue(query.search as string); // Use type assertion
-  //   // }
 
-  //   window.addEventListener("click", handleDocumentClick);
-  //   return () => window.removeEventListener("click", handleDocumentClick);
-  // }, [router]);
+
+    window.addEventListener("click", handleDocumentClick);
+    return () => window.removeEventListener("click", handleDocumentClick);
+  }, [router]);
 
   useEffect(() => {
     // Fetch search results whenever searchValue changes
