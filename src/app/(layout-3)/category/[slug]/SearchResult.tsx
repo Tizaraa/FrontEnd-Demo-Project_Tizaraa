@@ -321,6 +321,7 @@
 
 
 
+
 "use client";
 import { useRouter } from "next/navigation"; 
 import { useCallback, useEffect, useState } from "react";
@@ -346,8 +347,9 @@ export default function SearchResult({ sortOptions, slug }) {
   const width = useWindowSize();
   const [view, setView] = useState<"grid" | "list">("grid");
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0].value); 
-  const [selectedBrand, setSelectedBrand] = useState<any[] | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<number[] | null>(null); // Change the type to number[]
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null); // Track selected country
   const [products, setProducts] = useState<any[]>([]); 
   const [loading, setLoading] = useState(false); 
   const [totalProducts, setTotalProducts] = useState(0); 
@@ -355,8 +357,8 @@ export default function SearchResult({ sortOptions, slug }) {
 
   const isTablet = width < 1025;
 
-  const handleBrandChange = (brand: any[]) => {
-    setSelectedBrand(brand);
+  const handleBrandChange = (brands: number[]) => {
+    setSelectedBrand(brands);
     setCurrentPage(1); // Reset to first page
   };
 
@@ -366,11 +368,17 @@ export default function SearchResult({ sortOptions, slug }) {
     router.push(`/product/search/${category}`); 
   };
 
+  const handleCountryChange = (countries: number[]) => {
+    setSelectedCountry(countries); // Update selected countries
+    setCurrentPage(1); // Reset to first page
+  };
+
   const handleSortChange = (sortOption: any) => {
     setSelectedSortOption(sortOption.value); 
   };
 
-  const fetchProducts = useCallback(async () => {
+
+ const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(`https://tizaraa.com/api/category/${slug}`, {
@@ -381,8 +389,9 @@ export default function SearchResult({ sortOptions, slug }) {
         body: JSON.stringify({
           category: selectedCategory || "all",
           brand: selectedBrand || null,
+          country: selectedCountry || null, // Add country filter here
           page: currentPage, 
-          orderBy: selectedSortOption
+          orderBy: selectedSortOption,
         }),
       });
 
@@ -404,7 +413,11 @@ export default function SearchResult({ sortOptions, slug }) {
     } finally {
       setLoading(false);
     }
-  }, [selectedBrand, selectedCategory, currentPage, selectedSortOption]);
+  }, [selectedBrand, selectedCategory, selectedCountry, currentPage, selectedSortOption]); // Add selectedCountry to dependencies
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   useEffect(() => {
     fetchProducts();
@@ -473,12 +486,14 @@ export default function SearchResult({ sortOptions, slug }) {
                 </IconButton>
               }
             >
-              <ProductFilterCard
-                onBrandChange={handleBrandChange}
-                onCategoryChange={handleCategoryChange}
-                slug={slug}
-                pageType="default"  
-              />
+            <ProductFilterCard
+            onBrandChange={handleBrandChange}
+            onCategoryChange={handleCategoryChange}
+            onCountryChange={handleCountryChange} // Pass country handler
+            slug={slug}
+            pageType="default"  
+          />
+
             </Sidenav>
           )}
         </FlexBox>
@@ -486,12 +501,14 @@ export default function SearchResult({ sortOptions, slug }) {
 
       <Grid container spacing={6}>
         <Grid item lg={3} xs={12}>
-          <ProductFilterCard
+        <ProductFilterCard
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
+            onCountryChange={handleCountryChange} // Pass country handler
             slug={slug}
             pageType="default"  
           />
+
         </Grid>
 
         <Grid item lg={9} xs={12}>

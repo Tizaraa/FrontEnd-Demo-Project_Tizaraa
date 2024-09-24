@@ -321,6 +321,7 @@
 
 
 
+
 "use client";
 
 import React, { useEffect, useState } from 'react';
@@ -349,14 +350,23 @@ type Country = {
   location: string; 
 };
 
+// type ProductFilterCardProps = {
+//   onBrandChange: (brands: number[]) => void; // Array of selected brand IDs
+//   onCategoryChange: (category: string) => void;
+//   slug: string;
+//   pageType: string;
+// };
+
+
 type ProductFilterCardProps = {
   onBrandChange: (brands: number[]) => void; // Array of selected brand IDs
   onCategoryChange: (category: string) => void;
+  onCountryChange: (countryIds: number[]) => void; // Pass country IDs
   slug: string;
   pageType: string;
 };
 
-const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, onCategoryChange, slug, pageType = 'default' }) => {
+const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, onCategoryChange, onCountryChange, slug, pageType = 'default' }) =>  {
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [countryList, setCountryList] = useState<Country[]>([]); // State for countries
@@ -368,23 +378,18 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, on
 
   useEffect(() => {
     const fetchFilters = async () => {
-      // console.log(pageType);
       try {
-        
-        if(pageType=='default'){
-       
-          var response = await axios.get(`https://tizaraa.com/api/category-filter/${slug}`);
+        let response;
+        if (pageType === 'default') {
+          response = await axios.get(`https://tizaraa.com/api/category-filter/${slug}`);
+        } else if (pageType === 'search') {
+          response = await axios.get(`https://tizaraa.com/api/search-filter/${slug}`);
         }
-        else if(pageType=='search'){
-         
-          var response = await axios.get(`https://tizaraa.com/api/search-filter/${slug}`);
-        }
-
-
-        setBrandList(response.data.brand_filter);
-        setCategoryList(response.data.category_filter);
-        console.log(response.data.location_filter);
-        // setCountryList(response.data.location_filter); 
+  
+        // Safely check and set data or default to an empty array
+        setBrandList(response.data.brand_filter || []);
+        setCategoryList(response.data.category_filter || []);
+        setCountryList(response.data.location_filter || []); // Ensure location_filter exists or set to an empty array
       } catch (error) {
         console.error("Error fetching filters:", error);
       }
@@ -392,6 +397,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, on
   
     fetchFilters();
   }, [slug]);
+  
 
   const handleCategoryClick = (category: string) => {
     onCategoryChange(category);
@@ -406,14 +412,14 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, on
     onBrandChange(updatedSelectedBrands);
   };
 
-  const handleCountryChange = (countryId: number) => {
-    const updatedSelectedCountry = selectedCountry.includes(countryId)
-      ? selectedCountry.filter((id) => id !== countryId)
-      : [...selectedCountry, countryId];
+  // const handleCountryChange = (countryId: number) => {
+  //   const updatedSelectedCountry = selectedCountry.includes(countryId)
+  //     ? selectedCountry.filter((id) => id !== countryId)
+  //     : [...selectedCountry, countryId];
 
-    setSelectedCountry(updatedSelectedCountry);
-    onBrandChange(updatedSelectedCountry);
-  };
+  //   setSelectedCountry(updatedSelectedCountry);
+  //   onBrandChange(updatedSelectedCountry);
+  // };
 
   const renderCategories = (items: string[]) =>
     items.map((name) => (
@@ -444,6 +450,15 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, on
 
   const toggleShowCountries = () => { // New function to toggle country visibility
     setShowAllCountries(!showAllCountries);
+  };
+
+  const handleCountryChange = (countryId: number) => {
+    const updatedSelectedCountry = selectedCountry.includes(countryId)
+      ? selectedCountry.filter((id) => id !== countryId)
+      : [...selectedCountry, countryId];
+
+    setSelectedCountry(updatedSelectedCountry);
+    onCountryChange(updatedSelectedCountry); // Pass selected countries
   };
 
   return (
