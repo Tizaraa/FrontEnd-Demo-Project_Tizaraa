@@ -356,7 +356,7 @@ type ProductFilterCardProps = {
   pageType: string;
 };
 
-const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, onCategoryChange, slug,pageType='default'  }) => {
+const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, onCategoryChange, slug, pageType = 'default' }) => {
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [countryList, setCountryList] = useState<Country[]>([]); // State for countries

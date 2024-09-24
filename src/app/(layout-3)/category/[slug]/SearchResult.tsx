@@ -477,6 +477,7 @@ export default function SearchResult({ sortOptions, slug }) {
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
                 slug={slug}
+                pageType="default"  
               />
             </Sidenav>
           )}
@@ -489,6 +490,7 @@ export default function SearchResult({ sortOptions, slug }) {
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
             slug={slug}
+            pageType="default"  
           />
         </Grid>
 
