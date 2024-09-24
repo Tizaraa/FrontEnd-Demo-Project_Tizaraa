@@ -347,6 +347,7 @@ export default function SearchResult({ sortOptions, slug }) {
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0].value); 
   const [selectedBrand, setSelectedBrand] = useState<any[] | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null); // Track selected country
   const [products, setProducts] = useState<any[]>([]); 
   const [loading, setLoading] = useState(false); 
   const [totalProducts, setTotalProducts] = useState(0); 
@@ -366,6 +367,12 @@ export default function SearchResult({ sortOptions, slug }) {
     router.push(`/product/search/${category}`); 
   };
 
+  const handleCountryChange = (countries: number[]) => {
+    setSelectedCountry(countries); // Update selected countries
+    setCurrentPage(1); // Reset to first page
+  };
+
+
   const handleSortChange = (sortOption: any) => {
     setSelectedSortOption(sortOption.value); 
   };
@@ -381,6 +388,7 @@ export default function SearchResult({ sortOptions, slug }) {
         body: JSON.stringify({
           category: selectedCategory || "all",
           brand: selectedBrand || null,
+          country: selectedCountry || null, // Add country filter here
           page: currentPage, 
           orderBy: selectedSortOption
         }),
@@ -403,7 +411,11 @@ export default function SearchResult({ sortOptions, slug }) {
     } finally {
       setLoading(false);
     }
-  }, [selectedBrand, selectedCategory, currentPage, selectedSortOption]);
+  }, [selectedBrand, selectedCategory, selectedCountry, currentPage, selectedSortOption]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   useEffect(() => {
     fetchProducts();
@@ -475,6 +487,7 @@ export default function SearchResult({ sortOptions, slug }) {
               <ProductFilterCard
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
+                onCountryChange={handleCountryChange} // Pass country handler
                 slug={slug}
                 pageType={pageType}
               />
@@ -488,6 +501,7 @@ export default function SearchResult({ sortOptions, slug }) {
           <ProductFilterCard
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
+            onCountryChange={handleCountryChange} // Pass country handler
             slug={slug}
             pageType={pageType}
           />
