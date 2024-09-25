@@ -24,7 +24,10 @@ export default function FlashSaleBanner() {
         </Grid>
       </Grid> */}
       <Link href="/">
-            <NextImage alt="banner" src={FlasSaleBanner} />
+            <NextImage
+             alt="flashSaleBanner"
+              src={FlasSaleBanner}
+              priority />
           </Link>
     </Container>
   );
