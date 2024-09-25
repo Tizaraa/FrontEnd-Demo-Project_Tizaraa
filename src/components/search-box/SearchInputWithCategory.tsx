@@ -745,7 +745,7 @@ export default function SearchInputWithCategory() {
           className="search-field"
           placeholder="Search and hit enter..."
         />
-        <Menu direction="right" className="category-dropdown" handler={
+        {/* <Menu direction="right" className="category-dropdown" handler={
           <FlexBox className="dropdown-handler" alignItems="center">
             <span>{category}</span>
             <Icon variant="small">chevron-down</Icon>
@@ -756,7 +756,7 @@ export default function SearchInputWithCategory() {
               {item.title}
             </MenuItem>
           ))}
-        </Menu>
+        </Menu> */}
       </StyledSearchBox>
 
       {!!resultList.length && (
