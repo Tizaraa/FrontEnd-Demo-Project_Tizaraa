@@ -730,7 +730,7 @@ export default function SearchInputWithCategory() {
     } else {
       setResultList([]);
     }
-  }, [searchValue]);
+  }, []);
 
 
   return (
