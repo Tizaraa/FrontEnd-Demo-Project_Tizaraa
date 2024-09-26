@@ -1,11 +1,12 @@
 "use client";
 
+import { useState, useContext } from "react"; // Import useContext for AuthContext
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as yup from "yup";
-
 import useVisibility from "./useVisibility";
+import { useAppContext } from "contexts/app-context/AppContext";
 
 import Box from "@component/Box";
 import Icon from "@component/icon/Icon";
@@ -17,9 +18,13 @@ import { H3, H5, H6, SemiSpan, Small, Span } from "@component/Typography";
 // STYLED COMPONENT
 import { StyledRoot } from "./styles";
 
+
+
 export default function Login() {
+  const { state, dispatch } = useAppContext();
   const router = useRouter();
   const { passwordVisibility, togglePasswordVisibility } = useVisibility();
+  const [loading, setLoading] = useState(false); // State for loader
 
   const initialValues = { email: "", password: "" };
 
@@ -29,8 +34,42 @@ export default function Login() {
   });
 
   const handleFormSubmit = async (values: any) => {
-    router.push("/profile");
-    console.log(values);
+    setLoading(true); // Start loading
+    try {
+      const response = await fetch("https://tizaraa.com/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(values)
+      });
+      
+      const data = await response.json();
+      
+      
+      if (!response.ok) {
+        // Handle error
+        console.log(data);
+        alert("Login failed"); // Simple alert for demonstration
+      } else {
+        // Handle successful login
+        console.log(data);
+        const userToken = data.token // this should come from an API
+        const userInfo = data.user;
+        // Save to localStorage (or sessionStorage if you want it session-based)
+        localStorage.setItem("authToken", userToken);
+        localStorage.setItem("userInfo", JSON.stringify(userInfo)); // Storing userInfo as a JSON string
+      
+        dispatch({ type: 'LOGIN', payload: { authToken: userToken, userInfo } });
+      
+        router.push("/profile"); // Redirect to profile
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading
+    }
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
@@ -38,6 +77,7 @@ export default function Login() {
     onSubmit: handleFormSubmit,
     validationSchema: formSchema
   });
+
 
   return (
     <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
@@ -58,7 +98,7 @@ export default function Login() {
           onBlur={handleBlur}
           value={values.email}
           onChange={handleChange}
-          placeholder="exmple@mail.com"
+          placeholder="example@mail.com"
           label="Email or Phone Number"
           errorText={touched.email && errors.email}
         />
@@ -89,8 +129,8 @@ export default function Login() {
           }
         />
 
-        <Button mb="1.65rem" variant="contained" color="primary" type="submit" fullwidth>
-          Login
+        <Button mb="1.65rem" variant="contained" color="primary" type="submit" fullwidth disabled={loading}>
+          {loading ? "Loading..." : "Login"}
         </Button>
 
         <Box mb="1rem">
@@ -135,7 +175,7 @@ export default function Login() {
         </FlexBox>
 
         <FlexBox justifyContent="center" mb="1.25rem">
-          <SemiSpan>Don’t have account?</SemiSpan>
+          <SemiSpan>Don’t have an account?</SemiSpan>
           <Link href="/signup">
             <H6 ml="0.5rem" borderBottom="1px solid" borderColor="gray.900">
               Sign Up
