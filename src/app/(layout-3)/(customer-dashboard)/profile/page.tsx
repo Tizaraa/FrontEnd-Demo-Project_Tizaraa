@@ -1,4 +1,6 @@
-import { Fragment } from "react";
+"use client";
+import { Fragment, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 // API FUNCTIONS
 import api from "@utils/__api__/users";
@@ -13,8 +15,19 @@ import Typography, { H3, H5, Small } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 // PAGE SECTION COMPONENTS
 import { EditProfileButton } from "@sections/customer-dashboard/profile";
+import authService from "services/authService"; // Import the authService
 
 export default async function Profile() {
+  const router = useRouter();
+
+  // Check authentication
+  useEffect(() => {
+    if (!authService.isAuthenticated()) {
+      router.push("/login"); // Redirect to login if not authenticated
+    }
+  }, [router]);
+
+  // Fetch user data
   const user = await api.getUser();
 
   const infoList = [
@@ -54,7 +67,7 @@ export default async function Profile() {
                     </FlexBox>
                   </div>
 
-                  <Typography ontSize="14px" color="text.hint" letterSpacing="0.2em">
+                  <Typography fontSize="14px" color="text.hint" letterSpacing="0.2em">
                     SILVER USER
                   </Typography>
                 </FlexBox>
