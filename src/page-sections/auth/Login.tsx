@@ -55,7 +55,7 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     authService.googleLogin();
-    // alert('Google login initiated'); // This is just for testing purposes
+    alert('Google login initiated'); // This is just for testing purposes
     // setLoading(true);
     // try {
     //   const result = await signIn("google", { redirect: false }); // Use NextAuth's signIn method
