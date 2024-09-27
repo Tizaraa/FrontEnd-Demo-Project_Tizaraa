@@ -21,7 +21,7 @@ export default async function AddressList() {
         <AddressItem item={item} />
       ))}
 
-      <AddressPagination addressList={addressList} />
+      {/* <AddressPagination addressList={addressList} /> */}
     </Fragment>
   );
 }

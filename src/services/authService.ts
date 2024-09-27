@@ -1,4 +1,5 @@
 // import User from "models/user.model";
+import ApiBaseUrl from 'api/ApiBaseUrl'; // Adjust the path as needed
 
 interface LoginResponse {
     token: string;
@@ -26,7 +27,7 @@ interface LoginResponse {
   const authService = {
     login: async (values:any): Promise<LoginResponse> => {
       try {
-        const response = await fetch("https://tizaraa.com/api/login", {
+        const response = await fetch(`${ApiBaseUrl.baseUrl}login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
@@ -42,6 +43,11 @@ interface LoginResponse {
         console.error("Error in login:", error);
         throw error;
       }
+    },
+
+    googleLogin: (): void => {
+        // Redirect to the Laravel Google login route
+        window.location.href = `${ApiBaseUrl.baseUrl}login/google`;
     },
   
     logout: (): void => {

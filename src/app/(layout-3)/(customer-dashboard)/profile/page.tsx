@@ -1,6 +1,6 @@
 "use client";
 import { Fragment, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter ,useSearchParams} from "next/navigation";
 import { format } from "date-fns";
 import api from "@utils/__api__/users"; // Ensure you have this utility
 import authService from "services/authService"; // Import the authService
@@ -20,19 +20,52 @@ export default function Profile() {
   const router = useRouter();
   const [user, setUser] = useState(null); // State to store user data
   const [loading, setLoading] = useState(true); // Loading state
+  const searchParams = useSearchParams();
+
+  // useEffect(() => {
+  //       // Get token and user from the search params
+  //       const token = searchParams.get('token');
+  //       const user = searchParams.get('user');
+
+  //   // Check if the user is authenticated
+  //   if (!authService.isAuthenticated()) {
+  //     router.push("/login"); // Redirect to login page
+  //   } else {
+  //     // Fetch user data
+  //     authService.getUser().then((userData) => {
+  //       setUser(userData);
+  //       setLoading(false); // Set loading to false after data fetch
+  //     });
+  //   }
+  // }, [router]);
 
   useEffect(() => {
-    // Check if the user is authenticated
+    // Get token and user from the search params
+    const token = searchParams.get("token");
+    const userFromURL = searchParams.get("user");
+
+    if (token && userFromURL) {
+      // Store token and user in localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("userInfo", userFromURL);
+
+      // Optional: Redirect to another page (like the profile itself or dashboard)
+      router.push("/profile");
+    }
+
+    // Check if the user is authenticated via the authService
     if (!authService.isAuthenticated()) {
-      router.push("/login"); // Redirect to login page
+      // If not authenticated, redirect to login
+      router.push("/login");
     } else {
-      // Fetch user data
+      // If authenticated, fetch user data
       authService.getUser().then((userData) => {
         setUser(userData);
-        setLoading(false); // Set loading to false after data fetch
+        setLoading(false); // Stop loading after fetching user data
       });
     }
-  }, [router]);
+  }, [router, searchParams]);
+
 
   if (loading) return <div>Loading...</div>; // Show loading state until user data is fetched
 

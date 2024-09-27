@@ -53,6 +53,26 @@ export default function Login() {
 
   };
 
+  const handleGoogleLogin = async () => {
+    authService.googleLogin();
+    // alert('Google login initiated'); // This is just for testing purposes
+    // setLoading(true);
+    // try {
+    //   const result = await signIn("google", { redirect: false }); // Use NextAuth's signIn method
+    //   if (result?.error) {
+    //     alert("Login failed. Please try again.");
+    //   } else {
+    //     router.push("/profile"); // Redirect to profile after successful login
+    //   }
+    // } catch (error) {
+    //   alert("Login failed. Please try again.");
+    //   console.error(error);
+    // } finally {
+    //   setLoading(false);
+    // }
+  };
+
+
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues,
     onSubmit: handleFormSubmit,
@@ -147,11 +167,12 @@ export default function Login() {
           borderRadius={5}
           cursor="pointer"
           alignItems="center"
-          justifyContent="center">
+          justifyContent="center"
+          onClick={handleGoogleLogin} // Trigger Google login
+        >
           <Icon variant="small" defaultcolor="auto" mr="0.5rem">
             google-1
           </Icon>
-
           <Small fontWeight="600">Continue with Google</Small>
         </FlexBox>
 
