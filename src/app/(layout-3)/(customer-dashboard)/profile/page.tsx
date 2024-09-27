@@ -1,9 +1,10 @@
 "use client";
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
-// API FUNCTIONS
-import api from "@utils/__api__/users";
+import api from "@utils/__api__/users"; // Ensure you have this utility
+import authService from "services/authService"; // Import the authService
+
 // GLOBAL CUSTOM COMPONENTS
 import Box from "@component/Box";
 import Card from "@component/Card";
@@ -13,28 +14,33 @@ import FlexBox from "@component/FlexBox";
 import TableRow from "@component/TableRow";
 import Typography, { H3, H5, Small } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
-// PAGE SECTION COMPONENTS
 import { EditProfileButton } from "@sections/customer-dashboard/profile";
-import authService from "services/authService"; // Import the authService
 
-export default async function Profile() {
+export default function Profile() {
   const router = useRouter();
+  const [user, setUser] = useState(null); // State to store user data
+  const [loading, setLoading] = useState(true); // Loading state
 
-  // Check authentication
   useEffect(() => {
+    // Check if the user is authenticated
     if (!authService.isAuthenticated()) {
-      router.push("/login"); // Redirect to login if not authenticated
+      router.push("/login"); // Redirect to login page
+    } else {
+      // Fetch user data
+      authService.getUser().then((userData) => {
+        setUser(userData);
+        setLoading(false); // Set loading to false after data fetch
+      });
     }
   }, [router]);
 
-  // Fetch user data
-  const user = await api.getUser();
+  if (loading) return <div>Loading...</div>; // Show loading state until user data is fetched
 
   const infoList = [
     { title: "16", subtitle: "All Orders" },
     { title: "02", subtitle: "Awaiting Payments" },
     { title: "00", subtitle: "Awaiting Shipment" },
-    { title: "01", subtitle: "Awaiting Delivery" }
+    { title: "01", subtitle: "Awaiting Delivery" },
   ];
 
   return (
@@ -48,13 +54,23 @@ export default async function Profile() {
       <Box mb="30px">
         <Grid container spacing={6}>
           <Grid item lg={6} md={6} sm={12} xs={12}>
-            <FlexBox as={Card} p="14px 32px" height="100%" borderRadius={8} alignItems="center">
-              <Avatar src={user.avatar} size={64} />
+            <FlexBox
+              as={Card}
+              p="14px 32px"
+              height="100%"
+              borderRadius={8}
+              alignItems="center"
+            >
+              <Avatar src={user.image} size={64} />
 
               <Box ml="12px" flex="1 1 0">
-                <FlexBox flexWrap="wrap" justifyContent="space-between" alignItems="center">
+                <FlexBox
+                  flexWrap="wrap"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
                   <div>
-                    <H5 my="0px">{`${user.name.firstName} ${user.name.lastName}`}</H5>
+                    <H5 my="0px">{`${user.name}`}</H5>
 
                     <FlexBox alignItems="center">
                       <Typography fontSize="14px" color="text.hint">
@@ -67,7 +83,11 @@ export default async function Profile() {
                     </FlexBox>
                   </div>
 
-                  <Typography fontSize="14px" color="text.hint" letterSpacing="0.2em">
+                  <Typography
+                    fontSize="14px"
+                    color="text.hint"
+                    letterSpacing="0.2em"
+                  >
                     SILVER USER
                   </Typography>
                 </FlexBox>
@@ -86,7 +106,8 @@ export default async function Profile() {
                     borderRadius={8}
                     alignItems="center"
                     flexDirection="column"
-                    justifyContent="center">
+                    justifyContent="center"
+                  >
                     <H3 color="primary.main" my="0px" fontWeight="600">
                       {item.title}
                     </H3>
@@ -107,7 +128,6 @@ export default async function Profile() {
           <Small color="text.muted" mb="4px">
             First Name
           </Small>
-
           <span>{user.name.firstName}</span>
         </FlexBox>
 
@@ -115,7 +135,6 @@ export default async function Profile() {
           <Small color="text.muted" mb="4px">
             Last Name
           </Small>
-
           <span>{user.name.lastName}</span>
         </FlexBox>
 
@@ -123,7 +142,6 @@ export default async function Profile() {
           <Small color="text.muted" mb="4px">
             Email
           </Small>
-
           <span>{user.email}</span>
         </FlexBox>
 
@@ -131,17 +149,10 @@ export default async function Profile() {
           <Small color="text.muted" mb="4px" textAlign="left">
             Phone
           </Small>
-
           <span>{user.phone}</span>
         </FlexBox>
 
-        <FlexBox flexDirection="column" p="0.5rem">
-          <Small color="text.muted" mb="4px">
-            Birth date
-          </Small>
-
-          <span className="pre">{format(new Date(user.dateOfBirth), "dd MMM, yyyy")}</span>
-        </FlexBox>
+       
       </TableRow>
     </Fragment>
   );

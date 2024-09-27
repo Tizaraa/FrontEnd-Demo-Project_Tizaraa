@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import Login from "@sections/auth/Login";
 
@@ -19,6 +19,10 @@ import { SearchInputWithCategory } from "@component/search-box";
 import { useAppContext } from "@context/app-context";
 import StyledHeader from "./styles";
 import UserLoginDialog from "./LoginDialog";
+import authService from "services/authService";
+import Menu from "@component/Menu";
+import MenuItem from "@component/MenuItem";
+import { useRouter } from "next/navigation";
 
 // ====================================================================
 type HeaderProps = { isFixed?: boolean; className?: string };
@@ -28,6 +32,13 @@ export default function Header({ isFixed, className }: HeaderProps) {
   const { state } = useAppContext();
   const [open, setOpen] = useState(false);
   const toggleSidenav = () => setOpen(!open);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const router = useRouter(); 
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
 
   const CART_HANDLE = (
     <Box ml="20px" position="relative">
@@ -53,8 +64,41 @@ export default function Header({ isFixed, className }: HeaderProps) {
       )}
     </Box>
   );
+  const handleLogout = () => {
+    authService.logout();
+    setAnchorEl(null);
+    setIsLoggedIn(false); // Update login state
+    router.push("/login");
+  };
 
-  const LOGIN_HANDLE = (
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+  
+  
+
+
+  const LOGIN_HANDLE = isLoggedIn ? (
+    <Fragment>
+      
+      <Menu handler={
+        <IconButton ml="1rem" bg="gray.200" p="8px">
+          <Icon size="28px">user</Icon>
+        </IconButton>
+      }>
+        <MenuItem onClick={() => {
+          handleMenuClose();
+          router.push("/profile");
+        }}>
+          Profile Page
+        </MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      </Menu>
+    </Fragment>
+  ) : (
     <IconButton ml="1rem" bg="gray.200" p="8px">
       <Icon size="28px">user</Icon>
     </IconButton>

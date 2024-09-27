@@ -1,4 +1,5 @@
-// authService.ts
+// import User from "models/user.model";
+
 interface LoginResponse {
     token: string;
     user: UserInfo;
@@ -74,6 +75,35 @@ interface LoginResponse {
       const token = localStorage.getItem("token");
       return !!token; // Check if token exists
     },
+
+    getUser: async (): Promise<UserInfo | null> => {
+        const userInfoString = localStorage.getItem("userInfo");
+        if (userInfoString) {
+            const userInfo: UserInfo = JSON.parse(userInfoString);
+            return userInfo;
+        }
+        
+        // Optionally fetch from API if userInfo is not found in localStorage
+    //     try {
+    //         const response = await fetch("https://tizaraa.com/api/user", {
+    //             method: "GET",
+    //             headers: {
+    //                 "Authorization": `Bearer ${this.getToken()}`, // Use the stored token
+    //                 "Content-Type": "application/json"
+    //             },
+    //         });
+
+    //         if (!response.ok) throw new Error("Failed to fetch user data");
+
+    //         const data: UserInfo = await response.json();
+    //         localStorage.setItem("userInfo", JSON.stringify(data)); // Update localStorage with fetched user info
+    //         return data;
+    //     } catch (error) {
+    //         console.error("Error fetching user info:", error);
+    //         return null;
+    //     }
+    // },
+    }
   };
   
   export default authService;
