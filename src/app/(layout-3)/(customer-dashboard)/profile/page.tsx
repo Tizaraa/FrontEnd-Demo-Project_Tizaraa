@@ -4,6 +4,7 @@ import { useRouter ,useSearchParams} from "next/navigation";
 import { format } from "date-fns";
 import api from "@utils/__api__/users"; // Ensure you have this utility
 import authService from "services/authService"; // Import the authService
+import { Suspense } from "react";
 
 // GLOBAL CUSTOM COMPONENTS
 import Box from "@component/Box";
@@ -77,7 +78,8 @@ export default function Profile() {
   ];
 
   return (
-    <Fragment>
+  <Suspense>
+      <Fragment>
       <DashboardPageHeader
         title="My Profile"
         iconName="user_filled"
@@ -188,5 +190,6 @@ export default function Profile() {
        
       </TableRow>
     </Fragment>
+  </Suspense>
   );
 }
