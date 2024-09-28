@@ -11,6 +11,7 @@ const nextConfig = {
   },
   images: {
     domains: ['seller.tizaraa.com'], // Add the domain here
+    unoptimized: true,
   },
   experimental: {
     missingSuspenseWithCSRBailout: false,
@@ -18,3 +19,5 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+
+
