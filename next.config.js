@@ -12,6 +12,9 @@ const nextConfig = {
   images: {
     domains: ['seller.tizaraa.com'], // Add the domain here
   },
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
 };
 
 module.exports = nextConfig;
