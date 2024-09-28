@@ -419,9 +419,9 @@ export default function SearchResult({ sortOptions, slug }) {
     fetchProducts();
   }, [fetchProducts]);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+  // useEffect(() => {
+  //   fetchProducts();
+  // }, [fetchProducts]);
 
   const handleLoadMore = () => {
     setCurrentPage((prevPage) => prevPage + 1);

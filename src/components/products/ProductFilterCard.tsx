@@ -385,6 +385,9 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, on
         } else if (pageType === 'search') {
           response = await axios.get(`https://tizaraa.com/api/search-filter/${slug}`);
         }
+        else if(pageType === 'shop'){
+          response = await axios.get(`https://tizaraa.com/api/shop-filter/${slug}`);
+        }
   
         // Safely check and set data or default to an empty array
         setBrandList(response.data.brand_filter || []);
