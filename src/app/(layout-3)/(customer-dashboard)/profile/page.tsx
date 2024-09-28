@@ -59,7 +59,7 @@ export default function Profile() {
   ];
 
   return (
-    <Suspense >
+    <Suspense fallback={<LoadingFallback />}>
       <Fragment>
         <DashboardPageHeader
           title="My Profile"
