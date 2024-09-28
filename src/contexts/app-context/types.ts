@@ -37,6 +37,8 @@ export interface CartItem {
   price: number;
   imgUrl?: string;
   id: string | number;
+  totalDiscount?: number;
+  discountPrice?: number;
 }
 
 

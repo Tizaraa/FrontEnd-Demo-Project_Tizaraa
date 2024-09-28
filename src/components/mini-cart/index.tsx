@@ -28,7 +28,8 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
   };
 
   const getTotalPrice = () => {
-    return state.cart.reduce((accumulator, item) => accumulator + item.price * item.qty, 0) || 0;
+
+    return state.cart.reduce((accumulator, item) => accumulator + item.discountPrice * item.qty, 0) || 0;
   };
 
   return (
@@ -105,21 +106,35 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                 </Link>
 
                 <Tiny color="text.muted">
-                  {currency(item.price, 0)} x {item.qty}
+                  {currency(item.discountPrice, 0)} x {item.qty}
                 </Tiny>
 
                 <Typography fontWeight={600} fontSize="14px" color="primary.main" mt="4px">
-                  {currency(item.qty * item.price)}
+                  {currency(item.qty * item.discountPrice)}
                 </Typography>
               </div>
 
-              <Icon
+
+              {/* <Icon
                 size="1rem"
                 ml="1.25rem"
                 className="clear-icon"
                 onClick={handleCartAmountChange(0, item)}>
+                  
                 close
-              </Icon>
+              </Icon> */}
+
+                 <Button
+                  size="none"
+                  padding="5px"
+                  color="primary"
+                  variant="outlined"
+                  borderRadius="300px"
+                  borderColor="primary.light"
+                  onClick={handleCartAmountChange(0, item)}
+                 >
+                  <Icon variant="small">close</Icon>
+                </Button>
             </div>
             <Divider />
           </Fragment>

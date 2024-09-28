@@ -58,7 +58,11 @@ export default function ProductIntro({
         qty: amount,
         name: title,
         imgUrl: images[0],
-        id: id || routerId
+        id: id || routerId,
+        
+        // newly added 
+        discountPrice   
+
       }
     });
   };
