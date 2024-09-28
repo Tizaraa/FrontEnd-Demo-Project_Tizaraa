@@ -1,6 +1,6 @@
 "use client";
-import { Fragment, useEffect, useState } from "react";
-import { useRouter ,useSearchParams} from "next/navigation";
+import { Fragment, useEffect, useState } from "react"; // Ensure Fragment is imported from react
+import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import api from "@utils/__api__/users"; // Ensure you have this utility
 import authService from "services/authService"; // Import the authService
@@ -23,52 +23,28 @@ export default function Profile() {
   const [loading, setLoading] = useState(true); // Loading state
   const searchParams = useSearchParams();
 
-  // useEffect(() => {
-  //       // Get token and user from the search params
-  //       const token = searchParams.get('token');
-  //       const user = searchParams.get('user');
-
-  //   // Check if the user is authenticated
-  //   if (!authService.isAuthenticated()) {
-  //     router.push("/login"); // Redirect to login page
-  //   } else {
-  //     // Fetch user data
-  //     authService.getUser().then((userData) => {
-  //       setUser(userData);
-  //       setLoading(false); // Set loading to false after data fetch
-  //     });
-  //   }
-  // }, [router]);
-
   useEffect(() => {
-    // Get token and user from the search params
     const token = searchParams.get("token");
     const userFromURL = searchParams.get("user");
 
     if (token && userFromURL) {
-      // Store token and user in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("userInfo", userFromURL);
 
-      // Optional: Redirect to another page (like the profile itself or dashboard)
       router.push("/profile");
     }
 
-    // Check if the user is authenticated via the authService
     if (!authService.isAuthenticated()) {
-      // If not authenticated, redirect to login
       router.push("/login");
     } else {
-      // If authenticated, fetch user data
       authService.getUser().then((userData) => {
         setUser(userData);
-        setLoading(false); // Stop loading after fetching user data
+        setLoading(false);
       });
     }
   }, [router, searchParams]);
 
-
-  if (loading) return <div>Loading...</div>; // Show loading state until user data is fetched
+  if (loading) return <div>Loading...</div>;
 
   const infoList = [
     { title: "16", subtitle: "All Orders" },
@@ -96,7 +72,7 @@ export default function Profile() {
               borderRadius={8}
               alignItems="center"
             >
-              <Avatar src={user.image} size={64} />
+              <Avatar src={user?.image} size={64} />
 
               <Box ml="12px" flex="1 1 0">
                 <FlexBox
@@ -105,7 +81,7 @@ export default function Profile() {
                   alignItems="center"
                 >
                   <div>
-                    <H5 my="0px">{`${user.name}`}</H5>
+                    <H5 my="0px">{`${user?.name}`}</H5>
 
                     <FlexBox alignItems="center">
                       <Typography fontSize="14px" color="text.hint">
@@ -163,31 +139,29 @@ export default function Profile() {
           <Small color="text.muted" mb="4px">
             First Name
           </Small>
-          <span>{user.name.firstName}</span>
+          <span>{user?.name?.firstName}</span>
         </FlexBox>
 
         <FlexBox flexDirection="column" p="0.5rem">
           <Small color="text.muted" mb="4px">
             Last Name
           </Small>
-          <span>{user.name.lastName}</span>
+          <span>{user?.name?.lastName}</span>
         </FlexBox>
 
         <FlexBox flexDirection="column" p="0.5rem">
           <Small color="text.muted" mb="4px">
             Email
           </Small>
-          <span>{user.email}</span>
+          <span>{user?.email}</span>
         </FlexBox>
 
         <FlexBox flexDirection="column" p="0.5rem">
           <Small color="text.muted" mb="4px" textAlign="left">
             Phone
           </Small>
-          <span>{user.phone}</span>
+          <span>{user?.phone}</span>
         </FlexBox>
-
-       
       </TableRow>
     </Fragment>
   </Suspense>
