@@ -45,7 +45,7 @@ export default async function ShopDetails({ params }: SlugParams) {
 
   return (
     <Fragment>
-      <ShopIntroCard />
+      <ShopIntroCard slug={params.slug} />
 
 
       <Box pt="20px">

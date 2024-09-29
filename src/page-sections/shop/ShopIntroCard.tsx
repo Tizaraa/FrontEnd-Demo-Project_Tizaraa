@@ -8,11 +8,44 @@ import FlexBox from "@component/FlexBox";
 import { Button } from "@component/buttons";
 import { H3, SemiSpan, Small } from "@component/Typography";
 import { ShopIntroWrapper } from "./styles";
+import { useState,useEffect } from "react";
 
-export default function ShopIntroCard() {
+interface Props {
+  slug: string;
+}
+
+export default function ShopIntroCard({ slug }: Props) {
+  const [shop, setShop] = useState<any>(null);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchSingleShop = async () => {
+      try {
+        const response = await fetch(`https://tizaraa.com/api/seller/profile/${slug}`);
+        //console.log(response);
+        
+        const data = await response.json();
+        //console.log(data.sellerDetails);
+        
+        setShop(data);
+      } catch (err) {
+        setError("Failed to load shop data");
+        console.error(err);
+      }
+    };
+
+    fetchSingleShop();
+  },[slug]);
+
+  if (!shop) {
+    return <div>Loading...</div>;
+  }
   return (
     <ShopIntroWrapper mb="32px" pb="20px" overflow="hidden">
-      <Box className="cover-image" height="202px" />
+      <Box className="cover-image" height="202px" style={{
+          backgroundImage: `url(${shop.sellerDetails.seller_banner || "/assets/images/placeholder.jpg"})`, // Use a placeholder if no cover image
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }} />
 
       <FlexBox mt="-64px" px="30px" flexWrap="wrap">
         <Avatar
@@ -20,7 +53,7 @@ export default function ShopIntroCard() {
           mr="37px"
           border="4px solid"
           borderColor="gray.100"
-          src="/assets/images/faces/propic.png"
+          src={shop.sellerDetails.seller_logo || "/assets/images/faces/propic.png"}
         />
 
         <div className="description-holder">
@@ -37,7 +70,7 @@ export default function ShopIntroCard() {
               bg="secondary.main"
               display="inline-block">
               <H3 fontWeight="600" color="gray.100">
-                Scarlett Beauty
+              {shop.sellerDetails.shop_name || "Seller name not found" }
               </H3>
             </Box>
 
@@ -59,7 +92,7 @@ export default function ShopIntroCard() {
                 <Rating color="warn" value={5} outof={5} readOnly />
 
                 <Small color="text.muted" pl="0.75rem" display="block">
-                  (45)
+                {shop.averageRating || "0" }
                 </Small>
               </FlexBox>
 
@@ -69,7 +102,7 @@ export default function ShopIntroCard() {
                 </Icon>
 
                 <SemiSpan color="text.muted" ml="12px">
-                  845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark
+                {shop.sellerDetails.seller_address || "Seller address not found" }
                 </SemiSpan>
               </FlexBox>
 
@@ -79,7 +112,7 @@ export default function ShopIntroCard() {
                 </Icon>
 
                 <SemiSpan color="text.muted" ml="12px">
-                  (613) 343-9004
+                {shop.sellerDetails.phone || "Seller number not found" }
                 </SemiSpan>
               </FlexBox>
             </div>
