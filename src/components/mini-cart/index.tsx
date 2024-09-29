@@ -28,9 +28,11 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
   };
 
   const getTotalPrice = () => {
-
-    return state.cart.reduce((accumulator, item) => accumulator + item.discountPrice * item.qty, 0) || 0;
+    return state.cart.reduce((accumulator, item) => 
+      accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+    ) || 0;
   };
+  
 
   return (
     <StyledMiniCart>
@@ -105,13 +107,32 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                   </H5>
                 </Link>
 
-                <Tiny color="text.muted">
+                {/* <Tiny color="text.muted">
                   {currency(item.discountPrice, 0)} x {item.qty}
                 </Tiny>
 
                 <Typography fontWeight={600} fontSize="14px" color="primary.main" mt="4px">
                   {currency(item.qty * item.discountPrice)}
-                </Typography>
+                </Typography> */}
+                  {/* Updated Price Section */}
+        {item.discountPrice ? (
+          <>
+           <Tiny color="text.muted">
+                  {currency(item.discountPrice, 0)} x {item.qty}
+                </Tiny>
+              
+          </>
+        ) : (
+          <Tiny color="text.muted">
+          {currency(item.price, 0)} x {item.qty}
+        </Tiny>
+        )}
+
+        <Typography fontWeight={600} fontSize="14px" color="primary.main" mt="4px">
+          {currency(item.qty * (item.discountPrice ?? item.price))}
+        </Typography>
+     
+
               </div>
 
 

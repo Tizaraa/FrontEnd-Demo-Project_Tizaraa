@@ -24,7 +24,9 @@ export default function Cart() {
   const { state } = useAppContext();
 
   const getTotalPrice = () => {
-    return state.cart.reduce((accumulator, item) => accumulator + item.price * item.qty, 0) || 0;
+    return state.cart.reduce((accumulator, item) => 
+      accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+    ) || 0;
   };
 
   return (
@@ -41,6 +43,7 @@ export default function Cart() {
               name={item.name}
               price={item.price}
               imgUrl={item.imgUrl}
+              discountPrice={item.discountPrice}
             />
           ))}
         </Grid>

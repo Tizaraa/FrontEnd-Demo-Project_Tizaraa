@@ -53,17 +53,18 @@ interface ProductCard7Props extends SpaceProps {
   price: number;
   imgUrl?: string;
   id: string | number;
+  discountPrice: number;
 }
 // =====================================================================
 
 export default function ProductCard7(props: ProductCard7Props) {
-  const { id, name, qty, price, imgUrl, slug, ...others } = props;
+  const { id, name, qty, price, imgUrl, slug,discountPrice, ...others } = props;
 
   const { dispatch } = useAppContext();
   const handleCartAmountChange = (amount: number) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { qty: amount, name, price, imgUrl, id }
+      payload: { qty: amount, name, price, imgUrl, id, discountPrice }
     });
   };
 
@@ -96,13 +97,29 @@ export default function ProductCard7(props: ProductCard7Props) {
 
         <FlexBox justifyContent="space-between" alignItems="flex-end">
           <FlexBox flexWrap="wrap" alignItems="center">
-            <Typography color="gray.600" mr="0.5rem">
+            {/* <Typography color="gray.600" mr="0.5rem">
               {currency(price)} x {qty}
             </Typography>
 
             <Typography fontWeight={600} color="primary.main" mr="1rem">
               {currency(price * qty)}
-            </Typography>
+            </Typography> */}
+             {discountPrice ? (
+          <>
+           <Typography color="gray.600" mr="0.5rem">
+                  {currency(discountPrice, 0)} x {qty}
+                </Typography>
+              
+          </>
+        ) : (
+          <Typography fontWeight={600} color="primary.main" mr="1rem">
+          {currency(price, 0)} x {qty}
+        </Typography>
+        )}
+
+        <Typography fontWeight={600} fontSize="14px" color="primary.main" mt="4px">
+          {currency(qty * (discountPrice ?? price))}
+        </Typography>
           </FlexBox>
 
           <FlexBox alignItems="center">
