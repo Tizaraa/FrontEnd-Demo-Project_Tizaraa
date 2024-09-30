@@ -26,7 +26,8 @@ type ProductIntroProps = {
   id: string | number;
   sellerShopName: string; 
   rating: number; // Add rating prop
-  productStock: number
+  productStock: number;
+  slug?: string;
 };
 // ========================================
 
@@ -39,6 +40,7 @@ export default function ProductIntro({
   rating,
   discountPrice,
   totalDiscount,
+  slug,
   productStock
 }: ProductIntroProps) {
   const param = useParams();
@@ -50,6 +52,22 @@ export default function ProductIntro({
 
   const handleImageClick = (ind: number) => () => setSelectedImage(ind);
 
+  // const handleCartAmountChange = (amount: number) => () => {
+  //   dispatch({
+  //     type: "CHANGE_CART_AMOUNT",
+  //     payload: {
+  //       price,
+  //       qty: amount,
+  //       name: title,
+  //       imgUrl: images[0],
+  //       id: id || routerId,
+        
+  //       // newly added 
+  //       discountPrice   
+
+  //     }
+  //   });
+  // };
   const handleCartAmountChange = (amount: number) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
@@ -59,13 +77,13 @@ export default function ProductIntro({
         name: title,
         imgUrl: images[0],
         id: id || routerId,
-        
-        // newly added 
-        discountPrice   
-
+        discountPrice,
+        slug,
       }
     });
   };
+  
+  
 
   return (
     <Box overflow="hidden">
@@ -120,6 +138,7 @@ export default function ProductIntro({
           <Box mb="24px">
             <FlexBox alignItems="center">
             <H2 color="primary.main" mb="4px" lineHeight="1">
+              
   {discountPrice ? (
     <>
      {currency(discountPrice)} {/* Discounted price */}

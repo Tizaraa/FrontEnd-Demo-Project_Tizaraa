@@ -6,21 +6,50 @@ import FlexBox from "@component/FlexBox";
 import { Button } from "@component/buttons";
 import TextField from "@component/text-field";
 import Typography from "@component/Typography";
+import { useAppContext } from "@context/app-context";
+import Grid from "@component/grid/Grid";
+import { ProductCard2, ProductCard7 } from "@component/product-cards";
+import { currency } from "@utils/utils";
+import ProductCard20 from "@component/product-cards/ProductCard20";
 
 export default function CheckoutSummary() {
+  const { state } = useAppContext();
+
+  const getTotalPrice = () => {
+    return state.cart.reduce((accumulator, item) => 
+      accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+    ) || 0;
+  };
+
   return (
     <Card1>
+       
+          {state.cart.map((item) => (
+            <ProductCard20
+            margin={0}
+              mb="1.5rem"
+              id={item.id}
+              key={item.id}
+              qty={item.qty}
+              slug={item.slug}
+              name={item.name}
+              price={item.price}
+              imgUrl={item.imgUrl}
+              discountPrice={item.discountPrice}
+            />
+          ))}
+       
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
         <Typography color="text.hint">Subtotal:</Typography>
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-            $2610.
+          {currency(getTotalPrice())}
           </Typography>
 
-          <Typography fontWeight="600" fontSize="14px" lineHeight="1">
+          {/* <Typography fontWeight="600" fontSize="14px" lineHeight="1">
             00
-          </Typography>
+          </Typography> */}
         </FlexBox>
       </FlexBox>
 
@@ -39,12 +68,12 @@ export default function CheckoutSummary() {
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-            $40.
+          -
           </Typography>
 
-          <Typography fontWeight="600" fontSize="14px" lineHeight="1">
+          {/* <Typography fontWeight="600" fontSize="14px" lineHeight="1">
             00
-          </Typography>
+          </Typography> */}
         </FlexBox>
       </FlexBox>
 
@@ -61,7 +90,7 @@ export default function CheckoutSummary() {
       <Divider mb="1rem" />
 
       <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
-        $2610.00
+      {currency(getTotalPrice())}
       </Typography>
 
       <TextField placeholder="Voucher" fullwidth />

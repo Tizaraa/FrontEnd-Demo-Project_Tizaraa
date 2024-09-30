@@ -114,6 +114,8 @@ interface ProductCard1Props extends CardProps {
   imgUrl: string;
   rating: number;
   images: string[];
+  discountPrice?: number; // Optional discount price
+  totalDiscount?: number; // Optional total discount
   id?: string | number;
 }
 // =======================================================================
@@ -127,6 +129,7 @@ export default function ProductCard1({
   imgUrl,
   images,
   rating,
+  discountPrice,
   ...props
 }: ProductCard1Props) {
   const [open, setOpen] = useState(false);
@@ -144,7 +147,10 @@ export default function ProductCard1({
         price,
         imgUrl,
         name: title,
-        qty: amount
+        qty: amount,
+
+          // newly added 
+          discountPrice   
       }
     });
   };
@@ -227,7 +233,7 @@ export default function ProductCard1({
           
             
 
-            <FlexBox
+            {/* <FlexBox
               width="30px"
               alignItems="center"
               flexDirection="column-reverse"
@@ -259,7 +265,7 @@ export default function ProductCard1({
                   </Button>
                 </Fragment>
               )}
-            </FlexBox>
+            </FlexBox> */}
           </FlexBox>
         </div>
       </Wrapper>

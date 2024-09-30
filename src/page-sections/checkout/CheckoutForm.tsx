@@ -57,6 +57,8 @@ export default function CheckoutForm() {
                   errorText={touched.shipping_name && errors.shipping_name}
                 />
 
+                
+
                 <TextField
                   fullwidth
                   mb="1rem"
@@ -92,7 +94,40 @@ export default function CheckoutForm() {
               </Grid>
 
               <Grid item sm={6} xs={12}>
-                <TextField
+
+                {/* province/ region  */}
+              <Select
+                  mb="1rem"
+                  label="Province / Region"
+                  options={countryList}
+                  value={values.shipping_country || "US"}
+                  errorText={touched.shipping_country && errors.shipping_country}
+                  onChange={(country) => setFieldValue("shipping_country", country)}
+                />
+
+                {/* city  */}
+                <Select
+                  mb="1rem"
+                  label="City"
+                  options={countryList}
+                  value={values.shipping_country || "US"}
+                  errorText={touched.shipping_country && errors.shipping_country}
+                  onChange={(country) => setFieldValue("shipping_country", country)}
+                />
+
+                {/* country  */}
+
+              <Select
+                  mb="1rem"
+                  label="Country"
+                  options={countryList}
+                  value={values.shipping_country || "US"}
+                  errorText={touched.shipping_country && errors.shipping_country}
+                  onChange={(country) => setFieldValue("shipping_country", country)}
+                />
+
+
+                {/* <TextField
                   fullwidth
                   mb="1rem"
                   type="email"
@@ -102,9 +137,9 @@ export default function CheckoutForm() {
                   onChange={handleChange}
                   value={values.shipping_email}
                   errorText={touched.shipping_email && errors.shipping_email}
-                />
+                /> */}
 
-                <TextField
+                {/* <TextField
                   fullwidth
                   mb="1rem"
                   label="Company"
@@ -113,18 +148,11 @@ export default function CheckoutForm() {
                   name="shipping_company"
                   value={values.shipping_company}
                   errorText={touched.shipping_company && errors.shipping_company}
-                />
+                /> */}
 
-                <Select
-                  mb="1rem"
-                  label="Country"
-                  options={countryList}
-                  value={values.shipping_country || "US"}
-                  errorText={touched.shipping_country && errors.shipping_country}
-                  onChange={(country) => setFieldValue("shipping_country", country)}
-                />
-
-                <TextField
+              
+                {/* Area  */}
+                {/* <TextField
                   fullwidth
                   label="Address 2"
                   onBlur={handleBlur}
@@ -132,12 +160,20 @@ export default function CheckoutForm() {
                   name="shipping_address2"
                   value={values.shipping_address2}
                   errorText={touched.shipping_address2 && errors.shipping_address2}
+                /> */}
+                 <Select
+                  mb="1rem"
+                  label="Area"
+                  options={countryList}
+                  value={values.shipping_country || "US"}
+                  errorText={touched.shipping_country && errors.shipping_country}
+                  onChange={(country) => setFieldValue("shipping_country", country)}
                 />
               </Grid>
             </Grid>
           </Card1>
 
-          <Card1 mb="2rem">
+          {/* <Card1 mb="2rem">
             <Typography fontWeight="600" mb="1rem">
               Billing Address
             </Typography>
@@ -240,7 +276,7 @@ export default function CheckoutForm() {
                 </Grid>
               </Grid>
             )}
-          </Card1>
+          </Card1> */}
 
           <Grid container spacing={7}>
             <Grid item sm={6} xs={12}>
