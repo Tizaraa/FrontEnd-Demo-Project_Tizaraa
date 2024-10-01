@@ -54,7 +54,7 @@ export default function MobileNavigationBar() {
         {list.map((item) => (
           <NavLink className="link" href={item.href} key={item.title}>
             <Icon className="icon" variant="small">
-              {item.icon}
+            {item.icon}
             </Icon>
 
             {item.title}
