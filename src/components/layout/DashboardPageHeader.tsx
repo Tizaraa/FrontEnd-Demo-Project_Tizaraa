@@ -36,6 +36,10 @@ export default function DashboardPageHeader({ iconName, title, button }: Dashboa
           <Sidenav position="left" handle={<Icon mx="1rem">menu</Icon>}>
             <DashboardNavigation />
           </Sidenav>
+//           <Sidenav position="left" handle={<button>menu</button>}>
+//   <DashboardNavigation />
+// </Sidenav>
+
         )}
 
         {!isTablet && button}
