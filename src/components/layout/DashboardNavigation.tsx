@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import Icon from "@component/icon/Icon";
@@ -9,8 +9,43 @@ import Typography from "@component/Typography";
 // STYLED COMPONENTS
 import { DashboardNavigationWrapper, StyledDashboardNav } from "./styles";
 
+import { useRouter } from "next/navigation";
+import authService from "services/authService";
+
 export default function DashboardNavigation() {
   const pathname = usePathname();
+  const [isMobileView, setIsMobileView] = useState(false); // State to track if it's mobile view
+  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogout = () => {
+    authService.logout();
+    setIsLoggedIn(false); // Update login state
+    router.push("/login");
+  };
+
+  const router = useRouter(); 
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
+
+
+  useEffect(() => {
+    // Function to check screen size and update state
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768); // Assuming mobile view is less than 768px
+    };
+
+    // Check initial window size
+    handleResize();
+
+    // Add event listener to handle window resizing
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <DashboardNavigationWrapper px="0px" pb="1.5rem" color="gray.900" borderRadius={8}>
@@ -26,7 +61,8 @@ export default function DashboardNavigation() {
               mb="1.25rem"
               href={item.href}
               key={item.title}
-              isCurrentPath={pathname.includes(item.href)}>
+              isCurrentPath={pathname.includes(item.href)}
+            >
               <FlexBox alignItems="center">
                 <div className="dashboard-nav-icon-holder">
                   <Icon variant="small" defaultcolor="currentColor" mr="10px">
@@ -42,6 +78,24 @@ export default function DashboardNavigation() {
           ))}
         </Fragment>
       ))}
+
+      {/* Conditionally render logout button only in mobile view */}
+      {isMobileView && (
+        <StyledDashboardNav
+          px="1.5rem"
+          mb="1.25rem"
+          href="/"
+        >
+          <FlexBox alignItems="center">
+            <div className="dashboard-nav-icon-holder">
+              <Icon onClick={handleLogout} variant="small" defaultcolor="currentColor" mr="10px">
+                logout
+              </Icon>
+            </div>
+            <span>Logout</span>
+          </FlexBox>
+        </StyledDashboardNav>
+      )}
     </DashboardNavigationWrapper>
   );
 }
@@ -60,7 +114,8 @@ const linkList = [
     list: [
       { href: "/profile", title: "Profile Info", iconName: "user", count: 3 },
       { href: "/address", title: "Addresses", iconName: "pin", count: 16 },
-      { href: "/payment-methods", title: "Payment Methods", iconName: "credit-card", count: 4 }
+      { href: "/payment-methods", title: "Payment Methods", iconName: "credit-card", count: 4 },
+      // The logout option will be added dynamically for mobile view
     ]
   }
 ];

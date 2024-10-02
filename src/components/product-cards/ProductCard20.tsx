@@ -69,87 +69,91 @@ export default function ProductCard7(props: ProductCard7Props) {
   };
 
   return (
-    <Wrapper {...others}>
-      <LazyImage
-        alt={name}
-        width={140}
-        height={140}
-        src={imgUrl}
-      />
+    // <Wrapper {...others}>
+    //   <LazyImage
+    //     alt={name}
+    //     width={140}
+    //     height={140}
+    //     src={imgUrl}
+    //   />
 
-      <FlexBox
-        width="100%"
-        minWidth="0px"
-        flexDirection="column"
-        className="product-details"
-        justifyContent="space-between">
-        <Link href={`/product/${id}`}>
-          <Typography className="title" fontWeight="600" fontSize="14px" >
-            {name}
-          </Typography>
-        </Link>
+    //   <FlexBox
+    //     width="100%"
+    //     minWidth="0px"
+    //     flexDirection="column"
+    //     className="product-details"
+    //     justifyContent="space-between">
+    //     <Link href={`/product/${id}`}>
+    //       <Typography className="title" fontWeight="600" fontSize="14px" >
+    //         {name}
+    //       </Typography>
+    //     </Link>
 
-        <Box position="absolute" right="1rem" top="1rem">
-          <IconButton padding="4px" ml="12px" onClick={handleCartAmountChange(0)}>
-            <Icon size="1.25rem">close</Icon>
-          </IconButton>
-        </Box>
+    //     <Box position="absolute" right="1rem" top="1rem">
+    //       <IconButton padding="4px" ml="12px" onClick={handleCartAmountChange(0)}>
+    //         <Icon size="1.25rem">close</Icon>
+    //       </IconButton>
+    //     </Box>
 
-        <FlexBox justifyContent="space-between" alignItems="flex-end">
-          <FlexBox flexWrap="wrap" alignItems="center">
-            {/* <Typography color="gray.600" mr="0.5rem">
-              {currency(price)} x {qty}
-            </Typography>
+    //     <FlexBox justifyContent="space-between" alignItems="flex-end">
+    //       <FlexBox flexWrap="wrap" alignItems="center">
+    //         {/* <Typography color="gray.600" mr="0.5rem">
+    //           {currency(price)} x {qty}
+    //         </Typography>
 
-            <Typography fontWeight={600} color="primary.main" mr="1rem">
-              {currency(price * qty)}
-            </Typography> */}
-             {discountPrice ? (
-          <>
-           <Typography color="gray.600" mr="0.5rem">
-                  {currency(discountPrice, 0)} x {qty}
-                </Typography>
+    //         <Typography fontWeight={600} color="primary.main" mr="1rem">
+    //           {currency(price * qty)}
+    //         </Typography> */}
+    //          {discountPrice ? (
+    //       <>
+    //        <Typography color="gray.600" mr="0.5rem">
+    //               {currency(discountPrice, 0)} x {qty}
+    //             </Typography>
               
-          </>
-        ) : (
-          <Typography fontWeight={600} color="primary.main" mr="1rem">
-          {currency(price, 0)} x {qty}
-        </Typography>
-        )}
+    //       </>
+    //     ) : (
+    //       <Typography fontWeight={600} color="primary.main" mr="1rem">
+    //       {currency(price, 0)} x {qty}
+    //     </Typography>
+    //     )}
 
-        <Typography fontWeight={600} fontSize="14px" color="primary.main" mt="4px">
-          {currency(qty * (discountPrice ?? price))}
-        </Typography>
-          </FlexBox>
+    //     <Typography fontWeight={600} fontSize="14px" color="primary.main" mt="4px">
+    //       {currency(qty * (discountPrice ?? price))}
+    //     </Typography>
+    //       </FlexBox>
 
-          <FlexBox alignItems="center">
-            <Button
-              size="none"
-              padding="5px"
-              color="primary"
-              variant="outlined"
-              disabled={qty === 1}
-              borderColor="primary.light"
-              onClick={handleCartAmountChange(qty - 1)}>
-              <Icon variant="small">minus</Icon>
-            </Button>
+    //       <FlexBox alignItems="center">
+    //         <Button
+    //           size="none"
+    //           padding="5px"
+    //           color="primary"
+    //           variant="outlined"
+    //           disabled={qty === 1}
+    //           borderColor="primary.light"
+    //           onClick={handleCartAmountChange(qty - 1)}>
+    //           <Icon variant="small">minus</Icon>
+    //         </Button>
 
-            <Typography mx="0.5rem" fontWeight="600" fontSize="15px">
-              {qty}
-            </Typography>
+    //         <Typography mx="0.5rem" fontWeight="600" fontSize="15px">
+    //           {qty}
+    //         </Typography>
 
-            <Button
-              size="none"
-              padding="5px"
-              color="primary"
-              variant="outlined"
-              borderColor="primary.light"
-              onClick={handleCartAmountChange(qty + 1)}>
-              <Icon variant="small">plus</Icon>
-            </Button>
-          </FlexBox>
-        </FlexBox>
-      </FlexBox>
-    </Wrapper>
+    //         <Button
+    //           size="none"
+    //           padding="5px"
+    //           color="primary"
+    //           variant="outlined"
+    //           borderColor="primary.light"
+    //           onClick={handleCartAmountChange(qty + 1)}>
+    //           <Icon variant="small">plus</Icon>
+    //         </Button>
+    //       </FlexBox>
+    //     </FlexBox>
+    //   </FlexBox>
+    // </Wrapper>
+
+
+    <>
+    </>
   );
 }
