@@ -1,10 +1,12 @@
 "use client";
 
-import { Fragment, useEffect, useState, Suspense } from "react";
+import React, { Fragment, useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import api from "@utils/__api__/users";
 import authService from "services/authService";
+import Link from "next/link";
+import axios from "axios";
 
 // GLOBAL CUSTOM COMPONENTS
 import Box from "@component/Box";
@@ -25,6 +27,7 @@ function LoadingFallback() {
 export default function Profile() {
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [data, setData] = useState("nothing");
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
 

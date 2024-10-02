@@ -21,7 +21,7 @@ export default function DashboardNavigation() {
   const handleLogout = () => {
     authService.logout();
     setIsLoggedIn(false); // Update login state
-    router.push("/login");
+    router.push("/login")
   };
 
   const router = useRouter(); 

@@ -8,6 +8,7 @@ import * as yup from "yup";
 import useVisibility from "./useVisibility";
 import { useAppContext } from "contexts/app-context/AppContext"; // Context for managing user auth state
 import axios from "axios"; // Import axios for API calls
+import Cookies from "js-cookie";
 
 import Box from "@component/Box";
 import Icon from "@component/icon/Icon";
@@ -52,8 +53,10 @@ export default function Login() {
       if (response.status === 200 && data.token) {
         // Dispatch login action with auth token and user info
         //localStorage.setItem("authToken", data.token);
+        Cookies.set("token", data.token, { expires: 7 });
         localStorage.setItem("token", data.token);
         dispatch({ type: "LOGIN", payload: { authToken: data.token, userInfo: data.user } });
+        localStorage.setItem("userInfo", JSON.stringify(data.user));
         //console.log(data.token);
         
 
@@ -206,4 +209,3 @@ export default function Login() {
     </StyledRoot>
   );
 }
-

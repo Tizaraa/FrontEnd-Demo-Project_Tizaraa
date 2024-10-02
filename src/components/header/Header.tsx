@@ -23,6 +23,7 @@ import authService from "services/authService";
 import Menu from "@component/Menu";
 import MenuItem from "@component/MenuItem";
 import { useRouter } from "next/navigation";
+//import Cookies from "js-cookie";
 
 // ====================================================================
 type HeaderProps = { isFixed?: boolean; className?: string };
@@ -67,7 +68,11 @@ export default function Header({ isFixed, className }: HeaderProps) {
   const handleLogout = () => {
     authService.logout();
     setAnchorEl(null);
+    //Cookies.remove('token');
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('token');
     setIsLoggedIn(false); // Update login state
+    //Cookies.remove("token");
     router.push("/login");
   };
 

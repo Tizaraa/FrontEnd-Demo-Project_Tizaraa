@@ -1,5 +1,6 @@
 // import User from "models/user.model";
-import ApiBaseUrl from 'api/ApiBaseUrl'; // Adjust the path as needed
+import ApiBaseUrl from 'api/ApiBaseUrl';
+import Cookies from "js-cookie"; // Adjust the path as needed
 
 interface LoginResponse {
     token: string;
@@ -49,8 +50,14 @@ interface LoginResponse {
         // Redirect to the Laravel Google login route
         window.location.href = `${ApiBaseUrl.baseUrl}login/google`;
     },
+
+    isAuthenticated: (): boolean => {
+      const token = Cookies.get('token') || localStorage.getItem('token');
+      return !!token; // Check if token exists
+    },
   
     logout: (): void => {
+      Cookies.remove("token");
       localStorage.removeItem("token");
       localStorage.removeItem("userInfo");
     },
@@ -75,11 +82,6 @@ interface LoginResponse {
   
     getToken: (): string | null => {
       return localStorage.getItem("token");
-    },
-  
-    isAuthenticated: (): boolean => {
-      const token = localStorage.getItem("token");
-      return !!token; // Check if token exists
     },
 
     getUser: async (): Promise<UserInfo | null> => {
