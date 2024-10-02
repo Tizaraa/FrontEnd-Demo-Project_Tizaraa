@@ -20,7 +20,8 @@ import useWindowSize from "@hook/useWindowSize";
 export default function PaymentForm() {
   const router = useRouter();
   const width = useWindowSize();
-  const [paymentMethod, setPaymentMethod] = useState("credit-card");
+  // const [paymentMethod, setPaymentMethod] = useState("credit-card");
+  const [paymentMethod, setPaymentMethod] = useState("cod");
 
   const isMobile = width < 769;
 
@@ -33,10 +34,11 @@ export default function PaymentForm() {
     setPaymentMethod(name);
   };
 
+
   return (
     <Fragment>
       <Card1 mb="2rem">
-        <Radio
+        {/* <Radio
           mb="1.5rem"
           color="secondary"
           name="credit-card"
@@ -152,7 +154,7 @@ export default function PaymentForm() {
 
             <Divider mb="1.5rem" mx="-2rem" />
           </Fragment>
-        )}
+        )} */}
 
         <Radio
           name="cod"
@@ -205,7 +207,8 @@ const initialValues = {
   billing_zip: "",
   billing_country: "",
   billing_address1: "",
-  billing_address2: ""
+  billing_address2: "",
+  paymentMethod: ""
 };
 
 const checkoutSchema = yup.object().shape({
