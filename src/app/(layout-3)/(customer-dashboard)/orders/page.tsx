@@ -1,16 +1,47 @@
-import { Fragment } from "react";
+"use client";
+import { Fragment, useEffect, useState } from "react";
 // API FUNCTIONS
 import api from "@utils/__api__/orders";
 // GLOBAL CUSTOM COMPONENTS
 import Hidden from "@component/hidden";
 import TableRow from "@component/TableRow";
 import { H5 } from "@component/Typography";
+import { useRouter } from "next/navigation";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 // PAGE SECTION COMPONENTS
 import { OrderRow, OrdersPagination } from "@sections/customer-dashboard/orders";
+import Cookies from "js-cookie";
 
-export default async function OrderList() {
-  const orderList = await api.getOrders();
+export default function OrderList() {
+  //const orderList = await api.getOrders();
+  const router = useRouter();
+  const [orderList, setOrderList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const token = Cookies.get("token");
+
+    if (!token) {
+      // Redirect to login if no token is found
+      router.push("/login");
+    } else {
+      // If token is available, fetch the address list
+      fetchOrderList(token);
+    }
+  }, [router]);
+
+  const fetchOrderList = async (token: string) => {
+    try {
+      // Fetch the address list from the API
+      const orderListResponse = await api.getOrders(token); // Make sure your API accepts the token and verifies it
+      setOrderList(orderListResponse);
+    } catch (error) {
+      console.error("Failed to fetch address list:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <Fragment>
