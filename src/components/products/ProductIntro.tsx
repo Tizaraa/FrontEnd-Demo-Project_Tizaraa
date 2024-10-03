@@ -28,6 +28,8 @@ type ProductIntroProps = {
   rating: number; // Add rating prop
   productStock: number;
   slug?: string;
+  productId: string | number;
+  sellerId: string | number;
 };
 // ========================================
 
@@ -41,14 +43,16 @@ export default function ProductIntro({
   discountPrice,
   totalDiscount,
   slug,
-  productStock
+  productStock,
+  productId,
+  sellerId
 }: ProductIntroProps) {
   const param = useParams();
   const { state, dispatch } = useAppContext();
   const [selectedImage, setSelectedImage] = useState(0);
 
   const routerId = param.slug as string;
-  const cartItem = state.cart.find((item) => item.id === id || item.id === routerId);
+  const cartItem = state.cart.find((item) => item.id === id || item.id === routerId );
 
   const handleImageClick = (ind: number) => () => setSelectedImage(ind);
 
@@ -79,6 +83,8 @@ export default function ProductIntro({
         id: id || routerId,
         discountPrice,
         slug,
+        productId ,
+        sellerId
       }
     });
   };

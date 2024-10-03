@@ -16,8 +16,58 @@ import { Button } from "@component/buttons";
 import TextField from "@component/text-field";
 import Typography from "@component/Typography";
 import useWindowSize from "@hook/useWindowSize";
+import axios from "axios";
 
 export default function PaymentForm() {
+  
+
+
+  // `Bearer 1322|IQr8fvJUuNUnUZVuzWBsw1tVLsdR1U2Rp43YeNKL4b96967a`
+
+ const orderSubmit = ()=>{
+
+  let getData = localStorage.getItem('userInfo');
+  let userinfo = JSON.parse(getData);
+
+  // user shipping
+
+  let shippingData = sessionStorage.getItem('address');
+  let userShippingdata = JSON.parse(shippingData);
+
+  
+
+  axios.post('https://tizaraa.com/api/checkout/order',
+    {
+      user_id: userinfo.id,
+      name: userShippingdata.shipping_name,
+      phone: userShippingdata.shipping_contact,
+      email: userinfo.email,
+      province_id: userShippingdata.shipping_province,
+      city_id: userShippingdata.shipping_city,
+      area_id: userShippingdata.shipping_area,
+      house_level: userShippingdata.selectedLandmark,
+      address: userShippingdata.shipping_address1,
+      delivery_charge: 60,
+
+
+    },
+    {
+      headers: {
+        Authorization: `Bearer 1322|IQr8fvJUuNUnUZVuzWBsw1tVLsdR1U2Rp43YeNKL4b96967a`
+      }
+    }
+  )
+  .then(function (response) {
+    alert(response.status);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+ }
+
+
+
   const router = useRouter();
   const width = useWindowSize();
   // const [paymentMethod, setPaymentMethod] = useState("credit-card");
@@ -156,14 +206,15 @@ export default function PaymentForm() {
           </Fragment>
         )} */}
 
-        <Radio
-          name="cod"
+<Radio
+          mb="1.5rem"
           color="secondary"
-          checked={paymentMethod === "cod"}
+          name="cod"
           onChange={handlePaymentMethodChange}
+          checked={paymentMethod === "cod"}
           label={
             <Typography ml="6px" fontWeight="600" fontSize="18px">
-              Cash On Delivery
+              Cash on Delivery
             </Typography>
           }
         />
@@ -179,11 +230,11 @@ export default function PaymentForm() {
         </Grid>
 
         <Grid item sm={6} xs={12}>
-          <Link href="/orders">
-            <Button variant="contained" color="primary" type="submit" fullwidth>
+   
+            <Button onClick={orderSubmit} variant="contained" color="primary" type="submit" fullwidth>
               Review
             </Button>
-          </Link>
+   
         </Grid>
       </Grid>
     </Fragment>
@@ -191,24 +242,31 @@ export default function PaymentForm() {
 }
 
 const initialValues = {
-  card_no: "",
-  name: "",
-  exp_date: "",
-  cvc: "",
-  shipping_zip: "",
-  shipping_country: "",
-  shipping_address1: "",
-  shipping_address2: "",
+  // card_no: "",
+  // name: "",
+  // exp_date: "",
+  // cvc: "",
+  // shipping_zip: "",
+  // shipping_country: "",
+  // shipping_address1: "",
+  // shipping_address2: "",
 
-  billing_name: "",
-  billing_email: "",
-  billing_contact: "",
-  billing_company: "",
-  billing_zip: "",
-  billing_country: "",
-  billing_address1: "",
-  billing_address2: "",
-  paymentMethod: ""
+  // billing_name: "",
+  // billing_email: "",
+  // billing_contact: "",
+  // billing_company: "",
+  // billing_zip: "",
+  // billing_country: "",
+  // billing_address1: "",
+  // billing_address2: "",
+  paymentMethod: "",
+  shipping_name: "",
+  shipping_contact: "",
+  shipping_address1: "",
+  shipping_province: "",
+  shipping_city: "",
+  shipping_area: "",
+  selectedLandmark: null, 
 };
 
 const checkoutSchema = yup.object().shape({

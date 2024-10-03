@@ -382,6 +382,8 @@ import TextArea from "@component/textarea";
 import countryList from "@data/countryList";
 import axios from "axios";
 
+
+
 export default function CheckoutForm() {
   const router = useRouter();
   const [sameAsShipping, setSameAsShipping] = useState(false);
@@ -393,7 +395,10 @@ export default function CheckoutForm() {
 
 
   const handleFormSubmit = async (values: any) => {
-    console.log(values);
+
+
+    let stringAddress = JSON.stringify(values)
+  sessionStorage.setItem('address',stringAddress);
     router.push("/payment");
   };
 
@@ -418,55 +423,104 @@ export default function CheckoutForm() {
   //   fetchProvince(); 
   // }, []);
 
-  const fetchProvince = async () => {
-    try {
-        const response = await axios.get("https://tizaraa.com/api/checkout/address", {
-            headers: {
-                'Authorization': `Bearer 1204|d7tYXgZU3Fh3ICHKUx25qGM9vTTJqU1GPtypSaDi4dae3f55`
-            }
-        });
+//   const fetchProvince = async () => {
+//     try {
+//         const response = await axios.get("https://tizaraa.com/api/checkout/address", {
+//             headers: {
+//                 'Authorization': `Bearer 1204|d7tYXgZU3Fh3ICHKUx25qGM9vTTJqU1GPtypSaDi4dae3f55`
+//             }
+//         });
 
-        console.log("API Response:", response.data);
+//         console.log("API Response:", response.data);
 
-        if (Array.isArray(response.data)) {
-            // Extract provinces, cities, and areas from the response
-            const provinces = response.data.map(prov => ({
-                province: prov.province,
-                // If you want to store the id as well, uncomment the line below
-                // id: prov.id,
-            }));
+//         if (Array.isArray(response.data)) {
+//             // Extract provinces, cities, and areas from the response
+//             const provinces = response.data.map(prov => ({
+//                 province: prov.province,
+//                 id: prov.id,
+//             }));
 
-            const cities = response.data.map(prov => ({
-              city: prov.province,
-              // If you want to store the id as well, uncomment the line below
-              // id: prov.id,
-          }));
+//             const cities = response.data.map(prov => ({
+//               city: prov.province,
+//               // If you want to store the id as well, uncomment the line below
+//               // id: prov.id,
+//           }));
 
-            // Set the state for provinces
-            setProvince(provinces);
-            console.log("Provinces:", provinces);
+//             // Set the state for provinces
+//             setProvince(provinces);
+//             console.log("Provinces:", provinces);
 
  
-            setCity(cities); 
-            console.log("Cities:", cities);
+//             setCity(cities); 
+//             console.log("Cities:", cities);
 
-        } else {
-            console.error("Response data is not in expected format.");
-            setProvince([]); 
-            // Optionally reset cities and areas
-            setCity([]);
-        }
+//         } else {
+//             console.error("Response data is not in expected format.");
+//             setProvince([]); 
+//             // Optionally reset cities and areas
+//             setCity([]);
+//         }
 
-    } catch (error) {
-        console.error("Error fetching data:", error);
+//     } catch (error) {
+//         console.error("Error fetching data:", error);
+//     }
+// };
+
+// // useEffect to call fetchProvince when component mounts
+// useEffect(() => {
+//     fetchProvince();
+// }, []);
+
+// Fetch provinces and cities
+const fetchProvince = async () => {
+  try {
+    const response = await axios.get("https://tizaraa.com/api/checkout/address", {
+      headers: {
+        'Authorization': `Bearer 1204|d7tYXgZU3Fh3ICHKUx25qGM9vTTJqU1GPtypSaDi4dae3f55`
+      }
+    });
+
+    if (Array.isArray(response.data)) {
+      setProvince(response.data); // Store the whole response
     }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 };
 
-// useEffect to call fetchProvince when component mounts
 useEffect(() => {
-    fetchProvince();
+  fetchProvince();
 }, []);
 
+// Handle province selection
+const handleProvinceChange = (provinceId: number, setFieldValue: any) => {
+  console.log("Received provinceId:", provinceId); // Debug the value
+  const selectedProvince = province.find((prov: any) => prov.id === provinceId);
+ 
+  if (selectedProvince) {
+    setFieldValue("shipping_province", provinceId);
+    setCity(selectedProvince.city); // Update the city based on the selected province
+    setFieldValue("shipping_city", ""); // Reset city and area when province changes
+    setFieldValue("shipping_area", "");
+    setArea([]); // Reset area
+  } else {
+    console.log("Province not found.");
+  }
+};
+
+// Handle city selection
+const handleCityChange = (cityId: number, setFieldValue: any) => {
+  setFieldValue("shipping_city", cityId);
+
+  const selectedCity = city.find((c: any) => c.id === cityId); // Find the selected city object
+
+  if (selectedCity) {
+    setArea(selectedCity.areas); // Update the area state based on the selected city
+    setFieldValue("shipping_area", ""); // Reset area when city changes
+  } else {
+    setArea([]); // Reset area if the city is not found
+  }
+};
 
 
   const handleCheckboxChange =
@@ -552,7 +606,6 @@ useEffect(() => {
                 <Typography fontWeight="600" mb="0.5rem">
                   Select a label for effective delivery:
                 </Typography>
-
                 <Grid container spacing={2} justifyContent="flex-start">
   <Grid item>
     <Button
@@ -574,48 +627,60 @@ useEffect(() => {
   </Grid>
 </Grid>
 
+{/* Display error text for landmark selection */}
+{touched.selectedLandmark && errors.selectedLandmark && (
+  <Typography color="error" variant="body2" mt={1}>
+    {errors.selectedLandmark}
+  </Typography>
+)}
+
+
               </Grid>
 
               <Grid item sm={6} xs={12}>
-
-                {/* province  */}
+                {/* country  */}
                 <Select
-    mb="1rem"
-    label="Province / Region"
-    options={province.map(prov => ({ value: prov.id, label: prov.province }))} // Map to extract id and province name
-    value={values.shipping_province || ""} // Use appropriate initial value
-    errorText={touched.shipping_province && errors.shipping_province}
-    onChange={(selectedProvince) => setFieldValue("shipping_province", selectedProvince)}
+  mb="1rem"
+  label="Country"
+  options={[{ value: "BD", label: "Bangladesh" }]} 
+  value={{ value: "BD", label: "Bangladesh" }} 
+  errorText={touched.shipping_country && errors.shipping_country}
+  onChange={() => setFieldValue("shipping_country", { value: "BD", label: "Bangladesh" })}
 />
 
-{/* city  */}
-                <Select
-                  mb="1rem"
-                  label="City"
-                  options={city}
-                  value={values.shipping_city || "US"}
-                  errorText={touched.shipping_country && errors.shipping_country}
-                  onChange={(country) => setFieldValue("shipping_country", country)}
-                />
 
-                <Select
-                  mb="1rem"
-                  label="Country"
-                  options={countryList}
-                  value={values.shipping_country || "BD"}
-                  errorText={touched.shipping_country && errors.shipping_country}
-                  onChange={(country) => setFieldValue("shipping_country", country)}
-                />
-                
-{/* area  */}
-                <Select
-                  mb="1rem"
-                  label="Area"
-                  options={countryList}
-                  value={values.shipping_country || "BD"}
-                  errorText={touched.shipping_country && errors.shipping_country}
-                  onChange={(country) => setFieldValue("shipping_country", country)}
-                />
+              {/* Province Selection */}
+              <Select
+  mb="1rem"
+  label="Province / Region"
+  options={province.map(prov => ({ value: prov.id, label: prov.province }))} // Correct mapping
+  value={values.shipping_province ? { value: values.shipping_province, label: province.find(prov => prov.id === values.shipping_province)?.province } : null} // Ensure this value matches the selected option
+  errorText={touched.shipping_province && errors.shipping_province}
+  onChange={(e) => handleProvinceChange(parseInt(e.value, 10), setFieldValue)} 
+/>
+
+
+ {/* City Selection */}
+<Select
+  mb="1rem"
+  label="City"
+  options={city.map((c: any) => ({ value: c.id, label: c.city }))} 
+  value={values.shipping_city ? { value: values.shipping_city, label: city.find(c => c.id === values.shipping_city)?.city } : null} // Ensure this value matches the selected option
+  errorText={touched.shipping_city && errors.shipping_city}
+  onChange={(e) => handleCityChange(Number(e.value), setFieldValue)} 
+/>
+
+
+             {/* Area Selection (optional) */}
+<Select
+  mb="1rem"
+  label="Area"
+  options={area.map((a: any) => ({ value: a.id, label: a.area }))} // Assuming area has id and name
+  value={values.shipping_area ? { value: values.shipping_area, label: area.find(a => a.id === values.shipping_area)?.area } : null} // Ensure this value matches the selected option
+  errorText={touched.shipping_area && errors.shipping_area}
+  onChange={(selectedArea) => setFieldValue("shipping_area", selectedArea.value)} // Update selected area
+/>
+
               </Grid>
             </Grid>
           </Card1>
@@ -643,17 +708,19 @@ useEffect(() => {
 
 const initialValues = {
   shipping_name: "",
-  shipping_email: "",
   shipping_contact: "",
-  shipping_company: "",
-  shipping_zip: "",
-  shipping_country: "",
   shipping_address1: "",
-  shipping_address2: "",
-  selectedLandmark: null, 
   shipping_province: "",
+  shipping_city: "",
+  shipping_area: "",
+  selectedLandmark: null, 
 };
 
 const checkoutSchema = yup.object().shape({
-  // Define your validation schema if needed
+  shipping_name: yup.string().required("Name is required"),
+  shipping_contact: yup.string().required("Contact is required"),
+  shipping_address1: yup.string().required("Address is required"),
+  shipping_province: yup.string().required("Province is required"),
+  shipping_city: yup.string().required("City is required"),
+  selectedLandmark: yup.number().required("Please select a landmark"),
 });

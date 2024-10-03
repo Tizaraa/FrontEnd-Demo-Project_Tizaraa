@@ -238,6 +238,9 @@ export default async function ProductDetails({ params }: Props) {
           totalDiscount={product.total_discount}
           productStock={product.product_stock}
 
+          productId = {product.product_id}
+          sellerId = {product.seller_shop_id}
+
         />
 
         <ProductView

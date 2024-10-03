@@ -23,7 +23,7 @@ import authService from "services/authService";
 import Menu from "@component/Menu";
 import MenuItem from "@component/MenuItem";
 import { useRouter } from "next/navigation";
-//import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 // ====================================================================
 type HeaderProps = { isFixed?: boolean; className?: string };
