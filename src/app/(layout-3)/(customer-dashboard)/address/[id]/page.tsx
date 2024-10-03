@@ -10,7 +10,7 @@ import { BackToAddress, AddressForm } from "@sections/customer-dashboard/address
 import { IDParams } from "interfaces";
 import Cookies from "js-cookie";
 import { NextPageContext } from "next";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const AddressDetails = async ({ params }: IDParams) => {
   const router = useRouter();
