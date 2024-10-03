@@ -33,6 +33,9 @@ export default function ProductListView({ products, totalProducts, currentPage, 
           images={item.images}
           imgUrl={item.thumbnail}
           categories={item.categories}
+          productId={item.id}
+          sellerId={item.id}
+
         />
       ))}
 

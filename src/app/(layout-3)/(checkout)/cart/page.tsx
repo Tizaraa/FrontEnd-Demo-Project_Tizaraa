@@ -44,6 +44,8 @@ export default function Cart() {
               price={item.price}
               imgUrl={item.imgUrl}
               discountPrice={item.discountPrice}
+              productId={item.productId}
+              sellerId={item.sellerId}
             />
           ))}
         </Grid>
