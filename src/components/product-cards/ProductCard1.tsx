@@ -117,6 +117,8 @@ interface ProductCard1Props extends CardProps {
   discountPrice?: number; // Optional discount price
   totalDiscount?: number; // Optional total discount
   id?: string | number;
+  productId?: string | number;
+  sellerId?: string | number
 }
 // =======================================================================
 
@@ -130,6 +132,8 @@ export default function ProductCard1({
   images,
   rating,
   discountPrice,
+  productId,
+  sellerId,
   ...props
 }: ProductCard1Props) {
   const [open, setOpen] = useState(false);
@@ -150,7 +154,9 @@ export default function ProductCard1({
         qty: amount,
 
           // newly added 
-          discountPrice   
+          discountPrice,   
+          productId,
+          sellerId
       }
     });
   };
