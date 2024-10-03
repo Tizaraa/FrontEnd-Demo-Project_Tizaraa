@@ -11,6 +11,7 @@ import { DashboardNavigationWrapper, StyledDashboardNav } from "./styles";
 
 import { useRouter } from "next/navigation";
 import authService from "services/authService";
+import Cookies from "js-cookie";
 
 export default function DashboardNavigation() {
   const pathname = usePathname();
@@ -20,6 +21,9 @@ export default function DashboardNavigation() {
 
   const handleLogout = () => {
     authService.logout();
+    Cookies.remove('token');
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('token');
     setIsLoggedIn(false); // Update login state
     router.push("/login")
   };
