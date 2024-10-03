@@ -39,6 +39,8 @@ export interface CartItem {
   id: string | number;
   totalDiscount?: number;
   discountPrice?: number;
+  productId: string | number; 
+  sellerId: string | number;
 }
 
 
