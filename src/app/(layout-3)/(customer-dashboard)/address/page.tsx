@@ -72,7 +72,7 @@ export default function AddressList() {
   const fetchAddressList = async (token: string) => {
     try {
       // Fetch the address list from the API
-      const addressListResponse = await api.getAddressList(token); // Make sure your API accepts the token and verifies it
+      const addressListResponse = await api.getAddressList(); // Make sure your API accepts the token and verifies it
       setAddressList(addressListResponse);
     } catch (error) {
       console.error("Failed to fetch address list:", error);

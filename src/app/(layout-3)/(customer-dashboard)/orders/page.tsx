@@ -32,7 +32,7 @@ export default function OrderList() {
   const fetchOrderList = async (token: string) => {
     try {
       // Fetch the address list from the API
-      const orderListResponse = await api.getOrders(token); // Make sure your API accepts the token and verifies it
+      const orderListResponse = await api.getOrders(); // Make sure your API accepts the token and verifies it
       setOrderList(orderListResponse);
     } catch (error) {
       console.error("Failed to fetch address list:", error);
