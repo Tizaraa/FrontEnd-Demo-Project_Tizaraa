@@ -649,37 +649,48 @@ const handleCityChange = (cityId: number, setFieldValue: any) => {
 />
 
 
-              {/* Province Selection */}
-              <Select
+          {/* Province Selection */}
+<Select
   mb="1rem"
   label="Province / Region"
   options={province.map(prov => ({ value: prov.id, label: prov.province }))} // Correct mapping
-  value={values.shipping_province ? { value: values.shipping_province, label: province.find(prov => prov.id === values.shipping_province)?.province } : null} // Ensure this value matches the selected option
+  value={
+    values.shipping_province
+      ? { value: values.shipping_province, label: province.find(prov => prov.id === values.shipping_province)?.province }
+      : null
+  } // Ensure this value matches the selected option
   errorText={touched.shipping_province && errors.shipping_province}
-  onChange={(e) => handleProvinceChange(parseInt(e.value, 10), setFieldValue)} 
+  onChange={(e: { value: number; label: string }) => handleProvinceChange(e.value, setFieldValue)} // Use correct type
 />
 
-
- {/* City Selection */}
+{/* City Selection */}
 <Select
   mb="1rem"
   label="City"
   options={city.map((c: any) => ({ value: c.id, label: c.city }))} 
-  value={values.shipping_city ? { value: values.shipping_city, label: city.find(c => c.id === values.shipping_city)?.city } : null} // Ensure this value matches the selected option
+  value={
+    values.shipping_city
+      ? { value: values.shipping_city, label: city.find(c => c.id === values.shipping_city)?.city }
+      : null
+  } // Ensure this value matches the selected option
   errorText={touched.shipping_city && errors.shipping_city}
-  onChange={(e) => handleCityChange(Number(e.value), setFieldValue)} 
+  onChange={(e: { value: number; label: string }) => handleCityChange(e.value, setFieldValue)} // Use correct type
 />
 
-
-             {/* Area Selection (optional) */}
+{/* Area Selection */}
 <Select
   mb="1rem"
   label="Area"
   options={area.map((a: any) => ({ value: a.id, label: a.area }))} // Assuming area has id and name
-  value={values.shipping_area ? { value: values.shipping_area, label: area.find(a => a.id === values.shipping_area)?.area } : null} // Ensure this value matches the selected option
+  value={
+    values.shipping_area
+      ? { value: values.shipping_area, label: area.find(a => a.id === values.shipping_area)?.area }
+      : null
+  } // Ensure this value matches the selected option
   errorText={touched.shipping_area && errors.shipping_area}
-  onChange={(selectedArea) => setFieldValue("shipping_area", selectedArea.value)} // Update selected area
+  onChange={(selectedArea: { value: number; label: string }) => setFieldValue("shipping_area", selectedArea.value)} // Use correct type
 />
+
 
               </Grid>
             </Grid>
