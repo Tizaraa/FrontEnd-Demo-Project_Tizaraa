@@ -64,11 +64,13 @@ type ProductCard19Props = {
   reviews: number;
   images: string[];
   id: string | number;
+  productId: string | number;
+  sellerId: string | number;
 };
 // ==============================================================
 
 export default function ProductCard19(props: ProductCard19Props) {
-  const { img, name, price, reviews, id, slug, images } = props;
+  const { img, name, price, reviews, id, slug, images, productId, sellerId } = props;
 
   const { state, dispatch } = useAppContext();
   const [openDialog, setOpenDialog] = useState(false);
@@ -90,7 +92,9 @@ export default function ProductCard19(props: ProductCard19Props) {
       name,
       price,
       imgUrl: img,
-      qty: (cartItem?.qty || 0) + 1
+      qty: (cartItem?.qty || 0) + 1,
+      productId, 
+      sellerId
     };
 
     dispatch({ type: "CHANGE_CART_AMOUNT", payload });

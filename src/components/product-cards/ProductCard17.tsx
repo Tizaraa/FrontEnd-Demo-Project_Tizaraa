@@ -74,12 +74,14 @@ type ProductCard17Props = {
   category: string;
   images: string[];
   id: string | number;
+  productId: string | number;
+  sellerId: string | number;
 };
 
 // ==============================================================
 
 export default function ProductCard17(props: ProductCard17Props) {
-  const { id, title, price, imgUrl, category, reviews, slug, images } = props;
+  const { id, title, price, imgUrl, category, reviews, slug, images, productId, sellerId } = props;
 
   const { state, dispatch } = useAppContext();
   const [openDialog, setOpenDialog] = useState(false);
@@ -98,7 +100,9 @@ export default function ProductCard17(props: ProductCard17Props) {
       price,
       imgUrl,
       name: title,
-      qty: (cartItem?.qty || 0) + 1
+      qty: (cartItem?.qty || 0) + 1,
+      productId, 
+      sellerId
     };
 
     dispatch({ type: "CHANGE_CART_AMOUNT", payload });

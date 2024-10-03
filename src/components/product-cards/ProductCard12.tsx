@@ -109,11 +109,13 @@ type ProductCard12Props = {
   imgUrl: string;
   rating: number;
   images: string[];
+  productId: string | number;
+  sellerId: string | number;
 };
 // =============================================================
 
 export default function ProductCard12(props: ProductCard12Props) {
-  const { off, title, price, imgUrl, rating, slug, id, images } = props;
+  const { off, title, price, imgUrl, rating, slug, id, images, productId, sellerId } = props;
 
   const [open, setOpen] = useState(false);
   const { state, dispatch } = useAppContext();
@@ -125,7 +127,7 @@ export default function ProductCard12(props: ProductCard12Props) {
   const handleCartAmountChange = (qty: number) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { price, imgUrl, id, qty, slug, name: title }
+      payload: { price, imgUrl, id, qty, slug, name: title, productId, sellerId }
     });
   };
 

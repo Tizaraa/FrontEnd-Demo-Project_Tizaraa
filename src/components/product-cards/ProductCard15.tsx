@@ -100,11 +100,13 @@ type Props = {
   rating?: number;
   images: string[];
   id: string | number;
+  productId: string | number;
+  sellerId: string | number;
 };
 // ============================================================
 
 export default function ProductCard15(props: Props) {
-  const { off, id, title, price, imgUrl, rating, slug, images } = props;
+  const { off, id, title, price, imgUrl, rating, slug, images, productId, sellerId } = props;
 
   const [open, setOpen] = useState(false);
   const { state, dispatch } = useAppContext();
@@ -121,7 +123,9 @@ export default function ProductCard15(props: Props) {
       price,
       imgUrl,
       name: title,
-      qty: (cartItem?.qty || 0) + 1
+      qty: (cartItem?.qty || 0) + 1,
+      productId,
+      sellerId
     };
 
     dispatch({ type: "CHANGE_CART_AMOUNT", payload });

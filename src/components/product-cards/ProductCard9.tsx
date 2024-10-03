@@ -104,6 +104,9 @@ type ProductCard9Props = {
   images: string[];
   id: string | number;
   categories: string[];
+  productId: string | number;
+  sellerId: string | number;
+                                                                                                                                          
   [key: string]: unknown;
 };
 // ============================================================================
@@ -118,6 +121,7 @@ export default function ProductCard9({
   rating,
   images,
   categories,
+ productId, sellerId,
   ...props
 }: ProductCard9Props) {
   const [open, setOpen] = useState(false);
@@ -129,7 +133,7 @@ export default function ProductCard9({
   const handleCartAmountChange = (qty: number) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { price, imgUrl, id, qty, slug, name: title }
+      payload: { price, imgUrl, id, qty, slug, name: title, productId, sellerId }
     });
   };
 

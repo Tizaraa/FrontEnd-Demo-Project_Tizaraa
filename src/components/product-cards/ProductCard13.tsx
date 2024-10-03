@@ -118,11 +118,13 @@ interface Props {
   rating?: number;
   id: string | number;
   productColors: string[];
+  productId: string | number;
+  sellerId: string | number;
 }
 // =====================================================================
 
 export default function ProductCard13(props: Props) {
-  const { off, status, id, title, price, imgUrl, rating, productColors, slug } = props;
+  const { off, status, id, title, price, imgUrl, rating, productColors, slug, productId, sellerId } = props;
 
   const { state, dispatch } = useAppContext();
   const cartItem = state.cart.find((item) => item.slug === slug);
@@ -130,7 +132,7 @@ export default function ProductCard13(props: Props) {
   const handleCartAmountChange = (qty: number) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { price, imgUrl, id, qty, slug, name: title }
+      payload: { price, imgUrl, id, qty, slug, name: title, productId, sellerId }
     });
   };
 
