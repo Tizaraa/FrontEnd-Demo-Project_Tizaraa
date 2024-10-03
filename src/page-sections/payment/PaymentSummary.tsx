@@ -11,6 +11,7 @@ import Grid from "@component/grid/Grid";
 import { ProductCard2, ProductCard7 } from "@component/product-cards";
 import { currency } from "@utils/utils";
 import ProductCard20 from "@component/product-cards/ProductCard20";
+import { it } from "node:test";
 
 export default function PaymentSummary() {
   const { state } = useAppContext();
@@ -36,6 +37,8 @@ export default function PaymentSummary() {
               price={item.price}
               imgUrl={item.imgUrl}
               discountPrice={item.discountPrice}
+              productId={item.productId}
+              sellerId={item.sellerId}
             />
           ))}
        

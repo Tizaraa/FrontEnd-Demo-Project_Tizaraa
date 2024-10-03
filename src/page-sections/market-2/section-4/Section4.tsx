@@ -36,6 +36,8 @@ export default function Section4({ products }: Section4Props) {
               img={product.thumbnail}
               images={product.images as string[]}
               reviews={product.reviews?.length || 11}
+              productId={product.id}
+              sellerId={product.id}
             />
           ))}
         </Carousel>

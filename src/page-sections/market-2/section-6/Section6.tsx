@@ -64,6 +64,8 @@ export default function Section6({ data }: Props) {
                   img={product.thumbnail}
                   images={product.images as string[]}
                   reviews={product.reviews?.length || 14}
+                  productId={product.id}
+                  sellerId={product.id}
                 />
               ))}
             </Carousel>

@@ -47,6 +47,8 @@ export default function Section3({ products, title }: Props) {
                 rating={item.rating}
                 imgUrl={item.thumbnail}
                 productColors={item.colors}
+                productId={item.id}
+                sellerId={item.id}
               />
             </Box>
           ))}

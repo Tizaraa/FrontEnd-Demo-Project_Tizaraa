@@ -49,6 +49,8 @@ export default function Section5({ products, title }: Props) {
               rating={item.rating}
               images={item.images}
               imgUrl={item.thumbnail}
+              productId={item.id}
+              sellerId={item.id}
             />
           ))}
         </Carousel>

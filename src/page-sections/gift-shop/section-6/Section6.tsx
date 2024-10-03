@@ -26,6 +26,8 @@ export default function Section6({ products }: Props) {
               rating={item.rating}
               images={item.images}
               imgUrl={item.thumbnail}
+              productId={item.id}
+              sellerId={item.id}
             />
           </Grid>
         ))}

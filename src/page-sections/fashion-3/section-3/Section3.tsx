@@ -29,6 +29,8 @@ export default function Section3({ products }: Section3Props) {
               imgUrl={product.thumbnail}
               category={product.categories[0]}
               reviews={product.reviews?.length || 5}
+              productId={product.id}
+              sellerId={product.id}
             />
           </Grid>
         ))}
