@@ -50,19 +50,20 @@ export default function Login() {
       const data = response.data;
 
       // Check if login was successful
-      if (response.status === 200 && data.token) {
-        // Dispatch login action with auth token and user info
-        //localStorage.setItem("authToken", data.token);
+      if (data.token && response.status === 200) {
+        // Store token in cookies for both client-side and server-side access
         Cookies.set("token", data.token, { expires: 7 });
         localStorage.setItem("token", data.token);
-        dispatch({ type: "LOGIN", payload: { authToken: data.token, userInfo: data.user } });
         localStorage.setItem("userInfo", JSON.stringify(data.user));
-        //console.log(data.token);
-        
+
+        // Dispatch login action with auth token and user info
+        dispatch({
+          type: "LOGIN",
+          payload: { authToken: data.token, userInfo: data.user }
+        });
 
         // Redirect to profile page
         router.push("/profile");
-        //redirect('/profile');
       } else {
         // Handle errors (e.g., incorrect password, email not found, etc.)
         setApiError("Invalid credentials. Please check your email or password.");

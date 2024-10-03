@@ -1,10 +1,19 @@
+"use client";
 import { Fragment } from "react";
 // GLOBAL CUSTOM COMPONENTS
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 // PAGE SECTION COMPONENTS
 import { AddNewPayment, PaymentMethodList } from "@sections/customer-dashboard/payment-method";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function PaymentMethods() {
+  const router = useRouter();
+  const token = Cookies.get("token");
+  if (!token) {
+    // Redirect to login if no token is found
+    router.push("/login");
+  }
   return (
     <Fragment>
       <DashboardPageHeader

@@ -1,5 +1,3 @@
-// middleware.ts
-
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -9,16 +7,16 @@ export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname; // Get the current URL path
 
   const isAuthPath = ["/login", "/signup"].includes(path); // Public paths like login and signup
-  const isProtectedPath = ["/profile", "/address", "/orders", "/wish-list"].includes(path); // Protected paths
+  const isProtectedPath = ["/profile", "/orders", "/wish-list", "/address","/payment-methods"].includes(path); // Protected paths
 
   // If the user is trying to access protected paths without a token, redirect to login
   if (isProtectedPath && !token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // If the user is authenticated and tries to access login or signup, redirect to the homepage
+  // If the user is authenticated and tries to access login or signup, redirect to profile
   if (isAuthPath && token) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/profile", request.url));
   }
 
   return NextResponse.next(); // Continue the request if everything is fine
@@ -26,5 +24,5 @@ export function middleware(request: NextRequest) {
 
 // Configuring the middleware to match specific routes
 export const config = {
-  matcher: ["/profile", "/address", "/orders", "/wish-list", "/login", "/signup"], // Routes where this middleware applies
+  matcher: ["/profile", "/address", "/orders", "/wish-list", "/login", "/signup", "/payment-methods"], // Routes where this middleware applies
 };

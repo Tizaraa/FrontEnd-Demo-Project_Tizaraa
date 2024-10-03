@@ -10,8 +10,16 @@ import { Button } from "@component/buttons";
 import Pagination from "@component/pagination";
 import ProductCard1 from "@component/product-cards/ProductCard1";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function WishList() {
+  const router = useRouter();
+  const token = Cookies.get("token");
+  if (!token) {
+    // Redirect to login if no token is found
+    router.push("/login");
+  }
   return (
     <Fragment>
       {/* PAGE TITLE AREA */}

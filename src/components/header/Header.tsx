@@ -68,7 +68,7 @@ export default function Header({ isFixed, className }: HeaderProps) {
   const handleLogout = () => {
     authService.logout();
     setAnchorEl(null);
-    //Cookies.remove('token');
+    Cookies.remove('token');
     localStorage.removeItem('userInfo');
     localStorage.removeItem('token');
     setIsLoggedIn(false); // Update login state
