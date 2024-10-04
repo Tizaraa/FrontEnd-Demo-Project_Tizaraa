@@ -228,7 +228,8 @@ export default async function ProductDetails({ params }: Props) {
     return (
       <Fragment>
          <ProductIntro
-          id={product.product_slug}
+          // id={product.product_slug}
+          id={product.id}
           price={product.seeling_price}
           title={product.product_name}
           images={images}

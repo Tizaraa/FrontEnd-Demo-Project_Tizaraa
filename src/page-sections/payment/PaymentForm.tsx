@@ -20,7 +20,7 @@ import axios from "axios";
 
 export default function PaymentForm() {
   
-
+    let authtoken = localStorage.getItem('token');
 
   // `Bearer 1322|IQr8fvJUuNUnUZVuzWBsw1tVLsdR1U2Rp43YeNKL4b96967a`
 
@@ -34,7 +34,10 @@ export default function PaymentForm() {
   let shippingData = sessionStorage.getItem('address');
   let userShippingdata = JSON.parse(shippingData);
 
-  
+
+  // Cart Data 
+  let cartData = localStorage.getItem('cart');
+  let cart = JSON.parse(cartData);
 
   axios.post('https://tizaraa.com/api/checkout/order',
     {
@@ -48,21 +51,81 @@ export default function PaymentForm() {
       house_level: userShippingdata.selectedLandmark,
       address: userShippingdata.shipping_address1,
       delivery_charge: 60,
-
-
+      total_ammount: 600,
     },
     {
       headers: {
-        Authorization: `Bearer 1322|IQr8fvJUuNUnUZVuzWBsw1tVLsdR1U2Rp43YeNKL4b96967a`
+        Authorization: `Bearer ${authtoken}`
       }
     }
   )
   .then(function (response) {
-    alert(response.status);
+
+    let Ordersid = response.data.message.orderid
+     localStorage.setItem('orderId',Ordersid)
+
+       localStorage.setItem('orderSuccess', 'true');
+
+     let status = 500
+    
   })
   .catch(function (error) {
     console.log(error);
   });
+
+
+  let orderId = localStorage.getItem('orderId');
+
+  if(orderId != null){
+    
+    console.log(cart)
+
+    cart.map(cartdata=>{
+
+      // cart.productId
+      // cart.qty
+      // cart.price
+      // cart.id
+
+      console.log(cart.qty)
+      
+  axios.post('https://tizaraa.com/api/checkout/order/items',
+    {
+
+      delivery_charge: 60,
+      user_id: userinfo.id,
+      seller_id: cartdata.sellerId,
+      order_id: orderId,
+      product_id: cartdata.productId,
+      color: 'black' ,
+      size: '1',
+      qty: cartdata.qty,
+      note1: 'lorem10',
+      single_ammount: cartdata.price,
+
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${authtoken}`
+      }
+    }
+  )
+  .then(function (response) {
+
+   console.log(response.data)
+
+   window.location.href="http://localhost:3000/orders"
+
+
+    
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+    })
+
+  }
 
  }
 
@@ -231,9 +294,15 @@ export default function PaymentForm() {
 
         <Grid item sm={6} xs={12}>
    
-            <Button onClick={orderSubmit} variant="contained" color="primary" type="submit" fullwidth>
+            {/* <Button onClick={orderSubmit} variant="contained" color="primary" type="submit" fullwidth>
               Review
+            </Button> */}
+
+           
+            <Button onClick={orderSubmit} variant="outlined" color="primary" type="button" fullwidth>
+              Back to checkout details
             </Button>
+        
    
         </Grid>
       </Grid>
