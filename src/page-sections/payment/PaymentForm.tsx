@@ -17,10 +17,17 @@ import TextField from "@component/text-field";
 import Typography from "@component/Typography";
 import useWindowSize from "@hook/useWindowSize";
 import axios from "axios";
+import { useAppContext } from "@context/app-context";
 
 export default function PaymentForm() {
   
+  const { state } = useAppContext();
 
+  // var getTotalPrice = () => {
+  //   return state.cart.reduce((accumulator, item) => 
+  //     accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+  //   ) || 0;
+  // };
 
   // `Bearer 1322|IQr8fvJUuNUnUZVuzWBsw1tVLsdR1U2Rp43YeNKL4b96967a`
 
@@ -34,35 +41,40 @@ export default function PaymentForm() {
   let shippingData = sessionStorage.getItem('address');
   let userShippingdata = JSON.parse(shippingData);
 
-  
+  let totalPrice=state.cart.reduce((accumulator, item) => 
+  accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+  ) || 0;
 
-  axios.post('https://tizaraa.com/api/checkout/order',
-    {
-      user_id: userinfo.id,
-      name: userShippingdata.shipping_name,
-      phone: userShippingdata.shipping_contact,
-      email: userinfo.email,
-      province_id: userShippingdata.shipping_province,
-      city_id: userShippingdata.shipping_city,
-      area_id: userShippingdata.shipping_area,
-      house_level: userShippingdata.selectedLandmark,
-      address: userShippingdata.shipping_address1,
-      delivery_charge: 60,
+  console.log(totalPrice);
+  console.log(state.cart);
+
+  // axios.post('https://tizaraa.com/api/checkout/order',
+  //   {
+  //     user_id: userinfo.id,
+  //     name: userShippingdata.shipping_name,
+  //     phone: userShippingdata.shipping_contact,
+  //     email: userinfo.email,
+  //     province_id: userShippingdata.shipping_province,
+  //     city_id: userShippingdata.shipping_city,
+  //     area_id: userShippingdata.shipping_area,
+  //     house_level: userShippingdata.selectedLandmark,
+  //     address: userShippingdata.shipping_address1,
+  //     delivery_charge: 60,
 
 
-    },
-    {
-      headers: {
-        Authorization: `Bearer 1322|IQr8fvJUuNUnUZVuzWBsw1tVLsdR1U2Rp43YeNKL4b96967a`
-      }
-    }
-  )
-  .then(function (response) {
-    alert(response.status);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+  //   },
+  //   {
+  //     headers: {
+  //       Authorization: `Bearer 1322|IQr8fvJUuNUnUZVuzWBsw1tVLsdR1U2Rp43YeNKL4b96967a`
+  //     }
+  //   }
+  // )
+  // .then(function (response) {
+  //   alert(response.status);
+  // })
+  // .catch(function (error) {
+  //   console.log(error);
+  // });
 
  }
 
