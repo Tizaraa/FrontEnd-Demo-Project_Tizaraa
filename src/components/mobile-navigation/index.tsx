@@ -152,11 +152,11 @@ export default function MobileNavigationBar() {
   const token = Cookies.get("token"); // Check if user is logged in
 
   // If token is not found, redirect to login page
-  if (!token) {
-    // Prevent access to profile and show relevant links
-    router.push("/login");
-    return null;
-  }
+  // if (!token) {
+  //   // Prevent access to profile and show relevant links
+  //   router.push("/login");
+  //   return null;
+  // }
 
   if (width <= 900) {
     return (
