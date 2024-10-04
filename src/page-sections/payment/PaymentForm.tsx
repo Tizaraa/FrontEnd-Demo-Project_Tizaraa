@@ -19,6 +19,8 @@ import useWindowSize from "@hook/useWindowSize";
 import axios from "axios";
 import { useAppContext } from "@context/app-context";
 
+
+
 export default function PaymentForm() {
   
     let authtoken = localStorage.getItem('token');
@@ -115,8 +117,8 @@ export default function PaymentForm() {
 
    console.log(response.data)
 
-   window.location.href="http://localhost:3000/orders"
-
+  //  window.location.href="http://localhost:3000/orders"
+  router.push("/orders");
 
     
   })
