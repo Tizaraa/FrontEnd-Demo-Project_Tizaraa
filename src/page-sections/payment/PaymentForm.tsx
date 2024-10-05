@@ -18,6 +18,7 @@ import Typography from "@component/Typography";
 import useWindowSize from "@hook/useWindowSize";
 import axios from "axios";
 import { useAppContext } from "@context/app-context";
+import CheckBox from "@component/CheckBox";
 
 
 
@@ -271,8 +272,21 @@ export default function PaymentForm() {
             <Divider mb="1.5rem" mx="-2rem" />
           </Fragment>
         )} */}
+        <CheckBox
+         mb="1.5rem"
+         color="secondary"
+         name="cod"
+         onChange={handlePaymentMethodChange}
+         checked={paymentMethod === "cod"}
+         label={
+           <Typography ml="6px" fontWeight="600" fontSize="18px">
+             Cash on Delivery
+           </Typography>
+         }>
+          
+        </CheckBox>
 
-<Radio
+{/* <Radio
           mb="1.5rem"
           color="secondary"
           name="cod"
@@ -283,7 +297,7 @@ export default function PaymentForm() {
               Cash on Delivery
             </Typography>
           }
-        />
+        /> */}
       </Card1>
 
       <Grid container spacing={7}>
@@ -303,7 +317,7 @@ export default function PaymentForm() {
 
            
             <Button onClick={orderSubmit} variant="outlined" color="primary" type="button" fullwidth>
-              Back to checkout details
+              Review
             </Button>
         
    

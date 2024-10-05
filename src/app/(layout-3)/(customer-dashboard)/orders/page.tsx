@@ -73,11 +73,11 @@ export default function OrderList() {
         </TableRow>
       </Hidden>
 
-      {/* {orderList.map((item) => (
+      {orderList.map((item) => (
         <OrderRow order={item} key={item.id} />
       ))}
 
-      <OrdersPagination orderList={orderList} /> */}
+      <OrdersPagination orderList={orderList} />
     </Fragment>
   );
 }
