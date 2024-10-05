@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
 
@@ -14,10 +15,40 @@ import { currency } from "@utils/utils";
 import Order from "@models/order.model";
 
 // =================================================
-type OrderRowProps = { order: Order };
+type OrderRowProps = { order: Order }; // Keep this for rendering a single order
 // =================================================
 
-export default function OrderRow({ order }: OrderRowProps) {
+export default function OrderRow() { // No need to pass a single order here
+
+  let authtoken = localStorage.getItem('token');
+  const [orders, setOrders] = useState<Order[]>([]); // State for orders
+
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch("https://tizaraa.com/api/user/order", {
+        headers: {
+          Authorization: `Bearer ${authtoken}`
+        }
+      });
+
+      const data = await response.json();
+      console.log("Fetched Data:", data); // Log the response to check the structure
+
+      // Set orders state assuming the structure is data.orders
+      if (Array.isArray(data.orders)) {
+        setOrders(data.orders); // Ensure you're setting the array correctly
+      } else {
+        console.error("Orders not found in the expected format");
+      }
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []); // Fetch orders when component mounts
+
   const getColor = (status: string) => {
     switch (status) {
       case "Pending":
@@ -34,36 +65,40 @@ export default function OrderRow({ order }: OrderRowProps) {
   };
 
   return (
-    <Link href={`/orders/${order.id}`}>
-      <TableRow my="1rem" padding="6px 18px">
-        <H5 m="6px" textAlign="left">
-          #{order.id.substring(0, 8)}
-        </H5>
+    <>
+      {orders.map(order => (
+        <Link key={order.invoice} href={`/orders`}>
+          <TableRow my="1rem" padding="6px 18px">
+            <H5 m="6px" textAlign="left">
+              #{order.invoice}
+            </H5>
 
-        <Box m="6px">
-          <Chip p="0.25rem 1rem" bg={`${getColor(order.status)}.light`}>
-            <Small color={`${getColor(order.status)}.main`}>{order.status}</Small>
-          </Chip>
-        </Box>
+            <Box m="6px">
+              <Chip p="0.25rem 1rem" bg={`${getColor(order.status)}.light`}>
+                <Small color={`${getColor(order.status)}.main`}>{order.status}</Small>
+              </Chip>
+            </Box>
 
-        <Typography className="flex-grow pre" m="6px" textAlign="left">
-          {format(new Date(order.createdAt), "MMM dd, yyyy")}
-        </Typography>
+            <Typography className="flex-grow pre" m="6px" textAlign="left">
+              {format(new Date(order.date), "MMM dd, yyyy")} {/* Adjusted to use 'date' */}
+            </Typography>
 
-        <Typography m="6px" textAlign="left">
-          {currency(order.totalPrice)}
-        </Typography>
+            <Typography m="6px" textAlign="left">
+              {currency(order.amount)} {/* Adjusted to use 'amount' */}
+            </Typography>
 
-        <Hidden flex="0 0 0 !important" down={769}>
-          <Typography textAlign="center" color="text.muted">
-            <IconButton>
-              <Icon variant="small" defaultcolor="currentColor">
-                arrow-right
-              </Icon>
-            </IconButton>
-          </Typography>
-        </Hidden>
-      </TableRow>
-    </Link>
+            <Hidden flex="0 0 0 !important" down={769}>
+              <Typography textAlign="center" color="text.muted">
+                <IconButton>
+                  <Icon variant="small" defaultcolor="currentColor">
+                    arrow-right
+                  </Icon>
+                </IconButton>
+              </Typography>
+            </Hidden>
+          </TableRow>
+        </Link>
+      ))}
+    </>
   );
 }

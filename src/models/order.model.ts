@@ -19,6 +19,9 @@ interface Order {
   isDelivered: boolean;
   shippingAddress: string;
   status: "Pending" | "Processing" | "Delivered" | "Cancelled";
+  invoice: number;
+  date: Date;
+  amount: number;
 }
 
 export default Order;

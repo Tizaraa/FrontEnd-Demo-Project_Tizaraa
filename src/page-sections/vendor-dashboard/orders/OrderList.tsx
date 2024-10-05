@@ -15,7 +15,8 @@ export default function OrderList({ orders }: Props) {
   return (
     <Fragment>
       {orders.map((item) => (
-        <OrderRow order={item} key={item.id} />
+        // <OrderRow order={item} key={item.id} />
+        <OrderRow></OrderRow>
       ))}
 
       <FlexBox justifyContent="center" mt="2.5rem">
