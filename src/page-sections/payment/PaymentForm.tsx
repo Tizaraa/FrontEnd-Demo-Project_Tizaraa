@@ -80,49 +80,35 @@ export default function PaymentForm() {
 
   let orderId = localStorage.getItem('orderId');
 
-  if(orderId != null){
-    
-    console.log(cart)
-
-    cart.map(cartdata=>{
-
-      // cart.productId
-      // cart.qty
-      // cart.price
-      // cart.id
-
-      console.log(cart.qty)
-      
-  axios.post('https://tizaraa.com/api/checkout/order/items',
-    {
-
-      delivery_charge: 60,
-      user_id: userinfo.id,
-      seller_id: cartdata.sellerId,
-      order_id: orderId,
-      product_id: cartdata.productId,
-      color: 'black' ,
-      size: '1',
-      qty: cartdata.qty,
-      note1: 'lorem10',
-      single_ammount: cartdata.price,
-
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${authtoken}`
-      }
-    }
-  )
-  .then(function (response) {
-
-   console.log(response.data)
-
-  //  window.location.href="http://localhost:3000/orders"
-  router.push("/orders");
-
-    
-  })
+  if (orderId != null) {
+    cart.map((cartdata) => {
+      axios
+        .post(
+          "https://tizaraa.com/api/checkout/order/items",
+          {
+            delivery_charge: 60,
+            user_id: userinfo.id,
+            seller_id: cartdata.sellerId,
+            order_id: orderId,
+            product_id: cartdata.productId,
+            color: "black",
+            size: "1",
+            qty: cartdata.qty,
+            note1: "lorem10",
+            single_ammount: cartdata.price,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${authtoken}`,
+            },
+          }
+        )
+        .then(function (response) {
+          console.log(response.data);
+          // Clear the cart and update state
+          localStorage.removeItem("cart");
+          window.location.href = "/orders";
+        })
   .catch(function (error) {
     console.log(error);
   });

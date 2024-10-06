@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 
 // This function runs on every request
 export function middleware(request: NextRequest) {
+  
   const token = request.cookies.get("token")?.value; // Get the auth token from cookies
   const path = request.nextUrl.pathname; // Get the current URL path
 
