@@ -107,6 +107,7 @@ export default function PaymentForm() {
           console.log(response.data);
           // Clear the cart and update state
           localStorage.removeItem("cart");
+          localStorage.removeItem("orderId");
           window.location.href = "/orders";
         })
   .catch(function (error) {

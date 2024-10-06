@@ -67,7 +67,7 @@ export default function OrderRow() { // No need to pass a single order here
   return (
     <>
       {orders.map(order => (
-        <Link key={order.invoice} href={`/orders`}>
+        <Link key={order.invoice} href={`/orders/${order.invoice}`}>
           <TableRow my="1rem" padding="6px 18px">
             <H5 m="6px" textAlign="left">
               #{order.invoice}

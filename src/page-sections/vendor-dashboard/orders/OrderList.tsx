@@ -18,10 +18,10 @@ export default function OrderList({ orders }: Props) {
         // <OrderRow order={item} key={item.id} />
         <OrderRow></OrderRow>
       ))}
-
+{/* 
       <FlexBox justifyContent="center" mt="2.5rem">
         <Pagination pageCount={5} onChange={(data) => console.log(data)} />
-      </FlexBox>
+      </FlexBox> */}
     </Fragment>
   );
 }
