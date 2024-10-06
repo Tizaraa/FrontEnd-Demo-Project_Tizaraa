@@ -12,9 +12,9 @@ export default function CustomerDashboardLayout({ children }: PropsWithChildren)
         <DashboardNavigation />
       </StyledGrid>
 
-      <Grid item lg={9} xs={12}>
+       <Grid item lg={9} xs={12}>
         {children}
-      </Grid>
+      </Grid>  
     </Grid>
   );
 }

@@ -82,8 +82,9 @@ export default function Section1() {
     <Fragment>
       <Navbar navListOpen={true} />
 
-      <Box bg="gray.white" mb="3.75rem">
-        <Container pb="2rem">
+      <Box bg="gray.white" mb="3.75rem" >
+      <div className="container w-75 mx-auto pb-4">
+        <Container pb="2rem" >
           <Carousel
             spacing="0px"
             infinite={true}
@@ -103,6 +104,7 @@ export default function Section1() {
           </Carousel>
           {loading && <p>Loading products...</p>}
         </Container>
+        </div>
       </Box>
 
   

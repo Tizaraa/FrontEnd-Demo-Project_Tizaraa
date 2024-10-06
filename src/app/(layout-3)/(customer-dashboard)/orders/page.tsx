@@ -9,6 +9,7 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { OrderRow } from "@sections/customer-dashboard/orders"; // Ensure OrderRow is imported correctly
 import Cookies from "js-cookie";
 import axios from "axios";
+import authService from "services/authService";
 
 export default function OrderList() {
   const router = useRouter();
@@ -17,7 +18,8 @@ export default function OrderList() {
   const [orderSuccess, setOrderSuccess] = useState(false);
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    // const token = Cookies.get("token");
+    const token = authService.getToken();
 
     if (!token) {
       router.push("/login");
@@ -63,6 +65,7 @@ export default function OrderList() {
   if (loading) return <div>Loading...</div>;
 
   return (
+   
     <Fragment>
       <DashboardPageHeader title="My Orders" iconName="bag_filled" />
 
