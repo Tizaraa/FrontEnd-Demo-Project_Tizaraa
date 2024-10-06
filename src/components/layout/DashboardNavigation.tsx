@@ -241,7 +241,7 @@ const linkList = [
   {
     title: "DASHBOARD",
     list: [
-      { href: "/orders", title: "Orders", iconName: "bag", count: 5 },
+      { href: "/orders", title: "Orders", iconName: "bag", count: 1 },
       { href: "/wish-list", title: "Wishlist", iconName: "heart", count: 19 },
       { href: "/support-tickets", title: "Support Tickets", iconName: "customer-service", count: 1 },
     ],

@@ -23,78 +23,65 @@ import CheckBox from "@component/CheckBox";
 
 
 export default function PaymentForm() {
+  const router = useRouter();
   
     let authtoken = localStorage.getItem('token');
 
   // `Bearer 1322|IQr8fvJUuNUnUZVuzWBsw1tVLsdR1U2Rp43YeNKL4b96967a`
 
- const orderSubmit = ()=>{
-
-  let getData = localStorage.getItem('userInfo');
-  let userinfo = JSON.parse(getData);
-
-  // user shipping
-
-  let shippingData = sessionStorage.getItem('address');
-  let userShippingdata = JSON.parse(shippingData);
-
-
-  // Cart Data 
-  let cartData = localStorage.getItem('cart');
-  let cart = JSON.parse(cartData);
-
-  axios.post('https://tizaraa.com/api/checkout/order',
-    {
-      user_id: userinfo.id,
-      name: userShippingdata.shipping_name,
-      phone: userShippingdata.shipping_contact,
-      email: userinfo.email,
-      province_id: userShippingdata.shipping_province,
-      city_id: userShippingdata.shipping_city,
-      area_id: userShippingdata.shipping_area,
-      house_level: userShippingdata.selectedLandmark,
-      address: userShippingdata.shipping_address1,
-      delivery_charge: 60,
-      total_ammount: 600,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${authtoken}`
-      }
-    }
-  )
-  .then(function (response) {
-
-    let Ordersid = response.data.message.orderid
-     localStorage.setItem('orderId',Ordersid)
-
-       localStorage.setItem('orderSuccess', 'true');
-
-     let status = 500
-    
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-
-
-  let orderId = localStorage.getItem('orderId');
-
-  if (orderId != null) {
-    cart.map((cartdata) => {
-      axios
-        .post(
-          "https://tizaraa.com/api/checkout/order/items",
+  const orderSubmit = async () => {
+    let getData = localStorage.getItem('userInfo');
+    let userinfo = JSON.parse(getData);
+  
+    // User shipping data
+    let shippingData = sessionStorage.getItem('address');
+    let userShippingdata = JSON.parse(shippingData);
+  
+    // Cart Data
+    let cartData = localStorage.getItem('cart');
+    let cart = JSON.parse(cartData);
+  
+    try {
+      const orderResponse = await axios.post(
+        'https://tizaraa.com/api/checkout/order',
+        {
+          user_id: userinfo.id,
+          name: userShippingdata.shipping_name,
+          phone: userShippingdata.shipping_contact,
+          email: userinfo.email,
+          province_id: userShippingdata.shipping_province,
+          city_id: userShippingdata.shipping_city,
+          area_id: userShippingdata.shipping_area,
+          house_level: userShippingdata.selectedLandmark,
+          address: userShippingdata.shipping_address1,
+          delivery_charge: 60,
+          total_ammount: 600,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authtoken}`,
+          },
+        }
+      );
+  
+      let orderId = orderResponse.data.message.orderid;
+      localStorage.setItem('orderId', orderId);
+      localStorage.setItem('orderSuccess', 'true');
+  
+      // Process each cart item
+      await Promise.all(cart.map(async (cartdata) => {
+        await axios.post(
+          'https://tizaraa.com/api/checkout/order/items',
           {
             delivery_charge: 60,
             user_id: userinfo.id,
             seller_id: cartdata.sellerId,
             order_id: orderId,
             product_id: cartdata.productId,
-            color: "black",
-            size: "1",
+            color: 'black',
+            size: '1',
             qty: cartdata.qty,
-            note1: "lorem10",
+            note1: 'lorem10',
             single_ammount: cartdata.price,
           },
           {
@@ -102,27 +89,28 @@ export default function PaymentForm() {
               Authorization: `Bearer ${authtoken}`,
             },
           }
-        )
-        .then(function (response) {
-          console.log(response.data);
-          // Clear the cart and update state
-          localStorage.removeItem("cart");
-          localStorage.removeItem("orderId");
-          window.location.href = "/orders";
-        })
-  .catch(function (error) {
-    console.log(error);
-  });
+        );
+             
 
-    })
+      }));
 
-  }
+ 
+  
+    } catch (error) {
+      console.log(error);
+    }
 
- }
+    // Clear the cart and redirect
+    localStorage.removeItem('cart');
+    localStorage.removeItem('orderId');
+
+    router.push("/orders");
+  };
+ 
 
 
 
-  const router = useRouter();
+  
   const width = useWindowSize();
   // const [paymentMethod, setPaymentMethod] = useState("credit-card");
   const [paymentMethod, setPaymentMethod] = useState("cod");

@@ -14,9 +14,9 @@ type Props = { orders: Order[] };
 export default function OrderList({ orders }: Props) {
   return (
     <Fragment>
-      {orders.map((item) => (
+      {orders.map((order) => (
         // <OrderRow order={item} key={item.id} />
-        <OrderRow></OrderRow>
+        <OrderRow order={order} key={order.invoice}></OrderRow>
       ))}
 {/* 
       <FlexBox justifyContent="center" mt="2.5rem">

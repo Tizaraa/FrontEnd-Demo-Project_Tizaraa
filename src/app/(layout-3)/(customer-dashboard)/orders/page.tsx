@@ -1,13 +1,14 @@
 "use client";
 import { Fragment, useEffect, useState } from "react";
-import api from "@utils/__api__/orders";
+import api from "@utils/__api__/orders"; // Assuming you have an API utility
 import Hidden from "@component/hidden";
 import TableRow from "@component/TableRow";
 import { H5 } from "@component/Typography";
 import { useRouter } from "next/navigation";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
-import { OrderRow, OrdersPagination } from "@sections/customer-dashboard/orders";
+import { OrderRow } from "@sections/customer-dashboard/orders"; // Ensure OrderRow is imported correctly
 import Cookies from "js-cookie";
+import axios from "axios";
 
 export default function OrderList() {
   const router = useRouter();
@@ -24,10 +25,10 @@ export default function OrderList() {
       fetchOrderList(token);
     }
 
-    const success = localStorage.getItem('orderSuccess');
+    const success = localStorage.getItem("orderSuccess");
     if (success) {
       setOrderSuccess(true);
-      localStorage.removeItem('orderSuccess');
+      localStorage.removeItem("orderSuccess");
     }
   }, [router]);
 
@@ -40,8 +41,18 @@ export default function OrderList() {
 
   const fetchOrderList = async (token: string) => {
     try {
-      const orderListResponse = await api.getOrders();
-      setOrderList(orderListResponse);
+      const response = await axios.get("https://tizaraa.com/api/user/order", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      const data = response.data;
+      if (Array.isArray(data.orders)) {
+        setOrderList(data.orders);
+      } else {
+        console.error("Orders not found in the expected format");
+      }
     } catch (error) {
       console.error("Failed to fetch order list:", error);
     } finally {
@@ -73,12 +84,9 @@ export default function OrderList() {
         </TableRow>
       </Hidden>
 
-      {orderList.map((item) => (
-        // <OrderRow order={item} key={item.id} />
-        <OrderRow key={item.invoice}></OrderRow>
+      {orderList.map((order) => (
+        <OrderRow key={order.invoice} order={order} />
       ))}
-
-      <OrdersPagination orderList={orderList} />
     </Fragment>
   );
 }
