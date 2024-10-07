@@ -90,7 +90,9 @@ export default function AddressList() {
       {/* Render each address */}
       {addressList.length > 0 ? (
         addressList.map((item) => (
-          <AddressItem item={item} key={item.id} />
+          // <AddressItem item={item} key={item.id} />
+          <>
+          </>
         ))
       ) : (
         <div>No addresses found</div>

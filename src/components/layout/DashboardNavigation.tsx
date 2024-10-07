@@ -163,7 +163,8 @@ export default function DashboardNavigation() {
 
   // Check if user is logged in when component mounts
   useEffect(() => {
-    const token = Cookies.get("token");
+    // const token = Cookies.get("token");
+    const token = authService.getToken();
     if (token) {
       setIsLoggedIn(true); // Set logged-in state if token exists
     } else {

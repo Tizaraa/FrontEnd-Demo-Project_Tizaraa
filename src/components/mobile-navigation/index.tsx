@@ -108,6 +108,7 @@ import { getTheme } from "@utils/utils";
 import { layoutConstant } from "@utils/constants";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import authService from "services/authService";
 
 // STYLED COMPONENT
 const Wrapper = styled.div`
@@ -149,26 +150,35 @@ export default function MobileNavigationBar() {
   const width = useWindowSize();
   const { state } = useAppContext();
   const router = useRouter();
-  const token = Cookies.get("token"); // Check if user is logged in
+  const token = authService.getToken(); // Assuming this function gets the token
 
-  // If token is not found, redirect to login page
-  // if (!token) {
-  //   // Prevent access to profile and show relevant links
-  //   router.push("/login");
-  //   return null;
-  // }
+  // Function to handle click on the Account link
+  const handleAccountClick = (href) => {
+    if (!token) {
+      // Redirect to login if not logged in
+      router.push("/login");
+    } else {
+      // Redirect to profile if logged in
+      router.push(href);
+    }
+  };
 
   if (width <= 900) {
     return (
       <Wrapper>
         {list.map((item) => {
-          // Hide the profile link if the user is not logged in
-          if (item.title === "Account" && !token) {
-            return null; // Don't render Account link if the user is not logged in
-          }
-
+          // Render all links, but handle the Account link differently
           return (
-            <NavLink className="link" href={item.href} key={item.title}>
+            <NavLink
+              className="link"
+              href={item.href}
+              key={item.title}
+              onClick={(e) => {
+                if (item.title === "Account") {
+                  e.preventDefault(); 
+                  handleAccountClick(item.href); 
+                }
+              }}>
               <Icon className="icon" variant="small">
                 {item.icon}
               </Icon>

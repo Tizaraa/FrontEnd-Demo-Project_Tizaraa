@@ -52,7 +52,8 @@ interface LoginResponse {
     },
 
     isAuthenticated: (): boolean => {
-      const token = Cookies.get('token') || localStorage.getItem('token');
+      // const token = Cookies.get('token') || localStorage.getItem('token');
+      const token = authService.getToken() || localStorage.getItem('token');
       return !!token; // Check if token exists
     },
   
