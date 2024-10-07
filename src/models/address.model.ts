@@ -4,9 +4,9 @@ interface Address {
   id: string;
   user: User;
   city: string;
-  title: string;
+  name: string;
   phone: string;
-  street: string;
+  address: string;
   country: string;
 }
 
