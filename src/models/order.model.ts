@@ -22,6 +22,10 @@ interface Order {
   invoice: number;
   date: Date;
   amount: number;
+  invoice_id: number;
+  address: string;
+  // order_place_date: string;
+
 }
 
 export default Order;

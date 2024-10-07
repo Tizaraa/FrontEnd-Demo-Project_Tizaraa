@@ -473,10 +473,11 @@ export default function CheckoutForm() {
 
 // Fetch provinces and cities
 const fetchProvince = async () => {
+  const authtoken = localStorage.getItem('token'); 
   try {
     const response = await axios.get("https://tizaraa.com/api/checkout/address", {
       headers: {
-        'Authorization': `Bearer 1204|d7tYXgZU3Fh3ICHKUx25qGM9vTTJqU1GPtypSaDi4dae3f55`
+        Authorization: `Bearer ${authtoken}`,
       }
     });
 
