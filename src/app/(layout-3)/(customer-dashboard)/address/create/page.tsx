@@ -15,7 +15,7 @@ export default function CreateAddress() {
       />
 
       <Card1 borderRadius={8}>
-        {/* <AddressForm /> */}
+        <AddressForm />
       </Card1>
     </Fragment>
   );

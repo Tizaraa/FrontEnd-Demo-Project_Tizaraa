@@ -32,7 +32,7 @@ const AddressDetails = async ({ params }: IDParams) => {
       <DashboardPageHeader iconName="pin_filled" title="Edit Address" button={<BackToAddress />} />
 
       <Card1 borderRadius={8}>
-        <AddressForm address={address} />
+        <AddressForm  />
       </Card1>
     </Fragment>
   );
