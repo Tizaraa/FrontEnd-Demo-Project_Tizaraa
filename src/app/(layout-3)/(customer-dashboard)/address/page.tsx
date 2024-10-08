@@ -93,6 +93,7 @@ export default function AddressList() {
           // <AddressItem item={item} key={item.id} />
           <>
           </>
+          
         ))
       ) : (
         <div>No addresses found</div>

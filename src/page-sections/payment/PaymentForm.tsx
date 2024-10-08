@@ -23,6 +23,18 @@ import CheckBox from "@component/CheckBox";
 
 
 export default function PaymentForm() {
+
+
+  const { state } = useAppContext();
+
+  const getTotalPrice = () => {
+    return state.cart.reduce((accumulator, item) => 
+      accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+    ) || 0;
+  };
+
+  const total_ammount = getTotalPrice()
+ 
   const router = useRouter();
   
     let authtoken = localStorage.getItem('token');
@@ -55,7 +67,7 @@ export default function PaymentForm() {
           house_level: userShippingdata.selectedLandmark,
           address: userShippingdata.shipping_address1,
           delivery_charge: 60,
-          total_ammount: 600,
+          total_ammount: total_ammount,
         },
         {
           headers: {
