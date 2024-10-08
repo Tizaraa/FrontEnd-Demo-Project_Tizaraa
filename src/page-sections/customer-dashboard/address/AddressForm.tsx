@@ -131,7 +131,7 @@ import TextArea from "@component/textarea";
 import countryList from "@data/countryList";
 import axios from "axios";
 
-export default function AddressForm({address}) {
+export default function AddressForm() {
   const router = useRouter();
   const [selectedLandmark, setSelectedLandmark] = useState<number | null>(null);
   const [province, setProvince] = useState([]);
