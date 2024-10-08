@@ -11,9 +11,12 @@ import useWindowSize from "@hook/useWindowSize";
 
 type Status = "packaging" | "shipping" | "delivering" | "complete";
 
-export default function OrderStatus() {
+interface OrderStatusProps {
+  orderStatus: Status; // Accept orderStatus as a prop
+}
+
+export default function OrderStatus({ orderStatus }: OrderStatusProps) {
   const width = useWindowSize();
-  const orderStatus: Status = "shipping";
   const stepIconList = ["package-box", "truck-1", "delivery"];
   const orderStatusList = ["packaging", "shipping", "delivering", "complete"];
 
@@ -27,14 +30,16 @@ export default function OrderStatus() {
         flexWrap="wrap"
         alignItems="center"
         justifyContent="space-between"
-        flexDirection={width < breakpoint ? "column" : "row"}>
+        flexDirection={width < breakpoint ? "column" : "row"}
+      >
         {stepIconList.map((item, ind) => (
           <Fragment key={item}>
             <Box position="relative">
               <Avatar
                 size={64}
                 bg={ind <= statusIndex ? "primary.main" : "gray.300"}
-                color={ind <= statusIndex ? "gray.white" : "primary.main"}>
+                color={ind <= statusIndex ? "gray.white" : "primary.main"}
+              >
                 <Icon size="32px" defaultcolor="currentColor">
                   {item}
                 </Icon>
@@ -69,7 +74,8 @@ export default function OrderStatus() {
           bg="primary.light"
           textAlign="center"
           borderRadius="300px"
-          color="primary.main">
+          color="primary.main"
+        >
           Estimated Delivery Date <b>4th October</b>
         </Typography>
       </FlexBox>

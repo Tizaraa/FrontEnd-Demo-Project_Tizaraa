@@ -22,6 +22,7 @@ import { IDParams } from "interfaces";
 export default function OrderDetails({ params }: IDParams) {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true); // For loading state
+  const [getStatus, setStatus] = useState(null); // For status state
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -37,6 +38,7 @@ export default function OrderDetails({ params }: IDParams) {
         );
         setOrder(response.data);
         console.log("Fetched Order Data:", response.data);
+        setStatus(response.data.Order.status)
       } catch (error) {
         console.error("Error fetching order details:", error);
       } finally {
@@ -63,7 +65,9 @@ export default function OrderDetails({ params }: IDParams) {
         button={<OrderListButton />}
       />
 
-      <OrderStatus />
+      {/* <OrderStatus /> */}
+
+      <OrderStatus orderStatus={getStatus} />
 
       <Card p="0px" mb="30px" overflow="hidden" borderRadius={8}>
         <TableRow bg="gray.200" p="12px" boxShadow="none" borderRadius={0}>
@@ -161,7 +165,7 @@ export default function OrderDetails({ params }: IDParams) {
             </FlexBox>
 
 
-            <Typography fontSize="14px">Paid by Credit/Debit Card</Typography>
+            <Typography fontSize="14px">Paid by {order.Order.delivery_type}</Typography>
           </Card>
         </Grid>
       </Grid>

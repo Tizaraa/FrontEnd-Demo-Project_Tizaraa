@@ -52,6 +52,13 @@ export default function PaymentForm() {
     // Cart Data
     let cartData = localStorage.getItem('cart');
     let cart = JSON.parse(cartData);
+
+    console.log("Selected payment method:", paymentMethod);
+
+    // Log if payment method is COD
+    if (paymentMethod === "cod") {
+        console.log(1);
+    }
   
     try {
       const orderResponse = await axios.post(
@@ -68,6 +75,7 @@ export default function PaymentForm() {
           address: userShippingdata.shipping_address1,
           delivery_charge: 60,
           total_ammount: total_ammount,
+          payment_type: 1,
         },
         {
           headers: {
@@ -259,19 +267,18 @@ export default function PaymentForm() {
             <Divider mb="1.5rem" mx="-2rem" />
           </Fragment>
         )} */}
-        <CheckBox
-         mb="1.5rem"
-         color="secondary"
-         name="cod"
-         onChange={handlePaymentMethodChange}
-         checked={paymentMethod === "cod"}
-         label={
-           <Typography ml="6px" fontWeight="600" fontSize="18px">
-             Cash on Delivery
-           </Typography>
-         }>
-          
-        </CheckBox>
+       <CheckBox
+          mb="1.5rem"
+          color="secondary"
+          name="cod"
+          onChange={handlePaymentMethodChange}
+          checked={paymentMethod === "cod"}
+          label={
+            <Typography ml="6px" fontWeight="600" fontSize="18px">
+              Cash on Delivery
+            </Typography>
+          }
+        />
 
 {/* <Radio
           mb="1.5rem"
@@ -340,6 +347,8 @@ const initialValues = {
   shipping_city: "",
   shipping_area: "",
   selectedLandmark: null, 
+
+  
 };
 
 const checkoutSchema = yup.object().shape({
