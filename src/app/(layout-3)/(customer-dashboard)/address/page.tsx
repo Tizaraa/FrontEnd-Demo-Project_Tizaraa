@@ -65,14 +65,12 @@ export default function AddressList() {
   return (
     <Fragment>
       <DashboardPageHeader title="My Addresses" iconName="pin_filled" button={<AddNewAddress />} />
-
-      {/* Render each address */}
-      {addressList.length > 0 ? (
-        addressList.map((item) => (
-          // <AddressItem item={item} key={item.id} />
-          <>
-          </>
-          
+      {/* <Card1 borderRadius={8}>
+        <AddressForm />
+      </Card1> */}
+      {addresses.length > 0 ? (
+        addresses.map((item) => (
+          <AddressItem key={item.id} item={item} onDelete={handleDelete} />
         ))
       ) : (
         <div>No addresses found</div>
@@ -134,5 +132,4 @@ function AddressItem({
     </TableRow>
   );
 }
-
 
