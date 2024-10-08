@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import Box from "@component/Box";
 import Card from "@component/Card";
 import Avatar from "@component/avatar";
@@ -9,7 +9,7 @@ import FlexBox from "@component/FlexBox";
 import Typography from "@component/Typography";
 import useWindowSize from "@hook/useWindowSize";
 
-type Status = "packaging" | "shipping" | "delivering" | "complete";
+type Status =  "Pending" | "Confirm" | "Shipped" | "Delivered";
 
 interface OrderStatusProps {
   orderStatus: Status; // Accept orderStatus as a prop
@@ -18,10 +18,15 @@ interface OrderStatusProps {
 export default function OrderStatus({ orderStatus }: OrderStatusProps) {
   const width = useWindowSize();
   const stepIconList = ["package-box", "truck-1", "delivery"];
-  const orderStatusList = ["packaging", "shipping", "delivering", "complete"];
+  const orderStatusList = ["Confirm", "Shipped", "Delivered"]; 
 
   const breakpoint = 350;
   const statusIndex = orderStatusList.indexOf(orderStatus);
+
+  // current status 
+  useEffect(() => {
+    console.log("Current Order Status:", orderStatus);
+  }, [orderStatus]);
 
   return (
     <Card p="2rem 1.5rem" mb="30px" borderRadius={8}>

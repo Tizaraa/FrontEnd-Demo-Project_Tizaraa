@@ -69,7 +69,7 @@ export default function Topbar() {
             ))}
           </Menu>
 
-          <Menu
+          {/* <Menu
             direction="right"
             handler={
               <FlexBox className="dropdown-handler" alignItems="center" height="40px">
@@ -84,7 +84,7 @@ export default function Topbar() {
                 <Small fontWeight="600">{item.title}</Small>
               </MenuItem>
             ))}
-          </Menu>
+          </Menu> */}
         </FlexBox>
       </Container>
     </StyledTopbar>
