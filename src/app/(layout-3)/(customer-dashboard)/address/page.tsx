@@ -110,7 +110,7 @@ function AddressItem({
       </Typography>
 
       <Typography className="pre" textAlign="center" color="text.muted">
-        <Link href={`/address/${item.id}`}>
+        <Link href={`/address/edit/${item.id}`}>
           <IconButton>
             <Icon variant="small" defaultcolor="currentColor">
               edit
@@ -132,4 +132,5 @@ function AddressItem({
     </TableRow>
   );
 }
+
 
