@@ -4,6 +4,7 @@ interface User {
   phone: string;
   avatar: string;
   password: string;
+  gender: string;
   dateOfBirth: Date;
   verified: boolean;
   name: { firstName: string; lastName: string };

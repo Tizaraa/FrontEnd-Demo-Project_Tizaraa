@@ -87,6 +87,7 @@ interface SelectProps extends Props, SpaceProps {
   errorText?: any;
   isMulti?: boolean;
   defaultValue?: any;
+  fullwidth?: boolean;
   options: SelectOption[];
 }
 // ==============================================================

@@ -7,6 +7,7 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 // PAGE SECTION COMPONENTS
 import { ProfileEditForm, BackToProfileButton } from "@sections/customer-dashboard/profile";
 
+// Fetching user data
 export default async function ProfileEditor() {
   const user = await api.getUser();
 
@@ -19,7 +20,8 @@ export default async function ProfileEditor() {
       />
 
       <Card1 borderRadius={8}>
-        <ProfileEditForm user={user as any} />
+        {/* <ProfileEditForm user={user as any} /> */}
+        <ProfileEditForm />
       </Card1>
     </Fragment>
   );
