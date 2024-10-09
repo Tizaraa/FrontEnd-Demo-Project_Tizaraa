@@ -310,6 +310,7 @@ export default function AddressForm() {
                     <Button
                       type="button"
                       variant={selectedLandmark === 1 ? "contained" : "outlined"}
+                      color="primary"
                       onClick={() =>
                         handleLandmarkSelect("Home", setFieldValue)
                       }
@@ -321,6 +322,7 @@ export default function AddressForm() {
                     <Button
                       type="button"
                       variant={selectedLandmark === 2 ? "contained" : "outlined"}
+                      color="primary"
                       onClick={() =>
                         handleLandmarkSelect("Office", setFieldValue)
                       }

@@ -480,6 +480,7 @@ const fetchProvince = async () => {
         Authorization: `Bearer ${authtoken}`,
       }
     });
+    console.log(response.data)
 
     if (Array.isArray(response.data)) {
       setProvince(response.data); // Store the whole response
@@ -497,13 +498,17 @@ useEffect(() => {
 const handleProvinceChange = (provinceId: number, setFieldValue: any) => {
   console.log("Received provinceId:", provinceId); // Debug the value
   const selectedProvince = province.find((prov: any) => prov.id === provinceId);
- 
+
   if (selectedProvince) {
+    const deliveryCharge = selectedProvince.delivery_charge; // Get the delivery charge based on selected province
+
+    // Update form values
     setFieldValue("shipping_province", provinceId);
+    setFieldValue("delivery_charge", deliveryCharge); // Set delivery charge in form state
     setCity(selectedProvince.city); // Update the city based on the selected province
     setFieldValue("shipping_city", ""); // Reset city and area when province changes
     setFieldValue("shipping_area", "");
-    setArea([]); // Reset area
+    setArea([]); 
   } else {
     console.log("Province not found.");
   }
@@ -612,6 +617,7 @@ const handleCityChange = (cityId: number, setFieldValue: any) => {
     <Button
       type="button" 
       variant={selectedLandmark === 1 ? "contained" : "outlined"}
+      color="primary"
       onClick={() => handleLandmarkSelect("Home", setFieldValue)}
     >
       Home
@@ -621,6 +627,7 @@ const handleCityChange = (cityId: number, setFieldValue: any) => {
     <Button
       type="button" 
       variant={selectedLandmark === 2 ? "contained" : "outlined"}
+      color="primary"
       onClick={() => handleLandmarkSelect("Office", setFieldValue)}
     >
       Office
@@ -719,6 +726,7 @@ const handleCityChange = (cityId: number, setFieldValue: any) => {
 }
 
 const initialValues = {
+  delivery_charge:"",
   shipping_name: "",
   shipping_contact: "",
   shipping_address1: "",

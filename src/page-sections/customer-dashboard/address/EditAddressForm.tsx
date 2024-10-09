@@ -233,6 +233,7 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
                     <Button
                       type="button"
                       variant={selectedLandmark === 1 ? "contained" : "outlined"}
+                      color="primary"
                       onClick={() =>
                         handleLandmarkSelect(1, setFieldValue)
                       }
@@ -244,6 +245,7 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
                     <Button
                       type="button"
                       variant={selectedLandmark === 2 ? "contained" : "outlined"}
+                      color="primary"
                       onClick={() =>
                         handleLandmarkSelect(2, setFieldValue)
                       }

@@ -39,10 +39,11 @@ export default function OrderRow({ order }: OrderRowProps) {
         </H5>
 
         <Box m="6px">
-          <Chip p="0.25rem 1rem" bg={`${getColor(order.status)}.light`}>
-            <Small color={`${getColor(order.status)}.main`}>{order.status}</Small>
-          </Chip>
-        </Box>
+  <Chip p="0.25rem 1rem" bg="#4CAF50">
+    <Small color="white">{order.status}</Small>
+  </Chip>
+</Box>
+
 
         <Typography className="flex-grow pre" m="6px" textAlign="left">
           {format(new Date(order.date), "MMM dd, yyyy")}

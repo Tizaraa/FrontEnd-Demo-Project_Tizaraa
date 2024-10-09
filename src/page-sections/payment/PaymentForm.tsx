@@ -73,7 +73,7 @@ export default function PaymentForm() {
           area_id: userShippingdata.shipping_area,
           house_level: userShippingdata.selectedLandmark,
           address: userShippingdata.shipping_address1,
-          delivery_charge: 60,
+          delivery_charge: userShippingdata.delivery_charge,
           total_ammount: total_ammount,
           payment_type: 1,
         },
