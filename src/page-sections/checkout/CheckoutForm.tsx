@@ -384,7 +384,7 @@ import axios from "axios";
 
 
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ setDeliveryCharge }) {
   const router = useRouter();
   const [sameAsShipping, setSameAsShipping] = useState(false);
   const [selectedLandmark, setSelectedLandmark] = useState<number | null>(null);
@@ -403,75 +403,6 @@ export default function CheckoutForm() {
 
     
   };
-
-  // const fetchProvince = async () => {
-  //   try {
-  //     const response = await axios.get("https://tizaraa.com/api/checkout/address", {
-  //       headers: {
-  //         'Authorization': `Bearer 1204|d7tYXgZU3Fh3ICHKUx25qGM9vTTJqU1GPtypSaDi4dae3f55` 
-  //       }
-  //     });
-
-  //     console.log(response.data); 
-  //     const province = response.data.province || []; 
-  //     setProvince(province); 
-
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchProvince(); 
-  // }, []);
-
-//   const fetchProvince = async () => {
-//     try {
-//         const response = await axios.get("https://tizaraa.com/api/checkout/address", {
-//             headers: {
-//                 'Authorization': `Bearer 1204|d7tYXgZU3Fh3ICHKUx25qGM9vTTJqU1GPtypSaDi4dae3f55`
-//             }
-//         });
-
-//         console.log("API Response:", response.data);
-
-//         if (Array.isArray(response.data)) {
-//             // Extract provinces, cities, and areas from the response
-//             const provinces = response.data.map(prov => ({
-//                 province: prov.province,
-//                 id: prov.id,
-//             }));
-
-//             const cities = response.data.map(prov => ({
-//               city: prov.province,
-//               // If you want to store the id as well, uncomment the line below
-//               // id: prov.id,
-//           }));
-
-//             // Set the state for provinces
-//             setProvince(provinces);
-//             console.log("Provinces:", provinces);
-
- 
-//             setCity(cities); 
-//             console.log("Cities:", cities);
-
-//         } else {
-//             console.error("Response data is not in expected format.");
-//             setProvince([]); 
-//             // Optionally reset cities and areas
-//             setCity([]);
-//         }
-
-//     } catch (error) {
-//         console.error("Error fetching data:", error);
-//     }
-// };
-
-// // useEffect to call fetchProvince when component mounts
-// useEffect(() => {
-//     fetchProvince();
-// }, []);
 
 // Fetch provinces and cities
 const fetchProvince = async () => {
@@ -496,17 +427,19 @@ useEffect(() => {
   fetchProvince();
 }, []);
 
+
 // Handle province selection
-const handleProvinceChange = (provinceId: number, setFieldValue: any) => {
+const handleProvinceChange = (provinceId, setFieldValue) => {
   console.log("Received provinceId:", provinceId); // Debug the value
-  const selectedProvince = province.find((prov: any) => prov.id === provinceId);
+  const selectedProvince = province.find((prov) => prov.id === provinceId);
 
   if (selectedProvince) {
     const deliveryCharge = selectedProvince.delivery_charge; // Get the delivery charge based on selected province
 
     // Update form values
     setFieldValue("shipping_province", provinceId);
-    setFieldValue("delivery_charge", deliveryCharge); // Set delivery charge in form state
+    setFieldValue("delivery_charge", deliveryCharge); 
+    setDeliveryCharge(deliveryCharge); // Update delivery charge in parent component
     setCity(selectedProvince.city); // Update the city based on the selected province
     setFieldValue("shipping_city", ""); // Reset city and area when province changes
     setFieldValue("shipping_area", "");

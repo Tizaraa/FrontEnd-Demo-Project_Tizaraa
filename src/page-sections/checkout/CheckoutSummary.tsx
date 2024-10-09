@@ -12,7 +12,7 @@ import { ProductCard2, ProductCard7 } from "@component/product-cards";
 import { currency } from "@utils/utils";
 import ProductCard20 from "@component/product-cards/ProductCard20";
 
-export default function CheckoutSummary() {
+export default function CheckoutSummary({ deliveryCharge }) {
   const { state } = useAppContext();
 
   const getTotalPrice = () => {
@@ -23,12 +23,12 @@ export default function CheckoutSummary() {
 
       // User shipping data
       
-      let shippingData = sessionStorage.getItem('address');
-      let userShippingdata = JSON.parse(shippingData);
+  //     let shippingData = sessionStorage.getItem('address');
+  //     let userShippingdata = JSON.parse(shippingData);
 
-      const deliveryChargeDisplay = userShippingdata && userShippingdata.delivery_charge 
-  ? userShippingdata.delivery_charge 
-  : "-";
+  //     const deliveryChargeDisplay = userShippingdata && userShippingdata.delivery_charge 
+  // ? userShippingdata.delivery_charge 
+  // : "-";
 
   return (
     <Card1>
@@ -70,7 +70,7 @@ export default function CheckoutSummary() {
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
          {/* { userShippingdata.delivery_charge} */}
-         {deliveryChargeDisplay}
+         {deliveryCharge ? deliveryCharge : "-"}
           </Typography>
         </FlexBox>
       </FlexBox>
