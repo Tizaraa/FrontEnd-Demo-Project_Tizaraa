@@ -400,6 +400,8 @@ export default function CheckoutForm() {
     let stringAddress = JSON.stringify(values)
   sessionStorage.setItem('address',stringAddress);
     router.push("/payment");
+
+    
   };
 
   // const fetchProvince = async () => {

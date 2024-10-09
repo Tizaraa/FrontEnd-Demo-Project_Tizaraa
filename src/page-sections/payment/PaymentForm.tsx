@@ -48,6 +48,9 @@ export default function PaymentForm() {
     // User shipping data
     let shippingData = sessionStorage.getItem('address');
     let userShippingdata = JSON.parse(shippingData);
+
+    // remove the shipping data 
+    sessionStorage.removeItem('address');
   
     // Cart Data
     let cartData = localStorage.getItem('cart');

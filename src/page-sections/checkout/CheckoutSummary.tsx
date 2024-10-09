@@ -21,6 +21,15 @@ export default function CheckoutSummary() {
     ) || 0;
   };
 
+      // User shipping data
+      
+      let shippingData = sessionStorage.getItem('address');
+      let userShippingdata = JSON.parse(shippingData);
+
+      const deliveryChargeDisplay = userShippingdata && userShippingdata.delivery_charge 
+  ? userShippingdata.delivery_charge 
+  : "-";
+
   return (
     <Card1>
        
@@ -60,7 +69,8 @@ export default function CheckoutSummary() {
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-            -
+         {/* { userShippingdata.delivery_charge} */}
+         {deliveryChargeDisplay}
           </Typography>
         </FlexBox>
       </FlexBox>
