@@ -235,7 +235,7 @@ export default function AddressList() {
           <AddressItem key={item.id} item={item} onDelete={handleDelete} />
         ))
       ) : (
-        <div>No addresses found</div>
+        <div>Loading...</div>
       )}
       {/* Show Dialog only if isLoading is true */}
       {dialog.isLoading && <Dialog message={dialog.message} onDialog={areYouSureDelete} />}
