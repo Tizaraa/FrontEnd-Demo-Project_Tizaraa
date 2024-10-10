@@ -402,16 +402,14 @@ export default function ProfileEditForm() {
       });
 
       const userProfile = response.data.profile;
-      console.log(response.data);
+      //console.log(response.data);
       
 
       // Update state with the fetched user profile data
       setProfile({
         name: userProfile.name || "",
         phone: userProfile.phone || "",
-        birth_date: userProfile.birth_date
-          ? format(new Date(userProfile.birth_date), "yyyy-MM-dd")
-          : "",
+        birth_date: userProfile.birth_date,
         gender: userProfile.gender || "",
       });
 
@@ -451,7 +449,7 @@ export default function ProfileEditForm() {
         {
           name: values.name,
           phone: values.phone,
-          birth_date: values.birth_date,
+          birthdate: values.birth_date,
           gender: values.gender,
         },
         {
@@ -461,7 +459,7 @@ export default function ProfileEditForm() {
         }
       );
       console.log("Profile updated successfully:", response.data);
-      router.push("/profile")
+      //router.push("/profile")
     } catch (err) {
       console.error("Failed to update profile:", err);
     }
