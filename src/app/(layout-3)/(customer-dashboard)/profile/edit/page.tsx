@@ -9,7 +9,6 @@ import { ProfileEditForm, BackToProfileButton } from "@sections/customer-dashboa
 
 // Fetching user data
 export default async function ProfileEditor() {
-  const user = await api.getUser();
 
   return (
     <Fragment>
@@ -20,7 +19,6 @@ export default async function ProfileEditor() {
       />
 
       <Card1 borderRadius={8}>
-        {/* <ProfileEditForm user={user as any} /> */}
         <ProfileEditForm />
       </Card1>
     </Fragment>

@@ -211,7 +211,7 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   name="contact"
-                  value={values.contact} 
+                  value={values.phone} 
                   errorText={touched.contact && errors.contact}
                 />
 
