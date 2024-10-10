@@ -8,6 +8,10 @@ interface Address {
   phone: string;
   address: string;
   country: string;
+  landmark: string;
+  province_id: string;
+  city_id: string;
+  area_id: string;
 }
 
 export default Address;

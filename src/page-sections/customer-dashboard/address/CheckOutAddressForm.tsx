@@ -131,7 +131,7 @@ import TextArea from "@component/textarea";
 import countryList from "@data/countryList";
 import axios from "axios";
 
-export default function AddressForm() {
+export default function CheckOutAddressForm() {
   const router = useRouter();
   const [selectedLandmark, setSelectedLandmark] = useState<number | null>(null);
   const [province, setProvince] = useState([]);
@@ -172,7 +172,7 @@ export default function AddressForm() {
         sessionStorage.setItem("address", JSON.stringify(values));
         console.log(response.data)
         
-        router.push("/address");
+        router.push("/checkout");
       }
     } catch (error) {
       console.error("Error submitting address data:", error);
@@ -191,6 +191,7 @@ export default function AddressForm() {
           },
         }
       );
+      console.log(response.data)
 
       if (Array.isArray(response.data)) {
         setProvince(response.data); // Store the whole response
@@ -209,11 +210,15 @@ export default function AddressForm() {
     const selectedProvince = province.find((prov: any) => prov.id === provinceId);
 
     if (selectedProvince) {
+        console.log("Delivery Charge:", selectedProvince.delivery_charge);
       setFieldValue("province", provinceId);
       setCity(selectedProvince.city); // Update the city based on the selected province
       setFieldValue("city", ""); // Reset city and area when province changes
       setFieldValue("area", "");
       setArea([]); // Reset area
+
+      setFieldValue("deliveryCharge", selectedProvince.delivery_charge); // Set the delivery charge in Formik state
+      
     }
   };
 
@@ -427,7 +432,7 @@ export default function AddressForm() {
 
           <Grid container spacing={7}>
             <Grid item sm={6} xs={12}>
-              <Button type="submit" variant="contained" color="primary">
+              <Button type="submit" variant="contained" color="primary"   onClick={() => router.push("/checkout")}>
                 Save Changes
               </Button>
             </Grid>
@@ -439,6 +444,7 @@ export default function AddressForm() {
 }
 
 const initialValues = {
+  deliveryCharge: "",
   name: "",
   contact: "",
   address: "",

@@ -44,91 +44,83 @@ export default function PaymentForm() {
   const orderSubmit = async () => {
     let getData = localStorage.getItem('userInfo');
     let userinfo = JSON.parse(getData);
-  
-    // User shipping data
-    let shippingData = sessionStorage.getItem('address');
-    let userShippingdata = JSON.parse(shippingData);
 
-    // remove the shipping data 
+    let shippingData = sessionStorage.getItem('address');
+    console.log('Session Storage Data:', shippingData);  // Check if you get the expected data
+    let userShippingdata = JSON.parse(shippingData);
+    console.log('Parsed Shipping Data:', userShippingdata);  // Check the parsed object
     sessionStorage.removeItem('address');
-  
-    // Cart Data
+    
+
     let cartData = localStorage.getItem('cart');
     let cart = JSON.parse(cartData);
 
     console.log("Selected payment method:", paymentMethod);
-
-    // Log if payment method is COD
-    if (paymentMethod === "cod") {
-        console.log(1);
-    }
-  
     try {
       const orderResponse = await axios.post(
-        'https://tizaraa.com/api/checkout/order',
-        {
-          user_id: userinfo.id,
-          name: userShippingdata.shipping_name,
-          phone: userShippingdata.shipping_contact,
-          email: userinfo.email,
-          province_id: userShippingdata.shipping_province,
-          city_id: userShippingdata.shipping_city,
-          area_id: userShippingdata.shipping_area,
-          house_level: userShippingdata.selectedLandmark,
-          address: userShippingdata.shipping_address1,
-          delivery_charge: userShippingdata.delivery_charge,
-          total_ammount: total_ammount,
-          payment_type: 1,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${authtoken}`,
-          },
-        }
-      );
-  
-      let orderId = orderResponse.data.message.orderid;
-      localStorage.setItem('orderId', orderId);
-      localStorage.setItem('orderSuccess', 'true');
-  
-      // Process each cart item
-      await Promise.all(cart.map(async (cartdata) => {
-        await axios.post(
-          'https://tizaraa.com/api/checkout/order/items',
+          'https://tizaraa.com/api/checkout/order',
           {
-            delivery_charge: 60,
-            user_id: userinfo.id,
-            seller_id: cartdata.sellerId,
-            order_id: orderId,
-            product_id: cartdata.productId,
-            color: 'black',
-            size: '1',
-            qty: cartdata.qty,
-            note1: 'lorem10',
-            single_ammount: cartdata.price,
+              user_id: userinfo?.id, // Safeguard in case userinfo is null
+              name: userShippingdata?.shipping_name || userShippingdata?.name, // Fallback to name from session storage
+              phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
+              email: userinfo?.email, 
+              province_id: userShippingdata?.shipping_province || userShippingdata?.province_id,
+              city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
+              area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
+              house_level: userShippingdata?.selectedLandmark || userShippingdata?.landmark, // Safeguard for landmark
+              address: userShippingdata?.shipping_address1 || userShippingdata?.address,
+              delivery_charge: userShippingdata?.delivery_charge || 0,  // Default to 0 if undefined
+              total_ammount: total_ammount,
+              payment_type: 1, // Assuming 1 is the correct value
           },
           {
-            headers: {
-              Authorization: `Bearer ${authtoken}`,
-            },
+              headers: {
+                  Authorization: `Bearer ${authtoken}`,
+              },
           }
-        );
-             
+      );
+        console.log("Order Response:", orderResponse);
 
-      }));
+        let orderId = orderResponse.data.message.orderid;
+        localStorage.setItem('orderId', orderId);
+        localStorage.setItem('orderSuccess', 'true');
 
- 
-  
+        await Promise.all(cart.map(async (cartdata) => {
+            const response = await axios.post(
+                'https://tizaraa.com/api/checkout/order/items',
+                {
+                    delivery_charge: 60,
+                    user_id: userinfo.id,
+                    seller_id: cartdata.sellerId,
+                    order_id: orderId,
+                    product_id: cartdata.productId,
+                    color: 'black',
+                    size: '1',
+                    qty: cartdata.qty,
+                    note1: 'lorem10',
+                    single_ammount: cartdata.price,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${authtoken}`,
+                         'Content-Type': 'application/json'
+                    },
+                }
+            );
+            console.log("Cart Item Response:", response.data);
+        }));
+
+        localStorage.removeItem('cart');
+        localStorage.removeItem('orderId');
+
+        router.push("/orders");
     } catch (error) {
-      console.log(error);
+        console.error("Error placing order:", error);
+        alert("Failed to place order. Please try again.");
+        router.push("/payment")
     }
+};
 
-    // Clear the cart and redirect
-    localStorage.removeItem('cart');
-    localStorage.removeItem('orderId');
-
-    router.push("/orders");
-  };
  
 
 
