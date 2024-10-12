@@ -69,7 +69,7 @@ export default function PaymentForm() {
               area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
               house_level: userShippingdata?.selectedLandmark || userShippingdata?.landmark, // Safeguard for landmark
               address: userShippingdata?.shipping_address1 || userShippingdata?.address,
-              delivery_charge: userShippingdata?.delivery_charge || 0,  // Default to 0 if undefined
+              delivery_charge: userShippingdata?.deliveryCharge || 0,  // Default to 0 if undefined
               total_ammount: total_ammount,
               payment_type: 1, // Assuming 1 is the correct value
           },

@@ -12,6 +12,7 @@ interface Address {
   province_id: string;
   city_id: string;
   area_id: string;
+  deliveryCharge: string;
 }
 
 export default Address;

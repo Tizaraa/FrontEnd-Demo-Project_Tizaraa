@@ -10,46 +10,72 @@ import { Chip } from "@component/Chip";
 import { Small } from "@component/Typography";
 import Typography from "@component/Typography";
 import authService from "services/authService";
-import Address from "@models/address.model"; 
-
+import Address from "@models/address.model";
 
 export default function CheckoutAddress() {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
-  const authtoken = authService.getToken(); 
+  const [province, setProvince] = useState([]); // State for storing provinces
+  const authtoken = authService.getToken();
+
+  // Fetch provinces data
+  const fetchProvince = async () => {
+    const authtoken = localStorage.getItem("token");
+    try {
+      const response = await axios.get(`https://tizaraa.com/api/checkout/address`, {
+        headers: {
+          Authorization: `Bearer ${authtoken}`,
+        },
+      });
+      console.log("Provinces data:", response.data);
+
+      if (Array.isArray(response.data)) {
+        setProvince(response.data); // Set province data
+      }
+    } catch (error) {
+      console.error("Error fetching provinces:", error);
+    }
+  };
+
+  // Fetch addresses data
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await axios.get(
-          `https://tizaraa.com/api/user/address`,
-          {
-            headers: {
-              Authorization: `Bearer ${authtoken}`,
-            },
-          }
-        );
-        console.log("data", response.data)
-        setAddresses(response.data.user); 
+        const response = await axios.get(`https://tizaraa.com/api/user/address`, {
+          headers: {
+            Authorization: `Bearer ${authtoken}`,
+          },
+        });
+        console.log("Address data:", response.data);
+        setAddresses(response.data.user);
       } catch (error) {
         console.error("Error fetching addresses:", error);
       }
     };
 
     fetchAddresses();
+    fetchProvince(); // Fetch provinces when the component mounts
   }, [authtoken]);
 
-  // Handle address selection
+  // Handle address selection and set delivery charge
   const handleSelect = (item: Address) => {
+    // Find the corresponding province to get the delivery charge
+    const selectedProvince = province.find((prov: any) => prov.id === item.province_id);
+
+    if (selectedProvince && selectedProvince.delivery_charge) {
+      item.deliveryCharge = selectedProvince.delivery_charge; // Add deliveryCharge to the selected item
+    }
+
     setSelectedAddress(item);
     sessionStorage.setItem("address", JSON.stringify(item));
 
-    // Log the selected address
+    // Log the selected address and delivery charge
     console.log("Selected Address:", item);
+    console.log("Delivery Charge:", item.deliveryCharge || "Delivery charge not available");
   };
 
   return (
     <Fragment>
-      
       {addresses.length > 0 ? (
         addresses.map((item) => (
           <AddressItem
@@ -77,13 +103,12 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
     onSelect(item);
   };
 
-
   const landmarkMap: { [key: number]: string } = {
     1: "Home",
     2: "Office",
   };
 
-  const landmarkLabel = landmarkMap[item.landmark] || "Other"; 
+  const landmarkLabel = landmarkMap[item.landmark] || "Other";
 
   return (
     <Grid
@@ -98,8 +123,8 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
         padding="1px 5px"
         style={{
           display: "flex",
-          alignItems: "center", 
-          gap: "1rem", 
+          alignItems: "center",
+          gap: "1rem",
         }}
       >
         <CheckBox checked={isSelected} onChange={handleCheckboxChange} />
@@ -129,18 +154,9 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
         </Chip>
 
         <Typography className="pre" m="6px" textAlign="left">
-          {item.address},
-          {item.province_id},
-          {item.city_id},
-          {item.area_id}
+          {item.address}, {item.province_id}, {item.city_id}, {item.area_id}
         </Typography>
       </FlexBox>
-
-      
     </Grid>
-
-
-
-    
   );
 }

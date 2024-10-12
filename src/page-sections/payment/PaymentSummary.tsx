@@ -27,8 +27,8 @@ export default function PaymentSummary() {
    let shippingData = sessionStorage.getItem('address');
    let userShippingdata = JSON.parse(shippingData);
 
-   const deliveryChargeDisplay = userShippingdata && userShippingdata.delivery_charge 
-? userShippingdata.delivery_charge 
+   const deliveryChargeDisplay = userShippingdata && userShippingdata.deliveryCharge 
+? userShippingdata.deliveryCharge 
 : "-";
 
 
