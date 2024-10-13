@@ -11,6 +11,9 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import authService from "services/authService";
 
+import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
+
 export default function OrderList() {
   const router = useRouter();
   const [orderList, setOrderList] = useState<any[]>([]);
@@ -36,8 +39,9 @@ export default function OrderList() {
 
   useEffect(() => {
     if (orderSuccess) {
-      alert("Order placed successfully!");
-      setOrderSuccess(false); // Reset after showing the alert
+      // alert("Order placed successfully!");
+      toast.success("Order placed successfully!");
+      setOrderSuccess(false); 
     }
   }, [orderSuccess]);
 
