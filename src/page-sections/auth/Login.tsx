@@ -9,6 +9,7 @@ import useVisibility from "./useVisibility";
 import { useAppContext } from "contexts/app-context/AppContext"; // Context for managing user auth state
 import axios from "axios"; // Import axios for API calls
 import Cookies from "js-cookie";
+import {  toast } from 'react-toastify';
 
 import Box from "@component/Box";
 import Icon from "@component/icon/Icon";
@@ -64,13 +65,16 @@ export default function Login() {
 
         // Redirect to profile page
         router.push("/profile");
+        toast.success("User Login successfully!");
       } else {
         // Handle errors (e.g., incorrect password, email not found, etc.)
-        setApiError("Invalid credentials. Please check your email or password.");
+        //setApiError("Invalid credentials. Please check your email or password.");
+        toast.error("Failed Login. Please check your email or password.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setApiError("Failed to login. Please try again later.");
+      //setApiError("Failed to login. Please try again later.");
+      toast.error("Failed to login. Please try again later.");
     } finally {
       setLoading(false); // Stop loader
     }

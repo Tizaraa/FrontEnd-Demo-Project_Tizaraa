@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useState } from "react";
+import {  toast } from 'react-toastify';
 
 import useVisibility from "./useVisibility";
 
@@ -15,11 +16,14 @@ import CheckBox from "@component/CheckBox";
 import TextField from "@component/text-field";
 import { Button, IconButton } from "@component/buttons";
 import { H3, H5, H6, SemiSpan, Small, Span } from "@component/Typography";
+//router.push("/profile");
+import { useRouter } from "next/navigation";
 
 // STYLED COMPONENT
 import { StyledRoot } from "./styles";
 
 export default function Signup() {
+  const router = useRouter();
   const { passwordVisibility, togglePasswordVisibility } = useVisibility();
   const [apiError, setApiError] = useState({
     email: "",
@@ -85,9 +89,11 @@ export default function Signup() {
       const data = await response.json();
 
       if (response.ok) {
-        console.log("User registered successfully:", data);
+        //console.log("User registered successfully:", data);
+        router.push("/login");
+        toast.success("User registered successfully!");
       } else {
-        console.log("Failed to register user:", data);
+        toast.error("Failed to register user.");
 
         // Handle specific field errors
         if (data.errors) {
