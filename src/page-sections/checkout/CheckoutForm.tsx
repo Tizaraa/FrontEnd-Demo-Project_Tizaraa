@@ -55,6 +55,7 @@ export default function CheckoutForm({ setDeliveryCharge }) {
           px="2rem"
           color="primary"
           bg="primary.light"
+          my="2rem"
           onClick={() => router.push("/address/checkoutAddress")}
           
         >

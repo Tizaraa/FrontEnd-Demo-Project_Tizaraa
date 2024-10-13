@@ -144,9 +144,11 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
   return (
     <Grid
       style={{
-        border: "1px solid #ccc",
+        border: "0.5px solid #E94560",
         marginBottom: "1rem",
         borderRadius: "1rem",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", 
+    
       }}
     >
       <FlexBox
@@ -172,6 +174,7 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
 
       <FlexBox
         flex="1 1 260px !important"
+        padding="1px 5px"
         m="6px"
         textAlign="left"
         style={{
@@ -191,3 +194,5 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
     </Grid>
   );
 }
+
+
