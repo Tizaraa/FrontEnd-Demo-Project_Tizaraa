@@ -5,6 +5,8 @@ import StyledComponentsRegistry from "@lib/registry";
 // APP PROVIDER
 import { AppProvider } from "@context/app-context";
 import StyledContext from "@context/StyledContext";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const openSans = Open_Sans({ subsets: ["latin"] });
 
@@ -24,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <StyledComponentsRegistry>
           <AppProvider>
             <StyledContext>{children}</StyledContext>
+            <ToastContainer />
           </AppProvider>
         </StyledComponentsRegistry>
       </body>

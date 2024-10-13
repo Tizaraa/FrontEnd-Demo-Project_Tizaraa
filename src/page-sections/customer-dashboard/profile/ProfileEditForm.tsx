@@ -376,6 +376,7 @@ import { Button } from "@component/buttons";
 import TextField from "@component/text-field";
 import Select from "@component/Select";
 import { useRouter } from "next/navigation";
+import {  toast } from 'react-toastify';
 
 const API_URL = "https://tizaraa.com/api/user/profile";
 const UPDATE_API_URL = "https://tizaraa.com/api/user/profile/update";
@@ -458,10 +459,12 @@ export default function ProfileEditForm() {
           },
         }
       );
-      console.log("Profile updated successfully:", response.data);
+      //console.log("Profile updated successfully:", response.data);
+      toast.success("Profile updated successfully!");
       //router.push("/profile")
     } catch (err) {
-      console.error("Failed to update profile:", err);
+      //console.error("Failed to update profile:", err);
+      toast.error("Failed to update profile.");
     }
   };
 

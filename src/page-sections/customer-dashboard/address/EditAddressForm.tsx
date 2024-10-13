@@ -14,6 +14,7 @@ import Typography from "@component/Typography";
 import TextArea from "@component/textarea";
 import axios from "axios";
 import * as Yup from "yup";
+import {  toast } from 'react-toastify';
 
 export default function EditAddressForm({ addressId }: { addressId: string }) {
   const router = useRouter();
@@ -117,9 +118,11 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
 
       if (response.status === 200) {
         router.push("/address");
+        toast.success("Address Updated successfully!");
       }
     } catch (error) {
       console.error("Error updating address:", error);
+      toast.error("Failed updating address.");
     }
   };
 
@@ -211,7 +214,7 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   name="contact"
-                  value={values.phone} 
+                  value={values.contact} 
                   errorText={touched.contact && errors.contact}
                 />
 

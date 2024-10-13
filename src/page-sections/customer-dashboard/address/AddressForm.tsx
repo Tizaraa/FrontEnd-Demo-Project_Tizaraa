@@ -130,6 +130,7 @@ import Typography from "@component/Typography";
 import TextArea from "@component/textarea";
 import countryList from "@data/countryList";
 import axios from "axios";
+import {  toast } from 'react-toastify';
 
 export default function AddressForm() {
   const router = useRouter();
@@ -170,12 +171,15 @@ export default function AddressForm() {
       if (response.status === 200) {
         // Handle successful response, e.g., redirect or show a success message
         sessionStorage.setItem("address", JSON.stringify(values));
-        console.log(response.data)
+        //console.log(response.data)
         
         router.push("/address");
+        toast.success("Address Added successfully!");
+
       }
     } catch (error) {
-      console.error("Error submitting address data:", error);
+      console.error("Failed submitting address data:", error);
+      toast.error("Failed submitting address.");
     }
   };
 
