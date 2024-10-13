@@ -22,6 +22,8 @@ import CheckBox from "@component/CheckBox";
 
 
 
+
+
 export default function PaymentForm() {
 
 
@@ -49,7 +51,7 @@ export default function PaymentForm() {
     console.log('Session Storage Data:', shippingData);  // Check if you get the expected data
     let userShippingdata = JSON.parse(shippingData);
     console.log('Parsed Shipping Data:', userShippingdata);  // Check the parsed object
-    sessionStorage.removeItem('address');
+    // sessionStorage.removeItem('address');
     
 
     let cartData = localStorage.getItem('cart');

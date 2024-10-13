@@ -47,7 +47,22 @@ export default function CheckoutAddress() {
           },
         });
         console.log("Address data:", response.data);
-        setAddresses(response.data.user);
+        const fetchedAddresses = response.data.user;
+        setAddresses(fetchedAddresses);
+
+        // Load the selected address from sessionStorage
+        const storedAddress = sessionStorage.getItem("address");
+        if (storedAddress) {
+          const parsedAddress = JSON.parse(storedAddress);
+          // Check if the parsed address is in the fetched addresses
+          const matchingAddress = fetchedAddresses.find((addr) => addr.id === parsedAddress.id);
+          if (matchingAddress) {
+            handleAutoSelect(matchingAddress); // Automatically select the address from sessionStorage
+          }
+        } else if (fetchedAddresses.length > 0) {
+          const firstAddress = fetchedAddresses[0];
+          handleAutoSelect(firstAddress); // Automatically select the first address if no stored address
+        }
       } catch (error) {
         console.error("Error fetching addresses:", error);
       }
@@ -57,7 +72,23 @@ export default function CheckoutAddress() {
     fetchProvince(); // Fetch provinces when the component mounts
   }, [authtoken]);
 
-  // Handle address selection and set delivery charge
+  // Handle automatic selection of the first address and set delivery charge in sessionStorage
+  const handleAutoSelect = (item: Address) => {
+    // Find the corresponding province to get the delivery charge
+    const selectedProvince = province.find((prov: any) => prov.id === item.province_id);
+
+    if (selectedProvince && selectedProvince.delivery_charge) {
+      item.deliveryCharge = selectedProvince.delivery_charge; // Add deliveryCharge to the selected item
+      sessionStorage.setItem("deliveryCharge", JSON.stringify(item.deliveryCharge)); // Store in sessionStorage
+    }
+
+    setSelectedAddress(item);
+
+    // console.log("Auto-selected Address:", item);
+    // console.log("Delivery Charge stored in sessionStorage:", item.deliveryCharge || "Delivery charge not available");
+  };
+
+  // Handle manual selection of an address
   const handleSelect = (item: Address) => {
     // Find the corresponding province to get the delivery charge
     const selectedProvince = province.find((prov: any) => prov.id === item.province_id);
@@ -67,10 +98,10 @@ export default function CheckoutAddress() {
     }
 
     setSelectedAddress(item);
-    sessionStorage.setItem("address", JSON.stringify(item));
+    sessionStorage.setItem("address", JSON.stringify(item)); // Only store in sessionStorage when manually selected
 
     // Log the selected address and delivery charge
-    console.log("Selected Address:", item);
+    console.log("Manually Selected Address:", item);
     console.log("Delivery Charge:", item.deliveryCharge || "Delivery charge not available");
   };
 
