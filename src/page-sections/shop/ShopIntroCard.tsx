@@ -8,7 +8,15 @@ import FlexBox from "@component/FlexBox";
 import { Button } from "@component/buttons";
 import { H3, SemiSpan, Small } from "@component/Typography";
 import { ShopIntroWrapper } from "./styles";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 interface Props {
   slug: string;
@@ -20,12 +28,14 @@ export default function ShopIntroCard({ slug }: Props) {
   useEffect(() => {
     const fetchSingleShop = async () => {
       try {
-        const response = await fetch(`https://tizaraa.com/api/seller/profile/${slug}`);
+        const response = await fetch(
+          `https://tizaraa.com/api/seller/profile/${slug}`
+        );
         //console.log(response);
-        
+
         const data = await response.json();
         //console.log(data.sellerDetails);
-        
+
         setShop(data);
       } catch (err) {
         setError("Failed to load shop data");
@@ -34,18 +44,28 @@ export default function ShopIntroCard({ slug }: Props) {
     };
 
     fetchSingleShop();
-  },[slug]);
+  }, [slug]);
 
   if (!shop) {
-    return <div>Loading...</div>;
+    return (
+      <LoaderWrapper>
+        <Vortex />
+      </LoaderWrapper>
+    );
   }
   return (
     <ShopIntroWrapper mb="32px" pb="20px" overflow="hidden">
-      <Box className="cover-image" height="202px" style={{
-          backgroundImage: `url(${shop.sellerDetails.seller_banner || "/assets/images/placeholder.jpg"})`, // Use a placeholder if no cover image
+      <Box
+        className="cover-image"
+        height="202px"
+        style={{
+          backgroundImage: `url(${
+            shop.sellerDetails.seller_banner || "/assets/images/placeholder.jpg"
+          })`, // Use a placeholder if no cover image
           backgroundSize: "cover",
-          backgroundPosition: "center"
-        }} />
+          backgroundPosition: "center",
+        }}
+      />
 
       <FlexBox mt="-64px" px="30px" flexWrap="wrap">
         <Avatar
@@ -53,7 +73,9 @@ export default function ShopIntroCard({ slug }: Props) {
           mr="37px"
           border="4px solid"
           borderColor="gray.100"
-          src={shop.sellerDetails.seller_logo || "/assets/images/faces/propic.png"}
+          src={
+            shop.sellerDetails.seller_logo || "/assets/images/faces/propic.png"
+          }
         />
 
         <div className="description-holder">
@@ -62,37 +84,49 @@ export default function ShopIntroCard({ slug }: Props) {
             mb="22px"
             flexWrap="wrap"
             alignItems="center"
-            justifyContent="space-between">
+            justifyContent="space-between"
+          >
             <Box
               my="8px"
               p="4px 16px"
               borderRadius="4px"
               bg="secondary.main"
-              display="inline-block">
+              display="inline-block"
+            >
               <H3 fontWeight="600" color="gray.100">
-              {shop.sellerDetails.shop_name || "Seller name not found" }
+                {shop.sellerDetails.shop_name || "Seller name not found"}
               </H3>
             </Box>
 
             <FlexBox my="8px">
               {socialLinks.map((item, ind) => (
-                <a key={ind} href={item.url} target="_blank" rel="noreferrer noopener">
+                <a
+                  key={ind}
+                  href={item.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
                   <Icon
                     size="30px"
                     defaultcolor="auto"
-                    mr={ind < socialLinks.length - 1 ? "10px" : ""}>{`${item.name}_filled`}</Icon>
+                    mr={ind < socialLinks.length - 1 ? "10px" : ""}
+                  >{`${item.name}_filled`}</Icon>
                 </a>
               ))}
             </FlexBox>
           </FlexBox>
 
-          <FlexBox flexWrap="wrap" justifyContent="space-between" alignItems="center">
+          <FlexBox
+            flexWrap="wrap"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <div>
               <FlexBox alignItems="center" mb="14px">
                 <Rating color="warn" value={5} outof={5} readOnly />
 
                 <Small color="text.muted" pl="0.75rem" display="block">
-                {shop.averageRating || "0" }
+                  {shop.averageRating || "0"}
                 </Small>
               </FlexBox>
 
@@ -102,7 +136,8 @@ export default function ShopIntroCard({ slug }: Props) {
                 </Icon>
 
                 <SemiSpan color="text.muted" ml="12px">
-                {shop.sellerDetails.seller_address || "Seller address not found" }
+                  {shop.sellerDetails.seller_address ||
+                    "Seller address not found"}
                 </SemiSpan>
               </FlexBox>
 
@@ -112,7 +147,7 @@ export default function ShopIntroCard({ slug }: Props) {
                 </Icon>
 
                 <SemiSpan color="text.muted" ml="12px">
-                {shop.sellerDetails.phone || "Seller number not found" }
+                  {shop.sellerDetails.phone || "Seller number not found"}
                 </SemiSpan>
               </FlexBox>
             </div>
@@ -133,5 +168,5 @@ const socialLinks = [
   { name: "facebook", url: "https://facebook.com" },
   { name: "twitter", url: "https://twitter.com" },
   { name: "youtube", url: "https://youtube.com" },
-  { name: "instagram", url: "https://instagram.com" }
+  { name: "instagram", url: "https://instagram.com" },
 ];

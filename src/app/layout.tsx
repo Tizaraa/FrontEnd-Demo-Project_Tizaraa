@@ -5,10 +5,12 @@ import StyledComponentsRegistry from "@lib/registry";
 // APP PROVIDER
 import { AppProvider } from "@context/app-context";
 import StyledContext from "@context/StyledContext";
+//import { useNavigation } from "next/navigation";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const openSans = Open_Sans({ subsets: ["latin"] });
+//const navigation = useNavigation()
 
 export const metadata: Metadata = {
   title: "Tizaraa - The Best React eCommerce Template",
@@ -19,6 +21,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  //console.log(navigation);
+  
   return (
     <html lang="en">
       <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
@@ -27,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AppProvider>
             <StyledContext>{children}</StyledContext>
             <ToastContainer />
+
           </AppProvider>
         </StyledComponentsRegistry>
       </body>

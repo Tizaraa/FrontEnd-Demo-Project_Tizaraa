@@ -168,11 +168,18 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { Fragment } from "react";
 import Dialog from "./Dialog"; // Import the Dialog component
 import {  toast } from 'react-toastify';
+import { Vortex } from 'react-loader-spinner'
+import  styled from "@emotion/styled";
 import {
   AddNewAddress,
 } from "@sections/customer-dashboard/address"; // Import AddressItem component
 import Address from "@models/address.model";
 import authService from "services/authService"; // Make sure Address model is defined and imported correctly
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default function AddressList() {
   const [dialog, setDialog] = useState({
@@ -237,7 +244,9 @@ export default function AddressList() {
           <AddressItem key={item.id} item={item} onDelete={handleDelete} />
         ))
       ) : (
-        <div>Loading...</div>
+        <LoaderWrapper>
+        <Vortex />
+      </LoaderWrapper>
       )}
       {/* Show Dialog only if isLoading is true */}
       {dialog.isLoading && <Dialog message={dialog.message} onDialog={areYouSureDelete} />}

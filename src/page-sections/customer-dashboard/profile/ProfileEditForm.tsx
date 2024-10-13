@@ -377,9 +377,17 @@ import TextField from "@component/text-field";
 import Select from "@component/Select";
 import { useRouter } from "next/navigation";
 import {  toast } from 'react-toastify';
+import { Vortex } from 'react-loader-spinner'
+import  styled from "@emotion/styled";
 
 const API_URL = "https://tizaraa.com/api/user/profile";
 const UPDATE_API_URL = "https://tizaraa.com/api/user/profile/update";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default function ProfileEditForm() {
   const router = useRouter();
@@ -425,7 +433,12 @@ export default function ProfileEditForm() {
     fetchUserProfile();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <LoaderWrapper>
+        <Vortex />
+      </LoaderWrapper>
+    );
   if (error) return <p>{error}</p>;
 
   const INITIAL_VALUES = {

@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React from "react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import Box from "@component/Box";
@@ -16,6 +16,14 @@ import ProductGridView from "@component/products/ProductCard1List";
 import ProductListView from "@component/products/ProductCard9List";
 import ProductFilterCard from "@component/products/ProductFilterCard";
 import useWindowSize from "@hook/useWindowSize";
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const productsPerPage = 10;
 
@@ -208,7 +216,9 @@ export default function SearchResult({ sortOptions, slug }) {
 
         <Grid item lg={9} xs={12}>
           {currentPage === 1 && loading ? ( // Show loading only on initial load
-            <Paragraph>Loading products...</Paragraph>
+            <LoaderWrapper>
+              <Vortex />
+            </LoaderWrapper>
           ) : view === "grid" ? (
             <>
               <ProductGridView

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Fragment, useEffect, useState } from "react";
 import { format } from "date-fns";
 // UTILS
@@ -15,9 +15,21 @@ import TableRow from "@component/TableRow";
 import Typography, { H5, H6, Paragraph } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 // PAGE SECTION COMPONENTS
-import { OrderStatus, WriteReview, OrderListButton } from "@sections/customer-dashboard/orders";
+import {
+  OrderStatus,
+  WriteReview,
+  OrderListButton,
+} from "@sections/customer-dashboard/orders";
 // CUSTOM DATA MODEL
 import { IDParams } from "interfaces";
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default function OrderDetails({ params }: IDParams) {
   const [order, setOrder] = useState(null);
@@ -38,11 +50,11 @@ export default function OrderDetails({ params }: IDParams) {
         );
         setOrder(response.data);
         console.log("Fetched Order Data:", response.data);
-        setStatus(response.data.Order.status)
+        setStatus(response.data.Order.status);
       } catch (error) {
         console.error("Error fetching order details:", error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -50,7 +62,13 @@ export default function OrderDetails({ params }: IDParams) {
   }, [params.id]);
 
   if (loading) {
-    return <Typography>Loading...</Typography>; // Show loading state
+    return (
+      <Typography>
+        <LoaderWrapper>
+          <Vortex />
+        </LoaderWrapper>
+      </Typography>
+    ); // Show loading state
   }
 
   if (!order) {
@@ -75,7 +93,7 @@ export default function OrderDetails({ params }: IDParams) {
             <Typography fontSize="14px" color="text.muted" mr="4px">
               Order ID:
             </Typography>
-            <Typography fontSize="14px">#{order.Order.invoice_id}</Typography> 
+            <Typography fontSize="14px">#{order.Order.invoice_id}</Typography>
           </FlexBox>
 
           <FlexBox className="pre" m="6px" alignItems="center">
@@ -132,40 +150,59 @@ export default function OrderDetails({ params }: IDParams) {
               Total Summary
             </H5>
 
-            <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+            <FlexBox
+              justifyContent="space-between"
+              alignItems="center"
+              mb="0.5rem"
+            >
               <Typography fontSize="14px" color="text.hint">
                 Subtotal:
               </Typography>
-              <H6 my="0px">{currency(order.Order.amount)}</H6> {/* Use amount instead of totalPrice */}
+              <H6 my="0px">{currency(order.Order.amount)}</H6>{" "}
+              {/* Use amount instead of totalPrice */}
             </FlexBox>
 
-            <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+            <FlexBox
+              justifyContent="space-between"
+              alignItems="center"
+              mb="0.5rem"
+            >
               <Typography fontSize="14px" color="text.hint">
                 Shipping fee:
               </Typography>
               <H6 my="0px">{currency(order.Order.shippingAddress)}</H6>
             </FlexBox>
 
-            <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+            <FlexBox
+              justifyContent="space-between"
+              alignItems="center"
+              mb="0.5rem"
+            >
               <Typography fontSize="14px" color="text.hint">
                 Discount:
               </Typography>
-              <H6 my="0px">-{currency(order.discount || 0)}</H6> 
+              <H6 my="0px">-{currency(order.discount || 0)}</H6>
             </FlexBox>
 
             <Divider mb="0.5rem" />
 
-            <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-            <H6 my="0px">Total</H6>
-            <H6 my="0px">
-            {currency(
-            Number(order.Order.amount) + Number(order.Order.shippingAddress)
-            )} 
-            </H6>
+            <FlexBox
+              justifyContent="space-between"
+              alignItems="center"
+              mb="1rem"
+            >
+              <H6 my="0px">Total</H6>
+              <H6 my="0px">
+                {currency(
+                  Number(order.Order.amount) +
+                    Number(order.Order.shippingAddress)
+                )}
+              </H6>
             </FlexBox>
 
-
-            <Typography fontSize="14px">Paid by {order.Order.delivery_type}</Typography>
+            <Typography fontSize="14px">
+              Paid by {order.Order.delivery_type}
+            </Typography>
           </Card>
         </Grid>
       </Grid>

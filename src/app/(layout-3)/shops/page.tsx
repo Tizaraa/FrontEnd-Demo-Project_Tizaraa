@@ -4,6 +4,14 @@ import Grid from "@component/grid/Grid";
 import FlexBox from "@component/FlexBox";
 import ShopCard1 from "@sections/shop/ShopCard1";
 import { H2, SemiSpan } from "@component/Typography";
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default function ShopList() {
   const [shopList, setShopList] = useState([]);
@@ -17,7 +25,9 @@ export default function ShopList() {
   const fetchShops = async (page) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`https://tizaraa.com/api/all/seller/profile?page=${page}`);
+      const response = await fetch(
+        `https://tizaraa.com/api/all/seller/profile?page=${page}`
+      );
       const data = await response.json();
 
       setShopList((prevShops) => [...prevShops, ...data.data]); // Append new shops to the list
@@ -86,9 +96,16 @@ export default function ShopList() {
 
       {/* Loading Indicator */}
       {isLoading && (
-        <FlexBox justifyContent="center" mt="24px">
-          <SemiSpan>Loading more shops...</SemiSpan>
-        </FlexBox>
+        <LoaderWrapper>
+        <Vortex />
+      </LoaderWrapper>
+        // <FlexBox justifyContent="center" mt="24px">
+        //   {/* <SemiSpan>Loading more shops...</SemiSpan> */}
+        //   <LoaderWrapper>
+        //     <Vortex />
+        //   </LoaderWrapper>
+        //   ;
+        // </FlexBox>
       )}
 
       {/* Empty div used as a scroll observer target */}

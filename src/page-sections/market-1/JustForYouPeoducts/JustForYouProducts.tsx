@@ -255,6 +255,14 @@ import CategorySectionCreator from "@component/CategorySectionCreator";
 import { currency } from "@utils/utils";
 import Rating from "@component/rating";
 import styles from './JustForYouParoducts.module.css';
+import { Vortex } from "react-loader-spinner";
+  import styled from "@emotion/styled";
+  
+  const LoaderWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `;
 
 const JustForYouProducts = () => {
   const [products, setProducts] = useState([]); 
@@ -399,7 +407,9 @@ const JustForYouProducts = () => {
         </div>
       )}
 
-      {loading && <p>Loading products...</p>}
+      {loading && <LoaderWrapper>
+            <Vortex />
+          </LoaderWrapper>}
     </CategorySectionCreator>
   );
 };
