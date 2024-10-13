@@ -167,6 +167,7 @@ import { IconButton } from "@component/buttons";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { Fragment } from "react";
 import Dialog from "./Dialog"; // Import the Dialog component
+import {  toast } from 'react-toastify';
 import {
   AddNewAddress,
 } from "@sections/customer-dashboard/address"; // Import AddressItem component
@@ -220,8 +221,9 @@ export default function AddressList() {
         setAddresses((prevAddresses) =>
           prevAddresses.filter((address) => address.id !== dialog.id)
         );
+        toast.success("Address Deleted successfully!");
       } catch (error) {
-        console.error("Error deleting address:", error);
+        toast.error("Failed deleting address.");
       }
     }
     setDialog({ ...dialog, isLoading: false }); // Close the dialog
