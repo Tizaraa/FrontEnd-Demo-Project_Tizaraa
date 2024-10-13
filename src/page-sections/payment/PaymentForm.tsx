@@ -20,6 +20,8 @@ import axios from "axios";
 import { useAppContext } from "@context/app-context";
 import CheckBox from "@component/CheckBox";
 
+import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
 
 
 
@@ -114,6 +116,7 @@ export default function PaymentForm() {
 
         localStorage.removeItem('cart');
         localStorage.removeItem('orderId');
+        // toast.success("Order placed successfully!");
 
         router.push("/orders");
     } catch (error) {
@@ -122,6 +125,29 @@ export default function PaymentForm() {
         router.push("/payment")
     }
 };
+
+//  // SweetAlert success notification
+//  Swal.fire({
+//   title: 'Order Placed Successfully!',
+//   text: 'Your order has been placed. Redirecting to orders page...',
+//   icon: 'success',
+//   confirmButtonText: 'OK'
+// }).then(() => {
+//   // Redirect after showing the alert
+//   router.push("/orders");
+// });
+
+// } catch (error) {
+// console.error("Error placing order:", error);
+// Swal.fire({
+//   title: 'Error',
+//   text: 'Failed to place the order. Please try again.',
+//   icon: 'error',
+//   confirmButtonText: 'OK'
+// });
+// router.push("/payment");
+// }
+// };
 
  
 
