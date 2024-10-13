@@ -262,6 +262,7 @@ export default function Signup() {
 
         <Button
           mb="1.65rem"
+          mt="1.65rem"
           variant="contained"
           color="primary"
           type="submit"
