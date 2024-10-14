@@ -49,6 +49,14 @@ import Navbar from "@component/navbar/Navbar";
 import { Carousel } from "@component/carousel";
 import { CarouselCard1 } from "@component/carousel-cards";
 import MainCarouselItem from "@models/market-1.model";
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 // ======================================================
 
@@ -60,9 +68,11 @@ export default function Section1() {
   useEffect(() => {
     const fetchCarouselData = async () => {
       try {
-        const response = await fetch('https://seller.tizaraa.com/api/frontend/slider/all');
+        const response = await fetch(
+          "https://seller.tizaraa.com/api/frontend/slider/all"
+        );
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data: MainCarouselItem[] = await response.json();
         setCarouselData(data);
@@ -76,38 +86,38 @@ export default function Section1() {
     fetchCarouselData();
   }, []);
 
- 
-
   return (
     <Fragment>
       <Navbar navListOpen={true} />
 
-      <Box bg="gray.white" mb="3.75rem" >
-      <div className="container w-75 mx-auto pb-4">
-        <Container pb="2rem" >
-          <Carousel
-            spacing="0px"
-            infinite={true}
-            autoPlay={true}
-            showDots={true}
-            visibleSlides={1}
-            showArrow={false}
-            totalSlides={carouselData.length}>
-            {carouselData.map((item, index) => (
-              <CarouselCard1
-                key={index}
-                image={item.slider_image}
-                // buttonText={item.buttonText}
-            
-              />
-            ))}
-          </Carousel>
-          {loading && <p>Loading products...</p>}
-        </Container>
+      <Box bg="gray.white" mb="3.75rem">
+        <div className="container w-75 mx-auto pb-4">
+          <Container pb="2rem">
+            <Carousel
+              spacing="0px"
+              infinite={true}
+              autoPlay={true}
+              showDots={true}
+              visibleSlides={1}
+              showArrow={false}
+              totalSlides={carouselData.length}
+            >
+              {carouselData.map((item, index) => (
+                <CarouselCard1
+                  key={index}
+                  image={item.slider_image}
+                  // buttonText={item.buttonText}
+                />
+              ))}
+            </Carousel>
+            {loading && (
+              <LoaderWrapper>
+                <Vortex />
+              </LoaderWrapper>
+            )}
+          </Container>
         </div>
       </Box>
-
-  
     </Fragment>
   );
 }

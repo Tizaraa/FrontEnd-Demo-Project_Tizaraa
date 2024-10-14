@@ -114,7 +114,6 @@
 //   );
 // }
 
-
 // "use client";
 // import { useRouter } from "next/navigation"; // Import useRouter
 // import { useCallback, useEffect, useState } from "react";
@@ -170,7 +169,6 @@
 //   // Fetch products based on selected brand and category
 //   const fetchProducts = useCallback(async () => {
 
-   
 //     setLoading(true);
 //     try {
 //       const response = await fetch(`https://tizaraa.com/api/category/${slug}`, {
@@ -194,7 +192,7 @@
 
 //       const data = await response.json();
 //       console.log(data)
-//       setProducts(data.data);   
+//       setProducts(data.data);
 //       setTotalProducts(data.total); // Set total products from response
 //     } catch (error) {
 //       console.error("Error fetching products:", error);
@@ -307,21 +305,14 @@
 //           )}
 //         </Grid>
 
-
-
-
-
-        
 //       </Grid>
 //     </>
 //   );
 // }
 
-
-
 "use client";
-import React from 'react';
-import { useRouter } from "next/navigation"; 
+import React from "react";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import Box from "@component/Box";
 import Card from "@component/Card";
@@ -337,22 +328,32 @@ import ProductGridView from "@component/products/ProductCard1List";
 import ProductListView from "@component/products/ProductCard9List";
 import ProductFilterCard from "@component/products/ProductFilterCard";
 import useWindowSize from "@hook/useWindowSize";
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
 
-const productsPerPage = 10; 
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const productsPerPage = 10;
 
 export default function SearchResult({ sortOptions, slug }) {
   const router = useRouter();
   const width = useWindowSize();
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0].value); 
+  const [selectedSortOption, setSelectedSortOption] = useState(
+    sortOptions[0].value
+  );
   const [selectedBrand, setSelectedBrand] = useState<any[] | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null); // Track selected country
-  const [products, setProducts] = useState<any[]>([]); 
-  const [loading, setLoading] = useState(false); 
-  const [totalProducts, setTotalProducts] = useState(0); 
-  const [currentPage, setCurrentPage] = useState(1); 
-  let pageType="search";
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  let pageType = "search";
 
   const isTablet = width < 1025;
 
@@ -364,7 +365,7 @@ export default function SearchResult({ sortOptions, slug }) {
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     setCurrentPage(1); // Reset to first page
-    router.push(`/product/search/${category}`); 
+    router.push(`/product/search/${category}`);
   };
 
   const handleCountryChange = (countries: number[]) => {
@@ -372,27 +373,29 @@ export default function SearchResult({ sortOptions, slug }) {
     setCurrentPage(1); // Reset to first page
   };
 
-
   const handleSortChange = (sortOption: any) => {
-    setSelectedSortOption(sortOption.value); 
+    setSelectedSortOption(sortOption.value);
   };
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`https://tizaraa.com/api/search/product/${slug}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          category: selectedCategory || "all",
-          brand: selectedBrand || null,
-          country: selectedCountry || null, // Add country filter here
-          page: currentPage, 
-          orderBy: selectedSortOption
-        }),
-      });
+      const response = await fetch(
+        `https://tizaraa.com/api/search/product/${slug}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            category: selectedCategory || "all",
+            brand: selectedBrand || null,
+            country: selectedCountry || null, // Add country filter here
+            page: currentPage,
+            orderBy: selectedSortOption,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -401,9 +404,9 @@ export default function SearchResult({ sortOptions, slug }) {
       const data = await response.json();
       // Reset products when fetching the first page
       if (currentPage === 1) {
-        setProducts(data.data); 
+        setProducts(data.data);
       } else {
-        setProducts((prevProducts) => [...prevProducts, ...data.data]); 
+        setProducts((prevProducts) => [...prevProducts, ...data.data]);
       }
       setTotalProducts(data.total);
     } catch (error) {
@@ -411,7 +414,13 @@ export default function SearchResult({ sortOptions, slug }) {
     } finally {
       setLoading(false);
     }
-  }, [selectedBrand, selectedCategory, selectedCountry, currentPage, selectedSortOption]);
+  }, [
+    selectedBrand,
+    selectedCategory,
+    selectedCountry,
+    currentPage,
+    selectedSortOption,
+  ]);
 
   useEffect(() => {
     fetchProducts();
@@ -441,7 +450,9 @@ export default function SearchResult({ sortOptions, slug }) {
           {/* <H5>Searching for {slug}</H5> */}
           <H5>Searching for {decodeURIComponent(slug)}</H5>
 
-          <Paragraph color="text.muted">{totalProducts} results found</Paragraph>
+          <Paragraph color="text.muted">
+            {totalProducts} results found
+          </Paragraph>
         </div>
 
         <FlexBox alignItems="center" flexWrap="wrap">
@@ -453,8 +464,10 @@ export default function SearchResult({ sortOptions, slug }) {
             <Select
               placeholder="Sort by"
               options={sortOptions}
-              defaultValue={sortOptions.find(option => option.value === selectedSortOption)} 
-              onChange={handleSortChange} 
+              defaultValue={sortOptions.find(
+                (option) => option.value === selectedSortOption
+              )}
+              onChange={handleSortChange}
             />
           </Box>
 
@@ -463,13 +476,19 @@ export default function SearchResult({ sortOptions, slug }) {
           </Paragraph>
 
           <IconButton onClick={() => setView("grid")}>
-            <Icon variant="small" color={view === "grid" ? "primary" : "inherit"}>
+            <Icon
+              variant="small"
+              color={view === "grid" ? "primary" : "inherit"}
+            >
               grid
             </Icon>
           </IconButton>
 
           <IconButton onClick={() => setView("list")}>
-            <Icon variant="small" color={view === "list" ? "primary" : "inherit"}>
+            <Icon
+              variant="small"
+              color={view === "list" ? "primary" : "inherit"}
+            >
               menu
             </Icon>
           </IconButton>
@@ -508,30 +527,40 @@ export default function SearchResult({ sortOptions, slug }) {
         </Grid>
 
         <Grid item lg={9} xs={12}>
-  {currentPage === 1 && loading ? ( // Show loading only on initial load
-    <Paragraph>Loading products...</Paragraph>
-  ) : view === "grid" ? (
-    <>
-      <ProductGridView
-        products={products}
-        totalProducts={totalProducts}
-        currentPage={currentPage}
-        productsPerPage={productsPerPage}
-        onPageChange={handleLoadMore}
-      />
-      {loading && currentPage > 1 && <Paragraph>Loading more products...</Paragraph>} {/* Optional: loading indicator for more products */}
-    </>
-  ) : (
-    <ProductListView
-      products={products}
-      totalProducts={0}
-      currentPage={0}
-      productsPerPage={0}
-      onPageChange={() => {}}
-    />
-  )}
-</Grid>
-
+          {currentPage === 1 && loading ? ( // Show loading only on initial load
+            <Paragraph>
+              <LoaderWrapper>
+                <Vortex />
+              </LoaderWrapper>
+            </Paragraph>
+          ) : view === "grid" ? (
+            <>
+              <ProductGridView
+                products={products}
+                totalProducts={totalProducts}
+                currentPage={currentPage}
+                productsPerPage={productsPerPage}
+                onPageChange={handleLoadMore}
+              />
+              {loading && currentPage > 1 && (
+                <Paragraph>
+                  <LoaderWrapper>
+                    <Vortex />
+                  </LoaderWrapper>
+                </Paragraph>
+              )}{" "}
+              {/* Optional: loading indicator for more products */}
+            </>
+          ) : (
+            <ProductListView
+              products={products}
+              totalProducts={0}
+              currentPage={0}
+              productsPerPage={0}
+              onPageChange={() => {}}
+            />
+          )}
+        </Grid>
       </Grid>
     </>
   );

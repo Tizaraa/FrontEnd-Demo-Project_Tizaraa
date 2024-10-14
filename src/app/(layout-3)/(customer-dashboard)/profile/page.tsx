@@ -18,10 +18,22 @@ import TableRow from "@component/TableRow";
 import Typography, { H3, H5, Small } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { EditProfileButton } from "@sections/customer-dashboard/profile";
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 // Fallback component while waiting for search params
 function LoadingFallback() {
-  return <div>Loading...</div>;
+  return (
+    <LoaderWrapper>
+      <Vortex />
+    </LoaderWrapper>
+  );
 }
 
 export default function Profile() {
@@ -52,7 +64,12 @@ export default function Profile() {
     }
   }, [router, searchParams]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <LoaderWrapper>
+        <Vortex />
+      </LoaderWrapper>
+    );
 
   const infoList = [
     { title: "16", subtitle: "All Orders" },

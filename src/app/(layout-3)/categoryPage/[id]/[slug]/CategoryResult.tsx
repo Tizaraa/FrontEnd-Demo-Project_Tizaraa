@@ -26,15 +26,12 @@
 // // ==============================================================
 
 // export default function CategoryResult({ categoryid }) {
-  
 
 //   useEffect(() => {
-
 
 //     categoryProductLoad(40,1)
 
 //   },[])
-
 
 //     const categoryProductLoad = (id,orderby)=>{
 
@@ -47,14 +44,14 @@
 //       })
 //       .then(function (response) {
 //         const proName = response.data['products'][1].product_name;
-    
+
 //         console.log(response.data)
-    
+
 //       })
 //       .catch(function (error) {
 //         console.log(error);
 //       });
-  
+
 //       // ===
 
 //     }
@@ -141,15 +138,12 @@
 //           ) : (
 //             <ProductListView products={db.slice(95, 104)} />
 //           )}
-     
+
 //         </Grid>
 //       </Grid>
 //     </>
 //   );
 // }
-
-
-
 
 "use client";
 
@@ -158,6 +152,14 @@ import axios from "axios";
 import Grid from "@component/grid/Grid";
 import ProductFilterCard from "@component/products/ProductFilterCard";
 import CategoryRelatedProducts from "@sections/market-1/CategoryRelatedProducts";
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default function CategoryResult({ categoryid }) {
   const [products, setProducts] = useState([]);
@@ -167,11 +169,13 @@ export default function CategoryResult({ categoryid }) {
   useEffect(() => {
     const categoryProductLoad = async () => {
       try {
-        const response = await axios.post(`https://tizaraa.com/api/category/product/${categoryid}`);
-        
+        const response = await axios.post(
+          `https://tizaraa.com/api/category/product/${categoryid}`
+        );
+
         // Console log the result before setting state
         console.log("Category Products Data:", response.data.products);
-        
+
         setProducts(response.data.products);
         setLoading(false);
       } catch (error) {
@@ -180,13 +184,16 @@ export default function CategoryResult({ categoryid }) {
         setLoading(false);
       }
     };
-  
+
     categoryProductLoad();
   }, [categoryid]);
-  
 
   if (loading) {
-    return <p>Loading products...</p>;
+    return (
+      <LoaderWrapper>
+        <Vortex />
+      </LoaderWrapper>
+    );
   }
 
   if (error) {

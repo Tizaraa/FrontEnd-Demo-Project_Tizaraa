@@ -10,6 +10,14 @@ import { OrderRow } from "@sections/customer-dashboard/orders"; // Ensure OrderR
 import Cookies from "js-cookie";
 import axios from "axios";
 import authService from "services/authService";
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
@@ -52,9 +60,9 @@ export default function OrderList() {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+
       const data = response.data;
-      console.log(data)
+      console.log(data);
       if (Array.isArray(data.orders)) {
         setOrderList(data.orders);
       } else {
@@ -67,15 +75,23 @@ export default function OrderList() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <LoaderWrapper>
+        <Vortex />
+      </LoaderWrapper>
+    );
 
   return (
-   
     <Fragment>
       <DashboardPageHeader title="My Orders" iconName="bag_filled" />
 
       <Hidden down={769}>
-        <TableRow boxShadow="none" padding="0px 18px" backgroundColor="transparent">
+        <TableRow
+          boxShadow="none"
+          padding="0px 18px"
+          backgroundColor="transparent"
+        >
           <H5 color="text.muted" my="0px" mx="6px" textAlign="left">
             Order #
           </H5>

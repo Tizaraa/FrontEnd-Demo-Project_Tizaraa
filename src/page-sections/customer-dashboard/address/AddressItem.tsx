@@ -267,12 +267,21 @@ import Typography from "@component/Typography";
 import { IconButton } from "@component/buttons";
 //import { AddressItem } from "@sections/customer-dashboard/address"; // Import AddressItem component
 import Address from "@models/address.model"; // Make sure Address model is defined and imported correctly
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default function AddressList() {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
-  const authtoken = typeof window !== "undefined" ? localStorage.getItem("token") : null; // Retrieve the auth token safely
+  const authtoken =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null; // Retrieve the auth token safely
 
   useEffect(() => {
     if (!authtoken) {
@@ -320,7 +329,12 @@ export default function AddressList() {
     }
   };
 
-  if (loading) return <div>Loading addresses...</div>;
+  if (loading)
+    return (
+      <LoaderWrapper>
+        <Vortex />
+      </LoaderWrapper>
+    );
   if (error) return <div>{error}</div>;
 
   return (
@@ -389,6 +403,3 @@ function AddressItem({
     </TableRow>
   );
 }
-
-
-
