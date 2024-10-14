@@ -331,6 +331,7 @@ import CheckBox from "@component/CheckBox";
 import { Accordion, AccordionHeader } from "@component/accordion";
 import { H6, Paragraph, SemiSpan } from "@component/Typography";
 import axios from 'axios';
+import ApiBaseUrl from 'api/ApiBaseUrl';
 
 // Define types for your data
 type Brand = {
@@ -381,12 +382,12 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange, on
       try {
         let response;
         if (pageType === 'default') {
-          response = await axios.get(`https://tizaraa.com/api/category-filter/${slug}`);
+          response = await axios.get(`${ApiBaseUrl.baseUrl}category-filter/${slug}`);
         } else if (pageType === 'search') {
-          response = await axios.get(`https://tizaraa.com/api/search-filter/${slug}`);
+          response = await axios.get(`${ApiBaseUrl.baseUrl}search-filter/${slug}`);
         }
         else if(pageType === 'shop'){
-          response = await axios.get(`https://tizaraa.com/api/shop-filter/${slug}`);
+          response = await axios.get(`${ApiBaseUrl.baseUrl}shop-filter/${slug}`);
         }
   
         // Safely check and set data or default to an empty array

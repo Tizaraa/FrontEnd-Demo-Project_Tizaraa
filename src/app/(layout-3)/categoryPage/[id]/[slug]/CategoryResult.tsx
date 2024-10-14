@@ -154,6 +154,7 @@ import ProductFilterCard from "@component/products/ProductFilterCard";
 import CategoryRelatedProducts from "@sections/market-1/CategoryRelatedProducts";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -170,7 +171,7 @@ export default function CategoryResult({ categoryid }) {
     const categoryProductLoad = async () => {
       try {
         const response = await axios.post(
-          `https://tizaraa.com/api/category/product/${categoryid}`
+          `${ApiBaseUrl.baseUrl}category/product/${categoryid}`
         );
 
         // Console log the result before setting state

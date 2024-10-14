@@ -644,6 +644,7 @@ import TextField from "@component/text-field";
 import StyledSearchBox from "./styled";
 import { useRouter } from 'next/navigation';
 import { usePathname, useSearchParams } from "next/navigation";
+import ApiBaseUrl from "api/ApiBaseUrl";
 // import { useRouter } from 'next/router';
 
 export default function SearchInputWithCategory() {
@@ -668,7 +669,7 @@ export default function SearchInputWithCategory() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("https://tizaraa.com/api/categories");
+      const response = await axios.get(`${ApiBaseUrl.baseUrl}categories`);
       setCategories(response.data || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -677,7 +678,7 @@ export default function SearchInputWithCategory() {
 
   const fetchSearchResults = async (query: string) => {
     try {
-      const response = await axios.get(`https://tizaraa.com/api/search/suggestion/${query}`);
+      const response = await axios.get(`${ApiBaseUrl.baseUrl}search/suggestion/${query}`);
       const results = response.data || [];
       const uniqueResults = Array.from(new Set(results.map(item => item.keyword)))
         .map(keyword => results.find(item => item.keyword === keyword));

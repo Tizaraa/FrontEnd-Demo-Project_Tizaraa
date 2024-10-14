@@ -19,6 +19,7 @@ import useWindowSize from "@hook/useWindowSize";
 import axios from "axios";
 import { useAppContext } from "@context/app-context";
 import CheckBox from "@component/CheckBox";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
@@ -62,7 +63,7 @@ export default function PaymentForm() {
     console.log("Selected payment method:", paymentMethod);
     try {
       const orderResponse = await axios.post(
-          'https://tizaraa.com/api/checkout/order',
+          `${ApiBaseUrl.baseUrl}checkout/order`,
           {
               user_id: userinfo?.id, // Safeguard in case userinfo is null
               name: userShippingdata?.shipping_name || userShippingdata?.name, // Fallback to name from session storage
@@ -91,7 +92,7 @@ export default function PaymentForm() {
 
         await Promise.all(cart.map(async (cartdata) => {
             const response = await axios.post(
-                'https://tizaraa.com/api/checkout/order/items',
+                `${ApiBaseUrl.baseUrl}checkout/order/items`,
                 {
                     delivery_charge: 60,
                     user_id: userinfo.id,

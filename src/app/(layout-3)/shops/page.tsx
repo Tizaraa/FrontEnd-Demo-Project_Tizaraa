@@ -6,6 +6,7 @@ import ShopCard1 from "@sections/shop/ShopCard1";
 import { H2, SemiSpan } from "@component/Typography";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -26,7 +27,7 @@ export default function ShopList() {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `https://tizaraa.com/api/all/seller/profile?page=${page}`
+        `${ApiBaseUrl.baseUrl}all/seller/profile?page=${page}`
       );
       const data = await response.json();
 

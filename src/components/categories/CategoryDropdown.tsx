@@ -42,6 +42,7 @@ import MegaMenu1 from "./mega-menu/MegaMenu1";
 import MegaMenu2 from "./mega-menu/MegaMenu2";
 import CategoryMenuItem from "./CategoryMenuItem";
 import { StyledCategoryDropdown } from "./styles";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 // =========================================
 type CategoryDropdownProps = {
@@ -59,7 +60,7 @@ export default function CategoryDropdown({ open, position = "absolute" }: Catego
     // Fetch navigations data from the API
     const fetchNavigations = async () => {
       try {
-        const response = await fetch("https://tizaraa.com/api/categories"); // Adjust the API endpoint as needed
+        const response = await fetch(`${ApiBaseUrl.baseUrl}categories`); // Adjust the API endpoint as needed
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

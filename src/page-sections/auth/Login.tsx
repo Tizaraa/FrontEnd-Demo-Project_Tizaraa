@@ -20,6 +20,7 @@ import { Button, IconButton } from "@component/buttons";
 import { H3, H5, H6, SemiSpan, Small, Span } from "@component/Typography";
 import { StyledRoot } from "./styles"; // Import your styled components
 import authService from "services/authService";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function Login() {
   const { state, dispatch } = useAppContext(); // Accessing app context for auth
@@ -43,7 +44,7 @@ export default function Login() {
 
     try {
       // Making API request using axios
-      const response = await axios.post("https://tizaraa.com/api/login", {
+      const response = await axios.post(`${ApiBaseUrl.baseUrl}login`, {
         email: values.email,
         password: values.password
       });

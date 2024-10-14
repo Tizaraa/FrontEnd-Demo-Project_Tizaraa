@@ -130,6 +130,7 @@ import Typography from "@component/Typography";
 import TextArea from "@component/textarea";
 import countryList from "@data/countryList";
 import axios from "axios";
+import ApiBaseUrl from "api/ApiBaseUrl";
 import {  toast } from 'react-toastify';
 
 export default function AddressForm() {
@@ -159,7 +160,7 @@ export default function AddressForm() {
 
     try {
       const response = await axios.post(
-        "https://tizaraa.com/api/user/address/store",
+        `${ApiBaseUrl.baseUrl}user/address/store`,
         addressData,
         {
           headers: {
@@ -188,7 +189,7 @@ export default function AddressForm() {
     const authtoken = localStorage.getItem("token"); // Retrieve the auth token
     try {
       const response = await axios.get(
-        `https://tizaraa.com/api/checkout/address`,
+        `${ApiBaseUrl.baseUrl}checkout/address`,
         {
           headers: {
             Authorization: `Bearer ${authtoken}`, // Attach auth token to headers

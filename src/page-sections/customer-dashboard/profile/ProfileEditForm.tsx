@@ -369,6 +369,7 @@ import { Formik } from "formik";
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 import Box from "@component/Box";
 import Grid from "@component/grid/Grid";
@@ -380,8 +381,10 @@ import {  toast } from 'react-toastify';
 import { Vortex } from 'react-loader-spinner'
 import  styled from "@emotion/styled";
 
-const API_URL = "https://tizaraa.com/api/user/profile";
-const UPDATE_API_URL = "https://tizaraa.com/api/user/profile/update";
+//const API_URL = "https://tizaraa.com/api/user/profile";
+const API_URL = `${ApiBaseUrl.baseUrl}user/profile`
+//const UPDATE_API_URL = "https://tizaraa.com/api/user/profile/update";
+const UPDATE_API_URL = `${ApiBaseUrl.baseUrl}user/profile/update`;
 
 const LoaderWrapper = styled.div`
   display: flex;

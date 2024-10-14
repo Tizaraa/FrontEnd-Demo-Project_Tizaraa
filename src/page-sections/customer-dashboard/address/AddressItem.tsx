@@ -269,6 +269,7 @@ import { IconButton } from "@component/buttons";
 import Address from "@models/address.model"; // Make sure Address model is defined and imported correctly
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -293,7 +294,7 @@ export default function AddressList() {
     const fetchAddresses = async () => {
       try {
         const response = await axios.get(
-          `https://tizaraa.com/api/user/address`,
+          `${ApiBaseUrl.baseUrl}user/address`,
           {
             headers: {
               Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
@@ -314,7 +315,7 @@ export default function AddressList() {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`https://tizaraa.com/api/user/address/delete/${id}`, {
+      await axios.delete(`${ApiBaseUrl.baseUrl}user/address/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
         },

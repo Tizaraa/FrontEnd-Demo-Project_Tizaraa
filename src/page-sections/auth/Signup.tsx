@@ -18,6 +18,7 @@ import { Button, IconButton } from "@component/buttons";
 import { H3, H5, H6, SemiSpan, Small, Span } from "@component/Typography";
 //router.push("/profile");
 import { useRouter } from "next/navigation";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 // STYLED COMPONENT
 import { StyledRoot } from "./styles";
@@ -72,7 +73,7 @@ export default function Signup() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("https://tizaraa.com/api/register", {
+      const response = await fetch(`${ApiBaseUrl.baseUrl}register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

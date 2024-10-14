@@ -89,6 +89,7 @@ import { Button } from "@component/buttons";
 import { Span } from "@component/Typography";
 import TextField from "@component/text-field";
 import SearchBoxStyle from "./styled";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function SearchInput() {
   const [resultList, setResultList] = useState<string[]>([]);
@@ -97,7 +98,7 @@ export default function SearchInput() {
   // Function to fetch search suggestions based on query
   const fetchSearchResults = async (query: string) => {
     try {
-      const response = await axios.get(`https://tizaraa.com/api/search/suggestion/${query}`);
+      const response = await axios.get(`${ApiBaseUrl.baseUrl}search/suggestion/${query}`);
       const results = response.data || [];
 
       // Assuming the API returns an array of suggestions

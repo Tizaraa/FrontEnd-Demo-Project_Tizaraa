@@ -11,6 +11,7 @@ import { ShopIntroWrapper } from "./styles";
 import { useState, useEffect } from "react";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -29,7 +30,7 @@ export default function ShopIntroCard({ slug }: Props) {
     const fetchSingleShop = async () => {
       try {
         const response = await fetch(
-          `https://tizaraa.com/api/seller/profile/${slug}`
+          `${ApiBaseUrl.baseUrl}seller/profile/${slug}`
         );
         //console.log(response);
 

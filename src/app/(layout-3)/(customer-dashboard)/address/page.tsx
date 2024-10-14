@@ -170,6 +170,7 @@ import Dialog from "./Dialog"; // Import the Dialog component
 import {  toast } from 'react-toastify';
 import { Vortex } from 'react-loader-spinner'
 import  styled from "@emotion/styled";
+import ApiBaseUrl from "api/ApiBaseUrl";
 import {
   AddNewAddress,
 } from "@sections/customer-dashboard/address"; // Import AddressItem component
@@ -194,7 +195,7 @@ export default function AddressList() {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await axios.get(`https://tizaraa.com/api/user/address`, {
+        const response = await axios.get(`${ApiBaseUrl.baseUrl}user/address`, {
           headers: {
             Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
           },
@@ -219,7 +220,7 @@ export default function AddressList() {
   const areYouSureDelete = async (choose: boolean) => {
     if (choose) {
       try {
-        await axios.get(`https://tizaraa.com/api/user/address/delete/${dialog.id}`, {
+        await axios.get(`${ApiBaseUrl.baseUrl}user/address/delete/${dialog.id}`, {
           headers: {
             Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
           },

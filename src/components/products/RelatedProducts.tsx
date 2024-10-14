@@ -169,6 +169,7 @@ import FlexBox from "@component/FlexBox";
 import { H4 } from "@component/Typography";
 import Rating from "@component/rating";
 import { currency } from "@utils/utils";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 // Import the CSS module styles
 import styles from "./RelatedProductsStyle.module.css";
@@ -185,7 +186,7 @@ const RelatedProducts = ({ productId }: RelatedProductsProps) => {
   useEffect(() => {
     const fetchRelatedProducts = async () => {
       try {
-        const response = await axios.get(`https://tizaraa.com/api/product/details/related/product/${productId}`);
+        const response = await axios.get(`${ApiBaseUrl.baseUrl}product/details/related/product/${productId}`);
         if (response.data) {
           setAllProducts(response.data); // Store all fetched products
           setRelatedProducts(response.data.slice(0, visibleProducts)); // Initially display 10 products

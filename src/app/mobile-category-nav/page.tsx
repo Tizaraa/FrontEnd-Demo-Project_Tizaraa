@@ -19,6 +19,8 @@ import useWindowSize from "@hook/useWindowSize";
 import { MobileCategoryNavStyle } from "./styles";
 import MobileCategoryImageBox from "./MobileCategoryImageBox";
 
+// import navigations from "@data/navigations";
+
 // ==============================================================
 // Define the structure of Suggestion and Category
 interface Suggestion {
@@ -69,7 +71,7 @@ export default function MobileCategoryNav() {
   useEffect(() => {
     const fetchNavigations = async () => {
       try {
-        const response = await fetch("https://tizaraa.com/api/categories");
+        const response = await fetch("https://tizaraa.com/api/categories"); // Fetch categories from API
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

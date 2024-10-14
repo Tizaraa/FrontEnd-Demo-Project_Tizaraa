@@ -18,6 +18,7 @@ import ProductFilterCard from "@component/products/ProductFilterCard";
 import useWindowSize from "@hook/useWindowSize";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -69,7 +70,7 @@ export default function SearchResult({ sortOptions, slug }) {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://tizaraa.com/api/seller/products/${slug}`,
+        `${ApiBaseUrl.baseUrl}seller/products/${slug}`,
         {
           method: "POST",
           headers: {
