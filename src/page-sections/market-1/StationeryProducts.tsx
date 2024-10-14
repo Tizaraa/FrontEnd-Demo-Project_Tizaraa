@@ -17,6 +17,7 @@ import useWindowSize from "@hook/useWindowSize";
 
 import ApiBaseUrl from "../../api/ApiBaseUrl";
 import Rating from "@component/rating";
+import { Chip } from "@component/Chip";
 
 export default function StationeryProducts() {
   const [flashSale, setFlashSale] = useState([]);
@@ -57,7 +58,26 @@ export default function StationeryProducts() {
         <Carousel totalSlides={flashSale.length} visibleSlides={visibleSlides}>
           {flashSale.map((item) => (
             <Box py="0.25rem" key={item.product_slug}>
-              <Card p="1rem" borderRadius={8} style={{ height: '300px' }}> {/* Fixed height */}
+              <Card p="1rem" borderRadius={8} style={{ height: '300px' }}> 
+
+                         {/* Discount Badge */}
+              {!!item.discount_price && item.discount_price < item.seeling_price && (
+  <Chip
+    top="1rem"
+    left="1.2rem"
+    p="0.25rem 0.5rem"
+    fontSize="12px"
+    fontWeight="600"
+    bg="primary.main"
+    position="absolute"
+    color="primary.text"
+    zIndex={1}
+   
+    
+  >
+    {Math.floor(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}% off
+  </Chip>
+)}
                 <Link href={`/product/${item.product_slug}`}>
                   {/* <HoverBox
                     borderRadius={8}
@@ -81,24 +101,7 @@ export default function StationeryProducts() {
                 style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
               />
 
-              {/* Discount Badge */}
-              {item.discount_price != null && item.discount_price < item.seeling_price && (
-                <Box
-                  position="absolute"
-                  top="1rem"
-                  left="1rem"
-                  bg="red"
-                  color="white"
-                  px="0.5rem"
-                  py="0.25rem"
-                  borderRadius="50%"
-                  fontWeight="600"
-                  fontSize="12px"
-                  textAlign="center"
-                >
-                  {Math.floor(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}%
-                </Box>
-              )}
+     
             </Box>
 
                   <H4

@@ -15,6 +15,7 @@ import { Button } from "@component/buttons";
 import { H1, H2, H3, H6, SemiSpan } from "@component/Typography";
 import { useAppContext } from "@context/app-context";
 import { currency } from "@utils/utils";
+import { Chip } from "@component/Chip";
 
 // ========================================
 type ProductIntroProps = {
@@ -158,7 +159,7 @@ export default function ProductIntro({
   )}
 </H2>
 
-{discountPrice && totalDiscount && (
+{/* {discountPrice && totalDiscount && (
   <Box
     bg="red"
     color="white"
@@ -172,6 +173,22 @@ export default function ProductIntro({
   >
     {Math.floor(totalDiscount)}%
   </Box>
+)} */}
+ {!!discountPrice && totalDiscount && (
+  <Chip
+   bg="primary.main"
+  color="white"
+  px="0.5rem"
+  py="0.25rem"
+  ml="1rem"
+  fontWeight="600"
+  fontSize="12px"
+  textAlign="center"
+   
+    
+  >
+   {Math.floor(totalDiscount)}% off
+  </Chip>
 )}
 
 </FlexBox>

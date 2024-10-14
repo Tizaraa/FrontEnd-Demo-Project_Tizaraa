@@ -173,6 +173,7 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 
 // Import the CSS module styles
 import styles from "./RelatedProductsStyle.module.css";
+import { Chip } from "@component/Chip";
 
 interface RelatedProductsProps {
   productId: string;
@@ -230,23 +231,23 @@ const RelatedProducts = ({ productId }: RelatedProductsProps) => {
               />
 
               {/* Discount Badge */}
-              {item.discount_price != null && item.discount_price < item.seeling_price && (
-                <Box
-                  position="absolute"
-                  top="1rem"
-                  left="1rem"
-                  bg="red"
-                  color="white"
-                  px="0.5rem"
-                  py="0.25rem"
-                  borderRadius="50%"
-                  fontWeight="600"
-                  fontSize="12px"
-                  textAlign="center"
-                >
-                  {Math.round(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}%
-                </Box>
-              )}
+              {!!item.discount_price && item.discount_price < item.seeling_price && (
+  <Chip
+    top="1rem"
+    left="0.1rem"
+    p="0.25rem 0.5rem"
+    fontSize="12px"
+    fontWeight="600"
+    bg="primary.main"
+    position="absolute"
+    color="primary.text"
+    zIndex={1}
+   
+    
+  >
+    {Math.floor(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}% off
+  </Chip>
+)}
             </Box>
             <H4
               fontWeight="600"

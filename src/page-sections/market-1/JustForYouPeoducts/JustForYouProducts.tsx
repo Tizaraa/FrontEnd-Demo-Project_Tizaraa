@@ -257,6 +257,7 @@ import Rating from "@component/rating";
 import styles from './JustForYouParoducts.module.css';
 import { Vortex } from "react-loader-spinner";
   import styled from "@emotion/styled";
+import { Chip } from "@component/Chip";
   
   const LoaderWrapper = styled.div`
     display: flex;
@@ -329,24 +330,23 @@ const JustForYouProducts = () => {
               />
 
               {/* Discount Badge */}
-              {item.discount_price != null && item.discount_price < item.seeling_price && (
-                <Box
-                  position="absolute"
-                  top="1rem"
-                  left="1rem"
-                  bg="red"
-                  color="white"
-                  px="0.5rem"
-                  py="0.25rem"
-                  borderRadius="50%"
-                  fontWeight="600"
-                  fontSize="12px"
-                  textAlign="center"
-                >
-                  {Math.floor(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}%
-                
-                </Box>
-              )}
+              {!!item.discount_price && item.discount_price < item.seeling_price && (
+  <Chip
+    top="1rem"
+    left="0.1rem"
+    p="0.25rem 0.5rem"
+    fontSize="12px"
+    fontWeight="600"
+    bg="primary.main"
+    position="absolute"
+    color="primary.text"
+    zIndex={1}
+   
+    
+  >
+    {Math.floor(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}% off
+  </Chip>
+)}
             </Box>
 
                     <H4
