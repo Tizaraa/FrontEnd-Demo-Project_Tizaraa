@@ -11,6 +11,7 @@ import { Small } from "@component/Typography";
 import Typography from "@component/Typography";
 import authService from "services/authService";
 import Address from "@models/address.model";
+import { padding } from "styled-system";
 
 export default function CheckoutAddress() {
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -148,21 +149,22 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
         marginBottom: "1rem",
         borderRadius: "1rem",
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", 
+        // padding: "0.5rem 0.5rem"
     
       }}
     >
       <FlexBox
-        my="1rem"
+        my="0.5rem"
         padding="1px 5px"
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "1rem",
+          // gap: "1rem",
         }}
       >
         <CheckBox checked={isSelected} onChange={handleCheckboxChange} />
 
-        <FlexBox>
+        <FlexBox fontWeight="600">
           <Typography className="pre" m="6px" textAlign="left">
             {item.name || "No Name"}
           </Typography>
@@ -174,16 +176,17 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
 
       <FlexBox
         flex="1 1 260px !important"
-        padding="1px 5px"
+        // padding="1px 5px"
         m="6px"
         textAlign="left"
+        fontWeight="600"
         style={{
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
         }}
       >
-        <Chip p="0.25rem 1rem" bg="#4CAF50">
+        <Chip p="0.35rem 1rem" bg="#4CAF50">
           <Small color="white">{landmarkLabel}</Small>
         </Chip>
 
