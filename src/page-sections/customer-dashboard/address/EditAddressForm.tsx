@@ -15,6 +15,7 @@ import TextArea from "@component/textarea";
 import axios from "axios";
 import * as Yup from "yup";
 import {  toast } from 'react-toastify';
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function EditAddressForm({ addressId }: { addressId: string }) {
   const router = useRouter();
@@ -37,7 +38,7 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
       const authtoken = localStorage.getItem("token");
       try {
         const response = await axios.get(
-          "https://tizaraa.com/api/checkout/address",
+          `${ApiBaseUrl.baseUrl}checkout/address`,
           {
             headers: {
               Authorization: `Bearer ${authtoken}`,
@@ -58,7 +59,7 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
       const authtoken = localStorage.getItem("token");
       try {
         const response = await axios.get(
-          `https://tizaraa.com/api/user/address/edit/${addressId}`,
+          `${ApiBaseUrl.baseUrl}user/address/edit/${addressId}`,
           {
             headers: {
               Authorization: `Bearer ${authtoken}`,
@@ -107,7 +108,7 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
 
     try {
       const response = await axios.post(
-        `https://tizaraa.com/api/user/address/update/${addressId}`,
+        `${ApiBaseUrl.baseUrl}user/address/update/${addressId}`,
         updateAddressData,
         {
           headers: {

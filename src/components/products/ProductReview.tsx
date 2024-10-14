@@ -146,6 +146,7 @@ import { H2, H5 } from "@component/Typography";
 import ProductComment from "./ProductComment";
 import * as yup from "yup";
 import { useFormik } from "formik";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function ProductReview({ productId }: { productId: string }) {
   const [reviews, setReviews] = useState<any[]>([]);
@@ -156,7 +157,7 @@ export default function ProductReview({ productId }: { productId: string }) {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await axios.get(`https://tizaraa.com/api/product/comment/${productId}`);
+        const response = await axios.get(`${ApiBaseUrl.baseUrl}product/comment/${productId}`);
         setReviews(response.data.comments || []); // Assuming `comments` is the field in the response
         setLoading(false);
       } catch (error) {
@@ -182,7 +183,7 @@ export default function ProductReview({ productId }: { productId: string }) {
 
   const handleFormSubmit = async (values: any, { resetForm }: any) => {
     try {
-      await axios.post(`https://tizaraa.com/api/product/comment/${productId}`, values); // Submit the review to the API
+      await axios.post(`${ApiBaseUrl.baseUrl}product/comment/${productId}`, values); // Submit the review to the API
       setReviews([...reviews, values]); // Add the new review to the list
       resetForm(); // Reset the form after submission
     } catch (error) {

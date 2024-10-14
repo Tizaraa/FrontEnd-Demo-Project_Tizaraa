@@ -11,6 +11,7 @@ import { Small } from "@component/Typography";
 import Typography from "@component/Typography";
 import authService from "services/authService";
 import Address from "@models/address.model";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function CheckoutAddress() {
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -22,7 +23,7 @@ export default function CheckoutAddress() {
   const fetchProvince = async () => {
     const authtoken = localStorage.getItem("token");
     try {
-      const response = await axios.get(`https://tizaraa.com/api/checkout/address`, {
+      const response = await axios.get(`${ApiBaseUrl.baseUrl}checkout/address`, {
         headers: {
           Authorization: `Bearer ${authtoken}`,
         },
@@ -41,7 +42,7 @@ export default function CheckoutAddress() {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await axios.get(`https://tizaraa.com/api/user/address`, {
+        const response = await axios.get(`${ApiBaseUrl.baseUrl}user/address`, {
           headers: {
             Authorization: `Bearer ${authtoken}`,
           },

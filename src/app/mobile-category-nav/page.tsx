@@ -201,6 +201,7 @@ import useWindowSize from "@hook/useWindowSize";
 
 import { MobileCategoryNavStyle } from "./styles";
 import MobileCategoryImageBox from "./MobileCategoryImageBox";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 // import navigations from "@data/navigations";
 
@@ -256,7 +257,7 @@ export default function MobileCategoryNav() {
   useEffect(() => {
     const fetchNavigations = async () => {
       try {
-        const response = await fetch("https://tizaraa.com/api/categories"); // Fetch categories from API
+        const response = await fetch(`${ApiBaseUrl.baseUrl}categories`); // Fetch categories from API
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

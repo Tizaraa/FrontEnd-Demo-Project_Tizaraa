@@ -12,6 +12,7 @@ import axios from "axios";
 import authService from "services/authService";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -55,7 +56,7 @@ export default function OrderList() {
 
   const fetchOrderList = async (token: string) => {
     try {
-      const response = await axios.get("https://tizaraa.com/api/user/order", {
+      const response = await axios.get(`${ApiBaseUrl.baseUrl}user/order`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

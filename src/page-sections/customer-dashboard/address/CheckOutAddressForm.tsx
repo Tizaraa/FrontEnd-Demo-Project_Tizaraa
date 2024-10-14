@@ -483,6 +483,7 @@ import TextField from "@component/text-field";
 import Typography from "@component/Typography";
 import TextArea from "@component/textarea";
 import axios from "axios";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function CheckOutAddressForm() {
   const router = useRouter();
@@ -511,7 +512,7 @@ export default function CheckOutAddressForm() {
 
     try {
       const response = await axios.post(
-        "https://tizaraa.com/api/user/address/store",
+        `${ApiBaseUrl.baseUrl}user/address/store`,
         addressData,
         {
           headers: {
@@ -533,7 +534,7 @@ export default function CheckOutAddressForm() {
     const authtoken = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        `https://tizaraa.com/api/checkout/address`,
+        `${ApiBaseUrl.baseUrl}checkout/address`,
         {
           headers: {
             Authorization: `Bearer ${authtoken}`,

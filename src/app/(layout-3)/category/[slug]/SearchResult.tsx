@@ -329,6 +329,7 @@ import ProductFilterCard from "@component/products/ProductFilterCard";
 import useWindowSize from "@hook/useWindowSize";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -378,7 +379,7 @@ export default function SearchResult({ sortOptions, slug }) {
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`https://tizaraa.com/api/category/${slug}`, {
+      const response = await fetch(`${ApiBaseUrl.baseUrl}category/${slug}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

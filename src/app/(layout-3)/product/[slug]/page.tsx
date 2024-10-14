@@ -206,6 +206,7 @@ import axios from "axios";
 import ProductIntro from "@component/products/ProductIntro";
 import ProductView from "@component/products/ProductView";
 import RelatedProducts from "@component/products/RelatedProducts";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 interface Props {
   params: { slug: string };
@@ -213,7 +214,7 @@ interface Props {
 
 export default async function ProductDetails({ params }: Props) {
   try {
-    const response = await axios.get(`https://tizaraa.com/api/product/details/${params.slug}`);
+    const response = await axios.get(`${ApiBaseUrl.baseUrl}product/details/${params.slug}`);
     
     const product = response.data.productsingledetails;
     const productImages = response.data.productmultiimages;

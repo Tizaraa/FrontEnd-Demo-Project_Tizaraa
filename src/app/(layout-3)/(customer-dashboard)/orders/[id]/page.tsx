@@ -14,6 +14,7 @@ import FlexBox from "@component/FlexBox";
 import TableRow from "@component/TableRow";
 import Typography, { H5, H6, Paragraph } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
+import ApiBaseUrl from "api/ApiBaseUrl";
 // PAGE SECTION COMPONENTS
 import {
   OrderStatus,
@@ -41,7 +42,7 @@ export default function OrderDetails({ params }: IDParams) {
       const authtoken = localStorage.getItem("token");
       try {
         const response = await axios.get(
-          `https://tizaraa.com/api/user/order/details/${params.id}`,
+          `${ApiBaseUrl.baseUrl}user/order/details/${params.id}`,
           {
             headers: {
               Authorization: `Bearer ${authtoken}`,
