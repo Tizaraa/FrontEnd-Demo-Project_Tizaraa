@@ -90,6 +90,7 @@ export default function CountryResult({ sortOptions, slug }) {
       }
 
       const data = await response.json();
+      console.log("Fetched data:", data);
       // Reset products when fetching the first page
       if (currentPage === 1) {
         setProducts(data.data);

@@ -106,16 +106,17 @@ export default function ProductGridView({
       <Grid container spacing={6}>
         {products.map((item) => (
           <Grid item lg={4} sm={6} xs={12} key={item.id}>
-            <ProductCard1
-              id={item.id}
-              slug={item.slug}
-              price={item.price}
-              title={item.title}
-              off={item.discount}
-              images={item.images}
-              imgUrl={item.thumbnail}
-              rating={item.rating}
-            />
+           <ProductCard1
+  id={item?.id || ""}
+  slug={item?.slug || ""}
+  price={item?.price || 0}
+  title={item?.title || "No Title"}
+  off={item?.discount || 0}
+  images={item?.images || []}
+  imgUrl={item?.thumbnail || ""}
+  rating={item?.rating || 0}
+/>
+
           </Grid>
         ))}
       </Grid>
