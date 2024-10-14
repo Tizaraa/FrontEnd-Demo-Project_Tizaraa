@@ -60,11 +60,13 @@ import { H4, SemiSpan } from "@component/Typography";
 import Image from "@component/Image";
 import CategorySectionCreator from "@component/CategorySectionCreator";
 import { marginTop } from "styled-system";
+import Link from "next/link";
 
 type Service = {
   id: number;
   location: string;
-  image: string; // Assuming the icon here will be the image URL after fetching
+  image: string; // Image URL
+  location_slug: string; // Added to use in URL
 };
 
 export default function Section12() {
@@ -72,10 +74,12 @@ export default function Section12() {
 
   // Fetch data from the API
   useEffect(() => {
-    fetch("https://seller.tizaraa.com/api/frontend/country/product/flag")
+    fetch("https://tizaraa.com/api/product/country/flag")
       .then((response) => response.json())
       .then((data) => {
-        setServiceList(data);
+        
+        setServiceList(data.country); 
+        console.log(data.country);
       })
       .catch((error) => {
         console.error("Error fetching service list:", error);
@@ -83,20 +87,27 @@ export default function Section12() {
   }, []);
 
   return (
-   <div  style={{ marginTop: '70px' }}>
-     <CategorySectionCreator title="Find products by country or region" seeMoreLink="#">
-  <Grid container spacing={0} >
-    {serviceList.map((item) => (
-      <Grid item lg={2} md={2} sm={4} xs={6} key={item.id} style={{ textAlign: 'center' }}>
-        <Image src={item.image} alt={item.location} width={100} height={64} />
-        <H4 mt="10px" mb="5px" textAlign="center">
-          {item.location}
-        </H4>
-      </Grid>
-    ))}
-  </Grid>
-</CategorySectionCreator>
-
-   </div>
+    <div style={{ marginTop: '70px' }}>
+      <CategorySectionCreator title="Find products by country or region" seeMoreLink={`countryList/CountryList`}>
+        <Grid container spacing={0}>
+          {serviceList.length > 0 ? (
+            serviceList.map((item) => (
+              <Grid item lg={2} md={2} sm={4} xs={6} key={item.id} style={{ textAlign: 'center' }}>
+                <Link href={`/country/${encodeURIComponent(item.location_slug)}`}>
+                  <Image src={item.image} alt={item.location} width={100} height={64} />
+                  <H4 mt="10px" mb="5px" textAlign="center">
+                    {item.location}
+                  </H4>
+                </Link>
+              </Grid>
+            ))
+          ) : (
+            <div style={{ textAlign: 'center', width: '100%', padding: '20px' }}>
+              <p>No services available.</p>
+            </div>
+          )}
+        </Grid>
+      </CategorySectionCreator>
+    </div>
   );
 }
