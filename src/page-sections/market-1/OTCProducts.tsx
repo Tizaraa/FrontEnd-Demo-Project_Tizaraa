@@ -185,7 +185,7 @@ const OTCProducts = () => {
       products.map((product) => (
         <Box py="0.25rem" key={product.Id}>
           <Card p="1rem" borderRadius={8} style={{ height: '300px' }}>
-            <Link href={`/product/${product.Id}`}>
+            <Link href={`/otproducts/${product.Id}`}>
               <Box position="relative">
                 <img
                   src={product.MainPictureUrl}

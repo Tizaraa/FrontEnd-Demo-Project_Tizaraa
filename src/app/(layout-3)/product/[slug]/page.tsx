@@ -239,7 +239,7 @@ export default async function ProductDetails({ params }: Props) {
           discountPrice={product.discount_price}
           totalDiscount={product.total_discount}
           productStock={product.product_stock}
-
+          
           productId = {product.product_id}
           sellerId = {product.seller_shop_id}
 
