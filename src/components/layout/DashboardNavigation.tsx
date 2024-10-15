@@ -217,13 +217,24 @@ export default function DashboardNavigation() {
               </FlexBox>
               <span>{navItem.count}</span>
             </StyledDashboardNav>
+            
           ))}
         </Fragment>
       ))}
 
       {/* Conditionally render logout button in mobile view only if logged in */}
       {isMobileView && isLoggedIn && (
-        <StyledDashboardNav px="1.5rem" mb="1.25rem" onClick={handleLogout} href="#">
+          <FlexBox alignItems="center" style={{cursor:"pointer", marginLeft: "30px"}} onClick={handleLogout}>
+            <div className="dashboard-nav-icon-holder">
+              <Icon variant="small" defaultcolor="currentColor" mr="10px">
+                logout
+              </Icon>
+            </div>
+            <span>Logout</span>
+          </FlexBox>
+      )}
+      {/* {isMobileView && isLoggedIn && (
+        <StyledDashboardNav px="1.5rem" mb="1.25rem" onClick={handleLogout} href="/login">
           <FlexBox alignItems="center">
             <div className="dashboard-nav-icon-holder">
               <Icon variant="small" defaultcolor="currentColor" mr="10px">
@@ -233,7 +244,7 @@ export default function DashboardNavigation() {
             <span>Logout</span>
           </FlexBox>
         </StyledDashboardNav>
-      )}
+      )} */}
     </DashboardNavigationWrapper>
   );
 }
