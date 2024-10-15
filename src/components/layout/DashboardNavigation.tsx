@@ -154,7 +154,7 @@ export default function DashboardNavigation() {
   // Logout function
   const handleLogout = () => {
     authService.logout(); // Call the logout service
-    Cookies.remove("token"); // Remove the token from cookies
+    //Cookies.remove("token"); // Remove the token from cookies
     localStorage.removeItem("userInfo"); // Clear user info from local storage
     localStorage.removeItem("token"); // Clear token from local storage
     setIsLoggedIn(false); // Set the state as logged out
@@ -223,8 +223,8 @@ export default function DashboardNavigation() {
 
       {/* Conditionally render logout button in mobile view only if logged in */}
       {isMobileView && isLoggedIn && (
-        <StyledDashboardNav px="1.5rem" mb="1.25rem" href="#">
-          <FlexBox alignItems="center" onClick={handleLogout}>
+        <StyledDashboardNav px="1.5rem" mb="1.25rem" onClick={handleLogout} href="#">
+          <FlexBox alignItems="center">
             <div className="dashboard-nav-icon-holder">
               <Icon variant="small" defaultcolor="currentColor" mr="10px">
                 logout
