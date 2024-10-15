@@ -140,6 +140,7 @@ import Icon from "@component/icon/Icon";
 import FlexBox from "@component/FlexBox";
 import Typography from "@component/Typography";
 import authService from "services/authService";
+import { toast } from "react-toastify";
 
 // STYLED COMPONENTS
 import { DashboardNavigationWrapper, StyledDashboardNav } from "./styles";
@@ -158,7 +159,8 @@ export default function DashboardNavigation() {
     localStorage.removeItem("userInfo"); // Clear user info from local storage
     localStorage.removeItem("token"); // Clear token from local storage
     setIsLoggedIn(false); // Set the state as logged out
-    router.push("/login"); // Redirect to login page after logout
+    router.push("/login");
+    toast.success("Logout Successfully") // Redirect to login page after logout
   };
 
   // Check if user is logged in when component mounts
