@@ -21,6 +21,7 @@ import FlashSaleBanner from "@sections/market-1/FlashSaleBanner";
 import { Footer1, Footer2 } from "@component/footer";
 import StationeryProducts from "@sections/market-1/StationeryProducts";
 import GroceryProducts from "@sections/market-1/GroceryProducts";
+import OTCProducts from "@sections/market-1/OTCProducts";
 
 export default async function Market1() {
   const carList = await api.getCarList();
@@ -101,6 +102,9 @@ export default async function Market1() {
       {/* flashsale  */}
 
       <FlashSaleProducts></FlashSaleProducts>
+
+      {/* otc products show  */}
+      <OTCProducts></OTCProducts>
 
       {/* stationery products  */}
       <StationeryProducts></StationeryProducts>
