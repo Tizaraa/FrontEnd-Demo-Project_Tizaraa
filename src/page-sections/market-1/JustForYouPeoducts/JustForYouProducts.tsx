@@ -333,7 +333,7 @@ const JustForYouProducts = () => {
               {!!item.discount_price && item.discount_price < item.seeling_price && (
   <Chip
     top="1rem"
-    left="0.1rem"
+    left="-10px"
     p="0.25rem 0.5rem"
     fontSize="12px"
     fontWeight="600"

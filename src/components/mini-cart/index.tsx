@@ -517,6 +517,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
             <Typography fontWeight={600}>Checkout Now ({currency(getTotalPrice())})</Typography>
           </Button>
           
+          
 
           <Link href="/cart">
             <Button fullwidth color="primary" variant="outlined" mt="1rem" onClick={toggleSidenav}>

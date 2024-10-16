@@ -58,12 +58,12 @@ const OTCProducts = () => {
         const data = await response.json();
         console.log("Category data:", data);
 
-        const firstItem = data.CategoryInfoList.Content[0];
+        const firstItem = data.CategoryInfoList.Content[10];
         const formattedItem = firstItem
           ? [{
               id: firstItem.Id,
               name: firstItem.Name,
-              link: `/category/${firstItem.Id}`,
+              link: `/OtCategory/${firstItem.Id}`,
             }]
           : [];
 

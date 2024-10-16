@@ -146,17 +146,12 @@ export default function OtProductsIntro({
             <FlexBox alignItems="center">
             <H2 color="primary.main" mb="4px" lineHeight="1">
               
-  {discountPrice ? (
-    <>
-     {currency(discountPrice)} {/* Discounted price */}
-      <span style={{ textDecoration: 'line-through', color: 'gray', marginRight: '10px' }}>
-        {currency(price)} {/* Original selling price */}
+ 
+      <span>
+        {currency(price)}
       </span>
      
-    </>
-  ) : (
-    currency(price) 
-  )}
+
 </H2>
 
 {/* {discountPrice && totalDiscount && (
