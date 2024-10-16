@@ -140,6 +140,7 @@ import Icon from "@component/icon/Icon";
 import FlexBox from "@component/FlexBox";
 import Typography from "@component/Typography";
 import authService from "services/authService";
+import { toast } from "react-toastify";
 
 // STYLED COMPONENTS
 import { DashboardNavigationWrapper, StyledDashboardNav } from "./styles";
@@ -158,7 +159,8 @@ export default function DashboardNavigation() {
     localStorage.removeItem("userInfo"); // Clear user info from local storage
     localStorage.removeItem("token"); // Clear token from local storage
     setIsLoggedIn(false); // Set the state as logged out
-    router.push("/login"); // Redirect to login page after logout
+    router.push("/login");
+    toast.success("Logout Successfully") // Redirect to login page after logout
   };
 
   // Check if user is logged in when component mounts
@@ -217,13 +219,24 @@ export default function DashboardNavigation() {
               </FlexBox>
               <span>{navItem.count}</span>
             </StyledDashboardNav>
+            
           ))}
         </Fragment>
       ))}
 
       {/* Conditionally render logout button in mobile view only if logged in */}
       {isMobileView && isLoggedIn && (
-        <StyledDashboardNav px="1.5rem" mb="1.25rem" onClick={handleLogout} href="#">
+          <FlexBox alignItems="center" style={{cursor:"pointer", marginLeft: "30px"}} onClick={handleLogout}>
+            <div className="dashboard-nav-icon-holder">
+              <Icon variant="small" defaultcolor="currentColor" mr="10px">
+                logout
+              </Icon>
+            </div>
+            <span>Logout</span>
+          </FlexBox>
+      )}
+      {/* {isMobileView && isLoggedIn && (
+        <StyledDashboardNav px="1.5rem" mb="1.25rem" onClick={handleLogout} href="/login">
           <FlexBox alignItems="center">
             <div className="dashboard-nav-icon-holder">
               <Icon variant="small" defaultcolor="currentColor" mr="10px">
@@ -233,7 +246,7 @@ export default function DashboardNavigation() {
             <span>Logout</span>
           </FlexBox>
         </StyledDashboardNav>
-      )}
+      )} */}
     </DashboardNavigationWrapper>
   );
 }

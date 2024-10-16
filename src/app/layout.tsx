@@ -58,7 +58,7 @@ const defaultMetadata = {
 // Async function to fetch SEO data from the API
 async function fetchSEOData() {
   try {
-    const response = await fetch("https://tizaraa.com/api/product/details/A7-Small-Pocket-Notebook-Mini-Notepad-Portable-Small-Notebook-Small-Cute-Note-Book", {
+    const response = await fetch("https://tizaraa.com/api/frontend/parent/seo", {
       next: { revalidate: 60 }, // Revalidate every 60 seconds
     });
     const data = await response.json();

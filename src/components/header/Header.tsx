@@ -24,6 +24,7 @@ import Menu from "@component/Menu";
 import MenuItem from "@component/MenuItem";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 // ====================================================================
 type HeaderProps = { isFixed?: boolean; className?: string };
@@ -74,6 +75,7 @@ export default function Header({ isFixed, className }: HeaderProps) {
     setIsLoggedIn(false); // Update login state
     //Cookies.remove("token");
     router.push("/login");
+    toast.success("Logout Successfully")
   };
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
