@@ -48,7 +48,7 @@
 //           fullwidth
 //           onChange={hanldeSearch}
 //           className="search-field"
-//           placeholder="Search and hit enter..."
+//           placeholder=" enter..."
 //         />
 
 //         <Menu
