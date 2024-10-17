@@ -504,34 +504,32 @@ import ProductView from "@component/products/ProductView";
 import RelatedProducts from "@component/products/RelatedProducts";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
-// Fetch product-specific SEO data
-async function fetchProductSEO(slug: string) {
+// Fetch product data including SEO and details in a single API call
+async function fetchProductData(slug: string) {
   try {
     const response = await axios.get(`${ApiBaseUrl.baseUrl}product/details/${slug}`);
-    const product = response.data;
-    //console.log(product);
-    
-    return product?.seo || null; // Return the product SEO data if it exists
+    return response.data;
   } catch (error) {
-    console.error("Error fetching product SEO data:", error.message);
+    console.error("Error fetching product data:", error.message);
     return null;
   }
 }
 
 // Generate metadata for the product details page
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const seo = await fetchProductSEO(params.slug);
+  const productData = await fetchProductData(params.slug);
 
-  if (seo) {
+  if (productData?.seo) {
+    const seo = productData.seo;
     return {
-      title: seo?.title,
-      description: seo?.description,
-      keywords: seo?.keywords,
+      title: seo.title,
+      description: seo.description,
+      keywords: seo.keywords,
       openGraph: {
-        title: seo?.title,
-        description: seo?.description,
-        url: seo?.url,
-        images: seo?.image,
+        title: seo.title,
+        description: seo.description,
+        url: seo.url,
+        images: seo.image,
       },
     };
   } else {
@@ -548,48 +546,40 @@ interface Props {
 }
 
 export default async function ProductDetails({ params }: Props) {
-  try {
-    const response = await axios.get(`${ApiBaseUrl.baseUrl}product/details/${params.slug}`);
-    
-    const product = response.data.productsingledetails;
-    const productImages = response.data.productmultiimages;
+  const productData = await fetchProductData(params.slug);
 
-    if (!product) {
-      throw new Error("Product not found");
-    }
-
-    const images = productImages.map((img: any) => img.product_img);
-    const description = product.short_description;
-
-    return (
-      <Fragment>
-        <ProductIntro
-          id={product.id}
-          price={product.seeling_price}
-          title={product.product_name}
-          images={images}
-          sellerShopName={product.seller_shop_name}
-          rating={product.product_rating}
-          discountPrice={product.discount_price}
-          totalDiscount={product.total_discount}
-          productStock={product.product_stock}
-          productId={product.product_id}
-          sellerId={product.seller_shop_id}
-        />
-
-        <ProductView
-          description={description}
-          productId={product.product_id}
-        />
-
-        <RelatedProducts productId={product.product_id} />
-      </Fragment>
-    );
-  } catch (error) {
-    console.error("Error loading product details:", error.message);
+  if (!productData || !productData.productsingledetails) {
     return <div>Product not found or there was an error loading the product.</div>;
   }
+
+  const product = productData.productsingledetails;
+  const productImages = productData.productmultiimages;
+  const images = productImages.map((img: any) => img.product_img);
+  const description = product.short_description;
+
+  return (
+    <Fragment>
+      <ProductIntro
+        id={product.id}
+        price={product.seeling_price}
+        title={product.product_name}
+        images={images}
+        sellerShopName={product.seller_shop_name}
+        rating={product.product_rating}
+        discountPrice={product.discount_price}
+        totalDiscount={product.total_discount}
+        productStock={product.product_stock}
+        productId={product.product_id}
+        sellerId={product.seller_shop_id}
+      />
+
+      <ProductView description={description} productId={product.product_id} />
+
+      <RelatedProducts productId={product.product_id} />
+    </Fragment>
+  );
 }
+
 
 
 
