@@ -7,6 +7,10 @@ import { H2, SemiSpan } from "@component/Typography";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import StyledSearchBox from "@component/search-box/styled";
+import Icon from "@component/icon/Icon";
+import TextField from "@component/text-field";
+import Box from "@component/Box";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -77,7 +81,35 @@ export default function ShopList() {
 
   return (
     <Fragment>
-      <H2 mb="24px">All Shops</H2>
+      <div style={{display: "flex", gap:"10px", alignContent: "center", alignItems: "center", justifyContent: "center", marginBottom: "20px"}}>
+      <H2 mb="10px">All Shops</H2>
+      <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
+
+      <StyledSearchBox>
+        <Icon className="search-icon" size="18px">search</Icon>
+        <TextField
+          fullwidth
+          value="" 
+          onChange=""
+          onKeyDown=""
+          className="search-field"
+          placeholder="Search and hit enter..."
+        />
+        {/* <Menu direction="right" className="category-dropdown" handler={
+          <FlexBox className="dropdown-handler" alignItems="center">
+            <span>{category}</span>
+            <Icon variant="small">chevron-down</Icon>
+          </FlexBox>
+        }>
+          {categories.map((item) => (
+            <MenuItem key={item.id} onClick={handleCategoryChange(item.title)}>
+              {item.title}
+            </MenuItem>
+          ))}
+        </Menu> */}
+      </StyledSearchBox>
+      </Box>
+      </div>
 
       <Grid container spacing={6}>
         {shopList.map((item) => (
