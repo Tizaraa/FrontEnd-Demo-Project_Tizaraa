@@ -147,9 +147,25 @@ export default function OtProductsIntro({
             <H2 color="primary.main" mb="4px" lineHeight="1">
               
  
-      <span>
+      {/* <span>
         {currency(price)}
-      </span>
+      </span> */}
+
+{discountPrice ? (
+  <>
+    <span style={{ color: 'primary.main', fontWeight: 600, fontSize: '14px' }}>
+      {currency(discountPrice)} {/* Discounted price */}
+    </span>
+    <span style={{ textDecoration: 'line-through', color: 'gray', marginRight: '10px', fontWeight: 600, fontSize: '14px' }}>
+      {currency(price)} {/* Original selling price */}
+    </span>
+  </>
+) : (
+  <span>
+    {currency(price)}
+  </span>
+)}
+
      
 
 </H2>

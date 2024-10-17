@@ -332,7 +332,7 @@ const JustForYouProducts = () => {
               {/* Discount Badge */}
               {!!item.discount_price && item.discount_price < item.seeling_price && (
   <Chip
-    top="1rem"
+    // top="1rem"
     left="-10px"
     p="0.25rem 0.5rem"
     fontSize="12px"

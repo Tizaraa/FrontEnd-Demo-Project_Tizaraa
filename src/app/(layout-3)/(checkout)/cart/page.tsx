@@ -25,7 +25,8 @@ export default function Cart() {
 
   const getTotalPrice = () => {
     return state.cart.reduce((accumulator, item) => 
-      accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+      // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+    accumulator + (item.discountPrice ? item.discountPrice : item.price) * item.qty, 0
     ) || 0;
   };
 
