@@ -81,8 +81,8 @@ export default function ShopList() {
 
   return (
     <Fragment>
-      <div style={{display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "30px"}}>
-      <H2 mb="24px">All Shops</H2>
+      <div style={{display: "flex", gap:"10px", alignContent: "center", alignItems: "center", justifyContent: "center", marginBottom: "20px"}}>
+      <H2 mb="10px">All Shops</H2>
       <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
 
       <StyledSearchBox>
