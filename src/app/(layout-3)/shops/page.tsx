@@ -235,8 +235,407 @@
 //   );
 // }
 
+// "use client";
+// import { Fragment, useEffect, useState, useRef, useCallback } from "react";
+// import Grid from "@component/grid/Grid";
+// import axios from "axios";
+// import FlexBox from "@component/FlexBox";
+// import ShopCard1 from "@sections/shop/ShopCard1";
+// import { H2, SemiSpan, Span } from "@component/Typography";
+// import { Vortex } from "react-loader-spinner";
+// import styled from "@emotion/styled";
+// import ApiBaseUrl from "api/ApiBaseUrl";
+// import SearchBoxStyle from "@component/search-box/styled";
+// import Icon from "@component/icon/Icon";
+// import TextField from "@component/text-field";
+// import Box from "@component/Box";
+// import { Button } from "@component/buttons";
+// import { debounce } from "lodash";
+// import Card from "@component/Card";
+// import MenuItem from "@component/MenuItem";
+
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
+
+// export default function ShopList() {
+//   const [shopList, setShopList] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [totalShops, setTotalShops] = useState(0);
+//   const [lastPage, setLastPage] = useState(1);
+//   const [isLoading, setIsLoading] = useState(false);
+//   const observerRef = useRef(null);
+
+//   const [resultList, setResultList] = useState<string[]>([]);
+//   const [searchValue, setSearchValue] = useState("");
+
+//   //Function to fetch search suggestions based on query
+//   const fetchSearchResults = async (query: string) => {
+//     try {
+//       const response = await axios.get(
+//         `${ApiBaseUrl.baseUrl}search/suggestion/${query}`
+//       );
+//       const results = response.data || [];
+//       setResultList(results.map((item: any) => item.keyword));
+//     } catch (error) {
+//       console.error("Error fetching search results:", error);
+//       setResultList([]);
+//     }
+//   };
+
+//   // const fetchSearchResults = async (query: string) => {
+//   //   try {
+//   //     // Use POST method and pass the query in the request body
+//   //     const response = await axios.post(
+//   //       `${ApiBaseUrl.baseUrl}all/seller/profile`,  // Adjust the URL for POST if needed  // Sending the query in the body
+//   //     );
+      
+//   //     const results = response.data || [];
+//   //     setResultList(results.map((item: any) => item.keyword));
+//   //   } catch (error) {
+//   //     console.error("Error fetching search results:", error);
+//   //     setResultList([]);
+//   //   }
+//   // };
+
+//   // Debounced search handler
+//   const search = debounce((value: string) => {
+//     if (!value) {
+//       setResultList([]);
+//     } else {
+//       fetchSearchResults(value);
+//     }
+//   }, 300);
+
+//   // Handle search input change
+//   const handleSearch = (e: any) => {
+//     const value = e.target?.value;
+//     setSearchValue(value);
+//     search(value); // Call debounced function
+//   };
+
+//   // Handle search result click
+//   const handleResultClick = (item: string) => {
+//     setSearchValue(item);
+//     setResultList([]); // Clear the result list after selecting an item
+//   };
+
+//   // Hide result list when clicking outside of the search box
+//   const handleDocumentClick = () => setResultList([]);
+
+//   useEffect(() => {
+//     window.addEventListener("click", handleDocumentClick);
+//     return () => window.removeEventListener("click", handleDocumentClick);
+//   }, []);
+
+//   // Fetch shop data
+//   const fetchShops = async (page: number) => {
+//     setIsLoading(true);
+//     try {
+//       const response = await fetch(
+//         `${ApiBaseUrl.baseUrl}all/seller/profile?page=${page}`
+//       );
+//       const data = await response.json();
+
+//       setShopList((prevShops) => [...prevShops, ...data.data]);
+//       setTotalShops(data.total);
+//       setLastPage(data.last_page);
+//     } catch (error) {
+//       console.error("Error fetching shop list", error);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchShops(currentPage); // Initial fetch when component loads
+//   }, []);
+
+//   useEffect(() => {
+//     if (isLoading || currentPage >= lastPage) return;
+
+//     const handleScroll = (entries: any) => {
+//       const target = entries[0];
+//       if (target.isIntersecting) {
+//         setCurrentPage((prevPage) => prevPage + 1);
+//       }
+//     };
+
+//     const observer = new IntersectionObserver(handleScroll, {
+//       root: null,
+//       rootMargin: "100px",
+//       threshold: 0,
+//     });
+
+//     if (observerRef.current) observer.observe(observerRef.current);
+
+//     return () => {
+//       if (observerRef.current) observer.unobserve(observerRef.current);
+//     };
+//   }, [isLoading, currentPage, lastPage]);
+
+//   useEffect(() => {
+//     if (currentPage > 1) {
+//       fetchShops(currentPage); // Load more shops when currentPage changes
+//     }
+//   }, [currentPage]);
+
+//   return (
+//     <Fragment>
+//       <div
+//         style={{
+//           display: "flex",
+//           gap: "10px",
+//           alignContent: "center",
+//           alignItems: "center",
+//           justifyContent: "center",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <H2 mb="10px">All Shops</H2>
+//         <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
+//           <SearchBoxStyle>
+//             <Icon className="search-icon" size="18px">
+//               search
+//             </Icon>
+//             <TextField
+//               fullwidth
+//               value={searchValue}
+//               onChange={handleSearch}
+//               className="search-field"
+//               placeholder="Search and hit enter..."
+//             />
+//           </SearchBoxStyle>
+//           {/* {!!resultList.length && (
+//             <Card
+//               position="absolute"
+//               top="100%"
+//               py="0.5rem"
+//               width="100%"
+//               boxShadow="large"
+//               zIndex={99}
+//             >
+//               {resultList.map((item, index) => (
+//                 <MenuItem key={index} onClick={() => handleResultClick(item)}>
+//                   <Span fontSize="14px">{item}</Span>
+//                 </MenuItem>
+//               ))}
+//             </Card>
+//           )} */}
+//         </Box>
+//       </div>
+
+//       <Grid container spacing={6}>
+//         {shopList.map((item) => (
+//           <Grid item lg={4} sm={6} xs={12} key={item.id}>
+//             <ShopCard1
+//               name={item.name}
+//               phone={item.phone}
+//               address={item.address || "Address not found"}
+//               rating={item.rating || 5}
+//               imgUrl={item.profilePicture}
+//               coverImgUrl={item.coverPicture}
+//               shopUrl={`/shops/${item.slug}`}
+//             />
+//           </Grid>
+//         ))}
+//       </Grid>
+
+//       {isLoading && (
+//         <LoaderWrapper>
+//           <Vortex />
+//         </LoaderWrapper>
+//       )}
+
+//       <div ref={observerRef} style={{ height: "1px", width: "100%" }}></div>
+//     </Fragment>
+//   );
+// }
+
+// "use client";
+// import { Fragment, useEffect, useState, useRef } from "react";
+// import Grid from "@component/grid/Grid";
+// import axios from "axios";
+// import FlexBox from "@component/FlexBox";
+// import ShopCard1 from "@sections/shop/ShopCard1";
+// import { H2, SemiSpan, Span } from "@component/Typography";
+// import { Vortex } from "react-loader-spinner";
+// import styled from "@emotion/styled";
+// import ApiBaseUrl from "api/ApiBaseUrl";
+// import SearchBoxStyle from "@component/search-box/styled";
+// import Icon from "@component/icon/Icon";
+// import TextField from "@component/text-field";
+// import Box from "@component/Box";
+// import { Button } from "@component/buttons";
+// import { debounce } from "lodash";
+// import Card from "@component/Card";
+// import MenuItem from "@component/MenuItem";
+
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
+
+// export default function ShopList() {
+//   const [shopList, setShopList] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [totalShops, setTotalShops] = useState(0);
+//   const [lastPage, setLastPage] = useState(1);
+//   const [isLoading, setIsLoading] = useState(false);
+//   const observerRef = useRef(null);
+
+//   const [resultList, setResultList] = useState<string[]>([]);
+//   const [searchValue, setSearchValue] = useState("");
+//   const [isSearching, setIsSearching] = useState(false);
+
+//   // Function to fetch shops data
+//   const fetchShops = async (page: number, searchQuery = "") => {
+//     setIsLoading(true);
+//     try {
+//       let response;
+//       if (searchQuery) {
+//         // If there's a search query, use POST method to fetch search results
+//         response = await axios.post(
+//           `${ApiBaseUrl.baseUrl}all/seller/profile?search`,
+//           { search: searchQuery, page }
+//         );
+//       } else {
+//         // Else fetch all shops
+//         response = await axios.get(
+//           `${ApiBaseUrl.baseUrl}all/seller/profile?page=${page}`
+//         );
+//       }
+
+//       const data = response.data;
+//       if (page === 1) {
+//         setShopList(data.data); // If first page, replace the shop list
+//       } else {
+//         setShopList((prevShops) => [...prevShops, ...data.data]); // Append for more pages
+//       }
+
+//       setTotalShops(data.total);
+//       setLastPage(data.last_page);
+//     } catch (error) {
+//       console.error("Error fetching shop list", error);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   // Debounced search function to reduce API calls
+//   const searchShops = debounce((value: string) => {
+//     if (!value) {
+//       setResultList([]);
+//       setIsSearching(false);
+//       fetchShops(1); // Fetch all shops if search is cleared
+//     } else {
+//       setIsSearching(true);
+//       fetchShops(1, value); // Fetch shops based on search value
+//     }
+//   }, 300);
+
+//   // Handle search input change
+//   const handleSearch = (e: any) => {
+//     const value = e.target?.value;
+//     setSearchValue(value);
+//     searchShops(value); // Trigger debounced search
+//   };
+
+//   // Infinite scrolling logic
+//   useEffect(() => {
+//     if (isLoading || currentPage >= lastPage || isSearching) return;
+
+//     const handleScroll = (entries: any) => {
+//       const target = entries[0];
+//       if (target.isIntersecting) {
+//         setCurrentPage((prevPage) => prevPage + 1);
+//       }
+//     };
+
+//     const observer = new IntersectionObserver(handleScroll, {
+//       root: null,
+//       rootMargin: "100px",
+//       threshold: 0,
+//     });
+
+//     if (observerRef.current) observer.observe(observerRef.current);
+
+//     return () => {
+//       if (observerRef.current) observer.unobserve(observerRef.current);
+//     };
+//   }, [isLoading, currentPage, lastPage, isSearching]);
+
+//   useEffect(() => {
+//     if (currentPage > 1 && !isSearching) {
+//       fetchShops(currentPage); // Load more shops when currentPage changes, only if not searching
+//     }
+//   }, [currentPage, isSearching]);
+
+//   useEffect(() => {
+//     fetchShops(1); // Initial fetch when component loads
+//   }, []);
+
+//   return (
+//     <Fragment>
+//       <div
+//         style={{
+//           display: "flex",
+//           gap: "10px",
+//           alignContent: "center",
+//           alignItems: "center",
+//           justifyContent: "center",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <H2 mb="10px">All Shops</H2>
+//         <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
+//           <SearchBoxStyle>
+//             <Icon className="search-icon" size="18px">
+//               search
+//             </Icon>
+//             <TextField
+//               fullwidth
+//               value={searchValue}
+//               onChange={handleSearch}
+//               className="search-field"
+//               placeholder="Search and hit enter..."
+//             />
+//           </SearchBoxStyle>
+//         </Box>
+//       </div>
+
+//       <Grid container spacing={6}>
+//         {shopList.map((item) => (
+//           <Grid item lg={4} sm={6} xs={12} key={item.id}>
+//             <ShopCard1
+//               name={item.name}
+//               phone={item.phone}
+//               address={item.address || "Address not found"}
+//               rating={item.rating || 5}
+//               imgUrl={item.profilePicture}
+//               coverImgUrl={item.coverPicture}
+//               shopUrl={`/shops/${item.slug}`}
+//             />
+//           </Grid>
+//         ))}
+//       </Grid>
+
+//       {isLoading && (
+//         <LoaderWrapper>
+//           <Vortex />
+//         </LoaderWrapper>
+//       )}
+
+//       <div ref={observerRef} style={{ height: "1px", width: "100%" }}></div>
+//     </Fragment>
+//   );
+// }
+
 "use client";
-import { Fragment, useEffect, useState, useRef, useCallback } from "react";
+import { Fragment, useEffect, useState, useRef } from "react";
 import Grid from "@component/grid/Grid";
 import axios from "axios";
 import FlexBox from "@component/FlexBox";
@@ -249,15 +648,22 @@ import SearchBoxStyle from "@component/search-box/styled";
 import Icon from "@component/icon/Icon";
 import TextField from "@component/text-field";
 import Box from "@component/Box";
-import { Button } from "@component/buttons";
 import { debounce } from "lodash";
 import Card from "@component/Card";
-import MenuItem from "@component/MenuItem";
 
 const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const NoShopMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-size: 1.5rem;
+  color: gray;
 `;
 
 export default function ShopList() {
@@ -266,65 +672,44 @@ export default function ShopList() {
   const [totalShops, setTotalShops] = useState(0);
   const [lastPage, setLastPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [noShopsFound, setNoShopsFound] = useState(false);
   const observerRef = useRef(null);
 
-  const [resultList, setResultList] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState("");
 
-  // Function to fetch search suggestions based on query
-  const fetchSearchResults = async (query: string) => {
-    try {
-      const response = await axios.get(
-        `${ApiBaseUrl.baseUrl}search/suggestion/${query}`
-      );
-      const results = response.data || [];
-      setResultList(results.map((item: any) => item.keyword));
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-      setResultList([]);
-    }
-  };
-
-  // Debounced search handler
-  const search = debounce((value: string) => {
-    if (!value) {
-      setResultList([]);
-    } else {
-      fetchSearchResults(value);
-    }
-  }, 300);
-
-  // Handle search input change
-  const handleSearch = (e: any) => {
-    const value = e.target?.value;
-    setSearchValue(value);
-    search(value); // Call debounced function
-  };
-
-  // Handle search result click
-  const handleResultClick = (item: string) => {
-    setSearchValue(item);
-    setResultList([]); // Clear the result list after selecting an item
-  };
-
-  // Hide result list when clicking outside of the search box
-  const handleDocumentClick = () => setResultList([]);
-
-  useEffect(() => {
-    window.addEventListener("click", handleDocumentClick);
-    return () => window.removeEventListener("click", handleDocumentClick);
-  }, []);
-
-  // Fetch shop data
-  const fetchShops = async (page: number) => {
+  // Function to fetch shops data
+  const fetchShops = async (page: number, searchQuery = "") => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `${ApiBaseUrl.baseUrl}all/seller/profile?page=${page}`
-      );
-      const data = await response.json();
+      let response;
+      if (searchQuery) {
+        // If there's a search query, use POST method to fetch search results
+        response = await axios.post(
+          `${ApiBaseUrl.baseUrl}all/seller/profile?search`,
+          { search: searchQuery, page }
+        );
+      } else {
+        // Else fetch all shops
+        response = await axios.post(
+          `${ApiBaseUrl.baseUrl}all/seller/profile`
+        );
+      }
 
-      setShopList((prevShops) => [...prevShops, ...data.data]);
+      const data = response.data;
+
+      if (data.data.length === 0) {
+        setNoShopsFound(true); // Set to true if no shops found
+      } else {
+        setNoShopsFound(false); // Set to false if shops found
+      }
+
+      if (page === 1) {
+        setShopList(data.data); // If first page, replace the shop list
+      } else {
+        setShopList((prevShops) => [...prevShops, ...data.data]); // Append for more pages
+      }
+
       setTotalShops(data.total);
       setLastPage(data.last_page);
     } catch (error) {
@@ -334,12 +719,28 @@ export default function ShopList() {
     }
   };
 
-  useEffect(() => {
-    fetchShops(currentPage); // Initial fetch when component loads
-  }, []);
+  // Debounced search function to reduce API calls
+  const searchShops = debounce((value: string) => {
+    if (!value) {
+      setShopList([]); // Clear the current list before showing all shops again
+      setIsSearching(false);
+      fetchShops(1); // Fetch all shops if search is cleared
+    } else {
+      setIsSearching(true);
+      fetchShops(1, value); // Fetch shops based on search value
+    }
+  }, 300);
 
+  // Handle search input change
+  const handleSearch = (e: any) => {
+    const value = e.target?.value;
+    setSearchValue(value);
+    searchShops(value); // Trigger debounced search
+  };
+
+  // Infinite scrolling logic
   useEffect(() => {
-    if (isLoading || currentPage >= lastPage) return;
+    if (isLoading || currentPage >= lastPage || isSearching) return;
 
     const handleScroll = (entries: any) => {
       const target = entries[0];
@@ -359,13 +760,17 @@ export default function ShopList() {
     return () => {
       if (observerRef.current) observer.unobserve(observerRef.current);
     };
-  }, [isLoading, currentPage, lastPage]);
+  }, [isLoading, currentPage, lastPage, isSearching]);
 
   useEffect(() => {
-    if (currentPage > 1) {
-      fetchShops(currentPage); // Load more shops when currentPage changes
+    if (currentPage > 1 && !isSearching) {
+      fetchShops(currentPage); // Load more shops when currentPage changes, only if not searching
     }
-  }, [currentPage]);
+  }, [currentPage, isSearching]);
+
+  useEffect(() => {
+    fetchShops(1); // Initial fetch when component loads
+  }, []);
 
   return (
     <Fragment>
@@ -390,43 +795,31 @@ export default function ShopList() {
               value={searchValue}
               onChange={handleSearch}
               className="search-field"
-              placeholder="Search and hit enter..."
+              placeholder="Search for a shop..."
             />
           </SearchBoxStyle>
-          {/* {!!resultList.length && (
-            <Card
-              position="absolute"
-              top="100%"
-              py="0.5rem"
-              width="100%"
-              boxShadow="large"
-              zIndex={99}
-            >
-              {resultList.map((item, index) => (
-                <MenuItem key={index} onClick={() => handleResultClick(item)}>
-                  <Span fontSize="14px">{item}</Span>
-                </MenuItem>
-              ))}
-            </Card>
-          )} */}
         </Box>
       </div>
 
-      <Grid container spacing={6}>
-        {shopList.map((item) => (
-          <Grid item lg={4} sm={6} xs={12} key={item.id}>
-            <ShopCard1
-              name={item.name}
-              phone={item.phone}
-              address={item.address || "Address not found"}
-              rating={item.rating || 5}
-              imgUrl={item.profilePicture}
-              coverImgUrl={item.coverPicture}
-              shopUrl={`/shops/${item.slug}`}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      {noShopsFound && searchValue ? (
+        <NoShopMessage>No shop found with this name</NoShopMessage>
+      ) : (
+        <Grid container spacing={6}>
+          {shopList.map((item) => (
+            <Grid item lg={4} sm={6} xs={12} key={item.id}>
+              <ShopCard1
+                name={item.name}
+                phone={item.phone}
+                address={item.address || "Address not found"}
+                rating={item.rating || 5}
+                imgUrl={item.profilePicture}
+                coverImgUrl={item.coverPicture}
+                shopUrl={`/shops/${item.slug}`}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )}
 
       {isLoading && (
         <LoaderWrapper>
@@ -438,4 +831,6 @@ export default function ShopList() {
     </Fragment>
   );
 }
+
+
 
