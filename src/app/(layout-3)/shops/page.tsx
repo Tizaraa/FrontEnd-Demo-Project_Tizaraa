@@ -686,10 +686,11 @@ export default function ShopList() {
       if (searchQuery) {
         // If there's a search query, use POST method to fetch search results
         response = await axios.post(
-          `${ApiBaseUrl.baseUrl}all/seller/profile?search`,
+          `${ApiBaseUrl.baseUrl}all/seller/profile?search?page=${page}`,
           { search: searchQuery, page }
         );
-      } else {
+      } 
+      else {
         // Else fetch all shops
         response = await axios.post(
           `${ApiBaseUrl.baseUrl}all/seller/profile?page=${page}`
