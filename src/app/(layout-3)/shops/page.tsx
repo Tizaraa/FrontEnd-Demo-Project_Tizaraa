@@ -692,7 +692,7 @@ export default function ShopList() {
       } else {
         // Else fetch all shops
         response = await axios.post(
-          `${ApiBaseUrl.baseUrl}all/seller/profile`
+          `${ApiBaseUrl.baseUrl}all/seller/profile?page=${page}`
         );
       }
 
