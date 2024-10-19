@@ -54,7 +54,7 @@ export default function FlashSaleProducts() {
   }, []);
 
   return (
-    <CategorySectionCreator  title="Flash Sale" seeMoreLink="#">
+    <CategorySectionCreator  title="Flash Sale" seeMoreLink={`fashsale/FashSale`}>
       <Box my="-0.25rem">
         <Carousel totalSlides={flashSale.length} visibleSlides={visibleSlides}>
           {flashSale.map((item) => (
