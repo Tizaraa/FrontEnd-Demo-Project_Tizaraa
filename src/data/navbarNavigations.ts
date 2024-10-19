@@ -107,7 +107,7 @@ const navbarNavigations = [
   //     { title: "Profile", url: "/vendor/account-settings" }
   //   ]
   // },
-  // { title: "Track My Orders", url: "/orders" },
+  { title: "Become A seller", url: "https://seller.tizaraa.com" },
   { title: "Find My Showroom / Shop", url: "/shops" }
   // {
   //   title: "Documentation",
