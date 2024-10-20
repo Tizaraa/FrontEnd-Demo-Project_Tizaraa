@@ -509,6 +509,8 @@ async function fetchProductData(slug: string) {
   try {
     const response = await axios.get(`${ApiBaseUrl.baseUrl}product/details/${slug}`);
     return response.data;
+    
+    
   } catch (error) {
     console.error("Error fetching product data:", error.message);
     return null;
@@ -553,6 +555,7 @@ export default async function ProductDetails({ params }: Props) {
   }
 
   const product = productData.productsingledetails;
+  const sizecolorwithprice = productData.SizeColor.sizecolorwithprice; 
   const productImages = productData.productmultiimages;
   const images = productImages.map((img: any) => img.product_img);
   const description = product.short_description;
@@ -571,6 +574,7 @@ export default async function ProductDetails({ params }: Props) {
         productStock={product.product_stock}
         productId={product.product_id}
         sellerId={product.seller_shop_id}
+        sizecolorwithprice={sizecolorwithprice} 
       />
 
       <ProductView description={description} productId={product.product_id} />
@@ -579,7 +583,6 @@ export default async function ProductDetails({ params }: Props) {
     </Fragment>
   );
 }
-
 
 
 

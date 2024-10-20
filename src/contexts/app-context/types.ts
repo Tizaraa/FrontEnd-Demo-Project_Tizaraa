@@ -29,6 +29,10 @@ export interface InitialState {
   userInfo: UserInfo | null;
 }
 
+interface SizeColorWithPrice {
+  size: string;
+  price: number;
+}
 
 export interface CartItem {
   qty: number;
@@ -41,6 +45,7 @@ export interface CartItem {
   discountPrice?: number;
   productId: string | number; 
   sellerId: string | number;
+  sizecolorwithprice?: any; 
 }
 
 
