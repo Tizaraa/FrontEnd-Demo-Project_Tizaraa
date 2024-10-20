@@ -118,7 +118,8 @@ interface ProductCard1Props extends CardProps {
   totalDiscount?: number; // Optional total discount
   id?: string | number;
   productId?: string | number;
-  sellerId?: string | number
+  sellerId?: string | number;
+  sizecolorwithprice?: any; 
 }
 // =======================================================================
 
@@ -134,10 +135,12 @@ export default function ProductCard1({
   discountPrice,
   productId,
   sellerId,
+  sizecolorwithprice,
   ...props
 }: ProductCard1Props) {
   const [open, setOpen] = useState(false);
   const { state, dispatch } = useAppContext();
+  
   const cartItem = state.cart.find((item) => item.id === id);
 
   const toggleDialog = useCallback(() => setOpen((open) => !open), []);
@@ -156,7 +159,8 @@ export default function ProductCard1({
           // newly added 
           discountPrice,   
           productId,
-          sellerId
+          sellerId,
+          sizecolorwithprice 
       }
     });
   };
