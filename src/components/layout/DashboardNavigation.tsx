@@ -130,17 +130,159 @@
 //     ]
 //   }
 // ];
+// "use client";
+
+// import { Fragment, useState, useEffect } from "react";
+// import { usePathname, useRouter } from "next/navigation";
+// import Cookies from "js-cookie";
+
+// import Icon from "@component/icon/Icon";
+// import FlexBox from "@component/FlexBox";
+// import Typography from "@component/Typography";
+// import authService from "services/authService";
+// import { toast } from "react-toastify";
+
+// // STYLED COMPONENTS
+// import { DashboardNavigationWrapper, StyledDashboardNav } from "./styles";
+
+// export default function DashboardNavigation() {
+//   const pathname = usePathname();
+//   const router = useRouter();
+
+//   const [isMobileView, setIsMobileView] = useState(false);
+//   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+//   // Logout function
+//   const handleLogout = () => {
+//     authService.logout(); // Call the logout service
+//     //Cookies.remove("token"); // Remove the token from cookies
+//     localStorage.removeItem("userInfo"); // Clear user info from local storage
+//     localStorage.removeItem("token"); // Clear token from local storage
+//     setIsLoggedIn(false); // Set the state as logged out
+//     router.push("/login");
+//     toast.success("Logout Successfully") // Redirect to login page after logout
+//   };
+
+//   // Check if user is logged in when component mounts
+//   useEffect(() => {
+//     // const token = Cookies.get("token");
+//     const token = authService.getToken();
+//     if (token) {
+//       setIsLoggedIn(true); // Set logged-in state if token exists
+//     } else {
+//       setIsLoggedIn(false); // Set logged-out state if no token exists
+//     }
+//   }, [pathname]); // Add pathname as a dependency to re-check when route changes
+
+//   // Listen to window resize to update mobile view state
+//   useEffect(() => {
+//     const handleResize = () => {
+//       setIsMobileView(window.innerWidth < 768); // Mobile view threshold
+//     };
+
+//     handleResize(); // Check on mount
+
+//     window.addEventListener("resize", handleResize); // Listen for resize events
+
+//     return () => window.removeEventListener("resize", handleResize); // Clean up listener
+//   }, []);
+
+//   return (
+//     <DashboardNavigationWrapper px="0px" pb="1.5rem" color="gray.900" borderRadius={8}>
+//       {linkList.map((item) => (
+//         <Fragment key={item.title}>
+//           <Typography p="26px 30px 1rem" color="text.muted" fontSize="12px">
+//             {item.title}
+//           </Typography>
+
+//           {item.list.map((navItem) => (
+//             <StyledDashboardNav
+//               px="1.5rem"
+//               mb="1.25rem"
+//               href={navItem.href}
+//               key={navItem.title}
+//               isCurrentPath={pathname.includes(navItem.href)}
+//               onClick={() => {
+//                 // Prevent access to profile if not logged in
+//                 if (navItem.href === "/profile" && !isLoggedIn) {
+//                   router.push("/login");
+//                 }
+//               }}
+//             >
+//               <FlexBox alignItems="center">
+//                 <div className="dashboard-nav-icon-holder">
+//                   <Icon variant="small" defaultcolor="currentColor" mr="10px">
+//                     {navItem.iconName}
+//                   </Icon>
+//                 </div>
+//                 <span>{navItem.title}</span>
+//               </FlexBox>
+//               <span>{navItem.count}</span>
+//             </StyledDashboardNav>
+            
+//           ))}
+//         </Fragment>
+//       ))}
+
+//       {/* Conditionally render logout button in mobile view only if logged in */}
+//       {isMobileView && isLoggedIn && (
+//           <FlexBox alignItems="center" style={{cursor:"pointer", marginLeft: "30px"}} onClick={handleLogout}>
+//             <div className="dashboard-nav-icon-holder">
+//               <Icon variant="small" defaultcolor="currentColor" mr="10px">
+//                 logout
+//               </Icon>
+//             </div>
+//             <span>Logout</span>
+//           </FlexBox>
+//       )}
+//       {/* {isMobileView && isLoggedIn && (
+//         <StyledDashboardNav px="1.5rem" mb="1.25rem" onClick={handleLogout} href="/login">
+//           <FlexBox alignItems="center">
+//             <div className="dashboard-nav-icon-holder">
+//               <Icon variant="small" defaultcolor="currentColor" mr="10px">
+//                 logout
+//               </Icon>
+//             </div>
+//             <span>Logout</span>
+//           </FlexBox>
+//         </StyledDashboardNav>
+//       )} */}
+//     </DashboardNavigationWrapper>
+//   );
+// }
+
+// const linkList = [
+//   {
+//     title: "DASHBOARD",
+//     list: [
+//       { href: "/orders", title: "Orders", iconName: "bag", count: 1 },
+//       { href: "/wish-list", title: "Wishlist", iconName: "heart", count: 19 },
+//       { href: "/support-tickets", title: "Support Tickets", iconName: "customer-service", count: 1 },
+//     ],
+//   },
+//   {
+//     title: "ACCOUNT SETTINGS",
+//     list: [
+//       { href: "/profile", title: "Profile Info", iconName: "user", count: 3 },
+//       { href: "/address", title: "Addresses", iconName: "pin", count: 16 },
+//       { href: "/payment-methods", title: "Payment Methods", iconName: "credit-card", count: 4 },
+//     ],
+//   },
+// ];
+
 "use client";
 
 import { Fragment, useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import axios from "axios"; // Import axios for API requests
 
 import Icon from "@component/icon/Icon";
 import FlexBox from "@component/FlexBox";
 import Typography from "@component/Typography";
 import authService from "services/authService";
 import { toast } from "react-toastify";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 // STYLED COMPONENTS
 import { DashboardNavigationWrapper, StyledDashboardNav } from "./styles";
@@ -151,21 +293,46 @@ export default function DashboardNavigation() {
 
   const [isMobileView, setIsMobileView] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [orderCount, setOrderCount] = useState(0); // State for order count
+  const [addressCount, setAddressCount] = useState(0); // State for address count
+
+  // Fetch user data from the API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = authService.getToken(); // Assuming your authService provides the token
+        const response = await axios.get(`${ApiBaseUrl.baseUrl}user/profile/history`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass token in the Authorization header
+          },
+        });
+
+        // Extract the needed fields from the API response
+        const { totalorder, customeraddress } = response.data;
+
+        setOrderCount(totalorder); // Set the total order count
+        setAddressCount(customeraddress); // Set the customer address count
+
+      } catch (error) {
+        console.error("Error fetching user profile data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Logout function
   const handleLogout = () => {
     authService.logout(); // Call the logout service
-    //Cookies.remove("token"); // Remove the token from cookies
     localStorage.removeItem("userInfo"); // Clear user info from local storage
     localStorage.removeItem("token"); // Clear token from local storage
     setIsLoggedIn(false); // Set the state as logged out
     router.push("/login");
-    toast.success("Logout Successfully") // Redirect to login page after logout
+    toast.success("Logout Successfully"); // Redirect to login page after logout
   };
 
   // Check if user is logged in when component mounts
   useEffect(() => {
-    // const token = Cookies.get("token");
     const token = authService.getToken();
     if (token) {
       setIsLoggedIn(true); // Set logged-in state if token exists
@@ -186,6 +353,25 @@ export default function DashboardNavigation() {
 
     return () => window.removeEventListener("resize", handleResize); // Clean up listener
   }, []);
+
+  const linkList = [
+    {
+      title: "DASHBOARD",
+      list: [
+        { href: "/orders", title: "Orders", iconName: "bag", count: orderCount }, // Use orderCount here
+        { href: "/wish-list", title: "Wishlist", iconName: "heart", count: 19 },
+        { href: "/support-tickets", title: "Support Tickets", iconName: "customer-service", count: 1 },
+      ],
+    },
+    {
+      title: "ACCOUNT SETTINGS",
+      list: [
+        { href: "/profile", title: "Profile Info", iconName: "user", count: 3 },
+        { href: "/address", title: "Addresses", iconName: "pin", count: addressCount }, // Use addressCount here
+        { href: "/payment-methods", title: "Payment Methods", iconName: "credit-card", count: 4 },
+      ],
+    },
+  ];
 
   return (
     <DashboardNavigationWrapper px="0px" pb="1.5rem" color="gray.900" borderRadius={8}>
@@ -219,53 +405,21 @@ export default function DashboardNavigation() {
               </FlexBox>
               <span>{navItem.count}</span>
             </StyledDashboardNav>
-            
           ))}
         </Fragment>
       ))}
 
-      {/* Conditionally render logout button in mobile view only if logged in */}
       {isMobileView && isLoggedIn && (
-          <FlexBox alignItems="center" style={{cursor:"pointer", marginLeft: "30px"}} onClick={handleLogout}>
-            <div className="dashboard-nav-icon-holder">
-              <Icon variant="small" defaultcolor="currentColor" mr="10px">
-                logout
-              </Icon>
-            </div>
-            <span>Logout</span>
-          </FlexBox>
+        <FlexBox alignItems="center" style={{ cursor: "pointer", marginLeft: "30px" }} onClick={handleLogout}>
+          <div className="dashboard-nav-icon-holder">
+            <Icon variant="small" defaultcolor="currentColor" mr="10px">
+              logout
+            </Icon>
+          </div>
+          <span>Logout</span>
+        </FlexBox>
       )}
-      {/* {isMobileView && isLoggedIn && (
-        <StyledDashboardNav px="1.5rem" mb="1.25rem" onClick={handleLogout} href="/login">
-          <FlexBox alignItems="center">
-            <div className="dashboard-nav-icon-holder">
-              <Icon variant="small" defaultcolor="currentColor" mr="10px">
-                logout
-              </Icon>
-            </div>
-            <span>Logout</span>
-          </FlexBox>
-        </StyledDashboardNav>
-      )} */}
     </DashboardNavigationWrapper>
   );
 }
 
-const linkList = [
-  {
-    title: "DASHBOARD",
-    list: [
-      { href: "/orders", title: "Orders", iconName: "bag", count: 1 },
-      { href: "/wish-list", title: "Wishlist", iconName: "heart", count: 19 },
-      { href: "/support-tickets", title: "Support Tickets", iconName: "customer-service", count: 1 },
-    ],
-  },
-  {
-    title: "ACCOUNT SETTINGS",
-    list: [
-      { href: "/profile", title: "Profile Info", iconName: "user", count: 3 },
-      { href: "/address", title: "Addresses", iconName: "pin", count: 16 },
-      { href: "/payment-methods", title: "Payment Methods", iconName: "credit-card", count: 4 },
-    ],
-  },
-];

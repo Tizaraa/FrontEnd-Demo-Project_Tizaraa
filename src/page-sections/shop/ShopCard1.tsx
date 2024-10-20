@@ -30,14 +30,16 @@ export default function ShopCard1({
   imgUrl,
   address,
   shopUrl,
-  coverImgUrl
+  coverImgUrl,
 }: ShopCard1Props) {
   return (
     <ShopCard1Wrapper overflow="hidden" coverImgUrl={coverImgUrl}>
       <div className="black-box">
-        <H3 fontWeight="600" mb="8px">
-          {name}
-        </H3>
+        <Link href={shopUrl} style={{ color: "white" }}>
+          <H3 fontWeight="600" mb="8px">
+            {name}
+          </H3>
+        </Link>
 
         <Box mb="13px">
           <Rating size="small" value={rating || 0} outof={5} color="warn" />
@@ -65,7 +67,15 @@ export default function ShopCard1({
       </div>
 
       <FlexBox pl="30px" pr="18px" justifyContent="space-between">
-        <Avatar src={imgUrl} size={64} mt="-32px" border="4px solid" borderColor="gray.100" />
+        <Link href={shopUrl}>
+          <Avatar
+            src={imgUrl}
+            size={64}
+            mt="-32px"
+            border="4px solid"
+            borderColor="gray.100"
+          />
+        </Link>
         <Link href={shopUrl}>
           <IconButton my="0.25rem">
             <Icon defaultcolor="auto">arrow-long-right</Icon>
