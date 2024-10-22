@@ -91,7 +91,7 @@ export default function Signup() {
 
       if (response.ok) {
         //console.log("User registered successfully:", data);
-        router.push("/login");
+        router.push("/profile");
         toast.success("User registered successfully!");
       } else {
         toast.error("Failed to register user.");
