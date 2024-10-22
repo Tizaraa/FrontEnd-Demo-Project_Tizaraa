@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import Link from "next/link";
@@ -56,17 +58,18 @@ interface ProductCard7Props extends SpaceProps {
   discountPrice: number;
   productId: string | number;
   sellerId: string | number;
+  b2bPricing: any;
 }
 // =====================================================================
 
 export default function ProductCard7(props: ProductCard7Props) {
-  const { id, name, qty, price, imgUrl, slug,discountPrice,productId, sellerId, ...others } = props;
+  const { id, name, qty, price, imgUrl, slug,discountPrice,productId, sellerId,b2bPricing, ...others } = props;
 
   const { dispatch } = useAppContext();
   const handleCartAmountChange = (amount: number) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { qty: amount, name, price, imgUrl, id, discountPrice, productId, sellerId }
+      payload: { qty: amount, name, price, imgUrl, id, discountPrice, productId, sellerId, b2bPricing }
     });
   };
 
@@ -85,7 +88,7 @@ export default function ProductCard7(props: ProductCard7Props) {
         flexDirection="column"
         className="product-details"
         justifyContent="space-between">
-        <Link href={`/product/${id}`}>
+        <Link href={`/product/${slug}`}>
           <Typography className="title" fontWeight="600" fontSize="18px" mb="0.5rem">
             {name}
           </Typography>

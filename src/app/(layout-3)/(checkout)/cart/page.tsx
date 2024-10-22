@@ -1,3 +1,6 @@
+
+
+
 "use client";
 import Link from "next/link";
 import { Fragment } from "react";
@@ -24,6 +27,7 @@ export default function Cart() {
   const { state } = useAppContext();
 
   const getTotalPrice = () => {
+    console.log(state.cart);
     return state.cart.reduce((accumulator, item) => 
       // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
     accumulator + (item.discountPrice ? item.discountPrice : item.price) * item.qty, 0
@@ -47,6 +51,7 @@ export default function Cart() {
               discountPrice={item.discountPrice}
               productId={item.productId}
               sellerId={item.sellerId}
+              b2bPricing={item.b2bPricing}
             />
           ))}
         </Grid>
