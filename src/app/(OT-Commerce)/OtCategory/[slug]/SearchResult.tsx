@@ -21,6 +21,7 @@ import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import Link from "next/link";
+import OTProductsFilterCard from "@component/products/OTProductsFilterCard";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://tizaraa.com/api';
 const pageSize = 20; // Page size for product fetching
 
@@ -89,7 +90,7 @@ useEffect(() => {
       const data = await response.json();
       console.log("Category data:", data);
 
-      const firstItem = data.CategoryInfoList.Content[10];
+      const firstItem = data.CategoryInfoList.Content[21];
       const formattedItem = firstItem
         ? [{
             id: firstItem.Id,
@@ -260,7 +261,7 @@ justifyContent="space-between"
         </IconButton>
       }
     >
-      <ProductFilterCard
+      <OTProductsFilterCard
         onBrandChange={handleBrandChange}
         onCategoryChange={handleCategoryChange}
         onCountryChange={handleCountryChange} // Pass country handler
@@ -274,7 +275,7 @@ justifyContent="space-between"
 
 <Grid container spacing={6}>
 <Grid item lg={3} xs={12}>
-  <ProductFilterCard
+  <OTProductsFilterCard
     onBrandChange={handleBrandChange}
     onCategoryChange={handleCategoryChange}
     onCountryChange={handleCountryChange} // Pass country handler
