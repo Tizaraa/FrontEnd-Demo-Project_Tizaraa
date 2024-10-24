@@ -32,6 +32,7 @@ export const ShopCard1Wrapper = styled(Card)<ShopWrapperProps>`
         rgba(${convertHexToRGB(colors.gray[900])}, 0.8)
       ),
       url(${(props) => props.coverImgUrl || "/assets/images/banners/cycle.png"});
+      height: 18em;
     background-size: cover;
     background-position: center;
     color: white;

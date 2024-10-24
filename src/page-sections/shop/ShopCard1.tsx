@@ -34,8 +34,8 @@ export default function ShopCard1({
   coverImgUrl,
 }: ShopCard1Props) {
   return (
-    <ShopCard1Wrapper overflow="hidden" coverImgUrl={coverImgUrl} style={{height: "100%", objectFit:"cover"}}>
-      <div className="black-box" style={{height: "50vh", objectFit:"cover"}}>
+    <ShopCard1Wrapper overflow="hidden" coverImgUrl={coverImgUrl}>
+      <div className="black-box">
         <Link href={shopUrl} style={{ color: "white" }}>
           <H3 fontWeight="600" mb="8px">
             {name}
