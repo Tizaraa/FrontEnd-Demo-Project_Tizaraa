@@ -53,53 +53,53 @@ const AddToCartButton = ({
     };
 
     const handleCartAmountChange = (amount) => {
-        const uniqueKey = dummySizes.length === 0
-            ? `${productId}` // For products without sizes or colors
-            : `${selectedSize}-${selectedColor}-${productId}`; // For products with sizes and colors
-    
-        // Ensure price is always defined
-        const defaultPrice = discountPrice ?? price ?? 0;
-    
-        // Find the selected size/color option or default to basic price
-        const selectedSizeColorOption = dummySizes.length === 0
-            ? { price: defaultPrice, b2bPricing: [] }
-            : dummySizes.find(
-                (item) => item.size === selectedSize && item.color === selectedColor
-            );
-    
-        // If no valid option found (dummySizes not empty), alert and return
-        if (dummySizes.length !== 0 && !selectedSizeColorOption) {
-            alert("Selected size and color option is not available.");
-            return;
-        }
-    
-        // Calculate the price based on the quantity or default price
-        let finalPrice = getB2BPrice(amount, selectedSizeColorOption.b2bPricing) || selectedSizeColorOption.price;
-    
-        // Check stock quantity before allowing increment
-        // if (amount > 0 && amount > selectedSizeColorOption.stock_quantity) {
-        //     alert(`Only ${selectedSizeColorOption.stock_quantity} items are in stock.`);
-        //     return;
-        // }
-    
-        // Update the cart item in global state
-        dispatch({
-            type: "CHANGE_CART_AMOUNT",
-            payload: {
-                price: finalPrice,
-                qty: amount,
-                name: title,
-                imgUrl: images[0],
-                id: uniqueKey,
-                discountPrice,
-                slug,
-                productId,
-                sellerId,
-                b2bPricing: selectedSizeColorOption.b2bPricing
-            },
-        });
-    };
-    
+    const uniqueKey = dummySizes.length === 0
+        ? `${productId}` // For products without sizes or colors
+        : `${selectedSize}-${selectedColor}-${productId}`; // For products with sizes and colors
+
+    // Ensure price is always defined
+    const defaultPrice = discountPrice ?? price ?? 0;
+
+    // Find the selected size/color option or default to basic price
+    const selectedSizeColorOption = dummySizes.length === 0
+        ? { price: defaultPrice, b2bPricing: [] }
+        : dummySizes.find(
+            (item) => item.size === selectedSize && item.color === selectedColor
+        );
+
+    // If no valid option found (dummySizes not empty), alert and return
+    if (dummySizes.length !== 0 && !selectedSizeColorOption) {
+        alert("Selected size and color option is not available.");
+        return;
+    }
+
+    // Calculate the price based on the quantity or default price
+    let finalPrice = getB2BPrice(amount, selectedSizeColorOption.b2bPricing) || selectedSizeColorOption.price;
+
+    // // Check stock quantity before allowing increment
+    // if (amount > 0 && amount > selectedSizeColorOption.stock_quantity) {
+    //     alert(`Only ${selectedSizeColorOption.stock_quantity} items are in stock.`);
+    //     return;
+    // }
+
+    // Update the cart item in global state
+    dispatch({
+        type: "CHANGE_CART_AMOUNT",
+        payload: {
+            price: finalPrice,
+            qty: amount,
+            name: title,
+            imgUrl: images[0],
+            id: uniqueKey,
+            discountPrice,
+            slug,
+            productId,
+            sellerId,
+            b2bPricing: selectedSizeColorOption.b2bPricing
+        },
+    });
+};
+
     
 
     const handleAddToCart = () => {
@@ -139,7 +139,7 @@ const AddToCartButton = ({
                 <Button
                     onClick={handleAddToCart}
                     style={{
-                        backgroundColor: '#4CAF50',
+                        backgroundColor: '#E94560',
                         color: 'white',
                         padding: '10px 20px',
                         border: 'none',
@@ -147,8 +147,8 @@ const AddToCartButton = ({
                         cursor: 'pointer',
                         transition: 'background-color 0.3s',
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#45a049'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E94560'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#E94560'}
                 >
                     Add to Cart
                 </Button>
