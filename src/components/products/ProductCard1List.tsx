@@ -155,10 +155,10 @@ export default function ProductGridView({
 }: Props) {
   const startProduct = (currentPage - 1) * productsPerPage + 1;
   const endProduct = Math.min(currentPage * productsPerPage, totalProducts);
-  console.log(currentPage);
-  console.log(endProduct);
-  console.log(totalProducts);
-  console.log(products.length);
+  // console.log(currentPage);
+  // console.log(endProduct);
+  // console.log(totalProducts);
+  // console.log(products.length);
   
 
   return (
