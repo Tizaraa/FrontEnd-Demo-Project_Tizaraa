@@ -33,7 +33,7 @@ const LoaderWrapper = styled.div`
 
 const productsPerPage = 10;
 
-export default function SearchResult({ sortOptions, slug }) {
+export default function OTSearchResult({ sortOptions, slug }) {
   const router = useRouter();
 
   const [menuItems, setMenuItems] = useState<{ id: string; name: string; link: string }[]>([]);
