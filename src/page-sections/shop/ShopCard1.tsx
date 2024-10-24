@@ -10,6 +10,7 @@ import FlexBox from "@component/FlexBox";
 import { IconButton } from "@component/buttons";
 import { H3, SemiSpan } from "@component/Typography";
 import { ShopCard1Wrapper } from "./styles";
+import { height } from "styled-system";
 
 // =====================================================
 type ShopCard1Props = {
@@ -33,8 +34,8 @@ export default function ShopCard1({
   coverImgUrl,
 }: ShopCard1Props) {
   return (
-    <ShopCard1Wrapper overflow="hidden" coverImgUrl={coverImgUrl}>
-      <div className="black-box">
+    <ShopCard1Wrapper overflow="hidden" coverImgUrl={coverImgUrl} style={{height: "100%", objectFit:"cover"}}>
+      <div className="black-box" style={{height: "50vh", objectFit:"cover"}}>
         <Link href={shopUrl} style={{ color: "white" }}>
           <H3 fontWeight="600" mb="8px">
             {name}
