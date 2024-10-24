@@ -1,7 +1,8 @@
 "use client"; // Add this line at the top
 import Box from "@component/Box";
-import SearchResult from "./SearchResult";
+import SearchResult from "./OTSearchResult";
 import { useEffect } from "react";
+import OTSearchResult from "./OTSearchResult";
 
 interface Props {
   params: { slug: string };
@@ -16,7 +17,7 @@ export default function ProductSearchResult({ params }: Props) {
 
   return (
     <Box pt="20px">
-      <SearchResult sortOptions={sortOptions} slug={slug} />
+      <OTSearchResult sortOptions={sortOptions} slug={slug} />
     </Box>
   );
 }

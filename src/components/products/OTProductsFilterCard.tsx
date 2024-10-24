@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Card from "@component/Card";
 import { H6, Paragraph } from "@component/Typography";
+import Link from 'next/link';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://tizaraa.com/api';
 
@@ -28,6 +29,7 @@ const OTProductsFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange,
       try {
         setLoading(true);
         const response = await fetch(`${API_BASE_URL}/otpi/get-category`);
+        
         
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -70,6 +72,7 @@ const OTProductsFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange,
         <>
           {categoryList.length > 0 ? (
             categoryList.slice(0, visibleCategories).map((item) => (
+              <Link href={`/OtCategory/${item.Id}`}>
               <Paragraph
                 py="6px"
                 fontSize="14px"
@@ -79,7 +82,7 @@ const OTProductsFilterCard: React.FC<ProductFilterCardProps> = ({ onBrandChange,
                 onClick={() => handleCategoryClick(item.Id)}
               >
                 {item.Name} 
-              </Paragraph>
+              </Paragraph></Link>
             ))
           ) : (
             <Paragraph color="text.muted">No categories available</Paragraph>

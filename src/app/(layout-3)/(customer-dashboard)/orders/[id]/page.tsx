@@ -35,7 +35,8 @@ const LoaderWrapper = styled.div`
 export default function OrderDetails({ params }: IDParams) {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true); // For loading state
-  const [getStatus, setStatus] = useState(null); // For status state
+  const [getStatus, setStatus] = useState(null); 
+  const [getEstimateDate, setEstimateDate] = useState(null); 
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -52,6 +53,8 @@ export default function OrderDetails({ params }: IDParams) {
         setOrder(response.data);
         console.log("Fetched Order Data:", response.data);
         setStatus(response.data.Order.status);
+        setEstimateDate(response.data.Order.deliveredAt)
+        
       } catch (error) {
         console.error("Error fetching order details:", error);
       } finally {
@@ -86,7 +89,7 @@ export default function OrderDetails({ params }: IDParams) {
 
       {/* <OrderStatus /> */}
 
-      <OrderStatus orderStatus={getStatus} />
+      <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} />
 
       <Card p="0px" mb="30px" overflow="hidden" borderRadius={8}>
         <TableRow bg="gray.200" p="12px" boxShadow="none" borderRadius={0}>

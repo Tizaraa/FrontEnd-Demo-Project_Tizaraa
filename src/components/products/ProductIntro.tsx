@@ -32,7 +32,7 @@ type ProductIntroProps = {
     price: number;
     b2bPricing: { min_qty: number; price: number }[];
     stock: number;
-  }>; // Add sizecolorwithprice type
+  }>;
 };
 
 export default function ProductIntro({
