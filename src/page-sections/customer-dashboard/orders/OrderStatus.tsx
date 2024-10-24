@@ -8,17 +8,19 @@ import Icon from "@component/icon/Icon";
 import FlexBox from "@component/FlexBox";
 import Typography from "@component/Typography";
 import useWindowSize from "@hook/useWindowSize";
+import { format } from "date-fns";
 
 type Status =  "Pending" | "Confirm" | "Shipped" | "Delivered";
 
 interface OrderStatusProps {
   orderStatus: Status; // Accept orderStatus as a prop
+  deliveredAt: string; // Add deliveredAt as a prop
 }
 
-export default function OrderStatus({ orderStatus }: OrderStatusProps) {
+export default function OrderStatus({ orderStatus, deliveredAt }: OrderStatusProps) {
   const width = useWindowSize();
   const stepIconList = ["package-box", "truck-1", "delivery"];
-  const orderStatusList = ["Confirm", "Shipped", "Delivered"]; 
+  const orderStatusList = ["Confirmed", "Shipped", "Delivered"]; 
 
   const breakpoint = 350;
   const statusIndex = orderStatusList.indexOf(orderStatus);
@@ -81,7 +83,7 @@ export default function OrderStatus({ orderStatus }: OrderStatusProps) {
           borderRadius="300px"
           color="primary.main"
         >
-          Estimated Delivery Date <b>4th October</b>
+          Estimated Delivery Date <b>{deliveredAt}</b>
         </Typography>
       </FlexBox>
     </Card>
