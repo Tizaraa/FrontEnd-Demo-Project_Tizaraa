@@ -771,9 +771,48 @@ interface Props {
 export default async function ProductDetailsPage({ params }: Props) {
   const productData = await fetchProductData(params.slug)
 
+<<<<<<< HEAD
   return <ProductDetails params={params} />
 }
 
 
 
 
+=======
+  if (!productData || !productData.productsingledetails) {
+    return <div>Product not found or there was an error loading the product.</div>;
+  }
+
+  const product = productData.productsingledetails;
+  const sizecolorwithprice = productData.SizeColor.sizecolorwithprice; 
+  const productImages = productData.productmultiimages;
+  const images = productImages.map((img: any) => img.product_img);
+  const description = product.short_description;
+
+  return (
+    <Fragment>
+      <ProductIntro
+        id={product.id}
+        price={product.seeling_price}
+        title={product.product_name}
+        images={images}
+        sellerShopName={product.seller_shop_name}
+        rating={product.product_rating}
+        discountPrice={product.discount_price}
+        totalDiscount={product.total_discount}
+        productStock={product.product_stock}
+        productId={product.product_id}
+        sellerId={product.seller_shop_id}
+        sizecolorwithprice={sizecolorwithprice} // Pass the sizecolorwithprice data
+        slug={params.slug}
+      />
+
+      <ProductView description={description} productId={product.product_id} />
+
+      <RelatedProducts relatedProducts={productData.relatedproduct} />
+    </Fragment>
+  );
+}
+
+
+>>>>>>> 3f00d16f5b91669f985d80376da9462a0cfb9b03

@@ -11,8 +11,8 @@
 // import TextField from "@component/text-field";
 // import Select from "@component/Select";
 
-// const API_URL = "https://tizaraa.com/api/user/profile";
-// const UPDATE_API_URL = "https://tizaraa.com/api/user/profile/update";
+// const API_URL = "https://frontend.tizaraa.com/api/user/profile";
+// const UPDATE_API_URL = "https://frontend.tizaraa.com/api/user/profile/update";
 
 // export default function ProfileEditForm() {
 //   const [profile, setProfile] = useState(null); // State to hold the user data
@@ -185,8 +185,8 @@
 // import { useRouter } from "next/navigation";
 //const router = useRouter();
 
-// const API_URL = "https://tizaraa.com/api/user/profile";
-// const UPDATE_API_URL = "https://tizaraa.com/api/user/profile/update";
+// const API_URL = "https://frontend.tizaraa.com/api/user/profile";
+// const UPDATE_API_URL = "https://frontend.tizaraa.com/api/user/profile/update";
 
 // export default function ProfileEditForm() {
 //   const router = useRouter();
@@ -381,9 +381,9 @@ import {  toast } from 'react-toastify';
 import { Vortex } from 'react-loader-spinner'
 import  styled from "@emotion/styled";
 
-//const API_URL = "https://tizaraa.com/api/user/profile";
+//const API_URL = "https://frontend.tizaraa.com/api/user/profile";
 const API_URL = `${ApiBaseUrl.baseUrl}user/profile`
-//const UPDATE_API_URL = "https://tizaraa.com/api/user/profile/update";
+//const UPDATE_API_URL = "https://frontend.tizaraa.com/api/user/profile/update";
 const UPDATE_API_URL = `${ApiBaseUrl.baseUrl}user/profile/update`;
 
 const LoaderWrapper = styled.div`

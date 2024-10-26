@@ -94,7 +94,7 @@ interface LoginResponse {
         
         // Optionally fetch from API if userInfo is not found in localStorage
     //     try {
-    //         const response = await fetch("https://tizaraa.com/api/user", {
+    //         const response = await fetch("https://frontend.tizaraa.com/api/user", {
     //             method: "GET",
     //             headers: {
     //                 "Authorization": `Bearer ${this.getToken()}`, // Use the stored token

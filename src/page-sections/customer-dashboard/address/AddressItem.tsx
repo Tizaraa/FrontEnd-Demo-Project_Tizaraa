@@ -18,7 +18,7 @@
 //     const fetchAddresses = async () => {
 //       try {
 //         const response = await axios.get(
-//           `https://tizaraa.com/api/user/address`,
+//           `https://frontend.tizaraa.com/api/user/address`,
 //           {
 //             headers: {
 //               Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
@@ -106,7 +106,7 @@
 //     const fetchAddresses = async () => {
 //       try {
 //         const response = await axios.get(
-//           `https://tizaraa.com/api/user/address`,
+//           `https://frontend.tizaraa.com/api/user/address`,
 //           {
 //             headers: {
 //               Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
@@ -124,7 +124,7 @@
 
 //   const handleDelete = async (id: String) => {
 //     try {
-//       await axios.delete(`https://tizaraa.com/api/user/address/delete/${id}`, {
+//       await axios.delete(`https://frontend.tizaraa.com/api/user/address/delete/${id}`, {
 //         headers: {
 //           Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
 //         },

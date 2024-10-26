@@ -74,7 +74,7 @@ export default function Section12() {
 
   // Fetch data from the API
   useEffect(() => {
-    fetch("https://tizaraa.com/api/product/country/flag")
+    fetch("https://frontend.tizaraa.com/api/product/country/flag")
       .then((response) => response.json())
       .then((data) => {
         

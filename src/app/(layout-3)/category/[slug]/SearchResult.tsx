@@ -171,7 +171,7 @@
 
 //     setLoading(true);
 //     try {
-//       const response = await fetch(`https://tizaraa.com/api/category/${slug}`, {
+//       const response = await fetch(`https://frontend.tizaraa.com/api/category/${slug}`, {
 //         method: "POST",
 //         headers: {
 //           "Content-Type": "application/json",

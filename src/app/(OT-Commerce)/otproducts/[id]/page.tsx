@@ -70,7 +70,7 @@
 //       if (!id) return; // Wait for the ID to be available
 
 //       try {
-//         const response = await fetch(`https://tizaraa.com/api/otpi/get-item-full-info/${id}`, {
+//         const response = await fetch(`https://frontend.tizaraa.com/api/otpi/get-item-full-info/${id}`, {
 //           method: "GET", // Use GET method
 //         });
 
@@ -431,7 +431,7 @@ const ProductPage = () => {
 
       try {
         const response = await fetch(
-          `https://tizaraa.com/api/otpi/get-item-full-info/${id}`,
+          `https://frontend.tizaraa.com/api/otpi/get-item-full-info/${id}`,
           {
             method: "GET", // Use GET method
           }
