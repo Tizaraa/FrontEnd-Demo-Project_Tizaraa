@@ -75,10 +75,11 @@
 "use client";
 import Box from "@component/Box";
 import FlexBox from "@component/FlexBox";
-import Typography, { H1, H2, SemiSpan } from "@component/Typography";
+import Typography, { H1, H2, H6, SemiSpan } from "@component/Typography";
 import Rating from "@component/rating";
 import { currency } from "@utils/utils";
 import { Chip } from "@component/Chip";
+import Link from "next/link";
 
 type ProductDetailsProps = {
   title: string;
@@ -87,7 +88,8 @@ type ProductDetailsProps = {
   discountPrice?: number;
   totalDiscount?: number;
   productStock: number;
-  isDirectAdd?: boolean; // New prop to indicate direct addition to cart
+  isDirectAdd?: boolean;
+  sellerShopName,
 };
 
 const ProductDetails = ({
@@ -98,6 +100,7 @@ const ProductDetails = ({
   totalDiscount,
   productStock,
   isDirectAdd = false, // Default to false if not provided
+  sellerShopName,
 }: ProductDetailsProps) => {
   const displayPrice = isDirectAdd ? (discountPrice || price) : price; // Choose price based on direct add
 
@@ -140,6 +143,8 @@ const ProductDetails = ({
           )}
         </FlexBox>
         <SemiSpan color="inherit">{productStock > 0 ? "Stock Available" : "Stock Out"}</SemiSpan>
+
+       
       </Box>
     </Box>
   );

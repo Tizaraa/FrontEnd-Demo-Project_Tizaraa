@@ -12,6 +12,10 @@ import ProductImages from "./ProductImages";
 import SizeColorSelector from "./SizeColorSelector";
 import AddToCartButton from "./AddToCartButton";
 import ProductDetails from "./ProductDetails";
+import FlexBox from "@component/FlexBox";
+import { H6, SemiSpan } from "@component/Typography";
+import Link from "next/link";
+
 
 type ProductIntroProps = {
   price: number;
@@ -83,6 +87,7 @@ export default function ProductIntro({
             totalDiscount={totalDiscount}
             rating={rating}
             productStock={productStock}
+            sellerShopName={sellerShopName}
           />
           <SizeColorSelector
             productId={productId} 
@@ -104,8 +109,19 @@ export default function ProductIntro({
             price={selectedPrice} 
             dummySizes={formattedSizeColorOptions} 
           />
+
+           <FlexBox alignItems="center" mb="1rem" mt="1rem">
+            <SemiSpan>Sold By:</SemiSpan>
+            <Link href="#">
+              <H6 lineHeight="1" ml="8px">
+                {sellerShopName} 
+              </H6>
+            </Link>
+          </FlexBox>
         </Grid>
+      
       </Grid>
+     
     </Box>
   );
 }
