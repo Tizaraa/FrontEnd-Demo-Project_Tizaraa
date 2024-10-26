@@ -78,8 +78,9 @@ export default async function ProductDetails({ params }: Props) {
 
       <ProductView description={description} productId={product.product_id} />
 
-      <RelatedProducts productId={product.product_id} />
+      <RelatedProducts relatedProducts={productData.relatedproduct} />
     </Fragment>
   );
 }
+
 
