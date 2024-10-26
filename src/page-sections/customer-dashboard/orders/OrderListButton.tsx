@@ -1,28 +1,58 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@component/buttons";
 import FlexBox from "@component/FlexBox";
+import axios from "axios";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
-export default function OrderListButton() {
+export default function OrderListButton({ params }) {
   const { push } = useRouter();
-  const invoiceId = "123"; 
+  const [orderId, setOrderId] = useState(null); 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const authToken = localStorage.getItem("token");
+      try {
+        const response = await axios.get(
+          `${ApiBaseUrl.baseUrl}user/order/details/${params.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        const orderData = response.data.Order;
+        setOrderId(orderData?.id); // Set orderId from fetched data
+        console.log("Fetched Order Data:", orderData);
+      } catch (error) {
+        console.error("Error fetching order details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, [params.id]);
 
   return (
     <FlexBox>
-      <Button
+      {/* <Button
         px="2rem"
         color="primary"
         bg="primary.light"
-        onClick={() => push(`/invoice/${invoiceId}`)} // Include the ID here
+        onClick={() => push(`/invoice/${params.id}`)} 
+        
       >
         Invoice
-      </Button>
+      </Button> */}
       <Button
         px="2rem"
         color="primary"
         bg="primary.light"
-        onClick={() => push("/orders")} 
+        onClick={() => push("/orders")}
       >
         Order List
       </Button>
