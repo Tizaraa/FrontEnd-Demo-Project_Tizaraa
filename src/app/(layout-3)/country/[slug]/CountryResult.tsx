@@ -69,7 +69,7 @@ export default function CountryResult({ sortOptions, slug }) {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://tizaraa.com/api/country/product/view/${slug}`,
+        `https://frontend.tizaraa.com/api/country/product/view/${slug}`,
         {
           method: "POST",
           headers: {

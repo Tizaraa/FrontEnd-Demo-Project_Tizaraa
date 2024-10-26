@@ -158,7 +158,7 @@
 
 //     try {
 //       const response = await axios.post(
-//         "https://tizaraa.com/api/user/address/store",
+//         "https://frontend.tizaraa.com/api/user/address/store",
 //         addressData,
 //         {
 //           headers: {
@@ -184,7 +184,7 @@
 //     const authtoken = localStorage.getItem("token"); // Retrieve the auth token
 //     try {
 //       const response = await axios.get(
-//         `https://tizaraa.com/api/checkout/address`,
+//         `https://frontend.tizaraa.com/api/checkout/address`,
 //         {
 //           headers: {
 //             Authorization: `Bearer ${authtoken}`, // Attach auth token to headers

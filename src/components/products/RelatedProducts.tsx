@@ -22,7 +22,7 @@
 //   useEffect(() => {
 //     const fetchRelatedProducts = async () => {
 //       try {
-//         const response = await axios.get(`https://tizaraa.com/api/product/details/related/product/${productId}`);
+//         const response = await axios.get(`https://frontend.tizaraa.com/api/product/details/related/product/${productId}`);
 //         if (response.data) {
 //           setAllProducts(response.data); // Store all fetched products
 //           setRelatedProducts(response.data.slice(0, visibleProducts)); // Initially display 10 products

@@ -20,7 +20,7 @@ export default function CountryList() {
 
   // Fetch data from the API
   useEffect(() => {
-    fetch("https://tizaraa.com/api/product/all/country")
+    fetch("https://frontend.tizaraa.com/api/product/all/country")
       .then((response) => response.json())
       .then((data) => {
         setServiceList(data.country); // Assuming the API response contains a 'country' array

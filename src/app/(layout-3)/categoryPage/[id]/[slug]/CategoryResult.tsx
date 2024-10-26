@@ -35,7 +35,7 @@
 
 //     const categoryProductLoad = (id,orderby)=>{
 
-//       const url = 'https://tizaraa.com/api/category/product/34'; // Example API
+//       const url = 'https://frontend.tizaraa.com/api/category/product/34'; // Example API
 
 //       // ===
 //       axios.post(url, {

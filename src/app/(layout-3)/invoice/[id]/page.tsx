@@ -19,7 +19,7 @@ export default function InvoicePage({ params }) {
       }
 
       try {
-        const response = await axios.get(`https://tizaraa.com/api/get-invoice?id=${id}`, {
+        const response = await axios.get(`https://frontend.tizaraa.com/api/get-invoice?id=${id}`, {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },

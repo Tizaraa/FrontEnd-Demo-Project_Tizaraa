@@ -123,7 +123,7 @@
 //   useEffect(() => {
 //     const fetchCategories = async () => {
 //       try {
-//         const response = await axios.get("https://tizaraa.com/api/frontend/home/categorie/all");
+//         const response = await axios.get("https://frontend.tizaraa.com/api/frontend/home/categorie/all");
 //         setCategories(response.data); 
 //       } catch (error) {
 //         console.error("Failed to fetch categories", error);
@@ -236,7 +236,7 @@
 
 //   const fetchCategories = async () => {
 //     try {
-//       const response = await axios.get("https://tizaraa.com/api/categories");
+//       const response = await axios.get("https://frontend.tizaraa.com/api/categories");
 //       setCategories(response.data || []);
 //     } catch (error) {
 //       console.error("Error fetching categories:", error);
@@ -245,7 +245,7 @@
 
 //   const fetchSearchResults = async (query: string) => {
 //     try {
-//       const response = await axios.get(`https://tizaraa.com/api/search/suggestion/${query}`);
+//       const response = await axios.get(`https://frontend.tizaraa.com/api/search/suggestion/${query}`);
 //       const results = response.data || [];
       
 //       // Use a Set to filter duplicates by keyword
@@ -363,7 +363,7 @@
 
 //   const fetchCategories = async () => {
 //     try {
-//       const response = await axios.get("https://tizaraa.com/api/categories");
+//       const response = await axios.get("https://frontend.tizaraa.com/api/categories");
 //       setCategories(response.data || []);
 //     } catch (error) {
 //       console.error("Error fetching categories:", error);
@@ -372,7 +372,7 @@
 
 //   const fetchSearchResults = async (query: string) => {
 //     try {
-//       const response = await axios.get(`https://tizaraa.com/api/search/suggestion/${query}`);
+//       const response = await axios.get(`https://frontend.tizaraa.com/api/search/suggestion/${query}`);
 //       const results = response.data || [];
 
 //       const uniqueResults = Array.from(new Set(results.map(item => item.keyword)))
@@ -503,7 +503,7 @@
 
 //   const fetchCategories = async () => {
 //     try {
-//       const response = await axios.get("https://tizaraa.com/api/categories");
+//       const response = await axios.get("https://frontend.tizaraa.com/api/categories");
 //       setCategories(response.data || []);
 //     } catch (error) {
 //       console.error("Error fetching categories:", error);
@@ -512,7 +512,7 @@
 
 //   const fetchSearchResults = async (query: string) => {
 //     try {
-//       const response = await axios.get(`https://tizaraa.com/api/search/suggestion/${query}`);
+//       const response = await axios.get(`https://frontend.tizaraa.com/api/search/suggestion/${query}`);
 //       const results = response.data || [];
 
 //       const uniqueResults = Array.from(new Set(results.map(item => item.keyword)))

@@ -71,7 +71,7 @@ export default function MobileCategoryNav() {
   useEffect(() => {
     const fetchNavigations = async () => {
       try {
-        const response = await fetch("https://tizaraa.com/api/categories"); // Fetch categories from API
+        const response = await fetch("https://frontend.tizaraa.com/api/categories"); // Fetch categories from API
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

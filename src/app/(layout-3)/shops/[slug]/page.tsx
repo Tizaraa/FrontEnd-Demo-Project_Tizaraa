@@ -26,7 +26,7 @@ export default async function ShopDetails({ params }: SlugParams) {
   //   console.log("Server log:", params.slug);
   //   const categoryProductLoad = async () => {
   //     try {
-  //       const response = await axios.get(`https://tizaraa.com/api/seller/profile/${params.slug}`);
+  //       const response = await axios.get(`https://frontend.tizaraa.com/api/seller/profile/${params.slug}`);
         
   //       // Console log the result before setting state
   //       console.log("Category Products Data:", response.data.data);

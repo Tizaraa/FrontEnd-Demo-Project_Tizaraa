@@ -310,7 +310,7 @@ export default function OrderDetails({ params }: IDParams) {
     }
 
     try {
-      const response = await axios.get(`https://tizaraa.com/api/get-invoice?id=${params.id}`, {
+      const response = await axios.get(`https://frontend.tizaraa.com/api/get-invoice?id=${params.id}`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
