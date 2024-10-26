@@ -293,7 +293,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
 
       {!isDesktop && <ShippingInfo isDesktop={isDesktop} />}
 
-      <RelatedProducts productId={product.product_id} />
+      <RelatedProducts relatedProducts={productData.relatedproduct} />
     </Fragment>
   )
 }

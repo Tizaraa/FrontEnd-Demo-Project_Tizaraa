@@ -716,103 +716,54 @@
 //   );
 // }
 
-import React from "react"
-import { Metadata } from "next"
-import ProductDetails from "./ProductDetails"
-import axios from "axios"
-import ApiBaseUrl from "api/ApiBaseUrl"
+import React from "react";
+import { Metadata } from "next";
+import ProductDetails from "./ProductDetails";
+import axios from "axios";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 // Fetch product data for server-side metadata
 async function fetchProductData(slug: string) {
   try {
-    const response = await axios.get(
-      `${ApiBaseUrl.baseUrl}product/details/${slug}`
-    )
-    return response.data
+    const response = await axios.get(`${ApiBaseUrl.baseUrl}product/details/${slug}`);
+    return response.data;
   } catch (error) {
-    console.error("Error fetching product data:", error)
-    return null
+    console.error("Error fetching product data:", error);
+    return null;
   }
 }
 
 // Generate SEO metadata for the product page
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string }
-}): Promise<Metadata> {
-  const productData = await fetchProductData(params.slug)
-  if (productData?.seo) {
-    const seo = productData.seo
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const productData = await fetchProductData(params.slug);
+  if (productData && productData.seo) {
+    const seo = productData.seo;
     return {
-      title: seo.title,
-      description: seo.description,
-      keywords: seo.keywords,
+      title: seo.title || "Product Not Found",
+      description: seo.description || "No description available.",
+      keywords: seo.keywords || "products, ecommerce",
       openGraph: {
-        title: seo.title,
-        description: seo.description,
-        url: seo.url,
-        images: seo.image,
+        title: seo.title || "Product Not Found",
+        description: seo.description || "No description available.",
+        url: seo.url || "",
+        images: Array.isArray(seo.image) ? seo.image : [seo.image], // Ensure images are in an array
       },
-    }
+    };
   } else {
     return {
       title: "Product Not Found",
       description: "No SEO metadata found for this product.",
-    }
+    };
   }
 }
 
 interface Props {
-  params: { slug: string }
+  params: { slug: string };
 }
 
 // Server Component for rendering product details page
 export default async function ProductDetailsPage({ params }: Props) {
-  const productData = await fetchProductData(params.slug)
+  const productData = await fetchProductData(params.slug);
 
-<<<<<<< HEAD
-  return <ProductDetails params={params} />
+  return <ProductDetails params={params} />;
 }
-
-
-
-
-=======
-  if (!productData || !productData.productsingledetails) {
-    return <div>Product not found or there was an error loading the product.</div>;
-  }
-
-  const product = productData.productsingledetails;
-  const sizecolorwithprice = productData.SizeColor.sizecolorwithprice; 
-  const productImages = productData.productmultiimages;
-  const images = productImages.map((img: any) => img.product_img);
-  const description = product.short_description;
-
-  return (
-    <Fragment>
-      <ProductIntro
-        id={product.id}
-        price={product.seeling_price}
-        title={product.product_name}
-        images={images}
-        sellerShopName={product.seller_shop_name}
-        rating={product.product_rating}
-        discountPrice={product.discount_price}
-        totalDiscount={product.total_discount}
-        productStock={product.product_stock}
-        productId={product.product_id}
-        sellerId={product.seller_shop_id}
-        sizecolorwithprice={sizecolorwithprice} // Pass the sizecolorwithprice data
-        slug={params.slug}
-      />
-
-      <ProductView description={description} productId={product.product_id} />
-
-      <RelatedProducts relatedProducts={productData.relatedproduct} />
-    </Fragment>
-  );
-}
-
-
->>>>>>> 3f00d16f5b91669f985d80376da9462a0cfb9b03
