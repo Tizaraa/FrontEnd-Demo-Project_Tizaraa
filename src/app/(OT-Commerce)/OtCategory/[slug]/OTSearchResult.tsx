@@ -18,7 +18,7 @@ import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import Link from "next/link";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://tizaraa.com/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://frontend.tizaraa.com/api';
 const pageSize = 20;
 
 const LoaderWrapper = styled.div`
