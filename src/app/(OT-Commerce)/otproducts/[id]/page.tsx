@@ -191,12 +191,116 @@
 
 // export default ProductPage;
 
+//  <div className="lg:flex lg:gap-10 lg:flex-row"> 
+
+// <div className="lg:w-2/3 lg:pr-8">
+//   <h2 className="text-xl font-semibold">Description:</h2>
+//   <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
+// </div>
+
+
+// <div
+//   className="lg:w-1/3 lg:pl-8 bg-gray-100 p-4 rounded-lg mt-6 lg:mt-0"
+//   style={{
+//     border: "2px solid #ff6e33",
+//     textAlign: "center",
+//     padding: "5px",
+//     borderRadius: "15px",
+//   }}
+// >
+//   <h2
+//     className="text-xl font-semibold"
+//     style={{
+//       borderBottom: "2px solid #ff6e33",
+//       paddingBottom: "4px",
+//     }}
+//   >
+//     শর্ত সমুহ:
+//   </h2>
+//   <p
+//     className="text-sm text-gray-700"
+//     style={{ paddingBottom: "30px" }}
+//   >
+//     সর্বনিম্ন ১০০০ টাকার পণ্য অর্ডার করতে হবে। অর্ডার প্লেসের পরে
+//     আপনার সাপ্লায়ার থেকে আমাদের চায়না ওয়্যারহাউস পর্যন্ত প্রডাক্ট
+//     পৌছানোর ডেলিভারির চার্জ (চায়না লোকাল ডেলিভারি চার্জ) ধার্য হবে।
+//     উল্লেখিত পণ্যের ওজন সম্পূর্ণ সঠিক নয়, আনুমানিক মাত্র। বাংলাদেশে
+//     আসার পর পণ্যটির প্রকৃত ওজন মেপে শিপিং চার্জ হিসাব করা হবে। পণ্যের
+//     ক্যাটাগরির উপর নির্ভর করে শিপিং চার্জ নির্ধারণ করা হবে প্রতি কেজি
+//     ৭৪০/৯৩০ টাকা।
+//   </p>
+
+  
+//   <h2
+//     className="text-xl font-semibold"
+//     style={{
+//       borderBottom: "2px solid #ff6e33",
+//       paddingBottom: "4px",
+//     }}
+//   >
+//     শিপিং চার্জ:
+//   </h2>
+
+ 
+//   <h1
+//     className="text-xl font-bold"
+//     style={{ color: "#ff6e33", fontSize: "20px" }}
+//   >
+//     ক্যাটাগরিঃ এ
+//   </h1>
+//   <h2 className="">৭৪০ টাকা প্রতি কেজি</h2>
+//   <p
+//     className="text-sm text-gray-700"
+//     style={{ paddingBottom: "30px" }}
+//   >
+//     জুতা, ব্যাগ, জুয়েলারি, যন্ত্রপাতি, স্টিকার, কম্পিউটার এক্সেসরিজ,
+//     সিরামিক, ধাতব, চামড়া, রাবার, প্লাস্টিক জাতীয় পণ্য, কসমেটিক্স
+//     এক্সেসরিজ, ব্যাটারি ব্যতীত খেলনা / ইলেকট্রনিক্স পণ্য।
+//   </p>
+
+  
+//   <h1
+//     className="text-xl font-bold"
+//     style={{ color: "#ff6e33", fontSize: "20px" }}
+//   >
+//     ক্যাটাগরিঃ বি
+//   </h1>
+//   <h2 className="">৯৩০ টাকা প্রতি কেজি</h2>
+//   <p
+//     className="text-sm text-gray-700"
+//     style={{ paddingBottom: "30px" }}
+//   >
+//     ব্যাটারি জাতীয় যেকোন পণ্য, ডুপ্লিকেট ব্রান্ড বা কপি পণ্য, বীজ,
+//     রাসায়নিক দ্রব্য, নেটওয়ার্কিং আইটেম, ম্যাগনেট বা লেজার জাতীয় পণ্য।
+//   </p>
+
+  
+//   <h1
+//     className="text-xl font-bold"
+//     style={{ color: "#ff6e33", fontSize: "20px" }}
+//   >
+//     ক্যাটাগরিঃ সি
+//   </h1>
+//   <p className="text-sm text-gray-700">
+//     *পোশাক /গার্মেন্টস/হিজাব/ওড়না - ৮৪০ টাকা * শুধু ব্যাটারি/পাওয়ার
+//     ব্যাংক – ১২৫০ টাকা * সানগ্লাস - ৩৩০০ টাকা * ট্রিমার – ১৫০০ টাকা *
+//     কসমেটিক্স – ১০৮০ টাকা * স্মার্ট ওয়াচ - ১১০০ টাকা * সাধারন ঘড়ি -
+//     ১০০০ টাকা * ব্লুটুথ হেডফোন - ১০৫০ টাকা * তরল বা লিকুইড পণ্য - ১০০০
+//     টাকা *পারফিউম -১২৫০ টাকা * খাদ্য - ১২৫০ টাকা * পাউডার - ১০৫০ টাকা
+//     * জীবন্ত উদ্ভিদ - ১২৫০ টাকা * শিট মাক্স- ১২৫০ টাকা * সিরাম- ১২৫০
+//     টাকা
+//   </p>
+// </div>
+// </div> 
+
 "use client";
+import React from 'react';
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import DOMPurify from "dompurify";
 import ProductIntro from "@component/products/ProductIntro";
 import OTProductsIntro from "@component/products/OTproductsIntro";
+//import Component from "./responsive";
 // const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // Interfaces for the models
@@ -255,6 +359,70 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<RelatedProduct[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+  const [windowWidth, setWindowWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+
+  React.useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobileOrTablet = windowWidth < 1024;
+
+  const containerStyle: React.CSSProperties = {
+    display: isMobileOrTablet ? 'block' : 'flex',
+    gap: '20px',
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '20px',
+  };
+
+  const descriptionStyle: React.CSSProperties = {
+    flex: isMobileOrTablet ? 'none' : '2',
+    marginBottom: isMobileOrTablet ? '20px' : '0',
+  };
+
+  const bengaliTextStyle: React.CSSProperties = {
+    flex: isMobileOrTablet ? 'none' : '1',
+    backgroundColor: '#f3f4f6',
+    border: '2px solid #ff6e33',
+    borderRadius: '15px',
+    padding: '20px',
+    textAlign: 'center',
+  };
+
+  const headingStyle: React.CSSProperties = {
+    fontSize: '1.25rem',
+    fontWeight: 600,
+    borderBottom: '2px solid #ff6e33',
+    paddingBottom: '4px',
+    marginBottom: '10px',
+  };
+
+  const paragraphStyle: React.CSSProperties = {
+    fontSize: '0.875rem',
+    color: '#4b5563',
+    marginBottom: '30px',
+  };
+
+  const categoryStyle: React.CSSProperties = {
+    fontSize: '1.25rem',
+    fontWeight: 700,
+    color: '#ff6e33',
+    marginBottom: '5px',
+  };
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Fetch the product data
   useEffect(() => {
@@ -345,93 +513,39 @@ const ProductPage = () => {
           sellerId={""}
         />
 
-        <div style={{ display: "flex", gap: "10px" }}>
-          {/* Product description on the left */}
-          <div className="lg:w-2/3 lg:pr-8">
-            <h2 className="text-xl font-semibold">Description:</h2>
-            <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
-          </div>
+       {/* <Component /> */}
+       <div style={containerStyle}>
+      <div style={descriptionStyle}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '10px' }}>Description:</h2>
+        <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
+      </div>
 
-          {/* Static text on the right */}
-          <div
-            className="lg:w-1/3 lg:pl-8 bg-gray-100 p-4 rounded-lg"
-            style={{
-              border: "2px solid #ff6e33",
-              textAlign: "center",
-              padding: "5px",
-              borderRadius: "15px"
-            }}
-          >
-            <h2
-              className="text-xl font-semibold"
-              style={{
-                borderBottom: "2px solid #ff6e33",
-                paddingBottom: "4px",
-              }}
-            >
-              শর্ত সমুহ:
-            </h2>
-            <p
-              className="text-sm text-gray-700"
-              style={{ paddingBottom: "30px" }}
-            >
-              সর্বনিম্ন ১০০০ টাকার পণ্য অর্ডার করতে হবে। অর্ডার প্লেসের পরে
-              আপনার সাপ্লায়ার থেকে আমাদের চায়না ওয়্যারহাউস পর্যন্ত প্রডাক্ট
-              পৌছানোর ডেলিভারির চার্জ (চায়না লোকাল ডেলিভারি চার্জ) ধার্য হবে।
-              উল্লেখিত পণ্যের ওজন সম্পূর্ণ সঠিক নয়, আনুমানিক মাত্র। বাংলাদেশে
-              আসার পর পণ্যটির প্রকৃত ওজন মেপে শিপিং চার্জ হিসাব করা হবে। পণ্যের
-              ক্যাটাগরির উপর নির্ভর করে শিপিং চার্জ নির্ধারণ করা হবে প্রতি কেজি
-              ৭৪০/৯৩০ টাকা।
-            </p>
-            <h2
-              className="text-xl font-semibold"
-              style={{
-                borderBottom: "2px solid #ff6e33",
-                paddingBottom: "4px",
-              }}
-            >
-              শিপিং চার্জ:
-            </h2>
-            <h1
-              className="text-xl font-bold"
-              style={{ color: "#ff6e33", fontSize: "20px" }}
-            >
-              ক্যাটাগরিঃ এ
-            </h1>
-            <h2 className="">৭৪০ টাকা প্রতি কেজি</h2>
-            <p className="text-sm text-gray-700" style={{ paddingBottom: "30px" }}>
-              জুতা, ব্যাগ, জুয়েলারি, যন্ত্রপাতি, স্টিকার, কম্পিউটার এক্সেসরিজ,
-              সিরামিক, ধাতব, চামড়া, রাবার, প্লাস্টিক জাতীয় পণ্য, কসমেটিক্স
-              এক্সেসরিজ, ব্যাটারি ব্যতীত খেলনা / ইলেকট্রনিক্স পণ্য।
-            </p>
-            <h1
-              className="text-xl font-bold"
-              style={{ color: "#ff6e33", fontSize: "20px" }}
-            >
-              ক্যাটাগরিঃ বি
-            </h1>
-            <h2 className="">৯৩০ টাকা প্রতি কেজি</h2>
-            <p className="text-sm text-gray-700" style={{ paddingBottom: "30px" }}>
-              ব্যাটারি জাতীয় যেকোন পণ্য, ডুপ্লিকেট ব্রান্ড বা কপি পণ্য, বীজ,
-              রাসায়নিক দ্রব্য, নেটওয়ার্কিং আইটেম, ম্যাগনেট বা লেজার জাতীয় পণ্য।
-            </p>
-            <h1
-              className="text-xl font-bold"
-              style={{ color: "#ff6e33", fontSize: "20px" }}
-            >
-              ক্যাটাগরিঃ সি
-            </h1>
-            <p className="text-sm text-gray-700">
-              *পোশাক /গার্মেন্টস/হিজাব/ওড়না - ৮৪০ টাকা * শুধু ব্যাটারি/পাওয়ার
-              ব্যাংক – ১২৫০ টাকা * সানগ্লাস - ৩৩০০ টাকা * ট্রিমার – ১৫০০ টাকা *
-              কসমেটিক্স – ১০৮০ টাকা * স্মার্ট ওয়াচ - ১১০০ টাকা * সাধারন ঘড়ি -
-              ১০০০ টাকা * ব্লুটুথ হেডফোন - ১০৫০ টাকা * তরল বা লিকুইড পণ্য - ১০০০
-              টাকা *পারফিউম -১২৫০ টাকা * খাদ্য - ১২৫০ টাকা * পাউডার - ১০৫০ টাকা
-              * জীবন্ত উদ্ভিদ - ১২৫০ টাকা * শিট মাক্স- ১২৫০ টাকা * সিরাম- ১২৫০
-              টাকা
-            </p>
-          </div>
-        </div>
+      <div style={bengaliTextStyle}>
+        <h2 style={headingStyle}>শর্ত সমুহ:</h2>
+        <p style={paragraphStyle}>
+          সর্বনিম্ন ১০০০ টাকার পণ্য অর্ডার করতে হবে। অর্ডার প্লেসের পরে আপনার সাপ্লায়ার থেকে আমাদের চায়না ওয়্যারহাউস পর্যন্ত প্রডাক্ট পৌছানোর ডেলিভারির চার্জ (চায়না লোকাল ডেলিভারি চার্জ) ধার্য হবে। উল্লেখিত পণ্যের ওজন সম্পূর্ণ সঠিক নয়, আনুমানিক মাত্র। বাংলাদেশে আসার পর পণ্যটির প্রকৃত ওজন মেপে শিপিং চার্জ হিসাব করা হবে। পণ্যের ক্যাটাগরির উপর নির্ভর করে শিপিং চার্জ নির্ধারণ করা হবে প্রতি কেজি ৭৪০/৯৩০ টাকা।
+        </p>
+
+        <h2 style={headingStyle}>শিপিং চার্জ:</h2>
+
+        <h1 style={categoryStyle}>ক্যাটাগরিঃ এ</h1>
+        <h2 style={{ marginBottom: '5px' }}>৭৪০ টাকা প্রতি কেজি</h2>
+        <p style={paragraphStyle}>
+          জুতা, ব্যাগ, জুয়েলারি, যন্ত্রপাতি, স্টিকার, কম্পিউটার এক্সেসরিজ, সিরামিক, ধাতব, চামড়া, রাবার, প্লাস্টিক জাতীয় পণ্য, কসমেটিক্স এক্সেসরিজ, ব্যাটারি ব্যতীত খেলনা / ইলেকট্রনিক্স পণ্য।
+        </p>
+
+        <h1 style={categoryStyle}>ক্যাটাগরিঃ বি</h1>
+        <h2 style={{ marginBottom: '5px' }}>৯৩০ টাকা প্রতি কেজি</h2>
+        <p style={paragraphStyle}>
+          ব্যাটারি জাতীয় যেকোন পণ্য, ডুপ্লিকেট ব্রান্ড বা কপি পণ্য, বীজ, রাসায়নিক দ্রব্য, নেটওয়ার্কিং আইটেম, ম্যাগনেট বা লেজার জাতীয় পণ্য।
+        </p>
+
+        <h1 style={categoryStyle}>ক্যাটাগরিঃ সি</h1>
+        <p style={{ ...paragraphStyle, marginBottom: '0' }}>
+          *পোশাক /গার্মেন্টস/হিজাব/ওড়না - ৮৪০ টাকা * শুধু ব্যাটারি/পাওয়ার ব্যাংক – ১২৫০ টাকা * সানগ্লাস - ৩৩০০ টাকা * ট্রিমার – ১৫০০ টাকা * কসমেটিক্স – ১০৮০ টাকা * স্মার্ট ওয়াচ - ১১০০ টাকা * সাধারন ঘড়ি - ১০০০ টাকা * ব্লুটুথ হেডফোন - ১০৫০ টাকা * তরল বা লিকুইড পণ্য - ১০০০ টাকা *পারফিউম -১২৫০ টাকা * খাদ্য - ১২৫০ টাকা * পাউডার - ১০৫০ টাকা * জীবন্ত উদ্ভিদ - ১২৫০ টাকা * শিট মাক্স- ১২৫০ টাকা * সিরাম- ১২৫০ টাকা
+        </p>
+      </div>
+    </div>
 
         {/* Related Products Section */}
         <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gray-50">
