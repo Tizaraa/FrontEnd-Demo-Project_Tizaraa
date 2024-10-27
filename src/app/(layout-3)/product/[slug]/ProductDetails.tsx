@@ -41,7 +41,7 @@ const ShippingInfo: React.FC<{ isDesktop: boolean }> = ({ isDesktop }) => {
             display: isDesktop ? 'none' : 'block',
             marginBottom: '10px',
             padding: '10px',
-            backgroundColor: '#007bff',
+            backgroundColor: '#e74c3c',
             color: 'white',
             border: 'none',
             borderRadius: '5px',
