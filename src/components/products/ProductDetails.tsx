@@ -75,7 +75,7 @@
 "use client";
 import Box from "@component/Box";
 import FlexBox from "@component/FlexBox";
-import Typography, { H1, H2, H6, SemiSpan } from "@component/Typography";
+import Typography, { H1, H2, H5, H6, SemiSpan } from "@component/Typography";
 import Rating from "@component/rating";
 import { currency } from "@utils/utils";
 import { Chip } from "@component/Chip";
@@ -114,26 +114,26 @@ const ProductDetails = ({
       </FlexBox>
       <Box mb="24px">
         <FlexBox alignItems="center">
-          <H2 color="primary.main" mb="4px" lineHeight="1">
+          <H5 color="primary.main" mb="4px" lineHeight="1" fontSize="16px">
             {discountPrice ? (
               <>
                 {currency(discountPrice)}
-                <span style={{ textDecoration: "line-through", color: "gray", marginRight: "10px" }}>
+                <span style={{ textDecoration: "line-through", color: "gray", marginRight: "10px", marginLeft:"10px" }}>
                   {currency(price)}
                 </span>
               </>
             ) : (
               currency(price)
             )}
-          </H2>
+          </H5>
 
           {!!discountPrice && totalDiscount && (
             <Chip
               bg="primary.main"
               color="white"
-              px="0.5rem"
+              px="2px"
               py="0.25rem"
-              ml="1rem"
+              // ml="1rem"
               fontWeight="600"
               fontSize="12px"
               textAlign="center"
