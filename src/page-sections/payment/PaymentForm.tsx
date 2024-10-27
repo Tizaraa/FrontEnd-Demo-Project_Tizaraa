@@ -336,7 +336,7 @@ export default function PaymentForm() {
 
            
             <Button onClick={orderSubmit} variant="outlined" color="primary" type="button" fullwidth>
-              Review
+             Payment
             </Button>
         
    

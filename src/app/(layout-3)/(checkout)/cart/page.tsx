@@ -65,7 +65,7 @@ export default function Cart() {
 
             <Divider mb="1rem" />
 
-            <FlexBox alignItems="center" mb="1rem">
+            {/* <FlexBox alignItems="center" mb="1rem">
               <Typography fontWeight="600" mr="10px">
                 Additional Comments
               </Typography>
@@ -75,15 +75,15 @@ export default function Cart() {
                   Note
                 </Typography>
               </Box>
-            </FlexBox>
+            </FlexBox> */}
+{/* 
+            <TextArea rows={6} fullwidth mb="1rem" /> */}
 
-            <TextArea rows={6} fullwidth mb="1rem" />
+            {/* <Divider mb="1rem" /> */}
 
-            <Divider mb="1rem" />
+            {/* <TextField placeholder="Voucher" fullwidth /> */}
 
-            <TextField placeholder="Voucher" fullwidth />
-
-            <Button variant="outlined" color="primary" mt="1rem" mb="30px" fullwidth>
+            {/* <Button variant="outlined" color="primary" mt="1rem" mb="30px" fullwidth>
               Apply Voucher
             </Button>
 
@@ -114,7 +114,7 @@ export default function Cart() {
 
             <Button variant="outlined" color="primary" my="1rem" fullwidth>
               Calculate Shipping
-            </Button>
+            </Button> */}
 
             <Link href="/checkout">
               <Button variant="contained" color="primary" fullwidth>
