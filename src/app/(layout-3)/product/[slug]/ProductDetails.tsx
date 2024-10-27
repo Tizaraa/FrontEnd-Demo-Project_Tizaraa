@@ -289,8 +289,8 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
         )}
       </div>
 
+      {/* <ProductView description={description} productId={product.product_id} /> */}
       <ProductView description={description} productId={product.product_id} />
-
       {!isDesktop && <ShippingInfo isDesktop={isDesktop} />}
 
       <RelatedProducts relatedProducts={productData.relatedproduct} />
