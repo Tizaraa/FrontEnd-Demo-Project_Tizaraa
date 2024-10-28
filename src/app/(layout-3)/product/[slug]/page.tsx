@@ -727,6 +727,8 @@ import ResponsiveCategory from "./ResponsiveCategory";
 async function fetchProductData(slug: string) {
   try {
     const response = await axios.get(`${ApiBaseUrl.baseUrl}product/details/${slug}`);
+    // console.log(response.data.sitemap);
+    
     return response.data;
   } catch (error) {
     console.error("Error fetching product data:", error);
@@ -768,7 +770,7 @@ export default async function ProductDetailsPage({ params }: Props) {
 
   return (
     <>
-    <ResponsiveCategory />
+    <ResponsiveCategory slug={params.slug} />
     <ProductDetails params={params} />
     </>
   )
