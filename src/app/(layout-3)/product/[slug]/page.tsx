@@ -721,6 +721,7 @@ import { Metadata } from "next";
 import ProductDetails from "./ProductDetails";
 import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import ResponsiveCategory from "./ResponsiveCategory";
 
 // Fetch product data for server-side metadata
 async function fetchProductData(slug: string) {
@@ -765,5 +766,10 @@ interface Props {
 export default async function ProductDetailsPage({ params }: Props) {
   const productData = await fetchProductData(params.slug);
 
-  return <ProductDetails params={params} />;
+  return (
+    <>
+    <ResponsiveCategory />
+    <ProductDetails params={params} />
+    </>
+  )
 }
