@@ -188,7 +188,7 @@
 //               mb="0.5rem"
 //             >
 //               <Typography fontSize="14px" color="text.hint">
-//                 Shipping fee:
+//                  fee:
 //               </Typography>
 //               <H6 my="0px">{currency(order.Order.shippingAddress)}</H6>
 //             </FlexBox>
