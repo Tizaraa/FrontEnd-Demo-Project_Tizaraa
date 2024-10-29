@@ -15,9 +15,9 @@ export const customerCareLinks = [
 ];
 
 export const iconList = [
-  { iconName: "facebook", url: "https://www.facebook.com/UILibOfficial" },
-  { iconName: "twitter", url: "/" },
-  { iconName: "youtube", url: "https://www.youtube.com/channel/UCsIyD-TSO1wQFz-n2Y4i3Rg" },
-  { iconName: "google", url: "/" },
-  { iconName: "instagram", url: "/" }
+  { iconName: "facebook", url: "https://www.facebook.com/TizaraaGroup" },
+  // { iconName: "twitter", url: "/" },
+  // { iconName: "youtube", url: "https://www.youtube.com/channel/UCsIyD-TSO1wQFz-n2Y4i3Rg" },
+  // { iconName: "google", url: "/" },
+  // { iconName: "instagram", url: "/" }
 ];

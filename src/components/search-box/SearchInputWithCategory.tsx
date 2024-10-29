@@ -645,6 +645,7 @@ import StyledSearchBox from "./styled";
 import { useRouter } from 'next/navigation';
 import { usePathname, useSearchParams } from "next/navigation";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import ResponsiveCategory from "app/(layout-3)/product/[slug]/ResponsiveCategory";
 // import { useRouter } from 'next/router';
 
 export default function SearchInputWithCategory() {
@@ -775,5 +776,6 @@ export default function SearchInputWithCategory() {
         </Card>
       )}
     </Box>
+
   );
 }

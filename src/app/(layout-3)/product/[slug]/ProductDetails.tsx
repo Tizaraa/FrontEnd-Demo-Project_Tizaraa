@@ -2,10 +2,20 @@
 
 import React, { Fragment, useState, useEffect } from "react"
 import axios from "axios"
+import ResponsiveCategory from "./ResponsiveCategory"
 import ProductIntro from "@component/products/ProductIntro"
 import ProductView from "@component/products/ProductView"
 import RelatedProducts from "@component/products/RelatedProducts"
 import ApiBaseUrl from "api/ApiBaseUrl"
+
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 
 async function fetchProductData(slug: string) {
   try {
@@ -239,9 +249,12 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
 
   if (!productData || !productData.productsingledetails) {
     return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        Product not found or there was an error loading the product.
-      </div>
+      // <div style={{ padding: '20px', textAlign: 'center' }}>
+      //   Product not found or there was an error loading the product.
+      // </div>
+      <LoaderWrapper>
+      <Vortex />
+    </LoaderWrapper>
     )
   }
 
@@ -252,6 +265,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   const description = product.short_description
 
   return (
+    <>
     <Fragment>
       <div style={{
         display: 'flex',
@@ -289,12 +303,13 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
         )}
       </div>
 
+      {/* <ProductView description={description} productId={product.product_id} /> */}
       <ProductView description={description} productId={product.product_id} />
-
       {!isDesktop && <ShippingInfo isDesktop={isDesktop} />}
 
       <RelatedProducts relatedProducts={productData.relatedproduct} />
     </Fragment>
+    </>
   )
 }
 

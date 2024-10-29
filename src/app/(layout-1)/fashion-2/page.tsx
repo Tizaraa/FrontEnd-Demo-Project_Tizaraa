@@ -15,7 +15,6 @@ import Section7 from "@sections/fashion-2/section-7";
 import Section8 from "@sections/fashion-2/section-8";
 import Section9 from "@sections/fashion-2/section-9";
 import Section10 from "@sections/fashion-2/section-10";
-
 export default async function FashionTwo() {
   const blogs = await api.getBlogs();
   const brands = await api.getBrands();

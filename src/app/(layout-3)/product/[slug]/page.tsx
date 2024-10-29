@@ -721,11 +721,14 @@ import { Metadata } from "next";
 import ProductDetails from "./ProductDetails";
 import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import ResponsiveCategory from "./ResponsiveCategory";
 
 // Fetch product data for server-side metadata
 async function fetchProductData(slug: string) {
   try {
     const response = await axios.get(`${ApiBaseUrl.baseUrl}product/details/${slug}`);
+    // console.log(response.data.sitemap);
+    
     return response.data;
   } catch (error) {
     console.error("Error fetching product data:", error);
@@ -765,5 +768,10 @@ interface Props {
 export default async function ProductDetailsPage({ params }: Props) {
   const productData = await fetchProductData(params.slug);
 
-  return <ProductDetails params={params} />;
+  return (
+    <>
+    <ResponsiveCategory slug={params.slug} />
+    <ProductDetails params={params} />
+    </>
+  )
 }

@@ -11,6 +11,7 @@ import { Button } from "../buttons";
 import Container from "../Container";
 import Typography, { Span } from "../Typography";
 import Categories from "../categories/Categories";
+//import ResponsiveCategory from "app/(layout-3)/product/[slug]/ResponsiveCategory";
 
 import StyledNavbar from "./styles";
 import navbarNavigations from "@data/navbarNavigations";
@@ -147,7 +148,6 @@ export default function Navbar({ navListOpen }: NavbarProps) {
             </Icon>
           </Button>
         </Categories>
-
         <FlexBox style={{ gap: 32 }}>{renderNestedNav(navbarNavigations, true)}</FlexBox>
       </Container>
     </StyledNavbar>
