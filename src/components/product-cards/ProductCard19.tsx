@@ -137,11 +137,11 @@ export default function ProductCard19(props: ProductCard19Props) {
       </CardBox>
 
       {/* QUICK VIEW MODAL */}
-      <ProductQuickView
+      {/* <ProductQuickView
         open={openDialog}
         onClose={toggleDialog}
-        product={{ id, images, price, slug, title: name }}
-      />
+        product={{ id, imgUrl, price, slug, title: name }}
+      /> */}
     </Fragment>
   );
 }

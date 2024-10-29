@@ -135,7 +135,7 @@ export default function ProductCard17(props: ProductCard17Props) {
       <ProductQuickView
         open={openDialog}
         onClose={toggleDialog}
-        product={{ id, images, slug, price, title }}
+        product={{ id, imgUrl, slug, price, title }}
       />
 
       <Box p={1} textAlign="center">
