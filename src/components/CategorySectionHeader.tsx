@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import Icon from "./icon/Icon";
 import FlexBox from "./FlexBox";
-import { H2, SemiSpan } from "./Typography";
+import { H2, H3, H4, H5, SemiSpan } from "./Typography";
 
 // ==============================================================
 export interface CategorySectionHeaderProps {
@@ -27,9 +27,9 @@ export default function CategorySectionHeader({
             {iconName}
           </Icon>
         )}
-        <H2 fontWeight="bold" lineHeight="1">
+        <H3 fontWeight="bold" lineHeight="1">
           {title}
-        </H2>
+        </H3>
       </FlexBox>
 
       {seeMoreLink && (
