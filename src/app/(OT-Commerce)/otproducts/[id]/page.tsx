@@ -636,12 +636,13 @@ const ProductPage = () => {
                       {relatedProduct.Title}
                     </H4>
                   </Link>
-                  <p className="text-sm text-gray-600 mb-2">
-                    Price:{' '}
-                    <span className="font-medium text-gray-900">
-                      {relatedProduct.Price.OriginalPrice} {relatedProduct.Price.OriginalCurrencyCode}
-                    </span>
-                  </p>
+                  <p className="text-sm mb-2"> 
+                  <span style={{ color: '#e74c3c', fontWeight: '500' }}> 
+  BDT {parseFloat(relatedProduct.Price.ConvertedPriceWithoutSign)}
+</span>
+
+</p>
+
                 </Card>
               </Box>
             ))}
@@ -655,7 +656,7 @@ const ProductPage = () => {
                   padding: '10px 20px', 
                   fontSize: '16px', 
                   cursor: 'pointer',
-                  backgroundColor: 'orange',
+                  backgroundColor: '#e74c3c',
                   border: 'none',
                   borderRadius: '8px',
                   color: 'white',
