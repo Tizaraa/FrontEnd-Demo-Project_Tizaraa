@@ -303,6 +303,17 @@ import OTProductsIntro from "@component/products/OTproductsIntro";
 //import Component from "./responsive";
 // const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+import Link from "next/link";
+import Box from "@component/Box";
+import Card from "@component/Card";
+import FlexBox from "@component/FlexBox";
+import { H4 } from "@component/Typography";
+import Rating from "@component/rating";
+import { currency } from "@utils/utils";
+import { Chip } from "@component/Chip";
+
+import styles from "../../../../components/products/RelatedProductsStyle.module.css";
+
 // Interfaces for the models
 interface PictureSize {
   Url: string;
@@ -361,6 +372,30 @@ const ProductPage = () => {
   const [relatedProducts, setRelatedProducts] = useState<RelatedProduct[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [windowWidth, setWindowWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+
+   // Inline style for images
+   const imageStyle = {
+    maxWidth: '100%', // Make images responsive
+    height: 'auto',   // Maintain aspect ratio
+  };
+
+  // Inline style for tables
+  const tableStyle = {
+    width: '100%',      // Table should take full width
+    borderCollapse: 'collapse', 
+  };
+
+  const tdStyle = {
+    padding: '8px', 
+    border: '1px solid #ddd',
+  };
+
+  const [displayCount, setDisplayCount] = useState(10);
+
+  // Function to load more products
+  const handleShowMore = () => {
+    setDisplayCount((prevCount) => prevCount + 10); 
+  };
 
   React.useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -517,7 +552,17 @@ const ProductPage = () => {
        <div style={containerStyle}>
       <div style={descriptionStyle}>
         <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '10px' }}>Description:</h2>
-        <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
+        {/* <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} /> */}
+        <div
+            className="product-description-content"
+            dangerouslySetInnerHTML={{
+                __html: sanitizedDescription
+                    .replace(/<img /g, `<img style="max-width: 100%; height: auto;" `)
+                    .replace(/<table /g, `<table style="width: 100%; border-collapse: collapse;">`)
+                    .replace(/<td /g, `<td style="padding: 8px; border: 1px solid #ddd;">`)
+                    .replace(/<th /g, `<th style="padding: 8px; border: 1px solid #ddd;">`)
+            }}
+        />
       </div>
 
       <div style={bengaliTextStyle}>
@@ -548,51 +593,85 @@ const ProductPage = () => {
     </div>
 
         {/* Related Products Section */}
-        <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gray-50">
-          {relatedProducts.length > 0 ? (
-            <div className="w-full max-w-5xl mx-auto">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                Related Products
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {relatedProducts.map((relatedProduct) => (
-                  <div
-                    key={relatedProduct.Id}
-                    className="bg-white shadow-lg rounded-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 ease-in-out"
-                  >
-                    <img
-                      src={relatedProduct.Image.Url}
-                      alt={relatedProduct.Name}
-                      className="w-full h-48 object-cover mb-4 rounded-lg"
-                    />
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2 truncate">
-                      {relatedProduct.Title}
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-2">
-                      Price:{" "}
-                      <span className="font-medium text-gray-900">
-                        {relatedProduct.Price.OriginalPrice}{" "}
-                        {relatedProduct.Price.OriginalCurrencyCode}
-                      </span>
-                    </p>
-                    {/* View Product Button */}
-                    <a
-                      href={`/product/${relatedProduct.Id}`} // Assuming you have a route to view individual products
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block mt-4 text-center text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300 py-2 px-4 rounded-md text-sm"
+        
+        {relatedProducts.length > 0 ? (
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Related Products
+          </h2>
+
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '16px',
+              justifyContent: 'flex-start',
+            }}
+          >
+            {relatedProducts.slice(0, displayCount).map((relatedProduct) => (
+              <Box
+                key={relatedProduct.Id}
+                className={styles.productCard} // Use the flexbox-based card layout
+                height="350px"
+              >
+                <Card p="1rem" borderRadius={8} display="flex" flexDirection="column" height="100%">
+                  <Link href={`/product/${relatedProduct.Id}`}>
+                    <Box position="relative">
+                      <img
+                        src={relatedProduct.Image.Url}
+                        alt={relatedProduct.Name}
+                        style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }}
+                      />
+                    </Box>
+                    <H4
+                      fontWeight="600"
+                      fontSize="18px"
+                      mb="0.25rem"
+                      style={{
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
                     >
-                      View Product
-                    </a>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <p className="text-gray-600">No related products found.</p>
+                      {relatedProduct.Title}
+                    </H4>
+                  </Link>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Price:{' '}
+                    <span className="font-medium text-gray-900">
+                      {relatedProduct.Price.OriginalPrice} {relatedProduct.Price.OriginalCurrencyCode}
+                    </span>
+                  </p>
+                </Card>
+              </Box>
+            ))}
+          </div>
+
+          {displayCount < relatedProducts.length && (
+              <Box mt="1rem" textAlign="center">
+              <button 
+                onClick={handleShowMore} 
+                style={{ 
+                  padding: '10px 20px', 
+                  fontSize: '16px', 
+                  cursor: 'pointer',
+                  backgroundColor: 'orange',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  outline: 'none'
+                }}
+              >
+                Show More
+              </button>
+            </Box>
           )}
         </div>
-      </div>
+      ) : (
+        <p className="text-gray-600">No related products found.</p>
+      )}
+    </div>
     </div>
   );
 };
