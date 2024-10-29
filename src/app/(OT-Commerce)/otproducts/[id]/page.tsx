@@ -615,7 +615,7 @@ const ProductPage = () => {
                 height="350px"
               >
                 <Card p="1rem" borderRadius={8} display="flex" flexDirection="column" height="100%">
-                  <Link href={`/product/${relatedProduct.Id}`}>
+                  <Link href={`/otproducts/${relatedProduct.Id}`}>
                     <Box position="relative">
                       <img
                         src={relatedProduct.Image.Url}
