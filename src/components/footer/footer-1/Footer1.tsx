@@ -12,7 +12,7 @@ import Typography, { Paragraph } from "@component/Typography";
 // STYLED COMPONENTS
 import { StyledLink } from "./styles";
 // CUSTOM DATA
-import { aboutLinks, customerCareLinks, iconList } from "./data";
+import { aboutLinks, customerCareLinks, customerCareLink, iconList } from "./data";
 
 export default function Footer1() {
   return (
@@ -71,7 +71,7 @@ export default function Footer1() {
                   Earn With Tizaraa
                 </Typography>
                 <div>
-                  {customerCareLinks.map((item, ind) => (
+                  {customerCareLink.map((item, ind) => (
                     <StyledLink href="/" key={ind}>
                       {item}
                     </StyledLink>
