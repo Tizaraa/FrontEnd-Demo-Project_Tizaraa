@@ -20,7 +20,7 @@ const ProductImages = ({ images }: ProductImagesProps) => {
           width={200}
           height={200}
           src={images[selectedImage]}
-          style={{ display: "block", width: "70%", height: "auto" }}
+          style={{ display: "block", width: "150%", height: "auto" }}
         />
       </FlexBox>
 

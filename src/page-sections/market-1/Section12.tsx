@@ -88,7 +88,8 @@ export default function Section12() {
 
   return (
     <div style={{ marginTop: '70px' }}>
-      <CategorySectionCreator title="Find products by country or region" seeMoreLink={`countryList/CountryList`}>
+      {/* <CategorySectionCreator title="Find products by country or region" seeMoreLink={`countryList/CountryList`}> */}
+      <CategorySectionCreator title="Find products by country" seeMoreLink={`countryList/CountryList`}>
         <Grid container spacing={0}>
           {serviceList.length > 0 ? (
             serviceList.map((item) => (

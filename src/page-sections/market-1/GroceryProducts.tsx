@@ -18,6 +18,7 @@ import useWindowSize from "@hook/useWindowSize";
 import ApiBaseUrl from "../../api/ApiBaseUrl";
 import Rating from "@component/rating";
 import { Chip } from "@component/Chip";
+import styles from "../market-1/JustForYouPeoducts/JustForYouParoducts.module.css";
 
 export default function GroceryProducts() {
   const [flashSale, setFlashSale] = useState([]);
@@ -99,6 +100,7 @@ export default function GroceryProducts() {
                 src={item.product_thumbnail} 
                 alt={item.product_name} 
                 style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
+                className={styles.imgPart}
               />
 
      

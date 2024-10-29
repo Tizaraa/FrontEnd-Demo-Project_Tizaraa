@@ -6,7 +6,6 @@ import { H4 } from "@component/Typography";
 import Image from "@component/Image";
 import CategorySectionCreator from "@component/CategorySectionCreator";
 import Link from "next/link";
-import { flex, marginBottom } from "styled-system";
 
 type Product = {
   id: number;
@@ -17,6 +16,7 @@ type Product = {
 
 export default function CountryList() {
   const [serviceList, setServiceList] = useState<Product[]>([]);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   // Fetch data from the API
   useEffect(() => {
@@ -29,50 +29,66 @@ export default function CountryList() {
       .catch((error) => {
         console.error("Error fetching service list:", error);
       });
+
+    // Check if the screen is mobile
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // Adjust the breakpoint as necessary
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial check
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
     <div style={{ width: '100%', overflow: 'hidden' }}>
-      {/* <video
-        style={{ width: '100%', height: '50vh' }} 
-        controls
-        preload="none"
-      >
-        <source src="/path/to/video.mp4" type="video/mp4" />
-        <track
-          src="/path/to/captions.vtt"
-          kind="subtitles"
-          srcLang="en"
-          label="English"
-        />
-        Your browser does not support the video tag.
-      </video> */}
-
       <div style={{ marginTop: '70px' }}>
-        <CategorySectionCreator title="Find products by country or region" seeMoreLink={`countryList/CountryList`}>
+        <CategorySectionCreator title="Find products by country or region">
           <Grid container spacing={0}>
             {serviceList.length > 0 ? (
               serviceList.map((item) => (
-                <Grid item lg={2} md={2} sm={4} xs={6} key={item.id} style={{ textAlign: 'center', marginBottom: '4rem' }}>
-                  <Link href={`/country/${encodeURIComponent(item.location_slug)}`} 
-                  style={{
-                    width: '80%',
-                    height: '150%',
-                    borderRadius: '50%',
-                    // boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                    border: '1px solid rgba(0, 0, 0, 0.2)',
-                    justifyContent: 'center',
-                    display: 'grid',
-                    alignItems: 'center',
-                    overflow: 'hidden',
-                    margin: '0 auto',
-                    
-                  }}>
-                  <div style={{textAlign: 'center'}}>
-                    <Image src={item.image} alt={item.location} width={70} height={50}  />
-                    <H4 mt="10px" mb="5px" textAlign="center">
-                      {item.location}
-                    </H4>
+                <Grid 
+                  item 
+                  lg={2.4} // 5 items per row on large devices (12 / 5 = 2.4)
+                  md={3}   // 4 items per row on medium devices
+                  sm={4}   // 2 items per row on small devices
+                  xs={12}  // 1 item per row on extra small devices
+                  key={item.id} 
+                  style={{ 
+                    textAlign: 'center', 
+                    marginBottom: '5rem', 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center' // Center vertically
+                  }}
+                >
+                  <Link 
+                    href={`/country/${encodeURIComponent(item.location_slug)}`} 
+                    style={{
+                      width: isMobile ? '70%' : '80%', // Adjust width based on mobile view
+                      height: isMobile ? '250px' : '200px', // Adjust height for mobile view
+                      borderRadius: '100%',
+                      border: '1px solid rgba(0, 0, 0, 0.2)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      overflow: 'hidden',
+                      margin: '0 auto',
+                      padding: '20px',
+                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Optional shadow for better visuals
+                      transition: 'box-shadow 0.2s', // Transition for hover effects
+                    }}
+                  >
+                    <div style={{ textAlign: 'center' }}>
+                      <Image 
+                        src={item.image} 
+                        alt={item.location} 
+                        width={isMobile ? 150 : 100} // Adjust width for mobile view
+                        height={isMobile ? 100 : 70} // Adjust height for mobile view
+                      />
+                      <H4 mt="10px" mb="5px" textAlign="center">
+                        {item.location}
+                      </H4>
                     </div>
                   </Link>
                 </Grid>

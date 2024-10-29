@@ -19,6 +19,8 @@ import { Chip } from "@component/Chip";
 import OTsectioncreator from "@component/OTsectioncreator";
 import Icon from "@component/icon/Icon";
 
+import styles from "../market-1/JustForYouPeoducts/JustForYouParoducts.module.css";
+
 // Example: Replace this with your actual base URL or env variable
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://frontend.tizaraa.com/api';
 const pageSize = 20; // Page size for product fetching
@@ -191,6 +193,8 @@ const OTCProducts = () => {
                   src={product.MainPictureUrl}
                   alt={product.Title}
                   style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }}
+
+                  className={styles.imgPart}
                 />
               </Box>
               <H4
