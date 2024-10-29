@@ -34,25 +34,25 @@ export default function Topbar() {
 
           <FlexBox alignItems="center">
             <Icon size="14px">phone-call</Icon>
-            <span>+88012 3456 7894</span>
+            <span>+8801792223444</span>
           </FlexBox>
 
           <FlexBox alignItems="center" ml="20px">
             <Icon size="14px">mail</Icon>
-            <span>support@ui-lib.com</span>
+            <span>tizaraabd2023@gmail.com</span>
           </FlexBox>
         </FlexBox>
 
         <FlexBox className="topbar-right" alignItems="center">
-          <NavLink className="link" href="/">
+          {/* <NavLink className="link" href="/">
             Theme FAQ"s
-          </NavLink>
+          </NavLink> */}
 
-          <NavLink className="link" href="/">
+          {/* <NavLink className="link" href="/">
             Need Help?
-          </NavLink>
+          </NavLink> */}
 
-          <Menu
+          {/* <Menu
             direction="right"
             handler={
               <FlexBox className="dropdown-handler" alignItems="center" height="40px" mr="1.25rem">
@@ -67,7 +67,7 @@ export default function Topbar() {
                 <Small fontWeight="600">{item.title}</Small>
               </MenuItem>
             ))}
-          </Menu>
+          </Menu> */}
 
           {/* <Menu
             direction="right"

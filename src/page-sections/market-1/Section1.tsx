@@ -91,8 +91,8 @@ export default function Section1() {
       <Navbar navListOpen={true} />
 
       <Box bg="gray.white" mb="3.75rem">
-        <div className="container w-75 mx-auto pb-4">
-          <Container pb="2rem">
+        <div className="container w-75 mx-auto pb-1">
+          <Container pb="1rem">
             <Carousel
               spacing="0px"
               infinite={true}

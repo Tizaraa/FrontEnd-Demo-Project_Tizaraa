@@ -14,6 +14,12 @@ export const customerCareLinks = [
   "Returns & Refunds"
 ];
 
+export const customerCareLink = [
+  "Sell on Tizaraa",
+  "Code of Conduct",
+  "Join the Tizaraa Affiliate Program",
+];
+
 export const iconList = [
   { iconName: "facebook", url: "https://www.facebook.com/TizaraaGroup" },
   // { iconName: "twitter", url: "/" },

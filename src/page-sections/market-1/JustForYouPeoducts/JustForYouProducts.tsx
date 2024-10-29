@@ -16,32 +16,28 @@
 // import styles from './JustForYouParoducts.module.css';
 // import Rating from "@component/rating";
 
-
-
 // const JustForYouProducts = () => {
-//   const [products, setProducts] = useState([]); 
-//   const [currentPage, setCurrentPage] = useState(1); 
+//   const [products, setProducts] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
 //   const [lastPage, setLastPage] = useState(1);
-//   const [loading, setLoading] = useState(false); 
-//   const [loadingMore, setLoadingMore] = useState(false); 
+//   const [loading, setLoading] = useState(false);
+//   const [loadingMore, setLoadingMore] = useState(false);
 
 //   const width = useWindowSize();
 
 //   const fetchProducts = async (page = 1) => {
 //     if (loadingMore || loading) return;
 
-//     setLoading(page === 1); 
-//     setLoadingMore(page > 1); 
+//     setLoading(page === 1);
+//     setLoadingMore(page > 1);
 //     try {
 //       const response = await axios.get(`https://seller.tizaraa.com/api/frontend/latest/justoforyou/product/view/'?page=${page}`);
 //       const data = response.data;
 
-
 //       console.log("API Response:", data);
 
-     
 //       if (page === 1) {
-//         setProducts(data.data); 
+//         setProducts(data.data);
 //       } else {
 //         setProducts(prevProducts => [...prevProducts, ...data.data]);
 //       }
@@ -56,14 +52,12 @@
 //     }
 //   };
 
-
 //   useEffect(() => {
 //     fetchProducts();
 //   }, []);
 
-
 //   const handleLoadMore = () => {
-//     fetchProducts(currentPage + 1); 
+//     fetchProducts(currentPage + 1);
 //   };
 
 //   return (
@@ -84,13 +78,12 @@
 
 //         <Card p="2rem" borderRadius={8} style={{ height: '300px' }}>
 //           <Link href={`/product/${item.product_slug}`}>
-            
-//               <img 
-//                 src={item.product_thumbnail} 
-//                 alt={item.product_name} 
-//                 style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
-//               />
 
+//               <img
+//                 src={item.product_thumbnail}
+//                 alt={item.product_name}
+//                 style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }}
+//               />
 
 //             <H4
 //               fontWeight="600"
@@ -134,16 +127,16 @@
 //       >
 //         <Card p="2rem" borderRadius={8} style={{ height: '300px' }}>
 //           <Link href={`/product/${item.product_slug}`}>
-//             {/* <img 
-//               src={item.product_thumbnail} 
-//               alt={item.product_name} 
-//               style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
+//             {/* <img
+//               src={item.product_thumbnail}
+//               alt={item.product_name}
+//               style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }}
 //             /> */}
 //             <Box position="relative">
-//               <img 
-//                 src={item.product_thumbnail} 
-//                 alt={item.product_name} 
-//                 style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
+//               <img
+//                 src={item.product_thumbnail}
+//                 alt={item.product_name}
+//                 style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }}
 //               />
 
 //               {/* Discount Badge */}
@@ -217,11 +210,8 @@
 //   )}
 // </FlexBox>
 
-
-
 //       </Box>
 
-   
 //       {currentPage < lastPage && (
 //         <div className={styles.buttonStyle}>
 //           <button className={styles.loadMore} onClick={handleLoadMore} disabled={loadingMore}>
@@ -230,16 +220,12 @@
 //         </div>
 //       )}
 
-     
 //       {loading && <p>Loading products...</p>}
 //     </CategorySectionCreator>
 //   );
 // };
 
 // export default JustForYouProducts;
-
-
-
 
 "use client";
 
@@ -254,43 +240,45 @@ import { H4 } from "@component/Typography";
 import CategorySectionCreator from "@component/CategorySectionCreator";
 import { currency } from "@utils/utils";
 import Rating from "@component/rating";
-import styles from './JustForYouParoducts.module.css';
+import styles from "./JustForYouParoducts.module.css";
 import { Vortex } from "react-loader-spinner";
-  import styled from "@emotion/styled";
+import styled from "@emotion/styled";
 import { Chip } from "@component/Chip";
-  
-  const LoaderWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `;
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const JustForYouProducts = () => {
-  const [products, setProducts] = useState([]); 
-  const [currentPage, setCurrentPage] = useState(1); 
+  const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
-  const [loading, setLoading] = useState(false); 
-  const [loadingMore, setLoadingMore] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const fetchProducts = async (page = 1) => {
     if (loadingMore || loading) return;
 
-    setLoading(page === 1); 
-    setLoadingMore(page > 1); 
+    setLoading(page === 1);
+    setLoadingMore(page > 1);
     try {
-      const response = await axios.get(`https://seller.tizaraa.com/api/frontend/latest/justoforyou/product/view/'?page=${page}`);
+      const response = await axios.get(
+        `https://seller.tizaraa.com/api/frontend/latest/justoforyou/product/view/'?page=${page}`
+      );
       const data = response.data;
 
       if (page === 1) {
-        setProducts(data.data); 
+        setProducts(data.data);
       } else {
-        setProducts(prevProducts => [...prevProducts, ...data.data]);
+        setProducts((prevProducts) => [...prevProducts, ...data.data]);
       }
 
       setCurrentPage(data.current_page);
       setLastPage(data.last_page);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -302,12 +290,12 @@ const JustForYouProducts = () => {
   }, []);
 
   const handleLoadMore = () => {
-    fetchProducts(currentPage + 1); 
+    fetchProducts(currentPage + 1);
   };
 
   return (
     <CategorySectionCreator title="Just For You">
-      <Box my="-0.25rem" >
+      <Box my="-0.25rem">
         <FlexBox
           flexWrap="wrap"
           justifyContent="space-between"
@@ -320,75 +308,95 @@ const JustForYouProducts = () => {
                 key={item.product_slug}
                 className={styles.productCard} // Use a custom class for responsive sizing
               >
-                <Card p="1rem" borderRadius={8} style={{ height: '300px' }}>
+                <Card p="1rem" borderRadius={8} style={{ height: "300px" }}>
                   <Link href={`/product/${item.product_slug}`}>
-                  <Box position="relative">
-              <img 
-                src={item.product_thumbnail} 
-                alt={item.product_name} 
-                style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
-              />
+                    <Box position="relative">
+                      <img
+                        src={item.product_thumbnail}
+                        alt={item.product_name}
+                        style={{
+                          width: "100%",
+                          borderRadius: "8px",
+                          objectFit: "cover",
+                        }}
+                      />
 
-              {/* Discount Badge */}
-              {!!item.discount_price && item.discount_price < item.seeling_price && (
-  <Chip
-    // top="1rem"
-    left="-10px"
-    p="0.25rem 0.5rem"
-    fontSize="12px"
-    fontWeight="600"
-    bg="primary.main"
-    position="absolute"
-    color="primary.text"
-    zIndex={1}
-   
-    
-  >
-    {Math.floor(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}% off
-  </Chip>
-)}
-            </Box>
+                      {/* Discount Badge */}
+                      {!!item.discount_price &&
+                        item.discount_price < item.seeling_price && (
+                          <Chip
+                            //top="1rem"
+                            left="-10px"
+                            p="0.25rem 0.5rem"
+                            fontSize="12px"
+                            fontWeight="600"
+                            bg="primary.main"
+                            position="absolute"
+                            color="primary.text"
+                            zIndex={1}
+                          >
+                            {Math.floor(
+                              ((item.seeling_price - item.discount_price) /
+                                item.seeling_price) *
+                                100
+                            )}
+                            % off
+                          </Chip>
+                        )}
+                    </Box>
 
                     <H4
                       fontWeight="600"
                       fontSize="18px"
                       mb="0.25rem"
                       style={{
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
                       }}
                     >
                       {item.product_name}
                     </H4>
 
-                  
-            {item.rating > 0 && (
-  <Rating value={item.rating} outof={5} color="warn" readOnly />
-)}
+                    {item.rating > 0 && (
+                      <Rating
+                        value={item.rating}
+                        outof={5}
+                        color="warn"
+                        readOnly
+                      />
+                    )}
 
-{item.discount_price == null && (
-  <FlexBox>
-    <H4 fontWeight="600" fontSize="14px" color="primary.main">
-       {currency(item.seeling_price)}
-    </H4>
-  </FlexBox>
-)}
+                    {item.discount_price == null && (
+                      <FlexBox>
+                        <H4
+                          fontWeight="600"
+                          fontSize="14px"
+                          color="primary.main"
+                        >
+                          {currency(item.seeling_price)}
+                        </H4>
+                      </FlexBox>
+                    )}
 
-{item.discount_price != null && (
-  <FlexBox flexDirection="column">
-    <H4 fontWeight="600" fontSize="14px" color="text.muted">
-     BDT <del>{(item.seeling_price)}</del>
-    </H4>
-    <Box marginTop="4px"> {/* Adjust margin as needed */}
-      <H4 fontWeight="600" fontSize="14px" color="primary.main">
-        {currency(item.discount_price)}
-      </H4>
-    </Box>
-  </FlexBox>
-)}
-
-
+                    {item.discount_price != null && (
+                      <FlexBox flexDirection="column">
+                        <H4 fontWeight="600" fontSize="14px" color="text.muted">
+                          BDT <del>{item.seeling_price}</del>
+                        </H4>
+                        <Box marginTop="4px">
+                          {" "}
+                          {/* Adjust margin as needed */}
+                          <H4
+                            fontWeight="600"
+                            fontSize="14px"
+                            color="primary.main"
+                          >
+                            {currency(item.discount_price)}
+                          </H4>
+                        </Box>
+                      </FlexBox>
+                    )}
                   </Link>
                 </Card>
               </Box>
@@ -401,15 +409,21 @@ const JustForYouProducts = () => {
 
       {currentPage < lastPage && (
         <div className={styles.buttonStyle}>
-          <button className={styles.loadMore} onClick={handleLoadMore} disabled={loadingMore}>
-            {loadingMore ? 'Loading...' : 'Load More'}
+          <button
+            className={styles.loadMore}
+            onClick={handleLoadMore}
+            disabled={loadingMore}
+          >
+            {loadingMore ? "Loading..." : "Load More"}
           </button>
         </div>
       )}
 
-      {loading && <LoaderWrapper>
-            <Vortex />
-          </LoaderWrapper>}
+      {loading && (
+        <LoaderWrapper>
+          <Vortex />
+        </LoaderWrapper>
+      )}
     </CategorySectionCreator>
   );
 };
