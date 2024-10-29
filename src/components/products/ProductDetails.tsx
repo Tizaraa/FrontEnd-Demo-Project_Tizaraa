@@ -131,8 +131,8 @@ const ProductDetails = ({
             <Chip
               bg="primary.main"
               color="white"
-              px="2px"
-              py="0.25rem"
+              px="6px"
+              py="0.28rem"
               // ml="1rem"
               fontWeight="600"
               fontSize="12px"

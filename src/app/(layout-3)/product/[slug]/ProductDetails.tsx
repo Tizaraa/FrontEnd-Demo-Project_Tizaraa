@@ -10,6 +10,7 @@ import ApiBaseUrl from "api/ApiBaseUrl"
 
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import { ProductCard1 } from "@component/product-cards"
 const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -31,7 +32,7 @@ interface Props {
   params: { slug: string }
 }
 
-const ShippingInfo: React.FC<{ isDesktop: boolean }> = ({ isDesktop }) => {
+const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopUrl: string }> = ({ isDesktop,sellerShopName,shopUrl }) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
@@ -196,12 +197,14 @@ const ShippingInfo: React.FC<{ isDesktop: boolean }> = ({ isDesktop }) => {
               alignItems: 'center',
               color: 'white',
               fontSize: '16px',
+              fontWeight: "bold"
             }}>T</span>
             <span style={{
               fontSize: '14px',
               color: '#555',
+              fontWeight: "bold"
             }}>
-              Tizaraa In-House
+              {sellerShopName}
               <br />
               <span style={{
                 color: '#28a745',
@@ -209,7 +212,7 @@ const ShippingInfo: React.FC<{ isDesktop: boolean }> = ({ isDesktop }) => {
               }}>✓</span> Verified Seller
             </span>
           </div>
-          <a href="#" style={{
+          <a href={`/shops/${shopUrl}`} style={{
             color: '#007bff',
             textDecoration: 'underline',
             cursor: 'pointer',
@@ -263,6 +266,8 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   const productImages = productData.productmultiimages
   const images = productImages.map((img: any) => img.product_img)
   const description = product.short_description
+  const sellerShopName = product.seller_shop_name
+  const shopUrl = product.seller_shop_slug
 
   return (
     <>
@@ -298,14 +303,14 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
           <div style={{
             flex: isDesktop ? '1 1 40%' : '1 1 100%',
           }}>
-            <ShippingInfo isDesktop={isDesktop} />
+            <ShippingInfo isDesktop={isDesktop} sellerShopName={sellerShopName} shopUrl={shopUrl} />
           </div>
         )}
       </div>
 
       {/* <ProductView description={description} productId={product.product_id} /> */}
       <ProductView description={description} productId={product.product_id} />
-      {!isDesktop && <ShippingInfo isDesktop={isDesktop} />}
+      {!isDesktop && <ShippingInfo isDesktop={isDesktop} sellerShopName={sellerShopName} shopUrl={shopUrl} />}
 
       <RelatedProducts relatedProducts={productData.relatedproduct} />
     </Fragment>
