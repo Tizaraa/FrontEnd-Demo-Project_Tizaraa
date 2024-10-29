@@ -37,10 +37,10 @@
   border: 1px solid rgba(226, 225, 225, 0.567);
 }
 
-.imgPart img {
+/* .imgPart img {
   width: 100%;
   border-radius: 5px 5px 0 0;
-}
+} */
 
 .contentPart {
   padding: 10px;
@@ -153,7 +153,23 @@
     min-width: 163px;
   }
 }
+@media (max-width: 360px) {
+  .productCard {
+    width: 100% !important; 
+    max-width: 100%;
 
+  }
+
+  .imgPart {
+  /* width: 100%; */
+  height: 200px;
+  
+  object-fit: cover;
+  border-radius: 5px 5px 0 0;
+}
+
+ 
+}
 /* Tablet view: 3 products per row */
 @media (min-width: 768px) and (max-width: 1023px) {
   .productCard {

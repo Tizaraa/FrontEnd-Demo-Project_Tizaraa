@@ -319,6 +319,7 @@ const JustForYouProducts = () => {
                           borderRadius: "8px",
                           objectFit: "cover",
                         }}
+                        className={styles.imgPart}
                       />
 
                       {/* Discount Badge */}

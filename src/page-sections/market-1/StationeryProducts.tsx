@@ -13,6 +13,7 @@ import { Carousel } from "@component/carousel";
 import CategorySectionCreator from "@component/CategorySectionCreator";
 import { currency } from "@utils/utils";
 import useWindowSize from "@hook/useWindowSize";
+import styles from "../market-1/JustForYouPeoducts/JustForYouParoducts.module.css";
 
 
 import ApiBaseUrl from "../../api/ApiBaseUrl";
@@ -99,6 +100,8 @@ export default function StationeryProducts() {
                 src={item.product_thumbnail} 
                 alt={item.product_name} 
                 style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
+
+                className={styles.imgPart}
               />
 
      

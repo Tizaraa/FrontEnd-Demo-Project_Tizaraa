@@ -14,6 +14,8 @@ import CategorySectionCreator from "@component/CategorySectionCreator";
 import { currency } from "@utils/utils";
 import useWindowSize from "@hook/useWindowSize";
 
+import styles from "../JustForYouPeoducts/JustForYouParoducts.module.css";
+
 import ApiBaseUrl from "../../../api/ApiBaseUrl";
 import Rating from "@component/rating";
 import { Chip } from "@component/Chip";
@@ -106,6 +108,8 @@ export default function NewArrivalsProduct() {
                         borderRadius: "8px",
                         objectFit: "cover",
                       }}
+
+                      className={styles.imgPart}
                     />
                   </Box>
 
