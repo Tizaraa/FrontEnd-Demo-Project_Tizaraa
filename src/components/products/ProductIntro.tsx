@@ -111,12 +111,12 @@ export default function ProductIntro({
           />
 
            <FlexBox alignItems="center" mb="1rem" mt="1rem">
-            <SemiSpan>Sold By:</SemiSpan>
+            {/* <SemiSpan>Sold By:</SemiSpan>
             <Link href="#">
               <H6 lineHeight="1" ml="8px">
                 {sellerShopName} 
               </H6>
-            </Link>
+            </Link> */}
           </FlexBox>
         </Grid>
       
