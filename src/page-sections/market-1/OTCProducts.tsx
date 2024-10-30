@@ -59,7 +59,7 @@ const OTCProducts = () => {
         const data = await response.json();
         console.log("Category data:", data);
 
-        const firstItem = data.CategoryInfoList.Content[21];
+        const firstItem = data.CategoryInfoList.Content[35];
         const formattedItem = firstItem
           ? [
               {

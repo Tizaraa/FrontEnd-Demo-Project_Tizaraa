@@ -6,7 +6,7 @@ import NextImage from "@component/NextImage";
 // IMAGES
 import banner1 from "../../../public/assets/images/banners/banner-1.png";
 import banner2 from "../../../public/assets/images/banners/banner-2.png";
-import NewArrivalsProducts from "../../../public/assets/images/banners/New-Arrival.webp"
+import NewArrivalsProducts from "../../../public/assets/images/banners/New-arrival_01.jpg"
 
 export default function Section8() {
   return (

@@ -314,6 +314,8 @@ import { Chip } from "@component/Chip";
 
 import styles from "../../../../components/products/RelatedProductsStyle.module.css";
 
+
+
 // Interfaces for the models
 interface PictureSize {
   Url: string;
@@ -342,6 +344,18 @@ export interface Price {
 }
 
 export interface Product {
+  // Id: string;
+  // Title: string;
+  // OriginalTitle: string;
+  // MainPictureUrl: string;
+  // Pictures: Picture[];
+  // Price: Price;
+  // VendorDisplayName: string;
+  // VendorName: string;
+  // Location: Location;
+  // ExternalItemUrl: string;
+  // Description: string;
+
   Id: string;
   Title: string;
   OriginalTitle: string;
@@ -353,7 +367,21 @@ export interface Product {
   Location: Location;
   ExternalItemUrl: string;
   Description: string;
+  ConfiguredItems?: ConfiguredItem[]; // Add ConfiguredItems type
 }
+type ConfiguredItem = {
+  Id: string;
+  Price: {
+    ConvertedPriceWithoutSign: number; // This should be a number
+    CurrencySign: string;
+  };
+  Quantity: number;
+  SalesCount: number;
+  Configurators: {
+    Vid: string;
+  }[];
+};
+
 
 export interface RelatedProduct {
   Id: string;
@@ -477,6 +505,7 @@ const ProductPage = () => {
         }
 
         const data = await response.json();
+        console.log("details:", data)
 
         if (data && data.Result && data.Result.Item) {
           setProduct(data.Result.Item); // Set the product data
@@ -534,19 +563,20 @@ const ProductPage = () => {
       <div className="max-w-4xl w-full bg-white shadow-lg rounded-lg p-6">
         {/* Replace this section with ProductIntro */}
         <OTProductsIntro
-          images={product.Pictures.map((p) => p.Url)}
-          title={product.Title}
-          price={parseFloat(product.Price.ConvertedPriceWithoutSign)}
-          id={""}
-          sellerShopName={product.VendorDisplayName}
-          rating={4} // Pass the actual rating here
-          discountPrice={0}
-          totalDiscount={0}
-          slug={""}
-          productStock={10}
-          productId={""}
-          sellerId={""}
-        />
+  images={product.Pictures.map((p) => p.Url)}
+  title={product.Title}
+  price={parseFloat(product.Price.ConvertedPriceWithoutSign)}
+  id={product.Id}
+  sellerShopName={product.VendorDisplayName}
+  rating={4} // Replace with actual rating if available
+  discountPrice={0} // Replace with actual discount if available
+  totalDiscount={0} // Replace with actual discount if available
+  slug={""}
+  productStock={10} // Replace with actual stock if available
+  productId={""}
+  sellerId={""}
+  configuredItems={product.ConfiguredItems || []}
+/>
 
        {/* <Component /> */}
        <div style={containerStyle}>
