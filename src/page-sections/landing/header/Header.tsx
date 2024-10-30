@@ -47,7 +47,7 @@ export default function Header() {
         <FlexBox justifyContent="space-between" alignItems="center" height={headerHeight}>
           <Scroll to="top" duration={400} smooth={true} isDynamic>
             <Box cursor="pointer">
-              <NextImage src="https://frontend.tizaraa.com/public/frontend/assets/img/site-logo/tizaraa-logo.png" alt="logo" />
+              <NextImage src={logo} alt="logo" />
             </Box>
           </Scroll>
 
