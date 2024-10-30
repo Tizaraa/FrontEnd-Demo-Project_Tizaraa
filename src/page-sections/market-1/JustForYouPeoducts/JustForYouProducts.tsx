@@ -235,216 +235,10 @@
 
 
 
-// "use client";
-
-// import Link from "next/link";
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-
-// import Box from "@component/Box";
-// import Card from "@component/Card";
-// import FlexBox from "@component/FlexBox";
-// import { H4 } from "@component/Typography";
-// import CategorySectionCreator from "@component/CategorySectionCreator";
-// import { currency } from "@utils/utils";
-// import Rating from "@component/rating";
-// import styles from "./JustForYouParoducts.module.css";
-// import { Vortex } from "react-loader-spinner";
-// import styled from "@emotion/styled";
-// import { Chip } from "@component/Chip";
-
-// const LoaderWrapper = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// `;
-
-// const JustForYouProducts = () => {
-//   const [products, setProducts] = useState([]);
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const [lastPage, setLastPage] = useState(1);
-//   const [loading, setLoading] = useState(false);
-//   const [loadingMore, setLoadingMore] = useState(false);
-
-//   const fetchProducts = async (page = 1) => {
-//     if (loadingMore || loading) return;
-
-//     setLoading(page === 1);
-//     setLoadingMore(page > 1);
-//     try {
-//       const response = await axios.get(
-//         `https://seller.tizaraa.com/api/frontend/latest/justoforyou/product/view/'?page=${page}`
-//       );
-//       const data = response.data;
-
-//       if (page === 1) {
-//         setProducts(data.data);
-//       } else {
-//         setProducts((prevProducts) => [...prevProducts, ...data.data]);
-//       }
-
-//       setCurrentPage(data.current_page);
-//       setLastPage(data.last_page);
-//     } catch (error) {
-//       console.error("Error fetching products:", error);
-//     } finally {
-//       setLoading(false);
-//       setLoadingMore(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchProducts();
-//   }, []);
-
-//   const handleLoadMore = () => {
-//     fetchProducts(currentPage + 1);
-//   };
-
-//   return (
-//     <CategorySectionCreator title="Just For You">
-//       <Box my="-0.25rem">
-//         <FlexBox
-//           flexWrap="wrap"
-//           justifyContent="space-between"
-//           className={styles.flexContainer} // Use a custom class for better control
-//         >
-//           {products.length > 0 ? (
-//             products.map((item) => (
-//               <Box
-//                 py="0.25rem"
-//                 key={item.product_slug}
-//                 className={styles.productCard} // Use a custom class for responsive sizing
-//               >
-//                 <Card p="1rem" borderRadius={8} style={{ height: "300px" }}>
-//                   <Link href={`/product/${item.product_slug}`}>
-//                     <Box position="relative">
-//                       <img
-//                         src={item.product_thumbnail}
-//                         alt={item.product_name}
-//                         style={{
-//                           width: "100%",
-//                           borderRadius: "8px",
-//                           objectFit: "cover",
-//                         }}
-//                         className={styles.imgPart}
-//                       />
-
-//                       {/* Discount Badge */}
-//                       {!!item.discount_price &&
-//                         item.discount_price < item.seeling_price && (
-//                           <Chip
-//                             //top="1rem"
-//                             left="-10px"
-//                             p="0.25rem 0.5rem"
-//                             fontSize="12px"
-//                             fontWeight="600"
-//                             bg="primary.main"
-//                             position="absolute"
-//                             color="primary.text"
-//                             zIndex={1}
-//                           >
-//                             {Math.floor(
-//                               ((item.seeling_price - item.discount_price) /
-//                                 item.seeling_price) *
-//                                 100
-//                             )}
-//                             % off
-//                           </Chip>
-//                         )}
-//                     </Box>
-
-//                     <H4
-//                       fontWeight="600"
-//                       fontSize="18px"
-//                       mb="0.25rem"
-//                       style={{
-//                         whiteSpace: "nowrap",
-//                         overflow: "hidden",
-//                         textOverflow: "ellipsis",
-//                       }}
-//                     >
-//                       {item.product_name}
-//                     </H4>
-
-//                     {item.rating > 0 && (
-//                       <Rating
-//                         value={item.rating}
-//                         outof={5}
-//                         color="warn"
-//                         readOnly
-//                       />
-//                     )}
-
-//                     {item.discount_price == null && (
-//                       <FlexBox>
-//                         <H4
-//                           fontWeight="600"
-//                           fontSize="14px"
-//                           color="primary.main"
-//                         >
-//                           {currency(item.seeling_price)}
-//                         </H4>
-//                       </FlexBox>
-//                     )}
-
-//                     {item.discount_price != null && (
-//                       <FlexBox flexDirection="column">
-//                         <H4 fontWeight="600" fontSize="14px" color="text.muted">
-//                           BDT <del>{item.seeling_price}</del>
-//                         </H4>
-//                         <Box marginTop="4px">
-//                           {" "}
-//                           {/* Adjust margin as needed */}
-//                           <H4
-//                             fontWeight="600"
-//                             fontSize="14px"
-//                             color="primary.main"
-//                           >
-//                             {currency(item.discount_price)}
-//                           </H4>
-//                         </Box>
-//                       </FlexBox>
-//                     )}
-//                   </Link>
-//                 </Card>
-//               </Box>
-//             ))
-//           ) : (
-//             <p>No products available</p>
-//           )}
-//         </FlexBox>
-//       </Box>
-
-//       {currentPage < lastPage && (
-//         <div className={styles.buttonStyle}>
-//           <button
-//             className={styles.loadMore}
-//             onClick={handleLoadMore}
-//             disabled={loadingMore}
-//           >
-//             {loadingMore ? "Loading..." : "Load More"}
-//           </button>
-//         </div>
-//       )}
-
-//       {loading && (
-//         <LoaderWrapper>
-//           <Vortex />
-//         </LoaderWrapper>
-//       )}
-//     </CategorySectionCreator>
-//   );
-// };
-
-// export default JustForYouProducts;
-
-
-
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react"; 
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import Box from "@component/Box";
@@ -463,7 +257,6 @@ const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0; // Added margin for spacing
 `;
 
 const JustForYouProducts = () => {
@@ -472,7 +265,6 @@ const JustForYouProducts = () => {
   const [lastPage, setLastPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
-  const observerRef = useRef(null); // Create a ref for the observer
 
   const fetchProducts = async (page = 1) => {
     if (loadingMore || loading) return;
@@ -481,7 +273,7 @@ const JustForYouProducts = () => {
     setLoadingMore(page > 1);
     try {
       const response = await axios.get(
-       `https://seller.tizaraa.com/api/frontend/latest/justoforyou/product/view/'?page=${page}`
+        `https://seller.tizaraa.com/api/frontend/latest/justoforyou/product/view/'?page=${page}`
       );
       const data = response.data;
 
@@ -505,26 +297,9 @@ const JustForYouProducts = () => {
     fetchProducts();
   }, []);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && currentPage < lastPage && !loadingMore) {
-          fetchProducts(currentPage + 1);
-        }
-      },
-      { threshold: 1.0 } // Trigger when the last product is in view
-    );
-
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
-    }
-
-    return () => {
-      if (observerRef.current) {
-        observer.unobserve(observerRef.current);
-      }
-    };
-  }, [observerRef, currentPage, lastPage, loadingMore]);
+  const handleLoadMore = () => {
+    fetchProducts(currentPage + 1);
+  };
 
   return (
     <CategorySectionCreator title="Just For You">
@@ -532,14 +307,14 @@ const JustForYouProducts = () => {
         <FlexBox
           flexWrap="wrap"
           justifyContent="space-between"
-          className={styles.flexContainer}
+          className={styles.flexContainer} // Use a custom class for better control
         >
           {products.length > 0 ? (
             products.map((item) => (
               <Box
                 py="0.25rem"
                 key={item.product_slug}
-                className={styles.productCard}
+                className={styles.productCard} // Use a custom class for responsive sizing
               >
                 <Card p="1rem" borderRadius={8} style={{ height: "300px" }}>
                   <Link href={`/product/${item.product_slug}`}>
@@ -559,6 +334,7 @@ const JustForYouProducts = () => {
                       {!!item.discount_price &&
                         item.discount_price < item.seeling_price && (
                           <Chip
+                            //top="1rem"
                             left="-10px"
                             p="0.25rem 0.5rem"
                             fontSize="12px"
@@ -618,6 +394,8 @@ const JustForYouProducts = () => {
                           BDT <del>{item.seeling_price}</del>
                         </H4>
                         <Box marginTop="4px">
+                          {" "}
+                          {/* Adjust margin as needed */}
                           <H4
                             fontWeight="600"
                             fontSize="14px"
@@ -638,17 +416,27 @@ const JustForYouProducts = () => {
         </FlexBox>
       </Box>
 
-      {/* Show loader when loading more products */}
-      {loadingMore && (
+      {currentPage < lastPage && (
+        <div className={styles.buttonStyle}>
+          <button
+            className={styles.loadMore}
+            onClick={handleLoadMore}
+            disabled={loadingMore}
+          >
+            {loadingMore ? "Loading..." : "Load More"}
+          </button>
+        </div>
+      )}
+
+      {loading && (
         <LoaderWrapper>
           <Vortex />
         </LoaderWrapper>
       )}
-
-      {/* Add a dummy div at the bottom to observe */}
-      <div ref={observerRef} style={{ height: "20px", width: "100%" }} />
     </CategorySectionCreator>
   );
 };
 
 export default JustForYouProducts;
+
+
