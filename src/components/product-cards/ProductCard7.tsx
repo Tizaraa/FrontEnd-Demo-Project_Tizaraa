@@ -370,19 +370,26 @@ export default function ProductCard7(props: ProductCard7Props) {
   const { dispatch } = useAppContext();
   const [quantity, setQuantity] = useState(qty);
 
-  const handleCartAmountChange = (amount: number) => {
-    setQuantity(amount);
+  const handleCartAmountChange = (amount: number) => () => {
+        dispatch({
+          type: "CHANGE_CART_AMOUNT",
+          payload: { qty: amount, name, price, imgUrl, id, discountPrice, productId, sellerId, b2bPricing }
+        });
+      };
+
+  // const handleCloseButtonClick = () => {
+  //   setQuantity(0);
+  //   dispatch({
+  //     type: "REMOVE_FROM_CART",
+  //     payload: { id }
+  //   });
+  // };
+
+  const handleCloseButtonClick = (amount: number, product: any) => () => {
+    //setQuantity(0);
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { qty: amount, name, price, imgUrl, id, discountPrice, productId, sellerId, b2bPricing }
-    });
-  };
-
-  const handleCloseButtonClick = () => {
-    setQuantity(0);
-    dispatch({
-      type: "REMOVE_FROM_CART",
-      payload: { id }
+      payload: { ...product, qty: amount }
     });
   };
 
@@ -406,7 +413,7 @@ export default function ProductCard7(props: ProductCard7Props) {
           </Typography>
         </Link>
         <Box position="absolute" right="1rem" top="1rem">
-          <IconButton padding="4px" ml="12px" onClick={handleCloseButtonClick}>
+          <IconButton padding="4px" ml="12px" onClick={handleCartAmountChange(0)}>
             <Icon size="1.25rem">close</Icon>
           </IconButton>
         </Box>
