@@ -139,8 +139,7 @@ interface LayoutActionType {
 export type ActionType =
   | { type: 'TOGGLE_HEADER'; payload: boolean }
   | { type: 'CHANGE_CART_AMOUNT'; payload: CartItem }
+  | { type: 'REMOVE_FROM_CART'; payload: { id: string | number } }
   | { type: 'LOGIN'; payload: { authToken: string, userInfo: UserInfo } }
   | { type: 'LOGOUT' }
   | { type: 'UPDATE_USER_INFO'; payload: UserInfo };
-
-
