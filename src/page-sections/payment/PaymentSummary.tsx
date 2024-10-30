@@ -33,6 +33,7 @@ export default function PaymentSummary() {
 : "-";
 
 
+
   return (
     <Card1>
        
@@ -104,7 +105,8 @@ export default function PaymentSummary() {
       <Divider mb="1rem" />
 
       <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
-      {currency(getTotalPrice())}
+      {currency(getTotalPrice() + (parseFloat(deliveryChargeDisplay) || 0))}
+
       </Typography>
     </Card1>
   );
