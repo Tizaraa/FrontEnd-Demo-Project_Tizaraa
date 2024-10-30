@@ -32,7 +32,7 @@ interface Props {
   params: { slug: string }
 }
 
-const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopUrl: string }> = ({ isDesktop,sellerShopName,shopUrl }) => {
+const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopUrl: string; delivery_type: string }> = ({ isDesktop,sellerShopName,shopUrl,delivery_type }) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
@@ -81,7 +81,7 @@ const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopU
               width: '30px',
               height: '30px',
               marginRight: '10px',
-              backgroundColor: '#ff8c00',
+              backgroundColor: '#E94560',
               borderRadius: '50%',
               display: 'flex',
               justifyContent: 'center',
@@ -92,7 +92,7 @@ const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopU
             <span style={{
               fontSize: '14px',
               color: '#555',
-            }}>Instant delivery</span>
+            }}>{delivery_type}</span>
           </div>
         </div>
         
@@ -112,7 +112,7 @@ const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopU
               width: '30px',
               height: '30px',
               marginRight: '10px',
-              backgroundColor: '#ff8c00',
+              backgroundColor: '#E94560',
               borderRadius: '50%',
               display: 'flex',
               justifyContent: 'center',
@@ -124,11 +124,12 @@ const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopU
               fontSize: '14px',
               color: '#555',
             }}>
-              Contact us 24 hours a day, 7 days a week. <a href="#" style={{
+              Contact us 24 hours a day, 7 days a week. 
+              {/* <a href="#" style={{
                 color: '#007bff',
                 textDecoration: 'underline',
                 cursor: 'pointer',
-              }}>View details</a>
+              }}>View details</a> */}
             </span>
           </div>
         </div>
@@ -149,7 +150,7 @@ const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopU
               width: '30px',
               height: '30px',
               marginRight: '10px',
-              backgroundColor: '#ff8c00',
+              backgroundColor: '#E94560',
               borderRadius: '50%',
               display: 'flex',
               justifyContent: 'center',
@@ -161,11 +162,12 @@ const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopU
               fontSize: '14px',
               color: '#555',
             }}>
-              Eligible for refunds within 30 days of receiving products. <a href="#" style={{
+              Eligible for refunds within 30 days of receiving products. 
+              {/* <a href="#" style={{
                 color: '#007bff',
                 textDecoration: 'underline',
                 cursor: 'pointer',
-              }}>View more</a>
+              }}>View more</a> */}
             </span>
           </div>
         </div>
@@ -190,19 +192,20 @@ const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopU
               width: '30px',
               height: '30px',
               marginRight: '10px',
-              backgroundColor: '#ff8c00',
+              backgroundColor: '#E94560',
               borderRadius: '50%',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               color: 'white',
               fontSize: '16px',
-              fontWeight: "bold"
+              fontWeight: "bold",
+              textAlign: "center"
             }}>T</span>
             <span style={{
               fontSize: '14px',
               color: '#555',
-              fontWeight: "bold"
+              fontWeight: "bold",
             }}>
               {sellerShopName}
               <br />
@@ -213,11 +216,14 @@ const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopU
             </span>
           </div>
           <a href={`/shops/${shopUrl}`} style={{
-            color: '#007bff',
-            textDecoration: 'underline',
+            color: '#fff',
+            backgroundColor: "#E94560",
+            textDecoration: 'none',
             cursor: 'pointer',
-            display: 'block',
+            display: 'inline-block',
             marginTop: '10px',
+            padding: "5px 10px",
+            borderRadius: "10px"
           }}>Visit Profile</a>
         </div>
       </>
@@ -268,6 +274,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   const description = product.short_description
   const sellerShopName = product.seller_shop_name
   const shopUrl = product.seller_shop_slug
+  const delivery_type = product.delivereyType
 
   return (
     <>
@@ -303,14 +310,14 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
           <div style={{
             flex: isDesktop ? '1 1 40%' : '1 1 100%',
           }}>
-            <ShippingInfo isDesktop={isDesktop} sellerShopName={sellerShopName} shopUrl={shopUrl} />
+            <ShippingInfo isDesktop={isDesktop} sellerShopName={sellerShopName} shopUrl={shopUrl} delivery_type={delivery_type} />
           </div>
         )}
       </div>
 
       {/* <ProductView description={description} productId={product.product_id} /> */}
       <ProductView description={description} productId={product.product_id} />
-      {!isDesktop && <ShippingInfo isDesktop={isDesktop} sellerShopName={sellerShopName} shopUrl={shopUrl} />}
+      {!isDesktop && <ShippingInfo isDesktop={isDesktop} sellerShopName={sellerShopName} shopUrl={shopUrl} delivery_type={delivery_type} />}
 
       <RelatedProducts relatedProducts={productData.relatedproduct} />
     </Fragment>

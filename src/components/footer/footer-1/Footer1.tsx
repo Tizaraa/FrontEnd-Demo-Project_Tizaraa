@@ -131,7 +131,7 @@ export default function Footer1() {
                   <Image
                     alt="logo"
                     mb="1.25rem"
-                    src="/assets/images/tizaraa_logo.webp"
+                    src="https://frontend.tizaraa.com/public/frontend/assets/img/site-logo/tizaraa-logo.png"
                   />
                 </Link>
 

@@ -65,7 +65,7 @@ const StyledCarouselCard1 = styled.div`
     width: 100%;
     img {
       width: 100%;
-       height: 420px;
+      height: 420px;
     object-fit: fill;
       
       
@@ -79,6 +79,12 @@ const StyledCarouselCard1 = styled.div`
     .title {
       font-size: 32px;
     }
+    .image-holder{
+    img {
+      width: 100%;
+      height: 300px;
+      object-fit: fill;
+    }
   }
 
   @media only screen and (max-width: 425px) {
@@ -88,6 +94,13 @@ const StyledCarouselCard1 = styled.div`
     .title + * {
       font-size: 13px;
     }
+    .image-holder{
+    img {
+      width: 100%;
+      height: 300px;
+      object-fit: fill;
+    }
+  }
     .button-link {
       font-size: 13px;
       padding: 0.66rem 0.95rem;

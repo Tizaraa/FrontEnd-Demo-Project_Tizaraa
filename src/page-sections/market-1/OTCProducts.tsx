@@ -13,7 +13,6 @@ import CategorySectionCreator from "@component/CategorySectionCreator";
 import { currency } from "@utils/utils";
 import useWindowSize from "@hook/useWindowSize";
 
-
 import Rating from "@component/rating";
 import { Chip } from "@component/Chip";
 import OTsectioncreator from "@component/OTsectioncreator";
@@ -22,18 +21,20 @@ import Icon from "@component/icon/Icon";
 import styles from "../market-1/JustForYouPeoducts/JustForYouParoducts.module.css";
 
 // Example: Replace this with your actual base URL or env variable
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://frontend.tizaraa.com/api';
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://frontend.tizaraa.com/api";
 const pageSize = 20; // Page size for product fetching
 
 const OTCProducts = () => {
-  const [menuItems, setMenuItems] = useState<{ id: string; name: string; link: string }[]>([]);
+  const [menuItems, setMenuItems] = useState<
+    { id: string; name: string; link: string }[]
+  >([]);
   const [products, setProducts] = useState([]); // State for storing products
   const [loading, setLoading] = useState(true); // Initial loading state
   const [loadingMore, setLoadingMore] = useState(false); // State for loading more products
   const [error, setError] = useState<string | null>(null);
   const [framePosition, setFramePosition] = useState(0); // Frame position for product fetching
   const [hasMore, setHasMore] = useState(true); // State to track if more products are available
-
 
   const width = useWindowSize();
   const [visibleSlides, setVisibleSlides] = useState(5);
@@ -45,8 +46,6 @@ const OTCProducts = () => {
     else setVisibleSlides(5);
   }, [width]);
 
-
-  
   // Fetch categories
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -62,11 +61,13 @@ const OTCProducts = () => {
 
         const firstItem = data.CategoryInfoList.Content[35];
         const formattedItem = firstItem
-          ? [{
-              id: firstItem.Id,
-              name: firstItem.Name,
-              link: `/OtCategory/${firstItem.Id}`,
-            }]
+          ? [
+              {
+                id: firstItem.Id,
+                name: firstItem.Name,
+                link: `/OtCategory/${firstItem.Id}`,
+              },
+            ]
           : [];
 
         setMenuItems(formattedItem);
@@ -85,52 +86,59 @@ const OTCProducts = () => {
     fetchMenuItems();
   }, []);
 
-
-  
   // Fetch products by category
-  const fetchCategoryData = useCallback(async (position: number, categoryId: string) => {
-    setLoading(position === 0);
-    setLoadingMore(position > 0);
-    try {
-      console.log(`Fetching products for position: ${position} and category: ${categoryId}`);
-      const response = await fetch(`${API_BASE_URL}/otpi/items`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          xmlParameters: `<SearchItemsParameters><CategoryId>${categoryId}</CategoryId></SearchItemsParameters>`,
-          framePosition: position,
-          frameSize: pageSize,
-        }),
-      });
+  const fetchCategoryData = useCallback(
+    async (position: number, categoryId: string) => {
+      setLoading(position === 0);
+      setLoadingMore(position > 0);
+      try {
+        console.log(
+          `Fetching products for position: ${position} and category: ${categoryId}`
+        );
+        const response = await fetch(`${API_BASE_URL}/otpi/items`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            xmlParameters: `<SearchItemsParameters><CategoryId>${categoryId}</CategoryId></SearchItemsParameters>`,
+            framePosition: position,
+            frameSize: pageSize,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+
+        const data = await response.json();
+
+        console.log("products:", data);
+        const newProducts = data.Result.Items.Content;
+
+        setProducts((prevProducts) => {
+          const existingIds = new Set(
+            prevProducts.map((product) => product.Id)
+          );
+          const filteredNewProducts = newProducts.filter(
+            (product) => !existingIds.has(product.Id)
+          );
+          return [...prevProducts, ...filteredNewProducts];
+        });
+
+        if (newProducts.length < pageSize) {
+          setHasMore(false);
+        }
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
       }
-
-      const data = await response.json();
-      
-      console.log("products:", data)
-      const newProducts = data.Result.Items.Content;
-
-      setProducts((prevProducts) => {
-        const existingIds = new Set(prevProducts.map((product) => product.Id));
-        const filteredNewProducts = newProducts.filter((product) => !existingIds.has(product.Id));
-        return [...prevProducts, ...filteredNewProducts];
-      });
-
-      if (newProducts.length < pageSize) {
-        setHasMore(false);
-      }
-    } catch (err) {
-      console.error(err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
-    }
-  }, []);
+    },
+    []
+  );
 
   // Load more products
   const loadMoreProducts = () => {
@@ -156,91 +164,105 @@ const OTCProducts = () => {
 
   return (
     <div>
-        <OTsectioncreator 
-  title={menuItems.length > 0 ? menuItems[0].name : 'No Category Available'}
-  seeMoreLink={
-    menuItems.length > 0 ? (
-      <ul>
-        {menuItems.map((item) => (
-          <div key={item.id}>
-            <a href={item.link}><FlexBox alignItems="center" ml="0.5rem" color="text.muted">
-            <SemiSpan mr="0.5rem">View all</SemiSpan>
-            <Icon size="12px" defaultcolor="currentColor">
-              right-arrow
-            </Icon>
-          </FlexBox></a>
-          </div>
-        ))}
-      </ul>
-    ) : (
-      <ul>
-        <li>No categories available</li>
-      </ul>
-    )
-  }
->
-
-
-<Box my="-0.25rem">
-  <Carousel totalSlides={products.length} visibleSlides={visibleSlides}>
-    {products.length > 0 ? (
-      products.map((product) => (
-        <Box py="0.25rem" key={product.Id}>
-          <Card p="1rem" borderRadius={8} style={{ height: '300px' }}>
-            <Link href={`/otproducts/${product.Id}`}>
-              <Box position="relative">
-                <img
-                  src={product.MainPictureUrl}
-                  alt={product.Title}
-                  style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }}
-
-                  className={styles.imgPart}
-                />
-              </Box>
-              <H4
-                fontWeight="600"
-                fontSize="18px"
-                mb="0.25rem"
-                style={{
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis', 
-                }}
-              >
-                {product.Title}
-              </H4>
-              <FlexBox flexDirection="column">
-                {product.Price.DiscountPrice > 0 ? (
-                  <>
-                    <H4 fontWeight="600" fontSize="14px" color="text.muted">
-                      BDT <del>{product.Price.OriginalPrice}</del>
-                    </H4>
-                    <Box marginTop="4px">
-                      <H4 fontWeight="600" fontSize="14px" color="primary.main">
-                        {currency(product.Price.DiscountPrice)}
+      <OTsectioncreator 
+        title={
+          menuItems.length > 0 ? menuItems[0].name : "No Category Available"
+        }
+        
+        seeMoreLink={
+          menuItems.length > 0 ? (
+            <ul>
+              {menuItems.map((item) => (
+                <div key={item.id}>
+                  <a href={item.link}>
+                    <FlexBox alignItems="center" ml="0.5rem" color="text.muted">
+                      <SemiSpan mr="0.5rem">View all</SemiSpan>
+                      <Icon size="12px" defaultcolor="currentColor">
+                        right-arrow
+                      </Icon>
+                    </FlexBox>
+                  </a>
+                </div>
+              ))}
+            </ul>
+          ) : (
+            <ul>
+              <li>No categories available</li>
+            </ul>
+          )
+        }
+      >
+        <Box my="-0.25rem">
+          <Carousel totalSlides={products.length} visibleSlides={visibleSlides}>
+            {products.length > 0 ? (
+              products.map((product) => (
+                <Box py="0.25rem" key={product.Id}>
+                  <Card p="1rem" borderRadius={8} style={{ height: "300px" }}>
+                    <Link href={`/otproducts/${product.Id}`}>
+                      <Box position="relative">
+                        <img
+                          src={product.MainPictureUrl}
+                          alt={product.Title}
+                          style={{
+                            width: "100%",
+                            borderRadius: "8px",
+                            objectFit: "cover",
+                          }}
+                          className={styles.imgPart}
+                        />
+                      </Box>
+                      <H4
+                        fontWeight="600"
+                        fontSize="18px"
+                        mb="0.25rem"
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {product.Title}
                       </H4>
-                    </Box>
-                  </>
-                ) : (
-                  <H4 fontWeight="600" fontSize="14px" color="primary.main">
-                    {currency(product.Price.ConvertedPriceWithoutSign)}
-                  </H4>
-                )}
-              </FlexBox>
-            </Link>
-          </Card>
+                      <FlexBox flexDirection="column">
+                        {product.Price.DiscountPrice > 0 ? (
+                          <>
+                            <H4
+                              fontWeight="600"
+                              fontSize="14px"
+                              color="text.muted"
+                            >
+                              BDT <del>{product.Price.OriginalPrice}</del>
+                            </H4>
+                            <Box marginTop="4px">
+                              <H4
+                                fontWeight="600"
+                                fontSize="14px"
+                                color="primary.main"
+                              >
+                                {currency(product.Price.DiscountPrice)}
+                              </H4>
+                            </Box>
+                          </>
+                        ) : (
+                          <H4
+                            fontWeight="600"
+                            fontSize="14px"
+                            color="primary.main"
+                          >
+                            {currency(product.Price.ConvertedPriceWithoutSign)}
+                          </H4>
+                        )}
+                      </FlexBox>
+                    </Link>
+                  </Card>
+                </Box>
+              ))
+            ) : (
+              <div>No products available</div>
+            )}
+          </Carousel>
         </Box>
-      ))
-    ) : (
-      <div>No products available</div>
-    )}
-  </Carousel>
-</Box>
-
-</OTsectioncreator>
-
-
-      
+      </OTsectioncreator>
 
       {/* <h2>Category: {menuItems.length > 0 ? menuItems[0].name : 'No Category Available'}</h2>
 
@@ -257,8 +279,7 @@ const OTCProducts = () => {
         )}
       </ul> */}
 
-
-{/* products show  */}
+      {/* products show  */}
       {/* <h3>Products</h3> */}
       {/* <div>
         {products.length > 0 ? (
@@ -277,13 +298,11 @@ const OTCProducts = () => {
     </div> */}
     </div>
 
-
-
-// {hasMore && (
-//   <button onClick={loadMoreProducts} disabled={loadingMore}>
-//     {loadingMore ? 'Loading more...' : 'Load More Products'}
-//   </button>
-// )}
+    // {hasMore && (
+    //   <button onClick={loadMoreProducts} disabled={loadingMore}>
+    //     {loadingMore ? 'Loading more...' : 'Load More Products'}
+    //   </button>
+    // )}
   );
 };
 

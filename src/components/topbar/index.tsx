@@ -15,9 +15,11 @@ export default function Topbar() {
   const [currency, setCurrency] = useState(currencyList[0]);
   const [language, setLanguage] = useState(languageList[0]);
 
-  const handleCurrencyClick = (curr: typeof currency) => () => setCurrency(curr);
+  const handleCurrencyClick = (curr: typeof currency) => () =>
+    setCurrency(curr);
 
-  const handleLanguageClick = (lang: typeof language) => () => setLanguage(lang);
+  const handleLanguageClick = (lang: typeof language) => () =>
+    setLanguage(lang);
 
   useEffect(() => {
     // get language from browser
@@ -26,10 +28,20 @@ export default function Topbar() {
 
   return (
     <StyledTopbar>
-      <Container display="flex" justifyContent="space-between" alignItems="center" height="100%">
+      <Container
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        height="100%"
+      >
         <FlexBox className="topbar-left">
           <div className="logo">
-            <img src="/assets/images/tizaraa_logo.webp" alt="logo" />
+            <a href="/" style={{display: "block"}}>
+              <img
+                src="https://frontend.tizaraa.com/public/frontend/assets/img/site-logo/tizaraa-logo.png"
+                alt="logo"
+              />
+            </a>
           </div>
 
           <FlexBox alignItems="center">
@@ -94,12 +106,12 @@ export default function Topbar() {
 const languageList = [
   { title: "EN", imgUrl: "/assets/images/flags/usa.png" },
   { title: "BN", imgUrl: "/assets/images/flags/bd.png" },
-  { title: "HN", imgUrl: "/assets/images/flags/in.png" }
+  { title: "HN", imgUrl: "/assets/images/flags/in.png" },
 ];
 
 const currencyList = [
   { title: "USD", imgUrl: "/assets/images/flags/usa.png" },
   { title: "EUR", imgUrl: "/assets/images/flags/uk.png" },
   { title: "BDT", imgUrl: "/assets/images/flags/bd.png" },
-  { title: "INR", imgUrl: "/assets/images/flags/in.png" }
+  { title: "INR", imgUrl: "/assets/images/flags/in.png" },
 ];
