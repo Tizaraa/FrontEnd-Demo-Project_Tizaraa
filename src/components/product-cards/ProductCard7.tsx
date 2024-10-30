@@ -279,9 +279,10 @@ export default function ProductCard7(props: ProductCard7Props) {
         </Typography>
         )}
 
-        <Typography fontWeight={600} fontSize="14px" color="primary.main" mt="4px">
+        {/* <Typography fontWeight={600} fontSize="14px" color="primary.main" mt="4px">
           {currency(qty * (discountPrice ?? price))}
-        </Typography>
+        </Typography> */}
+        
           </FlexBox>
 
           <FlexBox alignItems="center">

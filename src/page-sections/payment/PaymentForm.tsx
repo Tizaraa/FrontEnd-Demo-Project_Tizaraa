@@ -123,7 +123,8 @@ export default function PaymentForm() {
         router.push("/orders");
     } catch (error) {
         console.error("Error placing order:", error);
-        alert("Failed to place order. Please try again.");
+        // alert("Failed to place order. Please try again.");
+            toast.error("Error placing order!");
         router.push("/payment")
     }
 };
@@ -171,6 +172,7 @@ export default function PaymentForm() {
     setPaymentMethod(name);
   };
 
+  
 
   return (
     <Fragment>
