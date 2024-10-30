@@ -27,7 +27,7 @@ export default function CategorySectionHeader({
             {iconName}
           </Icon>
         )}
-        <H3 fontWeight="bold" lineHeight="1">
+        <H3 fontWeight="bold" lineHeight="``1">
           {title}
         </H3>
       </FlexBox>
@@ -36,7 +36,7 @@ export default function CategorySectionHeader({
         <Link href={seeMoreLink}>
           <FlexBox alignItems="center" ml="0.5rem" color="text.muted">
             <SemiSpan mr="0.5rem">View all</SemiSpan>
-            <Icon size="12px" defaultcolor="currentColor">
+            <Icon size="10px" defaultcolor="currentColor">
               right-arrow
             </Icon>
           </FlexBox>
