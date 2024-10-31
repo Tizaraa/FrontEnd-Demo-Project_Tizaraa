@@ -157,6 +157,7 @@ const ShippingInfo: React.FC<{ isDesktop: boolean; sellerShopName: string; shopU
               alignItems: 'center',
               color: 'white',
               fontSize: '16px',
+              padding: "5px 10px",
             }}>💳</span>
             <span style={{
               fontSize: '14px',
