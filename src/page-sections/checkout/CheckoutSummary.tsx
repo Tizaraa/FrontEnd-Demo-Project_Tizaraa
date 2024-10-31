@@ -65,16 +65,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
         </FlexBox>
       </FlexBox>
 
-      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-        <Typography color="text.hint">Shipping:</Typography>
-
-        <FlexBox alignItems="flex-end">
-          <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-         {/* { userShippingdata.delivery_charge} */}
-         {deliveryCharge ? deliveryCharge : "-"}
-          </Typography>
-        </FlexBox>
-      </FlexBox>
+   
 
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
         <Typography color="text.hint">Tax:</Typography>

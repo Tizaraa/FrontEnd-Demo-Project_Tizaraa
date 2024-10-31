@@ -156,7 +156,7 @@ const SizeColorSelector = ({
         >
           <Box style={{ display: 'flex', flexDirection: 'column' }}>
             <Typography variant="h6">{`${item.size} - ${item.color}`}</Typography>
-            <Typography variant="body1">{`Price: $${item.price}`}</Typography>
+            <Typography variant="body1">{`Price: ${item.price}`}</Typography>
           </Box>
 
           {/* Display B2B Pricing */}
@@ -166,7 +166,7 @@ const SizeColorSelector = ({
             </Typography>
             {item.b2bPricing.map((b2b, b2bIndex) => (
               <Typography key={b2bIndex} variant="body2">
-                {`Min Qty: ${b2b.min_qty} - Price: $${b2b.price}`}
+                {`Min Qty: ${b2b.min_qty} - Price: ${b2b.price}`}
               </Typography>
             ))}
           </Box>
