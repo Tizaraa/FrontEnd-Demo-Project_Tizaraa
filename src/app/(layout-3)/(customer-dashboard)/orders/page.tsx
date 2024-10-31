@@ -13,6 +13,7 @@ import authService from "services/authService";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
+//import OrdersPage from "@sections/payment/OrdersPage";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -50,7 +51,7 @@ export default function OrderList() {
     if (orderSuccess) {
       // alert("Order placed successfully!");
       toast.success("Order placed successfully!");
-      setOrderSuccess(false); 
+      //setOrderSuccess(false); 
     }
   }, [orderSuccess]);
 
