@@ -105,6 +105,7 @@ export default function CheckoutAddress() {
     console.log("Delivery Charge:", item.deliveryCharge || "Delivery charge not available");
   };
 
+  
   return (
     <Fragment>
       {addresses.length > 0 ? (
@@ -190,7 +191,8 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
         </Chip>
 
         <Typography className="pre" m="6px" textAlign="left">
-          {item.address}, {item.province_id}, {item.city_id}, {item.area_id}
+          {item.address}
+           {/* {item.province_id}, {item.city_id}, {item.area_id} */}
         </Typography>
       </FlexBox>
     </Grid>
