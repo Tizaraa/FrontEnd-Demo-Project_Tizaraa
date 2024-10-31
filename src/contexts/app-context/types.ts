@@ -178,8 +178,10 @@ export interface CartItem {
   id: string | number;
   totalDiscount?: number;
   discountPrice?: number;
-  productId: string | number;
+  productId: string | number; 
   sellerId: string | number;
+  sizecolorwithprice?: any; 
+  b2bPricing?:any;
 }
 
 export type ActionType =

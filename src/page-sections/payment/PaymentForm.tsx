@@ -116,18 +116,21 @@ export default function PaymentForm() {
             console.log("Cart Item Response:", response.data);
         }));
 
+        
+  
+        
+        localStorage.removeItem('orderId');
+        router.push("/orders");
+        localStorage.removeItem('cart');
         cart.forEach(item => {
           dispatch({
             type: "CHANGE_CART_AMOUNT",
             payload: { ...item, qty: 0 }
           });
         });
-  
-        localStorage.removeItem('cart');
-        localStorage.removeItem('orderId');
-        router.push("/orders");
+        toast.success("Order placed successfully!");
         
-        // toast.success("Order placed successfully!");
+        
     } catch (error) {
         console.error("Error placing order:", error);
         // alert("Failed to place order. Please try again.");
