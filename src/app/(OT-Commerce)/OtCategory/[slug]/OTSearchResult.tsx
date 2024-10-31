@@ -18,7 +18,8 @@ import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import Link from "next/link";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://frontend.tizaraa.com/api';
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://frontend.tizaraa.com/api";
 const pageSize = 20;
 
 const LoaderWrapper = styled.div`
@@ -29,7 +30,7 @@ const LoaderWrapper = styled.div`
 
 export default function OTSearchResult({ sortOptions, slug }) {
   const router = useRouter();
-  
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -39,13 +40,12 @@ export default function OTSearchResult({ sortOptions, slug }) {
   const [totalProducts, setTotalProducts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [view, setView] = useState("grid");
-  const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]?.value || '');
+  const [selectedSortOption, setSelectedSortOption] = useState(
+    sortOptions[0]?.value || ""
+  );
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
-  
-
-
 
   const width = useWindowSize();
   const isTablet = width < 1025;
@@ -53,11 +53,11 @@ export default function OTSearchResult({ sortOptions, slug }) {
   const fetchCategoryData = useCallback(async () => {
     setLoading(framePosition === 0);
     setLoadingMore(framePosition > 0);
-    
+
     try {
       const response = await fetch(`${API_BASE_URL}/otpi/items`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           xmlParameters: `<SearchItemsParameters><CategoryId>${slug}</CategoryId></SearchItemsParameters>`,
           framePosition,
@@ -65,16 +65,19 @@ export default function OTSearchResult({ sortOptions, slug }) {
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to fetch data');
+      if (!response.ok) throw new Error("Failed to fetch data");
 
       const data = await response.json();
       const newProducts = data.Result.Items.Content;
-      console.log(data)
+      console.log(data);
 
       setTotalProducts(data.Result.Items.TotalCount);
       setProducts((prevProducts) => {
         const existingIds = new Set(prevProducts.map((product) => product.Id));
-        return [...prevProducts, ...newProducts.filter((product) => !existingIds.has(product.Id))];
+        return [
+          ...prevProducts,
+          ...newProducts.filter((product) => !existingIds.has(product.Id)),
+        ];
       });
 
       setHasMore(newProducts.length >= pageSize);
@@ -111,32 +114,67 @@ export default function OTSearchResult({ sortOptions, slug }) {
 
   return (
     <>
-      <FlexBox as={Card} mb="55px" p="1.25rem" elevation={5} flexWrap="wrap" borderRadius={8} alignItems="center" justifyContent="space-between">
+      <FlexBox
+        as={Card}
+        mb="55px"
+        p="1.25rem"
+        elevation={5}
+        flexWrap="wrap"
+        borderRadius={8}
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <div>
           <H5>Searching for {slug}</H5>
-          <Paragraph color="text.muted">{totalProducts} results found</Paragraph>
+          <Paragraph color="text.muted">
+            {totalProducts} results found
+          </Paragraph>
         </div>
 
         <FlexBox alignItems="center" flexWrap="wrap">
-          <Paragraph color="text.muted" mr="1rem">Sort by:</Paragraph>
+          <Paragraph color="text.muted" mr="1rem">
+            Sort by:
+          </Paragraph>
           <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
             <Select
               placeholder="Sort by"
               options={sortOptions}
-              defaultValue={sortOptions.find((option) => option.value === selectedSortOption)}
+              defaultValue={sortOptions.find(
+                (option) => option.value === selectedSortOption
+              )}
               onChange={(option) => setSelectedSortOption(option)}
             />
           </Box>
-          <Paragraph color="text.muted" mr="0.5rem">View:</Paragraph>
+          <Paragraph color="text.muted" mr="0.5rem">
+            View:
+          </Paragraph>
           <IconButton onClick={() => setView("grid")}>
-            <Icon variant="small" color={view === "grid" ? "primary" : "inherit"}>grid</Icon>
+            <Icon
+              variant="small"
+              color={view === "grid" ? "primary" : "inherit"}
+            >
+              grid
+            </Icon>
           </IconButton>
           <IconButton onClick={() => setView("list")}>
-            <Icon variant="small" color={view === "list" ? "primary" : "inherit"}>menu</Icon>
+            <Icon
+              variant="small"
+              color={view === "list" ? "primary" : "inherit"}
+            >
+              menu
+            </Icon>
           </IconButton>
           {isTablet && (
-            <Sidenav position="left" scroll={true} handle={<IconButton><Icon>options</Icon></IconButton>}>
-              <OTProductsFilterCard 
+            <Sidenav
+              position="left"
+              scroll={true}
+              handle={
+                <IconButton>
+                  <Icon>options</Icon>
+                </IconButton>
+              }
+            >
+              <OTProductsFilterCard
                 onBrandChange={setSelectedBrand}
                 onCategoryChange={setSelectedCategory}
                 onCountryChange={setSelectedCountry}
@@ -150,7 +188,7 @@ export default function OTSearchResult({ sortOptions, slug }) {
 
       <Grid container spacing={6}>
         <Grid item lg={3} xs={12}>
-          <OTProductsFilterCard 
+          <OTProductsFilterCard
             onBrandChange={setSelectedBrand}
             onCategoryChange={setSelectedCategory}
             onCountryChange={setSelectedCountry}
@@ -166,8 +204,14 @@ export default function OTSearchResult({ sortOptions, slug }) {
                 {products.map((product) => (
                   <Grid item lg={4} md={6} sm={6} xs={12} key={product.Id}>
                     <Link href={`/otproducts/${product.Id}`}>
-                      <Card style={{ height: '300px', display: 'flex', flexDirection: 'column' }}>
-                        <Box p="1rem" style={{ flex: '1' }}>
+                      <Card
+                        style={{
+                          height: "300px",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <Box p="1rem" style={{ flex: "1" }}>
                           <img
                             src={product.MainPictureUrl}
                             alt={product.Title}
@@ -177,7 +221,14 @@ export default function OTSearchResult({ sortOptions, slug }) {
                               objectFit: "cover",
                             }}
                           />
-                          <H5 style={{ margin: '0.5rem 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <H5
+                            style={{
+                              margin: "0.5rem 0",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
                             {product.Title}
                           </H5>
                           <Paragraph style={{ margin: 0 }}>
@@ -190,11 +241,20 @@ export default function OTSearchResult({ sortOptions, slug }) {
                 ))}
               </Grid>
 
-              {loadingMore && <Paragraph>Loading more products...</Paragraph>}
+              {loadingMore && (
+                <LoaderWrapper>
+                  <Vortex />
+                </LoaderWrapper>
+              )}
 
               {hasMore && !loadingMore && (
                 <Box textAlign="center" mt="1.5rem">
-                  <IconButton variant="contained" color="primary" onClick={loadMoreProducts} style={{ borderRadius: 0 }}>
+                  <IconButton
+                    variant="contained"
+                    color="primary"
+                    onClick={loadMoreProducts}
+                    style={{ borderRadius: 0 }}
+                  >
                     Load More
                   </IconButton>
                 </Box>

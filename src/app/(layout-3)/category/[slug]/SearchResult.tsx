@@ -538,7 +538,9 @@ export default function SearchResult({ sortOptions, slug }) {
                 onPageChange={handleLoadMore}
               />
               {loading && currentPage > 1 && (
-                <Paragraph>Loading more products...</Paragraph>
+                <LoaderWrapper>
+                <Vortex />
+              </LoaderWrapper>        
               )}{" "}
               {/* Optional: loading indicator for more products */}
             </>

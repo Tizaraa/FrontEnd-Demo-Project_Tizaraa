@@ -192,7 +192,9 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
                 onPageChange={handleLoadMore}
               />
               {loading && currentPage > 1 && (
-                <Paragraph>Loading more products...</Paragraph>
+                <LoaderWrapper>
+                <Vortex />
+              </LoaderWrapper>        
               )}
             </>
           ) : (
