@@ -178,8 +178,8 @@ export default function OrderList() {
       if (Array.isArray(data.orders)) {
         setOrderList(data.orders);
         if (!fetched) { // Show toast only on initial fetch
-          setOrderSuccess(true);
           //toast.success("Order placed successfully!");
+          setOrderSuccess(true);
           setFetched(true); // Mark as fetched
         }
       } else {
