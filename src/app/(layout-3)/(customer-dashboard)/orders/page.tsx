@@ -211,6 +211,8 @@ export default function OrderList() {
   useEffect(() => {
     if (orderSuccess) {
       toast.success("Order placed successfully!");
+      //console.log("nazim toast");
+      
       setOrderSuccess(false); // Reset orderSuccess state after toast displays
     }
   }, [orderSuccess]);
