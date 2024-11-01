@@ -47,6 +47,8 @@ export default function PaymentForm() {
 
   // `Bearer 1322|IQr8fvJUuNUnUZVuzWBsw1tVLsdR1U2Rp43YeNKL4b96967a`
 
+  
+
   const orderSubmit = async () => {
     let getData = localStorage.getItem('userInfo');
     let userinfo = JSON.parse(getData);
@@ -120,6 +122,7 @@ export default function PaymentForm() {
   
         
         localStorage.removeItem('orderId');
+        //toast.success("Order placed successfully!");
         router.push("/orders");
         localStorage.removeItem('cart');
         cart.forEach(item => {
@@ -128,7 +131,6 @@ export default function PaymentForm() {
             payload: { ...item, qty: 0 }
           });
         });
-        toast.success("Order placed successfully!");
         
         
     } catch (error) {
@@ -347,10 +349,13 @@ export default function PaymentForm() {
             </Button> */}
 
            
+        
             <Button onClick={orderSubmit} variant="outlined" color="primary" type="button" fullwidth>
              Payment
             </Button>
-        
+            {/* <Button onClick={orderSub} variant="outlined" color="primary" type="button" fullwidth>
+             Paymentclick
+            </Button> */}
    
         </Grid>
       </Grid>
