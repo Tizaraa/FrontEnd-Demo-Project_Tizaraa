@@ -145,7 +145,7 @@ import Hidden from "@component/hidden";
 import TableRow from "@component/TableRow";
 import { H5 } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
-import { OrderRow } from "@sections/customer-dashboard/orders"; // Ensure OrderRow is imported correctly
+import { OrderRow, OrdersPagination } from "@sections/customer-dashboard/orders"; // Ensure OrderRow is imported correctly
 import authService from "services/authService";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
@@ -160,38 +160,17 @@ const LoaderWrapper = styled.div`
 `;
 
 export default function OrderList() {
+  //const order_List = await api.getOrders();
   const router = useRouter();
   const [orderList, setOrderList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [fetched, setFetched] = useState(false);
-
-  // useEffect(() => {
-  //   // const token = Cookies.get("token");
-  //   const token = authService.getToken();
-
-  //   if (!token) {
-  //     router.push("/login");
-  //   } else {
-  //     fetchOrderList(token);
-  //   }
-
-  //   const success = localStorage.getItem("orderSuccess");
-  //   if (success) {
-  //     setOrderSuccess(true);
-  //     localStorage.removeItem("orderSuccess");
-  //   }
-  // }, [router]);
-
-  // useEffect(() => {
-  //   if (orderSuccess) {
-  //     // alert("Order placed successfully!");
-  //     toast.success("Order placed successfully!");
-  //     setOrderSuccess(false); 
-  //   }
-  // }, [orderSuccess]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const ordersPerPage = 10;
 
   const fetchOrderList = async (token: string) => {
+
     try {
       const response = await axios.get(`${ApiBaseUrl.baseUrl}user/order`, {
         headers: {
@@ -246,6 +225,11 @@ export default function OrderList() {
     }
   }, [orderSuccess]);
 
+  const currentOrders = orderList.slice(
+    currentPage * ordersPerPage,
+    (currentPage + 1) * ordersPerPage,
+  );
+
   if (loading)
     return (
       <LoaderWrapper>
@@ -280,9 +264,15 @@ export default function OrderList() {
         </TableRow>
       </Hidden>
 
-      {orderList.map((order) => (
+      {currentOrders.map((order) => (
         <OrderRow key={order.invoice} order={order} />
       ))}
+      <OrdersPagination
+        orderList={orderList}
+        ordersPerPage={ordersPerPage}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
     </Fragment>
   );
 }
