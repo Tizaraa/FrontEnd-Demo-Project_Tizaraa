@@ -122,7 +122,7 @@
 
 const navbarNavigations = [
   { title: "Become A Seller", url: "https://seller.tizaraa.com", extLink: true },
-  { title: "Find My Showroom / Shop", url: "/shops" },
+  { title: "Find My Showroom / Shop", url: "/shops", extLink: true },
 ];
 
 export default navbarNavigations;
