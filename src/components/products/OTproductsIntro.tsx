@@ -264,7 +264,7 @@
 
 
 "use client";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import Box from "@component/Box";
@@ -277,6 +277,7 @@ import { Chip } from "@component/Chip";
 import { H3, SemiSpan } from "@component/Typography";
 import { useAppContext } from "@context/app-context";
 import { currency } from "@utils/utils";
+import { marginLeft } from "styled-system";
 
 // ========================================
 
@@ -293,6 +294,18 @@ type ConfiguredItem = {
   }[];
 };
 
+interface Attribute {
+  ImageUrl: string;
+  IsConfigurator: boolean;
+  MiniImageUrl: string;
+  OriginalPropertyName: string;
+  OriginalValue: string;
+  Pid: string;
+  PropertyName: string;
+  Value: string;
+  Vid: string;
+}
+
 type OTProductsIntroProps = {
   images: string[];
   title: string;
@@ -307,6 +320,7 @@ type OTProductsIntroProps = {
   productId: string | number;
   sellerId: string | number;
   configuredItems: ConfiguredItem[];
+  Attributes?: Attribute[];
 };
 
 // ========================================
@@ -325,6 +339,7 @@ export default function OtProductsIntro({
   productId,
   sellerId,
   configuredItems,
+  Attributes,
 }: OTProductsIntroProps) {
   const param = useParams();
   const { state, dispatch } = useAppContext();
@@ -333,6 +348,29 @@ export default function OtProductsIntro({
 
   const routerId = param.slug as string;
   const cartItem = state.cart.find((item) => item.id === id || item.id === routerId);
+
+  const handleVariantSelect = (item: Attribute) => {
+    setSelectedSpec(item.Vid);
+
+    // Find the index of the matching image in `images`
+    const imageIndex = images.findIndex((url) => url === item.ImageUrl);
+    if (imageIndex !== -1) {
+      setSelectedImage(imageIndex); // Update displayed image
+    }
+  };
+
+  useEffect(() => {
+    // Set initial selectedSpec to the first item's Vid from filtered Attributes
+    const initialItem = Attributes?.find(item => 
+      configuredItems.some(configuredItem => 
+        configuredItem.Configurators.some(config => config.Vid === item.Vid)
+      )
+    );
+    
+    if (initialItem) {
+      setSelectedSpec(initialItem.Vid); // Set the initial selected spec
+    }
+  }, [Attributes, configuredItems]);
 
   const handleImageClick = (ind: number) => () => setSelectedImage(ind);
   
@@ -367,11 +405,12 @@ export default function OtProductsIntro({
     marginBottom: '0.75rem'
   }
 
-  const buttonContainerStyle = {
-    display: 'flex',
-    gap: '0.5rem',
-    marginBottom: '1rem'
-  }
+  const buttonContainerStyle: React.CSSProperties = {
+    display: 'flex',           
+    flexWrap: 'wrap',          
+    gap: '1rem',             
+    marginBottom: '1rem',
+};
 
   const getButtonStyle = (isSelected: boolean) => ({
     padding: '0.5rem 1rem',
@@ -466,25 +505,25 @@ export default function OtProductsIntro({
                 style={{ display: "block", width: "70%", height: "auto" }}
               />
             </FlexBox>
-            <FlexBox overflow="auto">
-              {images.map((url, ind) => (
-                <Box
-                  key={ind}
-                  size={70}
-                  bg="white"
-                  display="flex"
-                  cursor="pointer"
-                  border="1px solid"
-                  borderRadius="10px"
-                  alignItems="center"
-                  justifyContent="center"
-                  borderColor={selectedImage === ind ? "primary.main" : "gray.400"}
-                  onClick={handleImageClick(ind)}
-                >
-                  <Avatar src={url} borderRadius="10px" size={65} />
-                </Box>
-              ))}
-            </FlexBox>
+               <FlexBox overflow="auto" mb="1rem">
+        {images.map((url, ind) => (
+          <Box
+            key={ind}
+            size={70}
+            bg="white"
+            display="flex"
+            cursor="pointer"
+            border="1px solid"
+            borderRadius="10px"
+            alignItems="center"
+            justifyContent="center"
+            borderColor={selectedImage === ind ? "primary.main" : "gray.400"}
+            onClick={() => setSelectedImage(ind)}
+          >
+            <Avatar src={url} borderRadius="10px" size={65} />
+          </Box>
+        ))}
+      </FlexBox>
           </div>
         </Grid>
 
@@ -531,69 +570,89 @@ export default function OtProductsIntro({
           </Box>
 
           <div style={containerStyle}>
-  <h2 style={titleStyle}>Specification: </h2>
-  <div style={buttonContainerStyle}>
-    {configuredItems.map((item) => (
-      <button
-        key={item.Id}
-        onClick={() => setSelectedSpec(item.Id)}
-        style={getButtonStyle(selectedSpec === item.Id)}
-      >
-        {item.Configurators.map((config, index) => (
-          <Fragment key={index}>
-            {config.Vid}
-            {index < item.Configurators.length - 1 && ", "}
-          </Fragment>
-        ))}
-      </button>
-    ))}
-  </div>
+          {/* <h2 style={titleStyle}>Specification: </h2> */}
+          <div style={buttonContainerStyle}>
+        {Attributes?.filter(item =>
+          configuredItems.some(configItem =>
+            configItem.Configurators.some(config => config.Vid === item.Vid)
+          )
+        )
+          .reduce((uniqueItems, item) => {
+            if (!uniqueItems.some(uniqueItem => uniqueItem.Vid === item.Vid)) {
+              uniqueItems.push(item);
+            }
+            return uniqueItems;
+          }, [])
+          .map((item) => (
+            <button
+              key={item.Vid}
+              onClick={() => handleVariantSelect(item)}
+              style={getButtonStyle(selectedSpec === item.Vid)}
+            >
+              {item.ImageUrl ? (
+                <img
+                  src={item.ImageUrl}
+                  alt={item.Value}
+                  style={{ width: "40px", height: "50px", marginRight: "5px" }}
+                />
+              ) : (
+                item.Value
+              )}
+            </button>
+          ))}
+    </div>
 
-  <div style={tableContainerStyle}>
-    <table style={tableStyle}>
-      <thead>
-        <tr style={tableHeaderStyle}>
-        <th style={tableHeaderCellStyle}>Variants</th>
-          <th style={tableHeaderCellStyle}>Price</th>
-          <th style={tableHeaderCellStyle}>Quantity</th>
-        
-        </tr>
-      </thead>
-      <tbody>
-        {configuredItems.length > 0 ? (
-          configuredItems.map((item) => (
-            <tr key={item.Id} style={tableRowStyle}>
-                <td style={tableCellStyle}>
-                {item.Configurators.map((config, index) => (
+
+<div style={tableContainerStyle}>
+<table style={tableStyle}>
+  <thead>
+    <tr style={tableHeaderStyle}>
+      <th style={tableHeaderCellStyle}>Variants</th>
+      <th style={tableHeaderCellStyle}>Price</th>
+      <th style={tableHeaderCellStyle}>Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {configuredItems.length > 0 ? (
+      configuredItems
+        .filter(item => 
+          item.Configurators.some(config => config.Vid === selectedSpec)
+        ) // Filter based on selectedSpec
+        .map((item) => (
+          <tr key={item.Id} style={tableRowStyle}>
+            <td style={tableCellStyle}>
+              {item.Configurators.map((config, index) => {
+                const matchingAttribute = Attributes.find(attr => attr.Vid === config.Vid);
+                return (
                   <Fragment key={index}>
-                    {config.Vid}
+                    {matchingAttribute ? matchingAttribute.Value : config.Vid} 
                     {index < item.Configurators.length - 1 && ", "}
                   </Fragment>
-                ))}
-              </td>
-              <td style={tableCellStyle}>
-                {item.Price.CurrencySign}
-                {item.Price.ConvertedPriceWithoutSign}
-              </td>
-              <td style={quantityCellStyle}>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-    <button onClick={handleCartAmountChange(1)} style={addButtonStyle}>
-      Add to Cart
-    </button>
-    <span>{item.Quantity}</span>
-  </div>
-</td>
-
-            
-            </tr>
-          ))
-        ) : (
-          <tr>
-            <td colSpan={3}>No configurations available.</td>
+                );
+              })}
+            </td>
+            <td style={tableCellStyle}>
+              {item.Price.CurrencySign}
+              {item.Price.ConvertedPriceWithoutSign}
+            </td>
+            <td style={quantityCellStyle}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <button onClick={handleCartAmountChange(1)} style={addButtonStyle}>
+                  Add to Cart
+                </button>
+                <span>{item.Quantity}</span>
+              </div>
+            </td>
           </tr>
-        )}
-      </tbody>
-    </table>
+        ))
+    ) : (
+      <tr>
+        <td colSpan={3}>No configurations available.</td>
+      </tr>
+    )}
+  </tbody>
+</table>
+
   </div>
 </div>
 
