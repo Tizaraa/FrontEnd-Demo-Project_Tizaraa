@@ -10,6 +10,7 @@ import { StyledPagination } from "./styled";
 // ==============================================================
 export interface PaginationProps extends SpaceProps {
   pageCount: number;
+  currentPage: number;
   pageRangeDisplayed?: number;
   marginPagesDisplayed?: number;
   onChange?: (data: number) => void;
@@ -19,6 +20,7 @@ export interface PaginationProps extends SpaceProps {
 export default function Pagination({
   onChange,
   pageCount,
+  currentPage,
   pageRangeDisplayed,
   marginPagesDisplayed,
   ...props
@@ -74,7 +76,7 @@ export default function Pagination({
         onPageChange={handlePageChange}
         pageRangeDisplayed={pageRangeDisplayed}
         marginPagesDisplayed={marginPagesDisplayed}
-        // subContainerClassName="pages pagination"
+        //subContainerClassName="pages pagination"
       />
     </StyledPagination>
   );

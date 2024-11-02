@@ -145,12 +145,12 @@ import Hidden from "@component/hidden";
 import TableRow from "@component/TableRow";
 import { H5 } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
-import { OrderRow } from "@sections/customer-dashboard/orders"; // Ensure OrderRow is imported correctly
+import { OrderRow, OrdersPagination } from "@sections/customer-dashboard/orders"; // Ensure OrderRow is imported correctly
 import authService from "services/authService";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import { toast, ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css";
 
 const LoaderWrapper = styled.div`
@@ -160,13 +160,17 @@ const LoaderWrapper = styled.div`
 `;
 
 export default function OrderList() {
+  //const order_List = await api.getOrders();
   const router = useRouter();
   const [orderList, setOrderList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [orderSuccess, setOrderSuccess] = useState(false);
-  const [fetched, setFetched] = useState(false); // Track if data is fetched
+  const [fetched, setFetched] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const ordersPerPage = 10;
 
   const fetchOrderList = async (token: string) => {
+
     try {
       const response = await axios.get(`${ApiBaseUrl.baseUrl}user/order`, {
         headers: {
@@ -175,6 +179,10 @@ export default function OrderList() {
       });
 
       const data = response.data;
+      console.log("nazim",data);
+      console.log("nazim");
+      
+      
       if (Array.isArray(data.orders)) {
         setOrderList(data.orders);
         if (!fetched) { // Show toast only on initial fetch
@@ -206,7 +214,7 @@ export default function OrderList() {
       setOrderSuccess(true);
       localStorage.removeItem("orderSuccess");
     }
-  }, [fetched]);
+  }, [fetched,router]);
 
   useEffect(() => {
     if (orderSuccess) {
@@ -216,6 +224,11 @@ export default function OrderList() {
       setOrderSuccess(false); // Reset orderSuccess state after toast displays
     }
   }, [orderSuccess]);
+
+  const currentOrders = orderList.slice(
+    currentPage * ordersPerPage,
+    (currentPage + 1) * ordersPerPage,
+  );
 
   if (loading)
     return (
@@ -251,9 +264,15 @@ export default function OrderList() {
         </TableRow>
       </Hidden>
 
-      {orderList.map((order) => (
+      {currentOrders.map((order) => (
         <OrderRow key={order.invoice} order={order} />
       ))}
+      <OrdersPagination
+        orderList={orderList}
+        ordersPerPage={ordersPerPage}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
     </Fragment>
   );
 }

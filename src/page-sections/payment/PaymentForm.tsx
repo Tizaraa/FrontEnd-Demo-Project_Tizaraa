@@ -121,9 +121,8 @@ export default function PaymentForm() {
         
   
         
-        localStorage.removeItem('orderId');
-        //toast.success("Order placed successfully!");
         router.push("/orders");
+        localStorage.removeItem('orderId');
         localStorage.removeItem('cart');
         cart.forEach(item => {
           dispatch({
@@ -131,6 +130,7 @@ export default function PaymentForm() {
             payload: { ...item, qty: 0 }
           });
         });
+        //toast.success("Order placed successfully!");
         
         
     } catch (error) {

@@ -8,6 +8,7 @@ import { H5 } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 // GLOBAL CUSTOM COMPONENTS
 import OrderList from "@sections/vendor-dashboard/orders/OrderList";
+//import { OrdersPagination } from "@sections/customer-dashboard/orders";
 
 export default async function Orders() {
   const { data } = await axios.get("/api/admin/orders");
