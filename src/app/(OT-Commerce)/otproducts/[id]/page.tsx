@@ -367,8 +367,23 @@ export interface Product {
   Location: Location;
   ExternalItemUrl: string;
   Description: string;
-  ConfiguredItems?: ConfiguredItem[]; // Add ConfiguredItems type
+  ConfiguredItems?: ConfiguredItem[]; 
+  Attributes?: Attribute[];
 }
+
+
+interface Attribute {
+  ImageUrl: string;
+  IsConfigurator: boolean;
+  MiniImageUrl: string;
+  OriginalPropertyName: string;
+  OriginalValue: string;
+  Pid: string;
+  PropertyName: string;
+  Value: string;
+  Vid: string;
+}
+
 type ConfiguredItem = {
   Id: string;
   Price: {
@@ -487,51 +502,67 @@ const ProductPage = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Fetch the product data
-  useEffect(() => {
-    const fetchProductData = async () => {
-      if (!id) return; // Wait for the ID to be available
+  // Fetch and render product attributes
+useEffect(() => {
+  const fetchProductData = async () => {
+    if (!id) return;
 
-      try {
-        const response = await fetch(
-          `https://frontend.tizaraa.com/api/otpi/get-item-full-info/${id}`,
-          {
-            method: "GET", // Use GET method
-          }
-        );
+    try {
+      const response = await fetch(
+        `https://frontend.tizaraa.com/api/otpi/get-item-full-info/${id}`,
+        { method: "GET" }
+      );
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch product data");
-        }
-
-        const data = await response.json();
-        console.log("details:", data)
-
-        if (data && data.Result && data.Result.Item) {
-          setProduct(data.Result.Item); // Set the product data
-
-          // Check if RelatedGroups exists and has at least one group with items
-          if (
-            data.Result.Item.RelatedGroups &&
-            data.Result.Item.RelatedGroups.length > 0
-          ) {
-            setRelatedProducts(data.Result.Item.RelatedGroups[0].Items); // Set related products
-          } else {
-            setRelatedProducts([]); // If no related products, set an empty array
-          }
-        } else {
-          throw new Error("Product not found");
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error("Failed to fetch product data");
       }
-    };
 
-    fetchProductData();
-  }, [id]);
+      const data = await response.json();
+      console.log("details:", data);
 
+      if (data && data.Result && data.Result.Item) {
+        setProduct(data.Result.Item);
+
+        // Handle Related Products
+        if (
+          data.Result.Item.RelatedGroups &&
+          data.Result.Item.RelatedGroups.length > 0
+        ) {
+          setRelatedProducts(data.Result.Item.RelatedGroups[0].Items);
+        } else {
+          setRelatedProducts([]);
+        }
+      } else {
+        throw new Error("Product not found");
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProductData();
+}, [id]);
+
+// Rendering Attributes
+const renderAttributes = (attributes: Attribute[]) => {
+  return (
+    <div style={{ marginTop: '20px' }}>
+      {attributes.map((attribute) => (
+        <div key={attribute.Pid} style={{ marginBottom: '10px' }}>
+          <h4 style={{ fontWeight: '600' }}>{attribute.PropertyName}:</h4>
+          <p>{attribute.Value}</p>
+          <img
+            src={attribute.ImageUrl}
+            alt={attribute.Value}
+            style={{ maxWidth: '100px', height: 'auto', marginRight: '10px' }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -576,6 +607,8 @@ const ProductPage = () => {
   productId={""}
   sellerId={""}
   configuredItems={product.ConfiguredItems || []}
+  Attributes={product.Attributes || []}
+
 />
 
        {/* <Component /> */}
