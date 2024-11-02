@@ -200,11 +200,15 @@ export default function OrderList() {
       });
 
       const data = response.data;
+      console.log("nazim",data);
+      console.log("nazim");
+      
+      
       if (Array.isArray(data.orders)) {
         setOrderList(data.orders);
         if (!fetched) { // Show toast only on initial fetch
           //toast.success("Order placed successfully!");
-          //setOrderSuccess(true);
+          setOrderSuccess(true);
           setFetched(true); // Mark as fetched
         }
       } else {
