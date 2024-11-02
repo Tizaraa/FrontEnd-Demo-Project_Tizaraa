@@ -13,10 +13,10 @@ interface Props {
 export default function AddressPagination({ addressList }: Props) {
   return (
     <FlexBox justifyContent="center" mt="2.5rem">
-      <Pagination
+      {/* <Pagination
         onChange={(data) => console.log(data)}
         pageCount={Math.ceil(addressList.length / 5)}
-      />
+      /> */}
     </FlexBox>
   );
 }

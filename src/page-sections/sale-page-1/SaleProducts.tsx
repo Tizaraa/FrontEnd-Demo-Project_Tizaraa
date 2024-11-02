@@ -43,7 +43,7 @@ export default function SaleProducts({ products, meta }: Props) {
 
       <FlexBox flexWrap="wrap" justifyContent="space-between" alignItems="center" my="4rem">
         <SemiSpan>{renderProductCount(meta.page - 1, meta.pageSize, meta.total)}</SemiSpan>
-        <Pagination onChange={handlePageChange} pageCount={meta.totalPage} />
+        {/* <Pagination onChange={handlePageChange} pageCount={meta.totalPage} /> */}
       </FlexBox>
     </>
   );

@@ -20,7 +20,7 @@ export default function OrderList({ orders }: Props) {
       ))}
 
       <FlexBox justifyContent="center" mt="2.5rem">
-        <Pagination pageCount={5} onChange={(data) => console.log(data)} />
+        {/* <Pagination pageCount={5} onChange={(data) => console.log(data)} /> */}
       </FlexBox>
     </Fragment>
   );
