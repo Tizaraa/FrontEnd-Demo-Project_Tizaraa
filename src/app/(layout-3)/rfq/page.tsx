@@ -1,9 +1,9 @@
 import React from 'react'
-import Component from "./ProductForm"
+import RfqProductForm from "./RfqProductForm"
 
 const page = () => {
   return (
-    <Component />
+    <RfqProductForm />
   )
 }
 

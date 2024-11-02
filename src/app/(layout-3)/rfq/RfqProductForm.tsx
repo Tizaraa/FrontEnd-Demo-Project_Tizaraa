@@ -144,7 +144,7 @@
 import { useState } from 'react'
 import { ChevronDown, Upload } from 'lucide-react'
 
-export default function Component() {
+export default function RfqProductForm() {
   const [category, setCategory] = useState('')
   const [quantity, setQuantity] = useState('')
   const [agree, setAgree] = useState(false)
