@@ -277,6 +277,7 @@ import { Chip } from "@component/Chip";
 import { H3, SemiSpan } from "@component/Typography";
 import { useAppContext } from "@context/app-context";
 import { currency } from "@utils/utils";
+import { marginLeft } from "styled-system";
 
 // ========================================
 
@@ -348,6 +349,15 @@ export default function OtProductsIntro({
   const routerId = param.slug as string;
   const cartItem = state.cart.find((item) => item.id === id || item.id === routerId);
 
+  const handleVariantSelect = (item: Attribute) => {
+    setSelectedSpec(item.Vid);
+
+    // Find the index of the matching image in `images`
+    const imageIndex = images.findIndex((url) => url === item.ImageUrl);
+    if (imageIndex !== -1) {
+      setSelectedImage(imageIndex); // Update displayed image
+    }
+  };
 
   useEffect(() => {
     // Set initial selectedSpec to the first item's Vid from filtered Attributes
@@ -395,11 +405,12 @@ export default function OtProductsIntro({
     marginBottom: '0.75rem'
   }
 
-  const buttonContainerStyle = {
-    display: 'flex',
-    gap: '0.5rem',
-    marginBottom: '1rem'
-  }
+  const buttonContainerStyle: React.CSSProperties = {
+    display: 'flex',           
+    flexWrap: 'wrap',          
+    gap: '1rem',             
+    marginBottom: '1rem',
+};
 
   const getButtonStyle = (isSelected: boolean) => ({
     padding: '0.5rem 1rem',
@@ -494,25 +505,25 @@ export default function OtProductsIntro({
                 style={{ display: "block", width: "70%", height: "auto" }}
               />
             </FlexBox>
-            <FlexBox overflow="auto">
-              {images.map((url, ind) => (
-                <Box
-                  key={ind}
-                  size={70}
-                  bg="white"
-                  display="flex"
-                  cursor="pointer"
-                  border="1px solid"
-                  borderRadius="10px"
-                  alignItems="center"
-                  justifyContent="center"
-                  borderColor={selectedImage === ind ? "primary.main" : "gray.400"}
-                  onClick={handleImageClick(ind)}
-                >
-                  <Avatar src={url} borderRadius="10px" size={65} />
-                </Box>
-              ))}
-            </FlexBox>
+               <FlexBox overflow="auto" mb="1rem">
+        {images.map((url, ind) => (
+          <Box
+            key={ind}
+            size={70}
+            bg="white"
+            display="flex"
+            cursor="pointer"
+            border="1px solid"
+            borderRadius="10px"
+            alignItems="center"
+            justifyContent="center"
+            borderColor={selectedImage === ind ? "primary.main" : "gray.400"}
+            onClick={() => setSelectedImage(ind)}
+          >
+            <Avatar src={url} borderRadius="10px" size={65} />
+          </Box>
+        ))}
+      </FlexBox>
           </div>
         </Grid>
 
@@ -559,40 +570,36 @@ export default function OtProductsIntro({
           </Box>
 
           <div style={containerStyle}>
-          <h2 style={titleStyle}>Specification: </h2>
+          {/* <h2 style={titleStyle}>Specification: </h2> */}
           <div style={buttonContainerStyle}>
-      {Attributes?.filter(item => 
-        configuredItems.some(configuredItem => 
-          configuredItem.Configurators.some(config => config.Vid === item.Vid)
+        {Attributes?.filter(item =>
+          configuredItems.some(configItem =>
+            configItem.Configurators.some(config => config.Vid === item.Vid)
+          )
         )
-      ).reduce((uniqueItems, item) => {
-        if (!uniqueItems.some(uniqueItem => uniqueItem.Vid === item.Vid)) {
-          uniqueItems.push(item); 
-        }
-        return uniqueItems; 
-      }, []).map((item) => {
-        const matchingItem = configuredItems.find(configuredItem => 
-          configuredItem.Configurators.some(config => config.Vid === item.Vid)
-        );
-
-        return (
-          <button
-            key={item.Vid} 
-            onClick={() => setSelectedSpec(item.Vid)}
-            style={getButtonStyle(selectedSpec === item.Vid)} 
-          >
-            {matchingItem ? ( 
-              item.ImageUrl ? (
-                <>
-                  <img src={item.ImageUrl} alt={item.Value} style={{ width: '40px', height: '50px', marginRight: '5px' }} />
-                </>
+          .reduce((uniqueItems, item) => {
+            if (!uniqueItems.some(uniqueItem => uniqueItem.Vid === item.Vid)) {
+              uniqueItems.push(item);
+            }
+            return uniqueItems;
+          }, [])
+          .map((item) => (
+            <button
+              key={item.Vid}
+              onClick={() => handleVariantSelect(item)}
+              style={getButtonStyle(selectedSpec === item.Vid)}
+            >
+              {item.ImageUrl ? (
+                <img
+                  src={item.ImageUrl}
+                  alt={item.Value}
+                  style={{ width: "40px", height: "50px", marginRight: "5px" }}
+                />
               ) : (
-                item.Value 
-              )
-            ) : null} 
-          </button>
-        );
-      })}
+                item.Value
+              )}
+            </button>
+          ))}
     </div>
 
 
