@@ -343,20 +343,25 @@ export default function OtProductsIntro({
 }: OTProductsIntroProps) {
   const param = useParams();
   const { state, dispatch } = useAppContext();
-  const [selectedImage, setSelectedImage] = useState(0);
+  // const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(images[0] || "");
   const [selectedSpec, setSelectedSpec] = useState<string | null>(null); 
 
   const routerId = param.slug as string;
   const cartItem = state.cart.find((item) => item.id === id || item.id === routerId);
 
-  const handleVariantSelect = (item: Attribute) => {
-    setSelectedSpec(item.Vid);
+  // const handleVariantSelect = (item: Attribute) => {
+  //   setSelectedSpec(item.Vid);
 
-    // Find the index of the matching image in `images`
-    const imageIndex = images.findIndex((url) => url === item.ImageUrl);
-    if (imageIndex !== -1) {
-      setSelectedImage(imageIndex); // Update displayed image
-    }
+  //   // Find the index of the matching image in `images`
+  //   const imageIndex = images.findIndex((url) => url === item.ImageUrl);
+  //   if (imageIndex !== -1) {
+  //     setSelectedImage(imageIndex); // Update displayed image
+  //   }
+  // };
+  const handleVariantSelect = (item) => {
+    setSelectedSpec(item.Vid); 
+    setSelectedImage(item.ImageUrl); // Set selected image directly using the image URL
   };
 
   useEffect(() => {
@@ -372,7 +377,7 @@ export default function OtProductsIntro({
     }
   }, [Attributes, configuredItems]);
 
-  const handleImageClick = (ind: number) => () => setSelectedImage(ind);
+  // const handleImageClick = (ind: number) => () => setSelectedImage(ind);
   
   const handleCartAmountChange = (amount: number) => () => {
     dispatch({
@@ -497,33 +502,34 @@ export default function OtProductsIntro({
       <Grid container justifyContent="center" spacing={16}>
         <Grid item md={6} xs={12} alignItems="center">
           <div>
-            <FlexBox mb="50px" overflow="hidden" borderRadius={16} justifyContent="center">
-              <Image
-                width={200}
-                height={200}
-                src={images[selectedImage]}
-                style={{ display: "block", width: "70%", height: "auto" }}
-              />
-            </FlexBox>
-               <FlexBox overflow="auto" mb="1rem">
-        {images.map((url, ind) => (
-          <Box
-            key={ind}
-            size={70}
-            bg="white"
-            display="flex"
-            cursor="pointer"
-            border="1px solid"
-            borderRadius="10px"
-            alignItems="center"
-            justifyContent="center"
-            borderColor={selectedImage === ind ? "primary.main" : "gray.400"}
-            onClick={() => setSelectedImage(ind)}
-          >
-            <Avatar src={url} borderRadius="10px" size={65} />
-          </Box>
-        ))}
-      </FlexBox>
+        <FlexBox mb="50px" overflow="hidden" borderRadius={16} justifyContent="center">
+  <Image
+    width={200}
+    height={200}
+    src={selectedImage || images[0]} // Display selectedImage or fallback to first image
+    style={{ display: "block", width: "70%", height: "auto" }}
+  />
+</FlexBox>
+
+<FlexBox overflow="auto" mb="1rem">
+  {images.map((url, ind) => (
+    <Box
+      key={ind}
+      size={70}
+      bg="white"
+      display="flex"
+      cursor="pointer"
+      border="1px solid"
+      borderRadius="10px"
+      alignItems="center"
+      justifyContent="center"
+      borderColor={selectedImage === url ? "primary.main" : "gray.400"} 
+      onClick={() => setSelectedImage(url)} 
+    >
+      <Avatar src={url} borderRadius="10px" size={65} />
+    </Box>
+  ))}
+</FlexBox>
           </div>
         </Grid>
 
@@ -571,7 +577,7 @@ export default function OtProductsIntro({
 
           <div style={containerStyle}>
           {/* <h2 style={titleStyle}>Specification: </h2> */}
-          <div style={buttonContainerStyle}>
+          {/* <div style={buttonContainerStyle}>
         {Attributes?.filter(item =>
           configuredItems.some(configItem =>
             configItem.Configurators.some(config => config.Vid === item.Vid)
@@ -600,7 +606,50 @@ export default function OtProductsIntro({
               )}
             </button>
           ))}
-    </div>
+    </div> */}
+    <div style={buttonContainerStyle}>
+  {Attributes?.filter(item =>
+    configuredItems.some(configItem =>
+      configItem.Configurators.some(config => config.Vid === item.Vid)
+    )
+  )
+    // .reduce((uniqueItems, item) => {
+    //   if (!uniqueItems.some(uniqueItem => uniqueItem.Vid === item.Vid)) {
+    //     uniqueItems.push(item);
+    //   }
+    //   return uniqueItems;
+    // }, [])
+    .reduce((uniqueItems, item) => {
+ 
+      const hasImage = item.ImageUrl;
+      const hasSize = item.Value && item.PropertyName === "Size"; 
+
+      if (hasImage || !hasSize) {
+        if (!uniqueItems.some(uniqueItem => uniqueItem.Vid === item.Vid)) {
+          uniqueItems.push(item);
+        }
+      }
+      return uniqueItems;
+    }, [])
+
+    .map((item) => (
+      <button
+        key={item.Vid}
+        onClick={() => handleVariantSelect(item)}
+        style={getButtonStyle(selectedSpec === item.Vid)}
+      >
+        {item.ImageUrl ? (
+          <img
+            src={item.ImageUrl}
+            alt={item.Value}
+            style={{ width: "40px", height: "50px", marginRight: "5px" }}
+          />
+        ) : (
+          item.Value
+        )}
+      </button>
+    ))}
+</div>
 
 
 <div style={tableContainerStyle}>
