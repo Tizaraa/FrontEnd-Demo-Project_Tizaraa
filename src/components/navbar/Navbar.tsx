@@ -155,7 +155,6 @@
 // }
 
 "use client";
-
 import Box from "../Box";
 import Card from "../Card";
 import Badge from "../badge";
@@ -187,6 +186,7 @@ type NavbarProps = { navListOpen?: boolean };
 // ==============================================================
 
 export default function Navbar({ navListOpen }: NavbarProps) {
+  
   const renderNestedNav = (list: Nav[], isRoot = false) => {
     return list?.map((nav: Nav) => {
       if (isRoot) {
@@ -330,13 +330,14 @@ export default function Navbar({ navListOpen }: NavbarProps) {
                   color: "white",
                   minWidth: "150px", // Ensuring a minimum width for buttons
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#E94560")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#E94560")}
+                onMouseEnter={(e) => {(e.currentTarget.style.backgroundColor = "#E94560");}}
+                onMouseLeave={(e) => {(e.currentTarget.style.backgroundColor = "#E94560");}}
               >
                 {/* Wrapping the Icon with a span for margin control */}
-                <span style={{ marginRight: "8px" }}>
-                {navItem.title === "Become A Seller" ? <FaUser /> : <FaLocationPin />}
-                </span>
+                <div style={{ marginRight: "8px" }}>
+                {navItem.title === "Become A Seller" ? (<FaUser />) : <FaLocationPin />}
+
+                </div>
                 <Typography style={{ fontWeight: "500" }}>{navItem.title}</Typography>
               </Button>
             </NavLink>
