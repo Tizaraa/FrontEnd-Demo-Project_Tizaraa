@@ -57,11 +57,11 @@ export default function CheckoutAddress() {
           // Check if the parsed address is in the fetched addresses
           const matchingAddress = fetchedAddresses.find((addr) => addr.id === parsedAddress.id);
           if (matchingAddress) {
-            handleAutoSelect(matchingAddress); // Automatically select the address from sessionStorage
+            // handleAutoSelect(matchingAddress); 
           }
         } else if (fetchedAddresses.length > 0) {
           const firstAddress = fetchedAddresses[0];
-          handleAutoSelect(firstAddress); // Automatically select the first address if no stored address
+          // handleAutoSelect(firstAddress); 
         }
       } catch (error) {
         console.error("Error fetching addresses:", error);
@@ -73,20 +73,20 @@ export default function CheckoutAddress() {
   }, [authtoken]);
 
   // Handle automatic selection of the first address and set delivery charge in sessionStorage
-  const handleAutoSelect = (item: Address) => {
-    // Find the corresponding province to get the delivery charge
-    const selectedProvince = province.find((prov: any) => prov.id === item.province_id);
+  // const handleAutoSelect = (item: Address) => {
+  //   // Find the corresponding province to get the delivery charge
+  //   const selectedProvince = province.find((prov: any) => prov.id === item.province_id);
 
-    if (selectedProvince && selectedProvince.delivery_charge) {
-      item.deliveryCharge = selectedProvince.delivery_charge; // Add deliveryCharge to the selected item
-      sessionStorage.setItem("deliveryCharge", JSON.stringify(item.deliveryCharge)); // Store in sessionStorage
-    }
+  //   if (selectedProvince && selectedProvince.delivery_charge) {
+  //     item.deliveryCharge = selectedProvince.delivery_charge; // Add deliveryCharge to the selected item
+  //     sessionStorage.setItem("deliveryCharge", JSON.stringify(item.deliveryCharge)); // Store in sessionStorage
+  //   }
 
-    setSelectedAddress(item);
+  //   setSelectedAddress(item);
 
-    // console.log("Auto-selected Address:", item);
-    // console.log("Delivery Charge stored in sessionStorage:", item.deliveryCharge || "Delivery charge not available");
-  };
+  //   // console.log("Auto-selected Address:", item);
+  //   // console.log("Delivery Charge stored in sessionStorage:", item.deliveryCharge || "Delivery charge not available");
+  // };
 
   // Handle manual selection of an address
   const handleSelect = (item: Address) => {
@@ -155,7 +155,7 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
     >
       <FlexBox
         my="0.5rem"
-        padding="1px 5px"
+        padding="1px 14px"
         style={{
           display: "flex",
           alignItems: "center",

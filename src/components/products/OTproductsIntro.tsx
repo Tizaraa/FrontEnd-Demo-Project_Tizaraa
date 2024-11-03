@@ -278,6 +278,7 @@ import { H3, SemiSpan } from "@component/Typography";
 import { useAppContext } from "@context/app-context";
 import { currency } from "@utils/utils";
 import { marginLeft } from "styled-system";
+import AddToCartButton from "./AddToCartButton";
 
 // ========================================
 
@@ -321,6 +322,7 @@ type OTProductsIntroProps = {
   sellerId: string | number;
   configuredItems: ConfiguredItem[];
   Attributes?: Attribute[];
+  
 };
 
 // ========================================
@@ -343,20 +345,34 @@ export default function OtProductsIntro({
 }: OTProductsIntroProps) {
   const param = useParams();
   const { state, dispatch } = useAppContext();
-  const [selectedImage, setSelectedImage] = useState(0);
+  // const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(images[0] || "");
   const [selectedSpec, setSelectedSpec] = useState<string | null>(null); 
+
+
+  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
+  
+
+  const handleRowClick = (itemId: string) => {
+    setSelectedRowId(itemId === selectedRowId ? null : itemId); // Toggle selection
+  };
+  
 
   const routerId = param.slug as string;
   const cartItem = state.cart.find((item) => item.id === id || item.id === routerId);
 
-  const handleVariantSelect = (item: Attribute) => {
-    setSelectedSpec(item.Vid);
+  // const handleVariantSelect = (item: Attribute) => {
+  //   setSelectedSpec(item.Vid);
 
-    // Find the index of the matching image in `images`
-    const imageIndex = images.findIndex((url) => url === item.ImageUrl);
-    if (imageIndex !== -1) {
-      setSelectedImage(imageIndex); // Update displayed image
-    }
+  //   // Find the index of the matching image in `images`
+  //   const imageIndex = images.findIndex((url) => url === item.ImageUrl);
+  //   if (imageIndex !== -1) {
+  //     setSelectedImage(imageIndex); // Update displayed image
+  //   }
+  // };
+  const handleVariantSelect = (item) => {
+    setSelectedSpec(item.Vid); 
+    setSelectedImage(item.ImageUrl); // Set selected image directly using the image URL
   };
 
   useEffect(() => {
@@ -372,7 +388,7 @@ export default function OtProductsIntro({
     }
   }, [Attributes, configuredItems]);
 
-  const handleImageClick = (ind: number) => () => setSelectedImage(ind);
+  // const handleImageClick = (ind: number) => () => setSelectedImage(ind);
   
   const handleCartAmountChange = (amount: number) => () => {
     dispatch({
@@ -426,13 +442,24 @@ export default function OtProductsIntro({
     }
   })
 
-  const tableContainerStyle = {
-    backgroundColor: 'white'
-  }
+  // const tableContainerStyle = {
+  //   backgroundColor: 'white'
+  // }
 
-  const tableStyle = {
+  const tableContainerStyle: React.CSSProperties = {
+    maxHeight: '250px',
+    overflowY: 'auto',
+    marginBottom: '20px',
+    scrollbarWidth: 'thin',  
+    scrollbarColor: '#888 #f1f1f1', 
+    border: 'none'
+};
+
+  const tableStyle: React.CSSProperties = {
     width: '100%',
-    borderCollapse: 'collapse' as const
+  borderCollapse: 'collapse',
+  borderLeft: '1px solid #ccc', 
+  borderRight: '1px solid #ccc', 
   }
 
   const tableHeaderStyle = {
@@ -449,11 +476,14 @@ export default function OtProductsIntro({
   }
 
   const tableRowStyle = {
-    borderBottom: '1px solid #e5e7eb'
+    borderBottom: '1px solid #e5e7eb',
+     cursor: 'pointer'
   }
 
   const tableCellStyle = {
-    padding: '1rem'
+    // padding: '1rem'
+    padding: '10px', 
+    border: '1px solid #ddd' 
   }
 
   const priceContainerStyle = {
@@ -497,33 +527,34 @@ export default function OtProductsIntro({
       <Grid container justifyContent="center" spacing={16}>
         <Grid item md={6} xs={12} alignItems="center">
           <div>
-            <FlexBox mb="50px" overflow="hidden" borderRadius={16} justifyContent="center">
-              <Image
-                width={200}
-                height={200}
-                src={images[selectedImage]}
-                style={{ display: "block", width: "70%", height: "auto" }}
-              />
-            </FlexBox>
-               <FlexBox overflow="auto" mb="1rem">
-        {images.map((url, ind) => (
-          <Box
-            key={ind}
-            size={70}
-            bg="white"
-            display="flex"
-            cursor="pointer"
-            border="1px solid"
-            borderRadius="10px"
-            alignItems="center"
-            justifyContent="center"
-            borderColor={selectedImage === ind ? "primary.main" : "gray.400"}
-            onClick={() => setSelectedImage(ind)}
-          >
-            <Avatar src={url} borderRadius="10px" size={65} />
-          </Box>
-        ))}
-      </FlexBox>
+        <FlexBox mb="50px" overflow="hidden" borderRadius={16} justifyContent="center">
+  <Image
+    width={200}
+    height={200}
+    src={selectedImage || images[0]} // Display selectedImage or fallback to first image
+    style={{ display: "block", width: "70%", height: "auto" }}
+  />
+</FlexBox>
+
+<FlexBox overflow="auto" mb="1rem">
+  {images.map((url, ind) => (
+    <Box
+      key={ind}
+      size={70}
+      bg="white"
+      display="flex"
+      cursor="pointer"
+      border="1px solid"
+      borderRadius="10px"
+      alignItems="center"
+      justifyContent="center"
+      borderColor={selectedImage === url ? "primary.main" : "gray.400"} 
+      onClick={() => setSelectedImage(url)} 
+    >
+      <Avatar src={url} borderRadius="10px" size={65} />
+    </Box>
+  ))}
+</FlexBox>
           </div>
         </Grid>
 
@@ -571,89 +602,134 @@ export default function OtProductsIntro({
 
           <div style={containerStyle}>
           {/* <h2 style={titleStyle}>Specification: </h2> */}
-          <div style={buttonContainerStyle}>
-        {Attributes?.filter(item =>
-          configuredItems.some(configItem =>
-            configItem.Configurators.some(config => config.Vid === item.Vid)
-          )
-        )
-          .reduce((uniqueItems, item) => {
-            if (!uniqueItems.some(uniqueItem => uniqueItem.Vid === item.Vid)) {
-              uniqueItems.push(item);
-            }
-            return uniqueItems;
-          }, [])
-          .map((item) => (
-            <button
-              key={item.Vid}
-              onClick={() => handleVariantSelect(item)}
-              style={getButtonStyle(selectedSpec === item.Vid)}
-            >
-              {item.ImageUrl ? (
-                <img
-                  src={item.ImageUrl}
-                  alt={item.Value}
-                  style={{ width: "40px", height: "50px", marginRight: "5px" }}
-                />
-              ) : (
-                item.Value
-              )}
-            </button>
-          ))}
-    </div>
+    <div style={buttonContainerStyle}>
+  {Attributes?.filter(item =>
+    configuredItems.some(configItem =>
+      configItem.Configurators.some(config => config.Vid === item.Vid)
+    )
+  )
+    // .reduce((uniqueItems, item) => {
+    //   if (!uniqueItems.some(uniqueItem => uniqueItem.Vid === item.Vid)) {
+    //     uniqueItems.push(item);
+    //   }
+    //   return uniqueItems;
+    // }, [])
+    .reduce((uniqueItems, item) => {
+ 
+      const hasImage = item.ImageUrl;
+      const hasSize = item.Value && item.PropertyName === "Size"; 
+
+      if (hasImage || !hasSize) {
+        if (!uniqueItems.some(uniqueItem => uniqueItem.Vid === item.Vid)) {
+          uniqueItems.push(item);
+        }
+      }
+      return uniqueItems;
+    }, [])
+
+    .map((item) => (
+      <button
+        key={item.Vid}
+        onClick={() => handleVariantSelect(item)}
+        style={getButtonStyle(selectedSpec === item.Vid)}
+      >
+        {item.ImageUrl ? (
+          <img
+            src={item.ImageUrl}
+            alt={item.Value}
+            style={{ width: "40px", height: "50px", marginRight: "5px" }}
+          />
+        ) : (
+          item.Value
+        )}
+      </button>
+    ))}
+</div>
 
 
 <div style={tableContainerStyle}>
-<table style={tableStyle}>
-  <thead>
-    <tr style={tableHeaderStyle}>
-      <th style={tableHeaderCellStyle}>Variants</th>
-      <th style={tableHeaderCellStyle}>Price</th>
-      <th style={tableHeaderCellStyle}>Quantity</th>
-    </tr>
-  </thead>
-  <tbody>
-    {configuredItems.length > 0 ? (
-      configuredItems
-        .filter(item => 
+      {configuredItems.length > 0 && configuredItems.some(item => 
           item.Configurators.some(config => config.Vid === selectedSpec)
-        ) // Filter based on selectedSpec
-        .map((item) => (
-          <tr key={item.Id} style={tableRowStyle}>
-            <td style={tableCellStyle}>
-              {item.Configurators.map((config, index) => {
-                const matchingAttribute = Attributes.find(attr => attr.Vid === config.Vid);
-                return (
-                  <Fragment key={index}>
-                    {matchingAttribute ? matchingAttribute.Value : config.Vid} 
-                    {index < item.Configurators.length - 1 && ", "}
-                  </Fragment>
-                );
-              })}
-            </td>
-            <td style={tableCellStyle}>
-              {item.Price.CurrencySign}
-              {item.Price.ConvertedPriceWithoutSign}
-            </td>
-            <td style={quantityCellStyle}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <button onClick={handleCartAmountChange(1)} style={addButtonStyle}>
-                  Add to Cart
-                </button>
-                <span>{item.Quantity}</span>
-              </div>
-            </td>
-          </tr>
-        ))
-    ) : (
-      <tr>
-        <td colSpan={3}>No configurations available.</td>
-      </tr>
-    )}
-  </tbody>
-</table>
+        ) ? (
+        <table style={tableStyle}>
+          <thead>
+            <tr style={tableHeaderStyle}>
+              <th style={tableHeaderCellStyle}>Variants</th>
+              <th style={tableHeaderCellStyle}>Price</th>
+              <th style={tableHeaderCellStyle}>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {configuredItems
+              .filter(item => 
+                item.Configurators.some(config => config.Vid === selectedSpec)
+              )
+              .map((item) => (
+                <tr 
+                  key={item.Id} 
+                  style={{ ...tableRowStyle, backgroundColor: selectedRowId === item.Id ? '#f0f8ff' : 'white' }} 
+                  onClick={() => handleRowClick(item.Id)}
+                >
+                  <td style={tableCellStyle}>
+                    {item.Configurators.map((config, index) => {
+                      const matchingAttribute = Attributes.find(attr => attr.Vid === config.Vid);
+                      return (
+                        <Fragment key={index}>
+                          {matchingAttribute ? matchingAttribute.Value : config.Vid} 
+                          {index < item.Configurators.length - 1 && ", "}
+                        </Fragment>
+                      );
+                    })}
+                  </td>
+                  <td style={tableCellStyle}>
+                    {item.Price.CurrencySign}
+                    {item.Price.ConvertedPriceWithoutSign}
+                  </td>
+                  <td style={tableCellStyle}>
+                        <span>{item.Quantity}</span>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      ) : (
+        <div>
+          <AddToCartButton
+            productId={productId}
+            sellerId={sellerId}
+            images={images}
+            title={title}
+            discountPrice={discountPrice}
+            price={price}
+            slug={slug}
+            selectedSize={selectedSpec}
+            selectedColor={''} 
+            dummySizes={[]}
+          />
+        </div>
+      )}
 
-  </div>
+      {selectedRowId && (
+        <div style={{ marginTop: '20px' }}>
+          <AddToCartButton
+            productId={productId}
+            sellerId={sellerId}
+            images={images}
+            title={title}
+            discountPrice={discountPrice}
+            price={price}
+            slug={slug}
+            selectedSize={selectedSpec}
+            selectedColor={''}
+            dummySizes={[]} 
+        
+          />
+        </div>
+      )}
+    </div>
+
+
 </div>
 
         </Grid>
