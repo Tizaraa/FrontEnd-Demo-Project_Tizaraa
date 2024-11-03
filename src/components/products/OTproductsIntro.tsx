@@ -431,13 +431,24 @@ export default function OtProductsIntro({
     }
   })
 
-  const tableContainerStyle = {
-    backgroundColor: 'white'
-  }
+  // const tableContainerStyle = {
+  //   backgroundColor: 'white'
+  // }
 
-  const tableStyle = {
+  const tableContainerStyle: React.CSSProperties = {
+    maxHeight: '250px',
+    overflowY: 'auto',
+    marginBottom: '20px',
+    scrollbarWidth: 'thin',  
+    scrollbarColor: '#888 #f1f1f1', 
+    border: 'none'
+};
+
+  const tableStyle: React.CSSProperties = {
     width: '100%',
-    borderCollapse: 'collapse' as const
+  borderCollapse: 'collapse',
+  borderLeft: '1px solid #ccc', 
+  borderRight: '1px solid #ccc', 
   }
 
   const tableHeaderStyle = {
@@ -653,56 +664,62 @@ export default function OtProductsIntro({
 
 
 <div style={tableContainerStyle}>
-<table style={tableStyle}>
-  <thead>
-    <tr style={tableHeaderStyle}>
-      <th style={tableHeaderCellStyle}>Variants</th>
-      <th style={tableHeaderCellStyle}>Price</th>
-      <th style={tableHeaderCellStyle}>Quantity</th>
-    </tr>
-  </thead>
-  <tbody>
-    {configuredItems.length > 0 ? (
-      configuredItems
-        .filter(item => 
-          item.Configurators.some(config => config.Vid === selectedSpec)
-        ) // Filter based on selectedSpec
-        .map((item) => (
-          <tr key={item.Id} style={tableRowStyle}>
-            <td style={tableCellStyle}>
-              {item.Configurators.map((config, index) => {
-                const matchingAttribute = Attributes.find(attr => attr.Vid === config.Vid);
-                return (
-                  <Fragment key={index}>
-                    {matchingAttribute ? matchingAttribute.Value : config.Vid} 
-                    {index < item.Configurators.length - 1 && ", "}
-                  </Fragment>
-                );
-              })}
-            </td>
-            <td style={tableCellStyle}>
-              {item.Price.CurrencySign}
-              {item.Price.ConvertedPriceWithoutSign}
-            </td>
-            <td style={quantityCellStyle}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <button onClick={handleCartAmountChange(1)} style={addButtonStyle}>
-                  Add to Cart
-                </button>
-                <span>{item.Quantity}</span>
-              </div>
-            </td>
-          </tr>
-        ))
-    ) : (
-      <tr>
-        <td colSpan={3}>No configurations available.</td>
-      </tr>
-    )}
-  </tbody>
-</table>
+  {configuredItems.length > 0 && configuredItems.some(item => 
+      item.Configurators.some(config => config.Vid === selectedSpec)
+    ) ? (
+    <table style={tableStyle}>
+      <thead>
+        <tr style={tableHeaderStyle}>
+          <th style={tableHeaderCellStyle}>Variants</th>
+          <th style={tableHeaderCellStyle}>Price</th>
+          <th style={tableHeaderCellStyle}>Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        {configuredItems
+          .filter(item => 
+            item.Configurators.some(config => config.Vid === selectedSpec)
+          ) // Filter based on selectedSpec
+          .map((item) => (
+            <tr key={item.Id} style={tableRowStyle}>
+              <td style={tableCellStyle}>
+                {item.Configurators.map((config, index) => {
+                  const matchingAttribute = Attributes.find(attr => attr.Vid === config.Vid);
+                  return (
+                    <Fragment key={index}>
+                      {matchingAttribute ? matchingAttribute.Value : config.Vid} 
+                      {index < item.Configurators.length - 1 && ", "}
+                    </Fragment>
+                  );
+                })}
+              </td>
+              <td style={tableCellStyle}>
+                {item.Price.CurrencySign}
+                {item.Price.ConvertedPriceWithoutSign}
+              </td>
+              <td style={quantityCellStyle}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <button onClick={handleCartAmountChange(1)} style={addButtonStyle}>
+                    Add to Cart
+                  </button>
+                  <span>{item.Quantity}</span>
+                </div>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  ) : (
+    <div>
+      <button onClick={handleCartAmountChange(1)} style={addButtonStyle}>
+        Add to Cart
+      </button>
+    </div>
+  )}
+</div>
 
-  </div>
+
 </div>
 
         </Grid>
