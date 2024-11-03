@@ -155,7 +155,7 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
     >
       <FlexBox
         my="0.5rem"
-        padding="1px 5px"
+        padding="1px 14px"
         style={{
           display: "flex",
           alignItems: "center",
