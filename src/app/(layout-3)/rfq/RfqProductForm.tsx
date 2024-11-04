@@ -146,7 +146,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Upload } from "lucide-react";
 import axios from "axios";
 import authService from "services/authService";
@@ -185,6 +185,7 @@ export default function RfqProductForm() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Styles for the component
   const containerStyle: React.CSSProperties = {
@@ -331,6 +332,13 @@ export default function RfqProductForm() {
     fetchMeasurementUnits();
   }, []);
 
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"; // Reset the height
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set height based on scrollHeight
+    }
+  }, [productName]);
+
   const handleProductSelection = (product_name: string) => {
     setProductName(product_name);
     setSelectedProduct(product_name);
@@ -346,8 +354,18 @@ export default function RfqProductForm() {
     setIsDropdownOpen(false);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProductName(e.target.value);
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setProductName(e.target.value);
+  //   setSelectedProduct("");
+  //   setIsDropdownOpen(true);
+  //   setErrors((prev) => ({ ...prev, productName: "" }));
+  // };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const textarea = e.target;
+    textarea.style.height = "auto"; // Reset the height
+    textarea.style.height = `${textarea.scrollHeight}px`; // Set height based on scrollHeight
+    setProductName(textarea.value);
     setSelectedProduct("");
     setIsDropdownOpen(true);
     setErrors((prev) => ({ ...prev, productName: "" }));
@@ -437,15 +455,14 @@ export default function RfqProductForm() {
             style={inputStyle} 
           /> */}
           <textarea
+            ref={textareaRef} // Reference to the textarea
             value={productName}
-            onChange={(e) => {
-              setProductName(e.target.value);
-              setSelectedProduct("");
-              setIsDropdownOpen(true);
-              setErrors((prev) => ({ ...prev, productName: "" })); // Clear specifications error
-            }}
+            onChange={handleInputChange}
+            onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
+            onFocus={() => setIsDropdownOpen(suggestions.length > 0)}
             placeholder="Product Name"
-            style={{ ...inputStyle, maxHeight: "auto" }}
+            style={{ ...inputStyle, overflow: "hidden", resize: "none" }}
+            rows={1} // Initial rows
           ></textarea>
           {errors.productName && (
             <div style={{ color: "red" }}>{errors.productName}</div>
