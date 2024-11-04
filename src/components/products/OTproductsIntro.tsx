@@ -354,6 +354,7 @@ export default function OtProductsIntro({
 
   const [selectedPrice, setSelectedPrice] = useState<number | null>(price);
   
+  
 
   const handleRowClick = (itemId: string) => {
     setSelectedRowId(itemId === selectedRowId ? null : itemId);
@@ -571,6 +572,7 @@ export default function OtProductsIntro({
           </div>
         </Grid>
 
+
         <Grid item md={6} xs={12} alignItems="center">
           <H3 mb="1rem">{title}</H3>
 
@@ -714,7 +716,7 @@ export default function OtProductsIntro({
             images={images}
             title={title}
             discountPrice={discountPrice}
-            price={price}
+           price={selectedPrice}
             slug={slug}
             selectedSize={selectedSpec}
             selectedColor={''} 
@@ -733,7 +735,7 @@ export default function OtProductsIntro({
             images={images}
             title={title}
             discountPrice={discountPrice}
-            price={price}
+            price={selectedPrice}
             slug={slug}
             selectedSize={selectedSpec}
             selectedColor={''}
