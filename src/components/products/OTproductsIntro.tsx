@@ -351,12 +351,14 @@ export default function OtProductsIntro({
 
 
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
+
+  const [selectedPrice, setSelectedPrice] = useState<number | null>(price);
+  
   
 
   const handleRowClick = (itemId: string) => {
-    setSelectedRowId(itemId === selectedRowId ? null : itemId); // Toggle selection
+    setSelectedRowId(itemId === selectedRowId ? null : itemId);
   };
-  
 
   const routerId = param.slug as string;
   const cartItem = state.cart.find((item) => item.id === id || item.id === routerId);
@@ -387,6 +389,18 @@ export default function OtProductsIntro({
       setSelectedSpec(initialItem.Vid); // Set the initial selected spec
     }
   }, [Attributes, configuredItems]);
+  useEffect(() => {
+    // Update selectedPrice based on selected variant
+    const selectedItem = configuredItems.find(item => 
+      item.Configurators.some(config => config.Vid === selectedSpec)
+    );
+    
+    if (selectedItem) {
+      setSelectedPrice(selectedItem.Price.ConvertedPriceWithoutSign);
+    } else {
+      setSelectedPrice(price); // Reset to default if no variant is selected
+    }
+  }, [selectedSpec, configuredItems, price]);
 
   // const handleImageClick = (ind: number) => () => setSelectedImage(ind);
   
@@ -558,6 +572,7 @@ export default function OtProductsIntro({
           </div>
         </Grid>
 
+
         <Grid item md={6} xs={12} alignItems="center">
           <H3 mb="1rem">{title}</H3>
 
@@ -568,37 +583,37 @@ export default function OtProductsIntro({
           </FlexBox>
 
           <Box mb="24px">
-            <FlexBox alignItems="center">
-              <H3 color="primary.main" mb="4px" lineHeight="1">
-                {discountPrice ? (
-                  <>
-                    <span style={currentPriceStyle}>{currency(discountPrice)}</span>
-                    <span style={originalPriceStyle}>{currency(price)}</span>
-                  </>
-                ) : (
-                  <span>{currency(price)}</span>
-                )}
-              </H3>
+      <FlexBox alignItems="center">
+        <H3 color="primary.main" mb="4px" lineHeight="1">
+          {discountPrice ? (
+            <>
+              <span style={currentPriceStyle}>{currency(discountPrice)}</span>
+              <span style={originalPriceStyle}>{currency(selectedPrice)}</span> {/* Use selectedPrice */}
+            </>
+          ) : (
+            <span>{currency(selectedPrice)}</span> // Use selectedPrice
+          )}
+        </H3>
 
-              {!!discountPrice && totalDiscount && (
-                <Chip
-                  bg="primary.main"
-                  color="white"
-                  px="0.5rem"
-                  py="0.25rem"
-                  ml="1rem"
-                  fontWeight="600"
-                  fontSize="12px"
-                  textAlign="center"
-                >
-                  {Math.floor(totalDiscount)}% off
-                </Chip>
-              )}
-            </FlexBox>
-            <SemiSpan color="inherit">
-              {productStock > 0 ? "Stock Available" : "Stock Out"}
-            </SemiSpan>
-          </Box>
+        {!!discountPrice && totalDiscount && (
+          <Chip
+            bg="primary.main"
+            color="white"
+            px="0.5rem"
+            py="0.25rem"
+            ml="1rem"
+            fontWeight="600"
+            fontSize="12px"
+            textAlign="center"
+          >
+            {Math.floor(totalDiscount)}% off
+          </Chip>
+        )}
+      </FlexBox>
+      <SemiSpan color="inherit">
+        {productStock > 0 ? "Stock Available" : "Stock Out"}
+      </SemiSpan>
+    </Box>
 
           <div style={containerStyle}>
           {/* <h2 style={titleStyle}>Specification: </h2> */}
@@ -701,7 +716,7 @@ export default function OtProductsIntro({
             images={images}
             title={title}
             discountPrice={discountPrice}
-            price={price}
+           price={selectedPrice}
             slug={slug}
             selectedSize={selectedSpec}
             selectedColor={''} 
@@ -710,7 +725,9 @@ export default function OtProductsIntro({
         </div>
       )}
 
-      {selectedRowId && (
+    
+    </div>
+    {selectedRowId && (
         <div style={{ marginTop: '20px' }}>
           <AddToCartButton
             productId={productId}
@@ -718,7 +735,7 @@ export default function OtProductsIntro({
             images={images}
             title={title}
             discountPrice={discountPrice}
-            price={price}
+            price={selectedPrice}
             slug={slug}
             selectedSize={selectedSpec}
             selectedColor={''}
@@ -727,7 +744,6 @@ export default function OtProductsIntro({
           />
         </div>
       )}
-    </div>
 
 
 </div>
