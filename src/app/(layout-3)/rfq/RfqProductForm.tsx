@@ -444,7 +444,7 @@ export default function RfqProductForm() {
 
       <div style={{ marginBottom: "20px" }}>
         <label style={labelStyle}>Product Name</label>
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
           {/* <input 
             type="text" 
             value={productName}
@@ -461,7 +461,7 @@ export default function RfqProductForm() {
             onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
             onFocus={() => setIsDropdownOpen(suggestions.length > 0)}
             placeholder="Product Name"
-            style={{ ...inputStyle, overflow: "hidden", resize: "none" }}
+            style={{ ...inputStyle, overflow: "hidden", resize: "none", paddingRight: "30px" }}
             rows={1} // Initial rows
           ></textarea>
           {errors.productName && (
@@ -481,6 +481,7 @@ export default function RfqProductForm() {
                 cursor: "pointer",
                 fontSize: "30px",
                 color: "#6c757d",
+                textAlign: "center"
               }}
             >
               &times;
