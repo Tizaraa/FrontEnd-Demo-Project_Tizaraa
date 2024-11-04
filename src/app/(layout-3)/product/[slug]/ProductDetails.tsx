@@ -289,7 +289,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
         margin: '0 auto',
       }}>
         <div style={{
-          flex: isDesktop ? '1 1 75%' : '1 1 100%',
+          flex: isDesktop ? '1 1 70%' : '1 1 100%',
         }}>
           <ProductIntro
             id={product.id}
@@ -309,7 +309,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
         </div>
         {isDesktop && (
           <div style={{
-            flex: isDesktop ? '1 1 25%' : '1 1 100%',
+            flex: isDesktop ? '1 1 30%' : '1 1 100%',
           }}>
             <ShippingInfo isDesktop={isDesktop} sellerShopName={sellerShopName} shopUrl={shopUrl} delivery_type={delivery_type} />
           </div>
