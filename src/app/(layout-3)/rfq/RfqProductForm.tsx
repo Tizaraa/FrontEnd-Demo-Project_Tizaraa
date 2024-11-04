@@ -444,7 +444,7 @@ export default function RfqProductForm() {
 
       <div style={{ marginBottom: "20px" }}>
         <label style={labelStyle}>Product Name</label>
-        <div style={{ position: "relative", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+        <div style={{ position: "relative", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
           {/* <input 
             type="text" 
             value={productName}
