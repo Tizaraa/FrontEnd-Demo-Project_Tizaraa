@@ -97,8 +97,8 @@
 //         </div>
 //         <div style={{ flex: 1 }}>
 //           <label style={labelStyle}>&nbsp;</label>
-//           <select 
-//             value={quantity} 
+//           <select
+//             value={quantity}
 //             onChange={(e) => setQuantity(e.target.value)}
 //             style={dropdownStyle}
 //           >
@@ -123,8 +123,8 @@
 
 //       <div style={{ marginBottom: '20px' }}>
 //         <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-//           <input 
-//             type="checkbox" 
+//           <input
+//             type="checkbox"
 //             checked={agree}
 //             onChange={() => setAgree(!agree)}
 //             style={checkboxStyle}
@@ -133,8 +133,8 @@
 //         </label>
 //       </div>
 
-//       <button 
-//         style={submitButtonStyle} 
+//       <button
+//         style={submitButtonStyle}
 //         onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#E97451'}
 //         onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgb(231, 75, 50)'}
 //       >
@@ -144,11 +144,11 @@
 //   )
 // }
 
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Upload } from 'lucide-react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import { Upload } from "lucide-react";
+import axios from "axios";
 import authService from "services/authService";
 import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css";
@@ -170,119 +170,121 @@ interface MeasurementUnit {
 }
 
 export default function RfqProductForm() {
-  const [productName, setProductName] = useState('');
-  const [selectedProduct, setSelectedProduct] = useState(''); 
+  const [productName, setProductName] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [unit, setUnit] = useState('');
+  const [unit, setUnit] = useState("");
   const [agree, setAgree] = useState(false);
-  const [specifications, setSpecifications] = useState('');
+  const [specifications, setSpecifications] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [fileName, setFileName] = useState('');
+  const [fileName, setFileName] = useState("");
   const [suggestions, setSuggestions] = useState<ProductSuggestion[]>([]);
-  const [measurementUnits, setMeasurementUnits] = useState<MeasurementUnit[]>([]);
+  const [measurementUnits, setMeasurementUnits] = useState<MeasurementUnit[]>(
+    []
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   // Styles for the component
   const containerStyle: React.CSSProperties = {
-    maxWidth: '800px',
-    margin: '0 auto',
-    padding: '20px',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.4)',
-    borderRadius: '8px',
-    backgroundColor: '#fff',
-    position: 'relative',
+    maxWidth: "800px",
+    margin: "0 auto",
+    padding: "20px",
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.4)",
+    borderRadius: "8px",
+    backgroundColor: "#fff",
+    position: "relative",
   };
 
   const headerStyle: React.CSSProperties = {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    color: '#343a40',
-    marginBottom: '20px',
-    textAlign: 'center' as const,
+    fontSize: "24px",
+    fontWeight: "bold",
+    color: "#343a40",
+    marginBottom: "20px",
+    textAlign: "center" as const,
   };
 
   const inputStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '10px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    fontSize: '16px',
-    backgroundColor: '#f8f9fa',
-    color: '#343a40',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    position: 'relative' as const,
+    width: "100%",
+    padding: "10px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    fontSize: "16px",
+    backgroundColor: "#f8f9fa",
+    color: "#343a40",
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    position: "relative" as const,
   };
 
   const labelStyle: React.CSSProperties = {
-    display: 'block',
-    marginBottom: '5px',
-    color: '#6c757d',
-    fontSize: '18px',
+    display: "block",
+    marginBottom: "5px",
+    color: "#6c757d",
+    fontSize: "18px",
   };
 
   const errorMessageStyle: React.CSSProperties = {
-    color: 'red',
-    fontSize: '14px',
-    marginTop: '5px',
+    color: "red",
+    fontSize: "14px",
+    marginTop: "5px",
   };
 
   const dropdownStyles = {
     ...inputStyle,
-    appearance: 'none' as const,
-    paddingRight: '30px',
+    appearance: "none" as const,
+    paddingRight: "30px",
     background: `#f8f9fa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center`,
-    backgroundSize: '20px',
+    backgroundSize: "20px",
   };
 
   const dropdownStyle: React.CSSProperties = {
     ...inputStyle,
-    position: 'relative' as const,
+    position: "relative" as const,
     zIndex: 1000,
-    backgroundColor: '#fff',
-    maxHeight: '150px',
-    overflow: 'auto',
-    marginTop: '5px',
-    border: '1px solid #ccc',
-    width: '100%',
-    borderRadius: '4px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    textAlign: 'left' as const,
-    padding: '5px 0',
+    backgroundColor: "#fff",
+    maxHeight: "150px",
+    overflow: "auto",
+    marginTop: "5px",
+    border: "1px solid #ccc",
+    width: "100%",
+    borderRadius: "4px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+    textAlign: "left" as const,
+    padding: "5px 0",
   };
 
   const dropdownItemStyle: React.CSSProperties = {
-    padding: '10px 15px',
-    cursor: 'pointer',
-    borderBottom: '1px solid #ddd',
-    whiteSpace: '',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    width: '100%',
-    textAlign: 'left' as const,
+    padding: "10px 15px",
+    cursor: "pointer",
+    borderBottom: "1px solid #ddd",
+    whiteSpace: "",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    width: "100%",
+    textAlign: "left" as const,
   };
 
   const submitButtonStyle: React.CSSProperties = {
-    backgroundColor: 'rgb(231, 75, 50)',
-    color: '#fff',
-    padding: '10px 20px',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '18px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
+    backgroundColor: "rgb(231, 75, 50)",
+    color: "#fff",
+    padding: "10px 20px",
+    border: "none",
+    borderRadius: "4px",
+    fontSize: "18px",
+    cursor: "pointer",
+    transition: "background-color 0.3s",
   };
 
   const uploadAreaStyle = {
-    border: '2px dashed #ccc',
-    borderRadius: '4px',
-    padding: '20px',
-    textAlign: 'center' as const,
-    cursor: 'pointer',
-    color: '#6c757d',
-    marginBottom: '20px',
+    border: "2px dashed #ccc",
+    borderRadius: "4px",
+    padding: "20px",
+    textAlign: "center" as const,
+    cursor: "pointer",
+    color: "#6c757d",
+    marginBottom: "20px",
   };
 
   useEffect(() => {
@@ -299,7 +301,7 @@ export default function RfqProductForm() {
           setSuggestions(response.data.data);
           setIsDropdownOpen(response.data.data.length > 0);
         } catch (error) {
-          console.error('Error fetching product suggestions:', error);
+          console.error("Error fetching product suggestions:", error);
         }
       } else {
         setSuggestions([]);
@@ -322,7 +324,7 @@ export default function RfqProductForm() {
         );
         setMeasurementUnits(response.data.data);
       } catch (error) {
-        console.error('Error fetching measurement units:', error);
+        console.error("Error fetching measurement units:", error);
       }
     };
 
@@ -334,45 +336,47 @@ export default function RfqProductForm() {
     setSelectedProduct(product_name);
     setSuggestions([]);
     setIsDropdownOpen(false);
-    setErrors((prev) => ({ ...prev, productName: '' }));
+    setErrors((prev) => ({ ...prev, productName: "" }));
   };
 
   const handleClearProductName = () => {
-    setProductName('');
-    setSelectedProduct('');
+    setProductName("");
+    setSelectedProduct("");
     setSuggestions([]);
     setIsDropdownOpen(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProductName(e.target.value);
-    setSelectedProduct('');
+    setSelectedProduct("");
     setIsDropdownOpen(true);
-    setErrors((prev) => ({ ...prev, productName: '' }));
+    setErrors((prev) => ({ ...prev, productName: "" }));
   };
 
-  const handleInputChang = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value === '' || (parseInt(value) > 0)) { // Allow empty or positive values
+    if (value === "" || parseInt(value) > 0) {
+      // Allow empty or positive values
       setQuantity(value);
-      setErrors((prev) => ({ ...prev, quantity: '' }));
+      setErrors((prev) => ({ ...prev, quantity: "" }));
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
     setFile(selectedFile);
-    setFileName(selectedFile ? selectedFile.name : '');
+    setFileName(selectedFile ? selectedFile.name : "");
   };
-
 
   const handleSubmit = async () => {
     // Validation logic
     const newErrors: { [key: string]: string } = {};
     if (!productName) newErrors.productName = "Product name is required.";
-    if (!quantity || parseInt(quantity) <= 0) newErrors.quantity = "Quantity must be a positive number.";
+    if (!quantity || parseInt(quantity) <= 0)
+      newErrors.quantity = "Quantity must be a positive number.";
     if (!unit) newErrors.unit = "Unit is required.";
-    if (!specifications) newErrors.specifications = "Specifications are required.";
+    if (!specifications)
+      newErrors.specifications = "Specifications are required.";
     if (!agree) newErrors.agree = "You must agree to the terms.";
 
     if (Object.keys(newErrors).length > 0) {
@@ -394,17 +398,17 @@ export default function RfqProductForm() {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-      setProductName('');
-      setSelectedProduct('');
-      setQuantity('');
-      setUnit('');
-      setSpecifications('');
+      setProductName("");
+      setSelectedProduct("");
+      setQuantity("");
+      setUnit("");
+      setSpecifications("");
       setFile(null);
-      setFileName('');
+      setFileName("");
       setAgree(false);
       setErrors({});
       setSuggestions([]);
@@ -420,10 +424,10 @@ export default function RfqProductForm() {
     <div style={containerStyle}>
       <h2 style={headerStyle}>Request for Quotation</h2>
 
-      <div style={{ marginBottom: '20px' }}>
+      <div style={{ marginBottom: "20px" }}>
         <label style={labelStyle}>Product Name</label>
-        <div style={{ position: 'relative' }}>
-          <input 
+        <div style={{ position: "relative" }}>
+          {/* <input 
             type="text" 
             value={productName}
             onChange={handleInputChange}
@@ -431,22 +435,35 @@ export default function RfqProductForm() {
             onFocus={() => setIsDropdownOpen(suggestions.length > 0)}
             placeholder="Product Name" 
             style={inputStyle} 
-          />
-          {errors.productName && <div style={{ color: 'red' }}>{errors.productName}</div>}
+          /> */}
+          <textarea
+            value={productName}
+            onChange={(e) => {
+              setProductName(e.target.value);
+              setSelectedProduct("");
+              setIsDropdownOpen(true);
+              setErrors((prev) => ({ ...prev, productName: "" })); // Clear specifications error
+            }}
+            placeholder="Product Name"
+            style={{ ...inputStyle, maxHeight: "auto" }}
+          ></textarea>
+          {errors.productName && (
+            <div style={{ color: "red" }}>{errors.productName}</div>
+          )}
           {productName && (
-            <button 
-              onClick={handleClearProductName} 
+            <button
+              onClick={handleClearProductName}
               style={{
                 paddingLeft: "16px",
-                position: 'absolute',
-                right: '1px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
+                position: "absolute",
+                right: "1px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
                 fontSize: "30px",
-                color: '#6c757d',
+                color: "#6c757d",
               }}
             >
               &times;
@@ -456,7 +473,7 @@ export default function RfqProductForm() {
         {isDropdownOpen && suggestions.length > 0 && (
           <ul style={dropdownStyle}>
             {suggestions.map((suggestion) => (
-              <li 
+              <li
                 key={suggestion.product_name}
                 onClick={() => handleProductSelection(suggestion.product_name)}
                 style={dropdownItemStyle}
@@ -468,26 +485,28 @@ export default function RfqProductForm() {
         )}
       </div>
 
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+      <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
         <div style={{ flex: 1 }}>
           <label style={labelStyle}>Quantity</label>
           <input
-          type="number"
-          value={quantity}
-          onChange={handleInputChang}
-          min="1"
-          placeholder="Enter Quantity"
-          style={inputStyle}
-        />
-        {errors.quantity && <div style={{ color: 'red' }}>{errors.quantity}</div>}
+            type="number"
+            value={quantity}
+            onChange={handleQuantity}
+            min="1"
+            placeholder="Enter Quantity"
+            style={inputStyle}
+          />
+          {errors.quantity && (
+            <div style={{ color: "red" }}>{errors.quantity}</div>
+          )}
         </div>
         <div style={{ flex: 1 }}>
           <label style={labelStyle}>Unit</label>
-          <select 
-            value={unit} 
+          <select
+            value={unit}
             onChange={(e) => {
               setUnit(e.target.value);
-              setErrors((prev) => ({ ...prev, unit: '' })); // Clear unit error
+              setErrors((prev) => ({ ...prev, unit: "" })); // Clear unit error
             }}
             style={dropdownStyles}
           >
@@ -498,39 +517,46 @@ export default function RfqProductForm() {
               </option>
             ))}
           </select>
-          {errors.unit && <div style={{ color: 'red' }}>{errors.unit}</div>}
+          {errors.unit && <div style={{ color: "red" }}>{errors.unit}</div>}
         </div>
       </div>
-      <div style={{ marginBottom: '20px' }}>
+      <div style={{ marginBottom: "20px" }}>
         <label style={labelStyle}>Detailed Requirements</label>
-        <textarea 
+        <textarea
           value={specifications}
           onChange={(e) => {
             setSpecifications(e.target.value);
-            setErrors((prev) => ({ ...prev, specifications: '' })); // Clear specifications error
+            setErrors((prev) => ({ ...prev, specifications: "" })); // Clear specifications error
           }}
-          placeholder="I'm looking for..." 
-          style={{ ...inputStyle, height: '150px' }}
+          placeholder="I'm looking for..."
+          style={{ ...inputStyle, height: "150px" }}
         ></textarea>
-        {errors.specifications && <div style={{ color: 'red' }}>{errors.specifications}</div>}
+        {errors.specifications && (
+          <div style={{ color: "red" }}>{errors.specifications}</div>
+        )}
       </div>
 
-      <div style={uploadAreaStyle} onClick={() => document.getElementById('fileInput')?.click()}>
-        <input 
-          id="fileInput" 
-          type="file" 
-          onChange={handleFileChange} 
-          style={{ display: 'none' }} 
+      <div
+        style={uploadAreaStyle}
+        onClick={() => document.getElementById("fileInput")?.click()}
+      >
+        <input
+          id="fileInput"
+          type="file"
+          onChange={handleFileChange}
+          style={{ display: "none" }}
         />
         <Upload size={48} />
         {fileName ? <p>{fileName}</p> : <p>Click to upload or drag and drop</p>}
         <p>SVG, PNG, JPG or GIF (MAX. 800x400px), PDF, DOCX</p>
       </div>
 
-      <div style={{ marginBottom: '20px' }}>
-        <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <input 
-            type="checkbox" 
+      <div style={{ marginBottom: "20px" }}>
+        <label
+          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+        >
+          <input
+            type="checkbox"
             checked={agree}
             onChange={() => {
               const newAgree = !agree;
@@ -538,27 +564,26 @@ export default function RfqProductForm() {
               // Set or clear error based on the new state of the checkbox
               setErrors((prev) => ({
                 ...prev,
-                agree: newAgree ? '' : 'You must agree to the terms.'
+                agree: newAgree ? "" : "You must agree to the terms.",
               }));
             }}
-            style={{ marginRight: '10px' }}
+            style={{ marginRight: "10px" }}
           />
           I agree to share my Business card with quoted suppliers
         </label>
-        {errors.agree && <div style={{ color: 'red' }}>{errors.agree}</div>}
+        {errors.agree && <div style={{ color: "red" }}>{errors.agree}</div>}
       </div>
 
-      <button 
-        style={submitButtonStyle} 
+      <button
+        style={submitButtonStyle}
         onClick={handleSubmit}
-        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#E97451'}
-        onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgb(231, 75, 50)'}
+        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#E97451")}
+        onMouseOut={(e) =>
+          (e.currentTarget.style.backgroundColor = "rgb(231, 75, 50)")
+        }
       >
         Submit
       </button>
     </div>
   );
 }
-
-
-
