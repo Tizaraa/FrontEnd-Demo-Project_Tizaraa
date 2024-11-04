@@ -1380,6 +1380,17 @@ export default function RfqProductForm() {
           },
         }
       );
+      setProductName('');
+      setSelectedProduct('');
+      setQuantity('');
+      setUnit('');
+      setSpecifications('');
+      setFile(null);
+      setFileName('');
+      setAgree(false);
+      setErrors({});
+      setSuggestions([]);
+      setIsDropdownOpen(false);
       toast.success("Request For Quotation form submitted successfully!");
       //toast.success("Order placed successfully!");
     } catch (error) {
