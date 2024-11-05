@@ -108,6 +108,8 @@ export default function ProductIntro({
             selectedColor={selectedColor} 
             price={selectedPrice} 
             dummySizes={formattedSizeColorOptions} 
+            selectedSpec={''} 
+
           />
 
            <FlexBox alignItems="center" mb="1rem" mt="1rem">

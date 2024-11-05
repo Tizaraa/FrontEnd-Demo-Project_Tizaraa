@@ -15,6 +15,8 @@ import { currency } from "@utils/utils";
 import { marginLeft } from "styled-system";
 import AddToCartButton from "./AddToCartButton";
 
+import styles from '../../components/products/productsStyle/OTproductsIntrostyle.module.css';
+
 // ========================================
 
 type ConfiguredItem = {
@@ -49,8 +51,8 @@ type OTProductsIntroProps = {
   id: string | number;
   sellerShopName: string;
   rating: number;
-  discountPrice?: number; // Optional discount price
-  totalDiscount?: number; // Optional total discount
+  discountPrice?: number; 
+  totalDiscount?: number; 
   slug?: string;
   productStock: number;
   productId: string | number;
@@ -98,22 +100,12 @@ export default function OtProductsIntro({
   const routerId = param.slug as string;
   const cartItem = state.cart.find((item) => item.id === id || item.id === routerId);
 
-  // const handleVariantSelect = (item: Attribute) => {
-  //   setSelectedSpec(item.Vid);
-
-  //   // Find the index of the matching image in `images`
-  //   const imageIndex = images.findIndex((url) => url === item.ImageUrl);
-  //   if (imageIndex !== -1) {
-  //     setSelectedImage(imageIndex); // Update displayed image
-  //   }
-  // };
   const handleVariantSelect = (item) => {
     setSelectedSpec(item.Vid); 
-    setSelectedImage(item.ImageUrl); // Set selected image directly using the image URL
+    setSelectedImage(item.ImageUrl); 
   };
 
   useEffect(() => {
-    // Set initial selectedSpec to the first item's Vid from filtered Attributes
     const initialItem = Attributes?.find(item => 
       configuredItems.some(configuredItem => 
         configuredItem.Configurators.some(config => config.Vid === item.Vid)
@@ -121,7 +113,7 @@ export default function OtProductsIntro({
     );
     
     if (initialItem) {
-      setSelectedSpec(initialItem.Vid); // Set the initial selected spec
+      setSelectedSpec(initialItem.Vid); 
     }
   }, [Attributes, configuredItems]);
   useEffect(() => {
@@ -133,7 +125,7 @@ export default function OtProductsIntro({
     if (selectedItem) {
       setSelectedPrice(selectedItem.Price.ConvertedPriceWithoutSign);
     } else {
-      setSelectedPrice(price); // Reset to default if no variant is selected
+      setSelectedPrice(price);
     }
   }, [selectedSpec, configuredItems, price]);
 
@@ -156,122 +148,6 @@ export default function OtProductsIntro({
       },
     });
   };
-
-  const containerStyle = {
-    width: '100%'
-  }
-
-  const headerContainerStyle = {
-    marginBottom: '1rem'
-  }
-
-  const titleStyle = {
-    fontSize: '1.25rem',
-    fontWeight: 'bold',
-    marginBottom: '0.75rem'
-  }
-
-  const buttonContainerStyle: React.CSSProperties = {
-    display: 'flex',           
-    flexWrap: 'wrap',          
-    gap: '1rem',             
-    marginBottom: '1rem',
-};
-
-  const getButtonStyle = (isSelected: boolean) => ({
-    padding: '0.5rem 1rem',
-    borderRadius: '0.25rem',
-    border: `1px solid ${isSelected ? '#0ea5e9' : '#e5e7eb'}`,
-    backgroundColor: 'white',
-    color: isSelected ? '#0ea5e9' : '#4b5563',
-    fontSize: '0.875rem',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    ':hover': {
-      backgroundColor: isSelected ? 'white' : '#f9fafb'
-    }
-  })
-
-  // const tableContainerStyle = {
-  //   backgroundColor: 'white'
-  // }
-
-  const tableContainerStyle: React.CSSProperties = {
-    maxHeight: '250px',
-    overflowY: 'auto',
-    marginBottom: '20px',
-    scrollbarWidth: 'thin',  
-    scrollbarColor: '#888 #f1f1f1', 
-    border: 'none'
-};
-
-  const tableStyle: React.CSSProperties = {
-    width: '100%',
-  borderCollapse: 'collapse',
-  borderLeft: '1px solid #ccc', 
-  borderRight: '1px solid #ccc', 
-  }
-
-  const tableHeaderStyle = {
-    backgroundColor: '#f9fafb',
-    borderTop: '1px solid #e5e7eb',
-    borderBottom: '1px solid #e5e7eb'
-  }
-
-  const tableHeaderCellStyle = {
-    textAlign: 'left' as const,
-    padding: '0.75rem 1rem',
-    fontWeight: '500',
-    color: '#374151'
-  }
-
-  const tableRowStyle = {
-    borderBottom: '1px solid #e5e7eb',
-     cursor: 'pointer'
-  }
-
-  const tableCellStyle = {
-    // padding: '1rem'
-    padding: '10px', 
-    border: '1px solid #ddd' 
-  }
-
-  const priceContainerStyle = {
-    display: 'flex',
-    flexDirection: 'column' as const
-  }
-
-  const currentPriceStyle = {
-    color: '#0ea5e9',
-    fontWeight: '500'
-  }
-
-  const originalPriceStyle = {
-    color: '#9ca3af',
-    fontSize: '0.875rem',
-    textDecoration: 'line-through'
-  }
-
-  const quantityCellStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  }
-
-  const addButtonStyle = {
-    backgroundColor: '#e94560',
-    color: 'white',
-    padding: '0.375rem 1.5rem',
-    borderRadius: '0.25rem',
-    fontSize: '0.875rem',
-    cursor: 'pointer',
-    border: 'none',
-    transition: 'background-color 0.2s',
-    ':hover': {
-      backgroundColor: '#0284c7'
-    }
-  }
-
   return (
     <Box overflow="hidden">
       <Grid container justifyContent="center" spacing={16}>
@@ -281,7 +157,7 @@ export default function OtProductsIntro({
   <Image
     width={200}
     height={200}
-    src={selectedImage || images[0]} // Display selectedImage or fallback to first image
+    src={selectedImage || images[0]}
     style={{ display: "block", width: "70%", height: "auto" }}
   />
 </FlexBox>
@@ -323,11 +199,11 @@ export default function OtProductsIntro({
         <H3 color="primary.main" mb="4px" lineHeight="1">
           {discountPrice ? (
             <>
-              <span style={currentPriceStyle}>{currency(discountPrice)}</span>
-              <span style={originalPriceStyle}>{currency(selectedPrice)}</span> {/* Use selectedPrice */}
+              <span className={styles.currentPriceStyle}>{currency(discountPrice)}</span>
+              <span className={styles.originalPriceStyle}>{currency(selectedPrice)}</span> 
             </>
           ) : (
-            <span>{currency(selectedPrice)}</span> // Use selectedPrice
+            <span>{currency(selectedPrice)}</span> 
           )}
         </H3>
 
@@ -351,20 +227,14 @@ export default function OtProductsIntro({
       </SemiSpan>
     </Box>
 
-          <div style={containerStyle}>
+          <div className={styles.containerStyle}>
           {/* <h2 style={titleStyle}>Specification: </h2> */}
-    <div style={buttonContainerStyle}>
+    <div className={styles.buttonContainerStyle}>
   {Attributes?.filter(item =>
     configuredItems.some(configItem =>
       configItem.Configurators.some(config => config.Vid === item.Vid)
     )
   )
-    // .reduce((uniqueItems, item) => {
-    //   if (!uniqueItems.some(uniqueItem => uniqueItem.Vid === item.Vid)) {
-    //     uniqueItems.push(item);
-    //   }
-    //   return uniqueItems;
-    // }, [])
     .reduce((uniqueItems, item) => {
  
       const hasImage = item.ImageUrl;
@@ -382,7 +252,7 @@ export default function OtProductsIntro({
       <button
         key={item.Vid}
         onClick={() => handleVariantSelect(item)}
-        style={getButtonStyle(selectedSpec === item.Vid)}
+        className={styles.getButtonStyle + (selectedSpec === item.Vid ? ` ${styles.getButtonStyleSelected}` : '')} 
       >
         {item.ImageUrl ? (
           <img
@@ -398,16 +268,17 @@ export default function OtProductsIntro({
 </div>
 
 
-<div style={tableContainerStyle}>
+{/* table container starts */}
+<div className={styles.tableContainerStyle}>
       {configuredItems.length > 0 && configuredItems.some(item => 
           item.Configurators.some(config => config.Vid === selectedSpec)
         ) ? (
-        <table style={tableStyle}>
+        <table className={styles.tableStyle}>
           <thead>
-            <tr style={tableHeaderStyle}>
-              <th style={tableHeaderCellStyle}>Variants</th>
-              <th style={tableHeaderCellStyle}>Price</th>
-              <th style={tableHeaderCellStyle}>Quantity</th>
+            <tr className={styles.tableHeaderStyle}>
+              <th className={styles.tableHeaderCellStyle}>Variants</th>
+              <th className={styles.tableHeaderCellStyle}>Price</th>
+              <th className={styles.tableHeaderCellStyle}>Quantity</th>
             </tr>
           </thead>
           <tbody>
@@ -418,10 +289,10 @@ export default function OtProductsIntro({
               .map((item) => (
                 <tr 
                   key={item.Id} 
-                  style={{ ...tableRowStyle, backgroundColor: selectedRowId === item.Id ? '#f0f8ff' : 'white' }} 
+                  className={`${styles.tableRowStyle} ${selectedRowId === item.Id ? styles.selectedRowStyle : ''}`}
                   onClick={() => handleRowClick(item.Id)}
                 >
-                  <td style={tableCellStyle}>
+                  <td className={styles.tableCellStyle}>
                     {item.Configurators.map((config, index) => {
                       const matchingAttribute = Attributes.find(attr => attr.Vid === config.Vid);
                       return (
@@ -432,11 +303,11 @@ export default function OtProductsIntro({
                       );
                     })}
                   </td>
-                  <td style={tableCellStyle}>
+                  <td className={styles.tableCellStyle}>
                     {item.Price.CurrencySign}
                     {item.Price.ConvertedPriceWithoutSign}
                   </td>
-                  <td style={tableCellStyle}>
+                  <td className={styles.tableCellStyle}>
                         <span>{item.Quantity}</span>
                   </td>
                 </tr>
@@ -446,23 +317,26 @@ export default function OtProductsIntro({
         </table>
       ) : (
         <div>
-          <AddToCartButton
-            productId={productId}
-            sellerId={sellerId}
-            images={images}
-            title={title}
-            discountPrice={discountPrice}
-           price={selectedPrice}
-            slug={slug}
-            selectedSize={selectedSpec}
-            selectedColor={''} 
-            dummySizes={[]}
-          />
+           <AddToCartButton
+        productId={productId}
+        sellerId={sellerId}
+        images={images}
+        title={title}
+        discountPrice={discountPrice}
+        price={selectedPrice}
+        slug={slug}
+        selectedSize={''} // Empty as no size selection is needed
+        selectedColor={''} // Empty as no color selection is needed
+        selectedSpec={''} // Empty as no specification is needed
+        dummySizes={[]}
+      />
         </div>
       )}
 
     
     </div>
+    {/* table container ends  */}
+    
     {selectedRowId && (
         <div style={{ marginTop: '20px' }}>
           <AddToCartButton
@@ -474,6 +348,7 @@ export default function OtProductsIntro({
             price={selectedPrice}
             slug={slug}
             selectedSize={selectedSpec}
+            selectedSpec={selectedSpec}
             selectedColor={''}
             dummySizes={[]} 
         
