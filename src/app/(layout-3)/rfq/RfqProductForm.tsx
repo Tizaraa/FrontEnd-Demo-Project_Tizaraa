@@ -152,6 +152,7 @@ import axios from "axios";
 import authService from "services/authService";
 import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css";
+import BeatLoader from "react-spinners/BeatLoader";
 
 // Define interfaces for API responses
 interface ProductSuggestion {
@@ -183,6 +184,7 @@ export default function RfqProductForm() {
     []
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(false); // Loader state
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -354,13 +356,6 @@ export default function RfqProductForm() {
     setIsDropdownOpen(false);
   };
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setProductName(e.target.value);
-  //   setSelectedProduct("");
-  //   setIsDropdownOpen(true);
-  //   setErrors((prev) => ({ ...prev, productName: "" }));
-  // };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
     textarea.style.height = "auto"; // Reset the height
@@ -387,6 +382,7 @@ export default function RfqProductForm() {
   };
 
   const handleSubmit = async () => {
+    setLoading(true); // Start loading
     // Validation logic
     const newErrors: { [key: string]: string } = {};
     if (!productName) newErrors.productName = "Product name is required.";
@@ -399,6 +395,7 @@ export default function RfqProductForm() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setLoading(false); // Stop loading if there are errors
       return; // Stop submission if there are errors
     }
     const token = authService.getToken();
@@ -435,6 +432,8 @@ export default function RfqProductForm() {
       //toast.success("Order placed successfully!");
     } catch (error) {
       toast.error("Failed to submit RFQ");
+    }finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -445,15 +444,7 @@ export default function RfqProductForm() {
       <div style={{ marginBottom: "20px" }}>
         <label style={labelStyle}>Product Name</label>
         <div style={{ position: "relative", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
-          {/* <input 
-            type="text" 
-            value={productName}
-            onChange={handleInputChange}
-            onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
-            onFocus={() => setIsDropdownOpen(suggestions.length > 0)}
-            placeholder="Product Name" 
-            style={inputStyle} 
-          /> */}
+          
           <textarea
             ref={textareaRef} // Reference to the textarea
             value={productName}
@@ -593,14 +584,15 @@ export default function RfqProductForm() {
       </div>
 
       <button
-        style={submitButtonStyle}
+        style={{...submitButtonStyle, opacity: loading ? 0.7 : 1}}
         onClick={handleSubmit}
         onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#E97451")}
         onMouseOut={(e) =>
           (e.currentTarget.style.backgroundColor = "rgb(231, 75, 50)")
         }
+        disabled={loading}
       >
-        Submit
+        {loading ? <BeatLoader size={18} color="#ec7f5f"  /> : "Submit"}
       </button>
     </div>
   );
