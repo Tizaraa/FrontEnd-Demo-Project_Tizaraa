@@ -443,7 +443,7 @@ export default function RfqProductForm() {
 
       <div style={{ marginBottom: "20px" }}>
         <label style={labelStyle}>Product Name</label>
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
           
           <textarea
             ref={textareaRef} // Reference to the textarea
@@ -455,9 +455,6 @@ export default function RfqProductForm() {
             style={{ ...inputStyle, overflow: "hidden", resize: "none", paddingRight: "30px" }}
             rows={1} // Initial rows
           ></textarea>
-          {errors.productName && (
-            <div style={{ color: "red" }}>{errors.productName}</div>
-          )}
           {productName && (
             <button
               onClick={handleClearProductName}
@@ -479,6 +476,9 @@ export default function RfqProductForm() {
             </button>
           )}
         </div>
+        {errors.productName && (
+            <div style={{ color: "red" }}>{errors.productName}</div>
+          )}
         {isDropdownOpen && suggestions.length > 0 && (
           <ul style={dropdownStyle}>
             {suggestions.map((suggestion) => (
