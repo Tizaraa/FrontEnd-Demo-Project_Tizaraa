@@ -212,6 +212,7 @@ type AddToCartButtonProps = {
     slug?: string;
     selectedSize: string | null;
     selectedColor: string | null;
+    selectedSpec: string | null;
     dummySizes: SizeColorOption[];
 };
 
@@ -225,12 +226,14 @@ const AddToCartButton = ({
     slug,
     selectedSize,
     selectedColor,
+    selectedSpec,
     dummySizes,
 }: AddToCartButtonProps) => {
     const { state, dispatch } = useAppContext();
+
     const uniqueKey = dummySizes.length === 0
-        ? `${productId}`
-        : `${selectedSize}-${selectedColor}-${productId}`;
+        ? `${productId}-${selectedSpec}`
+        : `${selectedSize}-${selectedColor}-${selectedSpec}-${productId}`;
 
     const cartItem = state.cart.find(item => item.id === uniqueKey);
     const [quantity, setQuantity] = useState(cartItem ? cartItem.qty : 1);
@@ -253,7 +256,7 @@ const AddToCartButton = ({
 
         const finalPrice = getB2BPrice(amount, selectedSizeColorOption.b2bPricing) || selectedSizeColorOption.price;
 
-        setQuantity(amount); // Update quantity in input field
+        setQuantity(amount);
 
         dispatch({
             type: "CHANGE_CART_AMOUNT",
@@ -294,11 +297,12 @@ const AddToCartButton = ({
             return;
         }
 
-        if (!selectedSize || !selectedColor) {
-            alert("Please select a size and color before adding to cart.");
+        if (!selectedSize && !selectedColor && !selectedSpec) {
+            alert("Please select size, color, and variant before adding to cart.");
             return;
         }
     };
+
 
     const handleQuantityInputChange = (e) => {
         const newQuantity = Math.max(1, parseInt(e.target.value));

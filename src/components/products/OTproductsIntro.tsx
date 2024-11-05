@@ -317,18 +317,19 @@ export default function OtProductsIntro({
         </table>
       ) : (
         <div>
-          <AddToCartButton
-            productId={productId}
-            sellerId={sellerId}
-            images={images}
-            title={title}
-            discountPrice={discountPrice}
-           price={selectedPrice}
-            slug={slug}
-            selectedSize={selectedSpec}
-            selectedColor={''} 
-            dummySizes={[]}
-          />
+           <AddToCartButton
+        productId={productId}
+        sellerId={sellerId}
+        images={images}
+        title={title}
+        discountPrice={discountPrice}
+        price={selectedPrice}
+        slug={slug}
+        selectedSize={''} // Empty as no size selection is needed
+        selectedColor={''} // Empty as no color selection is needed
+        selectedSpec={''} // Empty as no specification is needed
+        dummySizes={[]}
+      />
         </div>
       )}
 
@@ -347,6 +348,7 @@ export default function OtProductsIntro({
             price={selectedPrice}
             slug={slug}
             selectedSize={selectedSpec}
+            selectedSpec={selectedSpec}
             selectedColor={''}
             dummySizes={[]} 
         
