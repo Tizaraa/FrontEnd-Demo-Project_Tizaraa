@@ -44,6 +44,7 @@
     "react-router-dom": "^6.27.0",
     "react-scroll": "^1.9.0",
     "react-select": "^5.8.0",
+    "react-spinners": "^0.14.1",
     "react-svg": "^16.1.33",
     "react-toastify": "^10.0.6",
     "sharp": "^0.33.2",
