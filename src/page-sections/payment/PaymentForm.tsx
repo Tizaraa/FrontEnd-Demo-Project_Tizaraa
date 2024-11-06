@@ -94,6 +94,14 @@ export default function PaymentForm() {
         localStorage.setItem('orderSuccess', 'true');
 
         await Promise.all(cart.map(async (cartdata) => {
+          let color = cartdata.id;
+
+   
+    if (/\D--\d+$/.test(cartdata.id)) {
+        color = cartdata.id.replace(/--\d+$/, "");  
+    } else if ((cartdata.id)) {
+        color = "";
+    }
             const response = await axios.post(
                 `${ApiBaseUrl.baseUrl}checkout/order/items`,
                 {
@@ -102,7 +110,7 @@ export default function PaymentForm() {
                     seller_id: cartdata.sellerId,
                     order_id: orderId,
                     product_id: cartdata.productId,
-                    color: 'black',
+                    color: color,
                     size: '1',
                     qty: cartdata.qty,
                     note1: 'lorem10',
