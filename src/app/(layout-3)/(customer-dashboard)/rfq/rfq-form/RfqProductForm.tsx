@@ -153,6 +153,7 @@ import authService from "services/authService";
 import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css";
 import BeatLoader from "react-spinners/BeatLoader";
+import { useRouter } from "next/navigation";
 
 // Define interfaces for API responses
 interface ProductSuggestion {
@@ -187,6 +188,7 @@ export default function RfqProductForm() {
   const [loading, setLoading] = useState(false); // Loader state
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const router = useRouter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Styles for the component
@@ -428,6 +430,7 @@ export default function RfqProductForm() {
       setErrors({});
       setSuggestions([]);
       setIsDropdownOpen(false);
+      router.push("/rfq")
       toast.success("Request For Quotation form submitted successfully!");
       //toast.success("Order placed successfully!");
     } catch (error) {
@@ -592,7 +595,7 @@ export default function RfqProductForm() {
         }
         disabled={loading}
       >
-        {loading ? <BeatLoader size={18} color="#ec7f5f"  /> : "Submit"}
+        {loading ? <BeatLoader size={18} color="#fff"  /> : "Submit"}
       </button>
     </div>
   );

@@ -283,6 +283,7 @@ import Typography from "@component/Typography";
 import authService from "services/authService";
 import { toast } from "react-toastify";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
 
 // STYLED COMPONENTS
 import { DashboardNavigationWrapper, StyledDashboardNav } from "./styles";
@@ -359,6 +360,7 @@ export default function DashboardNavigation() {
       title: "DASHBOARD",
       list: [
         { href: "/orders", title: "Orders", iconName: "bag", count: orderCount }, // Use orderCount here
+        { href: "/rfq", title: "RFQ", iconName: "request", count: 19 },
         { href: "/wish-list", title: "Wishlist", iconName: "heart", count: 19 },
         { href: "/support-tickets", title: "Support Tickets", iconName: "customer-service", count: 1 },
       ],

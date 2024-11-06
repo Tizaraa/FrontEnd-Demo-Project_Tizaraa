@@ -27,6 +27,7 @@
       "@sections/*": ["page-sections/*"],
       "@models/*": ["models/*"]
     }
+    
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(layout-3)/product/[slug]/ResponsiveCategory.tsx"],
   "exclude": ["node_modules", "./src/components/icon/Icon.tsx"]
