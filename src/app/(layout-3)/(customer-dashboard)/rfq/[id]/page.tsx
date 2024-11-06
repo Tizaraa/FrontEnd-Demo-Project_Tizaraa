@@ -71,6 +71,7 @@ export default function Component() {
         <h2 style={{ color: '#E94560', marginBottom: '15px' }}>Uploaded File</h2>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <FileText size={24} color="#E94560" />
+          <div style={{display: "flex", gap: "10px", flexDirection: "column"}}>
           <span>{productDetails.uploadedFile}</span>
           <button
             onClick={() => window.open('/download-link', '_blank')}
@@ -106,6 +107,7 @@ export default function Component() {
             <Eye size={18} />
             Open File
           </button>
+          </div>
         </div>
       </div>
 
