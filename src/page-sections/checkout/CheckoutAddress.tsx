@@ -12,7 +12,7 @@ import Typography from "@component/Typography";
 import authService from "services/authService";
 import Address from "@models/address.model";
 import ApiBaseUrl from "api/ApiBaseUrl";
-export default function CheckoutAddress() {
+export default function CheckoutAddress({ setDeliveryCharge }) {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [province, setProvince] = useState([]); // State for storing provinces
@@ -94,7 +94,9 @@ export default function CheckoutAddress() {
     const selectedProvince = province.find((prov: any) => prov.id === item.province_id);
 
     if (selectedProvince && selectedProvince.delivery_charge) {
+      setDeliveryCharge(selectedProvince.delivery_charge);
       item.deliveryCharge = selectedProvince.delivery_charge; // Add deliveryCharge to the selected item
+     
     }
 
     setSelectedAddress(item);

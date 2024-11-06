@@ -21,16 +21,14 @@ export default function CheckoutSummary({ deliveryCharge }) {
     accumulator + (item.discountPrice ? item.discountPrice : item.price) * item.qty, 0
     ) || 0;
   };
-
-      // User shipping data
+  // User shipping data
       
-  //     let shippingData = sessionStorage.getItem('address');
-  //     let userShippingdata = JSON.parse(shippingData);
+  // let shippingData = sessionStorage.getItem('address');
+  // let userShippingdata = JSON.parse(shippingData);
 
-  //     const deliveryChargeDisplay = userShippingdata && userShippingdata.delivery_charge 
-  // ? userShippingdata.delivery_charge 
-  // : "-";
-
+  // const deliveryChargeDisplay = userShippingdata && userShippingdata.deliveryCharge
+  // ? userShippingdata.deliveryCharge
+  // : deliveryCharge || "-";
   return (
     <Card1>
        
@@ -65,6 +63,17 @@ export default function CheckoutSummary({ deliveryCharge }) {
         </FlexBox>
       </FlexBox>
 
+      
+      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+        <Typography color="text.hint">Shipping:</Typography>
+
+        <FlexBox alignItems="flex-end">
+          <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+          {deliveryCharge !== "-" ? currency(deliveryCharge) : "-"}
+          </Typography>
+        </FlexBox>
+      </FlexBox>
+
    
 
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
@@ -94,7 +103,8 @@ export default function CheckoutSummary({ deliveryCharge }) {
       <Divider mb="1rem" />
 
       <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
-      {currency(getTotalPrice())}
+      {/* {currency(getTotalPrice())} */}
+      {currency(getTotalPrice() + (parseFloat(deliveryCharge) || 0))}
       </Typography>
 
       {/* <TextField placeholder="Voucher" fullwidth />
@@ -105,3 +115,15 @@ export default function CheckoutSummary({ deliveryCharge }) {
     </Card1>
   );
 }
+
+
+// import  Typography  from "@component/Typography";
+
+// export default function CheckoutSummary({ deliveryCharge }) {
+//   return (
+//     <div>
+//       <Typography variant="h6">Delivery Charge: {deliveryCharge ? `$${deliveryCharge}` : "Not selected"}</Typography>
+//       {/* Other summary details */}
+//     </div>
+//   );
+// }

@@ -74,7 +74,8 @@ export default function CheckoutForm({ setDeliveryCharge }) {
         </Button>
       </FlexBox>
 
-      <CheckoutAddress />
+      {/* <CheckoutAddress /> */}
+      <CheckoutAddress setDeliveryCharge={setDeliveryCharge} />
 
       <Grid container spacing={7}>
         <Grid item sm={6} xs={12}>
