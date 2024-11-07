@@ -656,11 +656,18 @@ export default function OtProductsIntro({
                 item.Configurators.some(config => config.Vid === selectedSpec)
               )
               .map((item) => (
-                <tr 
-                  key={item.Id} 
-                  className={`${styles.tableRowStyle} ${selectedRowId === item.Id ? styles.selectedRowStyle : ''}`}
-                  onClick={() => handleRowClick(item.Id)}
-                >
+                <tr
+                key={item.Id}
+                onClick={() => {
+                  console.log('Selected row ID:', item.Id);
+                  handleRowClick(item.Id);
+                }}
+                style={{
+                  backgroundColor: selectedRowId === item.Id ? '#e0e0e0' : 'transparent',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.3s ease', 
+                }}
+              >
                   <td className={styles.tableCellStyle}>
                     {item.Configurators.map((config, index) => {
                       const matchingAttribute = Attributes.find(attr => attr.Vid === config.Vid);
@@ -716,7 +723,7 @@ export default function OtProductsIntro({
             discountPrice={discountPrice}
             price={selectedPrice}
             slug={slug}
-            selectedSize={selectedSpec}
+            selectedSize={''}
             selectedSpec={selectedSpec}
             selectedColor={''}
             dummySizes={[]} 
