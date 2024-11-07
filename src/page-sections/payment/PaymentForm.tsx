@@ -54,39 +54,37 @@ export default function PaymentForm() {
     let userinfo = JSON.parse(getData);
 
     let shippingData = sessionStorage.getItem('address');
-    console.log('Session Storage Data:', shippingData);  // Check if you get the expected data
+    console.log('Session Storage Data:', shippingData); 
     let userShippingdata = JSON.parse(shippingData);
-    console.log('Parsed Shipping Data:', userShippingdata);  // Check the parsed object
-    // sessionStorage.removeItem('address');
-    
 
     let cartData = localStorage.getItem('cart');
     let cart = JSON.parse(cartData);
 
     console.log("Selected payment method:", paymentMethod);
     try {
-      const orderResponse = await axios.post(
-          `${ApiBaseUrl.baseUrl}checkout/order`,
-          {
-              user_id: userinfo?.id, // Safeguard in case userinfo is null
-              name: userShippingdata?.shipping_name || userShippingdata?.name, // Fallback to name from session storage
-              phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
-              email: userinfo?.email, 
-              province_id: userShippingdata?.shipping_province || userShippingdata?.province_id,
-              city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
-              area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
-              house_level: userShippingdata?.selectedLandmark || userShippingdata?.landmark, // Safeguard for landmark
-              address: userShippingdata?.shipping_address1 || userShippingdata?.address,
-              delivery_charge: userShippingdata?.deliveryCharge || 0,  // Default to 0 if undefined
-              total_ammount: total_ammount,
-              payment_type: 1, // Assuming 1 is the correct value
-          },
-          {
-              headers: {
-                  Authorization: `Bearer ${authtoken}`,
-              },
-          }
-      );
+        const orderResponse = await axios.post(
+            `${ApiBaseUrl.baseUrl}checkout/order`,
+            {
+                user_id: userinfo?.id,
+                name: userShippingdata?.shipping_name || userShippingdata?.name,
+                phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
+                email: userinfo?.email,
+                province_id: userShippingdata?.shipping_province || userShippingdata?.province_id,
+                city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
+                area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
+                house_level: userShippingdata?.selectedLandmark || userShippingdata?.landmark,
+                address: userShippingdata?.shipping_address1 || userShippingdata?.address,
+                delivery_charge: userShippingdata?.deliveryCharge || 0,
+                total_ammount: total_ammount,
+                payment_type: 1,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${authtoken}`,
+                },
+            }
+        );
+
         console.log("Order Response:", orderResponse);
 
         let orderId = orderResponse.data.message.orderid;
@@ -94,14 +92,27 @@ export default function PaymentForm() {
         localStorage.setItem('orderSuccess', 'true');
 
         await Promise.all(cart.map(async (cartdata) => {
-          let color = cartdata.id;
+            if (!cartdata.productId || !cartdata.sellerId) {
+                // If product does not have an API, store it in sessionStorage instead
+                const offlineOrders = JSON.parse(sessionStorage.getItem("offlineOrders") || "[]");
+                offlineOrders.push({
+                    ...cartdata,
+                    order_id: orderId,
+                    user_id: userinfo.id,
+                });
+                sessionStorage.setItem("offlineOrders", JSON.stringify(offlineOrders));
+                console.log("Product without API saved locally:", cartdata);
+                return; 
+            }
 
-   
-    if (/\D--\d+$/.test(cartdata.id)) {
-        color = cartdata.id.replace(/--\d+$/, "");  
-    } else if ((cartdata.id)) {
-        color = "";
-    }
+            let color = cartdata.id;
+            if (/\D--\d+$/.test(cartdata.id)) {
+                color = cartdata.id.replace(/--\d+$/, "");
+            } else if ((cartdata.id)) {
+                color = "";
+            }
+
+            // Place order items for products with API
             const response = await axios.post(
                 `${ApiBaseUrl.baseUrl}checkout/order/items`,
                 {
@@ -119,35 +130,32 @@ export default function PaymentForm() {
                 {
                     headers: {
                         Authorization: `Bearer ${authtoken}`,
-                         'Content-Type': 'application/json'
+                        'Content-Type': 'application/json'
                     },
                 }
             );
             console.log("Cart Item Response:", response.data);
         }));
 
-        
-  
-        
+        sessionStorage.removeItem("offlineOrders");
+
         router.push("/orders");
         localStorage.removeItem('orderId');
         localStorage.removeItem('cart');
         cart.forEach(item => {
-          dispatch({
-            type: "CHANGE_CART_AMOUNT",
-            payload: { ...item, qty: 0 }
-          });
+            dispatch({
+                type: "CHANGE_CART_AMOUNT",
+                payload: { ...item, qty: 0 }
+            });
         });
-        //toast.success("Order placed successfully!");
-        
-        
+
     } catch (error) {
         console.error("Error placing order:", error);
-        // alert("Failed to place order. Please try again.");
-            toast.error("Error placing order!");
-        router.push("/payment")
+        toast.error("Error placing order!");
+        router.push("/payment");
     }
 };
+
 
 //  // SweetAlert success notification
 //  Swal.fire({

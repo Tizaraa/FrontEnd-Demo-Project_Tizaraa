@@ -467,7 +467,7 @@ export default function OrderDetails({ params }: IDParams) {
               <Typography fontSize="14px" color="text.hint">
                 Discount:
               </Typography>
-              <H6 my="0px">-{currency(order.discount || 0)}</H6>
+              <H6 my="0px">{currency(order.discount || 0)}</H6>
             </FlexBox>
 
             <Divider mb="0.5rem" />
