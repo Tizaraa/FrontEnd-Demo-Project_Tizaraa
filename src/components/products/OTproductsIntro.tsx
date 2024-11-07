@@ -462,16 +462,31 @@ export default function OtProductsIntro({
   
   
 
-  const handleRowClick = (itemId: string) => {
-    setSelectedRowId(itemId === selectedRowId ? null : itemId);
-  };
+  // const handleRowClick = (itemId: string) => {
+  //   setSelectedRowId(itemId === selectedRowId ? null : itemId);
+  // };
 
   const routerId = param.slug as string;
   const cartItem = state.cart.find((item) => item.id === id || item.id === routerId);
 
+  // const handleVariantSelect = (item) => {
+  //   setSelectedSpec(item.Vid); 
+  //   setSelectedImage(item.ImageUrl); 
+  // };
   const handleVariantSelect = (item) => {
-    setSelectedSpec(item.Vid); 
+    // Set the selected variant
+    setSelectedSpec(item.Vid);
     setSelectedImage(item.ImageUrl); 
+    setSelectedRowId(null); 
+  };
+  
+  // const handleRowClick = (id) => {
+  //   // Set the selected row ID only
+  //   setSelectedRowId(id);
+  // };
+  
+   const handleRowClick = (itemId: string) => {
+    setSelectedRowId(itemId === selectedRowId ? null : itemId);
   };
 
   useEffect(() => {
