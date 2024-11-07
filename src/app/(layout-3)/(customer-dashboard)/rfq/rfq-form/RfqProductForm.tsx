@@ -154,6 +154,7 @@ import { toast, ToastContainer } from "react-toastify"; // Import toast and Toas
 import "react-toastify/dist/ReactToastify.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useRouter } from "next/navigation";
+import { debounce } from "lodash";
 
 // Define interfaces for API responses
 interface ProductSuggestion {
@@ -181,6 +182,7 @@ export default function RfqProductForm() {
   const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState("");
   const [suggestions, setSuggestions] = useState<ProductSuggestion[]>([]);
+  const [searchValue, setSearchValue] = useState("");
   const [measurementUnits, setMeasurementUnits] = useState<MeasurementUnit[]>(
     []
   );
@@ -292,30 +294,38 @@ export default function RfqProductForm() {
     marginBottom: "20px",
   };
 
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      const token = authService.getToken();
-      if (productName && !selectedProduct) {
-        try {
-          const response = await axios.get<ApiResponse>(
-            `https://frontend.tizaraa.com/api/product-suggestions?search=${productName}`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          setSuggestions(response.data.data);
-          setIsDropdownOpen(response.data.data.length > 0);
-        } catch (error) {
-          console.error("Error fetching product suggestions:", error);
-        }
-      } else {
-        setSuggestions([]);
-        setIsDropdownOpen(false);
-      }
-    };
+  
 
-    fetchSuggestions();
-  }, [productName, selectedProduct]);
+  const fetchSuggestions = async (value: string) => {
+    const token = authService.getToken();
+    if (value && !selectedProduct) {
+      try {
+        const response = await axios.get<{ data: ProductSuggestion[] }>(
+          `https://frontend.tizaraa.com/api/product-suggestions?search=${value}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const results = response.data.data || [];
+        setSuggestions(results);
+        setIsDropdownOpen(results.length > 0);
+      } catch (error) {
+        console.error("Error fetching product suggestions:", error);
+      }
+    } else {
+      setSuggestions([]);
+      setIsDropdownOpen(false);
+    }
+  };
+
+  // Debounced search function
+  const debouncedFetchSuggestions = debounce(fetchSuggestions, 300);
+
+  // Effect to trigger the debounced search when productName changes
+  useEffect(() => {
+    debouncedFetchSuggestions(productName);
+  }, [productName]);
+
 
   useEffect(() => {
     const fetchMeasurementUnits = async () => {
@@ -486,7 +496,7 @@ export default function RfqProductForm() {
           <ul style={dropdownStyle}>
             {suggestions.map((suggestion) => (
               <li
-                key={suggestion.product_name}
+                key={suggestion.id}
                 onClick={() => handleProductSelection(suggestion.product_name)}
                 style={dropdownItemStyle}
               >
