@@ -189,6 +189,7 @@ export default function AddressList() {
     id: null, // Track the ID to delete
   });
   const [addresses, setAddresses] = useState<Address[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const authtoken = authService.getToken(); // Retrieve the auth token
 
@@ -203,6 +204,8 @@ export default function AddressList() {
         setAddresses(response.data.user); // Assuming the data is structured as shown in the API response
       } catch (error) {
         console.error("Error fetching addresses:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -240,14 +243,18 @@ export default function AddressList() {
   return (
     <Fragment>
       <DashboardPageHeader title="My Addresses" iconName="pin_filled" button={<AddNewAddress />} />
-      {addresses.length > 0 ? (
+      {loading ? (
+        <LoaderWrapper>
+          <Vortex />
+        </LoaderWrapper>
+      ): addresses.length > 0 ? (
         addresses.map((item) => (
           <AddressItem key={item.id} item={item} onDelete={handleDelete} />
         ))
       ) : (
-        <LoaderWrapper>
-        <Vortex />
-      </LoaderWrapper>
+        <Typography textAlign="center" m="20px">
+          No address found
+        </Typography>
       )}
       {/* Show Dialog only if isLoading is true */}
       {dialog.isLoading && <Dialog message={dialog.message} onDialog={areYouSureDelete} />}
