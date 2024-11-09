@@ -172,6 +172,14 @@ export default function Cart() {
   };
 
   const handleCheckout = () => {
+    const totalPrice = getTotalPrice();
+
+  // Validation: Prevent checkout if total price is 0
+  if (totalPrice === 0) {
+    toast.error("Total price is 0. Please add items to your cart.");
+    return;
+  }
+
     // Replace this with your actual validation logic
     const isError = state.cart.some(item => item.qty <= 0); // Example: error if any item has a quantity of 0 or less
 
@@ -196,6 +204,8 @@ export default function Cart() {
     }
   }, [checkoutError]);
 
+
+    const totalPrice = getTotalPrice();
   return (
     <Fragment>
       <ToastContainer /> 
@@ -231,9 +241,23 @@ export default function Cart() {
             <Divider mb="1rem" />
 
            <Link href="/checkout" passHref>
-           <Button variant="contained" color="primary" fullwidth onClick={handleCheckout}>
+           {/* <Button variant="contained" color="primary" fullwidth onClick={handleCheckout}>
               Checkout Now
-            </Button></Link>
+            </Button> */}
+
+<Button
+  variant="contained"
+  color="primary"
+  fullwidth
+  onClick={handleCheckout}
+  disabled={totalPrice === 0} // Disable button if total price is 0
+>
+  Checkout Now
+</Button>
+
+            
+            
+            </Link>
           </Card1>
         </Grid>
       </Grid>

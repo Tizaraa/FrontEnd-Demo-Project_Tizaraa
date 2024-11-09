@@ -39,7 +39,9 @@ export default function PaymentForm() {
     ) || 0;
   };
 
+
   const total_ammount = getTotalPrice()
+  const isSubtotalZero = total_ammount === 0;
  
   const router = useRouter();
   
@@ -50,6 +52,10 @@ export default function PaymentForm() {
   
 
   const orderSubmit = async () => {
+    if (isSubtotalZero) {
+      toast.error("Your cart is empty. Please add items before proceeding.");
+      return; // Prevent form submission
+    }
     let getData = localStorage.getItem('userInfo');
     let userinfo = JSON.parse(getData);
 
@@ -389,9 +395,17 @@ export default function PaymentForm() {
 
            
         
-            <Button onClick={orderSubmit} variant="outlined" color="primary" type="button" fullwidth>
+            {/* <Button onClick={orderSubmit} variant="outlined" color="primary" type="button" fullwidth>
              Payment
-            </Button>
+            </Button> */}
+             <Button
+            onClick={orderSubmit}
+            variant="outlined"
+            color="primary"
+            type="button"
+            fullwidth
+            disabled={isSubtotalZero} 
+          >Payment</Button>
             {/* <Button onClick={orderSub} variant="outlined" color="primary" type="button" fullwidth>
              Paymentclick
             </Button> */}
