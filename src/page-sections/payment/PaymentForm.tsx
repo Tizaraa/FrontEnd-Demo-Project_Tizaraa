@@ -187,7 +187,9 @@ export default function PaymentForm() {
   
   const width = useWindowSize();
   // const [paymentMethod, setPaymentMethod] = useState("credit-card");
-  const [paymentMethod, setPaymentMethod] = useState("cod");
+  // const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
+
 
   const isMobile = width < 769;
 
@@ -196,8 +198,13 @@ export default function PaymentForm() {
     router.push("/payment");
   };
 
+  // const handlePaymentMethodChange = ({ target: { name } }: ChangeEvent<HTMLInputElement>) => {
+  //   setPaymentMethod(name);
+  // };
+
   const handlePaymentMethodChange = ({ target: { name } }: ChangeEvent<HTMLInputElement>) => {
-    setPaymentMethod(name);
+    // Update the payment method to the selected value
+    setPaymentMethod(prevMethod => (prevMethod === name ? "" : name));
   };
 
   
@@ -322,18 +329,34 @@ export default function PaymentForm() {
             <Divider mb="1.5rem" mx="-2rem" />
           </Fragment>
         )} */}
-       <CheckBox
-          mb="1.5rem"
-          color="secondary"
-          name="cod"
-          onChange={handlePaymentMethodChange}
-          checked={paymentMethod === "cod"}
-          label={
-            <Typography ml="6px" fontWeight="600" fontSize="18px">
-              Cash on Delivery
-            </Typography>
-          }
-        />
+      {/* Cash on Delivery */}
+      <CheckBox
+        mb="1.5rem"
+        color="secondary"
+        name="cod"
+        onChange={handlePaymentMethodChange}
+        checked={paymentMethod === "cod"} // Only check if paymentMethod is "cod"
+        label={
+          <Typography ml="6px" fontWeight="600" fontSize="18px">
+            Cash on Delivery
+          </Typography>
+        }
+      />
+
+      {/* Mobile Banking */}
+      <CheckBox
+        mb="1.5rem"
+        color="secondary"
+        name="mb"
+        onChange={handlePaymentMethodChange}
+        checked={paymentMethod === "mb"} // Only check if paymentMethod is "mb"
+        label={
+          <Typography ml="6px" fontWeight="600" fontSize="18px">
+            Mobile Banking
+          </Typography>
+        }
+      />
+
 
 {/* <Radio
           mb="1.5rem"
