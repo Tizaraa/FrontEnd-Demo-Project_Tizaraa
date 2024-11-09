@@ -13,7 +13,7 @@ import Grid from "@component/grid/Grid";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function CheckoutForm({ setDeliveryCharge }) {
+export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
@@ -91,12 +91,13 @@ export default function CheckoutForm({ setDeliveryCharge }) {
         </Grid>
 
         <Grid item sm={6} xs={12}>
-          <Button
+        <Button
             variant="outlined"
             color="primary"
             type="button"
             fullwidth
             onClick={handlePayment}
+            disabled={totalPrice === 0} 
           >
             Payment
           </Button>
