@@ -182,6 +182,7 @@ export interface CartItem {
   sellerId: string | number;
   sizecolorwithprice?: any; 
   b2bPricing?:any;
+  measurementUnit?:any;
 }
 
 export type ActionType =
