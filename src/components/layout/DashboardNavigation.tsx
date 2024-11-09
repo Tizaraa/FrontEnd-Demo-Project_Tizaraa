@@ -296,6 +296,8 @@ export default function DashboardNavigation() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [orderCount, setOrderCount] = useState(0); // State for order count
   const [addressCount, setAddressCount] = useState(0); // State for address count
+  const [rfqCount, setRfqCount] = useState(0); // State for RFQ count
+
 
   // Fetch user data from the API
   useEffect(() => {
@@ -313,6 +315,14 @@ export default function DashboardNavigation() {
 
         setOrderCount(totalorder); // Set the total order count
         setAddressCount(customeraddress); // Set the customer address count
+        const rfqResponse = await axios.get("https://frontend.tizaraa.com/api/rfqs", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass token in the Authorization header
+          },
+        });
+
+        const { total_rfqs } = rfqResponse.data; // Extract RFQ count from response
+        setRfqCount(total_rfqs); // Set the RFQ count
 
       } catch (error) {
         console.error("Error fetching user profile data:", error);
@@ -360,7 +370,7 @@ export default function DashboardNavigation() {
       title: "DASHBOARD",
       list: [
         { href: "/orders", title: "Orders", iconName: "bag", count: orderCount }, // Use orderCount here
-        { href: "/rfq", title: "RFQ", iconName: "request", count: 19 },
+        { href: "/rfq", title: "RFQ", iconName: "request", count: rfqCount },
         { href: "/wish-list", title: "Wishlist", iconName: "heart", count: 19 },
         { href: "/support-tickets", title: "Support Tickets", iconName: "customer-service", count: 1 },
       ],
