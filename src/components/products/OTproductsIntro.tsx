@@ -716,9 +716,9 @@ export default function OtProductsIntro({
         discountPrice={discountPrice}
         price={selectedPrice}
         slug={slug}
-        selectedSize={''} // Empty as no size selection is needed
-        selectedColor={''} // Empty as no color selection is needed
-        selectedSpec={''} // Empty as no specification is needed
+        selectedSize={''} 
+        selectedColor={''} 
+        selectedSpec={''} 
         dummySizes={[]}
       />
         </div>
@@ -731,7 +731,7 @@ export default function OtProductsIntro({
     {selectedRowId && (
         <div style={{ marginTop: '20px' }}>
           <AddToCartButton
-            productId={productId || id}
+            productId={selectedRowId}
             sellerId={sellerId}
             images={images}
             title={title}
