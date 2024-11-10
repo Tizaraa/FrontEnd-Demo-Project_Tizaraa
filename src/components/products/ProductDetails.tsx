@@ -90,6 +90,7 @@ type ProductDetailsProps = {
   productStock: number;
   isDirectAdd?: boolean;
   sellerShopName,
+  sellerShopLogo,
 };
 
 const ProductDetails = ({
@@ -101,6 +102,7 @@ const ProductDetails = ({
   productStock,
   isDirectAdd = false, // Default to false if not provided
   sellerShopName,
+  sellerShopLogo,
 }: ProductDetailsProps) => {
   const displayPrice = isDirectAdd ? (discountPrice || price) : price; // Choose price based on direct add
 

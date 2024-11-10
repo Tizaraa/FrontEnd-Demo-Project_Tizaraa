@@ -306,7 +306,11 @@ export default function RfqProductForm() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        console.log(response);
+        
         const results = response.data.data || [];
+        //console.log(results);
+        
         setSuggestions(results);
         setIsDropdownOpen(results.length > 0);
       } catch (error) {

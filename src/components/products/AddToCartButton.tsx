@@ -5,7 +5,7 @@ import FlexBox from "@component/FlexBox";
 import Icon from "@component/icon/Icon";
 import { H3 } from "@component/Typography";
 import { useAppContext } from "@context/app-context";
-import { useState } from "react";
+import { useState,useEffect  } from "react";
 import { toast } from "react-toastify";  // <-- Import the toast functionality
 
 type SizeColorOption = {
@@ -52,6 +52,13 @@ const AddToCartButton = ({
 
   const cartItem = state.cart.find(item => item.id === uniqueKey);
   const [quantity, setQuantity] = useState(cartItem ? cartItem.qty : 1);
+
+  useEffect(() => {
+    const itemInCart = state.cart.find(item => item.id === uniqueKey);
+    if (itemInCart) {
+      setQuantity(itemInCart.qty);
+    }
+  }, [state.cart, uniqueKey]);
 
   const getB2BPrice = (quantity, b2bPricing) => {
     const applicablePricing = b2bPricing.filter(b => quantity >= b.min_qty);
