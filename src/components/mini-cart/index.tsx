@@ -123,7 +123,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                     value={item.qty}
                     min={1}
                     onChange={(e) => handleInputChange(e, item)}
-                    style={{ width: "40px", textAlign: "center" }}
+                    style={{ width: "50px", textAlign: "center" }}
                   />
 
                 <Button
