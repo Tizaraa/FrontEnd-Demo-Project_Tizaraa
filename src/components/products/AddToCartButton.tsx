@@ -7,6 +7,7 @@ import { H3 } from "@component/Typography";
 import { useAppContext } from "@context/app-context";
 import { useState,useEffect  } from "react";
 import { toast } from "react-toastify";  // <-- Import the toast functionality
+import {Styledbutton} from "./style";
 
 type SizeColorOption = {
   size: string;
@@ -180,20 +181,23 @@ const AddToCartButton = ({
             <Icon variant="small">minus</Icon>
           </Button>
 
+          <Styledbutton>
           <input
             type="number"
             value={quantity}
             onChange={handleQuantityInputChange}
+            className="no-spin-button"
             style={{
               width: "50px",
               textAlign: "center",
               margin: "0 10px",
-              border: "1px solid #ccc",
               borderRadius: "4px",
-              padding: "5px",
+              padding: "8px",
+              border: "1px solid #E94560"
             }}
             min="1"
           />
+          </Styledbutton>
 
           <Button
             p="9px"

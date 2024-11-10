@@ -11,6 +11,27 @@ export const StyledMiniCart = styled.div`
     overflow: auto;
   }
 
+  .no-spin-button::-webkit-outer-spin-button,
+.no-spin-button::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.no-spin-button {
+  -moz-appearance: textfield;
+  user-select: none;
+}
+
+.no-spin-button:focus {
+  border-color: transparent; /* Hides the selected border color */
+  outline: none; /* Removes the outline when focused */
+}
+
+
+
+
   .cart-item {
     display: flex;
     padding: 1rem;

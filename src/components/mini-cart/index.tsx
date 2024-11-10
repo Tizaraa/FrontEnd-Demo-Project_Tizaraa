@@ -119,11 +119,12 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                 </Button>
 
                 <input
+                    className="no-spin-button"
                     type="number"
                     value={item.qty}
                     min={1}
                     onChange={(e) => handleInputChange(e, item)}
-                    style={{ width: "50px", textAlign: "center" }}
+                    style={{ textDecoration:"none", borderRadius: "30px", scrollBehavior: "unset", border: "1px solid #E94560", padding: "8px", width: "50px", textAlign: "center" }}
                   />
 
                 <Button
