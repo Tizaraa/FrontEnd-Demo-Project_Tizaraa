@@ -155,7 +155,10 @@ import "react-toastify/dist/ReactToastify.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useRouter } from "next/navigation";
 import { debounce } from "lodash";
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
 
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 // Define interfaces for API responses
 interface ProductSuggestion {
   product_name: string;
@@ -294,7 +297,11 @@ export default function RfqProductForm() {
     marginBottom: "20px",
   };
 
-  
+  const quillStyle: React.CSSProperties = {
+    ...inputStyle,
+    height: "auto",
+    minHeight: "300px",
+  };
 
   const fetchSuggestions = async (value: string) => {
     const token = authService.getToken();
@@ -546,7 +553,7 @@ export default function RfqProductForm() {
           {errors.unit && <div style={{ color: "red" }}>{errors.unit}</div>}
         </div>
       </div>
-      <div style={{ marginBottom: "20px" }}>
+      {/* <div style={{ marginBottom: "20px" }}>
         <label style={labelStyle}>Detailed Requirements</label>
         <textarea
           value={specifications}
@@ -557,6 +564,36 @@ export default function RfqProductForm() {
           placeholder="I'm looking for..."
           style={{ ...inputStyle, height: "150px" }}
         ></textarea>
+        {errors.specifications && (
+          <div style={{ color: "red" }}>{errors.specifications}</div>
+        )}
+      </div> */}
+      <div style={{ marginBottom: "20px" }}>
+        <label style={labelStyle}>Detailed Requirements</label>
+        <ReactQuill
+          value={specifications}
+          onChange={(content) => {
+            setSpecifications(content);
+            setErrors((prev) => ({ ...prev, specifications: "" }));
+          }}
+          placeholder="I'm looking for..."
+          style={quillStyle}
+          modules={{
+            toolbar: [
+              [{ 'header': [1, 2, 3, 4, false] }],
+              ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+              [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+              ['link', 'image'],
+              ['clean']
+            ],
+          }}
+          formats={[
+            'header',
+            'bold', 'italic', 'underline', 'strike', 'blockquote',
+            'list', 'bullet', 'indent',
+            'link', 'image'
+          ]}
+        />
         {errors.specifications && (
           <div style={{ color: "red" }}>{errors.specifications}</div>
         )}

@@ -79,6 +79,7 @@
 import { useEffect, useState } from 'react'
 import { Mail, Phone, MapPin } from 'lucide-react'
 import authService from 'services/authService'
+import { Styledbutton } from '../style'
 
 export default function Component({ params }: { params: { id: string } }) {
   // const [isHovered, setIsHovered] = useState(false)
@@ -160,7 +161,19 @@ export default function Component({ params }: { params: { id: string } }) {
         marginBottom: '20px',
       }}>
         <h2 style={{ color: '#E94560', marginBottom: '15px' }}>Detailed Requirements</h2>
-        <p style={{ lineHeight: '1.6' }}>{productDetails.detailedRequirements}</p>
+        {/* <p style={{ lineHeight: '1.6' }}>{productDetails.detailedRequirements}</p> */}
+        <div
+  className="responsive-content"
+  style={{
+    lineHeight: '1.6',
+    wordWrap: 'break-word',
+    overflowWrap: 'break-word',
+    whiteSpace: 'normal',
+    overflowX: 'auto',
+  }}
+  dangerouslySetInnerHTML={{ __html: productDetails.detailedRequirements }}
+></div>
+
       </div>
 
       {rfqVendorData.length > 0 && (
