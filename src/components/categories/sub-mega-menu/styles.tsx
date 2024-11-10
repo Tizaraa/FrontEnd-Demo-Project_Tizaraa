@@ -4,7 +4,7 @@ import { getTheme } from "@utils/utils";
 export const StyledMegaMenu1 = styled.div`
   display: none;
   position: absolute;
-  left: 94%;
+  left: 210%;
   right: auto;
   top: 0;
   z-index: 99;

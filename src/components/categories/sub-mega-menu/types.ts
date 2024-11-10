@@ -14,14 +14,13 @@ type MegaMenu1 = {
   categories: Category[];
 };
 
-export type MegaMenu1Props = { data: MegaMenu1; minWidth?: string; };
+export type MegaMenu1Props = { data: MegaMenu1; minWidth?: string };
 
 type MegaMenu2 = {
   icon: string;
   href: string;
   title: string;
   menuData?: any;
-  subCategories?: any;
 };
 
 export type MegaMenu2Props = { data: MegaMenu2[] };

@@ -358,7 +358,7 @@ export default function PaymentForm() {
         checked={paymentMethod === "mb"} // Only check if paymentMethod is "mb"
         label={
           <Typography ml="6px" fontWeight="600" fontSize="18px">
-            Mobile Banking
+            Online Payment
           </Typography>
         }
       />
@@ -404,7 +404,7 @@ export default function PaymentForm() {
             color="primary"
             type="button"
             fullwidth
-            disabled={isSubtotalZero} 
+            disabled={isSubtotalZero || !paymentMethod}  
           >Payment</Button>
             {/* <Button onClick={orderSub} variant="outlined" color="primary" type="button" fullwidth>
              Paymentclick

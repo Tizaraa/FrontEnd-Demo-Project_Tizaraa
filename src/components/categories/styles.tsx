@@ -37,6 +37,7 @@ export const StyledCategoryDropdown = styled.div.withConfig({
   box-shadow: ${getTheme("shadows.regular")};
   transition: all 250ms ease-in-out;
   z-index: 98;
+  height: 450px;
 `;
 
 export const StyledCategoryMenuItem = styled.div`
