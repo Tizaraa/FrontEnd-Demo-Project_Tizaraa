@@ -480,6 +480,8 @@ import { IconButton } from "@component/buttons";
 import { currency, getTheme, isValidProp } from "@utils/utils";
 import { useAppContext } from "@context/app-context";
 import { useState,useEffect } from "react";
+import {Styledbutton} from "./style";
+
 
 // STYLED COMPONENTS
 const Wrapper = styled.div.withConfig({
@@ -582,13 +584,16 @@ export default function ProductCard7(props: ProductCard7Props) {
               onClick={() => handleCartAmountChange(quantity - 1)}>
               <Icon variant="small">minus</Icon>
             </Button>
+            <Styledbutton>
             <input
               type="number"
               value={quantity}
-              onChange={(e) => handleCartAmountChange(parseInt(e.target.value) || 1)}
-              style={{ width: "50px", textAlign: "center", margin: "0 10px", border: "1px solid #ccc", borderRadius: "4px", padding: "5px" }}
+              className="no-spin-button"
+              onChange={(e) => handleCartAmountChange(Math.max(1, parseInt(e.target.value)))}
+              style={{ width: "50px", textAlign: "center", margin: "0 10px", borderRadius: "4px", padding: "5px", border: "1px solid #E94560" }}
               min="1"
             />
+            </Styledbutton>
             <Button
               size="none"
               padding="5px"
