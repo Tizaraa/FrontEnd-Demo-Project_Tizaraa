@@ -37,6 +37,14 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     });
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, product: any) => {
+    const newQty = Math.max(1, parseInt(e.target.value));
+    dispatch({
+      type: "CHANGE_CART_AMOUNT",
+      payload: { ...product, qty: newQty }
+    });
+  };
+
   const getTotalPrice = () => {
     return state.cart.reduce((accumulator, item) =>
       // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
@@ -98,7 +106,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
         {state.cart.map((item) => (
           <Fragment key={item.id}>
             <div className="cart-item">
-              <FlexBox alignItems="center" flexDirection="column">
+              <FlexBox style={{display: "flex", flexDirection: "column", gap: "10px"}} alignItems="center" flexDirection="column">
                 <Button
                   size="none"
                   padding="5px"
@@ -110,9 +118,13 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                   <Icon variant="small">plus</Icon>
                 </Button>
 
-                <Typography fontWeight={600} fontSize="15px" my="3px">
-                  {item.qty}
-                </Typography>
+                <input
+                    type="number"
+                    value={item.qty}
+                    min={1}
+                    onChange={(e) => handleInputChange(e, item)}
+                    style={{ width: "40px", textAlign: "center" }}
+                  />
 
                 <Button
                   size="none"

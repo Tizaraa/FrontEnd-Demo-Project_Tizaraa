@@ -226,8 +226,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+      {/* <link rel="icon" href={metadata.favicon} type="image/x-icon" /> */}
       <Head>
         <link rel="icon" href={metadata.favicon} type="image/x-icon" />
+        {/* <link rel="preload" href={metadata.favicon} /> */}
       </Head>
       <body className={openSans.className}>
         <StyledComponentsRegistry>
