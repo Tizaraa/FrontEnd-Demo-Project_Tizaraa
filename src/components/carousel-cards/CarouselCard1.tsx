@@ -65,7 +65,7 @@ const StyledCarouselCard1 = styled.div`
     width: 100%;
     img {
       width: 100%;
-      height: 400px;
+      height: 430px;
     object-fit: fill;
       
       
