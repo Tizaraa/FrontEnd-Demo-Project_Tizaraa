@@ -155,10 +155,10 @@ import "react-toastify/dist/ReactToastify.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useRouter } from "next/navigation";
 import { debounce } from "lodash";
-import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 // Define interfaces for API responses
 interface ProductSuggestion {
   product_name: string;
@@ -314,10 +314,10 @@ export default function RfqProductForm() {
           }
         );
         console.log(response);
-        
+
         const results = response.data.data || [];
         //console.log(results);
-        
+
         setSuggestions(results);
         setIsDropdownOpen(results.length > 0);
       } catch (error) {
@@ -336,7 +336,6 @@ export default function RfqProductForm() {
   useEffect(() => {
     debouncedFetchSuggestions(productName);
   }, [productName]);
-
 
   useEffect(() => {
     const fetchMeasurementUnits = async () => {
@@ -451,12 +450,12 @@ export default function RfqProductForm() {
       setErrors({});
       setSuggestions([]);
       setIsDropdownOpen(false);
-      router.push("/rfq")
+      router.push("/rfq");
       toast.success("Request For Quotation form submitted successfully!");
       //toast.success("Order placed successfully!");
     } catch (error) {
       toast.error("Failed to submit RFQ");
-    }finally {
+    } finally {
       setLoading(false); // Stop loading
     }
   };
@@ -467,8 +466,16 @@ export default function RfqProductForm() {
 
       <div style={{ marginBottom: "20px" }}>
         <label style={labelStyle}>Product Name</label>
-        <div style={{ position: "relative", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
-          
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
           <textarea
             ref={textareaRef} // Reference to the textarea
             value={productName}
@@ -476,7 +483,12 @@ export default function RfqProductForm() {
             onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
             onFocus={() => setIsDropdownOpen(suggestions.length > 0)}
             placeholder="Product Name"
-            style={{ ...inputStyle, overflow: "hidden", resize: "none", paddingRight: "30px" }}
+            style={{
+              ...inputStyle,
+              overflow: "hidden",
+              resize: "none",
+              paddingRight: "30px",
+            }}
             rows={1} // Initial rows
           ></textarea>
           {productName && (
@@ -493,7 +505,7 @@ export default function RfqProductForm() {
                 cursor: "pointer",
                 fontSize: "30px",
                 color: "#6c757d",
-                textAlign: "center"
+                textAlign: "center",
               }}
             >
               &times;
@@ -501,8 +513,8 @@ export default function RfqProductForm() {
           )}
         </div>
         {errors.productName && (
-            <div style={{ color: "red" }}>{errors.productName}</div>
-          )}
+          <div style={{ color: "red" }}>{errors.productName}</div>
+        )}
         {isDropdownOpen && suggestions.length > 0 && (
           <ul style={dropdownStyle}>
             {suggestions.map((suggestion) => (
@@ -580,18 +592,44 @@ export default function RfqProductForm() {
           style={quillStyle}
           modules={{
             toolbar: [
-              [{ 'header': [1, 2, 3, 4, false] }],
-              ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-              [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-              ['link', 'image'],
-              ['clean']
+              [{ font: [] }],
+              [{ header: [1, 2, 3, 4, 5, 6, false] }],
+              [{ size: ["small", false, "large", "huge"] }],
+              [{ color: [] }, { background: [] }],
+              ["bold", "italic", "underline", "strike", "blockquote"],
+              [{ script: "sub" }, { script: "super" }],
+              [
+                { list: "ordered" },
+                { list: "bullet" },
+                { indent: "-1" },
+                { indent: "+1" },
+              ],
+              [{ direction: "rtl" }],
+              [{ align: [] }],
+              ["link", "image", "video"],
+              ["clean"], // Removes formatting
             ],
           }}
           formats={[
-            'header',
-            'bold', 'italic', 'underline', 'strike', 'blockquote',
-            'list', 'bullet', 'indent',
-            'link', 'image'
+            "font",
+            "header",
+            "size",
+            "color",
+            "background",
+            "bold",
+            "italic",
+            "underline",
+            "strike",
+            "blockquote",
+            "script",
+            "list",
+            "bullet",
+            "indent",
+            "direction",
+            "align",
+            "link",
+            "image",
+            "video",
           ]}
         />
         {errors.specifications && (
@@ -646,7 +684,7 @@ export default function RfqProductForm() {
         }
         disabled={loading}
       >
-        {loading ? <BeatLoader size={18} color="#fff"  /> : "Submit"}
+        {loading ? <BeatLoader size={18} color="#fff" /> : "Submit"}
       </button>
     </div>
   );
