@@ -47,9 +47,9 @@ export default function RfqComment() {
           <div style={{ width: '42px', height: '42px', borderRadius: '50%', backgroundColor: '#E94560', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ fontSize: '18px', color: 'white' }}>RFQ</span>
           </div>
-          <h1 style={{ fontSize: '24px', fontWeight: '600', margin: 0, color: '#E94560' }}>Request for Quotation</h1>
+          <h1 style={{ fontSize: '24px', fontWeight: '600', margin: 0, color: '#E94560' }}>RFQ Comments</h1>
         </div>
-        <Button
+        {/* <Button
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -64,7 +64,7 @@ export default function RfqComment() {
     >
       <ChevronLeft size={18} />
       Back to RFQ List
-    </Button>
+    </Button> */}
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -90,7 +90,8 @@ export default function RfqComment() {
           onChange={setComment}
           style={{ 
             height: 'auto',
-            backgroundColor: '#ffffff'
+            backgroundColor: '#ffffff',
+            minHeight: "250px"
           }}
           modules={{
             toolbar: [
