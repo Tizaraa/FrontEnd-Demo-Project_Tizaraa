@@ -552,6 +552,7 @@ export default function Component({ params }: { params: { id: string } }) {
             position: 'relative',
             overflowY: 'auto',
             maxHeight: '80%',
+            
           }}>
             <button
               onClick={() => setIsModalOpen(false)}
@@ -566,8 +567,7 @@ export default function Component({ params }: { params: { id: string } }) {
                 width: '30px',
                 height: '30px',
                 cursor: 'pointer',
-                fontSize: '18px',
-                lineHeight: '30px',
+                fontSize: '20px',
                 textAlign: 'center',
               }}
             >
