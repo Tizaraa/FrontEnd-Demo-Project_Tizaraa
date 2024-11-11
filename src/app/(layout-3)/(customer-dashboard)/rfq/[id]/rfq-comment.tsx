@@ -166,7 +166,7 @@ export default function RfqComment() {
           style={{
             height: "auto",
             backgroundColor: "#ffffff",
-            minHeight: "250px",
+            minHeight: "350px",
           }}
           modules={{
             toolbar: [
