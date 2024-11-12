@@ -65,6 +65,7 @@ export default function CategoryDropdown({ open, position = "absolute" }: Catego
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        // console.log("main category:", data)
         setNavigations(data);
       } catch (error) {
         setError(error.message);

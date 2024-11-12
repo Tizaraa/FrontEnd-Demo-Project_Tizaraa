@@ -331,6 +331,8 @@ import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import OTCProducts from "@sections/market-1/OTCProducts";
+import OTCcategoryProductView from "./OTCcategoryProductView";
+
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -399,7 +401,7 @@ export default function SearchResult({ sortOptions, slug }) {
       }
 
       const data = await response.json();
-      console.log(data);
+      console.log("category details:",data.otid);
       // Reset products when fetching the first page
       if (currentPage === 1) {
         setProducts(data.data);
@@ -521,6 +523,7 @@ export default function SearchResult({ sortOptions, slug }) {
       </FlexBox>
 
       {/* <OTCProducts></OTCProducts> */}
+      <OTCcategoryProductView slug={slug}></OTCcategoryProductView>
 
       <Grid container spacing={6}>
         <Grid item lg={3} xs={12}>
