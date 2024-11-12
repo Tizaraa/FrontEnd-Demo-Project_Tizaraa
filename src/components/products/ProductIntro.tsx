@@ -54,7 +54,7 @@ export default function ProductIntro({
   productStock,
   productId,
   sellerId,
-  sizecolorwithprice, // Accept sizecolorwithprice
+  sizecolorwithprice, 
 }: ProductIntroProps) {
   const param = useParams();
   const { state } = useAppContext();
@@ -112,6 +112,7 @@ export default function ProductIntro({
             price={selectedPrice} 
             dummySizes={formattedSizeColorOptions} 
             selectedSpec={''} 
+            productType = "General"
 
           />
 

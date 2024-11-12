@@ -183,6 +183,7 @@ export interface CartItem {
   sizecolorwithprice?: any; 
   b2bPricing?:any;
   measurementUnit?:any;
+  productType?: string;
 }
 
 export type ActionType =

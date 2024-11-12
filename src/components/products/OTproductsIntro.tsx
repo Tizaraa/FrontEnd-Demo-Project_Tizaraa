@@ -720,6 +720,7 @@ export default function OtProductsIntro({
         selectedColor={''} 
         selectedSpec={''} 
         dummySizes={[]}
+        productType="Abroad"
       />
         </div>
       )}
@@ -742,6 +743,7 @@ export default function OtProductsIntro({
             selectedSpec={selectedSpec}
             selectedColor={''}
             dummySizes={[]} 
+            productType="Abroad"
         
           />
         </div>

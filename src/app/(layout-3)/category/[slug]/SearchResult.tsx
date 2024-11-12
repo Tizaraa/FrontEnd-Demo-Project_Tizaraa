@@ -330,6 +330,7 @@ import useWindowSize from "@hook/useWindowSize";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import OTCProducts from "@sections/market-1/OTCProducts";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -518,6 +519,8 @@ export default function SearchResult({ sortOptions, slug }) {
           )}
         </FlexBox>
       </FlexBox>
+
+      {/* <OTCProducts></OTCProducts> */}
 
       <Grid container spacing={6}>
         <Grid item lg={3} xs={12}>

@@ -29,6 +29,7 @@ type AddToCartButtonProps = {
   selectedColor: string | null;
   selectedSpec: string | null;
   dummySizes: SizeColorOption[];
+  productType?: string;
 };
 
 const AddToCartButton = ({
@@ -43,6 +44,7 @@ const AddToCartButton = ({
   selectedColor,
   selectedSpec,
   dummySizes,
+  productType,
 }: AddToCartButtonProps) => {
   const { state, dispatch } = useAppContext();
 
@@ -95,6 +97,8 @@ const AddToCartButton = ({
         productId,
         sellerId,
         b2bPricing: selectedSizeColorOption.b2bPricing,
+        productType
+        
       },
     });
   };
@@ -117,6 +121,7 @@ const AddToCartButton = ({
           productId,
           sellerId,
           b2bPricing: [],
+          productType,
         },
       });
 
