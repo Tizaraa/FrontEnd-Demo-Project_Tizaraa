@@ -23,7 +23,7 @@ export const customerCareLink = [
 export const iconList = [
   { iconName: "facebook", url: "https://www.facebook.com/TizaraaGroup" },
   // { iconName: "twitter", url: "/" },
-  // { iconName: "youtube", url: "https://www.youtube.com/channel/UCsIyD-TSO1wQFz-n2Y4i3Rg" },
+  { iconName: "youtube", url: "https://www.youtube.com/@Tizaraa24" },
   // { iconName: "google", url: "/" },
   // { iconName: "instagram", url: "/" }
 ];
