@@ -64,12 +64,13 @@ export default function Topbar() {
             Need Help?
           </NavLink> */}
 
-          {/* <Menu
+          <Menu
             direction="right"
             handler={
               <FlexBox className="dropdown-handler" alignItems="center" height="40px" mr="1.25rem">
-                <Image src={language.imgUrl} alt={language.title} />
-                <Small fontWeight="600">{language.title}</Small>
+                {/* <Image src={language.imgUrl} alt={language.title} />
+                <Small fontWeight="600">{language.title}</Small> */}
+                <Small fontWeight="600">Shop</Small>
                 <Icon size="1rem">chevron-down</Icon>
               </FlexBox>
             }>
@@ -79,7 +80,7 @@ export default function Topbar() {
                 <Small fontWeight="600">{item.title}</Small>
               </MenuItem>
             ))}
-          </Menu> */}
+          </Menu>
 
           {/* <Menu
             direction="right"

@@ -25,5 +25,5 @@ export const iconList = [
   // { iconName: "twitter", url: "/" },
   { iconName: "youtube", url: "https://www.youtube.com/@Tizaraa24" },
   // { iconName: "google", url: "/" },
-  // { iconName: "instagram", url: "/" }
+   { iconName: "instagram", url: "https://www.instagram.com/tizaraagroup/?igsh=MXB1b2l1NXN6N2U5dQ%3D%3D#" }
 ];
