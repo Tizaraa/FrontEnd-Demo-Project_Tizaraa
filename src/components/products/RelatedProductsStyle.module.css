@@ -8,7 +8,7 @@
   .productCard {
     flex: 1 1 calc(20% - 16px); /* Flex-grow to allow items to grow, 5 products per row */
     min-width: 190px;
-    max-width: 250px;
+    max-width: 220px;
     margin-bottom: 16px; /* Ensure proper spacing between rows */
   }
   

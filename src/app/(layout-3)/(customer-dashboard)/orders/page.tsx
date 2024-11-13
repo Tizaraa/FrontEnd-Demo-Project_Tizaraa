@@ -179,8 +179,8 @@ export default function OrderList() {
       });
 
       const data = response.data;
-      console.log("nazim",data);
-      console.log("nazim");
+      // console.log("nazim",data);
+      // console.log("nazim");
       
       
       if (Array.isArray(data.orders)) {
