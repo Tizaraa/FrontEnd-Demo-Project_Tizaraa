@@ -283,7 +283,8 @@ export default function RfqProductForm() {
     border: "none",
     borderRadius: "4px",
     fontSize: "18px",
-    cursor: "pointer",
+    cursor: agree ? "pointer" : "not-allowed",
+    opacity: agree ? 1 : 0.5,
     transition: "background-color 0.3s",
   };
 
@@ -413,7 +414,7 @@ export default function RfqProductForm() {
     if (!unit) newErrors.unit = "Unit is required.";
     if (!specifications)
       newErrors.specifications = "Specifications are required.";
-    if (!agree) newErrors.agree = "You must agree to the terms.";
+    //if (!agree) newErrors.agree = "You must agree to the terms.";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -672,7 +673,7 @@ export default function RfqProductForm() {
           />
           I agree to share my Business card with quoted suppliers
         </label>
-        {errors.agree && <div style={{ color: "red" }}>{errors.agree}</div>}
+        {/* {errors.agree && <div style={{ color: "red" }}>{errors.agree}</div>} */}
       </div>
 
       <button
@@ -682,7 +683,7 @@ export default function RfqProductForm() {
         onMouseOut={(e) =>
           (e.currentTarget.style.backgroundColor = "rgb(231, 75, 50)")
         }
-        disabled={loading}
+        disabled={!agree || loading}
       >
         {loading ? <BeatLoader size={18} color="#fff" /> : "Submit"}
       </button>
