@@ -130,8 +130,15 @@ const OTCcategoryProductView = ({ slug }: { slug: string }) => {
     return (
         <Box>
             {/* Display OTID wise name  */}
-      <FlexBox  p="1.25rem" flexDirection="column" alignItems="flex-start">
+      <FlexBox 
+       p="1.25rem"  
+       flexDirection="row" 
+       alignItems="flex-start" 
+       justifyContent="space-between">
       <H5>{name}</H5>
+      <Link href={`/OtCategory/${otid}`}>
+      <span style={{fontSize: '14px', color: 'rgb(125, 135, 156)'}}>View All </span>
+      </Link>
      </FlexBox>
             {loading && <div>Loading...</div>}
             {products.length > 0 ? (
@@ -205,7 +212,7 @@ const OTCcategoryProductView = ({ slug }: { slug: string }) => {
                     </Carousel>
                 </Box>
             ) : (
-                !loading && <div>No products available</div>
+                !loading && <div></div>
             )}
            
         </Box>
