@@ -14,6 +14,7 @@ const OTCcategoryProductView = ({ slug }: { slug: string }) => {
     const [products, setProducts] = useState<any[]>([]);
     const [otid, setOtid] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [name, setName] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const width = useWindowSize();
     const [visibleSlides, setVisibleSlides] = useState(5);
@@ -25,6 +26,7 @@ const OTCcategoryProductView = ({ slug }: { slug: string }) => {
         else setVisibleSlides(5);
     }, [width]);
 
+    // fetch the category data 
     const fetchCategoryData = useCallback(async () => {
         setLoading(true);
         try {
@@ -49,6 +51,28 @@ const OTCcategoryProductView = ({ slug }: { slug: string }) => {
         }
     }, [slug]);
 
+    // fetch category name 
+    const fetchCategoryName = useCallback(async () => {
+        if (!otid) return;
+    
+        try {
+            const response = await fetch(`${ApiBaseUrl.baseUrl}otpi/get-category`);
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            console.log("Category data:", data);
+            const category = data.CategoryInfoList.Content.find((item: any) => item.Id === otid);
+            setName(category ? category.Name : "Unknown Category");
+    
+        } catch (error) {
+            console.error("Error fetching category name:", error);
+        }
+    }, [otid]);
+    
+    
+
+    // fetch otc products 
     const fetchProducts = useCallback(async () => {
         if (!otid) return;
 
@@ -86,21 +110,28 @@ const OTCcategoryProductView = ({ slug }: { slug: string }) => {
         }
     }, [otid, currentPage, products]);
 
+    // category data 
     useEffect(() => {
         fetchCategoryData();
     }, [slug, fetchCategoryData]);
 
+    // fetch products data 
     useEffect(() => {
         if (otid) fetchProducts();
     }, [otid, currentPage, fetchProducts]);
+
+    // category name 
+    useEffect(() => {
+        fetchCategoryName();
+    }, [fetchCategoryName]);
 
     const handleLoadMore = () => setCurrentPage((prev) => prev + 1);
 
     return (
         <Box>
-            {/* Display OTID */}
+            {/* Display OTID wise name  */}
       <FlexBox  p="1.25rem" flexDirection="column" alignItems="flex-start">
-        <H5>OTID: {otid}</H5>
+      <H5>{name}</H5>
      </FlexBox>
             {loading && <div>Loading...</div>}
             {products.length > 0 ? (
