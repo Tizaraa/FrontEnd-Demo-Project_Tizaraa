@@ -447,8 +447,8 @@ export default function RfqProductList() {
                   fontWeight: "500",
                   padding: "0.25rem 0.625rem",
                   borderRadius: "9999px",
-                  backgroundColor: rfq.status === 1 ? "#d1fae5" : "#fee2e2",
-                  color: rfq.status === 1 ? "#065f46" : "#991b1b",
+                  backgroundColor: rfq.status === 1 ? "#d1fae5" : "#FFFFC5",
+                  color: rfq.status === 1 ? "#065f46" : "#FFBF00",
                 }}
               >
                 {rfq.status === 1 ? "Approved" : "Pending"}
