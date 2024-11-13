@@ -10,16 +10,28 @@ import MenuItem from "../MenuItem";
 import Container from "../Container";
 import { Small } from "../Typography";
 import StyledTopbar from "./styles";
+import { FaUser } from "react-icons/fa";
+import { FaLocationPin } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export default function Topbar() {
   const [currency, setCurrency] = useState(currencyList[0]);
   const [language, setLanguage] = useState(languageList[0]);
+  const router = useRouter();
 
   const handleCurrencyClick = (curr: typeof currency) => () =>
     setCurrency(curr);
 
-  const handleLanguageClick = (lang: typeof language) => () =>
+  const handleLanguageClick = (lang: typeof language) => () => {
     setLanguage(lang);
+    if (lang.url.startsWith("http")) {
+      // External URL
+      window.location.href = lang.url;
+    } else {
+      // Internal URL
+      router.push(lang.url);
+    }
+  }
 
   useEffect(() => {
     // get language from browser
@@ -64,13 +76,12 @@ export default function Topbar() {
             Need Help?
           </NavLink> */}
 
-          <Menu
+          {/* <Menu
             direction="right"
             handler={
               <FlexBox className="dropdown-handler" alignItems="center" height="40px" mr="1.25rem">
-                {/* <Image src={language.imgUrl} alt={language.title} />
-                <Small fontWeight="600">{language.title}</Small> */}
-                <Small fontWeight="600">Shop</Small>
+                <Image src={language.imgUrl} alt={language.title} />
+                <Small fontWeight="600">{language.title}</Small>
                 <Icon size="1rem">chevron-down</Icon>
               </FlexBox>
             }>
@@ -80,7 +91,27 @@ export default function Topbar() {
                 <Small fontWeight="600">{item.title}</Small>
               </MenuItem>
             ))}
-          </Menu>
+          </Menu> */}
+
+<Menu
+      direction="right"
+      handler={
+        <FlexBox className="dropdown-handler" alignItems="center" height="40px" mr="1.25rem">
+          {language.icon}
+          <Small fontWeight="600" ml="0.5rem">{language.title}</Small>
+          <Icon size="1rem">chevron-down</Icon>
+        </FlexBox>
+      }
+    >
+      {languageList.map((item) => (
+        <MenuItem key={item.title} onClick={handleLanguageClick(item)}>
+          <FlexBox alignItems="center">
+            {item.icon}
+            <Small fontWeight="600" ml="0.5rem">{item.title}</Small>
+          </FlexBox>
+        </MenuItem>
+      ))}
+    </Menu>
 
           {/* <Menu
             direction="right"
@@ -104,12 +135,17 @@ export default function Topbar() {
   );
 }
 
+// const languageList = [
+//   // { title: "Become A Seller", imgUrl: "/assets/images/flags/user.png" },
+//   // { title: "Find My Showroom / Shop", imgUrl: "/assets/images/flags/location.png" },
+//   // { title: "HN", imgUrl: "/assets/images/flags/in.png" },
+//   { title: "Become A Seller", imgUrl: "user" },
+//   { title: "Find My Showroom / Shop", imgUrl: "location" },
+// ];
 const languageList = [
-  { title: "EN", imgUrl: "/assets/images/flags/usa.png" },
-  { title: "BN", imgUrl: "/assets/images/flags/bd.png" },
-  { title: "HN", imgUrl: "/assets/images/flags/in.png" },
+  { title: "Become A Seller", icon: <FaUser />,url: "https://seller.tizaraa.com", },
+  { title: "Find My Showroom / Shop", icon: <FaLocationPin />,url: "/shops" },
 ];
-
 const currencyList = [
   { title: "USD", imgUrl: "/assets/images/flags/usa.png" },
   { title: "EUR", imgUrl: "/assets/images/flags/uk.png" },
