@@ -412,8 +412,13 @@ export default function RfqProductForm() {
     if (!quantity || parseInt(quantity) <= 0)
       newErrors.quantity = "Quantity must be a positive number.";
     if (!unit) newErrors.unit = "Unit is required.";
-    if (!specifications)
+    // if (!specifications)
+    //   newErrors.specifications = "Specifications are required.";
+    if (!specifications) {
       newErrors.specifications = "Specifications are required.";
+    }
+    setErrors(newErrors);
+    //return Object.keys(newErrors).length === 0;
     //if (!agree) newErrors.agree = "You must agree to the terms.";
 
     if (Object.keys(newErrors).length > 0) {
@@ -654,25 +659,24 @@ export default function RfqProductForm() {
       </div>
 
       <div style={{ marginBottom: "20px" }}>
-        <label
-          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-        >
-          <input
-            type="checkbox"
-            checked={agree}
-            onChange={() => {
-              const newAgree = !agree;
-              setAgree(newAgree);
-              // Set or clear error based on the new state of the checkbox
-              setErrors((prev) => ({
-                ...prev,
-                agree: newAgree ? "" : "You must agree to the terms.",
-              }));
-            }}
-            style={{ marginRight: "10px" }}
-          />
-          I agree to share my Business card with quoted suppliers
-        </label>
+      <label style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+  <input
+    type="checkbox"
+    checked={agree}
+    onChange={() => {
+      const newAgree = !agree;
+      setAgree(newAgree);
+      setErrors((prev) => ({
+        ...prev,
+        agree: newAgree ? "" : "You must agree to the terms.",
+      }));
+    }}
+    style={{ marginRight: "10px" }}
+  />
+  I agree to the <span style={{ paddingLeft: "5px", color: "rgb(231, 75, 50)" }}> Terms and Conditions</span>
+</label>
+{/* {errors.agree && <div style={{ color: "red" }}>{errors.agree}</div>} */}
+
         {/* {errors.agree && <div style={{ color: "red" }}>{errors.agree}</div>} */}
       </div>
 
@@ -683,7 +687,7 @@ export default function RfqProductForm() {
         onMouseOut={(e) =>
           (e.currentTarget.style.backgroundColor = "rgb(231, 75, 50)")
         }
-        disabled={!agree || loading}
+        disabled={!agree}
       >
         {loading ? <BeatLoader size={18} color="#fff" /> : "Submit"}
       </button>
