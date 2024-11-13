@@ -88,7 +88,7 @@ export default function SubCategoryMenu({ subCategories }: SubCategoryMenuProps)
           padding: "8px",
           minWidth: "645px",  
           zIndex: 9999,  
-         height: "450px",
+          height: "450px",
         //  display: "grid",  
         //  gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", 
         //  overflowY: "auto",
@@ -98,9 +98,12 @@ export default function SubCategoryMenu({ subCategories }: SubCategoryMenuProps)
        <div style={{
          display: "grid",  
          gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", 
+         gridAutoRows: "min-content",
          overflowY: "auto",
          height: "400px",
-         gap: "16px" 
+         gap: "16px" ,
+         justifyItems: "center",
+         alignContent: "start",
        }}>
 
        {subCategories.map((sub, subIndex) => (
