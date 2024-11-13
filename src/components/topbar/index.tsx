@@ -48,7 +48,7 @@ export default function Topbar() {
       >
         <FlexBox className="topbar-left">
           <div className="logo">
-            <a href="/" style={{display: "block"}}>
+            <a href="/" style={{ display: "block" }}>
               <img
                 src="https://frontend.tizaraa.com/public/frontend/assets/img/site-logo/tizaraa-logo.png"
                 alt="logo"
@@ -93,25 +93,27 @@ export default function Topbar() {
             ))}
           </Menu> */}
 
-<Menu
-      direction="right"
-      handler={
-        <FlexBox className="dropdown-handler" alignItems="center" height="40px" mr="1.25rem">
-          {language.icon}
-          <Small fontWeight="600" ml="0.5rem">{language.title}</Small>
-          <Icon size="1rem">chevron-down</Icon>
-        </FlexBox>
-      }
-    >
-      {languageList.map((item) => (
-        <MenuItem key={item.title} onClick={handleLanguageClick(item)}>
-          <FlexBox alignItems="center">
-            {item.icon}
-            <Small fontWeight="600" ml="0.5rem">{item.title}</Small>
-          </FlexBox>
-        </MenuItem>
-      ))}
-    </Menu>
+          <div className="responsive-menu">
+          <Menu
+            direction="right"
+            handler={
+              <FlexBox className="dropdown-handler" alignItems="center" height="40px" mr="1.25rem">
+                {language.icon}
+                <Small fontWeight="600" ml="0.5rem">{language.title}</Small>
+                <Icon size="1rem">chevron-down</Icon>
+              </FlexBox>
+            }
+          >
+            {languageList.map((item) => (
+              <MenuItem key={item.title} onClick={handleLanguageClick(item)}>
+                <FlexBox alignItems="center">
+                  {item.icon}
+                  <Small fontWeight="600" ml="0.5rem">{item.title}</Small>
+                </FlexBox>
+              </MenuItem>
+            ))}
+          </Menu>
+          </div>
 
           {/* <Menu
             direction="right"
@@ -131,6 +133,19 @@ export default function Topbar() {
           </Menu> */}
         </FlexBox>
       </Container>
+      <style jsx>{`
+        /* Hide on desktop */
+        .responsive-menu {
+          display: none;
+        }
+
+        /* Show on mobile and tablet */
+        @media (max-width: 768px) {
+          .responsive-menu {
+            display: block;
+          }
+        }
+      `}</style>
     </StyledTopbar>
   );
 }
