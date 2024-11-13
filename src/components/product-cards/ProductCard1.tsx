@@ -225,7 +225,7 @@ export default function ProductCard1({
               {/* <Rating value={rating || 0} outof={5} color="warn" readOnly /> */}
 
 
-    <Box marginTop="4px"> 
+    {/* <Box marginTop="4px"> 
       <H4 fontWeight="600" fontSize="14px" color="primary.main">
       <del>{currency(price)}</del>
       </H4>
@@ -235,7 +235,28 @@ export default function ProductCard1({
     <H4 fontWeight="600" fontSize="14px" color="primary.main">
     {calculateDiscount(price, off as number)}
     </H4>
-  </FlexBox>
+  </FlexBox> */}
+
+{(price === 0 && off === 0) ? (
+    <H4 fontWeight="600" fontSize="14px" color="primary.main">
+        RFQ
+    </H4>
+) : (
+    <>
+        <Box marginTop="4px"> 
+            <H4 fontWeight="600" fontSize="14px" color="primary.main">
+                <del>{currency(price)}</del>
+            </H4>
+        </Box>
+
+        <FlexBox>
+            <H4 fontWeight="600" fontSize="14px" color="primary.main">
+                {calculateDiscount(price, off as number)}
+            </H4>
+        </FlexBox>
+    </>
+)}
+
 
     
             </Box>
