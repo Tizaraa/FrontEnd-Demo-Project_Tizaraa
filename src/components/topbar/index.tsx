@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 
 export default function Topbar() {
   const [currency, setCurrency] = useState(currencyList[0]);
-  const [language, setLanguage] = useState(languageList[0]);
+  const [language, setLanguage] = useState(languageList[1]);
   const router = useRouter();
 
   const handleCurrencyClick = (curr: typeof currency) => () =>
@@ -143,8 +143,8 @@ export default function Topbar() {
 //   { title: "Find My Showroom / Shop", imgUrl: "location" },
 // ];
 const languageList = [
-  { title: "Become A Seller", icon: <FaUser />,url: "https://seller.tizaraa.com", },
-  { title: "Find My Showroom / Shop", icon: <FaLocationPin />,url: "/shops" },
+  { title: "Become A Seller", icon: <FaUser />, url: "https://seller.tizaraa.com", },
+  { title: "Find My Showroom / Shop", icon: <FaLocationPin />, url: "/shops" },
 ];
 const currencyList = [
   { title: "USD", imgUrl: "/assets/images/flags/usa.png" },
