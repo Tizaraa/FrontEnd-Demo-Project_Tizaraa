@@ -732,7 +732,7 @@ export default function OtProductsIntro({
     {selectedRowId && (
         <div style={{ marginTop: '20px' }}>
           <AddToCartButton
-            productId={selectedRowId}
+            productId={id}
             sellerId={sellerId}
             images={images}
             title={title}
