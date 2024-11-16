@@ -479,6 +479,18 @@ export default function OtProductsIntro({
     setSelectedImage(item.ImageUrl); 
     setSelectedRowId(null); 
   };
+
+  const getSelectedAttributes = () => {
+    if (!selectedSpec || !Attributes) return ""; 
+    const selectedAttributes = Attributes.filter(attr =>
+      configuredItems.some(item =>
+        item.Configurators.some(config => config.Vid === selectedSpec && config.Vid === attr.Vid)
+      )
+    );
+    const attributeValues = selectedAttributes.map(attr => attr.Value);
+    return attributeValues.join(", ");
+  };
+  
   
   // const handleRowClick = (id) => {
   //   // Set the selected row ID only
@@ -674,7 +686,7 @@ export default function OtProductsIntro({
                 <tr
                 key={item.Id}
                 onClick={() => {
-                  console.log('Selected row ID:', item.Id);
+                  // console.log('Selected row ID:', item.Id);
                   handleRowClick(item.Id);
                 }}
                 style={{
@@ -721,6 +733,7 @@ export default function OtProductsIntro({
         selectedSpec={''} 
         dummySizes={[]}
         productType="Abroad"
+        attributes={getSelectedAttributes()}
       />
         </div>
       )}
@@ -744,6 +757,7 @@ export default function OtProductsIntro({
             selectedColor={''}
             dummySizes={[]} 
             productType="Abroad"
+            attributes={getSelectedAttributes()}
         
           />
         </div>

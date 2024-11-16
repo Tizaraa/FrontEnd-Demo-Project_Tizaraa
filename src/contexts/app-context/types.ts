@@ -184,6 +184,7 @@ export interface CartItem {
   b2bPricing?:any;
   measurementUnit?:any;
   productType?: string;
+  attributes?: string;
 }
 
 export type ActionType =
