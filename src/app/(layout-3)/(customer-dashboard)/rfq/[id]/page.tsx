@@ -394,6 +394,7 @@ export default function Component({ params }: { params: { id: string } }) {
   })
   const [rfqVendorData, setRfqVendorData] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedResponseId, setSelectedResponseId] = useState<string | null>(null)
 
   const token = authService.getToken()
   const rfqVendorResponseApiUrl = `https://frontend.tizaraa.com/api/rfq-vendor-responses/${params.id}`
@@ -498,7 +499,10 @@ export default function Component({ params }: { params: { id: string } }) {
                 transition: 'all 0.3s ease',
                 boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
               }}
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                setSelectedResponseId(vendor.response_id)
+                setIsModalOpen(true)
+              }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = '#e3e8ec'
                 e.currentTarget.style.transform = 'scale(1.02)'
@@ -573,7 +577,7 @@ export default function Component({ params }: { params: { id: string } }) {
             >
               &times;
             </button>
-            <RfqComment />
+            <RfqComment rfqId={params.id} responseId={selectedResponseId} />
           </div>
         </div>
       )}
