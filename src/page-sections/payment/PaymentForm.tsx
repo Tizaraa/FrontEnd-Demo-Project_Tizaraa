@@ -389,7 +389,7 @@ export default function PaymentForm() {
                     order_id: orderId,
                     product_id: cartdata.productId,
                     color: color,
-                    size: '1',
+                    size: cartdata.attributes,
                     qty: cartdata.qty,
                     note1: 'lorem10',
                     single_ammount: cartdata.price,
