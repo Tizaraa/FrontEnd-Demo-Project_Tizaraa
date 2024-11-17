@@ -122,6 +122,7 @@ export default function RfqComment({
   };
 
   const handleSubmit = (event: React.FormEvent) => {
+    setComment("");
     event.preventDefault(); // Prevent form default behavior (page reload)
     postComment(); // Call the function to post comment
   };
@@ -218,7 +219,14 @@ export default function RfqComment({
                   }}
                 />
               </Avatar>
-              <div style={{ flex: 1 }}>
+              <div
+                style={{
+                  flex: 1,
+                  maxWidth: "100%",
+                  padding: "16px",
+                  boxSizing: "border-box",
+                }}
+              >
                 <div style={{ marginBottom: "8px" }}>
                   <span
                     style={{
@@ -234,23 +242,36 @@ export default function RfqComment({
                   </span>
                 </div>
                 <div
-        className="responsive-content"
-        style={{
-          lineHeight: "1.6",
-          wordWrap: "break-word",
-          overflowWrap: "break-word",
-          whiteSpace: "normal",
-          overflowX: "auto",
-        }}
-      >
-        <div
-          dangerouslySetInnerHTML={{ __html: c.message_content }}
-          style={{
-            display: "block",
-            overflow: "hidden",
-          }}
-        ></div>
-      </div>
+                  className="responsive-content"
+                  style={{
+                    lineHeight: "1.6",
+                    wordWrap: "break-word",
+                    overflowWrap: "break-word",
+                    whiteSpace: "normal",
+                    overflowX: "auto",
+                  }}
+                >
+                  <div
+                    dangerouslySetInnerHTML={{ __html: c.message_content }}
+                    style={{
+                      display: "block",
+                      overflow: "hidden",
+                    }}
+                  ></div>
+                </div>
+                <style jsx>{`
+                  .responsive-content img {
+                    max-width: 100%;
+                    height: auto;
+                    display: block;
+                    margin: 10px 0;
+                  }
+                  @media (max-width: 768px) {
+                    .responsive-content {
+                      font-size: 14px;
+                    }
+                  }
+                `}</style>
               </div>
             </div>
           ))
@@ -323,14 +344,15 @@ export default function RfqComment({
         >
           <Button
             type="submit"
+            disabled={!comment.trim()}
             style={{
               margin: "20px",
-              backgroundColor: "#E94560",
+              backgroundColor: !comment.trim() ? "#ccc" : "#E94560",
               color: "white",
               border: "none",
               padding: "10px 20px",
               borderRadius: "8px",
-              cursor: "pointer",
+              cursor: !comment.trim() ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               gap: "8px",
@@ -343,23 +365,6 @@ export default function RfqComment({
           </Button>
         </div>
       </form>
-      <style jsx>{`
-        .responsive-content img {
-          max-width: 100%;
-          height: auto;
-          display: block;
-          margin: 8px 0;
-        }
-        .responsive-content p {
-          margin: 0;
-        }
-        .responsive-content div,
-        .responsive-content span {
-          overflow-wrap: break-word;
-          word-wrap: break-word;
-          word-break: break-word;
-        }
-      `}</style>
     </div>
   );
 }
