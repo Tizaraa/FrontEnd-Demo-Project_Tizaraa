@@ -1,6 +1,6 @@
 "use client";
 
-import { useState,useEffect  } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 //import { Avatar } from '@/components/ui/avatar'
 //import { Button } from '@/components/ui/button'
@@ -8,19 +8,25 @@ import { ChevronLeft, Send } from "lucide-react";
 import Avatar from "@component/avatar";
 import { Button } from "@component/buttons";
 import "react-quill/dist/quill.snow.css";
-import authService from 'services/authService'
+import authService from "services/authService";
 import { format } from "date-fns";
-
 
 // Dynamic import of react-quill for rich text editing
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-export default function RfqComment({ rfqId, responseId }: { rfqId: string; responseId: string }) {
+export default function RfqComment({
+  rfqId,
+  responseId,
+}: {
+  rfqId: string;
+  responseId: string;
+}) {
   const formatDate = (dateString) => {
     return format(new Date(dateString), "MMMM d, yyyy");
   };
-  const sanitizeMessage = (message) => message.replace(/<\/?[^>]+(>|$)/g, "")
+  const sanitizeMessage = (message) => message.replace(/<\/?[^>]+(>|$)/g, "");
   const [comment, setComment] = useState("");
+  const [image, setImage] = useState(null);
   const [comments, setComments] = useState([]);
   const token = authService.getToken();
   const [hover, setHover] = useState(false);
@@ -54,9 +60,12 @@ export default function RfqComment({ rfqId, responseId }: { rfqId: string; respo
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`https://frontend.tizaraa.com/api/rfq-seller-reviews/${rfqId}/${responseId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch(
+        `https://frontend.tizaraa.com/api/rfq-seller-reviews/${rfqId}/${responseId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await response.json();
       setComments(data.data || []);
     } catch (error) {
@@ -66,30 +75,40 @@ export default function RfqComment({ rfqId, responseId }: { rfqId: string; respo
 
   const postComment = async () => {
     if (!comment.trim()) return; // Prevent posting empty comments
-  
+
     try {
-      const response = await fetch(`https://frontend.tizaraa.com/api/rfq-seller-reviews`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Corrected template literal
-        },
-        body: JSON.stringify({
-          rfq_id: rfqId,
-          response_id: responseId,
-          message_content: comment,
-        }),
-      });
-  
+      const formData = new FormData();
+      formData.append("rfq_id", rfqId);
+      formData.append("response_id", responseId);
+      formData.append("message_content", comment);
+      if (image) formData.append("image", image);
+      const response = await fetch(
+        `https://frontend.tizaraa.com/api/rfq-seller-reviews`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Corrected template literal
+          },
+          body: JSON.stringify({
+            rfq_id: rfqId,
+            response_id: responseId,
+            message_content: comment,
+          }),
+        }
+      );
+
       // Check if the response is okay (status code 2xx)
       if (!response.ok) {
         const errorText = await response.text();
-        console.error(`Failed to post comment. Status: ${response.status}, ${errorText}`); // Corrected template literal
+        console.error(
+          `Failed to post comment. Status: ${response.status}, ${errorText}`
+        ); // Corrected template literal
         return;
       }
-  
+
       const data = await response.json();
-  
+
       // Handle success response
       if (data.success) {
         setComment(""); // Clear the comment input after successful post
@@ -101,20 +120,15 @@ export default function RfqComment({ rfqId, responseId }: { rfqId: string; respo
       console.error("Error posting comment:", error);
     }
   };
-  
-  
 
-const handleSubmit = (event: React.FormEvent) => {
-  event.preventDefault(); // Prevent form default behavior (page reload)
-  postComment(); // Call the function to post comment
-};
-
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault(); // Prevent form default behavior (page reload)
+    postComment(); // Call the function to post comment
+  };
 
   useEffect(() => {
     fetchComments();
   }, [rfqId, responseId]);
-
-
 
   return (
     <div
@@ -219,97 +233,111 @@ const handleSubmit = (event: React.FormEvent) => {
                     {formatDate(c.created_at)}
                   </span>
                 </div>
-                <p style={{ margin: 0, lineHeight: "1.6", color: "#4b5563" }}>
+                {/* <p style={{ margin: 0, lineHeight: "1.6", color: "#4b5563" }}>
                   {sanitizeMessage(c.message_content)}
-                </p>
+                </p> */}
+                <div
+                  className="responsive-content"
+                  style={{
+                    lineHeight: "1.6",
+                    wordWrap: "break-word",
+                    overflowWrap: "break-word",
+                    whiteSpace: "normal",
+                    overflowX: "auto",
+                  }}
+                  dangerouslySetInnerHTML={{ __html: c.message_content }}
+                ></div>
               </div>
             </div>
           ))
         )}
       </div>
       <form onSubmit={handleSubmit} style={{ marginTop: "32px" }}>
-      <div
-        style={{
-          marginTop: "32px",
-          border: "1px solid #e5e7eb",
-          borderRadius: "12px",
-          overflow: "hidden",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <ReactQuill
-          value={comment}
-          onChange={setComment}
+        <div
           style={{
-            height: "auto",
-            backgroundColor: "#ffffff",
-            minHeight: "350px",
-          }}
-          modules={{
-            toolbar: [
-              [{ font: [] }],
-              [{ header: [1, 2, 3, 4, 5, 6, false] }],
-              [{ size: ["small", false, "large", "huge"] }],
-              [{ color: [] }, { background: [] }],
-              ["bold", "italic", "underline", "strike", "blockquote"],
-              [{ script: "sub" }, { script: "super" }],
-              [
-                { list: "ordered" },
-                { list: "bullet" },
-                { indent: "-1" },
-                { indent: "+1" },
-              ],
-              [{ direction: "rtl" }],
-              [{ align: [] }],
-              ["link", "image", "video"],
-              ["clean"], // Removes formatting
-            ],
-          }}
-          formats={[
-            "font",
-            "header",
-            "size",
-            "color",
-            "background",
-            "bold",
-            "italic",
-            "underline",
-            "strike",
-            "blockquote",
-            "script",
-            "list",
-            "bullet",
-            "indent",
-            "direction",
-            "align",
-            "link",
-            "image",
-            "video",
-          ]}
-        />
-      </div>
-      <div className="" style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button
-          type="submit"
-          style={{
-            margin: "20px",
-            backgroundColor: "#E94560",
-            color: "white",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            fontWeight: "600",
-            transition: "background-color 0.3s ease",
+            marginTop: "32px",
+            border: "1px solid #e5e7eb",
+            borderRadius: "12px",
+            overflow: "hidden",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           }}
         >
-          Post Comment
-          <Send size={18} />
-        </Button>
-      </div>
+          <ReactQuill
+            value={comment}
+            onChange={setComment}
+            style={{
+              height: "auto",
+              backgroundColor: "#ffffff",
+              minHeight: "350px",
+            }}
+            modules={{
+              toolbar: [
+                [{ font: [] }],
+                [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                [{ size: ["small", false, "large", "huge"] }],
+                [{ color: [] }, { background: [] }],
+                ["bold", "italic", "underline", "strike", "blockquote"],
+                [{ script: "sub" }, { script: "super" }],
+                [
+                  { list: "ordered" },
+                  { list: "bullet" },
+                  { indent: "-1" },
+                  { indent: "+1" },
+                ],
+                [{ direction: "rtl" }],
+                [{ align: [] }],
+                ["link", "image", "video"],
+                ["clean"], // Removes formatting
+              ],
+            }}
+            formats={[
+              "font",
+              "header",
+              "size",
+              "color",
+              "background",
+              "bold",
+              "italic",
+              "underline",
+              "strike",
+              "blockquote",
+              "script",
+              "list",
+              "bullet",
+              "indent",
+              "direction",
+              "align",
+              "link",
+              "image",
+              "video",
+            ]}
+          />
+        </div>
+        <div
+          className=""
+          style={{ display: "flex", justifyContent: "flex-end" }}
+        >
+          <Button
+            type="submit"
+            style={{
+              margin: "20px",
+              backgroundColor: "#E94560",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              fontWeight: "600",
+              transition: "background-color 0.3s ease",
+            }}
+          >
+            Post Comment
+            <Send size={18} />
+          </Button>
+        </div>
       </form>
     </div>
   );

@@ -499,8 +499,8 @@ export default function Component({ params }: { params: { id: string } }) {
                 backgroundColor: '#f8f9fa',
                 borderRadius: '8px',
                 marginBottom: '15px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
+                // cursor: 'pointer',
+                // transition: 'all 0.3s ease',
                 boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
               }}
               // onClick={() => {
