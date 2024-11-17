@@ -150,6 +150,12 @@ export default function OTSearchResult({ sortOptions, slug }) {
                 (option) => option.value === selectedSortOption
               )}
               onChange={(option) => setSelectedSortOption(option)}
+              styles={{
+                menu: (provided) => ({
+                  ...provided,
+                  zIndex: 1000, 
+                }),
+              }}
             />
           </Box>
           <Paragraph color="text.muted" mr="0.5rem">

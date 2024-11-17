@@ -125,7 +125,7 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
 
         <FlexBox alignItems="center" flexWrap="wrap">
           <Paragraph color="text.muted" mr="1rem">Sort by:</Paragraph>
-          <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
+          {/* <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
             <Select
               placeholder="Sort by"
               options={sortOptions}
@@ -134,7 +134,25 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
               )}
               onChange={handleSortChange}
             />
-          </Box>
+          </Box> */}
+
+<Box flex="1 1 0" mr="1.75rem" minWidth="150px">
+  <Select
+    placeholder="Sort by"
+    options={sortOptions}
+    defaultValue={sortOptions.find(
+      (option) => option.value === selectedSortOption
+    )}
+    onChange={handleSortChange}
+    styles={{
+      menu: (provided) => ({
+        ...provided,
+        zIndex: 1000, 
+      }),
+    }}
+  />
+</Box>
+
 
           <Paragraph color="text.muted" mr="0.5rem">View:</Paragraph>
           <IconButton onClick={() => setView("grid")}>
