@@ -23,7 +23,7 @@ export default function FlashSaleBanner() {
           </Link>
         </Grid>
       </Grid> */}
-      <Link href="/">
+      <Link href="/fashsale/FashSale">
             <NextImage
              alt="flashSaleBanner"
               src={FlasSaleBanner}
