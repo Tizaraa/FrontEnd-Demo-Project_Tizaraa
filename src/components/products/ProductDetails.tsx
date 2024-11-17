@@ -114,40 +114,56 @@ const ProductDetails = ({
           {rating > 0 && <Rating value={rating} outof={5} color="warn" readOnly />}
         </Box>
       </FlexBox>
+      
       <Box mb="24px">
-        <FlexBox alignItems="center">
-          <H5 color="primary.main" mb="4px" lineHeight="1" fontSize="16px">
-            {discountPrice ? (
-              <>
-                {currency(discountPrice)}
-                <span style={{ textDecoration: "line-through", color: "gray", marginRight: "10px", marginLeft:"10px" }}>
-                  {currency(price)}
-                </span>
-              </>
-            ) : (
-              currency(price)
-            )}
-          </H5>
 
-          {!!discountPrice && totalDiscount && (
-            <Chip
-              bg="primary.main"
-              color="white"
-              px="6px"
-              py="0.28rem"
-              // ml="1rem"
-              fontWeight="600"
-              fontSize="12px"
-              textAlign="center"
+  {/* Show price and discount only if the price is not 0 */}
+  {price !== 0 && (
+    <FlexBox alignItems="center">
+      <H5 color="primary.main" mb="4px" lineHeight="1" fontSize="16px">
+        {discountPrice ? (
+          <>
+            {currency(discountPrice)}
+            <span
+              style={{
+                textDecoration: "line-through",
+                color: "gray",
+                marginRight: "10px",
+                marginLeft: "10px",
+              }}
             >
-              {Math.floor(totalDiscount)}% off
-            </Chip>
-          )}
-        </FlexBox>
-        <SemiSpan color="inherit">{productStock > 0 ? "Stock Available" : "Stock Out"}</SemiSpan>
+              {currency(price)}
+            </span>
+          </>
+        ) : (
+          currency(price)
+        )}
+      </H5>
 
-       
-      </Box>
+      {!!discountPrice && totalDiscount && (
+        <Chip
+          bg="primary.main"
+          color="white"
+          px="6px"
+          py="0.28rem"
+          fontWeight="600"
+          fontSize="12px"
+          textAlign="center"
+        >
+          {Math.floor(totalDiscount)}% off
+        </Chip>
+      )}
+    </FlexBox>
+  )}
+
+  {/* Show stock availability only if price is not 0 */}
+  {price !== 0 && (
+    <SemiSpan color="inherit">
+      {productStock > 0 ? "Stock Available" : "Stock Out"}
+    </SemiSpan>
+  )}
+</Box>
+
     </Box>
   );
 };

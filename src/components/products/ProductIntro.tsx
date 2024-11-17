@@ -63,6 +63,7 @@ export default function ProductIntro({
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
+
   // Find the price based on selected size and color
   const selectedPrice = selectedSize && selectedColor 
     ? sizecolorwithprice.find(item => item.size === selectedSize && item.color === selectedColor)?.price 
@@ -73,6 +74,7 @@ export default function ProductIntro({
     ...item,
     stock_quantity: item.stock, 
   }));
+
 
   return (
     <Box overflow="hidden">
@@ -100,7 +102,41 @@ export default function ProductIntro({
             setSelectedColor={setSelectedColor} 
             dummySizes={sizecolorwithprice} // Use API data instead of dummy
           />
-          <AddToCartButton
+          {/* <AddToCartButton
+            productId={productId}
+            sellerId={sellerId}
+            images={images}
+            title={title}
+            discountPrice={discountPrice}
+            slug={slug}
+            selectedSize={selectedSize} 
+            selectedColor={selectedColor} 
+            price={selectedPrice} 
+            dummySizes={formattedSizeColorOptions} 
+            selectedSpec={''} 
+            productType = "General"
+
+          /> */}
+
+            {/* Conditionally render "Add to Cart" or "Request for Quote" based on price */}
+            {selectedPrice === 0 ? (
+            <Box mt="1rem">
+              <Link href="/rfq">
+                <button
+                  style={{
+                    padding: "10px 20px",
+                    backgroundColor: "#E94560",
+                    color: "white",
+                    borderRadius: "5px",
+                    border: "none",
+                  }}
+                >
+                  Request for Quote
+                </button>
+              </Link>
+            </Box>
+          ) : (
+            <AddToCartButton
             productId={productId}
             sellerId={sellerId}
             images={images}
@@ -115,6 +151,7 @@ export default function ProductIntro({
             productType = "General"
 
           />
+          )}
 
            <FlexBox alignItems="center" mb="1rem" mt="1rem">
             {/* <SemiSpan>Sold By:</SemiSpan>
