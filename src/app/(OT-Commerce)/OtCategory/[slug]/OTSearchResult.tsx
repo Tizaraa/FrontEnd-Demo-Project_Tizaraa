@@ -17,6 +17,8 @@ import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import Link from "next/link";
+import { SearchInputWithCategory } from "@component/search-box";
+import OTProductsSearchInputWithCategory from "@component/search-box/OTProductsSearchInputWithCategory";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "https://frontend.tizaraa.com/api";
@@ -49,6 +51,8 @@ export default function OTSearchResult({ sortOptions, slug }) {
 
   const width = useWindowSize();
   const isTablet = width < 1025;
+  const isDesktop = width >= 1024;
+  const isTabletOrMobile = width < 1024;
 
   const fetchCategoryData = useCallback(async () => {
     setLoading(framePosition === 0);
@@ -131,6 +135,9 @@ export default function OTSearchResult({ sortOptions, slug }) {
           </Paragraph>
         </div>
 
+          {/* otc product search desktop view */}
+          {isDesktop && <OTProductsSearchInputWithCategory slug={slug} />}
+
         <FlexBox alignItems="center" flexWrap="wrap">
           <Paragraph color="text.muted" mr="1rem">
             Sort by:
@@ -186,6 +193,12 @@ export default function OTSearchResult({ sortOptions, slug }) {
         </FlexBox>
       </FlexBox>
 
+       {/* otc product search mobile and tablet */}
+       {isTabletOrMobile && (
+        <Box mb="1rem">
+          <OTProductsSearchInputWithCategory slug={slug} />
+        </Box>
+      )}
       <Grid container spacing={6}>
         <Grid item lg={3} xs={12}>
           <OTProductsFilterCard
