@@ -394,6 +394,7 @@ export default function Component({ params }: { params: { id: string } }) {
   })
   const [rfqVendorData, setRfqVendorData] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedResponseId, setSelectedResponseId] = useState<string | null>(null)
 
   const token = authService.getToken()
   const rfqVendorResponseApiUrl = `https://frontend.tizaraa.com/api/rfq-vendor-responses/${params.id}`
@@ -477,13 +478,17 @@ export default function Component({ params }: { params: { id: string } }) {
       </div>
 
       {rfqVendorData.length > 0 && (
-        <div style={{
-          backgroundColor: 'white',
-          padding: '20px',
-          borderRadius: '8px',
-          marginBottom: '20px',
-        }}>
-          <h2 style={{ color: '#E94560', marginBottom: '15px' }}>Seller Responses</h2>
+        <div
+          style={{
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            marginBottom: '20px',
+          }}
+        >
+          <h2 style={{ color: '#E94560', marginBottom: '15px' }}>
+            Seller Responses
+          </h2>
           {rfqVendorData.map((vendor, index) => (
             <div
               key={index}
@@ -498,62 +503,104 @@ export default function Component({ params }: { params: { id: string } }) {
                 transition: 'all 0.3s ease',
                 boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
               }}
-              onClick={() => setIsModalOpen(true)}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#e3e8ec'
-                e.currentTarget.style.transform = 'scale(1.02)'
-                e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.1)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#f8f9fa'
-                e.currentTarget.style.transform = 'scale(1)'
-                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)'
-              }}
+              // onClick={() => {
+              //   setSelectedResponseId(vendor.response_id);
+              //   setIsModalOpen(true);
+              // }}
+              // onMouseEnter={(e) => {
+              //   e.currentTarget.style.backgroundColor = '#e3e8ec';
+              //   e.currentTarget.style.transform = 'scale(1.02)';
+              //   e.currentTarget.style.boxShadow =
+              //     '0 6px 12px rgba(0, 0, 0, 0.1)';
+              // }}
+              // onMouseLeave={(e) => {
+              //   e.currentTarget.style.backgroundColor = '#f8f9fa';
+              //   e.currentTarget.style.transform = 'scale(1)';
+              //   e.currentTarget.style.boxShadow =
+              //     '0 2px 4px rgba(0, 0, 0, 0.1)';
+              // }}
             >
-              <img 
-                src={vendor.seller_logo} 
+              <div style={{ display: 'flex', alignItems: 'center', width: '100%', marginBottom: '10px' }}>
+              <img
+                src={vendor.seller_logo}
                 alt={`${vendor.shop_name} logo`}
                 style={{
                   width: '100px',
                   height: '100px',
                   borderRadius: '50%',
                   marginRight: '20px',
-                  border: '2px solid #E94560'
+                  border: '2px solid #E94560',
                 }}
               />
-              <div>
-                <h3 style={{ color: '#E94560', marginBottom: '10px', fontSize: '1.2em' }}>{vendor.shop_name}</h3>
-                <p style={{ marginBottom: '5px' }}><strong>Seller:</strong> {vendor.seller_info}</p>
+              <div style={{ flex: 1}}>
+                <h3
+                  style={{
+                    color: '#E94560',
+                    marginBottom: '10px',
+                    fontSize: '1.2em',
+                  }}
+                >
+                  {vendor.shop_name}
+                </h3>
+                <p style={{ marginBottom: '20px' }}>
+                  <strong>Seller:</strong> {vendor.seller_info}
+                </p>
+                <button
+                onClick={(e) => {
+                  setSelectedResponseId(vendor.response_id);
+                  setIsModalOpen(true);
+                }}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#E94560',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  transition: 'all 0.3s ease',
+                  fontSize: 'clamp(0.8rem, 1vw, 1rem)',
+                  width: '100%',
+                  maxWidth: '200px',
+                }}
+              >
+                Send Message
+              </button>
+              </div>
               </div>
             </div>
+            
           ))}
         </div>
       )}
 
       {isModalOpen && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: '#fff',
-            borderRadius: '8px',
-            maxWidth: '800px',
-            width: '90%',
-            padding: '20px',
-            position: 'relative',
-            overflowY: 'auto',
-            maxHeight: '80%',
-            
-          }}>
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#fff',
+              borderRadius: '8px',
+              maxWidth: '800px',
+              width: '90%',
+              padding: '20px',
+              position: 'relative',
+              overflowY: 'auto',
+              maxHeight: '80%',
+            }}
+          >
             <button
               onClick={() => setIsModalOpen(false)}
               style={{
@@ -573,7 +620,7 @@ export default function Component({ params }: { params: { id: string } }) {
             >
               &times;
             </button>
-            <RfqComment />
+            <RfqComment rfqId={params.id} responseId={selectedResponseId} />
           </div>
         </div>
       )}
