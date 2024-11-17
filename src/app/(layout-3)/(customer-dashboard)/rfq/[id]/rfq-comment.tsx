@@ -233,20 +233,24 @@ export default function RfqComment({
                     {formatDate(c.created_at)}
                   </span>
                 </div>
-                {/* <p style={{ margin: 0, lineHeight: "1.6", color: "#4b5563" }}>
-                  {sanitizeMessage(c.message_content)}
-                </p> */}
                 <div
-                  className="responsive-content"
-                  style={{
-                    lineHeight: "1.6",
-                    wordWrap: "break-word",
-                    overflowWrap: "break-word",
-                    whiteSpace: "normal",
-                    overflowX: "auto",
-                  }}
-                  dangerouslySetInnerHTML={{ __html: c.message_content }}
-                ></div>
+        className="responsive-content"
+        style={{
+          lineHeight: "1.6",
+          wordWrap: "break-word",
+          overflowWrap: "break-word",
+          whiteSpace: "normal",
+          overflowX: "auto",
+        }}
+      >
+        <div
+          dangerouslySetInnerHTML={{ __html: c.message_content }}
+          style={{
+            display: "block",
+            overflow: "hidden",
+          }}
+        ></div>
+      </div>
               </div>
             </div>
           ))
@@ -339,6 +343,23 @@ export default function RfqComment({
           </Button>
         </div>
       </form>
+      <style jsx>{`
+        .responsive-content img {
+          max-width: 100%;
+          height: auto;
+          display: block;
+          margin: 8px 0;
+        }
+        .responsive-content p {
+          margin: 0;
+        }
+        .responsive-content div,
+        .responsive-content span {
+          overflow-wrap: break-word;
+          word-wrap: break-word;
+          word-break: break-word;
+        }
+      `}</style>
     </div>
   );
 }
