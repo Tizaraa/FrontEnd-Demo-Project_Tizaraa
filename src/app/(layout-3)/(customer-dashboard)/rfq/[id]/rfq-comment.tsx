@@ -207,7 +207,7 @@ export default function RfqComment({
                 boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
               }}
             >
-              <Avatar style={{ width: "48px", height: "48px" }}>
+              {/* <Avatar style={{ width: "10px", height: "10px" }}>
                 <img
                   src={c.check === 1 ? c.image : c.seller_logo}
                   alt={c.check === 1 ? c.name : c.shop_name}
@@ -218,7 +218,12 @@ export default function RfqComment({
                     objectFit: "cover",
                   }}
                 />
-              </Avatar>
+              </Avatar> */}
+              <Avatar
+                src={c.check === 1 ? c.image : c.seller_logo}
+                alt={c.check === 1 ? c.name : c.shop_name}
+                size={48} // Adjust size as needed
+              />
               <div
                 style={{
                   flex: 1,
