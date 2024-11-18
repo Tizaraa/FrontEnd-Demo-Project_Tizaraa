@@ -191,7 +191,7 @@ export default function RfqComment({
     </Button> */}
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px", justifyContent: "center", alignItems: "center",overflow: "hidden", objectFit: "cover" }}>
         {comments.length === 0 ? (
           <p>No comments yet. Be the first to post a comment!</p>
         ) : (
@@ -205,6 +205,9 @@ export default function RfqComment({
                 padding: "16px",
                 borderRadius: "8px",
                 boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                justifyContent: "center", 
+                alignItems: "center",
+                overflow: "hidden", objectFit: "cover",
               }}
             >
               {/* <Avatar style={{ width: "10px", height: "10px" }}>
@@ -254,13 +257,14 @@ export default function RfqComment({
                     overflowWrap: "break-word",
                     whiteSpace: "normal",
                     overflowX: "auto",
+                    
                   }}
                 >
                   <div
                     dangerouslySetInnerHTML={{ __html: c.message_content }}
                     style={{
-                      display: "block",
-                      overflow: "hidden",
+                      display: "flex",
+                      justifyContent: "center", alignItems: "center",overflow: "hidden", objectFit: "cover",margin: "20px"
                     }}
                   ></div>
                 </div>
@@ -270,10 +274,26 @@ export default function RfqComment({
                     height: auto;
                     display: block;
                     margin: 10px 0;
+                    overflow: "hidden",
+                    objectFit: "cover",
                   }
                   @media (max-width: 768px) {
                     .responsive-content {
                       font-size: 14px;
+                      max-width: 100%;
+                    height: auto;
+                    display: block;
+                    margin: 10px 0;
+                    overflow: "hidden",
+                    objectFit: "cover",
+                    }
+                    .responsive-content img {
+                      max-width: 100%;
+                    height: auto;
+                    display: block;
+                    margin: 10px 0;
+                    overflow: "hidden",
+                    objectFit: "cover",
                     }
                   }
                 `}</style>
