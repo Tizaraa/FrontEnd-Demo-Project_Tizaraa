@@ -199,24 +199,13 @@ export default function OTProductsSearchInputWithCategory({ slug }) {
 
   const pageSize = 100;
 
-  useEffect(() => {
-    if (pathname.startsWith("/product/search")) {
-      const searchTerm = pathname.split("/").pop();
-      setSearchValue(decodeURIComponent(searchTerm));
-      console.log("Search term from URL:", searchTerm);
-    }
-  }, [pathname]);
-
-  const handleCategoryChange = (cat: string) => () => setCategory(cat);
-
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get(`${ApiBaseUrl.baseUrl}otpi/get-category`);
-      setCategories(response.data || []);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
+  // useEffect(() => {
+  //   if (pathname.startsWith("/product/search")) {
+  //     const searchTerm = pathname.split("/").pop();
+  //     setSearchValue(decodeURIComponent(searchTerm));
+  //     console.log("Search term from URL:", searchTerm);
+  //   }
+  // }, [pathname]);
 
   const fetchSearchResults = async (query: string) => {
     setLoading(framePosition === 0);
@@ -237,9 +226,6 @@ export default function OTProductsSearchInputWithCategory({ slug }) {
 
       const results = response.data?.Result?.Items?.Content || [];
       console.log("Search Results:", results);
-
-      // You don't need to filter unique results based on `keyword`
-      // Simply set the results directly
       setResultList(results);
     } catch (error) {
       console.error("Error fetching search results:", error);
@@ -251,7 +237,7 @@ export default function OTProductsSearchInputWithCategory({ slug }) {
     if (!value) {
       setResultList([]);
     } else {
-      fetchSearchResults(value); // Fetch search results based on the value
+      fetchSearchResults(value); 
     }
   }, 300);
 
@@ -262,17 +248,16 @@ export default function OTProductsSearchInputWithCategory({ slug }) {
   };
 
 // OTProductsSearchInputWithCategory
-const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-  if (event.key === "Enter") {
-    router.push(`/product/search/${encodeURIComponent(searchValue.trim())}`);
-    setResultList([]);
-  }
-};
+// const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+//   if (event.key === "Enter") {
+//     router.push(`/product/search/${encodeURIComponent(searchValue.trim())}`);
+//     setResultList([]);
+//   }
+// };
 
   const handleDocumentClick = () => setResultList([]); 
 
   useEffect(() => {
-    fetchCategories(); 
     window.addEventListener("click", handleDocumentClick); 
     return () => window.removeEventListener("click", handleDocumentClick); 
   }, []);
@@ -293,7 +278,7 @@ const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
           fullwidth
           value={searchValue} 
           onChange={handleSearchChange}
-          onKeyDown={handleKeyDown}
+          // onKeyDown={handleKeyDown}
           className="search-field"
           placeholder="Search and hit enter..."
         />
@@ -302,7 +287,7 @@ const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       {!!resultList.length && (
         <Card position="absolute" top="100%" py="0.5rem" width="100%" boxShadow="large" zIndex={99} style={{maxHeight: '220px', overflowY: 'auto'}}>
           {resultList.map((item: any, index: number) => (
-            <Link href={`/product/search/${item.keyword || item.Title}`} key={index}>
+            <Link href={`/otproducts/${item.Id}`} key={index}>
               <MenuItem onClick={() => {
                 setSearchValue(item.keyword || `Product ${item.Title}`);
                 setResultList([]); 
