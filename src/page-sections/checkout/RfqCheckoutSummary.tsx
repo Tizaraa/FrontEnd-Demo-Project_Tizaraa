@@ -9,26 +9,37 @@ import { useAppContext } from "@context/app-context";
 import ProductCard20 from "@component/product-cards/ProductCard20";
 import { currency } from "@utils/utils";
 import authService from "services/authService";
-import { useSearchParams } from "next/navigation";
+//import { useSearchParams } from "next/navigation";
 
-export default function RfqCheckoutSummary() {
+interface RfqCheckoutSummaryProps {
+  responseId: number; // Ensure responseId is a number
+}
+
+const RfqCheckoutSummary: React.FC<RfqCheckoutSummaryProps> = ({ responseId }) => {
   const { state } = useAppContext();
-  const searchParams = useSearchParams();
-  const responseId = searchParams.get("response_id");
+  //const searchParams = useSearchParams();
+  //const responseId = searchParams.get("response_id");
 
   const [rfqData, setRfqData] = useState({
     sub_total: 0,
     vat: 0,
     total_price: 0,
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
 
   const authToken = authService.getToken();
 
   useEffect(() => {
     const fetchRfqData = async () => {
-      if (!responseId) return;
+      if (!responseId) {
+        setError("Response ID is missing.");
+        return;
+      }
 
       try {
+        console.log("Fetching data for responseId:", responseId);
         const response = await fetch(
           `https://frontend.tizaraa.com/api/rfq-seller-reviews/${responseId}`,
           {
@@ -38,22 +49,45 @@ export default function RfqCheckoutSummary() {
           }
         );
 
-        const data = await response.json();
+        if (!response.ok) {
+          setError(`API Error: ${response.statusText}`);
+          console.error("API Error Response:", await response.text());
+          return;
+        }
 
-        if (data.success) {
+        const data = await response.json();
+        console.log("Fetched RFQ data:", data); // Debug log for API response
+
+        // Ensure data structure matches the expected format
+        if (data?.purchaseInfo) {
           setRfqData({
             sub_total: data.purchaseInfo.sub_total || 0,
             vat: data.purchaseInfo.vat || 0,
             total_price: data.purchaseInfo.total_price || 0,
           });
+        } else {
+          setError("Invalid data structure in API response.");
+          console.error("Invalid data structure:", data); // Log unexpected response
         }
       } catch (error) {
         console.error("Error fetching RFQ data:", error);
+        setError("Error fetching RFQ data.");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchRfqData();
   }, [responseId, authToken]);
+
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
 
   return (
     <Card1>
@@ -96,7 +130,7 @@ export default function RfqCheckoutSummary() {
         <Typography color="text.hint">Tax:</Typography>
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-            {currency(rfqData.vat)}
+          {`${rfqData.vat}%`}
           </Typography>
         </FlexBox>
       </FlexBox>
@@ -124,3 +158,5 @@ export default function RfqCheckoutSummary() {
     </Card1>
   );
 }
+
+export default RfqCheckoutSummary;

@@ -12,7 +12,10 @@ import Typography from "@component/Typography";
 import authService from "services/authService";
 import Address from "@models/address.model";
 import ApiBaseUrl from "api/ApiBaseUrl";
-export default function RfqCheckoutAddress() {
+interface RfqCheckoutAddressProps {
+  onAddressSelect: (isSelected: boolean) => void; // New prop for parent notification
+}
+export default function RfqCheckoutAddress({ onAddressSelect }: RfqCheckoutAddressProps) {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [province, setProvince] = useState([]); // State for storing provinces
@@ -58,10 +61,14 @@ export default function RfqCheckoutAddress() {
           const matchingAddress = fetchedAddresses.find((addr) => addr.id === parsedAddress.id);
           if (matchingAddress) {
             // handleAutoSelect(matchingAddress); 
+            // setSelectedAddress(matchingAddress);
+            // onAddressSelect(true);
           }
         } else if (fetchedAddresses.length > 0) {
           const firstAddress = fetchedAddresses[0];
           // handleAutoSelect(firstAddress); 
+          // setSelectedAddress(firstAddress);
+          // onAddressSelect(true);
         }
       } catch (error) {
         console.error("Error fetching addresses:", error);
@@ -105,6 +112,7 @@ export default function RfqCheckoutAddress() {
     // Log the selected address and delivery charge
     console.log("Manually Selected Address:", item);
     console.log("Delivery Charge:", item.deliveryCharge || "Delivery charge not available");
+    onAddressSelect(true);
   };
 
   
