@@ -2,13 +2,14 @@
 
 import { FC, useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter,useSearchParams } from "next/navigation";
 import axios from "axios";
 import FlexBox from "@component/FlexBox";
 import RfqCheckoutAddress from "./RfqCheckoutAddress";
 import { Button } from "@component/buttons";
 import Typography from "@component/Typography";
 import Grid from "@component/grid/Grid";
+import authService from "services/authService";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,6 +25,13 @@ const RfqCheckoutForm: FC<RfqCheckoutFormProps> = ({  responseId }) => {
   const [isTablet, setIsTablet] = useState(false);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
   const [address, setAddress] = useState<any>(null);
+  const searchParams = useSearchParams();
+  const authtoken = authService.getToken();
+
+  // const userFromURL = searchParams.get("user");
+  // console.log("naz",userFromURL);
+  
+
   
 
   useEffect(() => {
@@ -51,12 +59,13 @@ const RfqCheckoutForm: FC<RfqCheckoutFormProps> = ({  responseId }) => {
 
   // Handle payment button click
   const handlePayment = async () => {
+    //const [user, setUser] = useState(null);
     const addressData = sessionStorage.getItem("address");
     console.log("Address", addressData);
     
     if (addressData) {
       console.log("Payment:", JSON.parse(addressData));
-      toast.success("Proceeding to Payment...");
+      //toast.success("Proceeding to Payment...");
       //router.push("/orders");
     } else {
       toast.error("No address data found. Please add an address.");
@@ -66,40 +75,73 @@ const RfqCheckoutForm: FC<RfqCheckoutFormProps> = ({  responseId }) => {
       toast.error("Response ID is missing.");
       return;
     }
+    // if(authService){
+    //   const user = authService.getUser()
+    //   console.log("naz",user);
+      
+    // }
+    // if (!authService.isAuthenticated()) {
+    //   router.push("/login");
+    // } else {
+    //   authService.getUser().then((userData) => {
+    //     setUser(userData); // Set user details
+    //     //setLoading(false);
+    //   });
+    // }
     const parsedAddress = JSON.parse(addressData);
+    const user = await authService.getUser();
+    //const email = user?.email || "";
+
+    console.log("p",parsedAddress);
+    //console.log("p",email);
 
     const data = {
       vendor_response_id: responseId,
-      name: parsedAddress.name,
-      phone: parsedAddress.phone,
-      email: parsedAddress.email || "",
-      province_id: parsedAddress.province_id,
-      city_id: parsedAddress.city_id,
-      area_id: parsedAddress.area_id,
-      house_level: parsedAddress.landmark || "",
-      address: parsedAddress.address,
-    };
+    name: parsedAddress.name,
+    phone: parsedAddress.phone,
+    email: user?.email || "",
+    province_id: parsedAddress.province_id,
+    city_id: parsedAddress.city_id,
+    area_id: parsedAddress.area_id,
+    house_level: parsedAddress.landmark || "",
+    address: parsedAddress.address,
+    }
+
     console.log("data",data);
     
-    try {
-      const response = await axios.post(
-        "https://frontend.tizaraa.com/api/rfq-order",
-        data
-      );
+    
 
-      console.log("nazim",response);
-      
+try {
+  const response = await axios.post("https://frontend.tizaraa.com/api/rfq-order", {
+    vendor_response_id: responseId,
+    name: parsedAddress.name,
+    phone: parsedAddress.phone,
+    email: user?.email || "",
+    province_id: parsedAddress.province_id,
+    city_id: parsedAddress.city_id,
+    area_id: parsedAddress.area_id,
+    house_level: parsedAddress.landmark || "",
+    address: parsedAddress.address,
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${authtoken}`,
+    },
+  }
+);
 
-      if (response.status === 200) {
-        toast.success("Order placed successfully.");
-        router.push("/orders");
-      } else {
-        toast.error("Error placing the order.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("An error occurred while placing the order.");
-    }
+  console.log("nazim", response);
+
+  if (response.status === 200) {
+    toast.success("Order placed successfully.");
+    router.push("/orders");
+  } else {
+    toast.error("Error placing the order.");
+  }
+} catch (error) {
+  console.error("Error:", error);
+  toast.error("Your order could not be placed because an order with this vendor response ID already exists. Please check your order details and try again.");
+}
     
   };
 
