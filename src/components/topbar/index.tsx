@@ -13,6 +13,7 @@ import StyledTopbar from "./styles";
 import { FaUser } from "react-icons/fa";
 import { FaLocationPin } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
+import GoogleTranslate from "@component/GoogleTranslate";
 
 export default function Topbar() {
   const [currency, setCurrency] = useState(currencyList[0]);
@@ -92,8 +93,9 @@ export default function Topbar() {
               </MenuItem>
             ))}
           </Menu> */}
+          <GoogleTranslate></GoogleTranslate>
 
-          <div className="responsive-menu">
+          {/* <div className="responsive-menu">
           <Menu
             direction="right"
             handler={
@@ -113,7 +115,7 @@ export default function Topbar() {
               </MenuItem>
             ))}
           </Menu>
-          </div>
+          </div> */}
 
           {/* <Menu
             direction="right"
@@ -133,6 +135,7 @@ export default function Topbar() {
           </Menu> */}
         </FlexBox>
       </Container>
+
       <style jsx>{`
         /* Hide on desktop */
         .responsive-menu {
@@ -146,6 +149,7 @@ export default function Topbar() {
           }
         }
       `}</style>
+
     </StyledTopbar>
   );
 }
