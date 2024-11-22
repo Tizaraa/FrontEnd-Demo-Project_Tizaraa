@@ -154,6 +154,7 @@ export default function Layout({ children }: PropsWithChildren) {
   const searchParams = useSearchParams();
 
   const isRfq = searchParams.get("rfq") === "true";
+  const responseId = searchParams.get("response_id");
 
   useEffect(() => {
     if (isRfq) {
@@ -175,7 +176,7 @@ export default function Layout({ children }: PropsWithChildren) {
     if (isRfq) {
       switch (ind) {
         case 0:
-          router.push("/checkout?rfq=true");
+          router.push(`/checkout?rfq=true${responseId ? `&response_id=${responseId}` : ""}`);
           break;
         case 1:
           router.push("/submit");
@@ -205,7 +206,7 @@ export default function Layout({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (isRfq) {
-      if (pathname === "/checkout?rfq=true") setSelectedStep(0);
+      if (pathname === "/checkout" && responseId) setSelectedStep(0);
     } else {
       switch (pathname) {
         case "/cart":
