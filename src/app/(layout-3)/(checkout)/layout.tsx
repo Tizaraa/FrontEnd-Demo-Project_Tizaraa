@@ -206,7 +206,7 @@ export default function Layout({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (isRfq) {
-      if (pathname === "/checkout" && responseId) setSelectedStep(0);
+      if (pathname === "/checkout?rfq=true" && responseId) setSelectedStep(0);
     } else {
       switch (pathname) {
         case "/cart":

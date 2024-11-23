@@ -83,9 +83,9 @@ export default function Checkout() {
     ) || 0;
   };
  
-  if (!responseId) {
-    return <Typography>Missing response ID</Typography>;
-  }
+  // if (!responseId) {
+  //   return <Typography>Missing response ID</Typography>;
+  // }
 
 
   return (
