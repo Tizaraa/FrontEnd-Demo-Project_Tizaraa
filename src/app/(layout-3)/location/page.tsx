@@ -15,6 +15,9 @@ import Box from "@component/Box";
 import { debounce } from "lodash";
 import Card from "@component/Card";
 import { MdLocationSearching } from "react-icons/md";
+import useWindowSize from "@hook/useWindowSize";
+import { ProductCard1 } from "@component/product-cards";
+
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -22,7 +25,7 @@ const LoaderWrapper = styled.div`
   align-items: center;
 `;
 
-const NoShopMessage = styled.div`
+const NoLocationMessage = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,19 +34,26 @@ const NoShopMessage = styled.div`
   color: gray;
 `;
 
-export default function ShopList() {
-  const [shopList, setShopList] = useState([]);
+export default function LocationList() {
+  const [locationList, setLocationList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalShops, setTotalShops] = useState(0);
+  const [totalLocations, setTotalLocations] = useState(0);
   const [lastPage, setLastPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [noShopsFound, setNoShopsFound] = useState(false);
+  const [noLocationsFound, setNoLocationsFound] = useState(false);
   const observerRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");
 
+
+  const [selectedLatLonData, setSelectedLatLonData] = useState(null);
+
+
+  const width = useWindowSize();
+  const isTabletOrMobile = width < 1024; // Detect small devices
+
   // Function to fetch shops data
-  const fetchShops = async (page: number, searchQuery = "") => {
+  const fetchLocations = async (page: number, searchQuery = "") => {
     setIsLoading(true);
     try {
       let response;
@@ -63,18 +73,18 @@ export default function ShopList() {
       const data = response.data;
 
       if (data.data.length === 0) {
-        setNoShopsFound(true); // Set to true if no shops found
+        setNoLocationsFound(true); // Set to true if no shops found
       } else {
-        setNoShopsFound(false); // Set to false if shops found
+        setNoLocationsFound(false); // Set to false if shops found
       }
 
       if (page === 1) {
-        setShopList(data.data); // If first page, replace the shop list
+        setLocationList(data.data); // If first page, replace the shop list
       } else {
-        setShopList((prevShops) => [...prevShops, ...data.data]); // Append for more pages
+        setLocationList((prevShops) => [...prevShops, ...data.data]); // Append for more pages
       }
 
-      setTotalShops(data.total);
+      setTotalLocations(data.total);
       setLastPage(data.last_page);
     } catch (error) {
       console.error("Error fetching shop list", error);
@@ -86,12 +96,12 @@ export default function ShopList() {
   // Debounced search function to reduce API calls
   const searchShops = debounce((value: string) => {
     if (!value) {
-      setShopList([]); // Clear the current list before showing all shops again
+      setLocationList([]); // Clear the current list before showing all shops again
       setIsSearching(false);
-      fetchShops(1); // Fetch all shops if search is cleared
+      fetchLocations(1); // Fetch all shops if search is cleared
     } else {
       setIsSearching(true);
-      fetchShops(1, value); // Fetch shops based on search value
+      fetchLocations(1, value); // Fetch shops based on search value
     }
   }, 300);
 
@@ -128,100 +138,195 @@ export default function ShopList() {
 
   useEffect(() => {
     if (currentPage > 1 && !isSearching) {
-      fetchShops(currentPage); // Load more shops when currentPage changes, only if not searching
+      fetchLocations(currentPage); // Load more shops when currentPage changes, only if not searching
     }
   }, [currentPage, isSearching]);
 
   useEffect(() => {
-    fetchShops(1); // Initial fetch when component loads
+    fetchLocations(1); // Initial fetch when component loads
   }, []);
 
   // Geolocation and address fetching
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else {
-      alert("Geolocation is not supported by this browser.");
+
+
+  async function getLocation() {
+    try {
+      // Fetch seller locations from the API
+      const response = await axios.get(
+        "https://seller.tizaraa.com/api/get/seller/lanlon"
+      );
+      const locations = response.data; // Assuming API response is an array of { lat, lon }
+      console.log("Fetched locations:", locations);
+  
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => showPosition(position, locations),
+          showError
+        );
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    } catch (error) {
+      console.error("Error fetching seller locations:", error);
+      alert("Could not fetch seller locations. Please try again later.");
     }
   }
-
-  function showPosition(position) {
+  
+  function showPosition(position, locations) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
+  
+    // Calculate distance and filter nearby locations
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Radius of the Earth in kilometers
+      const dLat = (lat2 - lat1) * (Math.PI / 180);
+      const dLon = (lon2 - lon1) * (Math.PI / 180);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * (Math.PI / 180)) *
+          Math.cos(lat2 * (Math.PI / 180)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c; // Distance in kilometers
+    }
+  
+    const nearbyLocations = locations.filter((location) => {
+      const distance = calculateDistance(
+        latitude,
+        longitude,
+        location.lat,
+        location.lon
+      );
+      return distance <= 5; // Filter for distances within 5 kilometers
+    });
+  
+    alert(
+      "Nearby locations within 5 km:\n" +
+        nearbyLocations
+          .map((loc) => `Latitude: ${loc.lat}, Longitude: ${loc.lon}`)
+          .join("\n")
+    );
+  
+    console.log("Nearby locations within 5 km:", nearbyLocations);
 
-    // Use Nominatim API to get address from coordinates
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
-      .then(response => response.json())
-      .then(data => {
-        const province = data.address.state || data.address.province || 'N/A';
-        const city = data.address.city || data.address.town || data.address.village || 'N/A';
-        const area = data.address.suburb || data.address.neighbourhood || data.address.district || 'N/A';
-        const street = data.address.road || 'N/A';
-        const streetNumber = data.address.house_number || 'N/A';
-        const postalCode = data.address.postcode || 'N/A';
+    const latlon = JSON.stringify(nearbyLocations);
+console.log(latlon)
 
-        const locations = [
-          { lat: 23.790174619055488, lon: 90.41311829795991 },
-          { lat: 23.760454158513884, lon: 90.34290427166988 },
-          { lat: 23.790370922293945, lon: 90.41556447135002 },
-      ];
+    fetchSelectedLatLong(latlon);
+  
+    // Continue to fetch address details using the Nominatim API
+    fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const province = data.address.state || data.address.province || "N/A";
+        const city =
+          data.address.city ||
+          data.address.town ||
+          data.address.village ||
+          "N/A";
+        const area =
+          data.address.suburb ||
+          data.address.neighbourhood ||
+          data.address.district ||
+          "N/A";
+        const street = data.address.road || "N/A";
+        const streetNumber = data.address.house_number || "N/A";
+        const postalCode = data.address.postcode || "N/A";
 
-      function calculateDistance(lat1, lon1, lat2, lon2) {
-          const R = 6371; // Radius of the Earth in kilometers
-          const dLat = (lat2 - lat1) * (Math.PI / 180);
-          const dLon = (lon2 - lon1) * (Math.PI / 180);
-          const a = 
-              Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * 
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-          return R * c; // Distance in kilometers
-      }
-
-      const nearbyLocations = locations.filter(location => {
-          const distance = calculateDistance(latitude, longitude, location.lat, location.lon);
-          return distance <= 5; // Filter for distances within 5 kilometers
-      });
-
-      alert("Nearby locations within 5 km:\n" + 
-            nearbyLocations.map(loc => `Latitude: ${loc.lat}, Longitude: ${loc.lon}`).join("\n"));
-
-        setSearchValue(`${province},${city}, ${area}, ${street}`);
-
-        alert("Your location details:\n" + 
-             "Province: " + province + "\n" +
-             "City: " + city + "\n" +
-             "Area: " + area + "\n" +
-             "Street: " + street + "\n" +
-             "Street Number: " + streetNumber + "\n" +
-             "Postal Code: " + postalCode + "\n" +
-             "Latitude: " + latitude + "\n" +
-             "Longitude: " + longitude);
+        setSearchValue(`${province}, ${city}, ${area}, ${street}`);
+  
+        alert(
+          "Your location details:\n" +
+            "Province: " +
+            province +
+            "\n" +
+            "City: " +
+            city +
+            "\n" +
+            "Area: " +
+            area +
+            "\n" +
+            "Street: " +
+            street +
+            "\n" +
+            "Street Number: " +
+            streetNumber +
+            "\n" +
+            "Postal Code: " +
+            postalCode +
+            "\n" +
+            "Latitude: " +
+            latitude +
+            "\n" +
+            "Longitude: " +
+            longitude
+        );
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error getting address:", error);
-        alert("Could not get address. Coordinates are:\n" +
-             "Latitude: " + latitude + "\n" +
-             "Longitude: " + longitude);
+        alert(
+          "Could not get address. Coordinates are:\n" +
+            "Latitude: " +
+            latitude +
+            "\n" +
+            "Longitude: " +
+            longitude
+        );
       });
   }
 
+    // Function to call selected latlong API
+    // async function fetchSelectedLatLong(latlon) {
+    //   try {
+    //     const response = await axios.get(
+    //       `https://seller.tizaraa.com/api/get/selected/latlong`,
+    //       {
+    //         params: { latlon }, 
+    //       }
+    //     );
+    //     console.log("Selected LatLong API Response:", response.data);
+    //   } catch (error) {
+    //     console.error("Error calling selected latlong API:", error);
+    //   }
+    // }
+
+    async function fetchSelectedLatLong(latlon) {
+      try {
+        const response = await axios.get(
+          `https://seller.tizaraa.com/api/get/selected/latlong`,
+          {
+            params: { latlon },
+          }
+        );
+        console.log("Selected LatLong API Response:", response.data);
+        setSelectedLatLonData(response.data); // Set the fetched data to the state
+      } catch (error) {
+        console.error("Error calling selected latlong API:", error);
+      }
+    }
+    
+    
+  
   function showError(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            alert("User denied the request for Geolocation.");
-            break;
-        case error.POSITION_UNAVAILABLE:
-            alert("Location information is unavailable.");
-            break;
-        case error.TIMEOUT:
-            alert("The request to get user location timed out.");
-            break;
-        case error.UNKNOWN_ERROR:
-            alert("An unknown error occurred.");
-            break;
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        alert("User denied the request for Geolocation.");
+        break;
+      case error.POSITION_UNAVAILABLE:
+        alert("Location information is unavailable.");
+        break;
+      case error.TIMEOUT:
+        alert("The request to get user location timed out.");
+        break;
+      case error.UNKNOWN_ERROR:
+        alert("An unknown error occurred.");
+        break;
     }
   }
+  
 
   return (
     <Fragment>
@@ -235,20 +340,22 @@ export default function ShopList() {
           marginBottom: "20px",
         }}
       >
-        <H2
-          mb="10px"
-          width="50%"
-          style={{
-            fontFamily: 'Oswald, sans-serif',
-            fontWeight: '700',
-            fontSize: '26px',
-            fontOpticalSizing: 'auto',
-          }}
-        >
-          Discover top products available in your area, delivered to your door.
-        </H2>
+         {/* {!isTabletOrMobile && ( 
+          <H2
+            mb="10px"
+            width="50%"
+            style={{
+              fontFamily: "Oswald, sans-serif",
+              fontWeight: "700",
+              fontSize: "26px",
+              fontOpticalSizing: "auto",
+            }}
+          >
+            Discover top products available in your area, delivered to your door.
+          </H2>
+        )} */}
 
-        <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
+        <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto" mb="3rem">
           <SearchBoxStyle>
             <TextField
               fullwidth
@@ -275,24 +382,46 @@ export default function ShopList() {
         </Box>
       </div>
 
-      {noShopsFound && searchValue ? (
-        <NoShopMessage>No products found with this name</NoShopMessage>
-      ) : (
-        <Grid container spacing={6}>
-          {shopList.map((item) => (
-            // <Grid item lg={4} sm={6} xs={12} key={item.id}>
-            //   <ShopCard1
-            //     name={item.name}
-            //     phone={item.phone}
-            //     address={item.address}
-            //     image={item.image_url}
-            //   />
-            // </Grid>
-            <>
-            </>
-          ))}
-        </Grid>
-      )}
+      {selectedLatLonData && selectedLatLonData.data && selectedLatLonData.data.length > 0 ? (
+  <Grid container spacing={2}>
+    {selectedLatLonData.data.map((item, index) => (
+      <Grid item lg={3} sm={6} xs={12} key={index} style={{ marginBottom: '3rem' }}>
+        <ProductCard1
+          id={item?.id || ""}
+          slug={item?.slug || ""}
+          price={item?.price || 0}
+          title={item?.title || "No Title"}
+          off={item?.discount || 0}
+          images={item?.images || []}
+          imgUrl={item?.thumbnail || ""}
+          rating={item?.rating || 0}
+        />
+      </Grid>
+    ))}
+  </Grid>
+) : (
+  <>
+  {!isTabletOrMobile && ( 
+    <H2
+      mb="10px"
+      textAlign="center"
+      style={{
+        fontFamily: "Oswald, sans-serif",
+        fontWeight: "700",
+        fontSize: "26px",
+        fontOpticalSizing: "auto",
+      }}
+    >
+      Discover top products available in your area, delivered to your door.
+    </H2>
+  )}
+  </>
+)}
+
+
+
+
+
       {/* <div ref={observerRef}></div>
       {isLoading && (
         <LoaderWrapper>
