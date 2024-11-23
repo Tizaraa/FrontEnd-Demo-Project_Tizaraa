@@ -201,12 +201,12 @@ export default function LocationList() {
       return distance <= 5; // Filter for distances within 5 kilometers
     });
   
-    alert(
-      "Nearby locations within 5 km:\n" +
-        nearbyLocations
-          .map((loc) => `Latitude: ${loc.lat}, Longitude: ${loc.lon}`)
-          .join("\n")
-    );
+    // alert(
+    //   "Nearby locations within 5 km:\n" +
+    //     nearbyLocations
+    //       .map((loc) => `Latitude: ${loc.lat}, Longitude: ${loc.lon}`)
+    //       .join("\n")
+    // );
   
     console.log("Nearby locations within 5 km:", nearbyLocations);
 
@@ -238,43 +238,43 @@ console.log(latlon)
 
         setSearchValue(`${province}, ${city}, ${area}, ${street}`);
   
-        alert(
-          "Your location details:\n" +
-            "Province: " +
-            province +
-            "\n" +
-            "City: " +
-            city +
-            "\n" +
-            "Area: " +
-            area +
-            "\n" +
-            "Street: " +
-            street +
-            "\n" +
-            "Street Number: " +
-            streetNumber +
-            "\n" +
-            "Postal Code: " +
-            postalCode +
-            "\n" +
-            "Latitude: " +
-            latitude +
-            "\n" +
-            "Longitude: " +
-            longitude
-        );
+        // alert(
+        //   "Your location details:\n" +
+        //     "Province: " +
+        //     province +
+        //     "\n" +
+        //     "City: " +
+        //     city +
+        //     "\n" +
+        //     "Area: " +
+        //     area +
+        //     "\n" +
+        //     "Street: " +
+        //     street +
+        //     "\n" +
+        //     "Street Number: " +
+        //     streetNumber +
+        //     "\n" +
+        //     "Postal Code: " +
+        //     postalCode +
+        //     "\n" +
+        //     "Latitude: " +
+        //     latitude +
+        //     "\n" +
+        //     "Longitude: " +
+        //     longitude
+        // );
       })
       .catch((error) => {
         console.error("Error getting address:", error);
-        alert(
-          "Could not get address. Coordinates are:\n" +
-            "Latitude: " +
-            latitude +
-            "\n" +
-            "Longitude: " +
-            longitude
-        );
+        // alert(
+        //   "Could not get address. Coordinates are:\n" +
+        //     "Latitude: " +
+        //     latitude +
+        //     "\n" +
+        //     "Longitude: " +
+        //     longitude
+        // );
       });
   }
 
