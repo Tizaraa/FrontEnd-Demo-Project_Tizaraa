@@ -321,13 +321,17 @@ export default function PaymentForm() {
     }
     let getData = localStorage.getItem('userInfo');
     let userinfo = JSON.parse(getData);
+    console.log("nazim",userinfo);
+    
 
     let shippingData = sessionStorage.getItem('address');
     console.log('Session Storage Data:', shippingData); 
     let userShippingdata = JSON.parse(shippingData);
+    console.log('nazim Data:', userShippingdata); 
 
     // let cartData = localStorage.getItem('cart');
     const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
+    console.log('nazim Data:', cartData); 
 
     // Ensure cartData is valid and not empty before trying to access its items
     const productType = cartData.length > 0 ? cartData[0]?.productType : "General";
@@ -437,9 +441,59 @@ export default function PaymentForm() {
     console.log(values);
     router.push("/payment");
   };
-  const handlePaymentMethodChange = ({ target: { name } }: ChangeEvent<HTMLInputElement>) => {
+  const handlePaymentMethodChange = async ({ target: { name } }: ChangeEvent<HTMLInputElement>) => {
     // Update the payment method to the selected value
     setPaymentMethod(prevMethod => (prevMethod === name ? "" : name));
+    if (name === "mb") {
+      const authtoken = localStorage.getItem("token");
+      const getData = localStorage.getItem("userInfo");
+      const userinfo = JSON.parse(getData || "{}");
+
+      const shippingData = sessionStorage.getItem("address");
+      const userShippingdata = JSON.parse(shippingData || "{}");
+
+      const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
+      const productType = cartData.length > 0 ? cartData[0]?.productType : "General";
+
+      try {
+        const response = await axios.post(
+          "https://frontend.tizaraa.com/api/pay-via-ajax",
+          {
+            user_id: userinfo?.id,
+            seller_id: cartData[0]?.sellerId,
+            cus_name: userShippingdata?.shipping_name || userShippingdata?.name,
+            cus_email: userinfo?.email,
+            cus_phone:
+              userShippingdata?.shipping_contact || userShippingdata?.phone,
+            province_id:
+              userShippingdata?.shipping_province || userShippingdata?.province_id,
+            city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
+            area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
+            cus_add1:
+              userShippingdata?.shipping_address1 || userShippingdata?.address,
+            currency: "BDT",
+            total_amount: Number(total_ammount) + Number(userShippingdata?.deliveryCharge),
+            productType: productType,
+            payment_type: "COD",
+            payment_method: "mb",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${authtoken}`,
+            },
+          }
+        );
+        const redirectUrl = response.data?.redirect_url;
+        if (redirectUrl) {
+          window.location.href = redirectUrl; // Redirect to the URL provided by the API
+        } else {
+          toast.error("Payment initiation failed. No redirect URL received.");
+        }
+      } catch (error) {
+        console.error("Online Payment Error:", error);
+        toast.error("Error initiating payment!");
+      }
+    }
   };
 
   
