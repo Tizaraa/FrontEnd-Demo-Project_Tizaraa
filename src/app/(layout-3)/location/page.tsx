@@ -36,6 +36,12 @@ export default function LocationList() {
 
   const [selectedLatLonData, setSelectedLatLonData] = useState(null);
 
+  const [currentItemsCount, setCurrentItemsCount] = useState(12);
+
+  const loadMoreProducts = () => {
+    setCurrentItemsCount((prevCount) => prevCount + 12); // Load 12 more items
+  };
+
 
   const width = useWindowSize();
   const isTabletOrMobile = width < 1024; // Detect small devices
@@ -274,21 +280,7 @@ export default function LocationList() {
           marginBottom: "20px",
         }}
       >
-         {/* {!isTabletOrMobile && ( 
-          <H2
-            mb="10px"
-            width="50%"
-            style={{
-              fontFamily: "Oswald, sans-serif",
-              fontWeight: "700",
-              fontSize: "26px",
-              fontOpticalSizing: "auto",
-            }}
-          >
-            Discover top products available in your area, delivered to your door.
-          </H2>
-        )} */}
-
+    
         <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto" mb="3rem">
           <SearchBoxStyle>
             <TextField
@@ -317,48 +309,67 @@ export default function LocationList() {
       </div>
 
       {selectedLatLonData && selectedLatLonData.data && selectedLatLonData.data.length > 0 ? (
-  <Grid container spacing={2}>
-    {selectedLatLonData.data.map((item, index) => (
-      <Grid item lg={3} sm={6} xs={12} key={index} style={{ marginBottom: '3rem' }}>
-        <ProductCard1
-          id={item?.id || ""}
-          slug={item?.slug || ""}
-          price={item?.price || 0}
-          title={item?.title || "No Title"}
-          off={item?.discount || 0}
-          images={item?.images || []}
-          imgUrl={item?.thumbnail || ""}
-          rating={item?.rating || 0}
-        />
-      </Grid>
-    ))}
-  </Grid>
-) : (
-  <>
-  {!isTabletOrMobile && ( 
-    <H2
-      mb="10px"
-      textAlign="center"
-      style={{
-        fontFamily: "Oswald, sans-serif",
-        fontWeight: "700",
-        fontSize: "26px",
-        fontOpticalSizing: "auto",
-      }}
-    >
-      Discover top products available in your area, delivered to your door.
-    </H2>
-  )}
-  </>
-)}
+        <>
+          <Grid container spacing={2}>
+            {selectedLatLonData.data.slice(0, currentItemsCount).map((item, index) => (
+              <Grid item lg={3} sm={6} xs={12} key={index} style={{ marginBottom: '3rem' }}>
+                <ProductCard1
+                  id={item?.id || ""}
+                  slug={item?.slug || ""}
+                  price={item?.price || 0}
+                  title={item?.title || "No Title"}
+                  off={item?.discount || 0}
+                  images={item?.images || []}
+                  imgUrl={item?.thumbnail || ""}
+                  rating={item?.rating || 0}
+                />
+              </Grid>
+            ))}
+          </Grid>
 
+          {/* Show 'Show More' button if there are more products to load */}
+          {currentItemsCount < selectedLatLonData.data.length && (
+            <FlexBox
+              mt={4}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <button
+                onClick={loadMoreProducts}
+                style={{
+                  padding: '10px 20px',
+                  fontSize: '16px',
+                  backgroundColor: '#E94560',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                }}
+              >
+                Show More
+              </button>
+            </FlexBox>
+          )}
+        </>
+      ) : (
+        <>
+          {!isTabletOrMobile && (
+            <H2
+              mb="10px"
+              textAlign="center"
+              style={{
+                fontFamily: "Oswald, sans-serif",
+                fontWeight: "700",
+                fontSize: "26px",
+                fontOpticalSizing: "auto",
+              }}
+            >
+              Discover top products available in your area, delivered to your door.
+            </H2>
+          )}
+        </>
+      )}
 
-      {/* <div ref={observerRef}></div>
-      {isLoading && (
-        <LoaderWrapper>
-          <Vortex visible={true} height="100" width="100" />
-        </LoaderWrapper>
-      )} */}
 
     </Fragment>
   );
