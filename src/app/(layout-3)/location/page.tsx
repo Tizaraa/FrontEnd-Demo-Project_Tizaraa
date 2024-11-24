@@ -17,22 +17,9 @@ import Card from "@component/Card";
 import { MdLocationSearching } from "react-icons/md";
 import useWindowSize from "@hook/useWindowSize";
 import { ProductCard1 } from "@component/product-cards";
+import Script from "next/script";
 
 
-const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const NoLocationMessage = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  font-size: 1.5rem;
-  color: gray;
-`;
 
 export default function LocationList() {
   const [locationList, setLocationList] = useState([]);
@@ -44,6 +31,7 @@ export default function LocationList() {
   const [noLocationsFound, setNoLocationsFound] = useState(false);
   const observerRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");
+  
 
 
   const [selectedLatLonData, setSelectedLatLonData] = useState(null);
@@ -148,6 +136,8 @@ export default function LocationList() {
 
   // Geolocation and address fetching
 
+  
+
 
   async function getLocation() {
     try {
@@ -201,19 +191,12 @@ export default function LocationList() {
       return distance <= 5; // Filter for distances within 5 kilometers
     });
   
-    // alert(
-    //   "Nearby locations within 5 km:\n" +
-    //     nearbyLocations
-    //       .map((loc) => `Latitude: ${loc.lat}, Longitude: ${loc.lon}`)
-    //       .join("\n")
-    // );
-  
     console.log("Nearby locations within 5 km:", nearbyLocations);
 
-    const latlon = JSON.stringify(nearbyLocations);
-console.log(latlon)
+    const latlon = nearbyLocations;
+// console.log(latlon)
 
-    fetchSelectedLatLong(latlon);
+    fetchSelectedLatLong(nearbyLocations);
   
     // Continue to fetch address details using the Nominatim API
     fetch(
@@ -236,62 +219,13 @@ console.log(latlon)
         const streetNumber = data.address.house_number || "N/A";
         const postalCode = data.address.postcode || "N/A";
 
-        setSearchValue(`${province}, ${city}, ${area}, ${street}`);
-  
-        // alert(
-        //   "Your location details:\n" +
-        //     "Province: " +
-        //     province +
-        //     "\n" +
-        //     "City: " +
-        //     city +
-        //     "\n" +
-        //     "Area: " +
-        //     area +
-        //     "\n" +
-        //     "Street: " +
-        //     street +
-        //     "\n" +
-        //     "Street Number: " +
-        //     streetNumber +
-        //     "\n" +
-        //     "Postal Code: " +
-        //     postalCode +
-        //     "\n" +
-        //     "Latitude: " +
-        //     latitude +
-        //     "\n" +
-        //     "Longitude: " +
-        //     longitude
-        // );
+        setSearchValue(`${province}, ${city}, ${area}, ${street}`)
       })
       .catch((error) => {
         console.error("Error getting address:", error);
-        // alert(
-        //   "Could not get address. Coordinates are:\n" +
-        //     "Latitude: " +
-        //     latitude +
-        //     "\n" +
-        //     "Longitude: " +
-        //     longitude
-        // );
+     
       });
   }
-
-    // Function to call selected latlong API
-    // async function fetchSelectedLatLong(latlon) {
-    //   try {
-    //     const response = await axios.get(
-    //       `https://seller.tizaraa.com/api/get/selected/latlong`,
-    //       {
-    //         params: { latlon }, 
-    //       }
-    //     );
-    //     console.log("Selected LatLong API Response:", response.data);
-    //   } catch (error) {
-    //     console.error("Error calling selected latlong API:", error);
-    //   }
-    // }
 
     async function fetchSelectedLatLong(latlon) {
       try {
@@ -419,15 +353,13 @@ console.log(latlon)
 )}
 
 
-
-
-
       {/* <div ref={observerRef}></div>
       {isLoading && (
         <LoaderWrapper>
           <Vortex visible={true} height="100" width="100" />
         </LoaderWrapper>
       )} */}
+
     </Fragment>
   );
 }
