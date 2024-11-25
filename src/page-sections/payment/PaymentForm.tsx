@@ -469,6 +469,8 @@ export default function PaymentForm() {
               userShippingdata?.shipping_province || userShippingdata?.province_id,
             city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
             area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
+            house_level: userShippingdata?.selectedLandmark || userShippingdata?.landmark,
+            delivery_charge: userShippingdata?.deliveryCharge || 0,
             cus_add1:
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             currency: "BDT",
