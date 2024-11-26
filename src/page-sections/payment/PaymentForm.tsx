@@ -256,7 +256,7 @@
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
-import { useRouter,usePathname } from "next/navigation";
+import { useRouter,usePathname, useSearchParams } from "next/navigation";
 import { ChangeEvent, Fragment, useState } from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -275,7 +275,7 @@ import axios from "axios";
 import { useAppContext } from "@context/app-context";
 import CheckBox from "@component/CheckBox";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import { useSearchParams } from "next/navigation";
+//import { useSearchParams } from "next/navigation";
 
 import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
@@ -453,13 +453,20 @@ export default function PaymentForm() {
         if (redirectUrl) {
           localStorage.setItem("redirectUrl", redirectUrl);
           window.location.href = redirectUrl;
+          const pathname = usePathname(); // Get the current path
+          const searchParams = useSearchParams(); // Get the query parameters
+
+          const message = searchParams.get("message"); // Extract specific query parameter
+
+          console.log("Current Pathname:", pathname);
+          console.log("Message from Query Params:", message);
           // const urlParams = new URLSearchParams(window.location.search);
           // const message = urlParams.get("message");
-          // if (message) {
-          //   toast.success(message); // Display success message
-          // } else {
-          //   toast.error("No transaction message found."); // Handle missing message
-          // }// Redirect to the stored URL
+          if (message) {
+            toast.success(message); // Display success message
+          } else {
+            toast.error("No transaction message found."); // Handle missing message
+          }// Redirect to the stored URL
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
         }
