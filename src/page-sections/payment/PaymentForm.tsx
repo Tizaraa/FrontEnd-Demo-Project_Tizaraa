@@ -400,7 +400,7 @@ export default function PaymentForm() {
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             currency: "BDT",
             total_amount:
-              Number(total_ammount) + Number(userShippingdata?.deliveryCharge),
+              total_ammount,
             productType: productType,
             payment_type: "mb",
             payment_method: "mb",
@@ -471,7 +471,8 @@ export default function PaymentForm() {
         });
 
         const redirectUrl = response.data?.redirect_url;
-        //console.log(redirectUrl);
+        console.log(redirectUrl);
+        //return
         
         if (redirectUrl) {
           //const searchParams = useSearchParams();
