@@ -288,6 +288,24 @@ export default function PaymentForm() {
   //const searchParams = useSearchParams();
   //const { state } = useAppContext();
 
+  useEffect(() => {
+    const queryString = window.location.search;
+    console.log("Query String:", queryString); // Log query string
+  
+    const urlParams = new URLSearchParams(queryString);
+    const status = urlParams.get("status");
+    const message = urlParams.get("message");
+    console.log("Status:", status);
+    console.log("Message:", decodeURIComponent(message || ""));
+  
+    if (status === "success" && message) {
+      toast.success(decodeURIComponent(message));
+    } else if (status === "error" && message) {
+      toast.error(decodeURIComponent(message));
+    }
+  }, []);
+  
+
   const getTotalPrice = () => {
     return (
       state.cart.reduce(
