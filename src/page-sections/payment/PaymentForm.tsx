@@ -256,7 +256,7 @@
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter,usePathname } from "next/navigation";
 import { ChangeEvent, Fragment, useState } from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -308,17 +308,25 @@ export default function PaymentForm() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Check if there's a message parameter in the URL
-    const message = searchParams.get("message");
-    //const message = params.get("message");
+    // Check if we are being redirected to the orders page
+    const redirectUrl = localStorage.getItem("redirectUrl");
 
-    // If the message exists, show it in a toast
-    if (message) {
-      toast.success(message);
-    }else{
-      toast.error("Transaction Failed")
+    if (redirectUrl) {
+      // Extract query parameters from the redirect URL
+      const urlParams = new URLSearchParams(new URL(redirectUrl).search);
+      const message = urlParams.get("message");
+
+      // Show message if exists
+      if (message) {
+        toast.success(message);
+      } else {
+        toast.error("No message received from the payment redirect.");
+      }
+
+      // Clear redirect URL after use
+      localStorage.removeItem("redirectUrl");
     }
-  }, [searchParams]);
+  }, []);
 
   let authtoken = localStorage.getItem("token");
   const orderSubmit = async () => {
@@ -462,7 +470,7 @@ export default function PaymentForm() {
 
         const redirectUrl = response.data?.redirect_url;
         if (redirectUrl) {
-          
+          localStorage.setItem("redirectUrl", redirectUrl);
           window.location.href = redirectUrl;
           // const urlParams = new URLSearchParams(window.location.search);
           // const message = urlParams.get("message");
