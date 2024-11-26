@@ -285,6 +285,7 @@ export default function PaymentForm() {
   //const [redirectUrl, setRedirectUrl] = useState<string>("");
   const [paymentType, setPaymentType] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
+  //const searchParams = useSearchParams();
   //const { state } = useAppContext();
 
   const getTotalPrice = () => {
@@ -304,8 +305,10 @@ export default function PaymentForm() {
 
   const router = useRouter();
 
+  
+
   //const router = useRouter();
-  const searchParams = useSearchParams();
+  //const searchParams = useSearchParams();
 
   
 
@@ -450,23 +453,21 @@ export default function PaymentForm() {
         });
 
         const redirectUrl = response.data?.redirect_url;
+        console.log(redirectUrl);
+        
         if (redirectUrl) {
-          localStorage.setItem("redirectUrl", redirectUrl);
           window.location.href = redirectUrl;
-          const pathname = usePathname(); // Get the current path
-          const searchParams = useSearchParams(); // Get the query parameters
-
-          const message = searchParams.get("message"); // Extract specific query parameter
-
-          console.log("Current Pathname:", pathname);
-          console.log("Message from Query Params:", message);
-          // const urlParams = new URLSearchParams(window.location.search);
-          // const message = urlParams.get("message");
-          if (message) {
-            toast.success(message); // Display success message
-          } else {
-            toast.error("No transaction message found."); // Handle missing message
-          }// Redirect to the stored URL
+          const searchParams = useSearchParams();
+          useEffect(() => {
+            const message = searchParams.get("message"); // Get the "message" parameter
+            const status = searchParams.get("status"); // Get the "status" parameter
+        
+            if (status === "success" && message) {
+              toast.success(message); // Show success message
+            } else if (status === "error" && message) {
+              toast.error(message); // Show error message
+            }
+          }, [searchParams]);
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
         }
