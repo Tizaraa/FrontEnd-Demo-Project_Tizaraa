@@ -316,17 +316,13 @@ export default function PaymentForm() {
       const urlParams = new URLSearchParams(new URL(redirectUrl).search);
       const message = urlParams.get("message");
 
-      // Show message if exists
-      if (message) {
-        toast.success(message);
-      } else {
-        toast.error("No message received from the payment redirect.");
-      }
-
-      // Clear redirect URL after use
-      localStorage.removeItem("redirectUrl");
+    // If the message exists, show it in a toast
+    if (message) {
+      toast.success(message);
+    }else{
+      toast.error("Transaction Failed")
     }
-  }, []);
+  }, [searchParams]);
 
   let authtoken = localStorage.getItem("token");
   const orderSubmit = async () => {
@@ -510,6 +506,7 @@ export default function PaymentForm() {
             delivery_charge: userShippingdata?.deliveryCharge || 0,
             total_ammount: total_ammount,
             payment_type: 1,
+            seller_id: cartData[0]?.sellerId,
             // payment_method: "cod",
             // productType: productType,
           },
