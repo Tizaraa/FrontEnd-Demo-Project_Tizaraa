@@ -285,20 +285,8 @@ export default function PaymentForm() {
   //const [redirectUrl, setRedirectUrl] = useState<string>("");
   const [paymentType, setPaymentType] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
-  const searchParams = useSearchParams();
+  //const searchParams = useSearchParams();
   //const { state } = useAppContext();
-
-  useEffect(() => {
-    const search = new URLSearchParams(window.location.search); // Parse the query string
-    const message = search.get("message"); // Get the "message" parameter
-    const status = search.get("status"); // Get the "status" parameter
-
-    if (status === "success" && message) {
-      toast.success(decodeURIComponent(message)); // Show success message
-    } else if (status === "error" && message) {
-      toast.error(decodeURIComponent(message)); // Show error message
-    }
-  }, []);
 
   const getTotalPrice = () => {
     return (
@@ -465,11 +453,22 @@ export default function PaymentForm() {
         });
 
         const redirectUrl = response.data?.redirect_url;
-        console.log(redirectUrl);
+        //console.log(redirectUrl);
         
         if (redirectUrl) {
-          const searchParams = useSearchParams();
+          //const searchParams = useSearchParams();
           window.location.href = redirectUrl;
+          useEffect(() => {
+            const search = new URLSearchParams(window.location.search); // Parse the query string
+            const message = search.get("message"); // Get the "message" parameter
+            const status = search.get("status"); // Get the "status" parameter
+        
+            if (status === "success" && message) {
+              toast.success(decodeURIComponent(message)); // Show success message
+            } else if (status === "error" && message) {
+              toast.error(decodeURIComponent(message)); // Show error message
+            }
+          }, []);
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
         }
