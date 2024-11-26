@@ -315,9 +315,10 @@ export default function PaymentForm() {
     // If the message exists, show it in a toast
     if (message) {
       toast.success(message);
-    }else{
-      toast.error("Transaction Failed")
     }
+    // else{
+    //   toast.error("Transaction Failed")
+    // }
   }, [searchParams]);
 
   let authtoken = localStorage.getItem("token");
@@ -481,22 +482,31 @@ export default function PaymentForm() {
     } else if(paymentMethod === "cod") {
       try {
         const orderResponse = await axios.post(
-            `${ApiBaseUrl.baseUrl}checkout/order`,
-            {
-                user_id: userinfo?.id,
-                name: userShippingdata?.shipping_name || userShippingdata?.name,
-                phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
-                email: userinfo?.email,
-                province_id: userShippingdata?.shipping_province || userShippingdata?.province_id,
-                city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
-                area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
-                house_level: userShippingdata?.selectedLandmark || userShippingdata?.landmark,
-                address: userShippingdata?.shipping_address1 || userShippingdata?.address,
-                delivery_charge: userShippingdata?.deliveryCharge || 0,
-                total_ammount: total_ammount,
-                payment_type: 1,
-                productType: productType,
-            },
+          `${ApiBaseUrl.baseUrl}checkout/order`,
+          {
+            user_id: userinfo?.id,
+            name: userShippingdata?.shipping_name || userShippingdata?.name,
+            phone:
+              userShippingdata?.shipping_contact || userShippingdata?.phone,
+            email: userinfo?.email,
+            province_id:
+              userShippingdata?.shipping_province ||
+              userShippingdata?.province_id,
+            city_id:
+              userShippingdata?.shipping_city || userShippingdata?.city_id,
+            area_id:
+              userShippingdata?.shipping_area || userShippingdata?.area_id,
+            house_level:
+              userShippingdata?.selectedLandmark || userShippingdata?.landmark,
+            address:
+              userShippingdata?.shipping_address1 || userShippingdata?.address,
+            delivery_charge: userShippingdata?.deliveryCharge || 0,
+            total_ammount: total_ammount,
+            payment_type: 1,
+            seller_id: cartData[0]?.sellerId,
+            // payment_method: "cod",
+            // productType: productType,
+          },
 
           {
             headers: {
