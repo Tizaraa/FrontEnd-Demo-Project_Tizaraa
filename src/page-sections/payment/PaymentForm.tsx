@@ -254,7 +254,7 @@
 
 // new for otc
 "use client";
-
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, Fragment, useState } from "react";
@@ -275,6 +275,7 @@ import axios from "axios";
 import { useAppContext } from "@context/app-context";
 import CheckBox from "@component/CheckBox";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import { useSearchParams } from "next/navigation";
 
 import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
@@ -302,6 +303,22 @@ export default function PaymentForm() {
   const isSubtotalZero = total_ammount === 0;
 
   const router = useRouter();
+
+  //const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Check if there's a message parameter in the URL
+    const message = searchParams.get("message");
+    //const message = params.get("message");
+
+    // If the message exists, show it in a toast
+    if (message) {
+      toast.success(message);
+    }else{
+      toast.error("Transaction Failed")
+    }
+  }, [searchParams]);
 
   let authtoken = localStorage.getItem("token");
   const orderSubmit = async () => {
@@ -445,14 +462,15 @@ export default function PaymentForm() {
 
         const redirectUrl = response.data?.redirect_url;
         if (redirectUrl) {
+          
           window.location.href = redirectUrl;
-          const urlParams = new URLSearchParams(window.location.search);
-          const message = urlParams.get("message");
-          if (message) {
-            toast.success(message); // Display success message
-          } else {
-            toast.error("No transaction message found."); // Handle missing message
-          }// Redirect to the stored URL
+          // const urlParams = new URLSearchParams(window.location.search);
+          // const message = urlParams.get("message");
+          // if (message) {
+          //   toast.success(message); // Display success message
+          // } else {
+          //   toast.error("No transaction message found."); // Handle missing message
+          // }// Redirect to the stored URL
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
         }
