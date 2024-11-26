@@ -445,9 +445,7 @@ export default function OrderDetails({ params }: IDParams) {
               <Typography fontSize="14px" color="text.hint">
                 Subtotal:
               </Typography>
-              <H6 my="0px">{currency(
-                  Number(order.Order.amount) -
-                    Number(order.Order.shippingAddress))}</H6>{" "}
+              <H6 my="0px">{currency(order.Order.amount)}</H6>{" "}
             </FlexBox>
 
             <FlexBox
