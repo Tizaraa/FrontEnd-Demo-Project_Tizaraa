@@ -476,17 +476,6 @@ export default function PaymentForm() {
         if (redirectUrl) {
           //const searchParams = useSearchParams();
           window.location.href = redirectUrl;
-          useEffect(() => {
-            const search = new URLSearchParams(window.location.search); // Parse the query string
-            const message = search.get("message"); // Get the "message" parameter
-            const status = search.get("status"); // Get the "status" parameter
-        
-            if (status === "success" && message) {
-              toast.success(decodeURIComponent(message)); // Show success message
-            } else if (status === "error" && message) {
-              toast.error(decodeURIComponent(message)); // Show error message
-            }
-          }, []);
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
         }
