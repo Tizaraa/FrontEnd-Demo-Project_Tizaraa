@@ -476,9 +476,9 @@ export default function PaymentForm() {
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             delivery_charge: userShippingdata?.deliveryCharge || 0,
             total_ammount: total_ammount,
-            payment_type: "cod",
-            payment_method: "cod",
-            productType: productType,
+            payment_type: 1,
+            // payment_method: "cod",
+            // productType: productType,
           },
 
           {
