@@ -358,6 +358,7 @@ export default function PaymentForm() {
                 total_ammount: total_ammount,
                 payment_type: 1,
                 productType: productType,
+                seller_id: cartData[0]?.sellerId,
             },
 
             {
