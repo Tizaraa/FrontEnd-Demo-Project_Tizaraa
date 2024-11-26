@@ -307,22 +307,7 @@ export default function PaymentForm() {
   //const router = useRouter();
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    // Check if we are being redirected to the orders page
-    const redirectUrl = localStorage.getItem("redirectUrl");
-
-    if (redirectUrl) {
-      // Extract query parameters from the redirect URL
-      const urlParams = new URLSearchParams(new URL(redirectUrl).search);
-      const message = urlParams.get("message");
-
-    // If the message exists, show it in a toast
-    if (message) {
-      toast.success(message);
-    }else{
-      toast.error("Transaction Failed")
-    }
-  }, [searchParams]);
+  
 
   let authtoken = localStorage.getItem("token");
   const orderSubmit = async () => {
