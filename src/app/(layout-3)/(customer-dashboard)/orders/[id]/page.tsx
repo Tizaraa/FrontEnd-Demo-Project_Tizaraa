@@ -447,7 +447,7 @@ export default function OrderDetails({ params }: IDParams) {
               </Typography>
               <H6 my="0px">{currency(
                   Number(order.Order.amount) -
-                    Number(order.Order.shippingAddress)}</H6>{" "}
+                    Number(order.Order.shippingAddress))}</H6>{" "}
             </FlexBox>
 
             <FlexBox
