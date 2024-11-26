@@ -24,27 +24,23 @@
 // import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 // import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
 
-
-
-
 // export default function PaymentForm() {
 
 //   const { state, dispatch } = useAppContext();
 //   //const { state } = useAppContext();
 
 //   const getTotalPrice = () => {
-//     return state.cart.reduce((accumulator, item) => 
+//     return state.cart.reduce((accumulator, item) =>
 //       // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
 //     accumulator + (item.discountPrice ? item.discountPrice : item.price) * item.qty, 0
 //     ) || 0;
 //   };
 
-
 //   const total_ammount = getTotalPrice()
 //   const isSubtotalZero = total_ammount === 0;
- 
+
 //   const router = useRouter();
-  
+
 //     let authtoken = localStorage.getItem('token');
 
 //   const orderSubmit = async () => {
@@ -56,7 +52,7 @@
 //     let userinfo = JSON.parse(getData);
 
 //     let shippingData = sessionStorage.getItem('address');
-//     console.log('Session Storage Data:', shippingData); 
+//     console.log('Session Storage Data:', shippingData);
 //     let userShippingdata = JSON.parse(shippingData);
 
 //     let cartData = localStorage.getItem('cart');
@@ -104,7 +100,7 @@
 //                 });
 //                 sessionStorage.setItem("offlineOrders", JSON.stringify(offlineOrders));
 //                 console.log("Product without API saved locally:", cartdata);
-//                 return; 
+//                 return;
 //             }
 
 //             let color = cartdata.id;
@@ -160,7 +156,6 @@
 
 //   const width = useWindowSize();
 //   const [paymentMethod, setPaymentMethod] = useState<string>("");
-
 
 //   const isMobile = width < 769;
 
@@ -224,12 +219,12 @@
 //             color="primary"
 //             type="button"
 //             fullwidth
-//             disabled={isSubtotalZero || !paymentMethod}  
+//             disabled={isSubtotalZero || !paymentMethod}
 //           >Submit</Button>
 //             {/* <Button onClick={orderSub} variant="outlined" color="primary" type="button" fullwidth>
 //              Paymentclick
 //             </Button> */}
-   
+
 //         </Grid>
 //       </Grid>
 //     </Fragment>
@@ -245,9 +240,8 @@
 //   shipping_province: "",
 //   shipping_city: "",
 //   shipping_area: "",
-//   selectedLandmark: null, 
+//   selectedLandmark: null,
 
-  
 // };
 
 // const checkoutSchema = yup.object().shape({
@@ -258,14 +252,7 @@
 
 // });
 
-
-
-
-
-
-
-
-// new for otc 
+// new for otc
 "use client";
 
 import Link from "next/link";
@@ -292,168 +279,75 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
 
-
-
-
 export default function PaymentForm() {
-
   const { state, dispatch } = useAppContext();
+  //const [redirectUrl, setRedirectUrl] = useState<string>("");
+  const [paymentType, setPaymentType] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
   //const { state } = useAppContext();
 
   const getTotalPrice = () => {
-    return state.cart.reduce((accumulator, item) => 
-      // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
-    accumulator + (item.discountPrice ? item.discountPrice : item.price) * item.qty, 0
-    ) || 0;
+    return (
+      state.cart.reduce(
+        (accumulator, item) =>
+          // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+          accumulator +
+          (item.discountPrice ? item.discountPrice : item.price) * item.qty,
+        0
+      ) || 0
+    );
   };
 
-
-  const total_ammount = getTotalPrice()
+  const total_ammount = getTotalPrice();
   const isSubtotalZero = total_ammount === 0;
- 
+
   const router = useRouter();
-  
-    let authtoken = localStorage.getItem('token');
+
+  let authtoken = localStorage.getItem("token");
   const orderSubmit = async () => {
     if (isSubtotalZero) {
       toast.error("Your cart is empty. Please add items before proceeding.");
       return; // Prevent form submission
     }
-    let getData = localStorage.getItem('userInfo');
+    // if (redirectUrl) {
+    //   window.location.href = redirectUrl; // Redirect to the stored URL
+    // } else {
+    //   toast.error("No redirect URL available for payment.");
+    // }
+    let getData = localStorage.getItem("userInfo");
     let userinfo = JSON.parse(getData);
-    console.log("nazim",userinfo);
-    
+    console.log("nazim", userinfo);
 
-    let shippingData = sessionStorage.getItem('address');
-    console.log('Session Storage Data:', shippingData); 
+    let shippingData = sessionStorage.getItem("address");
+    console.log("Session Storage Data:", shippingData);
     let userShippingdata = JSON.parse(shippingData);
-    console.log('nazim Data:', userShippingdata); 
+    console.log("nazim Data:", userShippingdata);
 
     // let cartData = localStorage.getItem('cart');
     const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
-    console.log('nazim Data:', cartData); 
+    console.log("nazim Data:", cartData);
 
     // Ensure cartData is valid and not empty before trying to access its items
-    const productType = cartData.length > 0 ? cartData[0]?.productType : "General";
-    
+    const productType =
+      cartData.length > 0 ? cartData[0]?.productType : "General";
+
     let cart = cartData;
-    
+
     console.log("Cart Items:", cart);
     console.log("Product Type:", productType);
     console.log("Selected payment method:", paymentMethod);
-    try {
-        const orderResponse = await axios.post(
-            `${ApiBaseUrl.baseUrl}checkout/order`,
-            {
-                user_id: userinfo?.id,
-                name: userShippingdata?.shipping_name || userShippingdata?.name,
-                phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
-                email: userinfo?.email,
-                province_id: userShippingdata?.shipping_province || userShippingdata?.province_id,
-                city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
-                area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
-                house_level: userShippingdata?.selectedLandmark || userShippingdata?.landmark,
-                address: userShippingdata?.shipping_address1 || userShippingdata?.address,
-                delivery_charge: userShippingdata?.deliveryCharge || 0,
-                total_ammount: total_ammount,
-                payment_type: 1,
-                productType: productType,
-            },
+    if (paymentMethod === "mb") {
+      // const authtoken = localStorage.getItem("token");
+      // const getData = localStorage.getItem("userInfo");
+      // const userinfo = JSON.parse(getData || "{}");
 
-            {
-                headers: {
-                    Authorization: `Bearer ${authtoken}`,
-                },
-            }
-        );
+      // const shippingData = sessionStorage.getItem("address");
+      // const userShippingdata = JSON.parse(shippingData || "{}");
 
-        console.log("Order Response:", orderResponse);
+      // const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
+      // const productType = cartData.length > 0 ? cartData[0]?.productType : "General";
 
-        let orderId = orderResponse.data.message.orderid;
-        localStorage.setItem('orderId', orderId);
-        localStorage.setItem('orderSuccess', 'true');
-
-        await Promise.all(cart.map(async (cartdata) => {
-          try {
-              // Set color handling logic
-              let color = cartdata.id;
-              if (/\D--\d+$/.test(cartdata.id)) {
-                  color = cartdata.id.replace(/--\d+$/, "");
-              } else if (cartdata.id) {
-                  color = "";
-              }
-      
-              // Place order items for all products, including OTC
-              const response = await axios.post(
-                `${ApiBaseUrl.baseUrl}checkout/order/items`,
-                {
-                    delivery_charge: 60,
-                    user_id: userinfo.id,
-                    seller_id: cartdata.sellerId,
-                    order_id: orderId,
-                    product_id: cartdata.productId,
-                    color: color,
-                    size: cartdata.attributes,
-                    qty: cartdata.qty,
-                    note1: 'lorem10',
-                    single_ammount: cartdata.price,
-                    
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${authtoken}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-        
-            console.log("Cart Item Response:", response.data);
-        } catch (error) {
-            console.error("Failed to add item to order:", error.response);
-        }
-      }));
-      
-        router.push("/orders");
-        localStorage.removeItem('orderId');
-        localStorage.removeItem('cart');
-        cart.forEach(item => {
-            dispatch({
-                type: "CHANGE_CART_AMOUNT",
-                payload: { ...item, qty: 0 }
-            });
-        });
-
-    } catch (error) {
-        console.error("Error placing order:", error);
-        toast.error("Error placing order!");
-        router.push("/payment");
-    }
-};
-
-
-  const width = useWindowSize();
-  const [paymentMethod, setPaymentMethod] = useState<string>("");
-
-
-  const isMobile = width < 769;
-
-  const handleFormSubmit = async (values: any) => {
-    console.log(values);
-    router.push("/payment");
-  };
-  const handlePaymentMethodChange = async ({ target: { name } }: ChangeEvent<HTMLInputElement>) => {
-    // Update the payment method to the selected value
-    setPaymentMethod(prevMethod => (prevMethod === name ? "" : name));
-    if (name === "mb") {
-      const authtoken = localStorage.getItem("token");
-      const getData = localStorage.getItem("userInfo");
-      const userinfo = JSON.parse(getData || "{}");
-
-      const shippingData = sessionStorage.getItem("address");
-      const userShippingdata = JSON.parse(shippingData || "{}");
-
-      const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
-      const productType = cartData.length > 0 ? cartData[0]?.productType : "General";
+      // let cart = cartData;
 
       try {
         const response = await axios.post(
@@ -466,17 +360,22 @@ export default function PaymentForm() {
             cus_phone:
               userShippingdata?.shipping_contact || userShippingdata?.phone,
             province_id:
-              userShippingdata?.shipping_province || userShippingdata?.province_id,
-            city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
-            area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
-            house_level: userShippingdata?.selectedLandmark || userShippingdata?.landmark,
+              userShippingdata?.shipping_province ||
+              userShippingdata?.province_id,
+            city_id:
+              userShippingdata?.shipping_city || userShippingdata?.city_id,
+            area_id:
+              userShippingdata?.shipping_area || userShippingdata?.area_id,
+            house_level:
+              userShippingdata?.selectedLandmark || userShippingdata?.landmark,
             delivery_charge: userShippingdata?.deliveryCharge || 0,
             cus_add1:
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             currency: "BDT",
-            total_amount: Number(total_ammount) + Number(userShippingdata?.deliveryCharge),
+            total_amount:
+              Number(total_ammount) + Number(userShippingdata?.deliveryCharge),
             productType: productType,
-            payment_type: "COD",
+            payment_type: "mb",
             payment_method: "mb",
           },
           {
@@ -485,9 +384,68 @@ export default function PaymentForm() {
             },
           }
         );
+        console.log("online Response:", response);
+
+        let orderId = response.data?.orderid;
+        console.log("id", orderId);
+        console.log("Selected payment method:", paymentMethod);
+        localStorage.setItem("orderId", orderId);
+        localStorage.setItem("orderSuccess", "true");
+
+        await Promise.all(
+          cart.map(async (cartdata) => {
+            try {
+              // Set color handling logic
+              let color = cartdata.id;
+              if (/\D--\d+$/.test(cartdata.id)) {
+                color = cartdata.id.replace(/--\d+$/, "");
+              } else if (cartdata.id) {
+                color = "";
+              }
+
+              // Place order items for all products, including OTC
+              const response = await axios.post(
+                `${ApiBaseUrl.baseUrl}checkout/order/items`,
+                {
+                  delivery_charge: 60,
+                  user_id: userinfo.id,
+                  seller_id: cartdata.sellerId,
+                  order_id: orderId,
+                  product_id: cartdata.productId,
+                  color: color,
+                  size: cartdata.attributes,
+                  qty: cartdata.qty,
+                  note1: "lorem10",
+                  single_ammount: cartdata.price,
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${authtoken}`,
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+
+              console.log("Cart Item Response:", response.data);
+            } catch (error) {
+              console.error("Failed to add item to order:", error.response);
+            }
+          })
+        );
+
+        //router.push("/orders");
+        localStorage.removeItem("orderId");
+        localStorage.removeItem("cart");
+        cart.forEach((item) => {
+          dispatch({
+            type: "CHANGE_CART_AMOUNT",
+            payload: { ...item, qty: 0 },
+          });
+        });
+
         const redirectUrl = response.data?.redirect_url;
         if (redirectUrl) {
-          window.location.href = redirectUrl; // Redirect to the URL provided by the API
+          window.location.href = redirectUrl; // Redirect to the stored URL
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
         }
@@ -495,43 +453,150 @@ export default function PaymentForm() {
         console.error("Online Payment Error:", error);
         toast.error("Error initiating payment!");
       }
+    } else if(paymentMethod === "cod") {
+      try {
+        const orderResponse = await axios.post(
+          `${ApiBaseUrl.baseUrl}checkout/order`,
+          {
+            user_id: userinfo?.id,
+            name: userShippingdata?.shipping_name || userShippingdata?.name,
+            phone:
+              userShippingdata?.shipping_contact || userShippingdata?.phone,
+            email: userinfo?.email,
+            province_id:
+              userShippingdata?.shipping_province ||
+              userShippingdata?.province_id,
+            city_id:
+              userShippingdata?.shipping_city || userShippingdata?.city_id,
+            area_id:
+              userShippingdata?.shipping_area || userShippingdata?.area_id,
+            house_level:
+              userShippingdata?.selectedLandmark || userShippingdata?.landmark,
+            address:
+              userShippingdata?.shipping_address1 || userShippingdata?.address,
+            delivery_charge: userShippingdata?.deliveryCharge || 0,
+            total_ammount: total_ammount,
+            payment_type: "cod",
+            payment_method: "cod",
+            productType: productType,
+          },
+
+          {
+            headers: {
+              Authorization: `Bearer ${authtoken}`,
+            },
+          }
+        );
+
+        console.log("Order Response:", orderResponse);
+
+        let orderId = orderResponse.data.message.orderid;
+        localStorage.setItem("orderId", orderId);
+        localStorage.setItem("orderSuccess", "true");
+
+        await Promise.all(
+          cart.map(async (cartdata) => {
+            try {
+              // Set color handling logic
+              let color = cartdata.id;
+              if (/\D--\d+$/.test(cartdata.id)) {
+                color = cartdata.id.replace(/--\d+$/, "");
+              } else if (cartdata.id) {
+                color = "";
+              }
+
+              // Place order items for all products, including OTC
+              const response = await axios.post(
+                `${ApiBaseUrl.baseUrl}checkout/order/items`,
+                {
+                  delivery_charge: 60,
+                  user_id: userinfo.id,
+                  seller_id: cartdata.sellerId,
+                  order_id: orderId,
+                  product_id: cartdata.productId,
+                  color: color,
+                  size: cartdata.attributes,
+                  qty: cartdata.qty,
+                  note1: "lorem10",
+                  single_ammount: cartdata.price,
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${authtoken}`,
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+
+              console.log("Cart Item Response:", response.data);
+            } catch (error) {
+              console.error("Failed to add item to order:", error.response);
+            }
+          })
+        );
+
+        router.push("/orders");
+        localStorage.removeItem("orderId");
+        localStorage.removeItem("cart");
+        cart.forEach((item) => {
+          dispatch({
+            type: "CHANGE_CART_AMOUNT",
+            payload: { ...item, qty: 0 },
+          });
+        });
+      } catch (error) {
+        console.error("Error placing order:", error);
+        toast.error("Error placing order!");
+        router.push("/payment");
+      }
     }
   };
 
-  
+  const width = useWindowSize();
+
+  const isMobile = width < 769;
+
+  const handleFormSubmit = async (values: any) => {
+    console.log(values);
+    router.push("/payment");
+  };
+  const handlePaymentMethodChange = async ({
+    target: { name },
+  }: ChangeEvent<HTMLInputElement>) => {
+    // Update the payment method to the selected value
+    setPaymentMethod((prevMethod) => (prevMethod === name ? "" : name));
+  };
 
   return (
     <Fragment>
       <Card1 mb="2rem">
-      
-      {/* Cash on Delivery */}
-      <CheckBox
-        mb="1.5rem"
-        color="secondary"
-        name="cod"
-        onChange={handlePaymentMethodChange}
-        checked={paymentMethod === "cod"} // Only check if paymentMethod is "cod"
-        label={
-          <Typography ml="6px" fontWeight="600" fontSize="18px">
-            Cash on Delivery
-          </Typography>
-        }
-      />
+        {/* Cash on Delivery */}
+        <CheckBox
+          mb="1.5rem"
+          color="secondary"
+          name="cod"
+          onChange={handlePaymentMethodChange}
+          checked={paymentMethod === "cod"} // Only check if paymentMethod is "cod"
+          label={
+            <Typography ml="6px" fontWeight="600" fontSize="18px">
+              Cash on Delivery
+            </Typography>
+          }
+        />
 
-      {/* Mobile Banking */}
-      <CheckBox
-        mb="1.5rem"
-        color="secondary"
-        name="mb"
-        onChange={handlePaymentMethodChange}
-        checked={paymentMethod === "mb"} 
-        label={
-          <Typography ml="6px" fontWeight="600" fontSize="18px">
-            Online Payment
-          </Typography>
-        }
-      />
-
+        {/* Mobile Banking */}
+        <CheckBox
+          mb="1.5rem"
+          color="secondary"
+          name="mb"
+          onChange={handlePaymentMethodChange}
+          checked={paymentMethod === "mb"}
+          label={
+            <Typography ml="6px" fontWeight="600" fontSize="18px">
+              Online Payment
+            </Typography>
+          }
+        />
       </Card1>
 
       <Grid container spacing={7}>
@@ -544,15 +609,16 @@ export default function PaymentForm() {
         </Grid>
 
         <Grid item sm={6} xs={12}>
-             <Button
+          <Button
             onClick={orderSubmit}
             variant="outlined"
             color="primary"
             type="button"
             fullwidth
-            disabled={isSubtotalZero || !paymentMethod}  
-          >Payment</Button>
-   
+            disabled={isSubtotalZero || !paymentMethod}
+          >
+            Payment
+          </Button>
         </Grid>
       </Grid>
     </Fragment>
@@ -560,7 +626,6 @@ export default function PaymentForm() {
 }
 
 const initialValues = {
-
   paymentMethod: "",
   shipping_name: "",
   shipping_contact: "",
@@ -568,15 +633,12 @@ const initialValues = {
   shipping_province: "",
   shipping_city: "",
   shipping_area: "",
-  selectedLandmark: null, 
-
-  
+  selectedLandmark: null,
 };
 
 const checkoutSchema = yup.object().shape({
   card_no: yup.string().required("required"),
   name: yup.string().required("required"),
   exp_date: yup.string().required("required"),
-  cvc: yup.string().required("required")
-
+  cvc: yup.string().required("required"),
 });
