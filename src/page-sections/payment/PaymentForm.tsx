@@ -400,7 +400,7 @@ export default function PaymentForm() {
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             currency: "BDT",
             total_amount:
-              Number(total_ammount),
+              Number(total_ammount) + Number(userShippingdata?.deliveryCharge),
             productType: productType,
             payment_type: "mb",
             payment_method: "mb",
@@ -505,7 +505,7 @@ export default function PaymentForm() {
             address:
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             delivery_charge: userShippingdata?.deliveryCharge || 0,
-            total_ammount: total_ammount,
+            total_ammount: Number(total_ammount) + Number(userShippingdata?.deliveryCharge),
             payment_type: 1,
             seller_id: cartData[0]?.sellerId,
             // payment_method: "cod",
