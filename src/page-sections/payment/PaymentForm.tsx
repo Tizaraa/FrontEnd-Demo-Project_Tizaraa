@@ -285,8 +285,20 @@ export default function PaymentForm() {
   //const [redirectUrl, setRedirectUrl] = useState<string>("");
   const [paymentType, setPaymentType] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
-  //const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
   //const { state } = useAppContext();
+
+  useEffect(() => {
+    const search = new URLSearchParams(window.location.search); // Parse the query string
+    const message = search.get("message"); // Get the "message" parameter
+    const status = search.get("status"); // Get the "status" parameter
+
+    if (status === "success" && message) {
+      toast.success(decodeURIComponent(message)); // Show success message
+    } else if (status === "error" && message) {
+      toast.error(decodeURIComponent(message)); // Show error message
+    }
+  }, []);
 
   const getTotalPrice = () => {
     return (
@@ -456,18 +468,8 @@ export default function PaymentForm() {
         console.log(redirectUrl);
         
         if (redirectUrl) {
-          window.location.href = redirectUrl;
           const searchParams = useSearchParams();
-          useEffect(() => {
-            const message = searchParams.get("message"); // Get the "message" parameter
-            const status = searchParams.get("status"); // Get the "status" parameter
-        
-            if (status === "success" && message) {
-              toast.success(message); // Show success message
-            } else if (status === "error" && message) {
-              toast.error(message); // Show error message
-            }
-          }, [searchParams]);
+          window.location.href = redirectUrl;
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
         }
@@ -558,7 +560,7 @@ export default function PaymentForm() {
           })
         );
 
-        router.push("/orders");
+        router.push("/orders?status=success&message=Order placed successfully");
         localStorage.removeItem("orderId");
         localStorage.removeItem("cart");
         cart.forEach((item) => {
