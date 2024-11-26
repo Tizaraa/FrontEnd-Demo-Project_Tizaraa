@@ -445,13 +445,20 @@ export default function PaymentForm() {
 
         const redirectUrl = response.data?.redirect_url;
         if (redirectUrl) {
-          window.location.href = redirectUrl; // Redirect to the stored URL
+          window.location.href = redirectUrl;
+          const urlParams = new URLSearchParams(window.location.search);
+          const message = urlParams.get("message");
+          if (message) {
+            toast.success(message); // Display success message
+          } else {
+            toast.error("No transaction message found."); // Handle missing message
+          }// Redirect to the stored URL
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
         }
       } catch (error) {
         console.error("Online Payment Error:", error);
-        toast.error("Error initiating payment!");
+        toast.error("Error initiating online payment payment!");
       }
     } else if(paymentMethod === "cod") {
       try {
@@ -546,7 +553,7 @@ export default function PaymentForm() {
         });
       } catch (error) {
         console.error("Error placing order:", error);
-        toast.error("Error placing order!");
+        toast.error("Error placing cash on delivery order!");
         router.push("/payment");
       }
     }
