@@ -269,7 +269,7 @@ const InvoiceWrapper = styled.div`
 margin-top: 20px;
 height: 80vh; // Use 80% of the viewport height for responsiveness
 width: 100%; // Take full width
-overflow: auto; // Prevent scrollbars on the wrapper itself
+overflow: hidden; // Prevent scrollbars on the wrapper itself
 border: 1px solid #ccc; // Optional border styling
 display: flex; // Align content in the center
 justify-content: center;
