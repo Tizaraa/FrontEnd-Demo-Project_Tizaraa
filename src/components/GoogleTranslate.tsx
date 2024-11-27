@@ -23,7 +23,9 @@ const GoogleTranslate = () => {
             window.googleTranslateElementInit = function () {
                 if (window.google && window.google.translate) {
                     new window.google.translate.TranslateElement(
-                        { pageLanguage: "en" },
+                        { 
+                            pageLanguage: "",
+                        },
                         "google_translate_element"
                     );
                 }
@@ -54,13 +56,51 @@ const GoogleTranslate = () => {
 
     return (
         <div>
-             {/* <style jsx global>{`
-                .goog-logo-link, .goog-te-gadget span {
+            {/* Add global CSS to hide unwanted parts */}
+            <style jsx global>{`
+                /* Hide the Google Translate branding and other elements */
+                .goog-logo-link, 
+                .goog-te-banner-frame, 
+                #goog-gt-tt, 
+                .goog-te-balloon-frame, 
+                .goog-te-gadget span,
+                iframe {
                     display: none !important;
                 }
-       `}</style> */}
+
+                /* Keep only the language dropdown */
+                .goog-te-gadget {
+                    color: transparent !important; /* Hide text like 'Select Language' */
+                }
+
+                /* Adjust dropdown styles if necessary */
+                .goog-te-combo {
+                    font-size: 16px;
+                    color: #000 !important; /* Dropdown text color */
+                    border: 1px solid #ccc; /* Add border */
+                    border-radius: 4px;
+                    padding: 5px;
+                }
+
+                /* Custom margin for the dropdown */
+                .goog-te-gadget .goog-te-combo {
+                    margin: 4px 0 !important; /* Override other styles */
+                    margin-top: 20px !important; /* Set proper spacing from the top */
+                }
+
+                /* Prevent the banner from appearing on language selection */
+                body > .goog-te-banner-frame {
+                    display: none !important;
+                }
+
+                /* Ensure the main body doesn't shift */
+                body {
+                    top: 0 !important;
+                }
+            `}</style>
+
+            {/* Google Translate widget container */}
             <div id="google_translate_element"></div>
-           
         </div>
     );
 };
