@@ -283,7 +283,7 @@ align-items: center;
 const EmbedWrapper = styled.div`
 width: 100%;
 height: 100%;
-overflow: auto; // Ensure scrolling within the embed area
+overflow: hidden; // Ensure scrolling within the embed area
 `;
 
 
@@ -454,6 +454,7 @@ export default function OrderDetails({ params }: IDParams) {
                   type="application/pdf"
                   width="100%"
                   height="100%"
+                  style={{overflow: "hidden"}}
                   title={`Invoice PDF ${params.id}`}
                 />
               </EmbedWrapper>
