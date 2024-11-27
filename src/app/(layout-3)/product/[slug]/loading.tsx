@@ -7,9 +7,9 @@ const LoaderWrapper = styled.div`
   align-items: center;
 `;
 export default function Loading() {
-  return (
+  return
     <LoaderWrapper>
       <Vortex />
     </LoaderWrapper>
-  );
+ ;
 }
