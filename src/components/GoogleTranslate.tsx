@@ -23,7 +23,9 @@ const GoogleTranslate = () => {
             window.googleTranslateElementInit = function () {
                 if (window.google && window.google.translate) {
                     new window.google.translate.TranslateElement(
-                        { pageLanguage: "en" },
+                        { 
+                            pageLanguage: "",
+                        },
                         "google_translate_element"
                     );
                 }
