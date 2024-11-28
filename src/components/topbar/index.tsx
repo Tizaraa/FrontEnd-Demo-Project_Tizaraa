@@ -76,7 +76,7 @@ export default function Topbar() {
   </a>
 
   <FlexBox alignItems="center" ml="20px">
-    <a href="email:tizaraabd2023@gmail.com" style={{ textDecoration: 'none', color: 'inherit' }}>
+    <a href="mailto:tizaraabd2023@gmail.com" style={{ textDecoration: 'none', color: 'inherit' }}>
       <FlexBox alignItems="center">
         <Icon size="14px">mail</Icon>
         <span>tizaraabd2023@gmail.com</span>

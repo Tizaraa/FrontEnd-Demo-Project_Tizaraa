@@ -94,12 +94,19 @@ export default function Footer1() {
                   House No: 15A, Road: 35, Gulshan 2, Dhaka 1212, Bangladesh
                 </Typography>
 
+
                 <Typography py="0.3rem" color="gray.500">
+                  <a href="mailto:tizaraabd2023@gmail.com" style={{ textDecoration: 'none', color: 'inherit' }}>
                   Email: tizaraabd2023@gmail.com
+                  </a>
+                 
                 </Typography>
 
                 <Typography py="0.3rem" mb="1rem" color="gray.500">
+                  <a href="tel:+8801792223444" style={{ textDecoration: 'none', color: 'inherit' }}>
                   Phone: +8801792223444
+                  </a>
+                 
                 </Typography>
 
                 <FlexBox className="flex" mx="-5px">
