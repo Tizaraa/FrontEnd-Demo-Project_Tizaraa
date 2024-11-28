@@ -712,6 +712,12 @@ export default function SearchInputWithCategory() {
     }
   };
 
+  const handleSearchAction = () => {
+    if (searchValue.trim() !== "") {
+      router.push(`/product/search/${searchValue.trim()}`);
+    }
+  };
+
   const handleDocumentClick = () => setResultList([]);
 
 
@@ -738,27 +744,17 @@ export default function SearchInputWithCategory() {
   return (
     <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
       <StyledSearchBox>
-        <Icon className="search-icon" size="18px">search</Icon>
+     
         <TextField
           fullwidth
           value={searchValue} 
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
           className="search-field"
-          placeholder="Search and hit enter..."
+          placeholder="Search by name and hit enter..."
         />
-        {/* <Menu direction="right" className="category-dropdown" handler={
-          <FlexBox className="dropdown-handler" alignItems="center">
-            <span>{category}</span>
-            <Icon variant="small">chevron-down</Icon>
-          </FlexBox>
-        }>
-          {categories.map((item) => (
-            <MenuItem key={item.id} onClick={handleCategoryChange(item.title)}>
-              {item.title}
-            </MenuItem>
-          ))}
-        </Menu> */}
+          
+          <Icon onClick={handleSearchAction} className="search-icon" size="18px">search</Icon>
       </StyledSearchBox>
 
       {!!resultList.length && (

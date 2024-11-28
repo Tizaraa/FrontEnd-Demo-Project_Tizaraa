@@ -8,14 +8,23 @@ const StyledSearchBox = styled.div`
 
   .search-icon {
     position: absolute;
-    color: ${getTheme("colors.text.hint")};
-    left: 1rem;
+    color: white;
+    right: 0.5rem;
     z-index: 1;
+    background-color: #E94560;
+    width: 60px;
+    height: 30px;
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 300px;
+    
   }
 
   .search-field {
     flex: 1 1 0;
-    padding-left: 3rem;
+    padding-left: 1rem;
     padding-right: 11.5rem;
     height: 44px;
     border-radius: 300px;
@@ -52,7 +61,7 @@ const StyledSearchBox = styled.div`
       display: none;
     }
     .search-icon {
-      left: 1rem;
+      right: 1rem;
     }
     .search-field {
       height: 40px;

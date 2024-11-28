@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.2.2",
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
-    "@mui/material": "^6.1.5",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
+    "@mui/material": "^6.1.9",
     "@next-tools/dynamic": "^0.0.11",
     "@nextui-org/react": "^2.4.8",
     "@nextui-org/table": "^2.0.40",
