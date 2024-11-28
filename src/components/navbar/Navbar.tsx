@@ -170,6 +170,9 @@ import StyledNavbar from "./styles";
 import navbarNavigations from "@data/navbarNavigations";
 import { FaUser } from "react-icons/fa";
 import { FaLocationPin } from "react-icons/fa6";
+import { usePathname } from "next/navigation";
+
+
 
 // ==============================================================
 
@@ -183,9 +186,14 @@ interface Nav {
 
 type NavbarProps = { navListOpen?: boolean };
 
+
 // ==============================================================
 
 export default function Navbar({ navListOpen }: NavbarProps) {
+  const pathname = usePathname(); // Get the current path using usePathname()
+
+  // Check if the current path is "/location"
+  const isLocationPage = pathname === "/location";
   
   const renderNestedNav = (list: Nav[], isRoot = false) => {
     return list?.map((nav: Nav) => {
@@ -295,56 +303,59 @@ export default function Navbar({ navListOpen }: NavbarProps) {
 
   return (
     <StyledNavbar>
-      <Container height="100%" display="flex" alignItems="center" justifyContent="space-between">
-        <Categories open={navListOpen}>
-          <Button width="278px" height="40px" bg="body.default" variant="text">
-            <Icon>categories</Icon>
-            <Typography ml="10px" flex="1 1 0" fontWeight="600" textAlign="left" color="text.muted">
-              Categories
-            </Typography>
-            <Icon className="dropdown-icon" variant="small">
-              chevron-right
-            </Icon>
-          </Button>
-        </Categories>
+    <Container height="100%" display="flex" alignItems="center" justifyContent="space-between">
+      <FlexBox style={{ gap: "32px", display: "flex", alignItems: "center", flexGrow: 1 }}>
+        {/* Render Categories only if the current page is not '/location' */}
+        {!isLocationPage && (
+          <Categories open={navListOpen}>
+            <Button width="278px" height="40px" bg="body.default" variant="text">
+              <Icon>categories</Icon>
+              <Typography ml="10px" flex="1 1 0" fontWeight="600" textAlign="left" color="text.muted">
+                Categories
+              </Typography>
+              <Icon className="dropdown-icon" variant="small">
+                chevron-right
+              </Icon>
+            </Button>
+          </Categories>
+        )}
+      </FlexBox>
 
-        <FlexBox style={{ gap: "32px", display: "flex", alignItems: "center" }}>
-          {navbarNavigations.map((navItem) => (
-            <NavLink
-              key={navItem.title}
-              href={navItem.url}
-              target={navItem.extLink ? "_blank" : undefined}
-              rel={navItem.extLink ? "noopener noreferrer" : undefined}
-              style={{ textDecoration: "none" }} // Removing underline from links
+      <FlexBox style={{ display: "flex", alignItems: "center" }}>
+        {navbarNavigations.map((navItem) => (
+          <NavLink
+            key={navItem.title}
+            href={navItem.url}
+            target={navItem.extLink ? "_blank" : undefined}
+            rel={navItem.extLink ? "noopener noreferrer" : undefined}
+            style={{ textDecoration: "none" }}
+          >
+            <Button
+              style={{
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "#E94560",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                transition: "background-color 0.3s",
+                color: "white",
+                minWidth: "150px",
+                marginLeft: "15px"
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#E94560")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#E94560")}
             >
-              <Button
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  backgroundColor: "#E94560",
-                  border: "none",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  transition: "background-color 0.3s",
-                  color: "white",
-                  minWidth: "150px", // Ensuring a minimum width for buttons
-                }}
-                onMouseEnter={(e) => {(e.currentTarget.style.backgroundColor = "#E94560");}}
-                onMouseLeave={(e) => {(e.currentTarget.style.backgroundColor = "#E94560");}}
-              >
-                {/* Wrapping the Icon with a span for margin control */}
-                <div style={{ marginRight: "8px" }}>
-                {navItem.title === "Become A Seller" ? (<FaUser />) : <FaLocationPin />}
-
-                </div>
-                <Typography style={{ fontWeight: "500" }}>{navItem.title}</Typography>
-              </Button>
-            </NavLink>
-          ))}
-        </FlexBox>
-      </Container>
-    </StyledNavbar>
+              <div style={{ marginRight: "8px" }}>
+                {navItem.title === "Become A Seller" ? <FaUser /> : <FaLocationPin />}
+              </div>
+              <Typography style={{ fontWeight: "500" }}>{navItem.title}</Typography>
+            </Button>
+          </NavLink>
+        ))}
+      </FlexBox>
+    </Container>
+  </StyledNavbar>
   );
 }
 
