@@ -56,7 +56,7 @@ export default function Topbar() {
               />
             </a>
           </div>
-
+{/* 
           <FlexBox alignItems="center">
             <Icon size="14px">phone-call</Icon>
             <span>+8801792223444</span>
@@ -65,7 +65,26 @@ export default function Topbar() {
           <FlexBox alignItems="center" ml="20px">
             <Icon size="14px">mail</Icon>
             <span>tizaraabd2023@gmail.com</span>
-          </FlexBox>
+          </FlexBox> */}
+
+<FlexBox alignItems="center">
+  <a href="tel:+8801792223444" style={{ textDecoration: 'none', color: 'inherit' }}>
+    <FlexBox alignItems="center">
+      <Icon size="14px">phone-call</Icon>
+      <span>+8801792223444</span>
+    </FlexBox>
+  </a>
+
+  <FlexBox alignItems="center" ml="20px">
+    <a href="email:tizaraabd2023@gmail.com" style={{ textDecoration: 'none', color: 'inherit' }}>
+      <FlexBox alignItems="center">
+        <Icon size="14px">mail</Icon>
+        <span>tizaraabd2023@gmail.com</span>
+      </FlexBox>
+    </a>
+  </FlexBox>
+</FlexBox>
+
         </FlexBox>
 
         <FlexBox className="topbar-right" alignItems="center">
