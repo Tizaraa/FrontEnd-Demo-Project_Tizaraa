@@ -237,7 +237,7 @@ export default function OrderList() {
   
     if (status === "success" && message) {
       toast.success(decodeURIComponent(message));
-    } else if (status === "error" && message) {
+    } else if (status === "fail" && message) {
       toast.error(decodeURIComponent(message));
     }
   }, []);

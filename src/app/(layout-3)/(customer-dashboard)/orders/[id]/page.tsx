@@ -531,6 +531,16 @@ export default function OrderDetails({ params }: IDParams) {
                 {order.Order.delivery_type}
               </H6>
             </FlexBox>
+            <FlexBox
+              // justifyContent="space-between"
+              alignItems="center"
+              mb="1rem"
+            >
+              Payment Status:
+              <H6 my="0px" mx="1rem">
+                {order.Order.payment_status}
+              </H6>
+            </FlexBox>
           </Card>
         </Grid>
       </Grid>
