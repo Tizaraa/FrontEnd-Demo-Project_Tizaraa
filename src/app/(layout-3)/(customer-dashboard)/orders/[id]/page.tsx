@@ -295,6 +295,8 @@ export default function OrderDetails({ params }: IDParams) {
   const [pdfUrl, setPdfUrl] = useState(null); // State to hold the PDF URL
   const [invoiceLoading, setInvoiceLoading] = useState(false); // Loading state for invoice
   const [invoiceError, setInvoiceError] = useState(""); // Error message for invoice
+  const [onlinePaymentError, setOnlinePaymentError] = useState("");
+  const [onlinePaymentLoading, setOnlinePaymentLoading] = useState(false);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -308,6 +310,7 @@ export default function OrderDetails({ params }: IDParams) {
             },
           }
         );
+        console.log("nazim data",response)
         setOrder(response.data);
         setStatus(response.data.Order.status);
         setEstimateDate(response.data.Order.deliveredAt);
@@ -350,6 +353,40 @@ export default function OrderDetails({ params }: IDParams) {
       setInvoiceError("Failed to load invoice. Please try again."); // Set error message for user
     } finally {
       setInvoiceLoading(false); // Stop loading state
+    }
+  };
+
+  const handleOnlinePayment = async () => {
+    setOnlinePaymentLoading(true);
+    setOnlinePaymentError("");
+    const authToken = localStorage.getItem("token");
+    if (!authToken) {
+      setOnlinePaymentError("Authentication token not found. Please log in.");
+      setOnlinePaymentLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `https://frontend.tizaraa.com/api/pay-via-ajax`,
+        { tran_id: params.id },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (response.data.payment_status === "paid") {
+        const updatedOrder = { ...order };
+        updatedOrder.Order.payment_status = "paid";
+        setOrder(updatedOrder);
+      }
+    } catch (error) {
+      console.error("Error processing payment:", error);
+      setOnlinePaymentError("Failed to process payment. Please try again.");
+    } finally {
+      setOnlinePaymentLoading(false);
     }
   };
 
@@ -433,6 +470,7 @@ export default function OrderDetails({ params }: IDParams) {
             </Paragraph>
           </Card>
 
+          <div style={{display: "flex", gap:"20px"}}>
           <Button
             px="2rem"
             color="primary"
@@ -442,6 +480,19 @@ export default function OrderDetails({ params }: IDParams) {
           >
             Invoice
           </Button>
+          {order.Order.payment_status === "Unpaid" && (
+              <Button
+                px="2rem"
+                color="primary"
+                bg="primary.light"
+                mt="2rem"
+                onClick={handleOnlinePayment}
+                disabled={onlinePaymentLoading}
+              >
+                {onlinePaymentLoading ? "Processing..." : "Online Payment"}
+              </Button>
+            )}
+          </div>
 
           {/* Invoice Display */}
           {invoiceLoading && <Typography>Loading Invoice...</Typography>}
