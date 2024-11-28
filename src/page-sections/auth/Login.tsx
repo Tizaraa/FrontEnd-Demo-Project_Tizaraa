@@ -21,6 +21,7 @@ import { H3, H5, H6, SemiSpan, Small, Span } from "@component/Typography";
 import { StyledRoot } from "./styles"; // Import your styled components
 import authService from "services/authService";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import CommonHeader from "@component/header/CommonHeader";
 
 export default function Login() {
   const { state, dispatch } = useAppContext(); // Accessing app context for auth
@@ -96,6 +97,8 @@ export default function Login() {
   });
 
   return (
+   <>
+   <CommonHeader></CommonHeader>
     <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
       <form className="content" onSubmit={handleSubmit}>
         <H3 textAlign="center" mb="0.5rem">
@@ -212,6 +215,6 @@ export default function Login() {
           </H6>
         </Link>
       </FlexBox>
-    </StyledRoot>
+    </StyledRoot></>
   );
 }

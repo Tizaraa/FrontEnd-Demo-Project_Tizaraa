@@ -22,6 +22,7 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 
 // STYLED COMPONENT
 import { StyledRoot } from "./styles";
+import CommonHeader from "@component/header/CommonHeader";
 
 export default function Signup() {
   const router = useRouter();
@@ -131,7 +132,9 @@ export default function Signup() {
     });
 
   return (
-    <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
+    <>
+    <CommonHeader></CommonHeader>
+        <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
       <form className="content" onSubmit={handleSubmit}>
         <H3 textAlign="center" mb="0.5rem">
           Create Your Account
@@ -283,5 +286,7 @@ export default function Signup() {
         </Link>
       </FlexBox>
     </StyledRoot>
+    </>
+
   );
 }
