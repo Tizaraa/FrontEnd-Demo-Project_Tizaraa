@@ -7,6 +7,8 @@ import ProductIntro from "@component/products/ProductIntro";
 import ProductView from "@component/products/ProductView";
 import RelatedProducts from "@component/products/RelatedProducts";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import { SemiSpan } from "@component/Typography";
+import FlexBox from "@component/FlexBox";
 
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
@@ -354,9 +356,9 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
       // <div style={{ padding: '20px', textAlign: 'center' }}>
       //   Product not found or there was an error loading the product.
       // </div>
-      <LoaderWrapper>
-        <Vortex />
-      </LoaderWrapper>
+      <FlexBox justifyContent="center" alignItems="center" width="100%">
+            <SemiSpan>No products found.</SemiSpan>
+          </FlexBox>
     );
   }
 

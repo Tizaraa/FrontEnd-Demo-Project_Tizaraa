@@ -61,12 +61,18 @@ export default function InvoicePage({ params }) {
     <>
       {/* <h1>Hello, Invoice ID: {id}</h1> */}
       {pdfUrl && (
-        <iframe
-          src={pdfUrl}
-          style={{ width: '100%', height: '600px' }} // Adjust height as necessary
-          frameBorder="0"
-          title={`Invoice PDF ${id}`}
-        ></iframe>
+        // <iframe
+        //   src={pdfUrl}
+        //   style={{ width: '100%', height: '600px' }} // Adjust height as necessary
+        //   frameBorder="0"
+        //   title={`Invoice PDF ${id}`}
+        // ></iframe>
+        <embed
+                  src={pdfUrl}
+                  type="application/pdf"
+                  style={{ width: '100%', height: '600px' }}
+                  title={`Invoice PDF ${params.id}`}
+                />
       )}
     </>
   );

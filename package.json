@@ -16,6 +16,7 @@
     "@next-tools/dynamic": "^0.0.11",
     "@nextui-org/react": "^2.4.8",
     "@nextui-org/table": "^2.0.40",
+    "@react-pdf-viewer/core": "^3.12.0",
     "@styled-system/theme-get": "^5.1.2",
     "axios": "^1.7.7",
     "axios-mock-adapter": "^1.22.0",

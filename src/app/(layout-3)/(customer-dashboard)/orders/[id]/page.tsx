@@ -28,7 +28,6 @@
 // import Box from "@component/Box";
 // import { useRouter } from "next/navigation";
 
-
 // const LoaderWrapper = styled.div`
 //   display: flex;
 //   justify-content: center;
@@ -39,8 +38,8 @@
 //   const { push } = useRouter();
 //   const [order, setOrder] = useState(null);
 //   const [loading, setLoading] = useState(true); // For loading state
-//   const [getStatus, setStatus] = useState(null); 
-//   const [getEstimateDate, setEstimateDate] = useState(null); 
+//   const [getStatus, setStatus] = useState(null);
+//   const [getEstimateDate, setEstimateDate] = useState(null);
 
 //   useEffect(() => {
 //     const fetchOrder = async () => {
@@ -58,7 +57,7 @@
 //         console.log("Fetched Order Data:", response.data);
 //         setStatus(response.data.Order.status);
 //         setEstimateDate(response.data.Order.deliveredAt)
-        
+
 //       } catch (error) {
 //         console.error("Error fetching order details:", error);
 //       } finally {
@@ -90,7 +89,6 @@
 //   iconName="bag_filled"
 //   button={<OrderListButton params={params} />}
 // />
-
 
 //       {/* <OrderStatus /> */}
 
@@ -157,8 +155,8 @@
 //         color="primary"
 //         bg="primary.light"
 //         mt="2rem"
-//         onClick={() => push(`/invoice/${params.id}`)} 
-        
+//         onClick={() => push(`/invoice/${params.id}`)}
+
 //       >
 //         Invoice
 //       </Button>
@@ -230,8 +228,6 @@
 //   );
 // }
 
-
-
 "use client";
 import { Fragment, useEffect, useState } from "react";
 import { format } from "date-fns";
@@ -246,7 +242,11 @@ import TableRow from "@component/TableRow";
 import Typography, { H5, H6, Paragraph } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import { OrderStatus, WriteReview, OrderListButton } from "@sections/customer-dashboard/orders";
+import {
+  OrderStatus,
+  WriteReview,
+  OrderListButton,
+} from "@sections/customer-dashboard/orders";
 import { IDParams } from "interfaces";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
@@ -258,21 +258,43 @@ const LoaderWrapper = styled.div`
   align-items: center;
 `;
 
+// const InvoiceWrapper = styled.div`
+//   margin-top: 20px;
+//   height: 400px; // Set height as needed
+//   overflow: auto; // Enable scrolling if needed
+//   border: 1px solid #ccc; // Optional styling for the invoice
+// `;
+
 const InvoiceWrapper = styled.div`
-  margin-top: 20px;
-  height: 600px; // Set height as needed
-  overflow: auto; // Enable scrolling if needed
-  border: 1px solid #ccc; // Optional styling for the invoice
+margin-top: 20px;
+height: 80vh; // Use 80% of the viewport height for responsiveness
+width: 100%; // Take full width
+overflow: hidden; // Prevent scrollbars on the wrapper itself
+border: 1px solid #ccc; // Optional border styling
+display: flex; // Align content in the center
+justify-content: center;
+align-items: center;
+
+@media (min-width: 1024px) {
+  height: 90vh; // Adjust height for larger screens
+}
 `;
+
+const EmbedWrapper = styled.div`
+width: 100%;
+height: 100%;
+overflow: hidden; // Ensure scrolling within the embed area
+`;
+
 
 export default function OrderDetails({ params }: IDParams) {
   const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(true); 
-  const [getStatus, setStatus] = useState(null); 
-  const [getEstimateDate, setEstimateDate] = useState(null); 
+  const [loading, setLoading] = useState(true);
+  const [getStatus, setStatus] = useState(null);
+  const [getEstimateDate, setEstimateDate] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null); // State to hold the PDF URL
   const [invoiceLoading, setInvoiceLoading] = useState(false); // Loading state for invoice
-  const [invoiceError, setInvoiceError] = useState(''); // Error message for invoice
+  const [invoiceError, setInvoiceError] = useState(""); // Error message for invoice
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -301,7 +323,7 @@ export default function OrderDetails({ params }: IDParams) {
 
   const fetchInvoice = async () => {
     setInvoiceLoading(true); // Start loading state for invoice
-    setInvoiceError(''); // Reset any previous errors
+    setInvoiceError(""); // Reset any previous errors
     const authToken = localStorage.getItem("token");
     if (!authToken) {
       setInvoiceError("Authentication token not found. Please log in."); // Handle missing token
@@ -310,17 +332,22 @@ export default function OrderDetails({ params }: IDParams) {
     }
 
     try {
-      const response = await axios.get(`https://frontend.tizaraa.com/api/get-invoice?id=${params.id}`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-        responseType: 'blob', // Set response type to blob for binary data
-      });
+      const response = await axios.get(
+        `https://frontend.tizaraa.com/api/get-invoice?id=${params.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          responseType: "blob", // Set response type to blob for binary data
+        }
+      );
       const pdfBlobUrl = URL.createObjectURL(response.data);
+      console.log("ifty", pdfBlobUrl);
+
       setPdfUrl(pdfBlobUrl);
     } catch (error) {
       console.error("Error fetching invoice data:", error);
-      setInvoiceError('Failed to load invoice. Please try again.'); // Set error message for user
+      setInvoiceError("Failed to load invoice. Please try again."); // Set error message for user
     } finally {
       setInvoiceLoading(false); // Stop loading state
     }
@@ -333,11 +360,11 @@ export default function OrderDetails({ params }: IDParams) {
           <Vortex />
         </LoaderWrapper>
       </Typography>
-    ); 
+    );
   }
 
   if (!order) {
-    return <Typography color="red">Failed to fetch order details</Typography>; 
+    return <Typography color="red">Failed to fetch order details</Typography>;
   }
 
   return (
@@ -421,12 +448,16 @@ export default function OrderDetails({ params }: IDParams) {
           {invoiceError && <Typography color="red">{invoiceError}</Typography>}
           {pdfUrl && (
             <InvoiceWrapper>
-              <iframe
-                src={pdfUrl}
-                style={{ width: '100%', height: '100%' }}
-                frameBorder="0"
-                title={`Invoice PDF ${params.id}`}
-              ></iframe>
+              <EmbedWrapper>
+                <embed
+                  src={pdfUrl}
+                  type="application/pdf"
+                  width="100%"
+                  height="100%"
+                  style={{overflow: "hidden"}}
+                  title={`Invoice PDF ${params.id}`}
+                />
+              </EmbedWrapper>
             </InvoiceWrapper>
           )}
         </Grid>
@@ -497,7 +528,7 @@ export default function OrderDetails({ params }: IDParams) {
             >
               Payment Method:
               <H6 my="0px" mx="1rem">
-              {order.Order.delivery_type}
+                {order.Order.delivery_type}
               </H6>
             </FlexBox>
           </Card>
