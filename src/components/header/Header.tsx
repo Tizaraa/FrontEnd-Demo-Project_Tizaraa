@@ -25,6 +25,7 @@ import MenuItem from "@component/MenuItem";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import Tooltip from "@mui/material/Tooltip";
 
 // ====================================================================
 type HeaderProps = { isFixed?: boolean; className?: string };
@@ -44,9 +45,11 @@ export default function Header({ isFixed, className }: HeaderProps) {
 
   const CART_HANDLE = (
     <Box ml="20px" position="relative">
+      <Tooltip title="Cart">
       <IconButton bg="gray.200" p="12px" size="small">
         <Icon size="20px">bag</Icon>
       </IconButton>
+      </Tooltip>
 
       {!!state.cart.length && (
         <FlexBox
@@ -92,9 +95,11 @@ export default function Header({ isFixed, className }: HeaderProps) {
     <Fragment>
       
       <Menu handler={
-        <IconButton ml="1rem" bg="gray.200" p="8px">
+        <Tooltip title="User">
+          <IconButton ml="1rem" bg="gray.200" p="8px">
           <Icon size="28px">user</Icon>
         </IconButton>
+        </Tooltip>
       }>
         <MenuItem onClick={() => {
           handleMenuClose();

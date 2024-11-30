@@ -363,7 +363,7 @@ export default function PaymentForm() {
     console.log("Cart Items:", cart);
     console.log("Product Type:", productType);
     console.log("Selected payment method:", paymentMethod);
-    if (paymentMethod === "mb") {
+    if (paymentMethod === "Online Payment") {
       // const authtoken = localStorage.getItem("token");
       // const getData = localStorage.getItem("userInfo");
       // const userinfo = JSON.parse(getData || "{}");
@@ -477,6 +477,7 @@ export default function PaymentForm() {
         if (redirectUrl) {
           //const searchParams = useSearchParams();
           window.location.href = redirectUrl;
+          localStorage.setItem("redirectUrl", redirectUrl);
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
         }
@@ -623,7 +624,7 @@ export default function PaymentForm() {
           color="secondary"
           name="mb"
           onChange={handlePaymentMethodChange}
-          checked={paymentMethod === "mb"}
+          checked={paymentMethod === "Online Payment"}
           label={
             <Typography ml="6px" fontWeight="600" fontSize="18px">
               Online Payment
