@@ -763,16 +763,22 @@ export default function OrderDetails({ params }: IDParams) {
         }
       );
 
-      if (paymentResponse.data.payment_status === "paid") {
-        const updatedOrder = { ...order };
-        updatedOrder.Order.payment_status = "paid";
-        setOrder(updatedOrder);
-      }
+      console.log("fg",paymentResponse);
+      console.log("fghhh",paymentResponse.data.redirect_url);
+      const redirectUrl = paymentResponse.data.redirect_url;
+        window.location.href = redirectUrl;
+      
 
-      if (paymentResponse.data.payment_status === "Unpaid") {
-        const redirectUrl = paymentResponse.data.redirect_url;
-        window.location.href = redirectUrl; // Redirect to the payment URL
-      }
+      // if (paymentResponse.data.payment_status === "Paid") {
+      //   const updatedOrder = { ...order };
+      //   updatedOrder.Order.payment_status = "Paid";
+      //   setOrder(updatedOrder);
+      // }
+
+      // if (paymentResponse.data.payment_status === "Unpaid") {
+      //   const redirectUrl = paymentResponse.data.redirect_url;
+      //   window.location.href = redirectUrl; // Redirect to the payment URL
+      // }
     } catch (error) {
       console.error("Error processing payment:", error);
       setOnlinePaymentError("Failed to process payment. Please try again.");
