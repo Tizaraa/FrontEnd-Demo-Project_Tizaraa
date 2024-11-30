@@ -769,8 +769,10 @@ export default function OrderDetails({ params }: IDParams) {
         window.location.href = redirectUrl;
       
 
-      if (paymentResponse.data.payment_status === "Paid") {
-        const updatedOrder = { ...order };
+      if (paymentResponse.data.payment_status === "Unpaid") {
+        const updatedOrder = orderResponse.data;
+        console.log("frrrr",updatedOrder);
+        
         updatedOrder.Order.payment_status = "Paid";
         setOrder(updatedOrder);
       }
