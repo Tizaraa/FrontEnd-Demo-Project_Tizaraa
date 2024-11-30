@@ -769,11 +769,11 @@ export default function OrderDetails({ params }: IDParams) {
         window.location.href = redirectUrl;
       
 
-      // if (paymentResponse.data.payment_status === "Paid") {
-      //   const updatedOrder = { ...order };
-      //   updatedOrder.Order.payment_status = "Paid";
-      //   setOrder(updatedOrder);
-      // }
+      if (paymentResponse.data.payment_status === "Paid") {
+        const updatedOrder = { ...order };
+        updatedOrder.Order.payment_status = "Paid";
+        setOrder(updatedOrder);
+      }
 
       // if (paymentResponse.data.payment_status === "Unpaid") {
       //   const redirectUrl = paymentResponse.data.redirect_url;

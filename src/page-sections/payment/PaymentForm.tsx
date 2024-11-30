@@ -622,7 +622,7 @@ export default function PaymentForm() {
         <CheckBox
           mb="1.5rem"
           color="secondary"
-          name="mb"
+          name="Online Payment"
           onChange={handlePaymentMethodChange}
           checked={paymentMethod === "Online Payment"}
           label={
