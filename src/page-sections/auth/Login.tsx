@@ -265,7 +265,7 @@ export default function Login() {
 
   return (
    <>
-   <CommonHeader></CommonHeader>
+   {/* <CommonHeader></CommonHeader> */}
     <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
       <form className="content" onSubmit={handleSubmit}>
         <H3 textAlign="center" mb="0.5rem">
