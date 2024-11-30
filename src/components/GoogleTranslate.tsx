@@ -1,7 +1,8 @@
-"use client";
-import { useEffect } from "react";
 
-// Extend the Window interface to include google and googleTranslateElementInit
+"use client";
+import { useEffect, useState } from "react";
+import FlexBox from "./FlexBox";
+
 declare global {
     interface Window {
         google?: {
@@ -17,14 +18,16 @@ declare global {
 }
 
 const GoogleTranslate = () => {
+    const [selectedLanguage, setSelectedLanguage] = useState<string>("");
+
     useEffect(() => {
         const addScript = () => {
             // Define the initialization function
             window.googleTranslateElementInit = function () {
                 if (window.google && window.google.translate) {
                     new window.google.translate.TranslateElement(
-                        { 
-                            pageLanguage: "",
+                        {
+                            pageLanguage: "", 
                         },
                         "google_translate_element"
                     );
@@ -54,11 +57,94 @@ const GoogleTranslate = () => {
         };
     }, []);
 
+    useEffect(() => {
+        // Function to update the selected language name
+        const updateSelectedLanguage = () => {
+            const languageElement = document.querySelector('.goog-te-combo');
+            if (languageElement) {
+                const languageCode = languageElement['value']; // Get the selected language code
+                let languageName = 'English'; // Default language
+
+               
+                setSelectedLanguage(languageName); // Update the selected language state
+            }
+        };
+
+        // Poll for changes every 500ms to check the selected language
+        const interval = setInterval(updateSelectedLanguage, 500);
+
+        // Clean up the interval when the component unmounts
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
     return (
-        <div>
-            {/* Add global CSS to hide unwanted parts */}
+        <>
+            <FlexBox alignItems="center" ml="20px">
+                <FlexBox alignItems="center" className="language-container">
+                    <span>{selectedLanguage}</span> 
+                    <div id="google_translate_element" className="google-translate-dropdown" />
+                </FlexBox>
+            </FlexBox>
+
             <style jsx global>{`
-                /* Hide the Google Translate branding and other elements */
+                /* Container for the Language text */
+                .language-container {
+                    position: relative;
+                    display: inline-block;
+                    cursor: pointer;
+                }
+
+                /* Google Translate dropdown hidden by default */
+                .goog-te-gadget {
+                    display: none !important;
+                    position: absolute;
+                    top: 20px; /* Adjust the dropdown position */
+                    left: -80px;
+                    background-color: white;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                    z-index: 10;
+                }
+
+                /* Show the dropdown when hovering over the container or dropdown */
+                .language-container:hover .goog-te-gadget,
+                .goog-te-gadget:hover {
+                    display: block !important;
+                }
+
+                /* Adjust dropdown styles */
+                .goog-te-combo {
+                    font-size: 16px;
+                    color: #000 !important; /* Dropdown text color */
+                    border: 1px solid #ccc; /* Add border */
+                    border-radius: 4px;
+                    padding: 5px;
+                }
+
+               /* Hide the Google Translate branding and other elements */
+                .goog-logo-link, 
+                .goog-te-banner-frame, 
+                #goog-gt-tt, 
+                .goog-te-balloon-frame, 
+                .goog-te-gadget span,
+                iframe {
+                    display: none !important;
+                }
+
+                /* Prevent the banner from appearing on language selection */
+                body > .goog-te-banner-frame {
+                    display: none !important;
+                }
+
+                /* Ensure the main body doesn't shift */
+                body {
+                    top: 0 !important;
+                }
+
+                    /* Hide the Google Translate branding and other elements */
                 .goog-logo-link, 
                 .goog-te-banner-frame, 
                 #goog-gt-tt, 
@@ -98,10 +184,7 @@ const GoogleTranslate = () => {
                     top: 0 !important;
                 }
             `}</style>
-
-            {/* Google Translate widget container */}
-            <div id="google_translate_element"></div>
-        </div>
+        </>
     );
 };
 
