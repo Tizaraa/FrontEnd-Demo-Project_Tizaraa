@@ -264,13 +264,13 @@ export default function Login() {
     });
 
   return (
-    <>
-      <CommonHeader></CommonHeader>
-      <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
-        <form className="content" onSubmit={handleSubmit}>
-          <H3 textAlign="center" mb="0.5rem">
-            Welcome To Ecommerce
-          </H3>
+   <>
+   {/* <CommonHeader></CommonHeader> */}
+    <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
+      <form className="content" onSubmit={handleSubmit}>
+        <H3 textAlign="center" mb="0.5rem">
+          Welcome To Ecommerce
+        </H3>
 
           <H5
             fontWeight="600"
