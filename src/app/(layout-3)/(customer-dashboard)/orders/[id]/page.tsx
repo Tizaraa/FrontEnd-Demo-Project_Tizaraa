@@ -751,10 +751,11 @@ export default function OrderDetails({ params }: IDParams) {
           delivery_charge: orderData.delivery_charge,
           cus_add1: orderData.address,
           currency: orderData.currency,
-          total_amount: orderData.totalPrice,
+          total_amount: orderData.amount,
           productType: orderData.productType,
-          payment_type: "mb", // Assuming "mb" is a predefined value for the payment method
+          payment_type: "Online Payment", // Assuming "mb" is a predefined value for the payment method
           payment_method: orderData.payment_method,
+          invoice_id: orderData.invoice
         },
         {
           headers: {
@@ -768,7 +769,7 @@ export default function OrderDetails({ params }: IDParams) {
       const updatedOrder = orderResponse.data;
       console.log("frrrr",updatedOrder);
       const redirectUrl = paymentResponse.data.redirect_url;
-        //window.location.href = redirectUrl;
+        window.location.href = redirectUrl;
       
 
       if (paymentResponse.data.payment_status === "Unpaid") {
