@@ -477,6 +477,7 @@ export default function PaymentForm() {
         if (redirectUrl) {
           //const searchParams = useSearchParams();
           window.location.href = redirectUrl;
+          localStorage.setItem("redirectUrl", redirectUrl);
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
         }
