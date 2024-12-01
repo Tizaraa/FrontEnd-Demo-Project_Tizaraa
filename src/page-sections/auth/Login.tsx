@@ -2,7 +2,7 @@
 
 import { useState, useContext } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import useVisibility from "./useVisibility";
@@ -31,6 +31,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const [confirmPassword, setConfirmPassword] = useState("");  // Store confirm password input
   const [isOtpStage, setIsOtpStage] = useState(false); // Track whether we are in OTP input stage
   const [isPasswordStage, setIsPasswordStage] = useState(false); // Track whether we are in password input stage
+
 
   // Handle the email/phone number submission
   const handleEmailOrPhoneSubmit = () => {
@@ -196,6 +197,10 @@ export default function Login() {
   const [apiError, setApiError] = useState<string | null>(null); // State for API errors
   const [isModalOpen, setModalOpen] = useState(false);
 
+  
+  const searchParams = useSearchParams();
+  const fromSignup = searchParams.get("from") === "signup";
+
   const initialValues = { email: "", password: "" };
 
   // Form validation schema
@@ -265,7 +270,7 @@ export default function Login() {
 
   return (
    <>
-   {/* <CommonHeader></CommonHeader> */}
+     {fromSignup && <CommonHeader />}
     <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
       <form className="content" onSubmit={handleSubmit}>
         <H3 textAlign="center" mb="0.5rem">
