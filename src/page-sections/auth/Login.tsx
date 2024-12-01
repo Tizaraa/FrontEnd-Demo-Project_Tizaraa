@@ -127,26 +127,12 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       }
     } catch (error) {
       toast.error("Failed to reset password. Please try again.");
-      setIsOtpStage(false);
-      setIsPasswordStage(false);
+      resetModal();
       onClose();
     } finally {
       setLoading(false);
     }
   };
-
-  const resetModalState = () => {
-    setEmailOrPhone("");
-    setOtp("");
-    setNewPassword("");
-    setConfirmPassword("");
-    setIsOtpStage(false);
-    setIsPasswordStage(false);
-  };
-
-  // if (isOpen) {
-  //   resetModalState();
-  // }
 
   if (!isOpen) return null;
 
