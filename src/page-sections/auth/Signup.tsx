@@ -277,14 +277,24 @@ export default function Signup() {
         </Button>
       </form>
 
-      <FlexBox justifyContent="center" bg="gray.200" py="19px">
+      {/* <FlexBox justifyContent="center" bg="gray.200" py="19px">
         <SemiSpan>Already have an account?</SemiSpan>
         <Link href="/login">
           <H6 ml="0.5rem" borderBottom="1px solid" borderColor="gray.900">
             Log in
           </H6>
         </Link>
-      </FlexBox>
+      </FlexBox> */}
+
+<FlexBox justifyContent="center" bg="gray.200" py="19px">
+  <SemiSpan>Already have an account?</SemiSpan>
+  <Link href={{ pathname: "/login", query: { from: "signup" } }}>
+    <H6 ml="0.5rem" borderBottom="1px solid" borderColor="gray.900">
+      Log in
+    </H6>
+  </Link>
+</FlexBox>
+
     </StyledRoot>
     </>
 
