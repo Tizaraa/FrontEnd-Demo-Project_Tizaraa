@@ -31,33 +31,66 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const [confirmPassword, setConfirmPassword] = useState("");  // Store confirm password input
   const [isOtpStage, setIsOtpStage] = useState(false); // Track whether we are in OTP input stage
   const [isPasswordStage, setIsPasswordStage] = useState(false); // Track whether we are in password input stage
-
-
+  const [resetToken, setResetToken] = useState("");
+  const { passwordVisibility, togglePasswordVisibility } = useVisibility();  // Store reset token after OTP verification
+  
+  const [loading, setLoading] = useState(false);  // Loading state for the form
+  
   // Handle the email/phone number submission
-  const handleEmailOrPhoneSubmit = () => {
+  const handleEmailOrPhoneSubmit = async () => {
     if (!emailOrPhone) {
       toast.error("Please enter a valid email or phone number");
       return;
     }
-    // Logic for sending OTP (e.g., API request to send OTP)
-    toast.success("OTP sent to your email/phone number!");
-    setIsOtpStage(true);  // Switch to OTP stage
+    setLoading(true);
+    try {
+      // Send request to the forgot password API
+      const response = await axios.post("https://frontend.tizaraa.com/api/forgot-password", {
+        email_or_phone: emailOrPhone,
+      });
+
+      if (response.status === 200) {
+        toast.success("OTP sent to your email/phone number!");
+        setEmailOrPhone("")
+        setIsOtpStage(true);  // Switch to OTP stage
+      }
+    } catch (error) {
+      toast.error("Failed to send OTP. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Handle OTP submission
-  const handleOtpSubmit = () => {
+  const handleOtpSubmit = async () => {
     if (!otp) {
       toast.error("Please enter the OTP");
       return;
     }
-    // Logic for verifying OTP (e.g., API request to verify OTP)
-    toast.success("OTP verified successfully!");
-    setIsPasswordStage(true);  // Switch to password stage
-    setIsOtpStage(false); // Hide OTP input
+    setLoading(true);
+    try {
+      // Send OTP verification request
+      const response = await axios.post("https://frontend.tizaraa.com/api/verify-otp", {
+        email_or_phone: emailOrPhone,
+        otp: otp,
+      });
+
+      if (response.status === 200) {
+        setResetToken(response.data.reset_token);  // Save reset token
+        toast.success("OTP verified successfully!");
+        setOtp("")
+        setIsPasswordStage(true);  // Switch to password stage
+        setIsOtpStage(false); // Hide OTP input
+      }
+    } catch (error) {
+      toast.error("Invalid OTP. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Handle New Password submission
-  const handlePasswordSubmit = () => {
+  const handlePasswordSubmit = async () => {
     if (!newPassword || !confirmPassword) {
       toast.error("Please enter both New Password and Confirm Password");
       return;
@@ -66,9 +99,31 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       toast.error("Passwords do not match");
       return;
     }
-    // Logic for resetting the password (e.g., API request to reset password)
-    toast.success("Password reset successfully!");
-    onClose(); // Close the modal after successful password reset
+    setLoading(true);
+    try {
+      // Send password reset request
+      const response = await axios.post("https://frontend.tizaraa.com/api/reset-password", {
+        email_or_phone: emailOrPhone,
+        password: newPassword,
+        confirm_password: confirmPassword,
+        reset_token: resetToken,
+      });
+
+      if (response.status === 200) {
+        toast.success("Password reset successfully!");
+        setEmailOrPhone("");
+        setOtp("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setIsOtpStage(false);
+        setIsPasswordStage(false);
+        onClose(); // Close the modal after successful password reset
+      }
+    } catch (error) {
+      toast.error("Failed to reset password. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -118,6 +173,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
           // Email/Phone number field
           <TextField
             fullwidth
+            type="email"
             mb="1rem"
             name="emailOrPhone"
             placeholder="Enter your Phone Number or Email"
@@ -144,7 +200,20 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               placeholder="Enter New Password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              type="password"
+              type={passwordVisibility ? "text" : "password"}
+            endAdornment={
+              <IconButton
+                p="0.25rem"
+                mr="0.25rem"
+                type="button"
+                onClick={togglePasswordVisibility}
+                color={passwordVisibility ? "gray.700" : "gray.600"}
+              >
+                <Icon variant="small" defaultcolor="currentColor">
+                  {passwordVisibility ? "eye-alt" : "eye"}
+                </Icon>
+              </IconButton>
+            }
             />
             <TextField
               fullwidth
@@ -153,14 +222,29 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               placeholder="Confirm New Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              type="password"
+              type={passwordVisibility ? "text" : "password"}
+            endAdornment={
+              <IconButton
+                p="0.25rem"
+                mr="0.25rem"
+                type="button"
+                onClick={togglePasswordVisibility}
+                color={passwordVisibility ? "gray.700" : "gray.600"}
+              >
+                <Icon variant="small" defaultcolor="currentColor">
+                  {passwordVisibility ? "eye-alt" : "eye"}
+                </Icon>
+              </IconButton>
+            }
             />
           </>
         )}
 
         {/* Action buttons */}
         <FlexBox justifyContent="flex-end" mt="1rem">
-          <Button
+          {!(!isOtpStage && !isPasswordStage) &&
+            (
+              <Button
             variant="outlined"
             color="secondary"
             onClick={() => {
@@ -175,12 +259,14 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
           >
             Back
           </Button>
+            )
+          }
           <Button
             variant="contained"
             color="primary"
             onClick={!isOtpStage && !isPasswordStage ? handleEmailOrPhoneSubmit : isOtpStage ? handleOtpSubmit : handlePasswordSubmit} // Submit logic based on the stage
           >
-            Confirm
+            {loading ? "Loading..." : "Confirm"}
           </Button>
         </FlexBox>
       </div>
@@ -383,7 +469,7 @@ export default function Login() {
           </FlexBox>
 
           {/* Link to Signup */}
-          <FlexBox justifyContent="center" mb="1.25rem">
+          <FlexBox justifyContent="center" mb="">
             <SemiSpan>Don’t have an account?</SemiSpan>
             <Link href="/signup">
               <H6 ml="0.5rem" borderBottom="1px solid" borderColor="gray.900">
@@ -394,7 +480,7 @@ export default function Login() {
         </form>
 
         {/* Forgot Password */}
-        <FlexBox justifyContent="center" alignItems="center" bg="gray.200" py="19px">
+        <FlexBox justifyContent="center" alignItems="center" bg="#fff" my="0.5rem">
   <SemiSpan>Forgot your password?</SemiSpan>
   <Button
     onClick={() => setModalOpen(true)} // Triggers the modal on click
