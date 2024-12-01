@@ -35,6 +35,15 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const { passwordVisibility, togglePasswordVisibility } = useVisibility();  // Store reset token after OTP verification
   
   const [loading, setLoading] = useState(false);  // Loading state for the form
+
+  const resetModal = () => {
+    setEmailOrPhone("");
+    setOtp("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setIsOtpStage(false);
+    setIsPasswordStage(false);
+  };
   
   // Handle the email/phone number submission
   const handleEmailOrPhoneSubmit = async () => {
@@ -84,6 +93,8 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       }
     } catch (error) {
       toast.error("Invalid OTP. Please try again.");
+      setOtp("")
+      //setIsOtpStage(false);
     } finally {
       setLoading(false);
     }
@@ -111,20 +122,31 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 
       if (response.status === 200) {
         toast.success("Password reset successfully!");
-        setEmailOrPhone("");
-        setOtp("");
-        setNewPassword("");
-        setConfirmPassword("");
-        setIsOtpStage(false);
-        setIsPasswordStage(false);
+        resetModal();
         onClose(); // Close the modal after successful password reset
       }
     } catch (error) {
       toast.error("Failed to reset password. Please try again.");
+      setIsOtpStage(false);
+      setIsPasswordStage(false);
+      onClose();
     } finally {
       setLoading(false);
     }
   };
+
+  const resetModalState = () => {
+    setEmailOrPhone("");
+    setOtp("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setIsOtpStage(false);
+    setIsPasswordStage(false);
+  };
+
+  // if (isOpen) {
+  //   resetModalState();
+  // }
 
   if (!isOpen) return null;
 
@@ -152,7 +174,10 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       }}>
         {/* Close Button */}
         <IconButton
-          onClick={onClose}
+          onClick={() => {
+            resetModal();  // Reset the modal to initial state when closing
+            onClose();  // Close the modal
+          }} // Close the modal
           style={{
             position: "absolute",
             top: "10px",
