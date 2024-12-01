@@ -289,17 +289,34 @@ const GoogleTranslate = () => {
                 }
 
                 /* Google Translate dropdown hidden by default */
-                .goog-te-gadget {
-                    display: none !important;
-                    position: absolute;
-                    top: 20px; /* Adjust the dropdown position */
-                    left: -80px;
-                    background-color: white;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-                    z-index: 10;
-                }
+ .goog-te-gadget {
+    display: none !important;
+    position: absolute;
+    top: 20px; /* Adjust the dropdown position */
+    left: -80px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    padding: 10px;
+}
+
+/* Adding content using the ::before pseudo-element */
+
+/* Adjusting style for the second line */
+.goog-te-gadget::before {
+    content: "Select your preferred language"; 
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+    white-space: pre-wrap;
+    display: block;
+}
+
+
+
+
 
                 /* Show the dropdown when hovering over the container or dropdown */
                 .language-container:hover .goog-te-gadget,
