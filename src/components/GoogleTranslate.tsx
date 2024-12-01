@@ -250,24 +250,23 @@ const GoogleTranslate = () => {
     useEffect(() => {
         // Function to update the selected language and display it in English format
         const updateSelectedLanguage = () => {
-            const languageElement = document.querySelector('.goog-te-combo');
-            if (languageElement) {
-                const languageName = (languageElement as HTMLSelectElement).options[
-                    (languageElement as HTMLSelectElement).selectedIndex
-                ].text; // Get the language name from the dropdown
+            const languageElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+    
+            if (languageElement && languageElement.options.length > 0) {
+                const languageName = languageElement.options[languageElement.selectedIndex]?.text || "Select Language";
                 setSelectedLanguage(languageName); // Update the selected language state with the name
             }
         };
-
+    
         // Poll for changes every 500ms to check the selected language
         const interval = setInterval(updateSelectedLanguage, 500);
-
+    
         // Clean up the interval when the component unmounts
         return () => {
             clearInterval(interval);
         };
     }, []);
-
+    
     return (
         <>
             <FlexBox alignItems="center" ml="20px">
