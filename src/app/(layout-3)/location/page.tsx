@@ -440,6 +440,11 @@ export default function LocationList() {
     });
   };
 
+  // const handleClick = () => {
+  //   alert('Please select "Locate Me"');
+  // };
+  
+
   return (
     <Fragment>
       <div style={{ display: "flex", gap: "10px", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
@@ -449,17 +454,25 @@ export default function LocationList() {
               fullwidth
               value={searchValue}
               className="search-field"
-              placeholder="Search for a product..."
+              placeholder="Street, Postal Code"
+              // onClick={handleClick}
               disabled
+              
             />
             <div
               style={{
-                marginLeft: "-100px",
+                marginLeft: "-110px",
                 zIndex: "999",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 cursor: "pointer",
+                backgroundColor: "#E94560",
+    // width: "100px",
+    // height: "30px",
+    padding: "5px",
+    borderRadius: "300px",
+    color: "white",
               }}
               onClick={getLocation}
             >
