@@ -20,7 +20,7 @@ export default function Section1({ carouselData }: Props) {
         autoPlay={false}
         visibleSlides={1}
         showArrow={false}
-        dotClass="carousel-dot"
+        
         totalSlides={carouselData.length}
         dotColor={theme.colors.marron.main}>
         {carouselData.map((item) => (
