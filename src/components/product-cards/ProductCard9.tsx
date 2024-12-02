@@ -159,14 +159,15 @@ export default function ProductCard9({
             <Icon color="secondary" variant="small" className="quick-view" onClick={toggleDialog}>
               eye-alt
             </Icon>
-
+            <Link href={`/product/${slug}`}>
             <Image src={imgUrl} alt={title} width="100%" borderRadius="0.5rem" />
+            </Link>
           </Box>
         </Grid>
 
         <Grid item md={8} sm={8} xs={12}>
           <FlexBox flexDirection="column" justifyContent="center" height="100%" p="1rem">
-            {!!categories && (
+            {/* {!!categories && (
               <div className="categories">
                 {categories.map((item) => (
                   <NavLink className="link" href={`/product/search/${item}`} key={item}>
@@ -174,7 +175,7 @@ export default function ProductCard9({
                   </NavLink>
                 ))}
               </div>
-            )}
+            )} */}
 
             <Link href={`/product/${slug}`}>
               <H5 fontWeight="600" my="0.5rem">
