@@ -60,7 +60,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 
       if (response.status === 200) {
         toast.success("OTP sent to your email/phone number!");
-        setEmailOrPhone("")
+        //setEmailOrPhone("")
         setIsOtpStage(true);  // Switch to OTP stage
       }
     } catch (error) {
@@ -80,16 +80,20 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     try {
       // Send OTP verification request
       const response = await axios.post("https://frontend.tizaraa.com/api/verify-otp", {
+
         email_or_phone: emailOrPhone,
         otp: otp,
       });
 
+      console.log("res", response);
+      
+
       if (response.status === 200) {
         setResetToken(response.data.reset_token);  // Save reset token
-        toast.success("OTP verified successfully!");
         setOtp("")
         setIsPasswordStage(true);  // Switch to password stage
-        setIsOtpStage(false); // Hide OTP input
+        setIsOtpStage(false); 
+        toast.success("OTP verified successfully!");
       }
     } catch (error) {
       toast.error("Invalid OTP. Please try again.");
@@ -334,7 +338,7 @@ export default function Login() {
         });
 
         // Redirect to profile page
-        router.push("/profile");
+        router.push("/");
         toast.success("User Login successfully!");
       } else {
         // Handle errors (e.g., incorrect password, email not found, etc.)

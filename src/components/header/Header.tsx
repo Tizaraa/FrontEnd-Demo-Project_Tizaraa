@@ -77,7 +77,7 @@ export default function Header({ isFixed, className }: HeaderProps) {
     localStorage.removeItem('token');
     setIsLoggedIn(false); // Update login state
     //Cookies.remove("token");
-    router.push("/login");
+    router.push("/");
     toast.success("Logout Successfully")
   };
 
@@ -93,27 +93,39 @@ export default function Header({ isFixed, className }: HeaderProps) {
 
   const LOGIN_HANDLE = isLoggedIn ? (
     <Fragment>
-      
-      <Menu handler={
-        <Tooltip title="User">
-          <IconButton ml="1rem" bg="gray.200" p="8px">
-          <Icon size="28px">user</Icon>
-        </IconButton>
-        </Tooltip>
-      }>
-        <MenuItem onClick={() => {
-          handleMenuClose();
-          router.push("/profile");
-        }}>
+      <Menu
+        handler={
+          <Tooltip title="User">
+            <IconButton ml="1rem" bg="gray.200" p="8px">
+              <Icon size="28px">user</Icon>
+            </IconButton>
+          </Tooltip>
+        }
+      >
+        <MenuItem
+          onClick={() => {
+            handleMenuClose();
+            router.push("/profile");
+          }}
+        >
           Profile Page
         </MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </Fragment>
   ) : (
-    <IconButton ml="1rem" bg="gray.200" p="8px">
-      <Icon size="28px">user</Icon>
-    </IconButton>
+    <Tooltip title="User">
+      <IconButton
+        ml="1rem"
+        bg="gray.200"
+        p="8px"
+        onClick={() => {
+          router.push("/login");
+        }}
+      >
+        <Icon size="28px">user</Icon>
+      </IconButton>
+    </Tooltip>
   );
 
   return (
