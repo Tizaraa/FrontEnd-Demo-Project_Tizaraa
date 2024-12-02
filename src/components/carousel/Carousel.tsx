@@ -11,6 +11,7 @@ import { StyledCarousel } from "./styles";
 // CUSTOM DATA MODEL
 import { colorOptions } from "interfaces";
 
+
 // ====================================================
 export interface CarouselProps {
   naturalSlideWidth?: number;
@@ -166,6 +167,10 @@ const renderDots = ({ step, currentSlide, visibleSlides, totalSlides, carouselSt
 
 export default Carousel;
 
+
+
+
+
 // import { Children, Fragment, useEffect, useState } from "react";
 // import { CSSProperties } from "styled-components";
 // import clsx from "clsx";
@@ -224,10 +229,10 @@ export default Carousel;
 //   rightButtonStyle,
 //   step = 1,
 //   totalSlides = 10,
-//   visibleSlides = 5,
+//   visibleSlides = 6,
 //   spacing = "1.5rem",
 //   infinite = false,
-//   autoPlay = false,
+//   autoPlay = true,
 //   interval = 2000,
 //   showDots = false,
 //   showArrow = true,

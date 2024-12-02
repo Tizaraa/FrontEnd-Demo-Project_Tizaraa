@@ -262,6 +262,7 @@ export default function Signup() {
               </a>
             </FlexBox>
           }
+          required
         />
 
         <Button
