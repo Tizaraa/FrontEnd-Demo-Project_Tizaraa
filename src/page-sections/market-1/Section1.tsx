@@ -58,7 +58,7 @@
 //   align-items: center;
 // `;
 
-// // ======================================================
+// // // ======================================================
 
 // export default function Section1() {
 //   const [carouselData, setCarouselData] = useState<MainCarouselItem[]>([]);
@@ -139,11 +139,12 @@ const LoaderWrapper = styled.div`
   align-items: center;
 `;
 
+// ======================================================
+
 export default function Section1() {
   const [carouselData, setCarouselData] = useState<MainCarouselItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const fetchCarouselData = async () => {
@@ -166,13 +167,6 @@ export default function Section1() {
     fetchCarouselData();
   }, []);
 
-  // Handle smooth slide transition
-  const handleSlideChange = (index: number) => {
-    const totalSlides = carouselData.length;
-    // Avoid directly jumping to the first dot when the last slide is reached
-    setCurrentSlide(index);
-  };
-
   return (
     <Fragment>
       <Navbar navListOpen={true} />
@@ -188,13 +182,12 @@ export default function Section1() {
               visibleSlides={1}
               showArrow={false}
               totalSlides={carouselData.length}
-              currentSlide={currentSlide}
-              onChange={handleSlideChange} // Handle smooth infinite loop
             >
               {carouselData.map((item, index) => (
                 <CarouselCard1
                   key={index}
                   image={item.slider_image}
+                  // buttonText={item.buttonText}
                 />
               ))}
             </Carousel>
@@ -209,6 +202,3 @@ export default function Section1() {
     </Fragment>
   );
 }
-
-
-

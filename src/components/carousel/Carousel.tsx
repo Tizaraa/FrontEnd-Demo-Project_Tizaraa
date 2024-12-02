@@ -166,8 +166,7 @@
 
 // export default Carousel;
 
-
-import { Children, Fragment } from "react";
+import { Children, Fragment, useEffect, useState } from "react";
 import { CSSProperties } from "styled-components";
 import clsx from "clsx";
 import { ButtonBack, ButtonNext, DotGroup, Slide, Slider } from "pure-react-carousel";
@@ -208,14 +207,13 @@ export interface CarouselProps {
   leftButtonStyle?: CSSProperties;
   rightButtonStyle?: CSSProperties;
   children: any;
-  onChange?: (slideIndex: number) => void; // Callback for slide change
 }
+
 // ====================================================
 
 const Carousel = ({
   children,
   currentSlide,
-  onChange,
   showArrowOnHover,
   dotClass,
   dotColor,
@@ -240,15 +238,30 @@ const Carousel = ({
   dotGroupMarginTop = "2rem",
   arrowButtonColor = "secondary"
 }: CarouselProps) => {
-  const handleNextSlide = () => {
-    const nextSlide = (currentSlide + 1) % totalSlides;
-    onChange && onChange(nextSlide); // Ensures smooth loop to the next slide
+  const [currentIndex, setCurrentIndex] = useState(currentSlide || 0);
+
+  // Handle Slide Change: Move forward by step
+  const handleSlideChange = (newIndex: number) => {
+    // Move smoothly and indefinitely, no looping back
+    if (newIndex >= totalSlides) {
+      newIndex = 0;  // After the last slide, go back to the first
+    } else if (newIndex < 0) {
+      newIndex = totalSlides - 1;  // When going before the first slide, go to the last
+    }
+    setCurrentIndex(newIndex); // Update the current slide index
   };
 
-  const handlePrevSlide = () => {
-    const prevSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-    onChange && onChange(prevSlide); // Ensures smooth loop to the previous slide
-  };
+  // Automatically change slides if autoplay is enabled
+  useEffect(() => {
+    if (autoPlay) {
+      const intervalId = setInterval(() => {
+        let nextIndex = currentIndex + 1;
+        handleSlideChange(nextIndex); // Update index based on the interval
+      }, interval);
+
+      return () => clearInterval(intervalId); // Cleanup the interval when the component unmounts
+    }
+  }, [autoPlay, currentIndex, interval]);
 
   return (
     <StyledCarousel
@@ -260,7 +273,7 @@ const Carousel = ({
       dotColor={dotColor}
       isPlaying={autoPlay}
       totalSlides={totalSlides}
-      currentSlide={currentSlide}
+      currentSlide={currentIndex}
       visibleSlides={visibleSlides}
       hasMasterSpinner={hasMasterSpinner}
       showArrowOnHover={showArrowOnHover}
@@ -279,7 +292,7 @@ const Carousel = ({
       {showDots && (
         <DotGroup
           className={`custom-dot ${dotClass}`}
-          renderDots={(props: any) => renderDots({ ...props, step })}
+          renderDots={(props: any) => renderDots({ ...props, step, currentIndex, handleSlideChange })}
         />
       )}
 
@@ -291,7 +304,7 @@ const Carousel = ({
             color={arrowButtonColor}
             style={leftButtonStyle || {}}
             className={`arrow-button left-arrow-class ${arrowButtonClass} ${leftButtonClass}`}
-            onClick={handlePrevSlide}
+            onClick={() => handleSlideChange(currentIndex - 1)}
           >
             <Icon variant="small" defaultcolor="currentColor">
               arrow-left
@@ -304,7 +317,7 @@ const Carousel = ({
             color={arrowButtonColor}
             style={rightButtonStyle || {}}
             className={`arrow-button right-arrow-class ${arrowButtonClass} ${rightButtonClass}`}
-            onClick={handleNextSlide}
+            onClick={() => handleSlideChange(currentIndex + 1)}
           >
             <Icon variant="small" defaultcolor="currentColor">
               arrow-right
@@ -316,25 +329,25 @@ const Carousel = ({
   );
 };
 
-const renderDots = ({ step, currentSlide, visibleSlides, totalSlides, carouselStore }: any) => {
+const renderDots = ({ step, currentIndex, totalSlides, carouselStore, handleSlideChange }: any) => {
   const dots = [];
-  const total = totalSlides - visibleSlides + 1;
+  const totalDots = Math.ceil(totalSlides / step);
 
-  for (let i = 0; i < total; i += step) {
+  for (let i = 0; i < totalDots; i++) {
+    const isActive = currentIndex === i * step;
+
     dots.push(
       <div
         key={i}
-        className={clsx({ dot: true, "dot-active": currentSlide === i })}
-        onClick={() => carouselStore.setStoreState({ currentSlide: i, autoPlay: true })}
+        className={clsx("dot", { "dot-active": isActive })}
+        onClick={() => {
+          handleSlideChange(i * step); // Call handleSlideChange to move to the selected dot
+        }}
       />
     );
   }
+
   return dots;
 };
 
 export default Carousel;
-
-
-
-
-
