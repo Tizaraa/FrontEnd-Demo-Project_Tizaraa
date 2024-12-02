@@ -169,14 +169,14 @@ export default function OTSearchResult({ sortOptions, slug }) {
               grid
             </Icon>
           </IconButton>
-          <IconButton onClick={() => setView("list")}>
+          {/* <IconButton onClick={() => setView("list")}>
             <Icon
               variant="small"
               color={view === "list" ? "primary" : "inherit"}
             >
               menu
             </Icon>
-          </IconButton>
+          </IconButton> */}
           {isTablet && (
             <Sidenav
               position="left"

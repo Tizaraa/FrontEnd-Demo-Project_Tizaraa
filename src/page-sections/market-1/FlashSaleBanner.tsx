@@ -5,7 +5,7 @@ import Container from "@component/Container";
 import NextImage from "@component/NextImage";
 // IMAGES
 
-import FlasSaleBanner from "../../../public/assets/images/banners/Flash-Sale3.jpg"
+import FlasSaleBanner from "../../../public/assets/images/banners/Flash-Sale_3.jpg"
 
 export default function FlashSaleBanner() {
   return (
@@ -23,7 +23,7 @@ export default function FlashSaleBanner() {
           </Link>
         </Grid>
       </Grid> */}
-      <Link href="/product/search/watch">
+      <Link href="/fashsale/FashSale">
             <NextImage
              alt="flashSaleBanner"
               src={FlasSaleBanner}
