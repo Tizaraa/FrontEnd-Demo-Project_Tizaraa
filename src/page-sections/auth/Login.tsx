@@ -375,7 +375,7 @@ export default function Login() {
     <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
       <form className="content" onSubmit={handleSubmit}>
         <H3 textAlign="center" mb="0.5rem">
-          Welcome To Ecommerce
+          Welcome To Tizaraa
         </H3>
 
           <H5
@@ -398,7 +398,7 @@ export default function Login() {
             value={values.email}
             onChange={handleChange}
             placeholder="example@mail.com"
-            label="Email or Phone Number"
+            label="Email"
             errorText={touched.email && errors.email}
           />
 
@@ -450,7 +450,7 @@ export default function Login() {
           </Button>
 
           {/* Google login */}
-          <FlexBox
+          {/* <FlexBox
             mb="0.75rem"
             height="40px"
             color="white"
@@ -465,7 +465,7 @@ export default function Login() {
             </Icon>
 
             <Small fontWeight="600">Continue with Facebook</Small>
-          </FlexBox>
+          </FlexBox> */}
           <FlexBox
             mb="1.25rem"
             height="40px"
