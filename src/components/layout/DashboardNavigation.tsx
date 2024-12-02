@@ -338,7 +338,7 @@ export default function DashboardNavigation() {
     localStorage.removeItem("userInfo"); // Clear user info from local storage
     localStorage.removeItem("token"); // Clear token from local storage
     setIsLoggedIn(false); // Set the state as logged out
-    router.push("/login");
+    router.push("/");
     toast.success("Logout Successfully"); // Redirect to login page after logout
   };
 
