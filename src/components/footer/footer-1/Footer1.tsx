@@ -317,10 +317,10 @@ export default function Footer1() {
                 >
                   Trade services
                 </Typography>
-                <Typography style={{ padding: "0.3rem 0", color: "gray" }}>
+                <Typography style={{ padding: "0.3rem 0", color: "inherit" }}>
                   House No: 15A, Road: 35, Gulshan 2, Dhaka 1212, Bangladesh
                 </Typography>
-                <Typography style={{ padding: "0.3rem 0", color: "gray" }}>
+                <Typography style={{ padding: "0.3rem 0", color: "inherit" }}>
                   <a
                     href="mailto:tizaraabd2023@gmail.com"
                     style={{ textDecoration: "none", color: "inherit" }}
@@ -332,7 +332,7 @@ export default function Footer1() {
                   style={{
                     padding: "0.3rem 0",
                     marginBottom: "1rem",
-                    color: "gray",
+                    color: "inherit",
                   }}
                 >
                   <a
@@ -386,7 +386,7 @@ export default function Footer1() {
                     src="https://frontend.tizaraa.com/public/frontend/assets/img/site-logo/tizaraa-logo.png"
                   />
                 </Link>
-                <Paragraph style={{ marginBottom: "1.25rem", color: "gray" }}>
+                <Paragraph style={{ marginBottom: "1.25rem", color: "inherit" }}>
                   Bangladesh's best online shopping store with 11 thousand
                   products at resounding discounts in Dhaka, Chittagong &amp;
                   All across Bangladesh with cash on delivery (COD)
