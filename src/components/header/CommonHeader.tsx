@@ -22,7 +22,7 @@ export default function CommonHeader() {
 
         {/* Logo */}
         <img
-          src="/assets/images/tizaraa_logo.webp"
+          src="/assets/images/tizaraa_logo.png"
           alt="logo"
           className="logo"
         />

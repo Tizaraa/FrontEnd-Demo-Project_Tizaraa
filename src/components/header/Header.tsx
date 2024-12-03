@@ -133,7 +133,7 @@ export default function Header({ isFixed, className }: HeaderProps) {
       <Container display="flex" alignItems="center" justifyContent="space-between" height="100%">
         <FlexBox className="logo" alignItems="center" mr="1rem">
           <Link href="/">
-            <Image src="/assets/images/tizaraa_logo.webp" alt="logo" />
+            <Image src="/assets/images/tizaraa_logo.png" alt="logo" width="200px" height="90px" />
           </Link>
 
           {isFixed && (
