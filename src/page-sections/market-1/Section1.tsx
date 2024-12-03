@@ -395,7 +395,7 @@ export default function Section1() {
                     transform: `translateX(-${currentSlide * slideWidth}%)`,
                     width: `${carouselData.length * 100}%`, // Container width equals total slide width
                     height: '450px',
-                    flexWrap: 'nowrap',
+                    
                     position: 'relative', // Ensure proper stacking
                   }}
                 >
