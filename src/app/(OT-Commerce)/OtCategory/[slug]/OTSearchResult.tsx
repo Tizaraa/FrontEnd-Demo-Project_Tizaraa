@@ -69,7 +69,7 @@ export default function OTSearchResult({ sortOptions, slug }) {
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to fetch data");
+      if (!response.ok) throw new Error("The requested category does not exit. Please check the category ID and try again.");
 
       const data = await response.json();
       const newProducts = data.Result.Items.Content;
@@ -85,10 +85,12 @@ export default function OTSearchResult({ sortOptions, slug }) {
       });
 
       setHasMore(newProducts.length >= pageSize);
-    } catch (err) {
-      console.error(err);
-      setError(err.message);
-    } finally {
+    } 
+    catch (err) {
+      // console.error(err);
+      // setError(err.message);
+    } 
+    finally {
       setLoading(false);
       setLoadingMore(false);
     }
@@ -113,7 +115,7 @@ export default function OTSearchResult({ sortOptions, slug }) {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div> {error}</div>;
   }
 
   return (
