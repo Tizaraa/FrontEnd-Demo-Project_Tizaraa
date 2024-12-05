@@ -160,7 +160,7 @@ export default function SearchInput() {
           value={searchValue} // Controlled input
           onChange={handleSearch}
           className="search-field"
-          placeholder="Search by name and hit enter..."
+          placeholder="Search By Name and Hit Enter"
         />
 
         {/* Optional Search Button */}

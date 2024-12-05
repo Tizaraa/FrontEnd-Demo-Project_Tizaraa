@@ -5,7 +5,7 @@ import Container from "@component/Container";
 import NextImage from "@component/NextImage";
 // IMAGES
 
-import FlasSaleBanner from "../../../public/assets/images/banners/Flash-Sale_3.jpg"
+import FlasSaleBanner from "../../../public/assets/images/banners/Flash_sale_banner.webp"
 
 export default function FlashSaleBanner() {
   return (
