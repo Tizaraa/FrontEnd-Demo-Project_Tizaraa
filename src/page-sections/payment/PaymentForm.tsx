@@ -402,7 +402,7 @@ export default function PaymentForm() {
             total_amount:
               total_ammount,
             productType: productType,
-            payment_type: "mb",
+            payment_type: "Online Payment",
             payment_method: "Online Payment",
           },
           {
