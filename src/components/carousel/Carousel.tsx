@@ -54,10 +54,10 @@ const Carousel = ({
   leftButtonStyle,
   rightButtonStyle,
   step = 1,
-  totalSlides = 10,
+  totalSlides = 5,
   visibleSlides = 5,
   spacing = "1.5rem",
-  infinite = false,
+  infinite = true,
   autoPlay = false,
   interval = 2000,
   showDots = false,
@@ -166,6 +166,8 @@ const renderDots = ({ step, currentSlide, visibleSlides, totalSlides, carouselSt
 };
 
 export default Carousel;
+
+
 
 
 
