@@ -197,174 +197,177 @@ export default function CarouselSlider(): JSX.Element {
 
   return (
     <>
-    <Navbar navListOpen={true} />
-    <div
-      style={{
-        width: '100%',
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
+      <Navbar navListOpen={true} />
       <div
         style={{
-          display: 'flex',
+          maxWidth: '1200px',
+          margin: '0 auto',
           width: '100%',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
+          overflow: 'hidden',
           position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        {/* Empty space for desktop/laptop view */}
         <div
           style={{
-            display: window.innerWidth >= 1024 ? 'block' : 'none',
-            width: '30%',
-            height: '100%',
-          }}
-        ></div>
-
-        {/* Slider Container */}
-        <div
-          style={{
-            width: window.innerWidth >= 1024 ? '90%' : '100%',
-            height: window.innerWidth >= 1024 ? '470px' : '300px', // Adjust height for different views
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
             position: 'relative',
-            overflow: 'hidden',
           }}
         >
+          {/* Empty space for desktop/laptop view */}
           <div
             style={{
-              display: 'flex',
+              display: window.innerWidth >= 1024 ? 'block' : 'none',
+              width: '30%',
               height: '100%',
-              transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
-              transform: `translateX(-${currentIndex * 100}%)`,
+            }}
+          ></div>
+
+          {/* Slider Container */}
+          <div
+            style={{
+              width: window.innerWidth >= 1024 ? '90%' : '100%',
+              height: window.innerWidth >= 1024 ? '460px' : '300px', // Adjust height for different views
+              position: 'relative',
+              overflow: 'hidden',
             }}
           >
-            {slides.map((slide, index) => (
-              <div
-                key={index}
-                style={{
-                  minWidth: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
+            <div
+              style={{
+                display: 'flex',
+                height: '100%',
+                transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
+                transform: `translateX(-${currentIndex * 100}%)`,
+              }}
+            >
+              {slides.map((slide, index) => (
                 <div
+                  key={index}
                   style={{
-                    width: '100%',
+                    minWidth: '100%',
                     height: '100%',
                     display: 'flex',
-                    padding: '20px',
-                    boxSizing: 'border-box',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                 >
-                  {/* Image Section */}
                   <div
                     style={{
                       width: '100%',
                       height: '100%',
-                      position: 'relative',
+                      display: 'flex',
+                      padding: '10px',
+                      boxSizing: 'border-box',
                     }}
                   >
-                    <img
-                      src={slide.slider_image}
-                      alt={`Slide ${index + 1}`}
+                    {/* Image Section */}
+                    <div
                       style={{
                         width: '100%',
                         height: '100%',
-                        objectFit: 'fill',
-                        borderRadius: '12px',
+                        position: 'relative',
                       }}
-                    />
+                    >
+                      <img
+                        src={slide.slider_image}
+                        alt={`Slide ${index + 1}`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'fill',
+                          borderRadius: '12px',
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-            {/* Clone the first slide for seamless looping */}
-            {slides.length > 0 && (
-              <div
-                style={{
-                  minWidth: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
+              ))}
+              {/* Clone the first slide for seamless looping */}
+              {slides.length > 0 && (
                 <div
                   style={{
-                    width: '100%',
+                    minWidth: '100%',
                     height: '100%',
                     display: 'flex',
-                    padding: '20px',
-                    boxSizing: 'border-box',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                 >
-                  {/* Image Section for the clone */}
                   <div
                     style={{
                       width: '100%',
                       height: '100%',
-                      position: 'relative',
+                      display: 'flex',
+                      padding: '10px',
+                      boxSizing: 'border-box',
                     }}
                   >
-                    <img
-                      src={slides[0].slider_image}
-                      alt="First Slide Clone"
+                    {/* Image Section for the clone */}
+                    <div
                       style={{
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover',
-                        borderRadius: '12px',
+                        position: 'relative',
                       }}
-                    />
+                    >
+                      <img
+                        src={slides[0].slider_image}
+                        alt="First Slide Clone"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          borderRadius: '12px',
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Dots Navigation */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '12px', // Minimal gap for dots
-          marginTop: '10px',
-          marginBottom: '10px',
-        }}
-      >
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handleDotClick(index)}
-            style={{
-              width: '12px', // Small dots
-              height: '12px',
-              borderRadius: '50%',
-              border: 'none',
-              backgroundColor: index === currentIndex % slides.length ? '#000' : '#ccc',
-              cursor: 'pointer',
-              padding: 0,
-              transition: 'all 0.3s ease',
-              transform: index === currentIndex % slides.length ? 'scale(1.2)' : 'scale(1)',
-            }}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
+        {/* Dots Navigation */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '12px', // Minimal gap for dots
+            marginTop: '10px',
+            marginBottom: '10px',
+          }}
+        >
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handleDotClick(index)}
+              style={{
+                width: '12px', // Small dots
+                height: '12px',
+                borderRadius: '50%',
+                border: 'none',
+                backgroundColor: index === currentIndex % slides.length ? '#000' : '#ccc',
+                cursor: 'pointer',
+                padding: 0,
+                transition: 'all 0.3s ease',
+                transform: index === currentIndex % slides.length ? 'scale(1.2)' : 'scale(1)',
+              }}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
       </div>
-    </div>
     </>
   )
 }
+
 
 
 
