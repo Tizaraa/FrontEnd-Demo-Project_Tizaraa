@@ -233,7 +233,7 @@ export default function CarouselSlider(): JSX.Element {
           <div
             style={{
               width: window.innerWidth >= 1024 ? '90%' : '100%',
-              height: window.innerWidth >= 1024 ? '460px' : '300px', // Adjust height for different views
+              height: window.innerWidth >= 1024 ? '470px' : '300px', // Adjust height for different views
               position: 'relative',
               overflow: 'hidden',
             }}
@@ -262,7 +262,7 @@ export default function CarouselSlider(): JSX.Element {
                       width: '100%',
                       height: '100%',
                       display: 'flex',
-                      padding: '10px',
+                      padding: '20px 0px',
                       boxSizing: 'border-box',
                     }}
                   >
