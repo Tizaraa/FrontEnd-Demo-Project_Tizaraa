@@ -236,7 +236,7 @@ export default function CarouselSlider(): JSX.Element {
               height: window.innerWidth >= 1024 ? '470px' : '300px', // Adjust height for different views
               position: 'relative',
               overflow: 'hidden',
-              margin: window.innerWidth < 1024 ? '0 10px' : '0',
+              margin: window.innerWidth < 1024 ? '0 12px' : '0',
             }}
           >
             <div
