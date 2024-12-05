@@ -168,13 +168,26 @@ import Container from "@component/Container";
 import Typography, { Paragraph } from "@component/Typography";
 
 // CUSTOM DATA
-export const aboutLinks = ["Terms & Conditions", "Privacy Policy"];
-export const customerCareLinks = [
-  "Help Center",
-  "Track Your Order",
-  "Corporate & Bulk Purchasing",
-  "Returns & Refunds",
+// export const aboutLinks = ["Terms & Conditions", "Privacy Policy"];
+// export const customerCareLinks = [
+//   "Help Center",
+//   "Track Your Order",
+//   "Corporate & Bulk Purchasing",
+//   "Returns & Refunds",
+// ];
+export const aboutLinks = [
+  { name: "Help Center", url: "/customer-service" },
+  { name: "How to Buy", url: "/privacy-policy" },
+  { name: "Tizara Journey", url: "/privacy-policy" }
 ];
+
+export const customerCareLinks = [
+  { name: "Help Center", url: "/help-center" },
+  { name: "Track Your Order", url: "/track-order" },
+  { name: "Corporate & Bulk Purchasing", url: "/corporate-purchasing" },
+  { name: "Returns & Refunds", url: "/returns-refunds" },
+];
+
 export const customerCareLink = ["Sell on Tizaraa"];
 export const iconList = [
   {
@@ -236,7 +249,7 @@ export default function Footer1() {
                         marginBottom: "0.5rem",
                       }}
                     >
-                      {item}
+                      {item.name}
                     </a>
                   ))}
                 </div>
@@ -267,7 +280,7 @@ export default function Footer1() {
                         marginBottom: "0.5rem",
                       }}
                     >
-                      {item}
+                      {item.name}
                     </a>
                   ))}
                 </div>
