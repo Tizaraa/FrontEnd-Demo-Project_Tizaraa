@@ -323,7 +323,7 @@ export default function CarouselSlider(): JSX.Element {
                         style={{
                           width: '100%',
                           height: '100%',
-                          objectFit: 'cover',
+                          objectFit: 'fill',
                           borderRadius: '12px',
                         }}
                       />
