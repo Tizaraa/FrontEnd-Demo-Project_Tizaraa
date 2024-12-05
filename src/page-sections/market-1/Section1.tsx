@@ -232,7 +232,7 @@ export default function CarouselSlider(): JSX.Element {
           {/* Slider Container */}
           <div
             style={{
-              width: window.innerWidth >= 1024 ? '90%' : '100%',
+              width: window.innerWidth >= 1024 ? '95%' : '100%',
               height: window.innerWidth >= 1024 ? '470px' : '300px', // Adjust height for different views
               position: 'relative',
               overflow: 'hidden',
