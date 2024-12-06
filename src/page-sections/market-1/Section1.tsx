@@ -124,252 +124,190 @@
 
 'use client'
 
-import React, { useEffect, useState, useCallback, useRef } from 'react'
-import Navbar from "@component/navbar/Navbar"
+import React, { useEffect, useState } from 'react';
+import Slider from "react-slick";
+import Navbar from "@component/navbar/Navbar";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+import { Vortex } from "react-loader-spinner";
+import styled from "@emotion/styled";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 interface Slide {
-  slider_image: string
+  slider_image: string;
 }
 
 export default function CarouselSlider(): JSX.Element {
-  const [slides, setSlides] = useState<Slide[]>([])
-  const [currentIndex, setCurrentIndex] = useState<number>(0)
-  const slideInterval = useRef<NodeJS.Timeout | null>(null)
-  const [isTransitioning, setIsTransitioning] = useState<boolean>(false)
+  const [slides, setSlides] = useState<Slide[]>([]);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+     const [loading, setLoading] = useState(true);
+     const [error, setError] = useState<string | null>(null);
 
   // Fetch slides from API
   useEffect(() => {
     const fetchSlides = async () => {
       try {
-        const response = await fetch('https://seller.tizaraa.com/api/frontend/slider/all')
-        const data = await response.json()
-        setSlides(data)
-      } catch (error) {
-        console.error('Error fetching slides:', error)
-      }
-    }
-    fetchSlides()
-  }, [])
+        const response = await fetch('https://seller.tizaraa.com/api/frontend/slider/all');
+        const data = await response.json();
+        setSlides(data);
+      } catch (error: any) {
+                setError(error.message);
+              } finally {
+                setLoading(false);
+              }
+            };
+    fetchSlides();
 
-  // Handle auto-sliding
-  const nextSlide = useCallback(() => {
-    if (isTransitioning || slides.length === 0) return
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-    setIsTransitioning(true)
-    setCurrentIndex((prevIndex) => prevIndex + 1)
+  const isDesktop = windowWidth >= 1024;
 
-    // If it's the last clone slide, reset to the first slide
-    setTimeout(() => {
-      if (currentIndex === slides.length) {
-        setCurrentIndex(0)
-        setIsTransitioning(false)
-      } else {
-        setIsTransitioning(false)
-      }
-    }, 500)
-  }, [currentIndex, slides.length, isTransitioning])
-
-  // Set up auto-sliding interval
-  useEffect(() => {
-    if (slides.length > 0) {
-      slideInterval.current = setInterval(nextSlide, 3000)
-    }
-    return () => {
-      if (slideInterval.current) {
-        clearInterval(slideInterval.current)
-      }
-    }
-  }, [slides.length, nextSlide])
-
-  // Reset interval when manually changing slides
-  const resetInterval = () => {
-    if (slideInterval.current) {
-      clearInterval(slideInterval.current)
-      slideInterval.current = setInterval(nextSlide, 3000)
-    }
-  }
-
-  // Handle dot click
-  const handleDotClick = (index: number) => {
-    setCurrentIndex(index)
-    resetInterval()
-  }
-
-  return (
-    <>
-      <Navbar navListOpen={true} />
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    arrows: false,
+    pauseOnHover: true,
+    customPaging: (i: number) => (
+      <button
+        style={{
+          width: isDesktop ? '12px' : '8px',
+          height: isDesktop ? '12px' : '8px',
+          borderRadius: '50%',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          cursor: 'pointer',
+          border: 'none',
+          transition: 'all 0.3s ease',
+          margin: '5px',
+        }}
+        aria-label={`Go to slide ${i + 1}`}
+      />
+    ),
+    appendDots: (dots: React.ReactNode) => (
       <div
         style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          width: '100%',
-          overflow: 'hidden',
-          position: 'relative',
+          position: 'absolute',
+          bottom: isDesktop ? '20px' : '10px',
+          right: isDesktop ? '20px' : '0',
+          left: isDesktop ? 'auto' : '0',
           display: 'flex',
-          flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
         }}
       >
         <div
           style={{
+            background: isDesktop ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.2)',
+            borderRadius: isDesktop ? '20px' : '10px',
             display: 'flex',
-            width: '100%',
-            justifyContent: 'flex-start',
+            justifyContent: "center",
             alignItems: 'center',
-            position: 'relative',
+            padding: isDesktop ? "10px" : "5px",
           }}
         >
-          {/* Empty space for desktop/laptop view */}
-          <div
-            style={{
-              display: window.innerWidth >= 1024 ? 'block' : 'none',
-              width: '30%',
-              height: '100%',
-            }}
-          ></div>
+          {dots}
+        </div>
+      </div>
+    ),
+  };
 
-          {/* Slider Container */}
-          <div
-            style={{
-              width: window.innerWidth >= 1024 ? '95%' : '100%',
-              height: window.innerWidth >= 1024 ? '470px' : '300px', // Adjust height for different views
-              position: 'relative',
-              overflow: 'hidden',
-              margin: window.innerWidth < 1024 ? '0 12px' : '0',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                height: '100%',
-                transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
-                transform: `translateX(-${currentIndex * 100}%)`,
-              }}
-            >
+  return (
+    <>
+      <Navbar navListOpen={true} />
+      <div className="slider-container" style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        width: '100%',
+        overflow: 'hidden',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <div className="slider-wrapper" style={{
+          display: 'flex',
+          width: '100%',
+          height: '100%',
+          justifyContent: isDesktop ? 'flex-end' : 'center',
+          alignItems: 'center',
+          position: 'relative',
+        }}>
+          <div className="slider" style={{
+            width: isDesktop ? '75%' : 'calc(100% - 40px)',
+            margin: isDesktop ? '20px 0' : '0 20px',
+            borderRadius: '12px',
+            overflow: 'hidden',
+          }}>
+            <Slider {...settings}>
               {slides.map((slide, index) => (
-                <div
-                  key={index}
-                  style={{
-                    minWidth: '100%',
+                <div key={index} className="slide" style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                  <div className="slide-content" style={{
+                    width: '100%',
                     height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      display: 'flex',
-                      padding: '20px 0px',
-                      boxSizing: 'border-box',
-                    }}
-                  >
-                    {/* Image Section */}
-                    <div
+                    position: 'relative',
+                  }}>
+                    <img
+                      src={slide.slider_image}
+                      alt={`Slide ${index + 1}`}
                       style={{
                         width: '100%',
                         height: '100%',
-                        position: 'relative',
+                        objectFit: 'fill',
+                        borderRadius: '12px',
                       }}
-                    >
-                      <img
-                        src={slide.slider_image}
-                        alt={`Slide ${index + 1}`}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'fill',
-                          borderRadius: '12px',
-                        }}
-                      />
-                    </div>
+                    />
+                    <div className="slide-overlay" style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      borderRadius: '12px',
+                    }} />
                   </div>
                 </div>
               ))}
-              {/* Clone the first slide for seamless looping */}
-              {slides.length > 0 && (
-                <div
-                  style={{
-                    minWidth: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      display: 'flex',
-                      padding: '10px',
-                      boxSizing: 'border-box',
-                    }}
-                  >
-                    {/* Image Section for the clone */}
-                    <div
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        position: 'relative',
-                      }}
-                    >
-                      <img
-                        src={slides[0].slider_image}
-                        alt="First Slide Clone"
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'fill',
-                          borderRadius: '12px',
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            </Slider>
           </div>
         </div>
-
-        {/* Dots Navigation */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '12px', // Minimal gap for dots
-            marginTop: '10px',
-            marginBottom: '10px',
-          }}
-        >
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handleDotClick(index)}
-              style={{
-                width: '12px', // Small dots
-                height: '12px',
-                borderRadius: '50%',
-                border: 'none',
-                backgroundColor: index === currentIndex % slides.length ? '#000' : '#ccc',
-                cursor: 'pointer',
-                padding: 0,
-                transition: 'all 0.3s ease',
-                transform: index === currentIndex % slides.length ? 'scale(1.2)' : 'scale(1)',
-              }}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
+        {loading && (
+              <LoaderWrapper>
+                <Vortex />
+              </LoaderWrapper>
+            )}
       </div>
+      <style jsx global>{`
+        .slick-dots li button:before {
+          display: none;
+        }
+        .slick-dots li.slick-active button {
+          background-color: #fff !important;
+          transform: scale(1.2);
+        }
+      `}</style>
     </>
-  )
+  );
 }
-
-
 
 
 
