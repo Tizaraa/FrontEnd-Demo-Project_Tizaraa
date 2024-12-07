@@ -146,7 +146,7 @@ export default function ProductCard15(props: Props) {
           />
         </Link>
 
-        <ItemController className="controlBox">
+        {/* <ItemController className="controlBox">
           <Span onClick={toggleDialog}>
             <Icon variant="small">eye-alt</Icon>
           </Span>
@@ -158,7 +158,7 @@ export default function ProductCard15(props: Props) {
           <Span onClick={handleAddToCart}>
             <Icon variant="small">shopping-cart</Icon>
           </Span>
-        </ItemController>
+        </ItemController> */}
       </ImgBox>
 
       <ProductQuickView
