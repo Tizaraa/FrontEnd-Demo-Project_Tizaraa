@@ -111,7 +111,7 @@ const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
           className="search-field"
-          placeholder="Search By Name and Hit Enter"
+          placeholder="Search by Name and Hit Enter"
         />
       </StyledSearchBox>
 

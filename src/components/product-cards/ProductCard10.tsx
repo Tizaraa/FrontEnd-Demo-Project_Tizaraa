@@ -157,7 +157,7 @@ export default function ProductCard10(props: ProductCard10Props) {
           </Chip>
         )}
 
-        <FlexBox className="extra-icons">
+        {/* <FlexBox className="extra-icons">
           <Icon color="secondary" variant="small" mb="0.5rem" onClick={toggleDialog}>
             eye-alt
           </Icon>
@@ -165,7 +165,7 @@ export default function ProductCard10(props: ProductCard10Props) {
           <Icon className="favorite-icon outlined-icon" variant="small">
             heart
           </Icon>
-        </FlexBox>
+        </FlexBox> */}
 
         <Link href={`/product/${slug}`}>
           <NextImage src={imgUrl} width={100} height={100} alt={title} />

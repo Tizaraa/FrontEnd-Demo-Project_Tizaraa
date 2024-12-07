@@ -401,7 +401,7 @@ export default function SearchResult({ sortOptions, slug }) {
       }
 
       const data = await response.json();
-      console.log("category details:",data.otid);
+      console.log("category details:",data);
       // Reset products when fetching the first page
       if (currentPage === 1) {
         setProducts(data.data);
