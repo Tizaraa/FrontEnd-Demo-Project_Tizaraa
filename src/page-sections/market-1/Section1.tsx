@@ -41,14 +41,95 @@
 //   );
 // }
 
-"use client";
-import { Fragment, useState, useEffect } from "react";
-import Box from "@component/Box";
-import Container from "@component/Container";
+// "use client";
+// import { Fragment, useState, useEffect } from "react";
+// import Box from "@component/Box";
+// import Container from "@component/Container";
+// import Navbar from "@component/navbar/Navbar";
+// import { Carousel } from "@component/carousel";
+// import { CarouselCard1 } from "@component/carousel-cards";
+// import MainCarouselItem from "@models/market-1.model";
+// import { Vortex } from "react-loader-spinner";
+// import styled from "@emotion/styled";
+
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
+
+// // ======================================================
+
+// export default function Section1() {
+//   const [carouselData, setCarouselData] = useState<MainCarouselItem[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+
+//   useEffect(() => {
+//     const fetchCarouselData = async () => {
+//       try {
+//         const response = await fetch(
+//           "https://seller.tizaraa.com/api/frontend/slider/all"
+//         );
+//         if (!response.ok) {
+//           throw new Error("Network response was not ok");
+//         }
+//         const data: MainCarouselItem[] = await response.json();
+//         setCarouselData(data);
+//       } catch (error: any) {
+//         setError(error.message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchCarouselData();
+//   }, []);
+
+//   return (
+//     <Fragment>
+//       <Navbar navListOpen={true} />
+
+//       <Box bg="gray.white" mb="3.75rem">
+//         <div className="container w-75 mx-auto pb-1">
+//           <Container pb="1rem">
+//             <Carousel
+//               spacing="0px"
+//               infinite={true}
+//               autoPlay={true}
+//               showDots={true}
+//               visibleSlides={1}
+//               showArrow={false}
+//               totalSlides={carouselData.length}
+//             >
+//               {carouselData.map((item, index) => (
+//                 <CarouselCard1
+//                   key={index}
+//                   image={item.slider_image}
+//                   // buttonText={item.buttonText}
+//                 />
+//               ))}
+//             </Carousel>
+//             {loading && (
+//               <LoaderWrapper>
+//                 <Vortex />
+//               </LoaderWrapper>
+//             )}
+//           </Container>
+//         </div>
+//       </Box>
+//     </Fragment>
+//   );
+// }
+
+'use client'
+
+import React, { useEffect, useState } from 'react';
+import Slider from "react-slick";
 import Navbar from "@component/navbar/Navbar";
-import { Carousel } from "@component/carousel";
-import { CarouselCard1 } from "@component/carousel-cards";
-import MainCarouselItem from "@models/market-1.model";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 
@@ -58,69 +139,178 @@ const LoaderWrapper = styled.div`
   align-items: center;
 `;
 
-// ======================================================
+interface Slide {
+  slider_image: string;
+}
 
-export default function Section1() {
-  const [carouselData, setCarouselData] = useState<MainCarouselItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default function CarouselSlider(): JSX.Element {
+  const [slides, setSlides] = useState<Slide[]>([]);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+     const [loading, setLoading] = useState(true);
+     const [error, setError] = useState<string | null>(null);
 
+  // Fetch slides from API
   useEffect(() => {
-    const fetchCarouselData = async () => {
+    const fetchSlides = async () => {
       try {
-        const response = await fetch(
-          "https://seller.tizaraa.com/api/frontend/slider/all"
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data: MainCarouselItem[] = await response.json();
-        setCarouselData(data);
+        const response = await fetch('https://seller.tizaraa.com/api/frontend/slider/all');
+        const data = await response.json();
+        setSlides(data);
       } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+                setError(error.message);
+              } finally {
+                setLoading(false);
+              }
+            };
+    fetchSlides();
 
-    fetchCarouselData();
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return (
-    <Fragment>
-      <Navbar navListOpen={true} />
+  const isDesktop = windowWidth >= 1024;
 
-      <Box bg="gray.white" mb="3.75rem">
-        <div className="container w-75 mx-auto pb-1">
-          <Container pb="1rem">
-            <Carousel
-              spacing="0px"
-              infinite={true}
-              autoPlay={true}
-              showDots={true}
-              visibleSlides={1}
-              showArrow={false}
-              totalSlides={carouselData.length}
-            >
-              {carouselData.map((item, index) => (
-                <CarouselCard1
-                  key={index}
-                  image={item.slider_image}
-                  // buttonText={item.buttonText}
-                />
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    arrows: false,
+    pauseOnHover: true,
+    customPaging: (i: number) => (
+      <button
+        style={{
+          width: isDesktop ? '12px' : '8px',
+          height: isDesktop ? '12px' : '8px',
+          borderRadius: '50%',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          cursor: 'pointer',
+          border: 'none',
+          transition: 'all 0.3s ease',
+          margin: '5px',
+        }}
+        aria-label={`Go to slide ${i + 1}`}
+      />
+    ),
+    appendDots: (dots: React.ReactNode) => (
+      <div
+        style={{
+          position: 'absolute',
+          bottom: isDesktop ? '20px' : '10px',
+          right: isDesktop ? '20px' : '0',
+          left: isDesktop ? 'auto' : '0',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <div
+          style={{
+            background: isDesktop ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.2)',
+            borderRadius: isDesktop ? '20px' : '10px',
+            display: 'flex',
+            justifyContent: "center",
+            alignItems: 'center',
+            padding: isDesktop ? "10px" : "5px",
+          }}
+        >
+          {dots}
+        </div>
+      </div>
+    ),
+  };
+
+  return (
+    <>
+      <Navbar navListOpen={true} />
+      <div className="slider-container" style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        width: '100%',
+        overflow: 'hidden',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <div className="slider-wrapper" style={{
+          display: 'flex',
+          width: '100%',
+          height: '100%',
+          justifyContent: isDesktop ? 'flex-end' : 'center',
+          alignItems: 'center',
+          position: 'relative',
+        }}>
+          <div className="slider" style={{
+            width: isDesktop ? '75%' : 'calc(100% - 40px)',
+            margin: isDesktop ? '20px 0' : '0 20px',
+            borderRadius: '12px',
+            overflow: 'hidden',
+          }}>
+            <Slider {...settings}>
+              {slides.map((slide, index) => (
+                <div key={index} className="slide" style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                  <div className="slide-content" style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'relative',
+                  }}>
+                    <img
+                      src={slide.slider_image}
+                      alt={`Slide ${index + 1}`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'fill',
+                        borderRadius: '12px',
+                      }}
+                    />
+                    <div className="slide-overlay" style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      borderRadius: '12px',
+                    }} />
+                  </div>
+                </div>
               ))}
-            </Carousel>
-            {loading && (
+            </Slider>
+          </div>
+        </div>
+        {loading && (
               <LoaderWrapper>
                 <Vortex />
               </LoaderWrapper>
             )}
-          </Container>
-        </div>
-      </Box>
-    </Fragment>
+      </div>
+      <style jsx global>{`
+        .slick-dots li button:before {
+          display: none;
+        }
+        .slick-dots li.slick-active button {
+          background-color: #fff !important;
+          transform: scale(1.2);
+        }
+      `}</style>
+    </>
   );
 }
+
+
+
 
 // 'use client'
 
