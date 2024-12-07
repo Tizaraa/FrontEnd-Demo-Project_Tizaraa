@@ -330,6 +330,7 @@ const ShippingInfo: React.FC<{
 const ProductDetails: React.FC<Props> = ({ params }) => {
   const [isDesktop, setIsDesktop] = useState(true);
   const [productData, setProductData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -344,12 +345,22 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
 
   useEffect(() => {
     const loadProductData = async () => {
+      setIsLoading(true);
       const data = await fetchProductData(params.slug);
       setProductData(data);
+      setIsLoading(false);
     };
 
     loadProductData();
   }, [params.slug]);
+
+  if (isLoading) {
+    return (
+      <LoaderWrapper>
+        <Vortex />
+      </LoaderWrapper>
+    );
+  }
 
   if (!productData || !productData.productsingledetails) {
     return (
