@@ -166,9 +166,9 @@ export default function ProductCard16(props: ProductCardProps) {
           </Link>
 
           <HoverWrapper className="controller">
-            <Span onClick={toggleDialog}>
+            {/* <Span onClick={toggleDialog}>
               <Icon variant="small">eye-alt</Icon>
-            </Span>
+            </Span> */}
 
             <Divider />
 

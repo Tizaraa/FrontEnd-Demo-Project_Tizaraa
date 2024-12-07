@@ -186,7 +186,7 @@ export default function ProductCard1({
             </Chip>
           )}
 
-          <FlexBox className="extra-icons">
+          {/* <FlexBox className="extra-icons">
             <Icon color="secondary" variant="small" mb="0.5rem" onClick={toggleDialog}>
               eye-alt
             </Icon>
@@ -194,7 +194,7 @@ export default function ProductCard1({
             <Icon className="favorite-icon outlined-icon" variant="small">
               heart
             </Icon>
-          </FlexBox>
+          </FlexBox> */}
 
           <Link href={`/product/${slug}`}>
             <NextImage alt={title} width={277} src={imgUrl} height={270} />
@@ -243,17 +243,25 @@ export default function ProductCard1({
     </H4>
 ) : (
     <>
-        <Box marginTop="4px"> 
-            <H4 fontWeight="600" fontSize="14px" color="primary.main">
-                <del>{currency(price)}</del>
-            </H4>
-        </Box>
+        {discountPrice && discountPrice > 0 ? (
+            <>
+                <Box marginTop="4px">
+                    <H4 fontWeight="600" fontSize="14px" color="primary.main">
+                        <del>{currency(price)}</del>
+                    </H4>
+                </Box>
 
-        <FlexBox>
+                <FlexBox>
+                    <H4 fontWeight="600" fontSize="14px" color="primary.main">
+                        {currency(discountPrice)}
+                    </H4>
+                </FlexBox>
+            </>
+        ) : (
             <H4 fontWeight="600" fontSize="14px" color="primary.main">
-                {calculateDiscount(price, off as number)}
+                {currency(price)}
             </H4>
-        </FlexBox>
+        )}
     </>
 )}
 

@@ -156,9 +156,9 @@ export default function ProductCard9({
               </Chip>
             )}
 
-            <Icon color="secondary" variant="small" className="quick-view" onClick={toggleDialog}>
+            {/* <Icon color="secondary" variant="small" className="quick-view" onClick={toggleDialog}>
               eye-alt
-            </Icon>
+            </Icon> */}
             <Link href={`/product/${slug}`}>
             <Image src={imgUrl} alt={title} width="100%" borderRadius="0.5rem" />
             </Link>

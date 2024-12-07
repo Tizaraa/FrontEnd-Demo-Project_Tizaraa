@@ -14,6 +14,7 @@ import { FaUser } from "react-icons/fa";
 import { FaLocationPin } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import GoogleTranslate from "@component/GoogleTranslate";
+import LanguageSelector from "@component/LanguageSelector";
 
 export default function Topbar() {
   const [currency, setCurrency] = useState(currencyList[0]);
@@ -56,17 +57,6 @@ export default function Topbar() {
               />
             </a>
           </div>
-{/* 
-          <FlexBox alignItems="center">
-            <Icon size="14px">phone-call</Icon>
-            <span>+8801792223444</span>
-          </FlexBox>
-
-          <FlexBox alignItems="center" ml="20px">
-            <Icon size="14px">mail</Icon>
-            <span>tizaraabd2023@gmail.com</span>
-          </FlexBox> */}
-
 <FlexBox alignItems="center">
   <a href="tel:+8801792223444" style={{ textDecoration: 'none', color: 'inherit' }}>
     <FlexBox alignItems="center">
@@ -88,70 +78,11 @@ export default function Topbar() {
         </FlexBox>
 
         <FlexBox className="topbar-right" alignItems="center">
-          {/* <NavLink className="link" href="/">
-            Theme FAQ"s
-          </NavLink> */}
+       
+          {/* <GoogleTranslate></GoogleTranslate> */}
+          <LanguageSelector></LanguageSelector>
 
-          {/* <NavLink className="link" href="/">
-            Need Help?
-          </NavLink> */}
-
-          {/* <Menu
-            direction="right"
-            handler={
-              <FlexBox className="dropdown-handler" alignItems="center" height="40px" mr="1.25rem">
-                <Image src={language.imgUrl} alt={language.title} />
-                <Small fontWeight="600">{language.title}</Small>
-                <Icon size="1rem">chevron-down</Icon>
-              </FlexBox>
-            }>
-            {languageList.map((item) => (
-              <MenuItem key={item.title} onClick={handleLanguageClick(item)}>
-                <Image src={item.imgUrl} borderRadius="2px" mr="0.5rem" alt={item.title} />
-                <Small fontWeight="600">{item.title}</Small>
-              </MenuItem>
-            ))}
-          </Menu> */}
-          <GoogleTranslate></GoogleTranslate>
-
-          {/* <div className="responsive-menu">
-          <Menu
-            direction="right"
-            handler={
-              <FlexBox className="dropdown-handler" alignItems="center" height="40px" mr="1.25rem">
-                {language.icon}
-                <Small fontWeight="600" ml="0.5rem">{language.title}</Small>
-                <Icon size="1rem">chevron-down</Icon>
-              </FlexBox>
-            }
-          >
-            {languageList.map((item) => (
-              <MenuItem key={item.title} onClick={handleLanguageClick(item)}>
-                <FlexBox alignItems="center">
-                  {item.icon}
-                  <Small fontWeight="600" ml="0.5rem">{item.title}</Small>
-                </FlexBox>
-              </MenuItem>
-            ))}
-          </Menu>
-          </div> */}
-
-          {/* <Menu
-            direction="right"
-            handler={
-              <FlexBox className="dropdown-handler" alignItems="center" height="40px">
-                <Image src={currency.imgUrl} alt={currency.title} />
-                <Small fontWeight="600">{currency.title}</Small>
-                <Icon size="1rem">chevron-down</Icon>
-              </FlexBox>
-            }>
-            {currencyList.map((item) => (
-              <MenuItem key={item.title} onClick={handleCurrencyClick(item)}>
-                <Image src={item.imgUrl} borderRadius="2px" mr="0.5rem" alt={item.title} />
-                <Small fontWeight="600">{item.title}</Small>
-              </MenuItem>
-            ))}
-          </Menu> */}
+       
         </FlexBox>
       </Container>
 
@@ -173,13 +104,6 @@ export default function Topbar() {
   );
 }
 
-// const languageList = [
-//   // { title: "Become A Seller", imgUrl: "/assets/images/flags/user.png" },
-//   // { title: "Find My Showroom / Shop", imgUrl: "/assets/images/flags/location.png" },
-//   // { title: "HN", imgUrl: "/assets/images/flags/in.png" },
-//   { title: "Become A Seller", imgUrl: "user" },
-//   { title: "Find My Showroom / Shop", imgUrl: "location" },
-// ];
 const languageList = [
   { title: "Become A Seller", icon: <FaUser />, url: "https://seller.tizaraa.com", },
   { title: "Find My Showroom / Shop", icon: <FaLocationPin />, url: "/shops" },

@@ -171,6 +171,7 @@ export default function ProductGridView({
                 id={item?.id || ""}
                 slug={item?.slug || ""}
                 price={item?.price || 0}
+                discountPrice={item?.discount_price || 0}
                 title={item?.title || "No Title"}
                 off={item?.discount || 0}
                 images={item?.images || []}

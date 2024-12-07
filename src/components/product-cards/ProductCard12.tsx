@@ -157,7 +157,7 @@ export default function ProductCard12(props: ProductCard12Props) {
 
         <HoverButtonBox className="hoverButtonBox">
           <Box className="buttonBox">
-            <ItemController>
+            {/* <ItemController>
               <Span onClick={toggleDialog}>
                 <Icon variant="small">eye-alt</Icon>
               </Span>
@@ -169,7 +169,7 @@ export default function ProductCard12(props: ProductCard12Props) {
               <Span onClick={handleCartAmountChange(1)}>
                 <Icon variant="small">shopping-cart</Icon>
               </Span>
-            </ItemController>
+            </ItemController> */}
 
             <Button
               color="primary"

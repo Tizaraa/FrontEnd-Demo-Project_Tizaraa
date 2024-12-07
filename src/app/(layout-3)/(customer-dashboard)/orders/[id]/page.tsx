@@ -988,6 +988,15 @@ export default function OrderDetails({ params }: IDParams) {
                 {order.Order.payment_status}
               </H6>
             </FlexBox>
+            <FlexBox
+              alignItems="center"
+              mb="1rem"
+            >
+              Order Status:
+              <H6 my="0px" mx="1rem">
+                {order.Order.status}
+              </H6>
+            </FlexBox>
           </Card>
         </Grid>
       </Grid>

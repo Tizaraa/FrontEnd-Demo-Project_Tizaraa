@@ -751,7 +751,7 @@ export default function SearchInputWithCategory() {
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
           className="search-field"
-          placeholder="Search By Name and Hit Enter"
+          placeholder="Search by Name and Hit Enter"
         />
           
           <Icon onClick={handleSearchAction} className="search-icon" size="18px">search</Icon>
