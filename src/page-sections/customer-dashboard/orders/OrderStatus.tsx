@@ -83,7 +83,7 @@ export default function OrderStatus({ orderStatus, deliveredAt }: OrderStatusPro
           borderRadius="300px"
           color="primary.main"
         >
-          Estimated Delivery Date <b>{deliveredAt}</b>
+          Estimated Delivery Date: <b>{deliveredAt}</b>
         </Typography>
       </FlexBox>
     </Card>
