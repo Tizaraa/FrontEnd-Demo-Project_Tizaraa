@@ -6,10 +6,11 @@ import Icon from "@component/icon/Icon";
 import { H3 } from "@component/Typography";
 import { useAppContext } from "@context/app-context";
 import { useState,useEffect  } from "react";
-import { toast } from "react-toastify";  // <-- Import the toast functionality
+//import { toast } from "react-toastify";  // <-- Import the toast functionality
 import {Styledbutton} from "./style";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
 
 type SizeColorOption = {
   size: string;
@@ -225,6 +226,7 @@ const AddToCartButton = ({
         return;
       }
     }
+    
     handleCartAmountChange(1);
   
     if (dummySizes.length === 0) {
@@ -247,7 +249,7 @@ const AddToCartButton = ({
           attributes
         },
       });
-
+      //console.log("defaultPrice");
       toast.success("Added to cart successfully!");
       return;
     }
@@ -257,11 +259,11 @@ const AddToCartButton = ({
       return;
     }
 
-    toast.success(`${title} has been added to the cart!`, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: true,
-    });
+    // toast.success(`${title} has been added to the cart!`, {
+    //   position: "top-right",
+    //   autoClose: 3000,
+    //   hideProgressBar: true,
+    // });
   };
   
 

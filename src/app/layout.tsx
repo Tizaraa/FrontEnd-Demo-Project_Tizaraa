@@ -170,6 +170,7 @@ import StyledComponentsRegistry from "@lib/registry";
 import { AppProvider } from "@context/app-context";
 import StyledContext from "@context/StyledContext";
 import { ToastContainer } from 'react-toastify';
+import toast, { Toaster } from 'react-hot-toast';
 import ApiBaseUrl from "api/ApiBaseUrl";
 import 'react-toastify/dist/ReactToastify.css';
 import Head from "next/head";
@@ -236,6 +237,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <AppProvider>
             <StyledContext>{children}</StyledContext>
             <ToastContainer />
+            <Toaster position="top-right" />
           </AppProvider>
         </StyledComponentsRegistry>
       </body>

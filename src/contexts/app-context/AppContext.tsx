@@ -6,7 +6,7 @@ import { useMemo, useReducer, useContext, createContext, PropsWithChildren, useE
 
 // TYPES
 import { ActionType, InitialState, ContextProps } from "./types";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 // Initial State
 const INITIAL_STATE: InitialState = {
@@ -38,7 +38,7 @@ const updateCartItem = (
   // Check if the requested quantity exceeds stock
   if (cartItem.qty > cartItem.productStock) {
     //toast.error("Out of Stock");// Display toast message
-    return cart; // Do not update the cart
+    return cartItem; // Do not update the cart
   }
   
   // Calculate the price based on quantity and B2B pricing if available
@@ -46,6 +46,7 @@ const updateCartItem = (
   let b2bPricing =cartItem.b2bPricing;
   
   console.log(cartItem);
+  //toast.error("Out of Stock");
 
 
   if (b2bPricing && cartItem.qty > 0) {

@@ -17,7 +17,8 @@ import authService from "services/authService";
 import Menu from "@component/Menu";
 import MenuItem from "@component/MenuItem";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+//import { toast } from "react-toastify";
+import toast, { Toaster } from 'react-hot-toast';
 
 // MiniCart Component
 type MiniCartProps = { toggleSidenav?: () => void };

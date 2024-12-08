@@ -481,7 +481,8 @@ import { currency, getTheme, isValidProp } from "@utils/utils";
 import { useAppContext } from "@context/app-context";
 import { useState,useEffect } from "react";
 import {Styledbutton} from "./style";
-import { toast } from "react-toastify";
+//import { toast } from "react-toastify";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 // STYLED COMPONENTS
