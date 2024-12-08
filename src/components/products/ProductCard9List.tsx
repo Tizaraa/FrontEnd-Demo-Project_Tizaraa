@@ -27,6 +27,7 @@ export default function ProductListView({ products, totalProducts, currentPage, 
           key={item.id}
           slug={item.slug}
           price={item.price}
+          productStock={item.product_stock}
           title={item.title}
           off={item.discount}
           rating={item.rating}

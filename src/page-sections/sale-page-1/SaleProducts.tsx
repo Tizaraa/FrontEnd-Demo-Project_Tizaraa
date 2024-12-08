@@ -31,6 +31,7 @@ export default function SaleProducts({ products, meta }: Props) {
               id={item.id}
               slug={item.slug}
               price={item.price}
+              productStock={item.product_stock}
               title={item.title}
               off={item.discount}
               images={item.images}

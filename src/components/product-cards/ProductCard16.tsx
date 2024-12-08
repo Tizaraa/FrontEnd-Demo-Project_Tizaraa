@@ -123,6 +123,7 @@ type ProductCardProps = {
   title: string;
   price: number;
   imgUrl: string;
+  productStock: number;
   rating?: number;
   images: string[];
   id: string | number;
@@ -133,7 +134,7 @@ type ProductCardProps = {
 // =============================================================
 
 export default function ProductCard16(props: ProductCardProps) {
-  const { off, id, title, price, imgUrl, rating, hoverEffect, slug, images, productId, sellerId } = props;
+  const { off, id, title, price, imgUrl, productStock, rating, hoverEffect, slug, images, productId, sellerId } = props;
 
   const { state, dispatch } = useAppContext();
   const [openModal, setOpenModal] = useState(false);
@@ -145,7 +146,7 @@ export default function ProductCard16(props: ProductCardProps) {
   const handleCartAmountChange = (qty: number) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { price, imgUrl, id, qty, slug, name: title, productId, sellerId }
+      payload: { price, imgUrl, productStock, id, qty, slug, name: title, productId, sellerId }
     });
   };
 

@@ -42,6 +42,7 @@ export default function Section3({ products, title }: Props) {
                 slug={item.slug}
                 title={item.title}
                 price={item.price}
+                productStock={item.product_stock}
                 off={item.discount}
                 status={item.status}
                 rating={item.rating}

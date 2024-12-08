@@ -345,6 +345,7 @@ export default function Cart() {
               name={item.name}
               price={item.price}
               imgUrl={item.imgUrl}
+              productStock={item.productStock}
               discountPrice={item.discountPrice}
               productId={item.productId}
               sellerId={item.sellerId}

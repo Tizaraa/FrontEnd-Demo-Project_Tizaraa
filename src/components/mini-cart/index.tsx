@@ -17,6 +17,7 @@ import authService from "services/authService";
 import Menu from "@component/Menu";
 import MenuItem from "@component/MenuItem";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 // MiniCart Component
 type MiniCartProps = { toggleSidenav?: () => void };
@@ -31,6 +32,12 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
   }, []);
 
   const handleCartAmountChange = (amount: number, product: any) => () => {
+    console.log("p",product.productStock);
+    
+    if (amount > product.productStock) {
+      toast.error("Out of Stock");
+      return;
+    }
     dispatch({
       type: "CHANGE_CART_AMOUNT",
       payload: { ...product, qty: amount }
@@ -38,7 +45,11 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, product: any) => {
-    const newQty = Math.max(1, parseInt(e.target.value));
+    const newQty = Math.min(product.productStock, Math.max(1, parseInt(e.target.value)));
+    if (newQty > product.productStock) {
+      toast.error("Out of Stock");
+      return;
+    }
     dispatch({
       type: "CHANGE_CART_AMOUNT",
       payload: { ...product, qty: newQty }

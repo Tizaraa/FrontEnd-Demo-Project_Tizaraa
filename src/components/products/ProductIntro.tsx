@@ -143,6 +143,7 @@ export default function ProductIntro({
             title={title}
             discountPrice={discountPrice}
             slug={slug}
+            productStock={productStock}
             selectedSize={selectedSize} 
             selectedColor={selectedColor} 
             price={selectedPrice} 

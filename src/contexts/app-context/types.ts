@@ -174,6 +174,7 @@ export interface CartItem {
   name: string;
   slug?: string;
   price: number;
+  productStock: number;
   imgUrl?: string;
   id: string | number;
   totalDiscount?: number;

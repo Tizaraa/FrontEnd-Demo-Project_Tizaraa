@@ -61,6 +61,7 @@ type ProductCard19Props = {
   name: string;
   slug: string;
   price: number;
+  productStock: number;
   reviews: number;
   images: string[];
   id: string | number;
@@ -70,7 +71,7 @@ type ProductCard19Props = {
 // ==============================================================
 
 export default function ProductCard19(props: ProductCard19Props) {
-  const { img, name, price, reviews, id, slug, images, productId, sellerId } = props;
+  const { img, name, price, productStock, reviews, id, slug, images, productId, sellerId } = props;
 
   const { state, dispatch } = useAppContext();
   const [openDialog, setOpenDialog] = useState(false);
@@ -91,6 +92,7 @@ export default function ProductCard19(props: ProductCard19Props) {
       slug,
       name,
       price,
+      productStock,
       imgUrl: img,
       qty: (cartItem?.qty || 0) + 1,
       productId, 

@@ -114,6 +114,7 @@ interface ProductCard1Props extends CardProps {
   imgUrl: string;
   rating: number;
   images: string[];
+  productStock: number;
   discountPrice?: number; // Optional discount price
   totalDiscount?: number; // Optional total discount
   id?: string | number;
@@ -130,6 +131,7 @@ export default function ProductCard1({
   title,
   price,
   imgUrl,
+  productStock,
   images,
   rating,
   discountPrice,
@@ -153,6 +155,7 @@ export default function ProductCard1({
         slug,
         price,
         imgUrl,
+        productStock,
         name: title,
         qty: amount,
 

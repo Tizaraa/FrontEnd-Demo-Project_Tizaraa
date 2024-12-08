@@ -6,6 +6,7 @@ interface Product {
   slug: string;
   price: number;
   discount_price: number;
+  product_stock: number;
   title: string;
   rating: number;
   discount: number;

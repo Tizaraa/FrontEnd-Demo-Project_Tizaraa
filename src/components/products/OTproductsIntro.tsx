@@ -533,6 +533,7 @@ export default function OtProductsIntro({
       type: "CHANGE_CART_AMOUNT",
       payload: {
         price,
+        productStock,
         qty: amount,
         name: title,
         imgUrl: images[0],
@@ -728,6 +729,7 @@ export default function OtProductsIntro({
         discountPrice={discountPrice}
         price={selectedPrice}
         slug={slug}
+        productStock={productStock}
         selectedSize={''} 
         selectedColor={''} 
         selectedSpec={''} 
@@ -752,6 +754,7 @@ export default function OtProductsIntro({
             discountPrice={discountPrice}
             price={selectedPrice}
             slug={slug}
+            productStock={productStock}
             selectedSize={''}
             selectedSpec={selectedSpec}
             selectedColor={''}

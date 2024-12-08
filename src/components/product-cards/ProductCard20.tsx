@@ -52,6 +52,7 @@ interface ProductCard7Props extends SpaceProps {
   slug: string;
   price: number;
   imgUrl?: string;
+  productStock: number;
   id: string | number;
   discountPrice: number;
   productId: string | number;
@@ -60,13 +61,13 @@ interface ProductCard7Props extends SpaceProps {
 // =====================================================================
 
 export default function ProductCard7(props: ProductCard7Props) {
-  const { id, name, qty, price, imgUrl, slug,discountPrice, productId, sellerId, ...others } = props;
+  const { id, name, qty, price, imgUrl, productStock, slug,discountPrice, productId, sellerId, ...others } = props;
 
   const { dispatch } = useAppContext();
   const handleCartAmountChange = (amount: number) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { qty: amount, name, price, imgUrl, id, discountPrice, productId, sellerId }
+      payload: { qty: amount, name, price, imgUrl, productStock, id, discountPrice, productId, sellerId }
     });
   };
 

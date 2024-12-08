@@ -22,6 +22,7 @@ export default function Section11({ moreItems }: Props) {
               slug={item.slug}
               title={item.title}
               price={item.price}
+              productStock={item.product_stock}
               off={item.discount}
               rating={item.rating}
               imgUrl={item.thumbnail}

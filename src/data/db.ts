@@ -36,6 +36,7 @@ export default [
     title: "Lord 2019",
     brand: null,
     price: 200,
+    product_stock: 200,
     size: null,
     colors: [],
     discount: 0,

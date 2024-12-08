@@ -99,6 +99,7 @@ const RfqCheckoutSummary: React.FC<RfqCheckoutSummaryProps> = ({ responseId }) =
           key={item.id}
           qty={item.qty}
           slug={item.slug}
+          productStock={item.productStock}
           name={item.name}
           price={item.price}
           imgUrl={item.imgUrl}
