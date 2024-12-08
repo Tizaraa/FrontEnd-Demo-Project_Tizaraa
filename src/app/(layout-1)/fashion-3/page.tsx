@@ -29,10 +29,10 @@ export default async function FashionThree() {
       <Box bg="white" pb="4rem">
         {/* HERO CAROUSEL AREA */}
         <Section1 carouselData={mainCarouselData} />
-
+        
         {/* MEN AND WOMEN OFFERS AREA */}
         <Section2 />
-
+        
         {/* BEST SELLING PRODUCTS AREA */}
         <Section3 products={products} />
 

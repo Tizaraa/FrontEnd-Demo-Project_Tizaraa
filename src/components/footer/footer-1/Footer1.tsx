@@ -389,7 +389,6 @@ export default function Footer1() {
                   ))}
                 </FlexBox>
               </Grid>
-
               {/* Logo and Description */}
               <Grid item lg={4} md={12} sm={12} xs={12}>
                 <Link href="/">
