@@ -279,6 +279,13 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 
 import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
+import PaymentCheckBox from "@component/PaymentCheckBox";
+import PaymentImage from "@component/PaymentImage";
+
+import cashOnDeliveryImage from "../../../public/assets/images/payment/cashOnDelivery.png"
+import onlinePayment from "../../../public/assets/images/payment/onlinePayment.png"
+import NagadImage from "../../../public/assets/images/payment/Nagad.avif"
+import BkashImage from "../../../public/assets/images/payment/Bkash.png"
 
 export default function PaymentForm() {
   const { state, dispatch } = useAppContext();
@@ -603,35 +610,207 @@ export default function PaymentForm() {
 
   return (
     <Fragment>
-      <Card1 mb="2rem">
-        {/* Cash on Delivery */}
-        <CheckBox
-          mb="1.5rem"
-          color="secondary"
-          name="cod"
-          onChange={handlePaymentMethodChange}
-          checked={paymentMethod === "cod"} // Only check if paymentMethod is "cod"
-          label={
-            <Typography ml="6px" fontWeight="600" fontSize="18px">
-              Cash on Delivery
-            </Typography>
-          }
-        />
+<FlexBox>
+<Card1
+  mb="2rem"
+  display="flex"
+  flexDirection="column" // Default direction
+  marginRight="2px"
+  width="100%"
 
-        {/* Mobile Banking */}
-        <CheckBox
-          mb="1.5rem"
-          color="secondary"
-          name="Online Payment"
-          onChange={handlePaymentMethodChange}
-          checked={paymentMethod === "Online Payment"}
-          label={
-            <Typography ml="6px" fontWeight="600" fontSize="18px">
-              Online Payment
-            </Typography>
-          }
-        />
-      </Card1>
+  style={{
+    gap: "20px",
+    background : "#FFFFFF",
+    boxShadow: "0px 1px 3px rgba(3, 0, 71, 0.09)"
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "10px", // Adds consistent spacing between elements
+    }}
+  >
+    {/* Cash on Delivery */}
+    <PaymentCheckBox
+      mb="1.5rem"
+      color="secondary"
+      name="cod"
+      onChange={handlePaymentMethodChange}
+      checked={paymentMethod === "cod"}
+      label={
+        <div
+          style={{
+            width: "100px", // Ensures equal width for all items
+            height: "120px",
+            // border: paymentMethod === "cod" ? "1px solid blue" : "1px solid black",
+            boxShadow: paymentMethod === "cod" ? "0px 1px 3px rgba(3, 0, 71, 0.09) blue" : "0 0 1px 0px black",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "8px",
+            background: paymentMethod === "cod" ? "rgba(0, 0, 255, 0.1)" : "white",
+            transition: "background 0.1s",
+            boxSizing: "border-box",
+            borderRadius: "4px"
+          }}
+        >
+          <PaymentImage
+            alt="Cash on Delivery"
+            src={cashOnDeliveryImage}
+            style={{
+              width: "60px",
+              height: "60px",
+              marginBottom: "8px",
+            }}
+            priority
+          />
+          <span
+            style={{
+              fontSize: "14px",
+              fontWeight: "600",
+              textAlign: "center",
+              // color: paymentMethod === "cod" ? "blue" : "black",
+            }}
+          >
+            Cash on Delivery
+          </span>
+        </div>
+      }
+    />
+
+    {/* Online Payment */}
+    <PaymentCheckBox
+      mb="1.5rem"
+      color="secondary"
+      name="Online Payment"
+      onChange={handlePaymentMethodChange}
+      checked={paymentMethod === "Online Payment"}
+      label={
+        <div
+          style={{
+            width: "100px", // Ensures equal width for all items
+            height: "120px",
+            // border: paymentMethod === "Online Payment" ? "1px solid blue" : "1px solid black",
+            boxShadow: paymentMethod === "Online Payment" ? "0px 1px 3px rgba(3, 0, 71, 0.09) blue" : "0 0 1px 0px black",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "8px",
+            background: paymentMethod === "Online Payment" ? "rgba(0, 0, 255, 0.1)" : "white",
+            transition: "background 0.1s",
+            boxSizing: "border-box",
+            borderRadius: "4px"
+          }}
+        >
+          <PaymentImage
+            alt="Online Payment"
+            src={onlinePayment}
+            style={{
+              width: "60px",
+              height: "60px",
+              marginBottom: "8px",
+            }}
+            priority
+          />
+          <span
+            style={{
+              fontSize: "14px",
+              fontWeight: "600",
+              textAlign: "center",
+            }}
+          >
+            Online Payment
+          </span>
+        </div>
+      }
+    />
+
+    {/* Disabled Payment Options (Nagad) */}
+    <div
+      style={{
+        width: "100px", // Ensures equal width for all items
+        height: "120px",
+        // border: "1px solid rgba(0, 0, 0, 0.5)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "8px",
+        background: "rgba(0, 0, 0, 0.5)", // Disabled background
+        pointerEvents: "none", // Disable interactions
+        boxSizing: "border-box", // Include padding in size
+        borderRadius: "4px"
+      }}
+    >
+      <PaymentImage
+        alt="Nagad Payment"
+        src={NagadImage}
+        style={{
+          width: "60px",
+          height: "60px",
+          marginBottom: "8px",
+          filter: "grayscale(100%) opacity(50%)",
+        }}
+        priority
+      />
+      <span
+        style={{
+          fontSize: "14px",
+          fontWeight: "600",
+          textAlign: "center",
+          color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
+        }}
+      >
+        Nagad
+      </span>
+    </div>
+
+    {/* Disabled Payment Options (Bkash) */}
+    <div
+      style={{
+        width: "100px", // Ensures equal width for all items
+        height: "120px",
+        // border: "1px solid rgba(0, 0, 0, 0.5)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "8px",
+        background: "rgba(0, 0, 0, 0.5)", // Disabled background
+        pointerEvents: "none", // Disable interactions
+        boxSizing: "border-box", // Include padding in size
+        borderRadius: "4px"
+      }}
+    >
+      <PaymentImage
+        alt="Bkash Payment"
+        src={BkashImage}
+        style={{
+          width: "60px",
+          height: "60px",
+          marginBottom: "8px",
+          filter: "grayscale(100%) opacity(50%)",
+        }}
+        priority
+      />
+      <span
+        style={{
+          fontSize: "14px",
+          fontWeight: "600",
+          textAlign: "center",
+          color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
+        }}
+      >
+        Bkash
+      </span>
+    </div>
+  </div>
+</Card1>
+
+</FlexBox>
 
       <Grid container spacing={7}>
         <Grid item sm={6} xs={12}>
