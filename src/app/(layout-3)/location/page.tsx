@@ -690,6 +690,7 @@ export default function LocationList() {
 
         // Save data to localStorage
         localStorage.setItem("selectedLatLonData", JSON.stringify(updatedData));
+        // console.log("latlon:", updatedData)
         return updatedData;
       });
     } catch (error) {

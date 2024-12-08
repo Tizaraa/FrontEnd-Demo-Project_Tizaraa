@@ -96,6 +96,7 @@ export default function LanguageSelector() {
               >
                 Language
               </label>
+              <GoogleTranslate></GoogleTranslate>
               {/* <select
                 style={{
                   width: "100%",
