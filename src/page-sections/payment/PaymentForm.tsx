@@ -282,8 +282,8 @@ import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
 import PaymentCheckBox from "@component/PaymentCheckBox";
 import PaymentImage from "@component/PaymentImage";
 
-import cashOnDeliveryImage from "../../../public/assets/images/payment/cashOnDelivery.png"
-import onlinePayment from "../../../public/assets/images/payment/onlinePayment.png"
+import cashOnDeliveryImage from "../../../public/assets/images/payment/cashOnDelivery.jpg"
+import onlinePayment from "../../../public/assets/images/payment/Mobile_Banking.jpg"
 import NagadImage from "../../../public/assets/images/payment/Nagad.avif"
 import BkashImage from "../../../public/assets/images/payment/Bkash.png"
 

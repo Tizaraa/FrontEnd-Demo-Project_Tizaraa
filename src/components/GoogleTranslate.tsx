@@ -206,7 +206,6 @@
 // };
 
 // export default GoogleTranslate;
-
 "use client";
 
 import { useEffect } from "react";
@@ -223,28 +222,10 @@ const GoogleTranslate = () => {
           new window.google.translate.TranslateElement(
             {
               pageLanguage: "en",
-              includedLanguages: "",
+              includedLanguages: "", // Add specific languages if needed
             },
             "google_translate_element"
           );
-
-          // Check if a language is saved in localStorage and apply it
-          const savedLanguage = localStorage.getItem("selectedLanguage");
-          if (savedLanguage) {
-            // Apply saved language
-            window.google.translate.TranslateElement.prototype
-              .hideBanner();
-            window.google.translate.TranslateElement.prototype
-              .setLang(savedLanguage);
-          }
-
-          // Listen for language change and save it to localStorage
-          const translateElement = window.google.translate.TranslateElement.prototype;
-          translateElement.setLang = (lang: string) => {
-            // Save language to localStorage
-            localStorage.setItem("selectedLanguage", lang);
-            translateElement.setLang.call(translateElement, lang);
-          };
         }
       };
 
@@ -260,50 +241,27 @@ const GoogleTranslate = () => {
 
   return (
     <>
-      <div
-        id="google_translate_element"
-        style={{ display: "block" }} // Make sure the element is displayed
-      />
+      <div id="google_translate_element" style={{ display: "block" }} />
 
       <style jsx global>{`
-        /* Hide the Google Translate branding and other elements */
+        /* Completely hide the Google Translate banner and elements */
         .goog-logo-link,
         .goog-te-banner-frame,
         #goog-gt-tt,
         .goog-te-balloon-frame,
-        .goog-te-gadget span,
-        iframe {
+        iframe,
+        .goog-te-gadget span {
           display: none !important;
         }
 
-        /* Prevent the banner from appearing on language selection */
+        /* Disable unwanted elements */
         body > .goog-te-banner-frame {
           display: none !important;
         }
 
-        /* Ensure the main body doesn't shift */
+        /* Prevent the body from shifting */
         body {
           top: 0 !important;
-        }
-
-        /* Keep only the language dropdown */
-        .goog-te-gadget {
-          color: transparent !important; /* Hide text like 'Select Language' */
-        }
-
-        /* Adjust dropdown styles if necessary */
-        .goog-te-combo {
-          font-size: 16px;
-          color: #000 !important; /* Dropdown text color */
-          border: 1px solid #ccc; /* Add border */
-          border-radius: 4px;
-          padding: 5px;
-        }
-
-        /* Custom margin for the dropdown */
-        .goog-te-gadget .goog-te-combo {
-          margin: 4px 0 !important; /* Override other styles */
-          margin-top: 20px !important; /* Set proper spacing from the top */
         }
       `}</style>
     </>
