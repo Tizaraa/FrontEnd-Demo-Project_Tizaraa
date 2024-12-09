@@ -363,6 +363,7 @@ export interface Product {
   Pictures: Picture[];
   Price: Price;
   VendorDisplayName: string;
+  MasterQuantity: number;
   VendorName: string;
   Location: Location;
   ExternalItemUrl: string;
@@ -603,7 +604,7 @@ const renderAttributes = (attributes: Attribute[]) => {
   discountPrice={0} // Replace with actual discount if available
   totalDiscount={0} // Replace with actual discount if available
   slug={""}
-  productStock={10} // Replace with actual stock if available
+  productStock={product.MasterQuantity}  // Replace with actual stock if available
   productId={""}
   sellerId={""}
   configuredItems={product.ConfiguredItems || []}
