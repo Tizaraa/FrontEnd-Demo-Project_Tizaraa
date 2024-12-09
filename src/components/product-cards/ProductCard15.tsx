@@ -97,6 +97,7 @@ type Props = {
   title: string;
   price: number;
   imgUrl: string;
+  productStock: number;
   rating?: number;
   images: string[];
   id: string | number;
@@ -106,7 +107,7 @@ type Props = {
 // ============================================================
 
 export default function ProductCard15(props: Props) {
-  const { off, id, title, price, imgUrl, rating, slug, images, productId, sellerId } = props;
+  const { off, id, title, price, imgUrl, productStock, rating, slug, images, productId, sellerId } = props;
 
   const [open, setOpen] = useState(false);
   const { state, dispatch } = useAppContext();
@@ -122,6 +123,7 @@ export default function ProductCard15(props: Props) {
       slug,
       price,
       imgUrl,
+      productStock,
       name: title,
       qty: (cartItem?.qty || 0) + 1,
       productId,

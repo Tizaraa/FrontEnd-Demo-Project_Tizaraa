@@ -769,6 +769,7 @@ export default function LocationList() {
                   price={item?.price || 0}
                   title={item?.title || "No Title"}
                   off={item?.discount || 0}
+                  productStock={item?.product_stock || 0}
                   images={item?.images || []}
                   imgUrl={item?.thumbnail || ""}
                   rating={item?.rating || 0}

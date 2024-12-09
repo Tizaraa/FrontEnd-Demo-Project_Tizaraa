@@ -257,7 +257,7 @@ export default function OrderList() {
 
   return (
     <Fragment>
-      <ToastContainer /> {/* Render ToastContainer for toast notifications */}
+       {/* Render ToastContainer for toast notifications */}
       <DashboardPageHeader title="My Orders" iconName="bag_filled" />
 
       <Hidden down={769}>

@@ -16,6 +16,7 @@ import NextImage from "@component/NextImage";
 import Card, { CardProps } from "@component/Card";
 import { H3, H4, SemiSpan } from "@component/Typography";
 import ProductQuickView from "@component/products/ProductQuickView";
+import { toast } from "react-toastify";
 
 import { calculateDiscount, currency, getTheme, DiscountPercentage } from "@utils/utils";
 import { deviceSize } from "@utils/constants";
@@ -114,6 +115,7 @@ interface ProductCard1Props extends CardProps {
   imgUrl: string;
   rating: number;
   images: string[];
+  productStock: number;
   discountPrice?: number; // Optional discount price
   totalDiscount?: number; // Optional total discount
   id?: string | number;
@@ -130,6 +132,7 @@ export default function ProductCard1({
   title,
   price,
   imgUrl,
+  productStock,
   images,
   rating,
   discountPrice,
@@ -146,6 +149,10 @@ export default function ProductCard1({
   const toggleDialog = useCallback(() => setOpen((open) => !open), []);
 
   const handleCartAmountChange = (amount: number) => () => {
+    if (amount > productStock) {
+      toast.error("Out of Stock");
+      return;
+    }
     dispatch({
       type: "CHANGE_CART_AMOUNT",
       payload: {
@@ -153,6 +160,7 @@ export default function ProductCard1({
         slug,
         price,
         imgUrl,
+        productStock,
         name: title,
         qty: amount,
 

@@ -481,6 +481,8 @@ import { currency, getTheme, isValidProp } from "@utils/utils";
 import { useAppContext } from "@context/app-context";
 import { useState,useEffect } from "react";
 import {Styledbutton} from "./style";
+//import { toast } from "react-toastify";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 // STYLED COMPONENTS
@@ -508,6 +510,7 @@ interface ProductCard7Props extends SpaceProps {
   slug: string;
   price: number;
   imgUrl?: string;
+  productStock: number;
   id: string | number;
   discountPrice: number;
   productId: string | number;
@@ -516,7 +519,7 @@ interface ProductCard7Props extends SpaceProps {
 }
 
 export default function ProductCard7(props: ProductCard7Props) {
-  const { id, name, qty, price, imgUrl, slug, discountPrice, productId, sellerId, b2bPricing, ...others } = props;
+  const { id, name, qty, price, imgUrl,productStock, slug, discountPrice, productId, sellerId, b2bPricing, ...others } = props;
   const { state, dispatch } = useAppContext();
   const [quantity, setQuantity] = useState(qty);
 
@@ -528,10 +531,14 @@ export default function ProductCard7(props: ProductCard7Props) {
   }, [state.cart, id]);
 
   const handleCartAmountChange = (amount: number) => {
+    if (amount > productStock) {
+      toast.error("Out of Stock"); // Show toast message
+      return;
+    }
     setQuantity(amount);
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { qty: amount, name, price, imgUrl, id, discountPrice, productId, sellerId, b2bPricing }
+      payload: { qty: amount, name, price, imgUrl, productStock, id, discountPrice, productId, sellerId, b2bPricing }
     });
   };
 
@@ -589,7 +596,7 @@ export default function ProductCard7(props: ProductCard7Props) {
               type="number"
               value={quantity}
               className="no-spin-button"
-              onChange={(e) => handleCartAmountChange(Math.max(1, parseInt(e.target.value)))}
+              onChange={(e) => handleCartAmountChange(Math.min(productStock, Math.max(1, parseInt(e.target.value))))}
               style={{ width: "50px", textAlign: "center", margin: "0 10px", borderRadius: "4px", padding: "5px", border: "1px solid #E94560" }}
               min="1"
             />

@@ -38,6 +38,7 @@ export default function Section4({ products }: Section4Props) {
               slug={product.slug}
               title={product.title}
               price={product.price}
+              productStock={product.product_stock}
               images={product.images}
               imgUrl={product.thumbnail}
               category={product.categories[0]}

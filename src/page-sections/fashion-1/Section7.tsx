@@ -31,6 +31,7 @@ export default function Section7({ products }: Props) {
             slug={products[0].slug}
             title={products[0].title}
             price={products[0].price}
+            productStock={products[0].product_stock}
             off={products[0].discount}
             rating={products[0].rating}
             images={products[0].images}
@@ -48,6 +49,7 @@ export default function Section7({ products }: Props) {
                   slug={item.slug}
                   title={item.title}
                   price={item.price}
+                  productStock={item.product_stock}
                   rating={item.rating}
                   images={item.images}
                   imgUrl={item.thumbnail}

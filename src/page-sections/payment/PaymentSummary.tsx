@@ -47,6 +47,7 @@ export default function PaymentSummary() {
               slug={item.slug}
               name={item.name}
               price={item.price}
+              productStock={item.productStock}
               imgUrl={item.imgUrl}
               discountPrice={item.discountPrice}
               productId={item.productId}

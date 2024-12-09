@@ -40,6 +40,7 @@ export default function Section6({ products }: Section6Props) {
               slug={product.slug}
               title={product.title}
               price={product.price}
+              productStock={product.product_stock}
               images={product.images}
               imgUrl={product.thumbnail}
               category={product.categories[0]}
