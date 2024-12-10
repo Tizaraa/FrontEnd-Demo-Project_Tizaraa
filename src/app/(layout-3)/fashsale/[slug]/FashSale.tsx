@@ -39,6 +39,8 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
   const [selectedBrand, setSelectedBrand] = useState<number[] | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null);
+
+  const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -61,6 +63,13 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
     setCurrentPage(1);
   };
 
+  const handleProvinceChange = (provinces: number[]) => {
+    setSelectedProvinces(provinces);
+    setCurrentPage(1);
+
+  }
+
+
   const handleSortChange = (sortOption: any) => {
     setSelectedSortOption(sortOption.value);
   };
@@ -76,6 +85,7 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
           category: selectedCategory || "all",
           brand: selectedBrand || null,
           country: selectedCountry || null,
+          province: selectedProvinces || null,
           page: currentPage,
           orderBy: selectedSortOption,
         }),
@@ -176,6 +186,7 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
                 onCountryChange={handleCountryChange}
+                onProvinceChange={handleProvinceChange}
                 slug={slug}
                 pageType="default"
               />
@@ -190,6 +201,7 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
             onCountryChange={handleCountryChange}
+            onProvinceChange={handleProvinceChange}
             slug={slug}
             pageType="default"
           />
