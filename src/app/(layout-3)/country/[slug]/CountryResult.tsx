@@ -37,6 +37,7 @@ export default function CountryResult({ sortOptions, slug }) {
   const [selectedBrand, setSelectedBrand] = useState<any[] | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null); // Track selected country
+  const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -61,6 +62,12 @@ export default function CountryResult({ sortOptions, slug }) {
     setCurrentPage(1); // Reset to first page
   };
 
+  const handleProvinceChange = (provinces: number[]) => {
+    setSelectedProvinces(provinces);
+    setCurrentPage(1);
+
+  }
+
   const handleSortChange = (sortOption: any) => {
     setSelectedSortOption(sortOption.value);
   };
@@ -79,6 +86,7 @@ export default function CountryResult({ sortOptions, slug }) {
             category: selectedCategory || "all",
             brand: selectedBrand || null,
             country: selectedCountry || null, // Add country filter here
+            province: selectedProvinces || null,
             page: currentPage,
             orderBy: selectedSortOption,
           }),
@@ -213,6 +221,7 @@ export default function CountryResult({ sortOptions, slug }) {
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
                 onCountryChange={handleCountryChange} // Pass country handler
+                onProvinceChange={handleProvinceChange}
                 slug={slug}
                 pageType={pageType}
               />
@@ -227,6 +236,7 @@ export default function CountryResult({ sortOptions, slug }) {
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
             onCountryChange={handleCountryChange} // Pass country handler
+            onProvinceChange={handleProvinceChange}
             slug={slug}
             pageType={pageType}
           />

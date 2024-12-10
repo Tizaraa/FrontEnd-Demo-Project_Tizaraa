@@ -40,6 +40,7 @@ type ProductFilterCardProps = {
   onBrandChange: (brands: number[]) => void;
   onCategoryChange: (categorySlug: string) => void; // Ensure this is a string
   onCountryChange: (countryIds: number[]) => void;
+  onProvinceChange: (provinces: number[]) => void;
   slug: string;
   pageType?: string;
 };
@@ -48,6 +49,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   onBrandChange,
   onCategoryChange,
   onCountryChange,
+  onProvinceChange,
   slug,
   pageType = 'default'
 }) =>  {
@@ -93,10 +95,12 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
     const updatedSelectedProvinces = selectedProvinces.includes(provinceId)
       ? selectedProvinces.filter((id) => id !== provinceId)
       : [...selectedProvinces, provinceId];
-
+  
     setSelectedProvinces(updatedSelectedProvinces);
+    onProvinceChange(updatedSelectedProvinces); // Pass updated provinces to parent
   };
-
+  
+  // Render provinces
   const visibleProvinces = showAllProvinces ? provinceList : provinceList.slice(0, 5);
   const toggleShowProvinces = () => setShowAllProvinces(!showAllProvinces);
 
