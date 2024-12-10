@@ -481,6 +481,7 @@ import { currency, getTheme, isValidProp } from "@utils/utils";
 import { useAppContext } from "@context/app-context";
 import { useState,useEffect } from "react";
 import {Styledbutton} from "./style";
+import CheckBox from "@component/CheckBox";
 //import { toast } from "react-toastify";
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -522,6 +523,18 @@ export default function ProductCard7(props: ProductCard7Props) {
   const { id, name, qty, price, imgUrl,productStock, slug, discountPrice, productId, sellerId, b2bPricing, ...others } = props;
   const { state, dispatch } = useAppContext();
   const [quantity, setQuantity] = useState(qty);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const itemInCart = state.cart.find(item => item.id === id);
@@ -542,14 +555,78 @@ export default function ProductCard7(props: ProductCard7Props) {
     });
   };
 
+  const handleDeleteAll = () => {
+    dispatch({
+      type: "CLEAR_CART"
+    });
+  };
+
   return (
-    <Wrapper {...others}>
+    <>
+    <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '1rem',
+        backgroundColor: '#fff',
+        borderRadius: '10px 10px 0 0',
+        marginBottom: '1rem',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+        ...(isMobile && {
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: '0.5rem'
+        })
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem'
+        }}>
+          <CheckBox />
+          <Typography style={{
+            fontSize: '14px',
+            color: '#757575',
+            marginRight: '0.5rem'
+          }}>
+            Selected All
+          </Typography>
+          <Typography style={{
+            fontSize: '14px',
+            color: '#757575'
+          }}>
+            {state.cart.length} item{state.cart.length !== 1 ? 's' : ''}
+          </Typography>
+        </div>
+        
+        <Button
+          onClick={handleDeleteAll}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.5rem 1rem',
+            backgroundColor: 'transparent',
+            border: 'none',
+            color: '#757575',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          <Icon variant="small">delete</Icon>
+          Delete All
+        </Button>
+      </div>
+      <Wrapper {...others}>
+      <div style={{display: "flex", flexDirection: "row", gap: "5px", marginLeft: "16px"}}>
+      <CheckBox />
       <LazyImage
         alt={name}
         width={140}
         height={140}
         src={imgUrl || "/assets/images/products/iphone-xi.png"}
       />
+      </div>
       <FlexBox
         width="100%"
         minWidth="0px"
@@ -614,5 +691,7 @@ export default function ProductCard7(props: ProductCard7Props) {
         </FlexBox>
       </FlexBox>
     </Wrapper>
+    </>
+    
   );
 }
