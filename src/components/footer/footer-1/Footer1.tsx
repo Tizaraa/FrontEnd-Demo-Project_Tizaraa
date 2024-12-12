@@ -176,13 +176,13 @@ import Typography, { Paragraph } from "@component/Typography";
 //   "Returns & Refunds",
 // ];
 export const aboutLinks = [
-  { name: "Help Center", url: "/customer-service" },
-  { name: "How to Buy", url: "/privacy-policy" },
+  { name: "Help Center", url: "/helpCenter" },
+  { name: "How to Buy", url: "/howToBuy" },
   { name: "Tizara Journey", url: "/privacy-policy" }
 ];
 
 export const customerCareLinks = [
-  { name: "Help Center", url: "/help-center" },
+  { name: "Help Center", url: "/help-center###" },
   { name: "Track Your Order", url: "/track-order" },
   { name: "Corporate & Bulk Purchasing", url: "/corporate-purchasing" },
   { name: "Returns & Refunds", url: "/returns-refunds" },
@@ -240,7 +240,7 @@ export default function Footer1() {
                 <div>
                   {aboutLinks.map((item, ind) => (
                     <a
-                      href="/"
+                      href={item.url}
                       key={ind}
                       style={{
                         display: "block",
