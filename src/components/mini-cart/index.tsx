@@ -776,7 +776,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                 size="small"
                 color="primary"
                 variant="outlined"
-                disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || isDeleting}
+                disabled={state.selectedProducts.length === 0 || state.cart.length === 0 && isDeleting}
                 onClick={handleDeleteSelected}
                 className={`delete-button ${isDeleting ? 'deleting' : ''}`}
               >
