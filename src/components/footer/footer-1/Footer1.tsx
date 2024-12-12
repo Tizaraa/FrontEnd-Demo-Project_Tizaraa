@@ -182,10 +182,10 @@ export const aboutLinks = [
 ];
 
 export const customerCareLinks = [
-  { name: "Help Center", url: "/help-center" },
-  { name: "Track Your Order", url: "/track-order" },
-  { name: "Corporate & Bulk Purchasing", url: "/corporate-purchasing" },
-  { name: "Returns & Refunds", url: "/returns-refunds" },
+  { name: "About Tizaraa", url: "/help-center" },
+  { name: "Tizaraa Blog", url: "/track-order" },
+  { name: "Tizaraa Cares", url: "/corporate-purchasing" },
+  { name: "Privacy Policy", url: "/returns-refunds" },
 ];
 
 export const customerCareLink = ["Sell on Tizaraa"];
@@ -271,7 +271,7 @@ export default function Footer1() {
                 <div>
                   {customerCareLinks.map((item, ind) => (
                     <a
-                      href="/"
+                      href={item.url}
                       key={ind}
                       style={{
                         display: "block",
@@ -411,4 +411,3 @@ export default function Footer1() {
     </footer>
   );
 }
-
