@@ -375,22 +375,23 @@ const useLocalStorage = (key: string, initialValue: any) => {
 export function AppProvider({ children }: PropsWithChildren) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [isMounted, setIsMounted] = useState(false);
-  const [storedCart, setStoredCart] = useLocalStorage("cart", []);
+  // const [storedCart, setStoredCart] = useLocalStorage("cart", []);
 
-  useEffect(() => {
-    setIsMounted(true);
-    if (storedCart.length > 0) {
-      storedCart.forEach(item => {
-        dispatch({ type: "CHANGE_CART_AMOUNT", payload: item });
-      });
-    }
-  }, [storedCart]);
+  // useEffect(() => {
+  //   setIsMounted(true);
+  //   if (storedCart.length > 0) {
+  //     storedCart.forEach(item => {
+  //       dispatch({ type: "CHANGE_CART_AMOUNT", payload: item });
+  //     });
+  //   }
+  // }, [storedCart]);
 
   const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
   
 
   useEffect(() => {
+    setIsMounted(true);
     // Restore cart and selected products from localStorage
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
     const storedSelectedProducts = JSON.parse(
@@ -398,7 +399,7 @@ export function AppProvider({ children }: PropsWithChildren) {
     );
 
     if (storedCart.length > 0) {
-      setIsMounted(true);
+      
       storedCart.forEach((item) => {
         dispatch({ type: "CHANGE_CART_AMOUNT", payload: item });
       });
@@ -409,7 +410,7 @@ export function AppProvider({ children }: PropsWithChildren) {
         dispatch({ type: "SELECT_PRODUCT", payload: id });
       });
     }
-  }, [storedCart]);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(state.cart));
