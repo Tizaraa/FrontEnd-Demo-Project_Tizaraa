@@ -34,46 +34,67 @@ const updateCartItem = (
   cart: any[],
   cartItem: any
 ) => {
+  // console.log("Initial Cart:", cart);
+  // console.log("Cart Item to Update:", cartItem);
+
   const exist = cart.find((item) => item.id === cartItem.id);
+
   // Check if the requested quantity exceeds stock
   if (cartItem.qty > cartItem.productStock) {
-    //toast.error("Out of Stock");// Display toast message
+    // console.log("Out of Stock:", cartItem);
+    //toast.error("Out of Stock"); // Display toast message
     return cartItem; // Do not update the cart
   }
-  
+
   // Calculate the price based on quantity and B2B pricing if available
   let calculatedPrice = cartItem.price; // Default to base price
-  let b2bPricing =cartItem.b2bPricing;
-  
-  console.log(cartItem);
-  //toast.error("Out of Stock");
-
+  let b2bPricing = cartItem.b2bPricing;
 
   if (b2bPricing && cartItem.qty > 0) {
-   
     // Check if B2B pricing applies based on quantity
-    let applicablePricing = getB2BPrice(cartItem.qty , b2bPricing) || calculatedPrice;
-
+    let applicablePricing = getB2BPrice(cartItem.qty, b2bPricing) || calculatedPrice;
 
     if (applicablePricing) {
-     
       calculatedPrice = applicablePricing; // Use the best applicable B2B price
     }
   }
 
+  // console.log("Calculated Price:", calculatedPrice);
+
+  // Convert the cartItem to a JSON string
+  const stringifiedCartItem = JSON.stringify({
+    ...cartItem,
+    qty: cartItem.qty,
+    price: calculatedPrice,
+  });
+
+  // console.log("Stringified Cart Item:", stringifiedCartItem);
+
   // Update quantity and price if item already exists
   if (exist) {
+    // console.log("Item Exists in Cart:", exist);
     if (cartItem.qty < 1) {
+      // console.log("Removing Item from Cart:", cartItem);
       return cart.filter((item) => item.id !== cartItem.id); // Remove item if qty is less than 1
     }
-    return cart.map((item) =>
-      item.id === cartItem.id ? { ...item, qty: cartItem.qty, price: calculatedPrice } : item
+    const updatedCart = cart.map((item) =>
+      item.id === cartItem.id
+        ? JSON.parse(stringifiedCartItem) // Parse the stringified cartItem to add it back as an object
+        : item
     );
+    // console.log("Updated Cart with Existing Item:", updatedCart);
+    return updatedCart;
   }
 
   // If the item is new, add it to the cart with the calculated price
-  return [...cart, { ...cartItem, qty: cartItem.qty, price: calculatedPrice }];
+  const newCart = [
+    ...cart,
+    JSON.parse(stringifiedCartItem), // Parse the stringified cartItem to add it as an object
+  ];
+  console.log("Updated Cart with New Item:", newCart);
+  return newCart;
 };
+
 
 // Reducer function
 const reducer = (state: InitialState, action: ActionType) => {

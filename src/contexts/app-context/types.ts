@@ -186,11 +186,13 @@ export interface CartItem {
   measurementUnit?:any;
   productType?: string;
   attributes?: string;
+  total_amount?: number;
 }
 
 export type ActionType =
   | { type: 'TOGGLE_HEADER'; payload: boolean }
   | { type: 'CHANGE_CART_AMOUNT'; payload: CartItem }
+  | { type: 'SET_BUY_NOW_ITEM'; payload: CartItem }
   | { type: 'LOGIN'; payload: { authToken: string, userInfo: UserInfo } }
   | { type: 'LOGOUT' }
   | { type: 'UPDATE_USER_INFO'; payload: UserInfo }

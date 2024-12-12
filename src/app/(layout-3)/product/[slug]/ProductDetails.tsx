@@ -38,7 +38,7 @@ async function fetchQRCode(slug: string) {
       `https://frontend.tizaraa.com/api/product/qr-code/${slug}`,
       { headers: { Accept: "application/xml" }, responseType: "text" } // Ensure SVG is returned as text
     );
-    console.log("nazim qr", response.data);
+    // console.log("nazim qr", response.data);
     
     return response.data; // Return the raw SVG XML string
   } catch (error) {
