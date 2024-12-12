@@ -18,6 +18,7 @@ import ProductFilterCard from "@component/products/ProductFilterCard";
 import useWindowSize from "@hook/useWindowSize";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import CountryProductFilterCard from "@component/products/CountryProductFilterCard";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -217,7 +218,7 @@ export default function CountryResult({ sortOptions, slug }) {
                 </IconButton>
               }
             >
-              <ProductFilterCard
+              <CountryProductFilterCard
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
                 onCountryChange={handleCountryChange} // Pass country handler
@@ -232,7 +233,7 @@ export default function CountryResult({ sortOptions, slug }) {
 
       <Grid container spacing={6}>
         <Grid item lg={3} xs={12}>
-          <ProductFilterCard
+          <CountryProductFilterCard
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
             onCountryChange={handleCountryChange} // Pass country handler
