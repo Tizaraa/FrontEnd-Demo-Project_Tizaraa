@@ -153,7 +153,8 @@ const AddToCartButton = ({
           sellerId,
           b2bPricing: [],
           productType,
-          attributes
+          attributes,
+          total_amount: defaultPrice*1
         },
       });
       //console.log("defaultPrice");
