@@ -83,54 +83,7 @@ const AddToCartButton = ({
       toast.error("Out of Stock");
       return;
     }
-    //const [productStock, setProductStock] = useState<number | null>(null);
-    // try {
-    //   const response = await axios.get(
-    //     `${ApiBaseUrl.baseUrl}product/details/${slug}`
-    //   );
-    //   console.log("nazim",response.data.productsingledetails.product_stock);
-      
-    //   const productStock = Number(response.data.productsingledetails.product_stock);
-    //   if (amount > productStock) {
-    //     toast.error("Out of Stock");
-    //     return;
-    //   }
-    //   const selectedSizeColorOption =
-    //     dummySizes.length === 0
-    //       ? { price: discountPrice || price || 0, b2bPricing: [] }
-    //       : dummySizes.find(item => item.size === selectedSize && item.color === selectedColor);
-  
-    //   if (!selectedSizeColorOption) {
-    //     alert("Selected size and color option is not available.");
-    //     return;
-    //   }
-  
-    //   const finalPrice = getB2BPrice(amount, selectedSizeColorOption.b2bPricing) || selectedSizeColorOption.price;
-  
-    //   setQuantity(amount);
-  
-    //   dispatch({
-    //     type: "CHANGE_CART_AMOUNT",
-    //     payload: {
-    //       price: finalPrice,
-    //       qty: amount,
-    //       name: title,
-    //       imgUrl: images[0],
-    //       id: uniqueKey,
-    //       discountPrice,
-    //       slug,
-    //       productId,
-    //       sellerId,
-    //       b2bPricing: selectedSizeColorOption.b2bPricing,
-    //       productType,
-    //       attributes
-          
-    //     },
-    //   });
-    // }catch (error) {
-    //   console.error("Failed to fetch product stock:", error);
-    // }
-
+   
       const selectedSizeColorOption =
         dummySizes.length === 0
           ? { price: discountPrice || price || 0, b2bPricing: [] }
@@ -160,58 +113,12 @@ const AddToCartButton = ({
           sellerId,
           b2bPricing: selectedSizeColorOption.b2bPricing,
           productType,
-          attributes
+          attributes,
+          total_amount: finalPrice*amount
           
         },
       });
   }
-    //console.log("nazim",productStock);
-    
-
-  // const handleAddToCart = () => {
-  //   handleCartAmountChange(1);
-
-  //   if (dummySizes.length === 0) {
-  //     const defaultPrice = discountPrice || price;
-  //     dispatch({
-  //       type: "CHANGE_CART_AMOUNT",
-  //       payload: {
-  //         price: defaultPrice,
-  //         qty: 1,
-  //         name: title,
-  //         imgUrl: images[0],
-  //         id: uniqueKey,
-  //         discountPrice,
-  //         slug,
-  //         productId,
-  //         sellerId,
-  //         b2bPricing: [],
-  //         productType,
-  //       },
-  //     });
-
-  //     // Show success toast
-  //   //   toast.success(`${title} has been added to the cart!`, {
-  //   //     position: "top-right", // Position of the toast
-  //   //     autoClose: 3000, // Auto close after 3 seconds
-  //   //     hideProgressBar: true, // Hide the progress bar
-  //   //   });
-  //   toast.success("Added to cart successfully!");
-  //     return;
-  //   }
-
-  //   if (!selectedSize && !selectedColor && !selectedSpec) {
-  //     alert("Please select size, color, and variant before adding to cart.");
-  //     return;
-  //   }
-
-  //   // Show success toast when item is added to cart
-  //   toast.success(`${title} has been added to the cart!`, {
-  //     position: "top-right", // Position of the toast
-  //     autoClose: 3000, // Auto close after 3 seconds
-  //     hideProgressBar: true, // Hide the progress bar
-  //   });
-  // };
 
 
   // Newly Added 
