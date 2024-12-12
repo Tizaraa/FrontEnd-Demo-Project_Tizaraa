@@ -8,7 +8,7 @@ export const StyledMiniCart = styled.div`
 
   .cart-list {
     flex: 1 1 0;
-    overflow: auto;
+    overflow: hidden;
   }
 
   .no-spin-button::-webkit-outer-spin-button,
