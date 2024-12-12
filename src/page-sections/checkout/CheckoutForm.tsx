@@ -17,6 +17,8 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const [hasAddress, setHasAddress] = useState(false);
+  const [isAddressChecked, setIsAddressChecked] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -57,6 +59,11 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
     router.push("/cart");
   };
 
+  const handleAddressChange = (hasAddressData, isSelected) => {
+    setHasAddress(hasAddressData);
+    setIsAddressChecked(isSelected);
+  };
+
   return (
     <>
       <ToastContainer autoClose={4000} />
@@ -75,7 +82,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
       </FlexBox>
 
       {/* <CheckoutAddress /> */}
-      <CheckoutAddress setDeliveryCharge={setDeliveryCharge} />
+      <CheckoutAddress setDeliveryCharge={setDeliveryCharge} onAddressChange={handleAddressChange} />
 
       <Grid container spacing={7}>
         <Grid item sm={6} xs={12}>
@@ -97,7 +104,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
             type="button"
             fullwidth
             onClick={handlePayment}
-            disabled={totalPrice === 0} 
+            disabled={!hasAddress || !isAddressChecked}
           >
             Payment
           </Button>
