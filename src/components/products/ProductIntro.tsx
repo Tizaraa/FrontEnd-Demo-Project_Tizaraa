@@ -15,6 +15,7 @@ import ProductDetails from "./ProductDetails";
 import FlexBox from "@component/FlexBox";
 import { H6, SemiSpan } from "@component/Typography";
 import Link from "next/link";
+// import BuyItNow from "./BuyItNow";
 
 
 type ProductIntroProps = {
@@ -143,6 +144,7 @@ export default function ProductIntro({
             title={title}
             discountPrice={discountPrice}
             slug={slug}
+            productStock={productStock}
             selectedSize={selectedSize} 
             selectedColor={selectedColor} 
             price={selectedPrice} 
@@ -151,6 +153,42 @@ export default function ProductIntro({
             productType = "General"
 
           />
+          //   <div style={{display: "flex", gap:"10px"}}>
+          //      <BuyItNow
+          //   productId={productId}
+          //   sellerId={sellerId}
+          //   images={images}
+          //   title={title}
+          //   discountPrice={discountPrice}
+          //   slug={slug}
+          //   productStock={productStock}
+          //   selectedSize={selectedSize} 
+          //   selectedColor={selectedColor} 
+          //   price={selectedPrice} 
+          //   dummySizes={formattedSizeColorOptions} 
+          //   selectedSpec={''} 
+          //   productType = "General"
+
+          // />
+          
+          //    <AddToCartButton
+          //   productId={productId}
+          //   sellerId={sellerId}
+          //   images={images}
+          //   title={title}
+          //   discountPrice={discountPrice}
+          //   slug={slug}
+          //   productStock={productStock}
+          //   selectedSize={selectedSize} 
+          //   selectedColor={selectedColor} 
+          //   price={selectedPrice} 
+          //   dummySizes={formattedSizeColorOptions} 
+          //   selectedSpec={''} 
+          //   productType = "General"
+
+          // />
+          //   </div>
+           
           )}
 
            <FlexBox alignItems="center" mb="1rem" mt="1rem">

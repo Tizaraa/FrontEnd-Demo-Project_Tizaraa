@@ -194,6 +194,7 @@ export default function Navbar({ navListOpen }: NavbarProps) {
 
   // Check if the current path is "/location"
   const isLocationPage = pathname === "/location";
+  const isHomePage = pathname === "/";
   
   const renderNestedNav = (list: Nav[], isRoot = false) => {
     return list?.map((nav: Nav) => {
@@ -313,9 +314,12 @@ export default function Navbar({ navListOpen }: NavbarProps) {
               <Typography ml="10px" flex="1 1 0" fontWeight="600" textAlign="left" color="text.muted">
                 Categories
               </Typography>
-              <Icon className="dropdown-icon" variant="small">
+              {!isHomePage && (
+                <Icon className="dropdown-icon" variant="small">
                 chevron-right
               </Icon>
+              )}
+              
             </Button>
           </Categories>
         )}

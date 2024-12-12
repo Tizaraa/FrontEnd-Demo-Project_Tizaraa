@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronDown, Globe } from "lucide-react";
 import dynamic from "next/dynamic";
 
@@ -9,15 +9,44 @@ const GoogleTranslate = dynamic(() => import("./GoogleTranslate"), { ssr: false 
 
 export default function LanguageSelector() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Hide the Google Translate bar if the user isn't interacting with it
+  const hideGoogleTranslateBar = () => {
+    const googleLogoLink = document.querySelector(".goog-logo-link") as HTMLElement;
+    if (googleLogoLink) googleLogoLink.style.display = "none";
+
+    const banner = document.querySelector(".goog-te-banner-frame") as HTMLElement;
+    if (banner) banner.style.display = "none";
+
+    const balloonFrame = document.querySelector(".goog-te-balloon-frame") as HTMLElement;
+    if (balloonFrame) balloonFrame.style.display = "none";
+
+    const tooltip = document.querySelector("#goog-gt-tt") as HTMLElement;
+    if (tooltip) tooltip.style.display = "none";
+
+    const iframes = document.querySelectorAll("iframe");
+    iframes.forEach((iframe) => {
+      (iframe as HTMLElement).style.display = "none";
+    });
+
+    const gadgetSpans = document.querySelectorAll(".goog-te-gadget span");
+    gadgetSpans.forEach((span) => {
+      (span as HTMLElement).style.display = "none";
+    });
+
+    document.body.style.top = "0";
+  };
+
+  // Effect to hide the Google Translate bar when clicking outside the dropdown
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        hideGoogleTranslateBar();
       }
-    }
+    };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -25,16 +54,41 @@ export default function LanguageSelector() {
     };
   }, []);
 
-  // Function to handle language selection
+  // Effect to initialize the selected language from localStorage on page load
+  useEffect(() => {
+    const storedLanguage = localStorage.getItem("selectedLanguage");
+    if (storedLanguage) {
+      setSelectedLanguage(storedLanguage);
+    }
+  }, []);
+
+  // Effect to trigger Google Translate language change when selectedLanguage changes
+  useEffect(() => {
+    const googleTranslateElement = document.querySelector(".goog-te-combo") as HTMLSelectElement;
+    if (googleTranslateElement && selectedLanguage) {
+      // Set the value based on the selected language
+      googleTranslateElement.value = selectedLanguage;
+
+      // Explicitly trigger the "change" event to update the translation
+      googleTranslateElement.dispatchEvent(new Event("change"));
+    }
+  }, [selectedLanguage]);
+
+  // Handle language change from dropdown
   const handleLanguageChange = (languageCode: string, languageName: string) => {
     setSelectedLanguage(languageName);
 
-    // Google Translate functionality
+    // Save the selected language in localStorage
+    localStorage.setItem("selectedLanguage", languageName);
+
+    // Trigger Google Translate language change
     const googleTranslateElement = document.querySelector(".goog-te-combo") as HTMLSelectElement;
     if (googleTranslateElement) {
-      googleTranslateElement.value = languageCode; // Set the selected language code
-      googleTranslateElement.dispatchEvent(new Event("change")); // Trigger the translation
+      googleTranslateElement.value = languageCode;
+      googleTranslateElement.dispatchEvent(new Event("change"));
     }
+
+    hideGoogleTranslateBar();
   };
 
   return (
@@ -54,12 +108,12 @@ export default function LanguageSelector() {
         <ChevronDown style={{ width: "16px", height: "16px" }} />
       </div>
 
-      {/* Dropdown */}
+      {/* Dropdown only shows when user clicks */}
       {isOpen && (
         <div
           style={{
             position: "absolute",
-            left: "-192px", // Adjust positioning for the initial state
+            left: "-192px",
             marginTop: "8px",
             width: "300px",
             backgroundColor: "#ffffff",
@@ -68,6 +122,7 @@ export default function LanguageSelector() {
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             zIndex: 50,
           }}
+          translate="no"
         >
           <div style={{ padding: "16px" }}>
             <h3
@@ -96,31 +151,9 @@ export default function LanguageSelector() {
               >
                 Language
               </label>
-              {/* <select
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  fontSize: "0.875rem",
-                  color: "#374151",
-                  border: "1px solid #d1d5db",
-                  borderRadius: "0.5rem",
-                }}
-                onChange={(e) => {
-                  const selectedOption = e.target.options[e.target.selectedIndex];
-                  handleLanguageChange(e.target.value, selectedOption.text);
-                }}
-                value={selectedLanguage}
-              >
-                <option value="">Select Language</option>
-                <option value="en">English</option>
-                <option value="es">Spanish</option>
-                <option value="fr">French</option>
-                <option value="de">German</option>
-                <option value="zh-CN">Chinese</option>
-                <option value="ar">Arabic</option>
-              </select> */}
+              {/* Pass the state updater to GoogleTranslate */}
+              <GoogleTranslate onLanguageChange={setSelectedLanguage} />
             </div>
-
           </div>
         </div>
       )}

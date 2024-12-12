@@ -182,7 +182,7 @@ export const aboutLinks = [
 ];
 
 export const customerCareLinks = [
-  { name: "Help Center", url: "/help-center###" },
+  { name: "Help Center", url: "/help-center" },
   { name: "Track Your Order", url: "/track-order" },
   { name: "Corporate & Bulk Purchasing", url: "/corporate-purchasing" },
   { name: "Returns & Refunds", url: "/returns-refunds" },

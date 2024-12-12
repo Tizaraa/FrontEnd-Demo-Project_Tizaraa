@@ -282,8 +282,8 @@ import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
 import PaymentCheckBox from "@component/PaymentCheckBox";
 import PaymentImage from "@component/PaymentImage";
 
-import cashOnDeliveryImage from "../../../public/assets/images/payment/cashOnDelivery.png"
-import onlinePayment from "../../../public/assets/images/payment/onlinePayment.png"
+import cashOnDeliveryImage from "../../../public/assets/images/payment/cashOnDelivery.jpg"
+import onlinePayment from "../../../public/assets/images/payment/Mobile_Banking.jpg"
 import NagadImage from "../../../public/assets/images/payment/Nagad.avif"
 import BkashImage from "../../../public/assets/images/payment/Bkash.png"
 
@@ -367,7 +367,7 @@ export default function PaymentForm() {
 
     let cart = cartData;
 
-    console.log("Cart Items:", cart);
+    console.log("Orders:", cart);
     console.log("Product Type:", productType);
     console.log("Selected payment method:", paymentMethod);
     if (paymentMethod === "Online Payment") {
@@ -439,18 +439,23 @@ export default function PaymentForm() {
 
               // Place order items for all products, including OTC
               const response = await axios.post(
-                `${ApiBaseUrl.baseUrl}checkout/order/items`,
+                `${ApiBaseUrl.baseUrl}checkout/order-items`,
                 {
-                  delivery_charge: 60,
-                  user_id: userinfo.id,
-                  seller_id: cartdata.sellerId,
-                  order_id: orderId,
-                  product_id: cartdata.productId,
-                  color: color,
-                  size: cartdata.attributes,
-                  qty: cartdata.qty,
-                  note1: "lorem10",
-                  single_ammount: cartdata.price,
+                  orders: [
+                    {
+                      delivery_charge: 60,
+                      user_id: userinfo.id,
+                      seller_id: cartdata.sellerId,
+                      order_id: orderId,
+                      product_id: cartdata.productId,
+                      color: 'null',
+                      size: 'null',
+                      qty: cartdata.qty,
+                      note1: "lorem10",
+                      single_amount: cartdata.price,
+                      total_amount: cartdata.total_amount,
+                    },
+                  ],
                 },
                 {
                   headers: {
@@ -519,7 +524,7 @@ export default function PaymentForm() {
             payment_type: 1,
             seller_id: cartData[0]?.sellerId,
             // payment_method: "cod",
-            // productType: productType,
+            productType: productType,
           },
 
           {
@@ -548,18 +553,23 @@ export default function PaymentForm() {
 
               // Place order items for all products, including OTC
               const response = await axios.post(
-                `${ApiBaseUrl.baseUrl}checkout/order/items`,
+                `${ApiBaseUrl.baseUrl}checkout/order-items`,
                 {
-                  delivery_charge: 60,
-                  user_id: userinfo.id,
-                  seller_id: cartdata.sellerId,
-                  order_id: orderId,
-                  product_id: cartdata.productId,
-                  color: color,
-                  size: cartdata.attributes,
-                  qty: cartdata.qty,
-                  note1: "lorem10",
-                  single_ammount: cartdata.price,
+                  orders: [
+                    {
+                      delivery_charge: 60,
+                      user_id: userinfo.id,
+                      seller_id: cartdata.sellerId,
+                      order_id: orderId,
+                      product_id: cartdata.productId,
+                      color: 'null',
+                      size: 'null',
+                      qty: cartdata.qty,
+                      note1: "lorem10",
+                      single_amount: cartdata.price,
+                      total_amount: cartdata.total_amount,
+                    },
+                  ],
                 },
                 {
                   headers: {
@@ -568,7 +578,7 @@ export default function PaymentForm() {
                   },
                 }
               );
-
+            
               console.log("Cart Item Response:", response.data);
             } catch (error) {
               console.error("Failed to add item to order:", error.response);

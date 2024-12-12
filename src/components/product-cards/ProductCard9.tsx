@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Fragment, useCallback, useState } from "react";
 import styled from "styled-components";
-
+import { toast } from "react-toastify";
 import Box from "../Box";
 import Card from "../Card";
 import Image from "../Image";
@@ -100,6 +100,7 @@ type ProductCard9Props = {
   title: string;
   price: number;
   imgUrl: string;
+  productStock: number;
   rating: number;
   images: string[];
   id: string | number;
@@ -118,6 +119,7 @@ export default function ProductCard9({
   title,
   price,
   imgUrl,
+  productStock,
   rating,
   images,
   categories,
@@ -133,7 +135,7 @@ export default function ProductCard9({
   const handleCartAmountChange = (qty: number) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { price, imgUrl, id, qty, slug, name: title, productId, sellerId }
+      payload: { price, imgUrl, productStock, id, qty, slug, name: title, productId, sellerId }
     });
   };
 

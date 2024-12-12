@@ -492,6 +492,28 @@ export default function Login() {
             </Small>
           )}
 
+                {/* Forgot Password */}
+        <FlexBox justifyContent="end" bg="#fff" >
+        <span
+  onClick={() => setModalOpen(true)} // Triggers the modal on click
+  style={{
+    padding: "10px",
+    marginTop: "-1.5rem",
+    minWidth: "auto",
+    marginLeft: "0.5rem",
+    marginRight: "-0.5rem",
+    textDecoration: "none", // Makes it look like a link
+    color: "#e94560", // Primary color for link
+    cursor: "pointer", // Makes it clickable
+    fontSize: "0.8rem", // Optional for text size
+    marginBottom: "10px",
+  }}
+>
+  Forgot password?
+</span>
+
+</FlexBox>
+
           {/* Submit Button */}
           <Button
             mb="1.65rem"
@@ -542,31 +564,14 @@ export default function Login() {
           <FlexBox justifyContent="center" mb="">
             <SemiSpan>Don’t have an account?</SemiSpan>
             <Link href="/signup">
-              <H6 ml="0.5rem" borderBottom="1px solid" borderColor="gray.900">
+              <H6 ml="0.5rem" mb="1.5rem" borderBottom="1px solid" borderColor="gray.900">
                 Sign Up
               </H6>
             </Link>
           </FlexBox>
         </form>
 
-        {/* Forgot Password */}
-        <FlexBox justifyContent="center" alignItems="center" bg="#fff" my="0.5rem">
-  <SemiSpan>Forgot your password?</SemiSpan>
-  <Button
-    onClick={() => setModalOpen(true)} // Triggers the modal on click
-    variant="text" // A variant to make it look like a link
-    color="primary"
-    style={{
-      padding: "10px",
-      minWidth: "auto",
-      marginLeft: "0.5rem",
-      textDecoration: "none", // Makes it look like a link
-      fontSize: "1rem", // You can adjust the font size if needed
-    }}
-  >
-    Reset It
-  </Button>
-</FlexBox>
+  
       </StyledRoot>
       <ForgotPasswordModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
     </>

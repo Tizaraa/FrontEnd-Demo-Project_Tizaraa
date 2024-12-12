@@ -69,6 +69,7 @@ type ProductCard17Props = {
   title: string;
   price: number;
   imgUrl: string;
+  productStock: number;
   rating?: number;
   reviews: number;
   category: string;
@@ -81,7 +82,7 @@ type ProductCard17Props = {
 // ==============================================================
 
 export default function ProductCard17(props: ProductCard17Props) {
-  const { id, title, price, imgUrl, category, reviews, slug, images, productId, sellerId } = props;
+  const { id, title, price, imgUrl, productStock, category, reviews, slug, images, productId, sellerId } = props;
 
   const { state, dispatch } = useAppContext();
   const [openDialog, setOpenDialog] = useState(false);
@@ -99,6 +100,7 @@ export default function ProductCard17(props: ProductCard17Props) {
       slug,
       price,
       imgUrl,
+      productStock,
       name: title,
       qty: (cartItem?.qty || 0) + 1,
       productId, 

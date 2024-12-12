@@ -114,7 +114,7 @@ export default function Header({ isFixed, className }: HeaderProps) {
       </Menu>
     </Fragment>
   ) : (
-    <Tooltip title="User">
+    <Tooltip title="Login">
       <IconButton
         ml="1rem"
         bg="gray.200"

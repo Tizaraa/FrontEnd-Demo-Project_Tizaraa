@@ -501,6 +501,15 @@ export default function OtProductsIntro({
     setSelectedRowId(itemId === selectedRowId ? null : itemId);
   };
 
+  const getSelectedRowQuantity = () => {
+    const selectedItem = configuredItems.find((item) => item.Id === selectedRowId);
+    return selectedItem?.Quantity || 0;
+  };
+
+  // const getDefaultQuantity = () => {
+  //   return configuredItems.length > 0 ? ConfiguredItems.find(item => item.Id)?.Quantity || 0 : productStock;
+  // };
+
   useEffect(() => {
     const initialItem = Attributes?.find(item => 
       configuredItems.some(configuredItem => 
@@ -533,6 +542,7 @@ export default function OtProductsIntro({
       type: "CHANGE_CART_AMOUNT",
       payload: {
         price,
+        productStock,
         qty: amount,
         name: title,
         imgUrl: images[0],
@@ -619,7 +629,13 @@ export default function OtProductsIntro({
         )}
       </FlexBox>
       <SemiSpan color="inherit">
-        {productStock > 0 ? "Stock Available" : "Stock Out"}
+      {selectedRowId
+      ? getSelectedRowQuantity() > 0
+        ? "Stock Available"
+        : "Stock Out"
+      : productStock > 0
+      ? "Stock Available"
+      : "Stock Out"}
       </SemiSpan>
     </Box>
 
@@ -728,6 +744,7 @@ export default function OtProductsIntro({
         discountPrice={discountPrice}
         price={selectedPrice}
         slug={slug}
+        productStock={productStock}
         selectedSize={''} 
         selectedColor={''} 
         selectedSpec={''} 
@@ -752,6 +769,7 @@ export default function OtProductsIntro({
             discountPrice={discountPrice}
             price={selectedPrice}
             slug={slug}
+            productStock={getSelectedRowQuantity()}
             selectedSize={''}
             selectedSpec={selectedSpec}
             selectedColor={''}

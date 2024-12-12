@@ -6,10 +6,11 @@ import Icon from "@component/icon/Icon";
 import { H3 } from "@component/Typography";
 import { useAppContext } from "@context/app-context";
 import { useState,useEffect  } from "react";
-import { toast } from "react-toastify";  // <-- Import the toast functionality
+//import { toast } from "react-toastify";  // <-- Import the toast functionality
 import {Styledbutton} from "./style";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
 
 type SizeColorOption = {
   size: string;
@@ -25,6 +26,7 @@ type AddToCartButtonProps = {
   images: string[];
   title: string;
   discountPrice?: number;
+  productStock: number;
   price?: number;
   slug?: string;
   selectedSize: string | null;
@@ -42,6 +44,7 @@ const AddToCartButton = ({
   title,
   discountPrice,
   price,
+  productStock,
   slug,
   selectedSize,
   selectedColor,
@@ -76,18 +79,11 @@ const AddToCartButton = ({
   };
 
   const handleCartAmountChange = async(amount) => {
-    //const [productStock, setProductStock] = useState<number | null>(null);
-    try {
-      const response = await axios.get(
-        `${ApiBaseUrl.baseUrl}product/details/${slug}`
-      );
-      console.log("nazim",response.data.productsingledetails.product_stock);
-      
-      const productStock = Number(response.data.productsingledetails.product_stock);
-      if (amount > productStock) {
-        toast.error("Out of Stock");
-        return;
-      }
+    if (amount > productStock) {
+      toast.error("Out of Stock");
+      return;
+    }
+   
       const selectedSizeColorOption =
         dummySizes.length === 0
           ? { price: discountPrice || price || 0, b2bPricing: [] }
@@ -109,6 +105,7 @@ const AddToCartButton = ({
           qty: amount,
           name: title,
           imgUrl: images[0],
+          productStock: productStock,
           id: uniqueKey,
           discountPrice,
           slug,
@@ -116,61 +113,12 @@ const AddToCartButton = ({
           sellerId,
           b2bPricing: selectedSizeColorOption.b2bPricing,
           productType,
-          attributes
+          attributes,
+          total_amount: finalPrice*amount
           
         },
       });
-    }catch (error) {
-      console.error("Failed to fetch product stock:", error);
-    }
   }
-    //console.log("nazim",productStock);
-    
-
-  // const handleAddToCart = () => {
-  //   handleCartAmountChange(1);
-
-  //   if (dummySizes.length === 0) {
-  //     const defaultPrice = discountPrice || price;
-  //     dispatch({
-  //       type: "CHANGE_CART_AMOUNT",
-  //       payload: {
-  //         price: defaultPrice,
-  //         qty: 1,
-  //         name: title,
-  //         imgUrl: images[0],
-  //         id: uniqueKey,
-  //         discountPrice,
-  //         slug,
-  //         productId,
-  //         sellerId,
-  //         b2bPricing: [],
-  //         productType,
-  //       },
-  //     });
-
-  //     // Show success toast
-  //   //   toast.success(`${title} has been added to the cart!`, {
-  //   //     position: "top-right", // Position of the toast
-  //   //     autoClose: 3000, // Auto close after 3 seconds
-  //   //     hideProgressBar: true, // Hide the progress bar
-  //   //   });
-  //   toast.success("Added to cart successfully!");
-  //     return;
-  //   }
-
-  //   if (!selectedSize && !selectedColor && !selectedSpec) {
-  //     alert("Please select size, color, and variant before adding to cart.");
-  //     return;
-  //   }
-
-  //   // Show success toast when item is added to cart
-  //   toast.success(`${title} has been added to the cart!`, {
-  //     position: "top-right", // Position of the toast
-  //     autoClose: 3000, // Auto close after 3 seconds
-  //     hideProgressBar: true, // Hide the progress bar
-  //   });
-  // };
 
 
   // Newly Added 
@@ -185,6 +133,7 @@ const AddToCartButton = ({
         return;
       }
     }
+    
     handleCartAmountChange(1);
   
     if (dummySizes.length === 0) {
@@ -196,6 +145,7 @@ const AddToCartButton = ({
           qty: 1,
           name: title,
           imgUrl: images[0],
+          productStock: productStock,
           id: uniqueKey,
           discountPrice,
           slug,
@@ -206,7 +156,7 @@ const AddToCartButton = ({
           attributes
         },
       });
-
+      //console.log("defaultPrice");
       toast.success("Added to cart successfully!");
       return;
     }
@@ -216,16 +166,16 @@ const AddToCartButton = ({
       return;
     }
 
-    toast.success(`${title} has been added to the cart!`, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: true,
-    });
+    // toast.success(`${title} has been added to the cart!`, {
+    //   position: "top-right",
+    //   autoClose: 3000,
+    //   hideProgressBar: true,
+    // });
   };
   
 
   const handleQuantityInputChange = (e) => {
-    const newQuantity = Math.max(1, parseInt(e.target.value));
+    const newQuantity = Math.min(productStock, Math.max(1, parseInt(e.target.value)));
     setQuantity(newQuantity);
     handleCartAmountChange(newQuantity);
   };

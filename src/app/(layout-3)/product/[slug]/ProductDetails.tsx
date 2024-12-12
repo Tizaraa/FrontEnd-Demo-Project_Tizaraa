@@ -2,6 +2,7 @@
 
 import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
+import DOMPurify from "dompurify";
 import ResponsiveCategory from "./ResponsiveCategory";
 import ProductIntro from "@component/products/ProductIntro";
 import ProductView from "@component/products/ProductView";
@@ -31,6 +32,22 @@ async function fetchProductData(slug: string) {
   }
 }
 
+async function fetchQRCode(slug: string) {
+  try {
+    const response = await axios.get(
+      `https://frontend.tizaraa.com/api/product/qr-code/${slug}`,
+      { headers: { Accept: "application/xml" }, responseType: "text" } // Ensure SVG is returned as text
+    );
+    // console.log("nazim qr", response.data);
+    
+    return response.data; // Return the raw SVG XML string
+  } catch (error) {
+    console.error("Error fetching QR code:", error);
+    return null;
+  }
+}
+
+
 interface Props {
   params: { slug: string };
 }
@@ -41,12 +58,14 @@ const ShippingInfo: React.FC<{
   sellerShopName: string;
   shopUrl: string;
   delivery_type: string;
+  qrCodeUrl: string | null;
 }> = ({
   isDesktop,
   sellerShopName,
   sellerShopLogo,
   shopUrl,
   delivery_type,
+  qrCodeUrl,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -228,6 +247,40 @@ const ShippingInfo: React.FC<{
             </div>
           </div>
 
+          
+          {qrCodeUrl && (
+  <div style={{ marginBottom: "20px", textAlign: "center" }}>
+    <h2
+      style={{
+        fontSize: "20px",
+        fontWeight: "bold",
+        marginBottom: "10px",
+        color: "#333",
+      }}
+    >
+      QR Code
+    </h2>
+    <div
+      dangerouslySetInnerHTML={{
+        __html: DOMPurify.sanitize(qrCodeUrl), // Sanitize and render SVG
+      }}
+      style={{
+        maxWidth: "100%",
+        height: "auto",
+        marginBottom: "10px",
+      }}
+    ></div>
+    <p
+      style={{
+        fontSize: "14px",
+        color: "#555",
+      }}
+    >
+      Scan this QR code for product information
+    </p>
+  </div>
+)}
+
           <div
             style={{
               backgroundColor: "#fff",
@@ -331,6 +384,8 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   const [isDesktop, setIsDesktop] = useState(true);
   const [productData, setProductData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -351,7 +406,19 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
       setIsLoading(false);
     };
 
+    const loadQRCode = async () => {
+      setIsLoading(true);
+      const qrCodeData = await fetchQRCode(params.slug);
+      if (qrCodeData) {
+        setQrCodeUrl(qrCodeData);
+      }else {
+        console.warn("No QR Code data received."); // Log warning
+      }
+      setIsLoading(false);
+    };
+
     loadProductData();
+    loadQRCode();
   }, [params.slug]);
 
   if (isLoading) {
@@ -359,6 +426,20 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
       <LoaderWrapper>
         <Vortex />
       </LoaderWrapper>
+    );
+  }
+
+  if (!qrCodeUrl) {
+    return (
+      <div
+        style={{
+          textAlign: "center",
+          padding: "20px",
+          color: "#555",
+        }}
+      >
+        <p>QR Code is not available.</p>
+      </div>
     );
   }
 
@@ -430,6 +511,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
                 sellerShopLogo={sellerShopLogo}
                 shopUrl={shopUrl}
                 delivery_type={delivery_type}
+                qrCodeUrl={qrCodeUrl}
               />
             </div>
           )}
@@ -444,6 +526,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
             sellerShopLogo={sellerShopLogo}
             shopUrl={shopUrl}
             delivery_type={delivery_type}
+            qrCodeUrl={qrCodeUrl}
           />
         )}
 

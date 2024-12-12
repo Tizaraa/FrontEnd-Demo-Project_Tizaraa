@@ -27,10 +27,20 @@ type Country = {
   location: string; 
 };
 
+
+type Province = {
+  id: number;
+  province: string;
+  price: string;
+  status: number;
+};
+
+
 type ProductFilterCardProps = {
   onBrandChange: (brands: number[]) => void;
   onCategoryChange: (categorySlug: string) => void; // Ensure this is a string
   onCountryChange: (countryIds: number[]) => void;
+  onProvinceChange: (provinces: number[]) => void;
   slug: string;
   pageType?: string;
 };
@@ -39,17 +49,22 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   onBrandChange,
   onCategoryChange,
   onCountryChange,
+  onProvinceChange,
   slug,
   pageType = 'default'
 }) =>  {
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [countryList, setCountryList] = useState<Country[]>([]);
+  const [provinceList, setProvinceList] = useState<Province[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<number[]>([]);
+  const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [showAllBrands, setShowAllBrands] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [showAllCountries, setShowAllCountries] = useState(false);
+  const [showAllProvinces, setShowAllProvinces] = useState(false);
+
 
   useEffect(() => {
     const fetchFilters = async () => {
@@ -67,6 +82,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
         setBrandList(response.data.brand_filter || []);
         setCategoryList(response.data.category_filter || []);
         setCountryList(response.data.location_filter || []);
+        setProvinceList(response.data.province_filter || []);
       } catch (error) {
         console.error("Error fetching filters:", error);
       }
@@ -74,6 +90,19 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
 
     fetchFilters();
   }, [slug, pageType]);
+
+  const handleProvinceChange = (provinceId: number) => {
+    const updatedSelectedProvinces = selectedProvinces.includes(provinceId)
+      ? selectedProvinces.filter((id) => id !== provinceId)
+      : [...selectedProvinces, provinceId];
+  
+    setSelectedProvinces(updatedSelectedProvinces);
+    onProvinceChange(updatedSelectedProvinces); // Pass updated provinces to parent
+  };
+  
+  // Render provinces
+  const visibleProvinces = showAllProvinces ? provinceList : provinceList.slice(0, 5);
+  const toggleShowProvinces = () => setShowAllProvinces(!showAllProvinces);
 
   const handleCategoryClick = (categorySlug: string) => {
     onCategoryChange(categorySlug); // Pass the slug for filtering
@@ -211,6 +240,35 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
       <H6 mb="10px">Warranty</H6>
       {/* Add warranty options here */}
       <Divider mt="18px" mb="24px" />
+
+      <H6 mb="10px">Shipped From</H6>
+      {visibleProvinces.map((province) => (
+        <CheckBox
+          my="10px"
+          key={province.id}
+          name={province.province}
+          value={province.id}
+          color="secondary"
+          label={
+            <SemiSpan color="inherit">
+              {province.province} 
+            </SemiSpan>
+          }
+          onChange={() => handleProvinceChange(province.id)}
+          checked={selectedProvinces.includes(province.id)}
+        />
+      ))}
+      {provinceList.length > 5 && (
+        <Paragraph
+          py="6px"
+          fontSize="14px"
+          className="cursor-pointer"
+          color="primary.main"
+          onClick={toggleShowProvinces}
+        >
+          {showAllProvinces ? "Show Less" : "Show More"}
+        </Paragraph>
+      )}
     </Card>
   );
 };
