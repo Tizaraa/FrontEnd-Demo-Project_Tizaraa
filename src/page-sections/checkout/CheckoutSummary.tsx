@@ -15,11 +15,23 @@ import ProductCard20 from "@component/product-cards/ProductCard20";
 export default function CheckoutSummary({ deliveryCharge }) {
   const { state } = useAppContext();
 
+  // const getTotalPrice = () => {
+  //   return state.cart.reduce((accumulator, item) => 
+  //     // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+  //   accumulator + (item.discountPrice ? item.discountPrice : item.price) * item.qty, 0
+  //   ) || 0;
+  // };
+
   const getTotalPrice = () => {
-    return state.cart.reduce((accumulator, item) => 
-      // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
-    accumulator + (item.discountPrice ? item.discountPrice : item.price) * item.qty, 0
-    ) || 0;
+    return state.cart.reduce((accumulator, item) => {
+      if (state.selectedProducts.includes(item.id)) {
+        return (
+          accumulator +
+          (item.discountPrice ? item.discountPrice : item.price) * item.qty
+        );
+      }
+      return accumulator;
+    }, 0);
   };
   // User shipping data
       

@@ -313,16 +313,28 @@ export default function PaymentForm() {
   // }, []);
   
 
+  // const getTotalPrice = () => {
+  //   return (
+  //     state.cart.reduce(
+  //       (accumulator, item) =>
+  //         // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+  //         accumulator +
+  //         (item.discountPrice ? item.discountPrice : item.price) * item.qty,
+  //       0
+  //     ) || 0
+  //   );
+  // };
+
   const getTotalPrice = () => {
-    return (
-      state.cart.reduce(
-        (accumulator, item) =>
-          // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
+    return state.cart.reduce((accumulator, item) => {
+      if (state.selectedProducts.includes(item.id)) {
+        return (
           accumulator +
-          (item.discountPrice ? item.discountPrice : item.price) * item.qty,
-        0
-      ) || 0
-    );
+          (item.discountPrice ? item.discountPrice : item.price) * item.qty
+        );
+      }
+      return accumulator;
+    }, 0);
   };
 
   const total_ammount = getTotalPrice();
