@@ -1,5 +1,5 @@
 "use client";
-
+import { useEffect, useState } from "react";
 import { Card1 } from "@component/Card1";
 import Divider from "@component/Divider";
 import FlexBox from "@component/FlexBox";
@@ -15,6 +15,9 @@ import { it } from "node:test";
 
 export default function PaymentSummary() {
   const { state } = useAppContext();
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [shippingCharge, setShippingCharge] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
 
   // const getTotalPrice = () => {
   //   return state.cart.reduce((accumulator, item) => 
@@ -22,6 +25,17 @@ export default function PaymentSummary() {
   //   accumulator + (item.discountPrice ? item.discountPrice : item.price) * item.qty, 0
   //   ) || 0;
   // };
+
+  useEffect(() => {
+    // Load values from sessionStorage
+    const savedPrice = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
+    const savedShipping = parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
+    const savedCart = JSON.parse(sessionStorage.getItem("cartItems") || "[]");
+
+    setTotalPrice(savedPrice);
+    setShippingCharge(savedShipping);
+    setCartItems(savedCart);
+  }, []);
 
   const getTotalPrice = () => {
     return state.cart.reduce((accumulator, item) => {
@@ -71,7 +85,8 @@ export default function PaymentSummary() {
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          {currency(getTotalPrice())}
+          {/* {currency(getTotalPrice())} */}
+          {currency(totalPrice)}
           </Typography>
 
           {/* <Typography fontWeight="600" fontSize="14px" lineHeight="1">
@@ -85,7 +100,8 @@ export default function PaymentSummary() {
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-            {deliveryChargeDisplay}
+            {/* {deliveryChargeDisplay} */}
+            {currency(shippingCharge)}
           </Typography>
         </FlexBox>
       </FlexBox>
@@ -117,7 +133,8 @@ export default function PaymentSummary() {
       <Divider mb="1rem" />
 
       <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
-      {currency(getTotalPrice() + (parseFloat(deliveryChargeDisplay) || 0))}
+      {/* {currency(getTotalPrice() + (parseFloat(deliveryChargeDisplay) || 0))} */}
+      {currency(totalPrice + shippingCharge)}
 
       </Typography>
     </Card1>

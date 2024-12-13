@@ -639,6 +639,7 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import CheckBox from "@component/CheckBox";
 import DeleteIcon from "@mui/icons-material/Delete";
+import BeatLoader from "react-spinners/BeatLoader";
 
 type MiniCartProps = { toggleSidenav?: () => void };
 
@@ -648,7 +649,11 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<(string | number)[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [loading, setLoading] = useState(false); // New loading state
+  const [viewCartLoading, setViewCartLoading] = useState(false);
   const router = useRouter();
+  const [visible, setVisible] = useState(true);
+  
 
   useEffect(() => {
     setIsLoggedIn(authService.isAuthenticated());
@@ -713,16 +718,23 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     );
     if (selectedItems.length === 0) {
       toast.error("Please select products to checkout");
+      setLoading(false);
       return;
     }
+    setLoading(true); // Set navigating to true
     const checkoutData = JSON.stringify(selectedItems);
     localStorage.setItem("selectedProducts", checkoutData);
-
+    setVisible(false); // Hide the cart
     if (isLoggedIn) {
-      router.push("/checkout");
+      setLoading(true); // Reset on navigation complete
+      router.push("/checkout")
+      //setLoading(false);
     } else {
-      router.push("/login");
+      setLoading(true);
+      router.push("/login")
+      //setLoading(false); // Reset on navigation complete
     }
+    setLoading(false);
   };
 
   const handleSelectAll = () => {
@@ -753,6 +765,11 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
   };
 
   const totalPrice = getTotalPrice();
+
+  const handleViewCart = () => {
+    setViewCartLoading(true);
+    toggleSidenav();
+  };
 
   return (
     <StyledMiniCart>
@@ -925,11 +942,15 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
             color="primary"
             variant="contained"
             onClick={handleCheckout}
-            disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0}
+            disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0 || loading}
           >
-            <Typography fontWeight={600}>
-              Checkout Now ({currency(getTotalPrice())})
-            </Typography>
+            {loading ? (
+                  <BeatLoader size={18} color="#fff" />
+                ) : (
+                  <Typography fontWeight={600}>
+                    PROCEED TO CHECKOUT ({currency(getTotalPrice())})
+                  </Typography>
+                )}
           </Button>
 
           <Link href="/cart">
@@ -938,9 +959,14 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
               color="primary"
               variant="outlined"
               mt="1rem"
-              onClick={toggleSidenav}
+              onClick={handleViewCart}
+              disabled={viewCartLoading}
             >
-              <Typography fontWeight={600}>View Cart</Typography>
+              {viewCartLoading ? (
+                <BeatLoader size={18} color="#fff" />
+              ) : (
+                <Typography fontWeight={600}>View Cart</Typography>
+              )}
             </Button>
           </Link>
         </div>

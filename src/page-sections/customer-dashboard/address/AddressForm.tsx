@@ -132,6 +132,7 @@ import countryList from "@data/countryList";
 import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import {  toast } from 'react-toastify';
+import BeatLoader from "react-spinners/BeatLoader";
 
 export default function AddressForm() {
   const router = useRouter();
@@ -139,8 +140,10 @@ export default function AddressForm() {
   const [province, setProvince] = useState([]);
   const [city, setCity] = useState([]);
   const [area, setArea] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleFormSubmit = async (values: any) => {
+    setLoading(true);
     const authtoken = localStorage.getItem("token"); // Retrieve the auth token
     const userInfo = localStorage.getItem("userInfo"); // Assume you store user_id in localStorage
     const userId = JSON.parse(userInfo)
@@ -181,6 +184,7 @@ export default function AddressForm() {
     } catch (error) {
       console.error("Failed submitting address data:", error);
       toast.error("Failed submitting address.");
+      setLoading(false);
     }
   };
 
@@ -433,7 +437,7 @@ export default function AddressForm() {
           <Grid container spacing={7}>
             <Grid item sm={6} xs={12}>
               <Button type="submit" variant="contained" color="primary">
-                Save Changes
+              {loading ? <BeatLoader size={18} color="#fff" /> : "Save"}
               </Button>
             </Grid>
           </Grid>

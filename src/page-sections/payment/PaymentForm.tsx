@@ -336,8 +336,9 @@ export default function PaymentForm() {
       return accumulator;
     }, 0);
   };
-
-  const total_ammount = getTotalPrice();
+  const total = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
+  const savedShipping = parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
+  const total_ammount = total + savedShipping;
   const isSubtotalZero = total_ammount === 0;
 
   const router = useRouter();
@@ -623,12 +624,31 @@ export default function PaymentForm() {
     console.log(values);
     router.push("/payment");
   };
-  const handlePaymentMethodChange = async ({
-    target: { name },
-  }: ChangeEvent<HTMLInputElement>) => {
-    // Update the payment method to the selected value
-    setPaymentMethod((prevMethod) => (prevMethod === name ? "" : name));
+  useEffect(() => {
+    // Retrieve the selected payment method from localStorage on component mount
+    const storedPaymentMethod = localStorage.getItem("paymentMethod");
+    if (storedPaymentMethod) {
+      setPaymentMethod(storedPaymentMethod);
+    }
+  }, []);
+
+  const handlePaymentMethodChange = ({ target: { name } }: ChangeEvent<HTMLInputElement>) => {
+    const newPaymentMethod = paymentMethod === name ? "" : name;
+    setPaymentMethod(newPaymentMethod);
+
+    // Save the selected payment method to localStorage
+    if (newPaymentMethod) {
+      localStorage.setItem("paymentMethod", newPaymentMethod);
+    } else {
+      localStorage.removeItem("paymentMethod");
+    }
   };
+  // const handlePaymentMethodChange = async ({
+  //   target: { name },
+  // }: ChangeEvent<HTMLInputElement>) => {
+  //   // Update the payment method to the selected value
+  //   setPaymentMethod((prevMethod) => (prevMethod === name ? "" : name));
+  // };
 
   return (
     <Fragment>

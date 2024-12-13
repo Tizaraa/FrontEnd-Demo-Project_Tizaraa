@@ -12,6 +12,7 @@ import Typography from "@component/Typography";
 import authService from "services/authService";
 import Address from "@models/address.model";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import { SemiSpan } from "@component/Typography";
 export default function CheckoutAddress({ setDeliveryCharge,onAddressChange }) {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
@@ -59,9 +60,15 @@ export default function CheckoutAddress({ setDeliveryCharge,onAddressChange }) {
           const matchingAddress = fetchedAddresses.find((addr) => addr.id === parsedAddress.id);
           if (matchingAddress) {
             // handleAutoSelect(matchingAddress); 
+            handleSelect(matchingAddress);
+            // setSelectedAddress(matchingAddress);
+          }else if (fetchedAddresses.length > 0) {
+            handleSelect(fetchedAddresses[0]);
           }
-        } else if (fetchedAddresses.length > 0) {
-          const firstAddress = fetchedAddresses[0];
+        }
+         else if (fetchedAddresses.length > 0) {
+          //const firstAddress = fetchedAddresses[0];
+          handleSelect(fetchedAddresses[0]);
           // handleAutoSelect(firstAddress); 
         }
       } catch (error) {
@@ -98,6 +105,7 @@ export default function CheckoutAddress({ setDeliveryCharge,onAddressChange }) {
     if (selectedProvince && selectedProvince.delivery_charge) {
       setDeliveryCharge(selectedProvince.delivery_charge);
       item.deliveryCharge = selectedProvince.delivery_charge; // Add deliveryCharge to the selected item
+      sessionStorage.setItem("deliveryCharge", selectedProvince.delivery_charge.toString());
      
     }
 
@@ -109,6 +117,20 @@ export default function CheckoutAddress({ setDeliveryCharge,onAddressChange }) {
     console.log("Delivery Charge:", item.deliveryCharge || "Delivery charge not available");
     onAddressChange(true, true);
   };
+
+  useEffect(() => {
+    const storedAddress = sessionStorage.getItem("address");
+    const storedCharge = sessionStorage.getItem("deliveryCharge");
+
+    if (storedAddress) {
+      setSelectedAddress(JSON.parse(storedAddress));
+    }
+
+    if (storedCharge) {
+      setDeliveryCharge(parseFloat(storedCharge));
+    }
+  }, [setDeliveryCharge]);
+
 
   
   return (
@@ -123,7 +145,10 @@ export default function CheckoutAddress({ setDeliveryCharge,onAddressChange }) {
           />
         ))
       ) : (
-        <div>No addresses found</div>
+        // <div>No addresses found</div>
+        <FlexBox justifyContent="center" alignItems="center" width="100%">
+            <SemiSpan>No addresses found</SemiSpan>
+          </FlexBox>
       )}
     </Fragment>
   );
