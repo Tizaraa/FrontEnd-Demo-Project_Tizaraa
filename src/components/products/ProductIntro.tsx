@@ -27,6 +27,9 @@ type ProductIntroProps = {
   id: string | number;
   sellerShopName: string;
   sellerShopLogo: string;
+  brandName: string;
+  brand_slug?: string;
+  warranty: string;
   rating: number;
   productStock: number;
   slug?: string;
@@ -48,6 +51,8 @@ export default function ProductIntro({
   id,
   sellerShopName,
   sellerShopLogo,
+  brandName,
+  warranty,
   rating,
   discountPrice,
   totalDiscount,
@@ -94,6 +99,8 @@ export default function ProductIntro({
             productStock={productStock}
             sellerShopName={sellerShopName}
             sellerShopLogo={sellerShopLogo}
+            brandName={brandName}
+            warranty={warranty}
           />
           <SizeColorSelector
             productId={productId} 

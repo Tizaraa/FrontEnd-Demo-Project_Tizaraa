@@ -530,7 +530,7 @@ export default function Login() {
             fullwidth
             disabled={loading}
           >
-            {loading ? <BeatLoader size={18} color="#fff" /> : "Login"}
+            {loading ? <BeatLoader size={18} color="#e94560" /> : "Login"}
             
           </Button>
 
