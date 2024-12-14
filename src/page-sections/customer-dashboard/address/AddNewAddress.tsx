@@ -19,7 +19,7 @@ export default function AddNewAddress() {
       color="primary"
       bg="primary.light"
       onClick={handleClick}>
-      {loading ? <BeatLoader size={18} color="#fff" /> : "Add New Address"}
+      {loading ? <BeatLoader size={18} color="#E94560" /> : "Add New Address"}
     </Button>
   );
 }

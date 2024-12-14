@@ -103,7 +103,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
           my="2rem"
           onClick={handleAddNewAddress}
         >
-          {isLoading ? <BeatLoader size={18} color="#fff" /> : "Add New Address"}
+          {isLoading ? <BeatLoader size={18} color="#E94560" /> : "Add New Address"}
         </Button>
       </FlexBox>
 

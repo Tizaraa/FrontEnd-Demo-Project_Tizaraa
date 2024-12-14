@@ -108,7 +108,7 @@
   //   ]
   // },
 //   { title: "Become A seller", url: "https://seller.tizaraa.com" },
-//   { title: "Find My Showroom / Shop", url: "/shops" }
+//   { title: "Showroom / Shop", url: "/shops" }
 //   // {
 //   //   title: "Documentation",
 //   //   url:

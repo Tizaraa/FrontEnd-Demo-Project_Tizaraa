@@ -945,7 +945,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
             disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0 || loading}
           >
             {loading ? (
-                  <BeatLoader size={18} color="#fff" />
+                  <BeatLoader size={18} color="#E94560" />
                 ) : (
                   <Typography fontWeight={600}>
                     PROCEED TO CHECKOUT ({currency(getTotalPrice())})
@@ -963,7 +963,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
               disabled={viewCartLoading}
             >
               {viewCartLoading ? (
-                <BeatLoader size={18} color="#fff" />
+                <BeatLoader size={18} color="#E94560" />
               ) : (
                 <Typography fontWeight={600}>View Cart</Typography>
               )}

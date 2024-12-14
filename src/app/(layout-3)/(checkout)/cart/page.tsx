@@ -567,7 +567,7 @@ export default function Cart() {
                 onClick={handleCheckout}
                 disabled={isLoading || state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0}
               >
-                {isLoading ? <BeatLoader size={18} color="#fff" /> : "PROCEED TO CHECKOUT"}
+                {isLoading ? <BeatLoader size={18} color="#E94560" /> : "PROCEED TO CHECKOUT"}
               </Button>
             </Link>
           </Card1>

@@ -736,6 +736,8 @@ export default function OrderDetails({ params }: IDParams) {
       );
 
       const orderData = orderResponse.data.Order
+      //console.log("");
+      
 
       const paymentResponse = await axios.post(
         `https://frontend.tizaraa.com/api/pay-via-ajax`,
@@ -881,7 +883,7 @@ export default function OrderDetails({ params }: IDParams) {
               mt="2rem"
               onClick={fetchInvoice} // Fetch invoice when button is clicked
             >
-              {invoiceLoading ? <BeatLoader size={18} color="#fff" /> : "Invoice"}
+              {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
             </Button>
             {order.Order.payment_status === "Unpaid" && (
               <Button
@@ -893,7 +895,7 @@ export default function OrderDetails({ params }: IDParams) {
                 disabled={onlinePaymentLoading}
               >
                 {/* {onlinePaymentLoading ? "Processing..." : "Online Payment"} */}
-                {onlinePaymentLoading ? <BeatLoader size={18} color="#fff" /> : "Online Payment"}
+                {onlinePaymentLoading ? <BeatLoader size={18} color="#E94560" /> : "Online Payment"}
               </Button>
             )}
           </div>
