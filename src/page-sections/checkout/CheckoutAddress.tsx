@@ -59,18 +59,12 @@ export default function CheckoutAddress({ setDeliveryCharge,onAddressChange }) {
           // Check if the parsed address is in the fetched addresses
           const matchingAddress = fetchedAddresses.find((addr) => addr.id === parsedAddress.id);
           if (matchingAddress) {
-            // handleAutoSelect(matchingAddress); 
-            handleSelect(matchingAddress);
-            // setSelectedAddress(matchingAddress);
-          }else if (fetchedAddresses.length > 0) {
-            handleSelect(fetchedAddresses[0]);
+            handleSelect(matchingAddress, true); // Auto-select the stored address
+            return;
           }
         }
-         else if (fetchedAddresses.length > 0) {
-          //const firstAddress = fetchedAddresses[0];
-          handleSelect(fetchedAddresses[0]);
-          // handleAutoSelect(firstAddress); 
-        }
+        
+        onAddressChange(fetchedAddresses.length > 0, fetchedAddresses.length > 0);
       } catch (error) {
         console.error("Error fetching addresses:", error);
         onAddressChange(false, false);
@@ -98,7 +92,7 @@ export default function CheckoutAddress({ setDeliveryCharge,onAddressChange }) {
   // };
 
   // Handle manual selection of an address
-  const handleSelect = (item: Address) => {
+  const handleSelect = (item: Address, isAutoSelect = false) => {
     // Find the corresponding province to get the delivery charge
     const selectedProvince = province.find((prov: any) => prov.id === item.province_id);
 
@@ -110,7 +104,9 @@ export default function CheckoutAddress({ setDeliveryCharge,onAddressChange }) {
     }
 
     setSelectedAddress(item);
-    sessionStorage.setItem("address", JSON.stringify(item)); // Only store in sessionStorage when manually selected
+    if (!isAutoSelect) {
+      sessionStorage.setItem("address", JSON.stringify(item)); // Store in localStorage only on manual selection
+    } // Only store in sessionStorage when manually selected
 
     // Log the selected address and delivery charge
     console.log("Manually Selected Address:", item);
@@ -157,7 +153,7 @@ export default function CheckoutAddress({ setDeliveryCharge,onAddressChange }) {
 interface AddressItemProps {
   item: Address;
   isSelected: boolean;
-  onSelect: (item: Address) => void;
+  onSelect: (item: Address, isAutoSelect?: boolean) => void;
 }
 
 function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
