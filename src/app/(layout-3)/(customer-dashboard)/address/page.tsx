@@ -167,7 +167,7 @@ import { IconButton } from "@component/buttons";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { Fragment } from "react";
 import Dialog from "./Dialog"; // Import the Dialog component
-import {  toast } from 'react-toastify';
+import toast, { Toaster } from "react-hot-toast";
 import { Vortex } from 'react-loader-spinner'
 import  styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";

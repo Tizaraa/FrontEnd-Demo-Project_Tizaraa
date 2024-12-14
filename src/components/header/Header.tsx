@@ -24,7 +24,7 @@ import Menu from "@component/Menu";
 import MenuItem from "@component/MenuItem";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import Tooltip from "@mui/material/Tooltip";
 
 // ====================================================================

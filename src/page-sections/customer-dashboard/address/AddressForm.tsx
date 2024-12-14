@@ -131,7 +131,7 @@ import TextArea from "@component/textarea";
 import countryList from "@data/countryList";
 import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import {  toast } from 'react-toastify';
+import toast, { Toaster } from "react-hot-toast";
 import BeatLoader from "react-spinners/BeatLoader";
 
 export default function AddressForm() {

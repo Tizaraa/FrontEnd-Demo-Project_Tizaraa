@@ -396,7 +396,7 @@
 "use client";
 import Link from "next/link";
 import { Fragment, useState, useEffect } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 import Box from "@component/Box";
 import Grid from "@component/grid/Grid";
@@ -507,7 +507,7 @@ export default function Cart() {
 
   return (
     <Fragment>
-      <ToastContainer />
+      <Toaster />
       <Grid container spacing={6}>
         <Grid item lg={8} md={8} xs={12}>
           <Card1 mb="1.5rem">

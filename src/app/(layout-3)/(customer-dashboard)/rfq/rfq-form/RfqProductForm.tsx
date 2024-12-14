@@ -689,7 +689,7 @@ export default function RfqProductForm() {
         }
         disabled={!agree}
       >
-        {loading ? er<BeatLoad size={18} color="#fff" /> : "Submit"}
+        {loading ? <BeatLoader size={18} color="#fff" /> : "Submit"}
       </button>
     </div>
   );

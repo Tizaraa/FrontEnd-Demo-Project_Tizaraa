@@ -281,7 +281,7 @@ import Icon from "@component/icon/Icon";
 import FlexBox from "@component/FlexBox";
 import Typography from "@component/Typography";
 import authService from "services/authService";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
 

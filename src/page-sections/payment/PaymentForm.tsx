@@ -277,7 +277,7 @@ import CheckBox from "@component/CheckBox";
 import ApiBaseUrl from "api/ApiBaseUrl";
 //import { useSearchParams } from "next/navigation";
 
-import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
+import toast, { Toaster } from "react-hot-toast"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
 import PaymentCheckBox from "@component/PaymentCheckBox";
 import PaymentImage from "@component/PaymentImage";

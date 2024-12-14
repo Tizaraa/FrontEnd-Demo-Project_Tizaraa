@@ -9,7 +9,7 @@ import useVisibility from "./useVisibility";
 import { useAppContext } from "contexts/app-context/AppContext"; // Context for managing user auth state
 import axios from "axios"; // Import axios for API calls
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 import Box from "@component/Box";
 import Icon from "@component/icon/Icon";
