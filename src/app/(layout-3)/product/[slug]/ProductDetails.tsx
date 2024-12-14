@@ -25,7 +25,9 @@ async function fetchProductData(slug: string) {
     const response = await axios.get(
       `${ApiBaseUrl.baseUrl}product/details/${slug}`
     );
+    console.log("product details:", response.data)
     return response.data;
+
   } catch (error) {
     console.error("Error fetching product data:", error);
     return null;
@@ -497,6 +499,8 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
               sellerId={product.seller_shop_id}
               sizecolorwithprice={sizecolorwithprice}
               slug={params.slug}
+              brandName={product.brand_name}
+              warranty={product.warranty}
             />
           </div>
           {isDesktop && (
