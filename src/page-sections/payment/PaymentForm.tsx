@@ -636,7 +636,7 @@ export default function PaymentForm() {
   };
   useEffect(() => {
     // Retrieve the selected payment method from localStorage on component mount
-    const storedPaymentMethod = localStorage.getItem("paymentMethod");
+    const storedPaymentMethod = sessionStorage.getItem("paymentMethod");
     if (storedPaymentMethod) {
       setPaymentMethod(storedPaymentMethod);
     }
@@ -648,9 +648,9 @@ export default function PaymentForm() {
 
     // Save the selected payment method to localStorage
     if (newPaymentMethod) {
-      localStorage.setItem("paymentMethod", newPaymentMethod);
+      sessionStorage.setItem("paymentMethod", newPaymentMethod);
     } else {
-      localStorage.removeItem("paymentMethod");
+      sessionStorage.removeItem("paymentMethod");
     }
   };
   // const handlePaymentMethodChange = async ({

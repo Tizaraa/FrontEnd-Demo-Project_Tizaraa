@@ -78,16 +78,14 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
     router.push("/cart");
   };
 
-  const handleAddressChange = (hasAddressData, isSelected) => {
+  const handleAddressChange = (hasAddressData: boolean, isSelected: boolean) => {
     setHasAddress(hasAddressData);
     setIsAddressChecked(isSelected);
   };
 
   const handleAddNewAddress = () => {
     setIsLoading(true);
-    setTimeout(() => {
-      router.push("/address/checkoutAddress");
-    }, 1000); // Simulate delay before navigation
+    router.push("/address/checkoutAddress");
   };
 
   return (
