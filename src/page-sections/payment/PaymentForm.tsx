@@ -338,7 +338,7 @@ export default function PaymentForm() {
   };
   const total = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
   const savedShipping = parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
-  const total_ammount = total + savedShipping;
+  const total_ammount = total;
   const isSubtotalZero = total_ammount === 0;
 
   const router = useRouter();
@@ -415,7 +415,7 @@ export default function PaymentForm() {
               userShippingdata?.shipping_area || userShippingdata?.area_id,
             house_level:
               userShippingdata?.selectedLandmark || userShippingdata?.landmark,
-            delivery_charge: userShippingdata?.deliveryCharge || 0,
+            delivery_charge: savedShipping || 0,
             cus_add1:
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             currency: "BDT",
@@ -531,7 +531,7 @@ export default function PaymentForm() {
               userShippingdata?.selectedLandmark || userShippingdata?.landmark,
             address:
               userShippingdata?.shipping_address1 || userShippingdata?.address,
-            delivery_charge: userShippingdata?.deliveryCharge || 0,
+            delivery_charge: savedShipping || 0,
             total_ammount: 
               total_ammount,
             payment_type: 1,
@@ -570,7 +570,7 @@ export default function PaymentForm() {
                 {
                   orders: [
                     {
-                      delivery_charge: 60,
+                      delivery_charge: savedShipping,
                       user_id: userinfo.id,
                       seller_id: cartdata.sellerId,
                       order_id: orderId,
