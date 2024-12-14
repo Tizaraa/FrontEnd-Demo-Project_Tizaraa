@@ -616,6 +616,7 @@ import { IDParams } from "interfaces";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import Box from "@component/Box";
+import BeatLoader from "react-spinners/BeatLoader";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -880,7 +881,7 @@ export default function OrderDetails({ params }: IDParams) {
               mt="2rem"
               onClick={fetchInvoice} // Fetch invoice when button is clicked
             >
-              Invoice
+              {invoiceLoading ? <BeatLoader size={18} color="#fff" /> : "Invoice"}
             </Button>
             {order.Order.payment_status === "Unpaid" && (
               <Button
@@ -891,13 +892,14 @@ export default function OrderDetails({ params }: IDParams) {
                 onClick={handleOnlinePayment}
                 disabled={onlinePaymentLoading}
               >
-                {onlinePaymentLoading ? "Processing..." : "Online Payment"}
+                {/* {onlinePaymentLoading ? "Processing..." : "Online Payment"} */}
+                {onlinePaymentLoading ? <BeatLoader size={18} color="#fff" /> : "Online Payment"}
               </Button>
             )}
           </div>
 
           {/* Invoice Display */}
-          {invoiceLoading && <Typography>Loading Invoice...</Typography>}
+          {/* {invoiceLoading && <Typography>Loading Invoice...</Typography>} */}
           {invoiceError && <Typography color="red">{invoiceError}</Typography>}
           {pdfUrl && (
             <InvoiceWrapper>
