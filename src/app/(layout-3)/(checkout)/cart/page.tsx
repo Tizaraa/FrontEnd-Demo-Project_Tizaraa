@@ -396,7 +396,7 @@
 "use client";
 import Link from "next/link";
 import { Fragment, useState, useEffect } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 import Box from "@component/Box";
 import Grid from "@component/grid/Grid";
@@ -410,6 +410,7 @@ import { currency } from "@utils/utils";
 import { Button } from "@component/buttons";
 import CheckBox from "@component/CheckBox";
 import DeleteIcon from "@mui/icons-material/Delete";
+import BeatLoader from "react-spinners/BeatLoader";
 
 export default function Cart() {
   const { state, dispatch } = useAppContext();
@@ -418,6 +419,7 @@ export default function Cart() {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<(string | number)[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setSelectAll(
@@ -458,11 +460,13 @@ export default function Cart() {
   };
 
   const handleCheckout = () => {
+    setIsLoading(true);
     const selectedItems = state.cart.filter((item) =>
       state.selectedProducts.includes(item.id)
     );
     if (selectedItems.length === 0) {
       toast.error("Please select products to checkout");
+      setIsLoading(false);
       return;
     }
     const checkoutData = JSON.stringify(selectedItems);
@@ -472,6 +476,7 @@ export default function Cart() {
 
     if (totalPrice === 0) {
       toast.error("Total price is 0. Please add items to your cart.");
+      setIsLoading(false);
       return;
     }
 
@@ -481,6 +486,7 @@ export default function Cart() {
     } else {
       setCheckoutSuccess(true);
     }
+    setIsLoading(true);
   };
 
   useEffect(() => {
@@ -501,7 +507,7 @@ export default function Cart() {
 
   return (
     <Fragment>
-      <ToastContainer />
+      <Toaster />
       <Grid container spacing={6}>
         <Grid item lg={8} md={8} xs={12}>
           <Card1 mb="1.5rem">
@@ -514,7 +520,7 @@ export default function Cart() {
                 size="small"
                 color="primary"
                 variant="outlined"
-                disabled={state.selectedProducts.length === 0 || isDeleting}
+                disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0 || isDeleting}
                 onClick={handleDeleteSelected}
                 className={`delete-button ${isDeleting ? 'deleting' : ''}`}
               >
@@ -558,9 +564,9 @@ export default function Cart() {
                 color="primary"
                 fullwidth
                 onClick={handleCheckout}
-                disabled={totalPrice === 0}
+                disabled={isLoading || state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0}
               >
-                Checkout Now
+                {isLoading ? <BeatLoader size={18} color="#fff" /> : "PROCEED TO CHECKOUT"}
               </Button>
             </Link>
           </Card1>

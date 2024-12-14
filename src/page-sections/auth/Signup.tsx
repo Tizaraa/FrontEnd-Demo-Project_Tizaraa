@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useState } from "react";
-import {  toast } from 'react-toastify';
+import toast, { Toaster } from "react-hot-toast";
 
 import useVisibility from "./useVisibility";
 

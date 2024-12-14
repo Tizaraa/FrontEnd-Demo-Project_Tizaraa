@@ -14,7 +14,7 @@ import Typography from "@component/Typography";
 import TextArea from "@component/textarea";
 import axios from "axios";
 import * as Yup from "yup";
-import {  toast } from 'react-toastify';
+import toast, { Toaster } from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function EditAddressForm({ addressId }: { addressId: string }) {

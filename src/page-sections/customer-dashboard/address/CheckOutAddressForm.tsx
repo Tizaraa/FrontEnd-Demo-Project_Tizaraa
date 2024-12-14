@@ -484,6 +484,7 @@ import Typography from "@component/Typography";
 import TextArea from "@component/textarea";
 import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import BeatLoader from "react-spinners/BeatLoader";
 
 export default function CheckOutAddressForm() {
   const router = useRouter();
@@ -491,8 +492,10 @@ export default function CheckOutAddressForm() {
   const [province, setProvince] = useState([]);
   const [city, setCity] = useState([]);
   const [area, setArea] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleFormSubmit = async (values: any) => {
+    setLoading(true);
     const authtoken = localStorage.getItem("token");
     const userInfo = localStorage.getItem("userInfo");
     const userId = JSON.parse(userInfo);
@@ -527,6 +530,7 @@ export default function CheckOutAddressForm() {
       }
     } catch (error) {
       console.error("Error submitting address data:", error);
+      setLoading(false);
     }
   };
 
@@ -771,7 +775,7 @@ export default function CheckOutAddressForm() {
           <Grid container spacing={7}>
             <Grid item sm={6} xs={12}>
               <Button type="submit" variant="contained" color="primary">
-                Save Changes
+              {loading ? <BeatLoader size={18} color="#fff" /> : "Save"}
               </Button>
             </Grid>
           </Grid>

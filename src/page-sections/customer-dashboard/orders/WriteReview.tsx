@@ -23,13 +23,13 @@ export default function WriteReview({ item }: { item: any }) {
 
       <FlexBox flex="1 1 260px" m="6px" alignItems="center">
         <Typography fontSize="14px" color="text.muted">
-         {item.color}
+         {item.color || "-"}
         </Typography>
       </FlexBox>
 
       <FlexBox flex="160px" m="6px" alignItems="center">
         <Button variant="text" color="primary">
-          <Typography fontSize="14px">Write a Review</Typography>
+          <Typography fontSize="14px">Review</Typography>
         </Button>
       </FlexBox>
     </FlexBox>

@@ -12,11 +12,15 @@ import Grid from "@component/grid/Grid";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import BeatLoader from "react-spinners/BeatLoader";
 
 export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const [hasAddress, setHasAddress] = useState(false);
+  const [isAddressChecked, setIsAddressChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -39,6 +43,18 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
     justifyContent: isMobile ? "center" : "space-between",
   };
 
+  useEffect(() => {
+    const cart = JSON.parse(sessionStorage.getItem("cart") || "[]");
+    const totalPrice = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
+    const shippingCharge = parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
+
+    if (cart.length > 0) {
+      sessionStorage.setItem("cartItems", JSON.stringify(cart));
+    }
+    sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
+    sessionStorage.setItem("savedTotalWithDelivery", shippingCharge.toString());
+  }, []);
+
   // Handle payment button click
   const handlePayment = () => {
     const addressData = sessionStorage.getItem("address");
@@ -53,8 +69,21 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
 
   // Handle back to cart button click
   const handleBackToCart = () => {
+    setIsLoading(true);
     toast.info("Returning to Cart...");
     router.push("/cart");
+  };
+
+  const handleAddressChange = (hasAddressData, isSelected) => {
+    setHasAddress(hasAddressData);
+    setIsAddressChecked(isSelected);
+  };
+
+  const handleAddNewAddress = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      router.push("/address/checkoutAddress");
+    }, 1000); // Simulate delay before navigation
   };
 
   return (
@@ -68,14 +97,14 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
           color="primary"
           bg="primary.light"
           my="2rem"
-          onClick={() => router.push("/address/checkoutAddress")}
+          onClick={handleAddNewAddress}
         >
-          Add New Address
+          {isLoading ? <BeatLoader size={18} color="#fff" /> : "Add New Address"}
         </Button>
       </FlexBox>
 
       {/* <CheckoutAddress /> */}
-      <CheckoutAddress setDeliveryCharge={setDeliveryCharge} />
+      <CheckoutAddress setDeliveryCharge={setDeliveryCharge} onAddressChange={handleAddressChange} />
 
       <Grid container spacing={7}>
         <Grid item sm={6} xs={12}>
@@ -86,7 +115,8 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
             fullwidth
             onClick={handleBackToCart}
           >
-            Back to Cart
+            {isLoading ? <BeatLoader size={18} color="#fff" /> : "Back to Cart"}
+            {/* Back to Cart */}
           </Button>
         </Grid>
 
@@ -97,7 +127,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
             type="button"
             fullwidth
             onClick={handlePayment}
-            disabled={totalPrice === 0} 
+            disabled={!hasAddress || !isAddressChecked}
           >
             Payment
           </Button>

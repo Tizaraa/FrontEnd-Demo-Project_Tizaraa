@@ -277,7 +277,7 @@ import CheckBox from "@component/CheckBox";
 import ApiBaseUrl from "api/ApiBaseUrl";
 //import { useSearchParams } from "next/navigation";
 
-import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
+import toast, { Toaster } from "react-hot-toast"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
 import PaymentCheckBox from "@component/PaymentCheckBox";
 import PaymentImage from "@component/PaymentImage";
@@ -336,8 +336,9 @@ export default function PaymentForm() {
       return accumulator;
     }, 0);
   };
-
-  const total_ammount = getTotalPrice();
+  const total = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
+  const savedShipping = parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
+  const total_ammount = total;
   const isSubtotalZero = total_ammount === 0;
 
   const router = useRouter();
@@ -414,7 +415,7 @@ export default function PaymentForm() {
               userShippingdata?.shipping_area || userShippingdata?.area_id,
             house_level:
               userShippingdata?.selectedLandmark || userShippingdata?.landmark,
-            delivery_charge: userShippingdata?.deliveryCharge || 0,
+            delivery_charge: savedShipping || 0,
             cus_add1:
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             currency: "BDT",
@@ -530,7 +531,7 @@ export default function PaymentForm() {
               userShippingdata?.selectedLandmark || userShippingdata?.landmark,
             address:
               userShippingdata?.shipping_address1 || userShippingdata?.address,
-            delivery_charge: userShippingdata?.deliveryCharge || 0,
+            delivery_charge: savedShipping || 0,
             total_ammount: 
               total_ammount,
             payment_type: 1,
@@ -569,7 +570,7 @@ export default function PaymentForm() {
                 {
                   orders: [
                     {
-                      delivery_charge: 60,
+                      delivery_charge: savedShipping,
                       user_id: userinfo.id,
                       seller_id: cartdata.sellerId,
                       order_id: orderId,
@@ -623,12 +624,31 @@ export default function PaymentForm() {
     console.log(values);
     router.push("/payment");
   };
-  const handlePaymentMethodChange = async ({
-    target: { name },
-  }: ChangeEvent<HTMLInputElement>) => {
-    // Update the payment method to the selected value
-    setPaymentMethod((prevMethod) => (prevMethod === name ? "" : name));
+  useEffect(() => {
+    // Retrieve the selected payment method from localStorage on component mount
+    const storedPaymentMethod = localStorage.getItem("paymentMethod");
+    if (storedPaymentMethod) {
+      setPaymentMethod(storedPaymentMethod);
+    }
+  }, []);
+
+  const handlePaymentMethodChange = ({ target: { name } }: ChangeEvent<HTMLInputElement>) => {
+    const newPaymentMethod = paymentMethod === name ? "" : name;
+    setPaymentMethod(newPaymentMethod);
+
+    // Save the selected payment method to localStorage
+    if (newPaymentMethod) {
+      localStorage.setItem("paymentMethod", newPaymentMethod);
+    } else {
+      localStorage.removeItem("paymentMethod");
+    }
   };
+  // const handlePaymentMethodChange = async ({
+  //   target: { name },
+  // }: ChangeEvent<HTMLInputElement>) => {
+  //   // Update the payment method to the selected value
+  //   setPaymentMethod((prevMethod) => (prevMethod === name ? "" : name));
+  // };
 
   return (
     <Fragment>

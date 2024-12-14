@@ -12,7 +12,8 @@ import Typography from "@component/Typography";
 import authService from "services/authService";
 import Address from "@models/address.model";
 import ApiBaseUrl from "api/ApiBaseUrl";
-export default function CheckoutAddress({ setDeliveryCharge }) {
+import { SemiSpan } from "@component/Typography";
+export default function CheckoutAddress({ setDeliveryCharge,onAddressChange }) {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [province, setProvince] = useState([]); // State for storing provinces
@@ -49,6 +50,7 @@ export default function CheckoutAddress({ setDeliveryCharge }) {
         console.log("Address data:", response.data);
         const fetchedAddresses = response.data.user;
         setAddresses(fetchedAddresses);
+        onAddressChange(fetchedAddresses.length > 0,true);
 
         // Load the selected address from sessionStorage
         const storedAddress = sessionStorage.getItem("address");
@@ -58,19 +60,26 @@ export default function CheckoutAddress({ setDeliveryCharge }) {
           const matchingAddress = fetchedAddresses.find((addr) => addr.id === parsedAddress.id);
           if (matchingAddress) {
             // handleAutoSelect(matchingAddress); 
+            handleSelect(matchingAddress);
+            // setSelectedAddress(matchingAddress);
+          }else if (fetchedAddresses.length > 0) {
+            handleSelect(fetchedAddresses[0]);
           }
-        } else if (fetchedAddresses.length > 0) {
-          const firstAddress = fetchedAddresses[0];
+        }
+         else if (fetchedAddresses.length > 0) {
+          //const firstAddress = fetchedAddresses[0];
+          handleSelect(fetchedAddresses[0]);
           // handleAutoSelect(firstAddress); 
         }
       } catch (error) {
         console.error("Error fetching addresses:", error);
+        onAddressChange(false, false);
       }
     };
 
     fetchAddresses();
     fetchProvince(); // Fetch provinces when the component mounts
-  }, [authtoken]);
+  }, [authtoken,onAddressChange]);
 
   // Handle automatic selection of the first address and set delivery charge in sessionStorage
   // const handleAutoSelect = (item: Address) => {
@@ -96,6 +105,7 @@ export default function CheckoutAddress({ setDeliveryCharge }) {
     if (selectedProvince && selectedProvince.delivery_charge) {
       setDeliveryCharge(selectedProvince.delivery_charge);
       item.deliveryCharge = selectedProvince.delivery_charge; // Add deliveryCharge to the selected item
+      sessionStorage.setItem("deliveryCharge", selectedProvince.delivery_charge.toString());
      
     }
 
@@ -105,7 +115,22 @@ export default function CheckoutAddress({ setDeliveryCharge }) {
     // Log the selected address and delivery charge
     console.log("Manually Selected Address:", item);
     console.log("Delivery Charge:", item.deliveryCharge || "Delivery charge not available");
+    onAddressChange(true, true);
   };
+
+  useEffect(() => {
+    const storedAddress = sessionStorage.getItem("address");
+    const storedCharge = sessionStorage.getItem("deliveryCharge");
+
+    if (storedAddress) {
+      setSelectedAddress(JSON.parse(storedAddress));
+    }
+
+    if (storedCharge) {
+      setDeliveryCharge(parseFloat(storedCharge));
+    }
+  }, [setDeliveryCharge]);
+
 
   
   return (
@@ -120,7 +145,10 @@ export default function CheckoutAddress({ setDeliveryCharge }) {
           />
         ))
       ) : (
-        <div>No addresses found</div>
+        // <div>No addresses found</div>
+        <FlexBox justifyContent="center" alignItems="center" width="100%">
+            <SemiSpan>No addresses found</SemiSpan>
+          </FlexBox>
       )}
     </Fragment>
   );
