@@ -21,6 +21,8 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   const [hasAddress, setHasAddress] = useState(false);
   const [isAddressChecked, setIsAddressChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isHasLoading, setIsHasLoading] = useState(false);
+  const [isHasPayLoading, setIsHasPayLoading] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -57,6 +59,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
 
   // Handle payment button click
   const handlePayment = () => {
+    setIsHasPayLoading(true)
     const addressData = sessionStorage.getItem("address");
     if (addressData) {
       console.log("Payment:", JSON.parse(addressData));
@@ -64,12 +67,13 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
       router.push("/payment");
     } else {
       toast.error("No address data found. Please add an address.");
+      setIsHasPayLoading(false)
     }
   };
 
   // Handle back to cart button click
   const handleBackToCart = () => {
-    setIsLoading(true);
+    setIsHasLoading(true);
     toast.info("Returning to Cart...");
     router.push("/cart");
   };
@@ -109,27 +113,31 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
       <Grid container spacing={7}>
         <Grid item sm={6} xs={12}>
           <Button
-            variant="outlined"
+            //variant="outlined"
             color="primary"
+            bg="primary.light"
             type="button"
             fullwidth
             onClick={handleBackToCart}
           >
-            {isLoading ? <BeatLoader size={18} color="#fff" /> : "Back to Cart"}
+            {isHasLoading ? <BeatLoader size={18} color="#E94560" /> : "Back to Cart"}
             {/* Back to Cart */}
           </Button>
         </Grid>
 
         <Grid item sm={6} xs={12}>
         <Button
-            variant="outlined"
+            //variant="outlined"
             color="primary"
+            bg="primary.light"
             type="button"
             fullwidth
             onClick={handlePayment}
             disabled={!hasAddress || !isAddressChecked}
           >
-            Payment
+            {/* Proceed to Pay
+            const [isHasPayLoading, setIsHasPayLoading] = useState(false); */}
+            {isHasPayLoading ? <BeatLoader size={18} color="#E94560" /> : "Proceed to Pay"}
           </Button>
         </Grid>
       </Grid>

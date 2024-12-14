@@ -286,12 +286,16 @@ import cashOnDeliveryImage from "../../../public/assets/images/payment/cashOnDel
 import onlinePayment from "../../../public/assets/images/payment/Mobile_Banking.jpg"
 import NagadImage from "../../../public/assets/images/payment/Nagad.avif"
 import BkashImage from "../../../public/assets/images/payment/Bkash.png"
+import BeatLoader from "react-spinners/BeatLoader";
 
 export default function PaymentForm() {
+  const { push } = useRouter();
   const { state, dispatch } = useAppContext();
   //const [redirectUrl, setRedirectUrl] = useState<string>("");
   const [paymentType, setPaymentType] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [isHasLoading, setIsHasLoading] = useState(false);
+  const [isHasPayLoading, setIsHasPayLoading] = useState(false);
   //const searchParams = useSearchParams();
   //const { state } = useAppContext();
 
@@ -352,6 +356,7 @@ export default function PaymentForm() {
 
   let authtoken = localStorage.getItem("token");
   const orderSubmit = async () => {
+  setIsHasLoading(true)
     if (isSubtotalZero) {
       toast.error("Your cart is empty. Please add items before proceeding.");
       return; // Prevent form submission
@@ -372,7 +377,7 @@ export default function PaymentForm() {
 
     // let cartData = localStorage.getItem('cart');
     const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
-    console.log("nazim Data:", cartData);
+    console.log("nazim Data cart:", cartData);
 
     // Ensure cartData is valid and not empty before trying to access its items
     const productType =
@@ -456,13 +461,13 @@ export default function PaymentForm() {
                 {
                   orders: [
                     {
-                      delivery_charge: 60,
+                      delivery_charge: savedShipping,
                       user_id: userinfo.id,
                       seller_id: cartdata.sellerId,
                       order_id: orderId,
                       product_id: cartdata.productId,
-                      color: 'null',
-                      size: 'null',
+                      color: null,
+                      size: null,
                       qty: cartdata.qty,
                       note1: "lorem10",
                       single_amount: cartdata.price,
@@ -481,6 +486,7 @@ export default function PaymentForm() {
               console.log("Cart Item Response:", response.data);
             } catch (error) {
               console.error("Failed to add item to order:", error.response);
+              setIsHasLoading(false)
             }
           })
         );
@@ -505,10 +511,12 @@ export default function PaymentForm() {
           localStorage.setItem("redirectUrl", redirectUrl);
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
+          setIsHasLoading(false)
         }
       } catch (error) {
         console.error("Online Payment Error:", error);
         toast.error("Error initiating online payment payment!");
+  setIsHasLoading(false)
       }
     } else if(paymentMethod === "cod") {
       try {
@@ -575,8 +583,8 @@ export default function PaymentForm() {
                       seller_id: cartdata.sellerId,
                       order_id: orderId,
                       product_id: cartdata.productId,
-                      color: 'null',
-                      size: 'null',
+                      color: null,
+                      size: null,
                       qty: cartdata.qty,
                       note1: "lorem10",
                       single_amount: cartdata.price,
@@ -595,6 +603,7 @@ export default function PaymentForm() {
               console.log("Cart Item Response:", response.data);
             } catch (error) {
               console.error("Failed to add item to order:", error.response);
+  setIsHasLoading(false)
             }
           })
         );
@@ -612,6 +621,7 @@ export default function PaymentForm() {
         console.error("Error placing order:", error);
         toast.error("Error placing cash on delivery order!");
         router.push("/payment");
+  setIsHasLoading(false)
       }
     }
   };
@@ -649,6 +659,11 @@ export default function PaymentForm() {
   //   // Update the payment method to the selected value
   //   setPaymentMethod((prevMethod) => (prevMethod === name ? "" : name));
   // };
+
+  const handleClick = () => {
+            setIsHasPayLoading(true)
+    push("/checkout");
+  };
 
   return (
     <Fragment>
@@ -856,23 +871,31 @@ export default function PaymentForm() {
 
       <Grid container spacing={7}>
         <Grid item sm={6} xs={12}>
-          <Link href="/checkout">
-            <Button variant="outlined" color="primary" type="button" fullwidth>
-              Back to checkout details
+          
+            <Button 
+            //variant="outlined" 
+            color="primary" 
+            bg="primary.light" 
+            type="button" 
+            fullwidth 
+            onClick={handleClick}>
+
+              {isHasPayLoading ? <BeatLoader size={18} color="#E94560" /> : "Back to Checkout Details"}
             </Button>
-          </Link>
+          
         </Grid>
 
         <Grid item sm={6} xs={12}>
           <Button
             onClick={orderSubmit}
-            variant="outlined"
+            //variant="outlined"
+            bg="primary.light"
             color="primary"
             type="button"
             fullwidth
             disabled={isSubtotalZero || !paymentMethod}
           >
-            Payment
+            {isHasLoading ? <BeatLoader size={18} color="#E94560" /> : "Proceed to Pay"}
           </Button>
         </Grid>
       </Grid>

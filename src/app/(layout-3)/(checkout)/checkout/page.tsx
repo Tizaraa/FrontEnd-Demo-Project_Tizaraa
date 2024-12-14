@@ -63,7 +63,7 @@ import RfqCheckoutSummary from "@sections/checkout/RfqCheckoutSummary";
 import Typography from "@component/Typography";
 import { useState } from "react";
 import axios from "axios";
-import {  toast } from 'react-toastify';
+import {  toast } from 'react-hot-toast';
 import authService from "services/authService";
 
 export default function Checkout() {

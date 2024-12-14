@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Fragment, useCallback, useState } from "react";
 import styled from "styled-components";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import Box from "../Box";
 import Card from "../Card";
 import Image from "../Image";

@@ -483,9 +483,10 @@ export default function Cart() {
     const isError = selectedItems.some(item => item.qty <= 0);
     if (isError) {
       setCheckoutError(true);
-    } else {
-      setCheckoutSuccess(true);
-    }
+    } 
+    // else {
+    //   setCheckoutSuccess(true);
+    // }
     setIsLoading(true);
   };
 

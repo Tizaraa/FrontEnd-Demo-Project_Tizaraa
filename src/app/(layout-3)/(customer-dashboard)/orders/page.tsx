@@ -150,7 +150,7 @@ import authService from "services/authService";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
+import { toast } from "react-hot-toast"; // Import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css";
 
 const LoaderWrapper = styled.div`
