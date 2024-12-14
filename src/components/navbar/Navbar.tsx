@@ -155,6 +155,7 @@
 // }
 
 "use client";
+import { useState } from "react";
 import Box from "../Box";
 import Card from "../Card";
 import Badge from "../badge";
@@ -171,6 +172,7 @@ import navbarNavigations from "@data/navbarNavigations";
 import { FaUser } from "react-icons/fa";
 import { FaLocationPin } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
+import BeatLoader from "react-spinners/BeatLoader";
 
 
 
@@ -191,10 +193,24 @@ type NavbarProps = { navListOpen?: boolean };
 
 export default function Navbar({ navListOpen }: NavbarProps) {
   const pathname = usePathname(); // Get the current path using usePathname()
+  const [loading, setLoading] = useState(false);
 
   // Check if the current path is "/location"
   const isLocationPage = pathname === "/location";
   const isHomePage = pathname === "/";
+
+  const handleNavigation = async (url: string, extLink: boolean) => {
+    setLoading(true);
+    try {
+      if (extLink) {
+        window.open(url, "_blank", "noopener noreferrer");
+      } else {
+        window.location.href = url;
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   
   const renderNestedNav = (list: Nav[], isRoot = false) => {
     return list?.map((nav: Nav) => {
@@ -327,36 +343,30 @@ export default function Navbar({ navListOpen }: NavbarProps) {
 
       <FlexBox style={{ display: "flex", alignItems: "center" }}>
         {navbarNavigations.map((navItem) => (
-          <NavLink
-            key={navItem.title}
-            href={navItem.url}
-            target={navItem.extLink ? "_blank" : undefined}
-            rel={navItem.extLink ? "noopener noreferrer" : undefined}
-            style={{ textDecoration: "none" }}
-          >
-            <Button
-              style={{
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: "#E94560",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                transition: "background-color 0.3s",
-                color: "white",
-                minWidth: "150px",
-                marginLeft: "15px"
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#E94560")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#E94560")}
-            >
-              <div style={{ marginRight: "8px" }}>
-                {navItem.title === "Become A Seller" ? <FaUser /> : <FaLocationPin />}
-              </div>
-              <Typography style={{ fontWeight: "500" }}>{navItem.title}</Typography>
-            </Button>
-          </NavLink>
+          <Button
+          key={navItem.title}
+          onClick={() => handleNavigation(navItem.url, navItem.extLink)}
+          disabled={loading}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#E94560",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            transition: "background-color 0.3s",
+            color: "white",
+            minWidth: "150px",
+            marginLeft: "15px",
+            opacity: loading ? 0.6 : 1,
+          }}>
+          <div style={{ marginRight: "8px" }}>
+            {navItem.title === "Become A Seller" ? <FaUser /> : <FaLocationPin />}
+          </div>
+          <Typography style={{ fontWeight: "500" }}>{navItem.title}</Typography>
+        </Button>
         ))}
+        {loading && <BeatLoader size={18} color="#fff" />}
       </FlexBox>
     </Container>
   </StyledNavbar>

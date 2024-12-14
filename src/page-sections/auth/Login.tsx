@@ -22,6 +22,7 @@ import { StyledRoot } from "./styles"; // Import your styled components
 import authService from "services/authService";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import CommonHeader from "@component/header/CommonHeader";
+import BeatLoader from "react-spinners/BeatLoader";
 
 // Modal Component
 function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -38,6 +39,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const timerRef = useRef<NodeJS.Timeout | null>(null); // Ref to store timer ID
 
   const [loading, setLoading] = useState(false); // Loading state for the form
+  const [isHasLoading, setIsHasLoading] = useState(false);
 
   // Reset modal fields
   const resetModal = () => {
@@ -76,7 +78,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
         clearTimer();
         setIsResetOtpDisabled(false); // Re-enable the button
         setOtpTimer(null);
-        toast.error("OTP Session Out");
+        toast.error("OTP Session Time Out");
       }
     }, 1000);
   };
@@ -189,6 +191,17 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 
   if (!isOpen) return null;
 
+  const handleBack = () =>{
+  setIsHasLoading(true)
+  if (isOtpStage) {
+    setIsOtpStage(false);
+    clearTimer(); // Stop OTP countdown
+  } else if (isPasswordStage) {
+    setIsPasswordStage(false);
+    setIsOtpStage(true);
+  }
+  }
+
   return (
     <div style={{
       position: "fixed",
@@ -259,7 +272,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                 disabled={isResetOtpDisabled}
                 onClick={handleResetOtp}
               >
-                {isResetOtpDisabled ? "Please Wait..." : "Reset OTP"}
+                {isResetOtpDisabled ? <BeatLoader size={18} color="#E94560" /> : "Reset OTP"}
               </Button>
             </FlexBox>
           </>
@@ -317,18 +330,10 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
             <Button
               variant="outlined"
               color="secondary"
-              onClick={() => {
-                if (isOtpStage) {
-                  setIsOtpStage(false);
-                  clearTimer(); // Stop OTP countdown
-                } else if (isPasswordStage) {
-                  setIsPasswordStage(false);
-                  setIsOtpStage(true);
-                }
-              }}
+              onClick={handleBack}
               style={{ marginRight: "8px" }}
             >
-              Back
+              {isHasLoading ? <BeatLoader size={18} color="#0000FF" /> : "Back"}
             </Button>
           )}
           <Button
@@ -336,7 +341,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
             color="primary"
             onClick={!isOtpStage && !isPasswordStage ? handleEmailOrPhoneSubmit : isOtpStage ? handleOtpSubmit : handlePasswordSubmit}
           >
-            {loading ? "Loading..." : "Confirm"}
+            {loading ? <BeatLoader size={18} color="#fff" /> : "Confirm"}
           </Button>
         </FlexBox>
       </div>
@@ -352,6 +357,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false); // State for loader
   const [apiError, setApiError] = useState<string | null>(null); // State for API errors
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isHasPayLoading, setIsHasPayLoading] = useState(false);
 
   
   const searchParams = useSearchParams();
@@ -411,6 +417,7 @@ export default function Login() {
 
   // Google login handler (for future integration)
   const handleGoogleLogin = async () => {
+    setIsHasPayLoading(true)
     // Handle Google login here
     console.log("google");
 
@@ -523,7 +530,8 @@ export default function Login() {
             fullwidth
             disabled={loading}
           >
-            {loading ? "Loading..." : "Login"}
+            {loading ? <BeatLoader size={18} color="#fff" /> : "Login"}
+            
           </Button>
 
           {/* Google login */}
@@ -544,21 +552,27 @@ export default function Login() {
             <Small fontWeight="600">Continue with Facebook</Small>
           </FlexBox> */}
           <FlexBox
-            mb="1.25rem"
-            height="40px"
-            color="white"
-            bg="#4285F4"
-            borderRadius={5}
-            cursor="pointer"
-            alignItems="center"
-            justifyContent="center"
-            onClick={handleGoogleLogin} // Trigger Google login
-          >
-            <Icon variant="small" defaultcolor="auto" mr="0.5rem">
-              google-1
-            </Icon>
-            <Small fontWeight="600">Continue with Google</Small>
-          </FlexBox>
+      mb="1.25rem"
+      height="40px"
+      color="white"
+      bg="#4285F4"
+      borderRadius={5}
+      cursor="pointer"
+      alignItems="center"
+      justifyContent="center"
+      onClick={handleGoogleLogin} // Trigger Google login
+    >
+      {isHasPayLoading ? (
+        <BeatLoader size={18} color="#0000FF" />
+      ) : (
+        <>
+          <Icon variant="small" defaultcolor="auto" mr="0.5rem">
+            google-1
+          </Icon>
+          <Small fontWeight="600">Continue with Google</Small>
+        </>
+      )}
+    </FlexBox>
 
           {/* Link to Signup */}
           <FlexBox justifyContent="center" mb="">
