@@ -182,8 +182,8 @@ export default function AddressForm() {
 
       }
     } catch (error) {
-      console.error("Failed submitting address data:", error);
-      toast.error("Failed submitting address.");
+      console.error("Failed submitting address data:", error.response.data.message.phone[0]);
+      toast.error(error.response.data.message.phone[0]);
       setLoading(false);
     }
   };

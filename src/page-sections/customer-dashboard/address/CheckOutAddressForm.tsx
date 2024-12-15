@@ -485,6 +485,7 @@ import TextArea from "@component/textarea";
 import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import BeatLoader from "react-spinners/BeatLoader";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function CheckOutAddressForm() {
   const router = useRouter();
@@ -527,9 +528,13 @@ export default function CheckOutAddressForm() {
       if (response.status === 200) {
         sessionStorage.setItem("address", JSON.stringify(values));
         router.push("/checkout");
+        toast.success("Address Added successfully!");
       }
     } catch (error) {
-      console.error("Error submitting address data:", error);
+      // console.error("Error submitting address data:", error);
+      // setLoading(false);
+      console.error("Failed submitting address data:", error.response.data.message.phone[0]);
+      toast.error(error.response.data.message.phone[0]);
       setLoading(false);
     }
   };

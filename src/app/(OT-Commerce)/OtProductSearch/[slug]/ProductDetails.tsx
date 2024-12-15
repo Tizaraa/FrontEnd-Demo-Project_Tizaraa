@@ -405,6 +405,9 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
               slug={params.slug}
               brandName={product.brandName}
               warranty={product.warranty}
+              warrantyType= {product.warrantyType}
+              replacewarranty={product.replacewarranty}
+
             />
           </div>
           {isDesktop && (

@@ -30,6 +30,8 @@ type ProductIntroProps = {
   brandName: string;
   brand_slug?: string;
   warranty: string;
+  warrantyType: string,
+  replacewarranty: string,
   rating: number;
   productStock: number;
   slug?: string;
@@ -53,6 +55,8 @@ export default function ProductIntro({
   sellerShopLogo,
   brandName,
   warranty,
+  warrantyType,
+  replacewarranty,
   rating,
   discountPrice,
   totalDiscount,
@@ -101,6 +105,8 @@ export default function ProductIntro({
             sellerShopLogo={sellerShopLogo}
             brandName={brandName}
             warranty={warranty}
+            warrantyType= {warrantyType}
+              replacewarranty= {replacewarranty}
           />
           <SizeColorSelector
             productId={productId} 
@@ -160,6 +166,8 @@ export default function ProductIntro({
             productType = "General"
 
           />
+
+
           //   <div style={{display: "flex", gap:"10px"}}>
           //      <BuyItNow
           //   productId={productId}

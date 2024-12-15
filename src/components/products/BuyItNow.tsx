@@ -99,7 +99,7 @@
 //         });
       
 //         // Redirect to the checkout page for Buy Now
-//         router.push("/checkout");
+//         router.push("/cart");
 //       };
   
 

@@ -21,6 +21,8 @@ type ProductDetailsProps = {
   sellerShopLogo,
   brandName,
   warranty,
+  warrantyType,
+  replacewarranty,
 };
 
 const ProductDetails = ({
@@ -35,6 +37,8 @@ const ProductDetails = ({
   sellerShopLogo,
   brandName,
   warranty,
+  warrantyType,
+  replacewarranty,
 }: ProductDetailsProps) => {
   const displayPrice = isDirectAdd ? (discountPrice || price) : price; // Choose price based on direct add
 
@@ -100,9 +104,24 @@ const ProductDetails = ({
 </Typography>
 
 {/* warranty */}
-{/* <Typography>
-      Warranty: {warranty || "No warranty"}
-    </Typography> */}
+<Typography>
+
+ <div style={{marginBottom:"10px", marginTop:"5px"}}>
+ Warranty:
+  <span style={{ backgroundColor: "rgba(226,226,226,1)", padding: "4px", borderRadius: "4px" }}>
+    {warranty || "N/A"}
+  </span>
+ </div>
+
+
+        {/* | Warranty type: {warrantyType || "N/A"}  */}
+        <div style={{marginBottom:"5px"}}>
+        Replacement warranty:
+         <span style={{ backgroundColor: "rgba(226,226,226,1)", padding: "4px", borderRadius: "4px" }}>
+          {replacewarranty || "N/A"}
+          </span>
+        </div>
+    </Typography>
 
   {/* Show stock availability only if price is not 0 */}
   {price !== 0 && (

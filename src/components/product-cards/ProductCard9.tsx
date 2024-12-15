@@ -14,7 +14,7 @@ import Icon from "../icon/Icon";
 import FlexBox from "../FlexBox";
 import NavLink from "../nav-link";
 import { Button } from "../buttons";
-import { H5, SemiSpan } from "../Typography";
+import { H4, H5, SemiSpan } from "../Typography";
 import ProductQuickView from "@component/products/ProductQuickView";
 import { useAppContext } from "@context/app-context";
 import { calculateDiscount, currency, getTheme } from "@utils/utils";
@@ -192,14 +192,15 @@ export default function ProductCard9({
                 {calculateDiscount(price, off as number)}
               </H5>
 
-              {off && (
-                <SemiSpan fontWeight="600">
-                  <del>{currency(price)}</del>
-                </SemiSpan>
-              )}
+              {off > 0 && (
+  <SemiSpan fontWeight="600">
+    <del>{currency(price)}</del>
+  </SemiSpan>
+)}
+
             </FlexBox>
 
-            <Hidden up="sm">
+            {/* <Hidden up="sm">
               <FlexBox
                 height="30px"
                 alignItems="center"
@@ -239,11 +240,11 @@ export default function ProductCard9({
                   )}
                 </FlexBox>
               </FlexBox>
-            </Hidden>
+            </Hidden> */}
           </FlexBox>
         </Grid>
 
-        <Hidden as={Grid} down="sm" item md={1} xs={12}>
+        {/* <Hidden as={Grid} down="sm" item md={1} xs={12}>
           <FlexBox
             ml="auto"
             p="1rem 0rem"
@@ -289,7 +290,7 @@ export default function ProductCard9({
               )}
             </FlexBox>
           </FlexBox>
-        </Hidden>
+        </Hidden> */}
       </Grid>
 
       <ProductQuickView

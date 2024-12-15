@@ -465,6 +465,9 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   const sellerShopLogo = product.seller_shop_logo;
   const shopUrl = product.seller_shop_slug;
   const delivery_type = product.delivereyType;
+  const warranty = productData.warranty;
+  const warrantyType = productData.warrantytype;
+  const replacewarranty = productData.replacement_warranty;
 
   return (
     <>
@@ -500,7 +503,9 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
               sizecolorwithprice={sizecolorwithprice}
               slug={params.slug}
               brandName={product.brand_name}
-              warranty={product.warranty}
+              warranty={warranty}
+              warrantyType= {warrantyType}
+              replacewarranty={replacewarranty}
             />
           </div>
           {isDesktop && (
