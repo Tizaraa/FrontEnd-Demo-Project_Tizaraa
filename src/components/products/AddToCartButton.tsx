@@ -11,6 +11,7 @@ import {Styledbutton} from "./style";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
+import BeatLoader from "react-spinners/BeatLoader";
 
 type SizeColorOption = {
   size: string;
@@ -54,6 +55,7 @@ const AddToCartButton = ({
   attributes
 }: AddToCartButtonProps) => {
   const { state, dispatch } = useAppContext();
+  const [isLoading, setIsLoading] = useState(false);
 
   const uniqueKey =
     dummySizes.length === 0
@@ -122,21 +124,74 @@ const AddToCartButton = ({
 
 
   // Newly Added 
+  // const handleAddToCart = () => {
+  //   if (state.cart.length > 0) {
+  //     const existingProductType = state.cart[0].productType;
+ 
+  //     if (existingProductType !== productType) {
+  //      alert(
+  //         `You can only add ${existingProductType === 'abroad' ? 'abroad' : 'general'} products to the cart.`
+  //       );
+  //       return;
+  //     }
+  //   }
+    
+  //   handleCartAmountChange(1);
+  
+  //   if (dummySizes.length === 0) {
+  //     const defaultPrice = discountPrice || price;
+  //     dispatch({
+  //       type: "CHANGE_CART_AMOUNT",
+  //       payload: {
+  //         price: defaultPrice,
+  //         qty: 1,
+  //         name: title,
+  //         imgUrl: images[0],
+  //         productStock: productStock,
+  //         id: uniqueKey,
+  //         discountPrice,
+  //         slug,
+  //         productId,
+  //         sellerId,
+  //         b2bPricing: [],
+  //         productType,
+  //         attributes,
+  //         total_amount: defaultPrice*1
+  //       },
+  //     });
+  //     //console.log("defaultPrice");
+  //     toast.success("Added to cart successfully!");
+  //     return;
+  //   }
+  
+  //   if (!selectedSize && !selectedColor && !selectedSpec) {
+  //     alert("Please select size, color, and variant before adding to cart.");
+  //     return;
+  //   }
+
+  //   // toast.success(`${title} has been added to the cart!`, {
+  //   //   position: "top-right",
+  //   //   autoClose: 3000,
+  //   //   hideProgressBar: true,
+  //   // });
+  // };
+
   const handleAddToCart = () => {
     if (state.cart.length > 0) {
       const existingProductType = state.cart[0].productType;
- 
+
       if (existingProductType !== productType) {
-       alert(
+        alert(
           `You can only add ${existingProductType === 'abroad' ? 'abroad' : 'general'} products to the cart.`
         );
         return;
       }
     }
-    
-    handleCartAmountChange(1);
-  
-    if (dummySizes.length === 0) {
+
+    setIsLoading(true);
+
+    setTimeout(() => {
+         if (dummySizes.length === 0) {
       const defaultPrice = discountPrice || price;
       dispatch({
         type: "CHANGE_CART_AMOUNT",
@@ -158,20 +213,15 @@ const AddToCartButton = ({
         },
       });
       //console.log("defaultPrice");
+      setIsLoading(false);
       toast.success("Added to cart successfully!");
       return;
     }
-  
     if (!selectedSize && !selectedColor && !selectedSpec) {
       alert("Please select size, color, and variant before adding to cart.");
       return;
     }
-
-    // toast.success(`${title} has been added to the cart!`, {
-    //   position: "top-right",
-    //   autoClose: 3000,
-    //   hideProgressBar: true,
-    // });
+    }, 1000); // Simulate API call with a 1-second delay
   };
   
 
@@ -197,8 +247,9 @@ const AddToCartButton = ({
           }}
           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E94560'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#E94560'}
+          disabled={isLoading}
         >
-          Add to Cart
+          {isLoading ? <BeatLoader size={18} color="#fff" /> : 'Add to Cart'}
         </Button>
       ) : (
         <FlexBox alignItems="center" mb="36px">
