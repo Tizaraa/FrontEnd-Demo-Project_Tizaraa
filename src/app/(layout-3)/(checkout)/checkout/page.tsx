@@ -89,6 +89,10 @@ export default function Checkout() {
     checkAuth();
   }, [router]);
 
+  if (!isLoggedIn) {
+    return null; // You can also return a loader or a placeholder here
+  }
+
 
   const getTotalPrice = () => {
     return state.cart.reduce(
