@@ -16,6 +16,8 @@ import { Button } from "@component/buttons";
 import CheckBox from "@component/CheckBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BeatLoader from "react-spinners/BeatLoader";
+import authService from "services/authService";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
   const { state, dispatch } = useAppContext();
