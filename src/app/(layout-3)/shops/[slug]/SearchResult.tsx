@@ -84,10 +84,10 @@ export default function SearchResult({ sortOptions, slug }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            category: selectedCategory || "all",
-            brand: selectedBrand || null,
-            country: selectedCountry || null, // Add country filter here
-            province: selectedProvinces || null,
+            // category: selectedCategory || "all",
+            // brand: selectedBrand || null,
+            // country: selectedCountry || null, 
+            // province: selectedProvinces || null,
             page: currentPage,
             orderBy: selectedSortOption,
           }),
@@ -99,6 +99,7 @@ export default function SearchResult({ sortOptions, slug }) {
       }
 
       const data = await response.json();
+      console.log("Shop Details:", data)
       // Reset products when fetching the first page
       if (currentPage === 1) {
         setProducts(data.data);
@@ -112,9 +113,9 @@ export default function SearchResult({ sortOptions, slug }) {
       setLoading(false);
     }
   }, [
-    selectedBrand,
-    selectedCategory,
-    selectedCountry,
+    // selectedBrand,
+    // selectedCategory,
+    // selectedCountry,
     currentPage,
     selectedSortOption,
   ]);
