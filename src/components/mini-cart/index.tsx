@@ -712,30 +712,71 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     }, 0);
   };
 
+  // const handleCheckout = () => {
+  //   const selectedItems = state.cart.filter((item) =>
+  //     state.selectedProducts.includes(item.id)
+  //   );
+  //   if (selectedItems.length === 0) {
+  //     toast.error("Please select products to checkout");
+  //     setLoading(false);
+  //     return;
+  //   }
+  //   setLoading(true); // Set navigating to true
+  //   const checkoutData = JSON.stringify(selectedItems);
+  //   localStorage.setItem("selectedProducts", checkoutData);
+  //   //setVisible(false); // Hide the cart
+  //   if (isLoggedIn) {
+  //     setLoading(true); // Reset on navigation complete
+  //     // router.push("/checkout")
+  //     setTimeout(() => {
+  //       router.push("/checkout") // Navigate to the cart page
+  //       setLoading(false); // Optional: reset loading state after navigation
+  //       toggleSidenav();// Adjust the delay time as needed (e.g., 1000ms = 1 second)
+  //     }, 5000); 
+  //     //setLoading(false);
+  //   } else {
+  //     setLoading(true);
+  //     router.push("/login")
+  //     //setLoading(false); // Reset on navigation complete
+  //   }
+  //   setLoading(false);
+  // };
+
   const handleCheckout = () => {
+    // Get selected items from the cart
     const selectedItems = state.cart.filter((item) =>
       state.selectedProducts.includes(item.id)
     );
+  
+    // Check if there are no selected items
     if (selectedItems.length === 0) {
       toast.error("Please select products to checkout");
-      setLoading(false);
       return;
     }
-    setLoading(true); // Set navigating to true
+  
+    // Start the loading process
+    setLoading(true);
+  
+    // Save selected items to localStorage
     const checkoutData = JSON.stringify(selectedItems);
     localStorage.setItem("selectedProducts", checkoutData);
-    setVisible(false); // Hide the cart
+  
     if (isLoggedIn) {
-      setLoading(true); // Reset on navigation complete
-      router.push("/checkout")
-      //setLoading(false);
+      // Redirect to checkout if logged in
+      setTimeout(() => {
+        router.push("/checkout");
+        setLoading(false); // Reset loading state after navigation
+        toggleSidenav();
+      }, 1000); // Adjust delay as needed
     } else {
-      setLoading(true);
-      router.push("/login")
-      //setLoading(false); // Reset on navigation complete
+      // Redirect to login if not logged in
+      setTimeout(() => {
+        router.push("/login");
+        setLoading(false); // Reset loading state after navigation
+      }, 1000); // Adjust delay as needed
     }
-    setLoading(false);
   };
+  
 
   const handleSelectAll = () => {
     if (selectAll) {
@@ -753,24 +794,53 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     }
   };
 
-  const handleDeleteSelected = () => {
-    state.selectedProducts.forEach((productId) => {
-      dispatch({
-        type: "CHANGE_CART_AMOUNT",
-        payload: { id: productId, qty: 0 },
+  const handleDeleteSelected = async () => {
+    setIsDeleting(true);
+
+    try {
+      // Simulate async operation (e.g., API call) with setTimeout
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      state.selectedProducts.forEach((productId) => {
+        dispatch({
+          type: "CHANGE_CART_AMOUNT",
+          payload: { id: productId, qty: 0 },
+        });
       });
-    });
-    dispatch({ type: "DESELECT_ALL_PRODUCTS" });
-    toast.success("Selected items deleted successfully");
+
+      localStorage.removeItem("orderId");
+      localStorage.removeItem("cart");
+      sessionStorage.removeItem("paymentMethod");
+
+      dispatch({ type: "DESELECT_ALL_PRODUCTS" });
+
+      //toast.success("Selected items deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete selected items");
+    } finally {
+      setIsDeleting(false);
+    }
   };
+
 
   const totalPrice = getTotalPrice();
 
-  const handleViewCart = () => {
-    setViewCartLoading(true);
-    toggleSidenav();
-  };
+  // const handleViewCart = () => {
+  //   setViewCartLoading(true);
+  //   toggleSidenav();
+  //   router.push("/cart")
+  // };
 
+  const handleViewCart = () => {
+    setViewCartLoading(true); // Show the loading state
+  
+    // Delay the navigation to the cart page
+    setTimeout(() => {
+      router.push("/cart"); // Navigate to the cart page
+      setViewCartLoading(false); // Optional: reset loading state after navigation
+      toggleSidenav();// Adjust the delay time as needed (e.g., 1000ms = 1 second)
+    }, 1000); 
+  };
   return (
     <StyledMiniCart>
       <div className={`cart-list ${state.cart.length === 0 ? "no-scroll" : ""}`}>
@@ -792,15 +862,26 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
             <Typography ml="0.5rem">Select All</Typography>
           </FlexBox>
           <Button
-                size="small"
-                color="primary"
-                variant="outlined"
-                disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0 || isDeleting}
-                onClick={handleDeleteSelected}
-                className={`delete-button ${isDeleting ? 'deleting' : ''}`}
-              >
-                 <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} /> Remove All
-              </Button>
+      size="small"
+      color="primary"
+      variant="outlined"
+      disabled={
+        state.selectedProducts.length === 0 ||
+        state.cart.length === 0 ||
+        totalPrice === 0 ||
+        isDeleting
+      }
+      onClick={handleDeleteSelected}
+      className={`delete-button ${isDeleting ? "deleting" : ""}`}
+    >
+      {isDeleting ? (
+        <BeatLoader size={18} color="#E94560" />
+      ) : (
+        <>
+          <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} /> Remove All
+        </>
+      )}
+    </Button>
         </FlexBox>
 
         {state.cart.length === 0 && (
@@ -945,15 +1026,15 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
             disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0 || loading}
           >
             {loading ? (
-                  <BeatLoader size={18} color="#E94560" />
-                ) : (
-                  <Typography fontWeight={600}>
-                    PROCEED TO CHECKOUT ({currency(getTotalPrice())})
-                  </Typography>
-                )}
+          <BeatLoader size={18} color="#E94560" />
+        ) : (
+          <Typography fontWeight={600}>
+            PROCEED TO CHECKOUT ({currency(getTotalPrice())})
+          </Typography>
+        )}
           </Button>
 
-          <Link href="/cart">
+          
             <Button
               fullwidth
               color="primary"
@@ -968,7 +1049,6 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                 <Typography fontWeight={600}>View Cart</Typography>
               )}
             </Button>
-          </Link>
         </div>
       )}
       <style jsx>{`

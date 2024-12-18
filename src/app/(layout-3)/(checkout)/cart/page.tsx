@@ -397,7 +397,7 @@
 import Link from "next/link";
 import { Fragment, useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import "react-toastify/dist/ReactToastify.css";
+//import "react-toastify/dist/ReactToastify.css";
 import Box from "@component/Box";
 import Grid from "@component/grid/Grid";
 import { Card1 } from "@component/Card1";
@@ -436,15 +436,32 @@ export default function Cart() {
     }
   };
 
-  const handleDeleteSelected = () => {
-    state.selectedProducts.forEach((productId) => {
-      dispatch({
-        type: "CHANGE_CART_AMOUNT",
-        payload: { id: productId, qty: 0 },
+  const handleDeleteSelected = async () => {
+    setIsDeleting(true);
+
+    try {
+      // Simulate async operation (e.g., API call) with setTimeout
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      state.selectedProducts.forEach((productId) => {
+        dispatch({
+          type: "CHANGE_CART_AMOUNT",
+          payload: { id: productId, qty: 0 },
+        });
       });
-    });
-    dispatch({ type: "DESELECT_ALL_PRODUCTS" });
-    toast.success("Selected items deleted successfully");
+
+      localStorage.removeItem("orderId");
+      localStorage.removeItem("cart");
+      sessionStorage.removeItem("paymentMethod");
+
+      dispatch({ type: "DESELECT_ALL_PRODUCTS" });
+
+      toast.success("Selected items deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete selected items");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const getTotalPrice = () => {
@@ -508,7 +525,6 @@ export default function Cart() {
 
   return (
     <Fragment>
-      <Toaster />
       <Grid container spacing={6}>
         <Grid item lg={8} md={8} xs={12}>
           <Card1 mb="1.5rem">
@@ -518,15 +534,26 @@ export default function Cart() {
                 <Typography ml="0.5rem">Select All</Typography>
               </FlexBox>
               <Button
-                size="small"
-                color="primary"
-                variant="outlined"
-                disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0 || isDeleting}
-                onClick={handleDeleteSelected}
-                className={`delete-button ${isDeleting ? 'deleting' : ''}`}
-              >
-                 <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} /> Remove All
-              </Button>
+      size="small"
+      color="primary"
+      variant="outlined"
+      disabled={
+        state.selectedProducts.length === 0 ||
+        state.cart.length === 0 ||
+        totalPrice === 0 ||
+        isDeleting
+      }
+      onClick={handleDeleteSelected}
+      className={`delete-button ${isDeleting ? "deleting" : ""}`}
+    >
+      {isDeleting ? (
+        <BeatLoader size={18} color="#E94560" />
+      ) : (
+        <>
+          <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} /> Remove All
+        </>
+      )}
+    </Button>
             </FlexBox>
           </Card1>
           {state.cart.map((item) => (
