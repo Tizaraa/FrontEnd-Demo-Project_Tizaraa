@@ -15,6 +15,7 @@ import ProductDetails from "./ProductDetails";
 import FlexBox from "@component/FlexBox";
 import { H6, SemiSpan } from "@component/Typography";
 import Link from "next/link";
+import BuyItNow from "./BuyItNow";
 // import BuyItNow from "./BuyItNow";
 
 
