@@ -64,7 +64,8 @@ export default function CheckoutAddress({ setDeliveryCharge,onAddressChange }) {
           }
         }
         
-        onAddressChange(fetchedAddresses.length > 0, fetchedAddresses.length > 0);
+        //onAddressChange(fetchedAddresses.length > 0, fetchedAddresses.length > 0);
+        onAddressChange(response.data.user.length > 0, false);
       } catch (error) {
         console.error("Error fetching addresses:", error);
         onAddressChange(false, false);

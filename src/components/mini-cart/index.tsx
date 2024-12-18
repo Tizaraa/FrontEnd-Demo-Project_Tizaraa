@@ -905,7 +905,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
               textAlign="center"
               maxWidth="200px"
             >
-              Your shopping bag is empty. Start shopping
+              No Product Found
             </Paragraph>
           </FlexBox>
         )}
