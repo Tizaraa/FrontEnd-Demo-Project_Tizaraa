@@ -16,7 +16,7 @@ import axios from "axios";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
-
+import authService from "services/authService";
 export default function EditAddressForm({ addressId }: { addressId: string }) {
   const router = useRouter();
   const [selectedLandmark, setSelectedLandmark] = useState<number | null>(null);
@@ -32,6 +32,12 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
     area: "",
     selectedLandmark: null,
   });
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -118,8 +124,13 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
       );
 
       if (response.status === 200) {
-        router.push("/address");
-        toast.success("Address Updated successfully!");
+
+        if(isLoggedIn){
+          router.push("/address");
+          toast.success("Address Updated successfully!");
+        }else{
+          router.push("/login");
+        }
       }
     } catch (error) {
       console.error("Error updating address:", error);

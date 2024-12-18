@@ -9,6 +9,7 @@ import CheckoutAddress from "./CheckoutAddress";
 import { Button } from "@component/buttons";
 import Typography from "@component/Typography";
 import Grid from "@component/grid/Grid";
+import authService from "services/authService";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,6 +24,11 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isHasLoading, setIsHasLoading] = useState(false);
   const [isHasPayLoading, setIsHasPayLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -64,7 +70,11 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
     if (addressData) {
       console.log("Payment:", JSON.parse(addressData));
       toast.success("Proceeding to Payment...");
-      router.push("/payment");
+      if(isLoggedIn){
+        router.push("/payment");
+      }else{
+        router.push("/login");
+      }
     } else {
       toast.error("No address data found. Please add an address.");
       setIsHasPayLoading(false)
@@ -85,7 +95,11 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
 
   const handleAddNewAddress = () => {
     setIsLoading(true);
-    router.push("/address/checkoutAddress");
+    if(isLoggedIn){
+      router.push("/address/checkoutAddress");
+    }else{
+      router.push("/login");
+    }
   };
 
   return (
@@ -131,7 +145,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
             type="button"
             fullwidth
             onClick={handlePayment}
-            disabled={!hasAddress || !isAddressChecked}
+            disabled={!hasAddress || !isAddressChecked || totalPrice === 0}
           >
             {/* Proceed to Pay
             const [isHasPayLoading, setIsHasPayLoading] = useState(false); */}

@@ -10,6 +10,7 @@ import { Button } from "@component/buttons";
 import Typography from "@component/Typography";
 import Grid from "@component/grid/Grid";
 import authService from "services/authService";
+import BeatLoader from "react-spinners/BeatLoader";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,9 +28,16 @@ const RfqCheckoutForm: FC<RfqCheckoutFormProps> = ({  responseId }) => {
   const [address, setAddress] = useState<any>(null);
   const searchParams = useSearchParams();
   const authtoken = authService.getToken();
+  const [isLoading, setIsLoading] = useState(false);
 
   // const userFromURL = searchParams.get("user");
   // console.log("naz",userFromURL);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
   
 
   
@@ -156,6 +164,15 @@ try {
     setIsAddressSelected(true);
   };
 
+  const handleAddNewAddress = () => {
+    setIsLoading(true);
+    if(isLoggedIn){
+      router.push("/address/checkoutAddress");
+    }else{
+      router.push("/login");
+    }
+  };
+
   return (
     <>
       <ToastContainer autoClose={4000} />
@@ -167,9 +184,9 @@ try {
           color="primary"
           bg="primary.light"
           my="2rem"
-          onClick={() => router.push("/address/checkoutAddress")}
+          onClick={handleAddNewAddress}
         >
-          Add New Address
+          {isLoading ? <BeatLoader size={18} color="#E94560" /> : "Add New Address"}
         </Button>
       </FlexBox>
 

@@ -133,6 +133,7 @@ import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import toast, { Toaster } from "react-hot-toast";
 import BeatLoader from "react-spinners/BeatLoader";
+import authService from "services/authService";
 
 export default function AddressForm() {
   const router = useRouter();
@@ -141,6 +142,12 @@ export default function AddressForm() {
   const [city, setCity] = useState([]);
   const [area, setArea] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
 
   const handleFormSubmit = async (values: any) => {
     setLoading(true);
@@ -176,9 +183,13 @@ export default function AddressForm() {
         // Handle successful response, e.g., redirect or show a success message
         sessionStorage.setItem("address", JSON.stringify(values));
         //console.log(response.data)
-        
-        router.push("/address");
+
+        if(isLoggedIn){
+          router.push("/address");
         toast.success("Address Added successfully!");
+        }else{
+          router.push("/login");
+        }
 
       }
     } catch (error) {

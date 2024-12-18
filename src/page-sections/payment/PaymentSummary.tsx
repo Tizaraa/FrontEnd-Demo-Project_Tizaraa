@@ -35,7 +35,7 @@ export default function PaymentSummary() {
     setTotalPrice(savedPrice);
     setShippingCharge(savedShipping);
     setCartItems(savedCart);
-  }, []);
+  }, [state.cart]);
 
   const getTotalPrice = () => {
     return state.cart.reduce((accumulator, item) => {
@@ -107,7 +107,7 @@ export default function PaymentSummary() {
       </FlexBox>
 
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-        <Typography color="text.hint">Tax:</Typography>
+        <Typography color="text.hint">Vat:</Typography>
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">

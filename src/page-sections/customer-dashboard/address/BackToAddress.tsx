@@ -1,16 +1,27 @@
 "use client";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@component/buttons";
+import authService from "services/authService";
 import BeatLoader from "react-spinners/BeatLoader";
 
 export default function BackToAddress() {
   const { push } = useRouter();
   const [loading, setLoading] = useState(false);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
+
   const handleClick = () => {
     setLoading(true);
-    push("/address");
+    if(isLoggedIn){
+      push("/address");
+    }else{
+      push("/login");
+    }
   };
 
   return (

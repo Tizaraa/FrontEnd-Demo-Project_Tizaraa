@@ -411,6 +411,8 @@ import { Button } from "@component/buttons";
 import CheckBox from "@component/CheckBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BeatLoader from "react-spinners/BeatLoader";
+import authService from "services/authService";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
   const { state, dispatch } = useAppContext();
@@ -420,6 +422,13 @@ export default function Cart() {
   const [selectedProducts, setSelectedProducts] = useState<(string | number)[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
 
   useEffect(() => {
     setSelectAll(
@@ -453,6 +462,9 @@ export default function Cart() {
       localStorage.removeItem("orderId");
       localStorage.removeItem("cart");
       sessionStorage.removeItem("paymentMethod");
+      sessionStorage.removeItem("savedTotalPrice");
+      sessionStorage.removeItem("savedTotalWithDelivery");
+
 
       dispatch({ type: "DESELECT_ALL_PRODUCTS" });
 
@@ -476,35 +488,46 @@ export default function Cart() {
     }, 0);
   };
 
-  const handleCheckout = () => {
-    setIsLoading(true);
+  const handleCheckout = async () => {
+    setIsLoading(true); // Show loading spinner immediately when the button is clicked
+  
+    if (!isLoggedIn) {
+      // Redirect to login page if not logged in
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading delay
+      router.push("/login");
+      return; // Exit function, no need to reset loading here
+    }
+  
     const selectedItems = state.cart.filter((item) =>
       state.selectedProducts.includes(item.id)
     );
+  
     if (selectedItems.length === 0) {
       toast.error("Please select products to checkout");
-      setIsLoading(false);
+      setIsLoading(false); // Reset loading state if no products are selected
       return;
     }
+  
     const checkoutData = JSON.stringify(selectedItems);
     localStorage.setItem("selectedProducts", checkoutData);
-
+  
     const totalPrice = getTotalPrice();
-
+  
     if (totalPrice === 0) {
       toast.error("Total price is 0. Please add items to your cart.");
-      setIsLoading(false);
+      setIsLoading(false); // Reset loading state if total price is 0
       return;
     }
-
+  
     const isError = selectedItems.some(item => item.qty <= 0);
     if (isError) {
       setCheckoutError(true);
-    } 
-    // else {
-    //   setCheckoutSuccess(true);
-    // }
-    setIsLoading(true);
+      setIsLoading(false); // Reset loading state if there's an error
+      return;
+    }
+  
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading delay
+    router.push("/checkout"); // Redirect to checkout page
   };
 
   useEffect(() => {
@@ -586,7 +609,7 @@ export default function Cart() {
 
             <Divider mb="1rem" />
 
-            <Link href="/checkout" passHref>
+            {/* <Link href="/checkout" passHref> */}
               <Button
                 variant="contained"
                 color="primary"
@@ -596,7 +619,7 @@ export default function Cart() {
               >
                 {isLoading ? <BeatLoader size={18} color="#E94560" /> : "PROCEED TO CHECKOUT"}
               </Button>
-            </Link>
+            {/* </Link> */}
           </Card1>
         </Grid>
       </Grid>

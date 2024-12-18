@@ -1,16 +1,27 @@
 "use client";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Button } from "@component/buttons";
 import { useRouter } from "next/navigation";
+import authService from "services/authService";
 import BeatLoader from "react-spinners/BeatLoader";
 
 export default function AddNewAddress() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
+
   const handleClick = () => {
     setLoading(true);
-    router.push("/address/create");
+    if(isLoggedIn){
+      router.push("/address/create");
+    }else{
+      router.push("/login");
+    }
   };
 
   return (

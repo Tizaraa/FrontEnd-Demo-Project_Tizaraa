@@ -811,10 +811,12 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
       localStorage.removeItem("orderId");
       localStorage.removeItem("cart");
       sessionStorage.removeItem("paymentMethod");
+      sessionStorage.removeItem("savedTotalPrice");
+      sessionStorage.removeItem("savedTotalWithDelivery");
 
       dispatch({ type: "DESELECT_ALL_PRODUCTS" });
 
-      //toast.success("Selected items deleted successfully");
+      toast.success("Selected items deleted successfully");
     } catch (error) {
       toast.error("Failed to delete selected items");
     } finally {

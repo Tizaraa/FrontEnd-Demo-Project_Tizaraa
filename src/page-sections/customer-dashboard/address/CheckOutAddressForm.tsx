@@ -486,6 +486,7 @@ import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import BeatLoader from "react-spinners/BeatLoader";
 import toast, { Toaster } from "react-hot-toast";
+import authService from "services/authService";
 
 export default function CheckOutAddressForm() {
   const router = useRouter();
@@ -500,6 +501,11 @@ export default function CheckOutAddressForm() {
     const authtoken = localStorage.getItem("token");
     const userInfo = localStorage.getItem("userInfo");
     const userId = JSON.parse(userInfo);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
 
     const addressData = {
       user_id: userId.id,
@@ -527,8 +533,12 @@ export default function CheckOutAddressForm() {
 
       if (response.status === 200) {
         sessionStorage.setItem("address", JSON.stringify(values));
-        router.push("/checkout");
+        if(isLoggedIn){
+          router.push("/checkout");
         toast.success("Address Added successfully!");
+        }else{
+          router.push("/login");
+        }
       }
     } catch (error) {
       // console.error("Error submitting address data:", error);

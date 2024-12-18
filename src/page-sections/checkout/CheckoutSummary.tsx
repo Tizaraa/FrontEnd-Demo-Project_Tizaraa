@@ -51,7 +51,15 @@ export default function CheckoutSummary({ deliveryCharge }) {
       setSavedTotalWithDelivery(totalWithDelivery);
       sessionStorage.setItem("savedTotalWithDelivery", totalWithDelivery.toString());
     }
-  }, [state, deliveryCharge]);
+
+    if (state.cart.length === 0) {
+      setSavedTotalPrice(0);
+      setSavedTotalWithDelivery(0);
+      sessionStorage.removeItem("savedTotalPrice");
+      sessionStorage.removeItem("savedTotalWithDelivery");
+    }
+    
+  }, [state.cart, deliveryCharge]);
   // useEffect(() => {
   //   const savedPrice = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
   //   const savedWithDelivery = parseFloat(

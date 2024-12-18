@@ -287,6 +287,7 @@ import onlinePayment from "../../../public/assets/images/payment/Mobile_Banking.
 import NagadImage from "../../../public/assets/images/payment/Nagad.avif"
 import BkashImage from "../../../public/assets/images/payment/Bkash.png"
 import BeatLoader from "react-spinners/BeatLoader";
+import authService from "services/authService";
 
 export default function PaymentForm() {
   const { push } = useRouter();
@@ -296,6 +297,11 @@ export default function PaymentForm() {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [isHasLoading, setIsHasLoading] = useState(false);
   const [isHasPayLoading, setIsHasPayLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
   //const searchParams = useSearchParams();
   //const { state } = useAppContext();
 
@@ -620,7 +626,11 @@ export default function PaymentForm() {
       } catch (error) {
         console.error("Error placing order:", error);
         toast.error("Error placing cash on delivery order!");
-        router.push("/payment");
+        if(isLoggedIn){
+          router.push("/payment");
+        }else{
+          router.push("/login");
+        }
   setIsHasLoading(false)
       }
     }
@@ -662,7 +672,11 @@ export default function PaymentForm() {
 
   const handleClick = () => {
             setIsHasPayLoading(true)
-    push("/checkout");
+    if(isLoggedIn){
+      push("/checkout");
+    }else{
+      router.push("/login");
+    }
   };
 
   return (
