@@ -57,7 +57,7 @@ export default async function ShopDetails({ params }: SlugParams) {
 
 
 const sortOptions = [
-  { label: "Date", value: "Date" },
+  { label: "Latest", value: "Latest" },
   { label: "Price Low to High", value: "1" },
   { label: "Price High to Low", value: "2" }
 ];
