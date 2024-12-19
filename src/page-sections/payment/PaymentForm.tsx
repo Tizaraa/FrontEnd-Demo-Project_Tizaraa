@@ -500,7 +500,7 @@ export default function PaymentForm() {
         //router.push("/orders");
         localStorage.removeItem("orderId");
       sessionStorage.removeItem("selectedProducts");
-      localStorage.removeItem("cart");
+      //localStorage.removeItem("cart");
       sessionStorage.removeItem("paymentMethod");
       sessionStorage.removeItem("savedTotalPrice");
       sessionStorage.removeItem("savedTotalWithDelivery");
@@ -621,7 +621,7 @@ export default function PaymentForm() {
         router.push("/orders?status=success&message=Order placed successfully");
         localStorage.removeItem("orderId");
       sessionStorage.removeItem("selectedProducts");
-      localStorage.removeItem("cart");
+      //localStorage.removeItem("cart");
       sessionStorage.removeItem("paymentMethod");
       sessionStorage.removeItem("savedTotalPrice");
       sessionStorage.removeItem("savedTotalWithDelivery");
