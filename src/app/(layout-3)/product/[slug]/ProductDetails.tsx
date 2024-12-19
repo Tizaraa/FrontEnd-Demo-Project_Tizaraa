@@ -414,7 +414,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
       if (qrCodeData) {
         setQrCodeUrl(qrCodeData);
       }else {
-        console.warn("No QR Code data received."); // Log warning
+        console.log("No QR Code data received."); // Log warning
       }
       setIsLoading(false);
     };
@@ -431,19 +431,19 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
     );
   }
 
-  if (!qrCodeUrl) {
-    return (
-      <div
-        style={{
-          textAlign: "center",
-          padding: "20px",
-          color: "#555",
-        }}
-      >
-        <p>QR Code is not available.</p>
-      </div>
-    );
-  }
+  // if (!qrCodeUrl) {
+  //   return (
+  //     <div
+  //       style={{
+  //         textAlign: "center",
+  //         padding: "20px",
+  //         color: "#555",
+  //       }}
+  //     >
+  //       <p>QR Code is not available.</p>
+  //     </div>
+  //   );
+  // }
 
   if (!productData || !productData.productsingledetails) {
     return (
