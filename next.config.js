@@ -15,7 +15,7 @@ const nextConfig = {
   },
   experimental: {
     missingSuspenseWithCSRBailout: false,
-    middleware: true,
+   // middleware: true,
   },
 };
 

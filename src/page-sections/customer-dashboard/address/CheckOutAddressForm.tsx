@@ -503,9 +503,9 @@ export default function CheckOutAddressForm() {
     const userId = JSON.parse(userInfo);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    setIsLoggedIn(authService.isAuthenticated());
-  }, []);
+  // useEffect(() => {
+  //   setIsLoggedIn(authService.isAuthenticated());
+  // }, []);
 
     const addressData = {
       user_id: userId.id,

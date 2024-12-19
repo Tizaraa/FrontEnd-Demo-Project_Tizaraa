@@ -196,20 +196,20 @@ export default function AddressList() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    const checkAuth = () => {
-      if (!authService.isAuthenticated()) {
-        router.push("/login");
-      } else {
-        setIsLoggedIn(true);
-      }
-    };
-    checkAuth();
-  }, [router]);
+  // useEffect(() => {
+  //   const checkAuth = () => {
+  //     if (!authService.isAuthenticated()) {
+  //       router.push("/login");
+  //     } else {
+  //       setIsLoggedIn(true);
+  //     }
+  //   };
+  //   checkAuth();
+  // }, [router]);
 
-  if (!isLoggedIn) {
-    return null; // You can also return a loader or a placeholder here
-  }
+  // if (!isLoggedIn) {
+  //   return null; // You can also return a loader or a placeholder here
+  // }
 
   useEffect(() => {
     const fetchAddresses = async () => {
