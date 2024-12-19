@@ -68,7 +68,7 @@ const updateCartItem = (
   let calculatedPrice = cartItem.price; // Default to base price
   let b2bPricing =cartItem.b2bPricing;
   
-  console.log(cartItem);
+  console.log("nazim cart data",cartItem);
   //toast.error("Out of Stock");
 
 

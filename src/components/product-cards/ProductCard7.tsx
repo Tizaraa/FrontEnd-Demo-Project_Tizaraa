@@ -47,10 +47,11 @@ interface ProductCard7Props extends SpaceProps {
   productId: string | number;
   sellerId: string | number;
   b2bPricing: any;
+  total_amount: any;
 }
 
 export default function ProductCard7(props: ProductCard7Props) {
-  const { id, name, qty, price, imgUrl, productStock, slug, discountPrice, productId, sellerId, b2bPricing, ...others } = props;
+  const { id, name, qty, price, imgUrl, productStock, slug, discountPrice, productId, sellerId, b2bPricing,total_amount, ...others } = props;
   const { state, dispatch } = useAppContext();
   const [quantity, setQuantity] = useState(qty);
 
@@ -69,7 +70,7 @@ export default function ProductCard7(props: ProductCard7Props) {
     setQuantity(amount);
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { qty: amount, name, price, imgUrl, productStock, id, discountPrice, productId, sellerId, b2bPricing }
+      payload: { qty: amount, name, price, imgUrl, productStock, id, discountPrice, productId, sellerId, b2bPricing,total_amount }
     });
   };
 

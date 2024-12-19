@@ -228,6 +228,7 @@ export default function Cart() {
               productId={item.productId}
               sellerId={item.sellerId}
               b2bPricing={item.b2bPricing}
+              total_amount={item.total_amount}
             />
           ))}
         </Grid>
