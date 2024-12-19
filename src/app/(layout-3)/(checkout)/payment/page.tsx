@@ -13,21 +13,21 @@ export default function Checkout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   // Check if the user is authenticated
-  //   const authenticated = authService.isAuthenticated();
-  //   setIsLoggedIn(authenticated);
+  useEffect(() => {
+    // Check if the user is authenticated
+    const authenticated = authService.isAuthenticated();
+    setIsLoggedIn(authenticated);
 
-  //   // If not authenticated, redirect to the login page
-  //   if (!authenticated) {
-  //     router.push("/login");
-  //   }
-  // }, [router]);
+    // If not authenticated, redirect to the login page
+    if (!authenticated) {
+      router.push("/login");
+    }
+  }, [router]);
 
-  // // If the user is not logged in, prevent rendering the components
-  // if (!isLoggedIn) {
-  //   return null; // You can also return a loader or a placeholder here
-  // }
+  // If the user is not logged in, prevent rendering the components
+  if (!isLoggedIn) {
+    return null; // You can also return a loader or a placeholder here
+  }
   
   return (
     <Grid container flexWrap="wrap-reverse" spacing={6}>

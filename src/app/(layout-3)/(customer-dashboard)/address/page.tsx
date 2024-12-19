@@ -191,21 +191,21 @@ export default function AddressList() {
   });
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const authtoken = authService.getToken();// Retrieve the auth token
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // useEffect(() => {
-  //   const checkAuth = () => {
-  //     if (!authService.isAuthenticated()) {
-  //       router.push("/login");
-  //     } else {
-  //       setIsLoggedIn(true);
-  //     }
-  //   };
-  //   checkAuth();
-  // }, [router]);
+  const authtoken = authService.getToken();// Retrieve the auth token
+
+  useEffect(() => {
+    const checkAuth = () => {
+      if (!authService.isAuthenticated()) {
+        router.push("/login");
+      } else {
+        setIsLoggedIn(true);
+      }
+    };
+    checkAuth();
+  }, [router]);
 
   // if (!isLoggedIn) {
   //   return null; // You can also return a loader or a placeholder here

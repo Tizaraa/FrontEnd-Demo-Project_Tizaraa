@@ -496,16 +496,17 @@ export default function CheckOutAddressForm() {
   const [area, setArea] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
+
   const handleFormSubmit = async (values: any) => {
     setLoading(true);
     const authtoken = localStorage.getItem("token");
     const userInfo = localStorage.getItem("userInfo");
     const userId = JSON.parse(userInfo);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // useEffect(() => {
-  //   setIsLoggedIn(authService.isAuthenticated());
-  // }, []);
 
     const addressData = {
       user_id: userId.id,
@@ -539,6 +540,8 @@ export default function CheckOutAddressForm() {
         }else{
           router.push("/login");
         }
+        // router.push("/checkout");
+        // toast.success("Address Added successfully!");
       }
     } catch (error) {
       // console.error("Error submitting address data:", error);
