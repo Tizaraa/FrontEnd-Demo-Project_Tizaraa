@@ -489,7 +489,7 @@ export default function Login() {
             onBlur={handleBlur}
             value={values.email}
             onChange={handleChange}
-            placeholder="example@mail.com"
+            placeholder="Enter Your Email"
             label="Email"
             errorText={touched.email && errors.email}
           />
@@ -503,7 +503,7 @@ export default function Login() {
             autoComplete="on"
             onBlur={handleBlur}
             onChange={handleChange}
-            placeholder="*********"
+            placeholder="Enter Your Passoword"
             value={values.password}
             errorText={touched.password && errors.password}
             type={passwordVisibility ? "text" : "password"}
