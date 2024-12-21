@@ -1,6 +1,6 @@
 "use client"; // Add this line at the top
 import Box from "@component/Box";
-import NewArrivals from "./NewArrivals";
+import NewArrivals from "./new_arrivals";
 import { useEffect } from "react";
 
 interface Props {

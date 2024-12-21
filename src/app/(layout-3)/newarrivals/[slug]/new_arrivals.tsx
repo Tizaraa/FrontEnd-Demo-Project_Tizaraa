@@ -17,6 +17,7 @@ import { H5, Paragraph } from "@component/Typography";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import styled from "@emotion/styled";
 import { Vortex } from "react-loader-spinner";
+import NewArrivalProductFilter from "@component/products/NewArrivalProductFilter";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -74,29 +75,75 @@ export default function NewArrivals({ sortOptions, slug }: NewArrivalsProps) {
     setSelectedSortOption(sortOption.value);
   };
 
+  // const fetchProducts = useCallback(async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await fetch(`${ApiBaseUrl.baseUrl}remark/product/new_arrivals`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         category: selectedCategory || "all",
+  //         brand: selectedBrand || null,
+  //         country: selectedCountry || null,
+  //         province: selectedProvinces || null,
+  //         page: currentPage,
+  //         orderBy: selectedSortOption,
+  //       }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Network response was not ok");
+  //     }
+
+  //     const data = await response.json();
+  //     if (currentPage === 1) {
+  //       setProducts(data.data);
+  //     } else {
+  //       setProducts((prevProducts) => [...prevProducts, ...data.data]);
+  //     }
+  //     setTotalProducts(data.total);
+  //   } catch (error) {
+  //     console.error("Error fetching products:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [selectedBrand, selectedCategory, selectedCountry, currentPage, selectedSortOption]);
   const fetchProducts = useCallback(async () => {
     setLoading(true);
+  
+    // Prepare the filter object
+    const filters: any = {};
+    if (selectedCategory) filters.category = selectedCategory;
+    if (selectedBrand && selectedBrand.length) filters.brand = selectedBrand;
+    if (selectedCountry && selectedCountry.length) filters.country = selectedCountry;
+    if (selectedProvinces && selectedProvinces.length) filters.province = selectedProvinces;
+  
     try {
-      const response = await fetch(`${ApiBaseUrl.baseUrl}remark/product/new_arrivals`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          category: selectedCategory || "all",
-          brand: selectedBrand || null,
-          country: selectedCountry || null,
-          province: selectedProvinces || null,
-          page: currentPage,
-          orderBy: selectedSortOption,
-        }),
-      });
-
+      const response = await fetch(
+        `${ApiBaseUrl.baseUrl}remark/product/new_arrivals`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...filters, // Include only valid filters
+            page: currentPage,
+            orderBy: selectedSortOption,
+          }),
+        }
+      );
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
+  
       const data = await response.json();
+      console.log("Shop Details:", data);
+  
+      // Reset products when fetching the first page
       if (currentPage === 1) {
         setProducts(data.data);
       } else {
@@ -108,7 +155,14 @@ export default function NewArrivals({ sortOptions, slug }: NewArrivalsProps) {
     } finally {
       setLoading(false);
     }
-  }, [selectedBrand, selectedCategory, selectedCountry, currentPage, selectedSortOption]);
+  }, [
+    selectedBrand,
+    selectedCategory,
+    selectedCountry,
+    selectedProvinces,
+    currentPage,
+    selectedSortOption,
+  ]);
 
   useEffect(() => {
     fetchProducts();
@@ -183,13 +237,13 @@ export default function NewArrivals({ sortOptions, slug }: NewArrivalsProps) {
               scroll={true}
               handle={<IconButton><Icon>options</Icon></IconButton>}
             >
-              <ProductFilterCard
+              <NewArrivalProductFilter
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
                 onCountryChange={handleCountryChange}
                 onProvinceChange={handleProvinceChange}
                 slug={slug}
-                pageType="default"
+                pageType="newArrival"
               />
             </Sidenav>
           )}
@@ -198,13 +252,13 @@ export default function NewArrivals({ sortOptions, slug }: NewArrivalsProps) {
 
       <Grid container spacing={6}>
         <Grid item lg={3} xs={12}>
-          <ProductFilterCard
+          <NewArrivalProductFilter
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
             onCountryChange={handleCountryChange}
             onProvinceChange={handleProvinceChange}
             slug={slug}
-            pageType="default"
+            pageType="newArrival"
           />
         </Grid>
 
