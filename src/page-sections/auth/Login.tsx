@@ -163,6 +163,9 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       });
 
       if (response.status === 200) {
+        clearTimer(); // Stop OTP countdown
+        setOtpTimer(null); // Set OTP timer to null
+        setIsResetOtpDisabled(false)
         setResetToken(response.data.reset_token);
         setIsPasswordStage(true);
         setIsOtpStage(false);
@@ -170,6 +173,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Invalid OTP."); // Show API error message
+      setIsResetOtpDisabled(false)
     } finally {
       setLoading(false);
     }
@@ -216,10 +220,12 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   setIsHasLoading(true)
   if (isOtpStage) {
     setIsOtpStage(false);
+    setIsHasLoading(false)
     clearTimer(); // Stop OTP countdown
   } else if (isPasswordStage) {
     setIsPasswordStage(false);
     setIsOtpStage(true);
+    setIsHasLoading(false)
   }
   }
 
