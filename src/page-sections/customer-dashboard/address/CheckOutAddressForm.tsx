@@ -502,7 +502,7 @@ export default function CheckOutAddressForm() {
     setIsLoggedIn(authService.isAuthenticated());
   }, []);
 
-  const handleFormSubmit = async (values: any) => {
+  const handleFormSubmit = async (values: any,{ setErrors }: any) => {
     setLoading(true);
     const authtoken = localStorage.getItem("token");
     const userInfo = localStorage.getItem("userInfo");
@@ -547,7 +547,11 @@ export default function CheckOutAddressForm() {
       // console.error("Error submitting address data:", error);
       // setLoading(false);
       console.error("Failed submitting address data:", error.response.data.message.phone[0]);
-      toast.error(error.response.data.message.phone[0]);
+      if (error.response && error.response.data.message.phone) {
+        setErrors({ contact: error.response.data.message.phone[0] });
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
       setLoading(false);
     }
   };
