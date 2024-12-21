@@ -707,7 +707,7 @@ export default function CheckOutAddressForm() {
                 </Grid>
 
                 {touched.selectedLandmark && errors.selectedLandmark && (
-                  <Typography color="error" variant="body2" mt={1}>
+                  <Typography color="#ff3333" variant="body2" mt={1}>
                     {errors.selectedLandmark}
                   </Typography>
                 )}

@@ -149,7 +149,7 @@ export default function AddressForm() {
     setIsLoggedIn(authService.isAuthenticated());
   }, []);
 
-  const handleFormSubmit = async (values: any) => {
+  const handleFormSubmit = async (values: any,{ setErrors }: any) => {
     setLoading(true);
     const authtoken = localStorage.getItem("token"); // Retrieve the auth token
     const userInfo = localStorage.getItem("userInfo"); // Assume you store user_id in localStorage
@@ -194,7 +194,11 @@ export default function AddressForm() {
       }
     } catch (error) {
       console.error("Failed submitting address data:", error.response.data.message.phone[0]);
-      toast.error(error.response.data.message.phone[0]);
+      if (error.response && error.response.data.message.phone) {
+        setErrors({ contact: error.response.data.message.phone[0] });
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
       setLoading(false);
     }
   };
@@ -354,7 +358,7 @@ export default function AddressForm() {
 
                 {/* Display error text for landmark selection */}
                 {touched.selectedLandmark && errors.selectedLandmark && (
-                  <Typography color="error" variant="body2" mt={1}>
+                  <Typography color="#ff3333" variant="body2" mt={1}>
                     {errors.selectedLandmark}
                   </Typography>
                 )}
@@ -474,5 +478,6 @@ const checkoutSchema = yup.object().shape({
   address: yup.string().required("Address is required"),
   province: yup.string().required("Province is required"),
   city: yup.string().required("City is required"),
-  selectedLandmark: yup.number().required("Please select a landmark"),
+  area: yup.string().required("Area is required"),
+  selectedLandmark: yup.number().required("Landmark is required"),
 });
