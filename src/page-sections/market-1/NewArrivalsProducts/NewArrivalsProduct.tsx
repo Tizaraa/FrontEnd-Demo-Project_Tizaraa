@@ -53,7 +53,7 @@ export default function NewArrivalsProduct() {
   }, []);
 
   return (
-    <CategorySectionCreator title="New Arrivals" seeMoreLink={`newarrivals/NewArrivals`}>
+    <CategorySectionCreator title="New Arrivals" seeMoreLink={`newarrivals/new_arrivals`}>
       <Box my="-0.25rem">
         <Carousel
           totalSlides={bigDiscountList.length}

@@ -36,7 +36,7 @@ type Province = {
 };
 
 
-type CountryProductFilterCardProps = {
+type ShopProductFilterCardProps = {
   onBrandChange: (brands: number[]) => void;
   onCategoryChange: (categorySlug: string) => void; // Ensure this is a string
   onCountryChange: (countryIds: number[]) => void;
@@ -45,13 +45,13 @@ type CountryProductFilterCardProps = {
   pageType?: string;
 };
 
-const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
+const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
   onBrandChange,
   onCategoryChange,
   onCountryChange,
   onProvinceChange,
   slug,
-  pageType = 'country'
+  pageType = 'shop'
 }) =>  {
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
@@ -77,8 +77,6 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
           response = await axios.get(`${ApiBaseUrl.baseUrl}search-filter/${slug}`);
         } else if (pageType === 'shop') {
           response = await axios.get(`${ApiBaseUrl.baseUrl}shop-filter/${slug}`);
-        } else if (pageType === 'country') {
-          response = await axios.get(`${ApiBaseUrl.baseUrl}country/product-filter/${slug}`)
         }
 
         setBrandList(response.data.brand_filter || []);
@@ -93,42 +91,40 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
     fetchFilters();
   }, [slug, pageType]);
 
-  const handleProvinceChange = (provinceId: number) => {
-    const updatedSelectedProvinces = selectedProvinces.includes(provinceId)
-      ? selectedProvinces.filter((id) => id !== provinceId)
-      : [...selectedProvinces, provinceId];
-  
-    setSelectedProvinces(updatedSelectedProvinces);
-    onProvinceChange(updatedSelectedProvinces); // Pass updated provinces to parent
-  };
-  
+
   // Render provinces
   const visibleProvinces = showAllProvinces ? provinceList : provinceList.slice(0, 5);
   const toggleShowProvinces = () => setShowAllProvinces(!showAllProvinces);
 
-  const handleCategoryClick = (categorySlug: string) => {
-    onCategoryChange(categorySlug); // Pass the slug for filtering
-  };
- 
-
-  const handleBrandChange = (brandId: number) => {
-    const updatedSelectedBrands = selectedBrands.includes(brandId)
+const handleBrandChange = (brandId: number) => {
+    const updatedBrands = selectedBrands.includes(brandId)
       ? selectedBrands.filter((id) => id !== brandId)
       : [...selectedBrands, brandId];
-
-    setSelectedBrands(updatedSelectedBrands);
-    onBrandChange(updatedSelectedBrands);
+    setSelectedBrands(updatedBrands);
+    onBrandChange(updatedBrands);
   };
-
+  
+  const handleCategoryClick = (categorySlug: string) => {
+    onCategoryChange(categorySlug);
+  };
+  
   const handleCountryChange = (countryId: number) => {
-    const updatedSelectedCountry = selectedCountry.includes(countryId)
+    const updatedCountries = selectedCountry.includes(countryId)
       ? selectedCountry.filter((id) => id !== countryId)
       : [...selectedCountry, countryId];
-
-    setSelectedCountry(updatedSelectedCountry);
-    onCountryChange(updatedSelectedCountry);
+    setSelectedCountry(updatedCountries);
+    onCountryChange(updatedCountries);
   };
-
+  
+  const handleProvinceChange = (provinceId: number) => {
+    const updatedProvinces = selectedProvinces.includes(provinceId)
+      ? selectedProvinces.filter((id) => id !== provinceId)
+      : [...selectedProvinces, provinceId];
+    setSelectedProvinces(updatedProvinces);
+    onProvinceChange(updatedProvinces);
+  };
+  
+  
   const renderCategories = (items: Category[]) => 
     items.map((item) => (
       <div key={item.id}>
@@ -194,13 +190,21 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
       <Divider my="24px" />
       <H6 mb="10px">Categories</H6>
       {/* {visibleCategories.map((item) => (
-        <Link href={`${item.categorie_name}`}>
+        <Link href={`/category/${item.categorie_name}`}>
         <div key={item.id}>
           {renderCategories([item])}
         </div>
         </Link>
-      ))} */}
-       {visibleCategories.map((item) => (
+      ))}
+      */}
+
+      {/* {visibleCategories.filter(item => item.categorie_name === item.categorie_name).map((item) => (
+  <div key={item.id}>
+    {renderCategories([item])}
+  </div>
+))} */}
+
+{visibleCategories.map((item) => (
         <CheckBox
           my="10px"
           key={item.id}
@@ -212,6 +216,7 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
           checked={selectedBrands.includes(item.id)}
         />
       ))}
+
       {categoryList.length > 5 && (
         <Paragraph
           py="6px"
@@ -288,4 +293,4 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
   );
 };
 
-export default CountryProductFilterCard;
+export default ShopProductFilterCard;

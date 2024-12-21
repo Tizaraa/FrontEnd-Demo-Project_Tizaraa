@@ -36,7 +36,7 @@ type Province = {
 };
 
 
-type CountryProductFilterCardProps = {
+type NewArrivalProductFilterProps = {
   onBrandChange: (brands: number[]) => void;
   onCategoryChange: (categorySlug: string) => void; // Ensure this is a string
   onCountryChange: (countryIds: number[]) => void;
@@ -45,7 +45,7 @@ type CountryProductFilterCardProps = {
   pageType?: string;
 };
 
-const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
+const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
   onBrandChange,
   onCategoryChange,
   onCountryChange,
@@ -58,6 +58,7 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
   const [countryList, setCountryList] = useState<Country[]>([]);
   const [provinceList, setProvinceList] = useState<Province[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<number[]>([]);
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [showAllBrands, setShowAllBrands] = useState(false);
@@ -79,6 +80,8 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
           response = await axios.get(`${ApiBaseUrl.baseUrl}shop-filter/${slug}`);
         } else if (pageType === 'country') {
           response = await axios.get(`${ApiBaseUrl.baseUrl}country/product-filter/${slug}`)
+        } else if (pageType === 'newArrival') {
+            response = await axios.get(`${ApiBaseUrl.baseUrl}remark/product-filter/new_arrivals`)
         }
 
         setBrandList(response.data.brand_filter || []);
@@ -193,14 +196,14 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
 
       <Divider my="24px" />
       <H6 mb="10px">Categories</H6>
-      {/* {visibleCategories.map((item) => (
+      {visibleCategories.map((item) => (
         <Link href={`${item.categorie_name}`}>
         <div key={item.id}>
           {renderCategories([item])}
         </div>
         </Link>
-      ))} */}
-       {visibleCategories.map((item) => (
+      ))}
+       {/* {visibleCategories.map((item) => (
         <CheckBox
           my="10px"
           key={item.id}
@@ -211,7 +214,7 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
           onChange={() => handleBrandChange(item.id)}
           checked={selectedBrands.includes(item.id)}
         />
-      ))}
+      ))} */}
       {categoryList.length > 5 && (
         <Paragraph
           py="6px"
@@ -288,4 +291,4 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
   );
 };
 
-export default CountryProductFilterCard;
+export default NewArrivalProductFilter;
