@@ -382,7 +382,7 @@ export default function PaymentForm() {
     console.log("nazim Data:", userShippingdata);
 
     // let cartData = localStorage.getItem('cart');
-    const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
+    const cartData = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
     console.log("nazim Data cart:", cartData);
 
     // Ensure cartData is valid and not empty before trying to access its items
@@ -499,7 +499,11 @@ export default function PaymentForm() {
 
         //router.push("/orders");
         localStorage.removeItem("orderId");
-        localStorage.removeItem("cart");
+      sessionStorage.removeItem("selectedProducts");
+      //localStorage.removeItem("cart");
+      sessionStorage.removeItem("paymentMethod");
+      sessionStorage.removeItem("savedTotalPrice");
+      sessionStorage.removeItem("savedTotalWithDelivery");
         cart.forEach((item) => {
           dispatch({
             type: "CHANGE_CART_AMOUNT",
@@ -616,7 +620,11 @@ export default function PaymentForm() {
 
         router.push("/orders?status=success&message=Order placed successfully");
         localStorage.removeItem("orderId");
-        localStorage.removeItem("cart");
+      sessionStorage.removeItem("selectedProducts");
+      //localStorage.removeItem("cart");
+      sessionStorage.removeItem("paymentMethod");
+      sessionStorage.removeItem("savedTotalPrice");
+      sessionStorage.removeItem("savedTotalWithDelivery");
         cart.forEach((item) => {
           dispatch({
             type: "CHANGE_CART_AMOUNT",

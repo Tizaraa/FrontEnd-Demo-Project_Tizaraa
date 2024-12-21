@@ -759,7 +759,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
   
     // Save selected items to localStorage
     const checkoutData = JSON.stringify(selectedItems);
-    localStorage.setItem("selectedProducts", checkoutData);
+    sessionStorage.setItem("selectedProducts", checkoutData);
   
     if (isLoggedIn) {
       // Redirect to checkout if logged in
@@ -809,6 +809,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
       });
 
       localStorage.removeItem("orderId");
+      sessionStorage.removeItem("selectedProducts");
       localStorage.removeItem("cart");
       sessionStorage.removeItem("paymentMethod");
       sessionStorage.removeItem("savedTotalPrice");

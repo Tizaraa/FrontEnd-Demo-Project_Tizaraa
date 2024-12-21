@@ -71,6 +71,7 @@ export default function Cart() {
       });
 
       localStorage.removeItem("orderId");
+      sessionStorage.removeItem("selectedProducts");
       localStorage.removeItem("cart");
       sessionStorage.removeItem("paymentMethod");
       sessionStorage.removeItem("savedTotalPrice");
@@ -120,7 +121,7 @@ export default function Cart() {
     }
   
     const checkoutData = JSON.stringify(selectedItems);
-    localStorage.setItem("selectedProducts", checkoutData);
+    sessionStorage.setItem("selectedProducts", checkoutData);
   
     const totalPrice = getTotalPrice();
   
@@ -227,6 +228,7 @@ export default function Cart() {
               productId={item.productId}
               sellerId={item.sellerId}
               b2bPricing={item.b2bPricing}
+              total_amount={item.total_amount}
             />
           ))}
         </Grid>

@@ -52,7 +52,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   };
 
   useEffect(() => {
-    const cart = JSON.parse(sessionStorage.getItem("cart") || "[]");
+    const cart = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
     const totalPrice = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
     const shippingCharge = parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
 

@@ -496,16 +496,17 @@ export default function CheckOutAddressForm() {
   const [area, setArea] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleFormSubmit = async (values: any) => {
-    setLoading(true);
-    const authtoken = localStorage.getItem("token");
-    const userInfo = localStorage.getItem("userInfo");
-    const userId = JSON.parse(userInfo);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setIsLoggedIn(authService.isAuthenticated());
   }, []);
+
+  const handleFormSubmit = async (values: any,{ setErrors }: any) => {
+    setLoading(true);
+    const authtoken = localStorage.getItem("token");
+    const userInfo = localStorage.getItem("userInfo");
+    const userId = JSON.parse(userInfo);
 
     const addressData = {
       user_id: userId.id,
@@ -539,12 +540,18 @@ export default function CheckOutAddressForm() {
         }else{
           router.push("/login");
         }
+        // router.push("/checkout");
+        // toast.success("Address Added successfully!");
       }
     } catch (error) {
       // console.error("Error submitting address data:", error);
       // setLoading(false);
       console.error("Failed submitting address data:", error.response.data.message.phone[0]);
-      toast.error(error.response.data.message.phone[0]);
+      if (error.response && error.response.data.message.phone) {
+        setErrors({ contact: error.response.data.message.phone[0] });
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
       setLoading(false);
     }
   };

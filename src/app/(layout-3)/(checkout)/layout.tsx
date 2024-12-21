@@ -202,6 +202,7 @@ export default function Layout({ children }: PropsWithChildren) {
           }else{
             router.push("/login");
           }
+          //router.push("/checkout");
           break;
         case 2:
           if(isLoggedIn){
@@ -209,6 +210,7 @@ export default function Layout({ children }: PropsWithChildren) {
           }else{
             router.push("/login");
           }
+          //router.push("/payment");
           break;
         case 3:
           if(isLoggedIn){
@@ -216,6 +218,7 @@ export default function Layout({ children }: PropsWithChildren) {
           }else{
             router.push("/login");
           }
+          //router.push("/orders");
           break;
         default:
           break;
