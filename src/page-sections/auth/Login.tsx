@@ -222,6 +222,8 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     setIsOtpStage(false);
     setIsHasLoading(false)
     clearTimer(); // Stop OTP countdown
+    setOtpTimer(null); // Set OTP timer to null
+    setIsResetOtpDisabled(false)
   } else if (isPasswordStage) {
     setIsPasswordStage(false);
     setIsOtpStage(true);
