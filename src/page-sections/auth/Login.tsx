@@ -28,6 +28,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [emailOrPhone, setEmailOrPhone] = useState(""); // Store email or phone input
   const [otp, setOtp] = useState(""); // Store OTP input
+  const [otpError, setOtpError] = useState(""); // Store OTP error
   const [newPassword, setNewPassword] = useState(""); // Store new password input
   const [confirmPassword, setConfirmPassword] = useState(""); // Store confirm password input
   const [isOtpStage, setIsOtpStage] = useState(false); // Track whether we are in OTP input stage
@@ -45,6 +46,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const resetModal = () => {
     setEmailOrPhone("");
     setOtp("");
+    setOtpError("");
     setNewPassword("");
     setConfirmPassword("");
     setIsOtpStage(false);
@@ -81,6 +83,21 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
         toast.error("OTP Session Time Out");
       }
     }, 1000);
+  };
+
+   // Handle OTP validation
+   const validateOtp = (inputOtp: string) => {
+    if (!/^[0-9]{6}$/.test(inputOtp)) {
+      setOtpError("OTP must be a 6-digit number.");
+    } else {
+      setOtpError("");
+    }
+  };
+
+  // Handle OTP input change
+  const handleOtpChange = (value: string) => {
+    setOtp(value);
+    validateOtp(value);
   };
 
   // Handle OTP reset request
@@ -131,7 +148,11 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   // Handle OTP submission
   const handleOtpSubmit = async () => {
     if (!otp) {
-      toast.error("Please enter the OTP");
+      setOtpError("Please enter the OTP");
+      return;
+    }
+    if (otpError) {
+      toast.error("Invalid OTP.");
       return;
     }
     setLoading(true);
@@ -242,7 +263,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
         </IconButton>
 
         <H5 mb="1rem" fontSize="20px">Forgot your password?</H5>
-        <Small mb="1rem" display="block">Please enter the account for which you want to reset the password.</Small>
+        <Small mb="1rem" display="block">Reset password.</Small>
 
         {!isOtpStage && !isPasswordStage ? (
           <TextField
@@ -262,7 +283,8 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               name="otp"
               placeholder="Enter OTP"
               value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              onChange={(e) => handleOtpChange(e.target.value)}
+              errorText={otpError} // Display error message in red
             />
             <FlexBox justifyContent="space-between" alignItems="center">
               <Small>OTP expires in: {otpTimer || "0"}s</Small>
