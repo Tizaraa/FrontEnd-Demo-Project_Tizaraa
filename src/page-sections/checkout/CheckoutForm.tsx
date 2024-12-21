@@ -69,7 +69,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
     const addressData = sessionStorage.getItem("address");
     if (addressData) {
       console.log("Payment:", JSON.parse(addressData));
-      toast.success("Proceeding to Payment...");
+      toast.success("Proceed to Payment.");
       if(isLoggedIn){
         router.push("/payment");
       }else{
