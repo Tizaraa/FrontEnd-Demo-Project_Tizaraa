@@ -140,7 +140,7 @@ export default function Signup() {
           Create Your Account
         </H3>
 
-        <H5
+        {/* <H5
           fontWeight="600"
           fontSize="12px"
           color="gray.800"
@@ -148,7 +148,7 @@ export default function Signup() {
           mb="2.25rem"
         >
           Please fill all forms to continue
-        </H5>
+        </H5> */}
 
         {/* Name */}
         <TextField
@@ -159,7 +159,7 @@ export default function Signup() {
           onBlur={handleBlur}
           value={values.name}
           onChange={handleChange}
-          placeholder="Ralph Adwards"
+          placeholder="Enter Your Name"
           errorText={touched.name && errors.name}
         />
 
@@ -172,7 +172,7 @@ export default function Signup() {
           onBlur={handleBlur}
           value={values.email}
           onChange={handleChange}
-          placeholder="example@mail.com"
+          placeholder="Enter Your Email"
           label="Email"
           errorText={touched.email && (errors.email || apiError.email)}
         />
@@ -186,7 +186,7 @@ export default function Signup() {
           onBlur={handleBlur}
           value={values.phone}
           onChange={handleChange}
-          placeholder="1234567890"
+          placeholder="Enter Your Phone Number"
           label="Phone"
           errorText={touched.phone && errors.phone}
         />
@@ -196,7 +196,7 @@ export default function Signup() {
   mb="0.75rem"
   name="password"
   label="Password"
-  placeholder="*********"
+  placeholder="Enter Your Password"
   onBlur={handleBlur}
   value={values.password}
   onChange={handleChange}
@@ -223,7 +223,7 @@ export default function Signup() {
   mb="0.75rem"
   name="cpassword"
   label="Confirm Password"
-  placeholder="*********"
+  placeholder="Enter Your Confirm Password"
   onBlur={handleBlur}
   value={values.cpassword}
   onChange={handleChange}
@@ -255,7 +255,7 @@ export default function Signup() {
           label={
             <FlexBox>
               <SemiSpan>By signing up, you agree to</SemiSpan>
-              <a href="/" target="_blank" rel="noreferrer noopener">
+              <a href="/terms_condition" target="_blank" rel="noreferrer noopener">
                 <H6 ml="0.5rem" borderBottom="1px solid" borderColor="gray.900">
                   Terms & Condition
                 </H6>
