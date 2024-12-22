@@ -1,0 +1,5 @@
+.otp-container{
+    --ReactInputVerificationCode-itemWidth: 46.5px;
+  --ReactInputVerificationCode-itemHeight: 46.5px;
+  margin-bottom: 1rem;
+}

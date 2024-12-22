@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import useVisibility from "./useVisibility";
+import ReactInputVerificationCode from 'react-input-verification-code';
 import { useAppContext } from "contexts/app-context/AppContext"; // Context for managing user auth state
 import axios from "axios"; // Import axios for API calls
 import Cookies from "js-cookie";
@@ -23,6 +24,8 @@ import authService from "services/authService";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import CommonHeader from "@component/header/CommonHeader";
 import BeatLoader from "react-spinners/BeatLoader";
+
+import "./CustomOtpInput.css"; // Import the custom CSS file for styling
 
 // Modal Component
 function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -285,15 +288,19 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
           />
         ) : isOtpStage ? (
           <>
-            <TextField
-              fullwidth
-              mb="1rem"
-              name="otp"
-              placeholder="Enter OTP"
-              value={otp}
-              onChange={(e) => handleOtpChange(e.target.value)}
-              errorText={otpError} // Display error message in red
-            />
+            <div className="otp-container">
+              <ReactInputVerificationCode
+                length={6}
+                placeholder=""
+                onChange={handleOtpChange}
+                value={otp}
+              />
+            </div>
+            {otpError && (
+              <Small color="red" mb="1rem" mt="3rem">
+                {otpError}
+              </Small>
+            )}
             <FlexBox justifyContent="space-between" alignItems="center">
               <Small>OTP expires in: {otpTimer || "0"}s</Small>
               <Button
