@@ -308,6 +308,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                 color="secondary"
                 disabled={isResetOtpDisabled}
                 onClick={handleResetOtp}
+                mt="1rem"
               >
                 {isResetOtpDisabled ? <BeatLoader size={18} color="#E94560" /> : "Reset OTP"}
               </Button>
