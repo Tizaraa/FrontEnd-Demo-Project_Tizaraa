@@ -18,8 +18,8 @@ type Brand = {
 type Category = {
   id: number;
   categorie_name: string;
-  child?: Category[]; // Ensure child is of type Category[]
-  categorie_name_slug: string;
+  // child?: Category[]; // Ensure child is of type Category[]
+  // categorie_name_slug: string;
 };
 
 type Country = {
@@ -38,7 +38,7 @@ type Province = {
 
 type CountryProductFilterCardProps = {
   onBrandChange: (brands: number[]) => void;
-  onCategoryChange: (categorySlug: string) => void; // Ensure this is a string
+  onCategoryChange: (categories: number[]) => void; // Ensure this is a string
   onCountryChange: (countryIds: number[]) => void;
   onProvinceChange: (provinces: number[]) => void;
   slug: string;
@@ -58,6 +58,7 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
   const [countryList, setCountryList] = useState<Country[]>([]);
   const [provinceList, setProvinceList] = useState<Province[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<number[]>([]);
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [showAllBrands, setShowAllBrands] = useState(false);
@@ -106,9 +107,9 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
   const visibleProvinces = showAllProvinces ? provinceList : provinceList.slice(0, 5);
   const toggleShowProvinces = () => setShowAllProvinces(!showAllProvinces);
 
-  const handleCategoryClick = (categorySlug: string) => {
-    onCategoryChange(categorySlug); // Pass the slug for filtering
-  };
+  // const handleCategoryClick = (categorySlug: string) => {
+  //   onCategoryChange(categorySlug); // Pass the slug for filtering
+  // };
  
 
   const handleBrandChange = (brandId: number) => {
@@ -120,6 +121,15 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
     onBrandChange(updatedSelectedBrands);
   };
 
+  const handleCategoryChange = (categoryId: number) => {
+    const updatedSelectedCategories = selectedCategories.includes(categoryId)
+      ? selectedCategories.filter((id) => id !== categoryId)
+      : [...selectedCategories, categoryId];
+  
+    setSelectedCategories(updatedSelectedCategories);
+    onCategoryChange(updatedSelectedCategories);
+  };
+
   const handleCountryChange = (countryId: number) => {
     const updatedSelectedCountry = selectedCountry.includes(countryId)
       ? selectedCountry.filter((id) => id !== countryId)
@@ -129,31 +139,31 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
     onCountryChange(updatedSelectedCountry);
   };
 
-  const renderCategories = (items: Category[]) => 
-    items.map((item) => (
-      <div key={item.id}>
-        <Paragraph
-          py="6px"
-          pl="22px"
-          fontSize="14px"
-          color="text.muted"
-          className="cursor-pointer"
-          onClick={() => handleCategoryClick(item.categorie_name)} // Ensure you're passing the slug
-        >
-          {item.categorie_name}
-        </Paragraph>
-        {item.child && item.child.length > 0 && (
-          <Accordion key={item.id} expanded>
-            <AccordionHeader px="0px" py="6px" color="text.muted">
-              <SemiSpan className="cursor-pointer" mr="9px">
-                {item.categorie_name}
-              </SemiSpan>
-            </AccordionHeader>
-            {renderCategories(item.child)} {/* Render child categories */}
-          </Accordion>
-        )}
-      </div>
-    ));
+  // const renderCategories = (items: Category[]) => 
+  //   items.map((item) => (
+  //     <div key={item.id}>
+  //       <Paragraph
+  //         py="6px"
+  //         pl="22px"
+  //         fontSize="14px"
+  //         color="text.muted"
+  //         className="cursor-pointer"
+  //         onClick={() => handleCategoryClick(item.categorie_name)} // Ensure you're passing the slug
+  //       >
+  //         {item.categorie_name}
+  //       </Paragraph>
+  //       {item.child && item.child.length > 0 && (
+  //         <Accordion key={item.id} expanded>
+  //           <AccordionHeader px="0px" py="6px" color="text.muted">
+  //             <SemiSpan className="cursor-pointer" mr="9px">
+  //               {item.categorie_name}
+  //             </SemiSpan>
+  //           </AccordionHeader>
+  //           {renderCategories(item.child)} {/* Render child categories */}
+  //         </Accordion>
+  //       )}
+  //     </div>
+  //   ));
 
   const visibleBrands = showAllBrands ? brandList : brandList.slice(0, 5);
   const visibleCategories = showAllCategories ? categoryList : categoryList.slice(0, 5);
@@ -190,16 +200,8 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
           {showAllBrands ? "Show Less" : "Show More"}
         </Paragraph>
       )}
-
-      <Divider my="24px" />
+ <Divider my="24px" />
       <H6 mb="10px">Categories</H6>
-      {/* {visibleCategories.map((item) => (
-        <Link href={`${item.categorie_name}`}>
-        <div key={item.id}>
-          {renderCategories([item])}
-        </div>
-        </Link>
-      ))} */}
        {visibleCategories.map((item) => (
         <CheckBox
           my="10px"
@@ -208,8 +210,8 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
           value={item.id}
           color="secondary"
           label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
-          onChange={() => handleBrandChange(item.id)}
-          checked={selectedBrands.includes(item.id)}
+          onChange={() => handleCategoryChange(item.id)}
+          checked={selectedCategories.includes(item.id)}
         />
       ))}
       {categoryList.length > 5 && (
@@ -223,6 +225,7 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
           {showAllCategories ? "Show Less" : "Show More"}
         </Paragraph>
       )}
+
 
       <Divider mt="18px" mb="24px" />
       <H6 mb="10px">Country of Origin</H6>
