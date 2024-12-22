@@ -27,12 +27,12 @@ const LoaderWrapper = styled.div`
 
 const productsPerPage = 10;
 
-interface FashSaleProps {
+interface FlashSaleProps {
     sortOptions: { label: string; value: string }[];
     slug: string;
   }
 
-export default function FashSale({ sortOptions, slug }: FashSaleProps) {
+export default function FlashSale({ sortOptions, slug }: FlashSaleProps) {
     const router = useRouter();
   const width = useWindowSize();
   const [view, setView] = useState<"grid" | "list">("grid");

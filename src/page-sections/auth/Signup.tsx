@@ -412,8 +412,12 @@ export default function Signup() {
           });
         } else {
           setApiError({
-            phone: "An error occurred with the phone number.",
-            email: "An error occurred with the email address.",
+            // phone: "An error occurred with the phone number.",
+            // email: "An error occurred with the email address.",
+            // password: "",
+            // cpassword: "",
+            phone: data.message.phone ? data.message.phone[0] : "",
+            email: data.message.email ? data.message.email[0] : "",
             password: "",
             cpassword: "",
           });
@@ -451,16 +455,21 @@ export default function Signup() {
           </H3>
 
           <TextField
-            fullwidth
-            name="name"
-            mb="0.75rem"
-            label="Full Name"
-            onBlur={handleBlur}
-            value={values.name}
-            onChange={handleChange}
-            placeholder="Enter Your Name"
-            errorText={touched.name && errors.name}
-          />
+  fullwidth
+  name="name"
+  mb="0.75rem"
+  label={
+    <>
+      Full Name <span style={{ color: '#e94560' }}>*</span>
+    </>
+  }
+  onBlur={handleBlur}
+  value={values.name}
+  onChange={handleChange}
+  placeholder="Enter Your Name"
+  errorText={touched.name && errors.name}
+/>
+
 
           <TextField
             fullwidth
@@ -471,7 +480,11 @@ export default function Signup() {
             value={values.email}
             onChange={handleChange}
             placeholder="Enter Your Email"
-            label="Email"
+            label={
+              <>
+                Email <span style={{ color: '#e94560' }}>*</span>
+              </>
+            }
             errorText={touched.email && (errors.email || apiError.email)}
           />
 
@@ -484,7 +497,11 @@ export default function Signup() {
             value={values.phone}
             onChange={handleChange}
             placeholder="Enter Your Phone Number"
-            label="Phone"
+            label={
+              <>
+                Phone <span style={{ color: '#e94560' }}>*</span>
+              </>
+            }
             errorText={touched.phone && (errors.phone || apiError.phone)}
           />
 
@@ -518,7 +535,12 @@ export default function Signup() {
             fullwidth
             mb="0.75rem"
             name="cpassword"
-            label="Confirm Password"
+            // label="Confirm Password"
+            label={
+              <>
+                Confirm Password <span style={{ color: '#e94560' }}>*</span>
+              </>
+            }
             placeholder="Enter Your Confirm Password"
             onBlur={handleBlur}
             value={values.cpassword}

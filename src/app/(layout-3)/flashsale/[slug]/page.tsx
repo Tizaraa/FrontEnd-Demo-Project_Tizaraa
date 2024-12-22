@@ -1,7 +1,7 @@
 "use client"; // Add this line at the top
 import Box from "@component/Box";
-import FashSale from "./flash_sale";
 import { useEffect } from "react";
+import FlashSale from "./flash_sale";
 
 interface Props {
   params: { slug: string };
@@ -16,7 +16,7 @@ export default function ProductSearchResult({ params }: Props) {
 
   return (
     <Box pt="20px">
-      <FashSale sortOptions={sortOptions} slug={slug} />
+      <FlashSale sortOptions={sortOptions} slug={slug} />
     </Box>
   );
 }

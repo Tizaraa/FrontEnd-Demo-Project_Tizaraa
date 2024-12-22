@@ -24,7 +24,7 @@ export default function Section8() {
           </Link>
         </Grid>
       </Grid> */}
-      <Link href="/newarrivals/NewArrivals">
+      <Link href="/newarrivals/new_arrivals">
             <NextImage
              alt="newArrivalBanner" 
              src={NewArrivalsProducts}
