@@ -38,7 +38,7 @@ export default function NewArrivals({ sortOptions, slug }: NewArrivalsProps) {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0].value);
   const [selectedBrand, setSelectedBrand] = useState<number[] | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number[] | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null);
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [products, setProducts] = useState<any[]>([]);
@@ -53,10 +53,10 @@ export default function NewArrivals({ sortOptions, slug }: NewArrivalsProps) {
     setCurrentPage(1);
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
+  const handleCategoryChange = (categories: number[]) => {
+    setSelectedCategory(categories);
     setCurrentPage(1);
-    router.push(`/product/search/${category}`);
+    // router.push(`/product/search/${categories}`);
   };
 
   const handleCountryChange = (countries: number[]) => {
