@@ -17,6 +17,7 @@ import { H5, Paragraph } from "@component/Typography";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import styled from "@emotion/styled";
 import { Vortex } from "react-loader-spinner";
+import FlashSaleProductFilter from "@component/products/FlashSaleProductFilter";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -37,7 +38,7 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0].value);
   const [selectedBrand, setSelectedBrand] = useState<number[] | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number[] | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null);
 
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
@@ -52,12 +53,11 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
     setCurrentPage(1);
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
+  const handleCategoryChange = (categories: number[]) => {
+    setSelectedCategory(categories);
     setCurrentPage(1);
-    router.push(`/product/search/${category}`);
+    // router.push(`/product/search/${categories}`);
   };
-
   const handleCountryChange = (countries: number[]) => {
     setSelectedCountry(countries);
     setCurrentPage(1);
@@ -75,27 +75,38 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
   };
   const fetchProducts = useCallback(async () => {
     setLoading(true);
+  
+    // Prepare the filter object
+    const filters: any = {};
+    if (selectedCategory) filters.category = selectedCategory;
+    if (selectedBrand && selectedBrand.length) filters.brand = selectedBrand;
+    if (selectedCountry && selectedCountry.length) filters.country = selectedCountry;
+    if (selectedProvinces && selectedProvinces.length) filters.province = selectedProvinces;
+  
     try {
-      const response = await fetch(`${ApiBaseUrl.baseUrl}remark/product/flash_sale`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          category: selectedCategory || "all",
-          brand: selectedBrand || null,
-          country: selectedCountry || null,
-          province: selectedProvinces || null,
-          page: currentPage,
-          orderBy: selectedSortOption,
-        }),
-      });
-
+      const response = await fetch(
+        `${ApiBaseUrl.baseUrl}remark/product/flash_sale`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...filters, // Include only valid filters
+            page: currentPage,
+            orderBy: selectedSortOption,
+          }),
+        }
+      );
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
+  
       const data = await response.json();
+      console.log("Shop Details:", data);
+  
+      // Reset products when fetching the first page
       if (currentPage === 1) {
         setProducts(data.data);
       } else {
@@ -107,7 +118,14 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
     } finally {
       setLoading(false);
     }
-  }, [selectedBrand, selectedCategory, selectedCountry, currentPage, selectedSortOption]);
+  }, [
+    selectedBrand,
+    selectedCategory,
+    selectedCountry,
+    selectedProvinces,
+    currentPage,
+    selectedSortOption,
+  ]);
 
   useEffect(() => {
     fetchProducts();
@@ -182,13 +200,13 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
               scroll={true}
               handle={<IconButton><Icon>options</Icon></IconButton>}
             >
-              <ProductFilterCard
+              <FlashSaleProductFilter
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
                 onCountryChange={handleCountryChange}
                 onProvinceChange={handleProvinceChange}
                 slug={slug}
-                pageType="default"
+                pageType="flashSale"
               />
             </Sidenav>
           )}
@@ -197,13 +215,13 @@ export default function FashSale({ sortOptions, slug }: FashSaleProps) {
 
       <Grid container spacing={6}>
         <Grid item lg={3} xs={12}>
-          <ProductFilterCard
+          <FlashSaleProductFilter
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
             onCountryChange={handleCountryChange}
             onProvinceChange={handleProvinceChange}
             slug={slug}
-            pageType="default"
+            pageType="flashSale"
           />
         </Grid>
 

@@ -1,6 +1,6 @@
 "use client"; // Add this line at the top
 import Box from "@component/Box";
-import FashSale from "./FashSale";
+import FashSale from "./flash_sale";
 import { useEffect } from "react";
 
 interface Props {
@@ -22,7 +22,7 @@ export default function ProductSearchResult({ params }: Props) {
 }
 
 const sortOptions = [
-  { label: "Date", value: "Date" },
+  { label: "Latest", value: "Latest" },
   { label: "Price Low to High", value: "1" },
   { label: "Price High to Low", value: "2" }
 ];

@@ -36,7 +36,7 @@ type Province = {
 };
 
 
-type NewArrivalProductFilterProps = {
+type FlashSaleProductFilterProps = {
   onBrandChange: (brands: number[]) => void;
   onCategoryChange: (categories: number[]) => void; // Ensure this is a string
   onCountryChange: (countryIds: number[]) => void;
@@ -45,13 +45,13 @@ type NewArrivalProductFilterProps = {
   pageType?: string;
 };
 
-const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
+const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
   onBrandChange,
   onCategoryChange,
   onCountryChange,
   onProvinceChange,
   slug,
-  pageType = 'newArrival'
+  pageType = 'flashSale'
 }) =>  {
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
@@ -82,6 +82,8 @@ const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
           response = await axios.get(`${ApiBaseUrl.baseUrl}country/product-filter/${slug}`)
         } else if (pageType === 'newArrival') {
             response = await axios.get(`${ApiBaseUrl.baseUrl}remark/product-filter/new_arrivals`)
+        } else if (pageType === 'flashSale') {
+            response = await axios.get(`${ApiBaseUrl.baseUrl}remark/product-filter/flash_sale`)
         }
 
         setBrandList(response.data.brand_filter || []);
@@ -265,4 +267,4 @@ const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
   );
 };
 
-export default NewArrivalProductFilter;
+export default FlashSaleProductFilter;
