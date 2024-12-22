@@ -18,8 +18,8 @@ type Brand = {
 type Category = {
   id: number;
   categorie_name: string;
-  child?: Category[]; // Ensure child is of type Category[]
-  categorie_name_slug: string;
+  // child?: Category[]; // Ensure child is of type Category[]
+  // categorie_name_slug: string;
 };
 
 type Country = {
@@ -38,7 +38,8 @@ type Province = {
 
 type ShopProductFilterCardProps = {
   onBrandChange: (brands: number[]) => void;
-  onCategoryChange: (categorySlug: string) => void; // Ensure this is a string
+  // onCategoryChange: (categorySlug: string) => void; // Ensure this is a string
+  onCategoryChange: (categories: number[]) => void; // Ensure this is a number
   onCountryChange: (countryIds: number[]) => void;
   onProvinceChange: (provinces: number[]) => void;
   slug: string;
@@ -61,6 +62,7 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
   const [selectedCountry, setSelectedCountry] = useState<number[]>([]);
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [showAllBrands, setShowAllBrands] = useState(false);
+   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [showAllCountries, setShowAllCountries] = useState(false);
   const [showAllProvinces, setShowAllProvinces] = useState(false);
@@ -104,9 +106,9 @@ const handleBrandChange = (brandId: number) => {
     onBrandChange(updatedBrands);
   };
   
-  const handleCategoryClick = (categorySlug: string) => {
-    onCategoryChange(categorySlug);
-  };
+  // const handleCategoryClick = (categorySlug: string) => {
+  //   onCategoryChange(categorySlug);
+  // };
   
   const handleCountryChange = (countryId: number) => {
     const updatedCountries = selectedCountry.includes(countryId)
@@ -115,6 +117,16 @@ const handleBrandChange = (brandId: number) => {
     setSelectedCountry(updatedCountries);
     onCountryChange(updatedCountries);
   };
+
+  const handleCategoryChange = (categoryId: number) => {
+    const updatedSelectedCategories = selectedCategories.includes(categoryId)
+      ? selectedCategories.filter((id) => id !== categoryId)
+      : [...selectedCategories, categoryId];
+  
+    setSelectedCategories(updatedSelectedCategories);
+    onCategoryChange(updatedSelectedCategories);
+  };
+
   
   const handleProvinceChange = (provinceId: number) => {
     const updatedProvinces = selectedProvinces.includes(provinceId)
@@ -125,31 +137,31 @@ const handleBrandChange = (brandId: number) => {
   };
   
   
-  const renderCategories = (items: Category[]) => 
-    items.map((item) => (
-      <div key={item.id}>
-        <Paragraph
-          py="6px"
-          pl="22px"
-          fontSize="14px"
-          color="text.muted"
-          className="cursor-pointer"
-          onClick={() => handleCategoryClick(item.categorie_name)} // Ensure you're passing the slug
-        >
-          {item.categorie_name}
-        </Paragraph>
-        {item.child && item.child.length > 0 && (
-          <Accordion key={item.id} expanded>
-            <AccordionHeader px="0px" py="6px" color="text.muted">
-              <SemiSpan className="cursor-pointer" mr="9px">
-                {item.categorie_name}
-              </SemiSpan>
-            </AccordionHeader>
-            {renderCategories(item.child)} {/* Render child categories */}
-          </Accordion>
-        )}
-      </div>
-    ));
+  // const renderCategories = (items: Category[]) => 
+  //   items.map((item) => (
+  //     <div key={item.id}>
+  //       <Paragraph
+  //         py="6px"
+  //         pl="22px"
+  //         fontSize="14px"
+  //         color="text.muted"
+  //         className="cursor-pointer"
+  //         onClick={() => handleCategoryClick(item.categorie_name)} // Ensure you're passing the slug
+  //       >
+  //         {item.categorie_name}
+  //       </Paragraph>
+  //       {item.child && item.child.length > 0 && (
+  //         <Accordion key={item.id} expanded>
+  //           <AccordionHeader px="0px" py="6px" color="text.muted">
+  //             <SemiSpan className="cursor-pointer" mr="9px">
+  //               {item.categorie_name}
+  //             </SemiSpan>
+  //           </AccordionHeader>
+  //           {renderCategories(item.child)} {/* Render child categories */}
+  //         </Accordion>
+  //       )}
+  //     </div>
+  //   ));
 
   const visibleBrands = showAllBrands ? brandList : brandList.slice(0, 5);
   const visibleCategories = showAllCategories ? categoryList : categoryList.slice(0, 5);
@@ -187,24 +199,9 @@ const handleBrandChange = (brandId: number) => {
         </Paragraph>
       )}
 
-      <Divider my="24px" />
+<Divider my="24px" />
       <H6 mb="10px">Categories</H6>
-      {/* {visibleCategories.map((item) => (
-        <Link href={`/category/${item.categorie_name}`}>
-        <div key={item.id}>
-          {renderCategories([item])}
-        </div>
-        </Link>
-      ))}
-      */}
-
-      {/* {visibleCategories.filter(item => item.categorie_name === item.categorie_name).map((item) => (
-  <div key={item.id}>
-    {renderCategories([item])}
-  </div>
-))} */}
-
-{visibleCategories.map((item) => (
+       {visibleCategories.map((item) => (
         <CheckBox
           my="10px"
           key={item.id}
@@ -212,11 +209,10 @@ const handleBrandChange = (brandId: number) => {
           value={item.id}
           color="secondary"
           label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
-          onChange={() => handleBrandChange(item.id)}
-          checked={selectedBrands.includes(item.id)}
+          onChange={() => handleCategoryChange(item.id)}
+          checked={selectedCategories.includes(item.id)}
         />
       ))}
-
       {categoryList.length > 5 && (
         <Paragraph
           py="6px"
@@ -228,6 +224,7 @@ const handleBrandChange = (brandId: number) => {
           {showAllCategories ? "Show Less" : "Show More"}
         </Paragraph>
       )}
+
 
       <Divider mt="18px" mb="24px" />
       <H6 mb="10px">Country of Origin</H6>
