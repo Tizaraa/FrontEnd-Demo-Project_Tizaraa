@@ -51,7 +51,7 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
   onCountryChange,
   onProvinceChange,
   slug,
-  pageType = 'flashSale'
+  pageType = 'newArrival'
 }) =>  {
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
@@ -151,8 +151,8 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
 
   return (
     <Card p="18px 27px" elevation={5} borderRadius={8}>
-      <H6 mb="16px">Brands</H6>
-      {visibleBrands.map((item) => (
+      {/* <H6 mb="16px">Brands</H6> */}
+      {/* {visibleBrands.map((item) => (
         <CheckBox
           my="10px"
           key={item.id}
@@ -163,9 +163,32 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
           onChange={() => handleBrandChange(item.id)}
           checked={selectedBrands.includes(item.id)}
         />
-      ))}
+      ))} */}
 
-      {brandList.length > 5 && (
+<H6 mb="16px">Brands</H6>
+<div style={{ 
+    maxHeight: "200px", 
+    overflowY: "auto",
+    paddingRight: "10px", // Add padding for space between scrollbar and content
+}}
+className="custom-scrollbar"
+>
+  {brandList.map((item) => (
+    <CheckBox
+      my="10px"
+      key={item.id}
+      name={item.brand_name}
+      value={item.id}
+      color="secondary"
+      label={<SemiSpan color="inherit">{item.brand_name}</SemiSpan>}
+      onChange={() => handleBrandChange(item.id)}
+      checked={selectedBrands.includes(item.id)}
+    />
+  ))}
+</div>
+
+
+      {/* {brandList.length > 5 && (
         <Paragraph
           py="6px"
           fontSize="14px"
@@ -175,23 +198,51 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
         >
           {showAllBrands ? "Show Less" : "Show More"}
         </Paragraph>
-      )}
+      )} */}
 
       <Divider my="24px" />
       <H6 mb="10px">Categories</H6>
-       {visibleCategories.map((item) => (
-        <CheckBox
-          my="10px"
-          key={item.id}
-          name={item.categorie_name}
-          value={item.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
-          onChange={() => handleCategoryChange(item.id)}
-          checked={selectedCategories.includes(item.id)}
-        />
-      ))}
-      {categoryList.length > 5 && (
+      <div
+  style={{
+    maxHeight: "200px",
+    overflowY: "auto",
+    paddingRight: "10px", // Add padding for space between scrollbar and content
+  }}
+  className="custom-scrollbar"
+>
+  {categoryList.map((item) => (
+    <CheckBox
+      my="10px"
+      key={item.id}
+      name={item.categorie_name}
+      value={item.id}
+      color="secondary"
+      label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
+      onChange={() => handleCategoryChange(item.id)}
+      checked={selectedCategories.includes(item.id)}
+    />
+  ))}
+</div>
+
+
+
+
+{/* <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+  {categoryList.map((item) => (
+    <CheckBox
+      my="10px"
+      key={item.id}
+      name={item.categorie_name}
+      value={item.id}
+      color="secondary"
+      label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
+      onChange={() => handleCategoryChange(item.id)}
+      checked={selectedCategories.includes(item.id)}
+    />
+  ))}
+</div> */}
+
+      {/* {categoryList.length > 5 && (
         <Paragraph
           py="6px"
           fontSize="14px"
@@ -201,11 +252,32 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
         >
           {showAllCategories ? "Show Less" : "Show More"}
         </Paragraph>
-      )}
+      )} */}
 
       <Divider mt="18px" mb="24px" />
       <H6 mb="10px">Country of Origin</H6>
-      {visibleCountries.map((country) => (
+      <div
+  style={{
+    maxHeight: "200px",
+    overflowY: "auto",
+    paddingRight: "10px", // Add padding for space between scrollbar and content
+  }}
+  className="custom-scrollbar"
+>
+{countryList.map((country) => (
+        <CheckBox
+          my="10px"
+          key={country.id}
+          name={country.location}
+          value={country.id}
+          color="secondary"
+          label={<SemiSpan color="inherit">{country.location}</SemiSpan>}
+          onChange={() => handleCountryChange(country.id)}
+          checked={selectedCountry.includes(country.id)}
+        />
+      ))}
+</div>
+      {/* {visibleCountries.map((country) => (
         <CheckBox
           my="10px"
           key={country.id}
@@ -228,15 +300,42 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
         >
           {showAllCountries ? "Show Less" : "Show More"}
         </Paragraph>
-      )}
+      )} */}
 
-      <Divider mt="18px" mb="24px" />
-      <H6 mb="10px">Warranty</H6>
+      {/* Warranty */}
+      {/* <Divider mt="18px" mb="24px" />
+      <H6 mb="10px">Warranty</H6> */}
+
       {/* Add warranty options here */}
       <Divider mt="18px" mb="24px" />
 
       <H6 mb="10px">Shipped From</H6>
-      {visibleProvinces.map((province) => (
+      <div
+  style={{
+    maxHeight: "200px",
+    overflowY: "auto",
+    paddingRight: "10px", // Add padding for space between scrollbar and content
+  }}
+  className="custom-scrollbar"
+> 
+{provinceList.map((province) => (
+        <CheckBox
+          my="10px"
+          key={province.id}
+          name={province.province}
+          value={province.id}
+          color="secondary"
+          label={
+            <SemiSpan color="inherit">
+              {province.province} 
+            </SemiSpan>
+          }
+          onChange={() => handleProvinceChange(province.id)}
+          checked={selectedProvinces.includes(province.id)}
+        />
+      ))}
+      </div>
+      {/* {visibleProvinces.map((province) => (
         <CheckBox
           my="10px"
           key={province.id}
@@ -262,7 +361,36 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
         >
           {showAllProvinces ? "Show Less" : "Show More"}
         </Paragraph>
-      )}
+      )} */}
+
+
+
+
+{/* scrollbar css  */}
+
+<style jsx>{`
+  .custom-scrollbar {
+    scrollbar-width: thin; /* Firefox - thin scrollbar */
+    scrollbar-color: #888 transparent; /* Thumb color and no track background for Firefox */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 2px; /* Thinner scrollbar width */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888; /* Thumb color */
+    border-radius: 2px; /* Rounded edges for the thumb */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Darker thumb color on hover */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Remove track background */
+  }
+`}</style>
     </Card>
   );
 };
