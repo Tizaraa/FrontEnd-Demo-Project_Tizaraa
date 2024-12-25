@@ -19,7 +19,7 @@ export default function OrderListButton({ params }) {
       const authToken = localStorage.getItem("token");
       try {
         const response = await axios.get(
-          `${ApiBaseUrl.baseUrl}user/order/details/${params.id}`,
+          `${ApiBaseUrl.baseUrl}user/order/detailss/${params.id}`,
           {
             headers: {
               Authorization: `Bearer ${authToken}`,

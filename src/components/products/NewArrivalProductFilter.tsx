@@ -127,6 +127,23 @@ const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
     onCategoryChange(updatedSelectedCategories);
   };
   
+  
+  const fetchFilteredData = async (categories: number[]) => {
+    try {
+      const response = await axios.get(
+        `${ApiBaseUrl.baseUrl}remark/product-filter/new_arrivals`, {
+          params: { categories: categories.join(",") }, // Adjust based on API requirements
+        }
+      );
+      // Update your state with the new data
+      console.log("Filtered Data:", response.data);
+      // Example: setProductList(response.data.products || []);
+    } catch (error) {
+      console.error("Error fetching filtered data:", error);
+    }
+  };
+  
+  
 
   const handleCountryChange = (countryId: number) => {
     const updatedSelectedCountry = selectedCountry.includes(countryId)
@@ -149,6 +166,56 @@ const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
 
   return (
     <Card p="18px 27px" elevation={5} borderRadius={8}>
+       <H6 mb="10px">Categories</H6>
+      <div
+  style={{
+    maxHeight: "200px",
+    overflowY: "auto",
+    paddingRight: "10px", // Add padding for space between scrollbar and content
+  }}
+  className="custom-scrollbar"
+> 
+
+{categoryList.map((item) => (
+        <CheckBox
+          my="10px"
+          key={item.id}
+          name={item.categorie_name}
+          value={item.id}
+          color="secondary"
+          label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
+          onChange={() => handleCategoryChange(item.id)}
+          checked={selectedCategories.includes(item.id)}
+        />
+      ))}
+ </div>
+
+
+       {/* {visibleCategories.map((item) => (
+        <CheckBox
+          my="10px"
+          key={item.id}
+          name={item.categorie_name}
+          value={item.id}
+          color="secondary"
+          label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
+          onChange={() => handleCategoryChange(item.id)}
+          checked={selectedCategories.includes(item.id)}
+        />
+      ))}
+      {categoryList.length > 5 && (
+        <Paragraph
+          py="6px"
+          fontSize="14px"
+          className="cursor-pointer"
+          color="primary.main"
+          onClick={toggleShowCategories}
+        >
+          {showAllCategories ? "Show Less" : "Show More"}
+        </Paragraph>
+      )} */}
+     
+      <Divider my="24px" />
       <H6 mb="16px">Brands</H6>
       <div
   style={{
@@ -199,55 +266,7 @@ const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
         </Paragraph>
       )} */}
 
-      <Divider my="24px" />
-      <H6 mb="10px">Categories</H6>
-      <div
-  style={{
-    maxHeight: "200px",
-    overflowY: "auto",
-    paddingRight: "10px", // Add padding for space between scrollbar and content
-  }}
-  className="custom-scrollbar"
-> 
-
-{categoryList.map((item) => (
-        <CheckBox
-          my="10px"
-          key={item.id}
-          name={item.categorie_name}
-          value={item.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
-          onChange={() => handleCategoryChange(item.id)}
-          checked={selectedCategories.includes(item.id)}
-        />
-      ))}
- </div>
-
-
-       {/* {visibleCategories.map((item) => (
-        <CheckBox
-          my="10px"
-          key={item.id}
-          name={item.categorie_name}
-          value={item.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
-          onChange={() => handleCategoryChange(item.id)}
-          checked={selectedCategories.includes(item.id)}
-        />
-      ))}
-      {categoryList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowCategories}
-        >
-          {showAllCategories ? "Show Less" : "Show More"}
-        </Paragraph>
-      )} */}
+     
 
       <Divider mt="18px" mb="24px" />
       <H6 mb="10px">Country of Origin</H6>

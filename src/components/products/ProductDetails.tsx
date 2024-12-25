@@ -54,7 +54,7 @@ const ProductDetails = ({
       <Box mb="24px">
 
   {/* Show price and discount only if the price is not 0 */}
-  {price !== 0 && (
+  {/* {price !== 0 && (
     <FlexBox alignItems="center">
       <H5 color="primary.main" mb="4px" lineHeight="1" fontSize="18px">
         {discountPrice ? (
@@ -90,7 +90,44 @@ const ProductDetails = ({
         </Chip>
       )}
     </FlexBox>
-  )}
+  )} */}
+{price !== 0 && (
+  <FlexBox alignItems="center">
+    <H5 color="primary.main" mb="4px" lineHeight="1" fontSize="18px">
+      {discountPrice && price !== discountPrice ? (
+        <>
+          {currency(discountPrice)}
+          <span
+            style={{
+              textDecoration: "line-through",
+              color: "gray",
+              marginRight: "10px",
+              marginLeft: "10px",
+            }}
+          >
+            {currency(price)}
+          </span>
+        </>
+      ) : (
+        currency(price)
+      )}
+    </H5>
+
+    {!!discountPrice && price !== discountPrice && totalDiscount && (
+      <Chip
+        bg="primary.main"
+        color="white"
+        px="6px"
+        py="0.28rem"
+        fontWeight="600"
+        fontSize="12px"
+        textAlign="center"
+      >
+        {Math.floor(totalDiscount)}% off
+      </Chip>
+    )}
+  </FlexBox>
+)}
 
   {/* brand name  */}
   <Typography style={{fontSize: "16px"}}>

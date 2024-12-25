@@ -329,6 +329,8 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 import { StyledRoot } from "./styles";
 import CommonHeader from "@component/header/CommonHeader";
 
+import BeatLoader from "react-spinners/BeatLoader";
+
 export default function Signup() {
   const router = useRouter();
   const { passwordVisibility, togglePasswordVisibility } = useVisibility();
@@ -427,8 +429,8 @@ export default function Signup() {
       console.error("Error during registration:", error);
       toast.error("An unexpected error occurred.");
       setApiError({
-        phone: "An error occurred with the phone number.",
-        email: "An error occurred with the email address.",
+        phone: "",
+        email: "",
         password: "",
         cpassword: "",
       });
@@ -509,7 +511,12 @@ export default function Signup() {
             fullwidth
             mb="0.75rem"
             name="password"
-            label="Password"
+            // label="Password"
+            label={
+              <>
+               Password <span style={{ color: '#e94560' }}>*</span>
+              </>
+            }
             placeholder="Enter Your Password"
             onBlur={handleBlur}
             value={values.password}
@@ -598,7 +605,7 @@ export default function Signup() {
             fullwidth
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Creating Account..." : "Create Account"}
+            {isSubmitting ? <BeatLoader size={18} color="#fff" /> : "Create Account"}
           </Button>
         </form>
 
