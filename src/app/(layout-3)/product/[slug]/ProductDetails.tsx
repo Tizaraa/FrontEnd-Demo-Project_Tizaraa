@@ -451,7 +451,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
       //   Product not found or there was an error loading the product.
       // </div>
       <FlexBox justifyContent="center" alignItems="center" width="100%">
-            <SemiSpan>No products found.</SemiSpan>
+            {/* <SemiSpan>No products found.</SemiSpan> */}
           </FlexBox>
     );
   }
