@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import { currency } from "@utils/utils";
 import axios from "axios";
@@ -25,7 +25,8 @@ import BeatLoader from "react-spinners/BeatLoader";
 
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStore } from "@fortawesome/free-solid-svg-icons";
+import { faStore, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
+// import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons"; 
 
 
 const LoaderWrapper = styled.div`
@@ -65,6 +66,23 @@ export default function OrderDetails({ params }: IDParams) {
   const [invoiceError, setInvoiceError] = useState(""); // Error message for invoice
   const [onlinePaymentError, setOnlinePaymentError] = useState("");
   const [onlinePaymentLoading, setOnlinePaymentLoading] = useState(false);
+
+
+
+  // const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+  // const summaryRef = useRef<HTMLDivElement>(null);
+  // const buttonRef = useRef<HTMLButtonElement>(null);
+
+
+  const [openSummaries, setOpenSummaries] = useState<{ [key: string]: boolean }>({});
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const toggleSummary = (shop: string) => {
+    setOpenSummaries((prev) => ({
+      ...prev,
+      [shop]: !prev[shop], // Toggle the summary visibility for the clicked shop
+    }));
+  };
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -272,61 +290,144 @@ export default function OrderDetails({ params }: IDParams) {
             <Typography>No items in this order.</Typography>
           )}
         </Box> */}
-     <Box py="0.5rem">
-  {order?.Order?.items && Object.keys(order.Order.items).length > 0 ? (
-    Object.entries(order.Order.items).map(([shopName, shopDetails]) => {
-      // Cast shopDetails to the appropriate type
-      const details = shopDetails as { delivered_at: string | null; order_items: any[] };
+  <Box py="0.5rem">
+      {order?.Order?.items && Object.keys(order.Order.items).length > 0 ? (
+        Object.entries(order.Order.items).map(([shopName, shopDetails]) => {
+          // Cast shopDetails to the appropriate type
+          const details = shopDetails as {
+            delivered_at: string | null;
+            order_items: any[];
+            delivery_charge: number | null;
+            sub_total: number | null;
+            total: number | null;
+          };
 
-      return (
-        <Box key={shopName} my="1rem">
-          <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexDirection: 'row', // Default flex direction
-        alignItems: 'center', // Center align items
-        flexWrap: 'wrap', // Allow wrapping when in column direction on small screens
-      }}
-    >
-      <Typography fontWeight="bold" fontSize="18px" mb="1rem" p="1rem">
-        <FontAwesomeIcon icon={faStore} size="1x" color="black" /> {shopName}
-      </Typography>
+          return (
+            <Box key={shopName} my="1rem">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexDirection: "row",
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              <Typography fontWeight="bold" fontSize="18px" mb="1rem" p="1rem">
+                <FontAwesomeIcon icon={faStore} size="1x" color="black" /> {shopName}
+              </Typography>
+      
+              {/* Check and render the 'delivered_at' property */}
+              {details.delivered_at && (
+                <p
+                  color="text.muted"
+                  style={{
+                    padding: "0.5rem 1rem",
+                    backgroundColor: "#FFE1E6",
+                    color: "#E94560",
+                    borderRadius: "300px",
+                    textAlign: "center",
+                    height: "40px",
+                    marginRight: "20px",
+                    marginTop: "10px",
+                    minWidth: "200px", // Minimum width to maintain the design
+                  }}
+                >
+                  Estimated Delivery Date: <b>{details.delivered_at}</b>
+                </p>
+              )}
+      
+              {/* Total Summary Button */}
+              <Box mt="1rem" textAlign="center">
+                <Button
+                  ref={buttonRef}
+                  variant="text"
+                  color="primary"
+                  onClick={() => toggleSummary(shopName)} 
+                  style={{
+                    padding: "0.5rem 1rem",
+                    backgroundColor: "#FFE1E6",
+                    color: "#E94560",
+                    borderRadius: "300px",
+                    textAlign: "center",
+                    height: "40px",
+                    marginRight: "20px",
+                    marginTop: "-15px",
+                    minWidth: "200px", // Minimum width to maintain the design 
+                  }}
+                >
+                  {/* {openSummaries[shopName] ? "Collapse Total Summary" : "Show Total Summary"} */}
+                  {openSummaries[shopName] ? (
+  <>
+    Total Summary <span style={{ marginLeft: "8px" }}><FontAwesomeIcon icon={faCaretUp} /></span>
+  </>
+) : (
+  <>
+    Total Summary <span style={{ marginLeft: "8px" }}><FontAwesomeIcon icon={faCaretDown} /></span>
+  </>
+)}
 
-      {/* Check and render the 'delivered_at' property */}
-      {details.delivered_at && (
-        <p
-          color="text.muted"
-          style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: '#FFE1E6',
-            color: '#E94560',
-            borderRadius: '300px',
-            textAlign: 'center',
-            height: '40px',
-            marginRight: '20px',
-            marginTop: '10px', // Space added for mobile view
-    
-            minWidth: '200px', // Minimum width to maintain the design
-          }}
-        >
-          Estimated Delivery Date: <b>{details.delivered_at}</b>
-        </p>
+                </Button>
+              </Box>
+            </div>
+      
+            {/* Render the items from the shop */}
+            {details.order_items.map((item, ind) => (
+              <WriteReview key={ind} item={item} shopName={shopName} orderDetails={details} />
+            ))}
+      
+            {/* Conditionally render the total summary */}
+            {openSummaries[shopName] && (
+              <div style={{ width: "100%", marginTop: "1rem" }}>
+                <Box p="20px" borderRadius={8}>
+                  <Typography variant="h6" mt="0px" mb="14px">
+                    Total Summary
+                  </Typography>
+      
+                  <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+                    <Typography fontSize="14px" color="text.hint">
+                      Subtotal:
+                    </Typography>
+                    <Typography fontSize="14px" color="text.hint">
+                      {currency(details.sub_total || 0)} {/* Use details.sub_total */}
+                    </Typography>
+                  </FlexBox>
+      
+                  {/* Display the Delivery Charge based on shop */}
+                  <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+                    <Typography fontSize="14px" color="text.hint">
+                      Shipping fee ({shopName}):
+                    </Typography>
+                    <Typography fontSize="14px" color="text.hint">
+                      {currency(details.delivery_charge || 0)} {/* Use details.delivery_charge */}
+                    </Typography>
+                  </FlexBox>
+      
+                  <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+                    <Typography fontSize="14px" color="text.hint">
+                      Discount:
+                    </Typography>
+                    <Typography fontSize="14px" color="text.hint">
+                      {currency(0)} {/* Assuming no discount for now */}
+                    </Typography>
+                  </FlexBox>
+      
+                  <Divider mb="0.5rem" />
+      
+                  <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
+                    <Typography variant="h6">Total</Typography>
+                    <Typography variant="h6">{currency(details.total || 0)}</Typography>
+                  </FlexBox>
+                </Box>
+              </div>
+            )}
+          </Box>
+          );
+        })
+      ) : (
+        <Typography>No order items available.</Typography>
       )}
-    </div>
-
-          {/* Render the items from the shop */}
-          {details.order_items.map((item, ind) => (
-            <WriteReview key={ind} item={item} shopName={shopName} orderDetails={details} />
-          ))}
-        </Box>
-      );
-    })
-  ) : (
-    <Typography>No items in this order.</Typography>
-  )}
-</Box>
-
+    </Box>
 
 
 

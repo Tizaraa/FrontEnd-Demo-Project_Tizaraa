@@ -112,20 +112,30 @@ const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
   const handleBrandChange = (brandId: number) => {
     const updatedSelectedBrands = selectedBrands.includes(brandId)
       ? selectedBrands.filter((id) => id !== brandId)
-      : [...selectedBrands, brandId];
+      // : [...selectedBrands, brandId];
+      : [brandId];
 
     setSelectedBrands(updatedSelectedBrands);
     onBrandChange(updatedSelectedBrands);
   };
 
+  // const handleCategoryChange = (categoryId: number) => {
+  //   const updatedSelectedCategories = selectedCategories.includes(categoryId)
+  //     ? selectedCategories.filter((id) => id !== categoryId)
+  //     : [...selectedCategories, categoryId];
+  
+  //   setSelectedCategories(updatedSelectedCategories);
+  //   onCategoryChange(updatedSelectedCategories);
+  // };
   const handleCategoryChange = (categoryId: number) => {
     const updatedSelectedCategories = selectedCategories.includes(categoryId)
       ? selectedCategories.filter((id) => id !== categoryId)
-      : [...selectedCategories, categoryId];
-  
+      : [categoryId]; 
+    
     setSelectedCategories(updatedSelectedCategories);
     onCategoryChange(updatedSelectedCategories);
   };
+  
   
   
   const fetchFilteredData = async (categories: number[]) => {
@@ -177,17 +187,18 @@ const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
 > 
 
 {categoryList.map((item) => (
-        <CheckBox
-          my="10px"
-          key={item.id}
-          name={item.categorie_name}
-          value={item.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
-          onChange={() => handleCategoryChange(item.id)}
-          checked={selectedCategories.includes(item.id)}
-        />
-      ))}
+  <CheckBox
+    my="10px"
+    key={item.id}
+    name={item.categorie_name}
+    value={item.id}
+    color="secondary"
+    label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
+    onChange={() => handleCategoryChange(item.id)}
+    checked={selectedCategories.includes(item.id)}
+  />
+))}
+
  </div>
 
 
@@ -225,7 +236,7 @@ const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
   }}
   className="custom-scrollbar"
 > 
-{brandList.map((item) => (
+{/* {brandList.map((item) => (
         <CheckBox
           my="10px"
           key={item.id}
@@ -236,7 +247,20 @@ const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
           onChange={() => handleBrandChange(item.id)}
           checked={selectedBrands.includes(item.id)}
         />
-      ))}
+      ))} */}
+      {brandList.map((item) => (
+  <CheckBox
+    my="10px"
+    key={item.id}
+    name={item.brand_name}
+    value={item.id}
+    color="secondary"
+    label={<SemiSpan color="inherit">{item.brand_name}</SemiSpan>}
+    onChange={() => handleBrandChange(item.id)}
+    checked={selectedBrands.includes(item.id)}
+  />
+))}
+
 </div>
 
 
