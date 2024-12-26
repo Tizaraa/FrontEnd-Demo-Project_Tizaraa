@@ -9,7 +9,7 @@ import Grid from "@component/grid/Grid";
 import Divider from "@component/Divider";
 import FlexBox from "@component/FlexBox";
 import TableRow from "@component/TableRow";
-import Typography, { H5, H6, Paragraph } from "@component/Typography";
+import Typography, { H5, H6, Paragraph, Small } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import {
@@ -26,6 +26,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStore, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
+import { Chip } from "@component/Chip";
 // import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons"; 
 
 
@@ -76,6 +77,21 @@ export default function OrderDetails({ params }: IDParams) {
 
   const [openSummaries, setOpenSummaries] = useState<{ [key: string]: boolean }>({});
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const getColor = (status: string) => {
+    switch (status) {
+      case "Pending":
+        return "#FFC107"; // Yellow for Pending
+      case "Confirmed":
+        return "#2196F3"; // Blue for Processing
+      case "Delivered":
+        return "#4CAF51"; // Green for Delivered
+      case "Cancelled":
+        return "#F44336"; // Red for Cancelled
+      default:
+        return "#9E9E9E"; // Grey for unknown status
+    }
+  };
 
   const toggleSummary = (shop: string) => {
     setOpenSummaries((prev) => ({
@@ -300,6 +316,7 @@ export default function OrderDetails({ params }: IDParams) {
             delivery_charge: number | null;
             sub_total: number | null;
             total: number | null;
+            status: string | null
           };
 
           return (
@@ -313,9 +330,23 @@ export default function OrderDetails({ params }: IDParams) {
                 flexWrap: "wrap",
               }}
             >
-              <Typography fontWeight="bold" fontSize="18px" mb="1rem" p="1rem">
-                <FontAwesomeIcon icon={faStore} size="1x" color="black" /> {shopName}
-              </Typography>
+              <div
+  style={{
+    display: "flex",
+    alignItems: "center", // Aligns items vertically
+    gap: "0", // No gap between the components
+  }}
+>
+  <Typography fontWeight="bold" fontSize="18px" mb="1rem" p="1rem" style={{ margin: "0" }}>
+    <FontAwesomeIcon icon={faStore} size="1x" color="black" /> {shopName}
+  </Typography>
+   <Box m="6px">
+          <Chip p="0.25rem 1rem" bg={getColor(details.status)}>
+            <Small color="white"> {details.status}</Small>
+          </Chip>
+        </Box>
+</div>
+
       
               {/* Check and render the 'delivered_at' property */}
               {details.delivered_at && (
@@ -352,7 +383,7 @@ export default function OrderDetails({ params }: IDParams) {
                     textAlign: "center",
                     height: "40px",
                     marginRight: "20px",
-                    marginTop: "-15px",
+                    marginTop: "-20px",
                     minWidth: "200px", // Minimum width to maintain the design 
                   }}
                 >
@@ -372,9 +403,19 @@ export default function OrderDetails({ params }: IDParams) {
             </div>
       
             {/* Render the items from the shop */}
-            {details.order_items.map((item, ind) => (
+            {/* {details.order_items.map((item, ind) => (
               <WriteReview key={ind} item={item} shopName={shopName} orderDetails={details} />
-            ))}
+            ))} */}
+            {details.order_items.map((item, ind) => (
+  <WriteReview
+    key={ind}
+    item={item}
+    shopName={shopName}
+    orderDetails={details}
+    status={details.status} // Pass the status here
+  />
+))}
+
       
             {/* Conditionally render the total summary */}
             {openSummaries[shopName] && (
@@ -418,6 +459,25 @@ export default function OrderDetails({ params }: IDParams) {
                     <Typography variant="h6">Total</Typography>
                     <Typography variant="h6">{currency(details.total || 0)}</Typography>
                   </FlexBox>
+
+                  <FlexBox
+              alignItems="center"
+              mb="1rem"
+            >
+              Payment Method:
+              <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+                {order.Order.delivery_type}
+              </H6>
+            </FlexBox>
+            <FlexBox
+              alignItems="center"
+              mb="1rem"
+            >
+              Payment Status:
+              <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+                {order.Order.payment_status}
+              </H6>
+            </FlexBox>
                 </Box>
               </div>
             )}

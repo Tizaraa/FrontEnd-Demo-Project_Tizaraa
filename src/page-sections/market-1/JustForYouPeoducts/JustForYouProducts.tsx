@@ -252,6 +252,7 @@ import styles from "./JustForYouParoducts.module.css";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import { Chip } from "@component/Chip";
+import BeatLoader from "react-spinners/BeatLoader";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -423,7 +424,7 @@ const JustForYouProducts = () => {
             onClick={handleLoadMore}
             disabled={loadingMore}
           >
-            {loadingMore ? "Loading..." : "Load More"}
+            {loadingMore ? <BeatLoader size={18} color="#fff" />  : "Load More"}
           </button>
         </div>
       )}

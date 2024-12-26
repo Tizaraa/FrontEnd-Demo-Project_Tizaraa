@@ -108,11 +108,11 @@ export default function OrderRow({ order }: OrderRowProps) {
           #{order.invoice}
         </H5>
 
-        <Box m="6px">
+        {/* <Box m="6px">
           <Chip p="0.25rem 1rem" bg={getColor(order.status)}>
             <Small color="white">{order.status}</Small>
           </Chip>
-        </Box>
+        </Box> */}
 
         <Typography className="flex-grow pre" m="6px" textAlign="left">
           {format(new Date(order.date), "MMM dd, yyyy")}

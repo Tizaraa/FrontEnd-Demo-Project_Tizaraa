@@ -269,9 +269,9 @@ export default function OrderList() {
           <H5 color="text.muted" my="0px" mx="6px" textAlign="left">
             Order #
           </H5>
-          <H5 color="text.muted" my="0px" mx="6px" textAlign="left">
+          {/* <H5 color="text.muted" my="0px" mx="6px" textAlign="left">
             Status
-          </H5>
+          </H5> */}
           <H5 color="text.muted" my="0px" mx="6px" textAlign="left">
             Date purchased
           </H5>

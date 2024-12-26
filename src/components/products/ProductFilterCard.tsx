@@ -162,6 +162,48 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
 
   return (
     <Card p="18px 27px" elevation={5} borderRadius={8}>
+       
+       <H6 mb="10px">Categories</H6>
+      <div
+  style={{
+    maxHeight: "200px",
+    overflowY: "auto",
+    paddingRight: "10px", // Add padding for space between scrollbar and content
+  }}
+  className="custom-scrollbar"
+>
+{categoryList.map((item) => (
+        <Link href={`/category/${item.categorie_name_slug}`}>
+        <div key={item.id}>
+          {renderCategories([item])}
+        </div>
+        </Link>
+      ))}
+  </div>
+
+      {/* {visibleCategories.map((item) => (
+        <Link href={`/category/${item.categorie_name_slug}`}>
+        <div key={item.id}>
+          {renderCategories([item])}
+        </div>
+        </Link>
+      ))}
+      {categoryList.length > 5 && (
+        <Paragraph
+          py="6px"
+          fontSize="14px"
+          className="cursor-pointer"
+          color="primary.main"
+          onClick={toggleShowCategories}
+        >
+          {showAllCategories ? "Show Less" : "Show More"}
+        </Paragraph>
+      )} */}
+
+
+
+
+<Divider my="24px" />
       <H6 mb="16px">Brands</H6>
       <div
   style={{
@@ -210,44 +252,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
         </Paragraph>
       )} */}
 
-      <Divider my="24px" />
-      <H6 mb="10px">Categories</H6>
-      <div
-  style={{
-    maxHeight: "200px",
-    overflowY: "auto",
-    paddingRight: "10px", // Add padding for space between scrollbar and content
-  }}
-  className="custom-scrollbar"
->
-{categoryList.map((item) => (
-        <Link href={`/category/${item.categorie_name_slug}`}>
-        <div key={item.id}>
-          {renderCategories([item])}
-        </div>
-        </Link>
-      ))}
-  </div>
-
-      {/* {visibleCategories.map((item) => (
-        <Link href={`/category/${item.categorie_name_slug}`}>
-        <div key={item.id}>
-          {renderCategories([item])}
-        </div>
-        </Link>
-      ))}
-      {categoryList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowCategories}
-        >
-          {showAllCategories ? "Show Less" : "Show More"}
-        </Paragraph>
-      )} */}
-
+     
       <Divider mt="18px" mb="24px" />
       <H6 mb="10px">Country of Origin</H6>
       <div
