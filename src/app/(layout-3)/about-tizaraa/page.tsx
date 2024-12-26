@@ -1,162 +1,82 @@
-import React from "react";
+import React from 'react';
 
-const AboutUs = () => {
-    // Inline styles
-    const styles: { [key: string]: React.CSSProperties }  = {
-        menuBar: {
-            background: "#f8f9fa",
-            padding: "10px 0",
-            borderBottom: "1px solid #ddd",
-        },
-        container: {
-            width: "90%",
-            margin: "0 auto",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-        },
-        logo: {
-            display: "flex",
-            alignItems: "center",
-        },
-        logoImg: {
-            height: "50px",
-        },
-        menu: {
-            display: "flex",
-            listStyle: "none",
-            margin: 0,
-            padding: 0,
-        },
-        menuItem: {
-            margin: "0 15px",
-        },
-        menuLink: {
-            textDecoration: "none",
-            color: "#333",
-            fontSize: "16px",
-        },
-        banner: {
-            backgroundImage: "url(assets/img/banner/About-Tizaraa-Top-Banner_2_12.jpg)",
-            backgroundPosition: "center center",
-            backgroundSize: "cover",
-            height: "400px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "#fff",
-            textAlign: "center",
-        },
-        aboutMain: {
-            padding: "50px 0",
-            backgroundColor: "#f5f5f5",
-        },
-        aboutContent: {
-            width: "80%",
-            margin: "0 auto",
-            textAlign: "left",
-        },
-        sectionTitle: {
-            fontSize: "28px",
-            marginBottom: "20px",
-            color: "#333",
-        },
-        sectionContent: {
-            fontSize: "16px",
-            color: "#555",
-            lineHeight: "1.6",
-        },
-        imgPart: {
-            width: "100%",
-            borderRadius: "8px",
-        },
-        footer: {
-            background: "#222",
-            color: "#fff",
-            padding: "20px 0",
-            textAlign: "center",
-        },
-        footerLink: {
-            color: "#fff",
-            textDecoration: "none",
-        },
-    };
+const AboutUs: React.FC = () => {
+  return (
+    <div style={{ fontFamily: 'Arial, sans-serif', lineHeight: '1.6', padding: '20px' }}>
+      {/* Header Section */}
+      <header style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <img src="/assets/images/footer_image/About-Tizaraa-Top-Banner_1.jpg" alt="About Us" style={{ maxWidth: '100%', height: 'auto',}} />
+        <h1 style={{ fontSize: '2.5rem', marginTop: '20px' }}>About Us Tizaraa</h1>
+      </header>
 
-    return (
-        <div>
-            {/* Menu Bar */}
-            <div style={styles.menuBar}>
-                <div style={styles.container}>
-                    <div style={styles.logo}>
-                        <a href="index.html">
-                            <img
-                                src="assets/img/logo/Logo_14.11.2023.png"
-                                alt="Tizaraa Full Logo"
-                                style={styles.logoImg}
-                            />
-                        </a>
-                    </div>
-                    <ul style={styles.menu}>
-                        <li style={styles.menuItem}>
-                            <a href="login.html" style={styles.menuLink}>Login</a>
-                        </li>
-                        <li style={styles.menuItem}>
-                            <a href="sign-up.html" style={styles.menuLink}>Sign up</a>
-                        </li>
-                        <li style={styles.menuItem}>
-                            <a href="#" style={styles.menuLink}>
-                                <i className="fas fa-shopping-cart"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+      {/* Story Section */}
+      <section style={{ marginBottom: '40px' }}>
+        <h2 style={{ fontSize: '22px', color: '#ff6600' }}>Our Story</h2>
+        <p>
+        Welcome to Tizaraa, your go-to destination for a seamless and diverse online shopping experience. Founded in [Year], Tizaraa was born out of a passion for connecting buyers with quality products from trusted sellers across the globe.
+        </p>
+      </section>
 
-            {/* Banner */}
-            <div style={styles.banner}>
-                <h2>About Us Tizaraa</h2>
-            </div>
+      {/* Mission and Vision Section */}
+      <section style={{ marginBottom: '40px' }}>
+        <h2 style={{ fontSize: '22px', color: '#ff6600' }}>Mission & Vision</h2>
+        <p>
+        At Tizaraa, our mission is to provide a reliable and user-friendly platform that empowers both buyers and sellers. We strive to create a vibrant online marketplace where everyone can discover unique products, build lasting connections, and experience the joy of hassle-free transactions.
+        </p>
+      </section>
 
-            {/* About Content */}
-            <div style={styles.aboutMain}>
-                <div style={styles.aboutContent}>
-                    <div>
-                        <h2 style={styles.sectionTitle}>Our Story</h2>
-                        <p style={styles.sectionContent}>
-                            Welcome to Tizaraa, your go-to destination for a seamless and diverse online shopping experience.
-                            Founded in [Year], Tizaraa was born out of a passion for connecting buyers with quality
-                            products from trusted sellers across the globe.
-                        </p>
-                        <img
-                            src="assets/img/banner/pexels-pixabay-461049.jpg"
-                            alt="Our Story"
-                            style={styles.imgPart}
-                        />
-                    </div>
-
-                    <div>
-                        <h2 style={styles.sectionTitle}>Our Commitment</h2>
-                        <p style={styles.sectionContent}>
-                            Tizaraa is committed to ensuring the quality of products on our platform. We work closely
-                            with sellers to maintain high standards and deliver exceptional goods to our customers.
-                        </p>
-                        <img
-                            src="assets/img/banner/quality.jpg"
-                            alt="Quality Assurance"
-                            style={styles.imgPart}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* Footer */}
-            <footer style={styles.footer}>
-                <p>
-                    &copy; Tizaraa 2023 | <a href="#" style={styles.footerLink}>Privacy Policy</a>
-                </p>
-            </footer>
+      {/* What Sets Us Apart Section */}
+      <section style={{ marginBottom: '40px' }}>
+        <h2 style={{ fontSize: '22px', color: '#ff6600' }}>What Sets Us Apart</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+          <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+            <h3 style={{ fontSize: '20px' }}>Curated Selection</h3>
+            <p>
+            We take pride in curating a collection of products that align with our commitment to quality, innovation, and style. Every item in our inventory is handpicked to ensure it meets our high standards.
+            </p>
+          </div>
+          <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+            <h3 style={{ fontSize: '20px' }}>Customer-Centric Approach</h3>
+            <p>
+            At Tizaraa, customers are at the heart of everything we do. Our dedicated customer support team is always ready to assist you, whether you have a question about a product, need help with an order, or simply want some shopping advice.
+            </p>
+          </div>
+          <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+            <h3 style={{ fontSize: '20px' }}>Secure and Convenient Shopping</h3>
+            <p>
+            We understand the importance of a secure and convenient shopping experience. That's why we've invested in the latest technology to ensure your transactions are safe and your personal information is protected.
+            </p>
+          </div>
+          <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+            <h3 style={{ fontSize: '20px' }}>Innovation and Technology</h3>
+            <p>
+            Tizaraa embraces the latest in e-commerce technology to provide a modern, efficient, and reliable platform. We are committed to staying ahead of the curve to enhance your shopping journey.
+            </p>
+          </div>
         </div>
-    );
+      </section>
+
+      {/* Our Commitment Section */}
+      <section style={{ marginBottom: '40px' }}>
+        <h2 style={{ fontSize: '22px', color: '#ff6600' }}>Our Commitment</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+          <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+            <h3 style={{ fontSize: '20px' }}>Quality Assurance</h3>
+            <p>
+              Tizaraa is committed to ensuring the quality of products on our platform. We work closely with sellers to maintain high standards and deliver exceptional goods to our customers.
+            </p>
+          </div>
+          <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+            <h3 style={{ fontSize: '20px' }}>Community Building</h3>
+            <p>
+              Beyond transactions, Tizaraa is a community. Join us in building connections, sharing experiences, and creating a vibrant space for buyers and sellers alike.
+            </p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  );
 };
 
 export default AboutUs;
