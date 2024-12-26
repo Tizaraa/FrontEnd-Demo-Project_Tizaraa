@@ -176,16 +176,16 @@ import Typography, { Paragraph } from "@component/Typography";
 //   "Returns & Refunds",
 // ];
 export const aboutLinks = [
-  { name: "Help Center", url: "/helpCenter" },
-  { name: "How to Buy", url: "/howToBuy" },
-  { name: "Tizara Journey", url: "/privacy-policy" }
+  { name: "Help center", url: "/helpCenter" },
+  { name: "How to buy", url: "/howToBuy" },
+  { name: "Tizaraa journey", url: "/tizaraa-journey" }
 ];
 
 export const customerCareLinks = [
-  { name: "About Tizaraa", url: "/help-center" },
-  { name: "Tizaraa Blog", url: "/track-order" },
-  { name: "Tizaraa Cares", url: "/corporate-purchasing" },
-  { name: "Privacy Policy", url: "/returns-refunds" },
+  { name: "About Tizaraa", url: "/about-tizaraa" },
+  { name: "Tizaraa blog", url: "/tizaraa-blog" },
+  { name: "Tizaraa cares", url: "/tizaraa-cares" },
+  { name: "Privacy policy", url: "/privacy-policy" },
 ];
 
 export const customerCareLink = ["Sell on Tizaraa"];
@@ -240,6 +240,7 @@ export default function Footer1() {
                 <div>
                   {aboutLinks.map((item, ind) => (
                     <a
+                      target="_blank"
                       href={item.url}
                       key={ind}
                       style={{
@@ -271,9 +272,11 @@ export default function Footer1() {
                 <div>
                   {customerCareLinks.map((item, ind) => (
                     <a
+                      target="_blank"
                       href={item.url}
                       key={ind}
                       style={{
+                        
                         display: "block",
                         color: "white",
                         textDecoration: "none",
@@ -302,7 +305,9 @@ export default function Footer1() {
                 <div>
                   {customerCareLink.map((item, ind) => (
                     <a
-                      href="/"
+
+                    target="_blank"
+                      href="https://seller.tizaraa.com/"
                       key={ind}
                       style={{
                         display: "block",
@@ -331,15 +336,14 @@ export default function Footer1() {
                   Trade services
                 </Typography>
                 <Typography style={{ padding: "0.3rem 0", color: "inherit" }}>
-                  House No: 15A, Road: 35, Gulshan 2, Dhaka 1212, Bangladesh
                 </Typography>
                 <Typography style={{ padding: "0.3rem 0", color: "inherit" }}>
-                  <a
-                    href="mailto:tizaraabd2023@gmail.com"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Email: tizaraabd2023@gmail.com
-                  </a>
+                    <a
+                      href="mailto:tizaraabd2023@gmail.com"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      Email: tizaraabd2023@gmail.com
+                    </a>
                 </Typography>
                 <Typography
                   style={{
