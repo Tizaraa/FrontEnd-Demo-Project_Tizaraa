@@ -11,6 +11,7 @@ import FlexBox from "@component/FlexBox";
 import { IconButton } from "@component/buttons";
 import Sidenav from "@component/sidenav/Sidenav";
 import { H5, Paragraph } from "@component/Typography";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 import ProductGridView from "@component/products/ProductCard1List";
 import ProductListView from "@component/products/ProductCard9List";
@@ -18,6 +19,7 @@ import ProductFilterCard from "@component/products/ProductFilterCard";
 import useWindowSize from "@hook/useWindowSize";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import CountryProductFilterCard from "@component/products/CountryProductFilterCard";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -35,7 +37,7 @@ export default function CountryResult({ sortOptions, slug }) {
     sortOptions[0].value
   );
   const [selectedBrand, setSelectedBrand] = useState<any[] | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number[] | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null); // Track selected country
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [products, setProducts] = useState<any[]>([]);
@@ -51,10 +53,10 @@ export default function CountryResult({ sortOptions, slug }) {
     setCurrentPage(1); // Reset to first page
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(1); // Reset to first page
-    // router.push(`/product/search/${category}`);
+  const handleCategoryChange = (categories: number[]) => {
+    setSelectedCategory(categories);
+    setCurrentPage(1);
+    // router.push(`/product/search/${categories}`);
   };
 
   const handleCountryChange = (countries: number[]) => {
@@ -72,33 +74,40 @@ export default function CountryResult({ sortOptions, slug }) {
     setSelectedSortOption(sortOption.value);
   };
 
+
   const fetchProducts = useCallback(async () => {
     setLoading(true);
+  
+    // Prepare the filter object
+    const filters: any = {};
+    if (selectedCategory) filters.category = selectedCategory;
+    if (selectedBrand && selectedBrand.length) filters.brand = selectedBrand;
+    if (selectedCountry && selectedCountry.length) filters.country = selectedCountry;
+    if (selectedProvinces && selectedProvinces.length) filters.province = selectedProvinces;
+  
     try {
       const response = await fetch(
-        `https://frontend.tizaraa.com/api/country/product/view/${slug}`,
+        `${ApiBaseUrl.baseUrl}country/product/view/${slug}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            category: selectedCategory || "all",
-            brand: selectedBrand || null,
-            country: selectedCountry || null, // Add country filter here
-            province: selectedProvinces || null,
+            ...filters, // Include only valid filters
             page: currentPage,
             orderBy: selectedSortOption,
           }),
         }
       );
-
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
+  
       const data = await response.json();
-      console.log("Fetched data:", data);
+      console.log("Shop Details:", data);
+  
       // Reset products when fetching the first page
       if (currentPage === 1) {
         setProducts(data.data);
@@ -115,6 +124,7 @@ export default function CountryResult({ sortOptions, slug }) {
     selectedBrand,
     selectedCategory,
     selectedCountry,
+    selectedProvinces,
     currentPage,
     selectedSortOption,
   ]);
@@ -217,13 +227,13 @@ export default function CountryResult({ sortOptions, slug }) {
                 </IconButton>
               }
             >
-              <ProductFilterCard
+              <CountryProductFilterCard
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
                 onCountryChange={handleCountryChange} // Pass country handler
                 onProvinceChange={handleProvinceChange}
                 slug={slug}
-                pageType={pageType}
+                pageType="country"
               />
             </Sidenav>
           )}
@@ -232,13 +242,13 @@ export default function CountryResult({ sortOptions, slug }) {
 
       <Grid container spacing={6}>
         <Grid item lg={3} xs={12}>
-          <ProductFilterCard
+          <CountryProductFilterCard
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
             onCountryChange={handleCountryChange} // Pass country handler
             onProvinceChange={handleProvinceChange}
             slug={slug}
-            pageType={pageType}
+            pageType="country"
           />
         </Grid>
 

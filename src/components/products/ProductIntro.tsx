@@ -15,6 +15,7 @@ import ProductDetails from "./ProductDetails";
 import FlexBox from "@component/FlexBox";
 import { H6, SemiSpan } from "@component/Typography";
 import Link from "next/link";
+import BuyItNow from "./BuyItNow";
 // import BuyItNow from "./BuyItNow";
 
 
@@ -27,6 +28,11 @@ type ProductIntroProps = {
   id: string | number;
   sellerShopName: string;
   sellerShopLogo: string;
+  brandName: string;
+  brand_slug?: string;
+  warranty: string;
+  warrantyType: string,
+  replacewarranty: string,
   rating: number;
   productStock: number;
   slug?: string;
@@ -48,6 +54,10 @@ export default function ProductIntro({
   id,
   sellerShopName,
   sellerShopLogo,
+  brandName,
+  warranty,
+  warrantyType,
+  replacewarranty,
   rating,
   discountPrice,
   totalDiscount,
@@ -94,6 +104,10 @@ export default function ProductIntro({
             productStock={productStock}
             sellerShopName={sellerShopName}
             sellerShopLogo={sellerShopLogo}
+            brandName={brandName}
+            warranty={warranty}
+            warrantyType= {warrantyType}
+              replacewarranty= {replacewarranty}
           />
           <SizeColorSelector
             productId={productId} 
@@ -153,6 +167,8 @@ export default function ProductIntro({
             productType = "General"
 
           />
+
+
           //   <div style={{display: "flex", gap:"10px"}}>
           //      <BuyItNow
           //   productId={productId}

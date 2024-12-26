@@ -1,5 +1,5 @@
 "use client";
-
+import { useEffect, useState } from "react";
 import { Card1 } from "@component/Card1";
 import Divider from "@component/Divider";
 import FlexBox from "@component/FlexBox";
@@ -14,13 +14,62 @@ import ProductCard20 from "@component/product-cards/ProductCard20";
 
 export default function CheckoutSummary({ deliveryCharge }) {
   const { state } = useAppContext();
+  const [savedTotalPrice, setSavedTotalPrice] = useState(() => {
+    return parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
+  });
+  const [savedTotalWithDelivery, setSavedTotalWithDelivery] = useState(() => {
+    return parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
+  });
 
-  const getTotalPrice = () => {
-    return state.cart.reduce((accumulator, item) => 
-      // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
-    accumulator + (item.discountPrice ? item.discountPrice : item.price) * item.qty, 0
-    ) || 0;
-  };
+  useEffect(() => {
+    const getTotalPrice = () => {
+      return state.cart.reduce((accumulator, item) => {
+        if (state.selectedProducts.includes(item.id)) {
+          return (
+            accumulator +
+            (item.discountPrice ? item.discountPrice : item.price) * item.qty
+          );
+        }
+        return accumulator;
+      }, 0);
+    };
+
+    const storedAddress = sessionStorage.getItem("address");
+    const selectedAddress = storedAddress ? JSON.parse(storedAddress) : null;
+    const deliveryChargeDisplay =
+      selectedAddress?.deliveryCharge || deliveryCharge || 0;
+
+    const totalPrice = getTotalPrice();
+    const totalWithDelivery = parseFloat(deliveryChargeDisplay);
+
+    if (totalPrice > 0) {
+      setSavedTotalPrice(totalPrice);
+      sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
+    }
+
+    if (totalWithDelivery > 0) {
+      setSavedTotalWithDelivery(totalWithDelivery);
+      sessionStorage.setItem("savedTotalWithDelivery", totalWithDelivery.toString());
+    }
+
+    if (state.cart.length === 0) {
+      setSavedTotalPrice(0);
+      setSavedTotalWithDelivery(0);
+      sessionStorage.removeItem("savedTotalPrice");
+      sessionStorage.removeItem("savedTotalWithDelivery");
+    }
+    
+  }, [state.cart, deliveryCharge]);
+  // useEffect(() => {
+  //   const savedPrice = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
+  //   const savedWithDelivery = parseFloat(
+  //     sessionStorage.getItem("savedTotalWithDelivery") || "0"
+  //   );
+
+  //   if (savedPrice > 0) setSavedTotalPrice(savedPrice);
+  //   if (savedWithDelivery > 0) setSavedTotalWithDelivery(savedWithDelivery);
+  // }, []);
+
   // User shipping data
       
   // let shippingData = sessionStorage.getItem('address');
@@ -55,7 +104,9 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          {currency(getTotalPrice())}
+          {/* {currency(getTotalPrice())} */}
+          {/* {savedTotalPrice !== 0 ? currency(savedTotalPrice) : "0"} */}
+          {currency(savedTotalPrice)}
           </Typography>
 
           {/* <Typography fontWeight="600" fontSize="14px" lineHeight="1">
@@ -70,7 +121,8 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          {deliveryCharge !== "-" ? currency(deliveryCharge) : "-"}
+          {/* {deliveryChargeDisplay !== "-" ? currency(deliveryChargeDisplay) : "-"} */}
+          {currency(savedTotalWithDelivery)}
           </Typography>
         </FlexBox>
       </FlexBox>
@@ -78,7 +130,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
    
 
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-        <Typography color="text.hint">Tax:</Typography>
+        <Typography color="text.hint">VAT:</Typography>
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
@@ -105,7 +157,9 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
       <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
       {/* {currency(getTotalPrice())} */}
-      {currency(getTotalPrice() + (parseFloat(deliveryCharge) || 0))}
+      {/* {currency(getTotalPrice() + (parseFloat(deliveryChargeDisplay) || 0))} */}
+      {/* {currency(savedTotalWithDelivery)} */}
+      {currency(savedTotalWithDelivery + savedTotalPrice)}
       </Typography>
 
       {/* <TextField placeholder="Voucher" fullwidth />

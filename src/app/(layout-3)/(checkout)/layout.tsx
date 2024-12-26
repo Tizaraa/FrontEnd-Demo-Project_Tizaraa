@@ -139,6 +139,7 @@ import { Fragment, PropsWithChildren, useEffect, useState } from "react";
 import Box from "@component/Box";
 import Grid from "@component/grid/Grid";
 import Stepper from "@component/Stepper";
+import authService from "services/authService";
 
 export default function Layout({ children }: PropsWithChildren) {
   const [selectedStep, setSelectedStep] = useState(0);
@@ -155,6 +156,12 @@ export default function Layout({ children }: PropsWithChildren) {
 
   const isRfq = searchParams.get("rfq") === "true";
   const responseId = searchParams.get("response_id");
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
 
   useEffect(() => {
     if (isRfq) {
@@ -190,13 +197,28 @@ export default function Layout({ children }: PropsWithChildren) {
           router.push("/cart");
           break;
         case 1:
-          router.push("/checkout");
+          if(isLoggedIn){
+            router.push("/checkout");
+          }else{
+            router.push("/login");
+          }
+          //router.push("/checkout");
           break;
         case 2:
-          router.push("/payment");
+          if(isLoggedIn){
+            router.push("/payment");
+          }else{
+            router.push("/login");
+          }
+          //router.push("/payment");
           break;
         case 3:
-          router.push("/orders");
+          if(isLoggedIn){
+            router.push("/orders");
+          }else{
+            router.push("/login");
+          }
+          //router.push("/orders");
           break;
         default:
           break;

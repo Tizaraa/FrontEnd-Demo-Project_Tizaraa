@@ -377,7 +377,7 @@ import { Button } from "@component/buttons";
 import TextField from "@component/text-field";
 import Select from "@component/Select";
 import { useRouter } from "next/navigation";
-import {  toast } from 'react-toastify';
+import toast, { Toaster } from "react-hot-toast";
 import { Vortex } from 'react-loader-spinner'
 import  styled from "@emotion/styled";
 

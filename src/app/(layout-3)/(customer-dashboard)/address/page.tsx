@@ -167,10 +167,11 @@ import { IconButton } from "@component/buttons";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { Fragment } from "react";
 import Dialog from "./Dialog"; // Import the Dialog component
-import {  toast } from 'react-toastify';
+import toast, { Toaster } from "react-hot-toast";
 import { Vortex } from 'react-loader-spinner'
 import  styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import { useSearchParams,useRouter } from "next/navigation";
 import {
   AddNewAddress,
 } from "@sections/customer-dashboard/address"; // Import AddressItem component
@@ -190,8 +191,25 @@ export default function AddressList() {
   });
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const authtoken = authService.getToken(); // Retrieve the auth token
+  const authtoken = authService.getToken();// Retrieve the auth token
+
+  useEffect(() => {
+    const checkAuth = () => {
+      if (!authService.isAuthenticated()) {
+        router.push("/login");
+      } else {
+        setIsLoggedIn(true);
+      }
+    };
+    checkAuth();
+  }, [router]);
+
+  // if (!isLoggedIn) {
+  //   return null; // You can also return a loader or a placeholder here
+  // }
 
   useEffect(() => {
     const fetchAddresses = async () => {

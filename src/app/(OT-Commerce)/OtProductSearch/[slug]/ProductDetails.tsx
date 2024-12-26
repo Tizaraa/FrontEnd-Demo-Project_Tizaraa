@@ -403,6 +403,11 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
               sellerId={product.seller_shop_id}
               sizecolorwithprice={sizecolorwithprice}
               slug={params.slug}
+              brandName={product.brandName}
+              warranty={product.warranty}
+              warrantyType= {product.warrantyType}
+              replacewarranty={product.replacewarranty}
+
             />
           </div>
           {isDesktop && (

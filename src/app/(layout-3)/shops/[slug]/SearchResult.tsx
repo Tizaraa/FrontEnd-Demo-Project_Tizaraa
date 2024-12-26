@@ -19,6 +19,7 @@ import useWindowSize from "@hook/useWindowSize";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import ShopProductFilterCard from "@component/products/ShopProductFilterCard";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -36,7 +37,7 @@ export default function SearchResult({ sortOptions, slug }) {
     sortOptions[0].value
   );
   const [selectedBrand, setSelectedBrand] = useState<any[] | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number[] | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null); // Track selected country
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [products, setProducts] = useState<any[]>([]);
@@ -52,10 +53,10 @@ export default function SearchResult({ sortOptions, slug }) {
     setCurrentPage(1); // Reset to first page
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(1); // Reset to first page
-    // router.push(`/product/search/${category}`);
+  const handleCategoryChange = (categories: number[]) => {
+    setSelectedCategory(categories);
+    setCurrentPage(1);
+    // router.push(`/product/search/${categories}`);
   };
 
   const handleCountryChange = (countries: number[]) => {
@@ -75,6 +76,14 @@ export default function SearchResult({ sortOptions, slug }) {
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
+  
+    // Prepare the filter object
+    const filters: any = {};
+    if (selectedCategory) filters.category = selectedCategory;
+    if (selectedBrand && selectedBrand.length) filters.brand = selectedBrand;
+    if (selectedCountry && selectedCountry.length) filters.country = selectedCountry;
+    if (selectedProvinces && selectedProvinces.length) filters.province = selectedProvinces;
+  
     try {
       const response = await fetch(
         `${ApiBaseUrl.baseUrl}seller/products/${slug}`,
@@ -84,21 +93,20 @@ export default function SearchResult({ sortOptions, slug }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            category: selectedCategory || "all",
-            brand: selectedBrand || null,
-            country: selectedCountry || null, // Add country filter here
-            province: selectedProvinces || null,
+            ...filters, // Include only valid filters
             page: currentPage,
             orderBy: selectedSortOption,
           }),
         }
       );
-
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
+  
       const data = await response.json();
+      console.log("Shop Details:", data);
+  
       // Reset products when fetching the first page
       if (currentPage === 1) {
         setProducts(data.data);
@@ -115,10 +123,11 @@ export default function SearchResult({ sortOptions, slug }) {
     selectedBrand,
     selectedCategory,
     selectedCountry,
+    selectedProvinces,
     currentPage,
     selectedSortOption,
   ]);
-
+  
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
@@ -217,13 +226,13 @@ export default function SearchResult({ sortOptions, slug }) {
                 </IconButton>
               }
             >
-              <ProductFilterCard
+              <ShopProductFilterCard
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
                 onCountryChange={handleCountryChange} // Pass country handler
                 onProvinceChange={handleProvinceChange}
                 slug={slug}
-                pageType={pageType}
+                pageType="shop"
               />
             </Sidenav>
           )}
@@ -232,13 +241,13 @@ export default function SearchResult({ sortOptions, slug }) {
 
       <Grid container spacing={6}>
         <Grid item lg={3} xs={12}>
-          <ProductFilterCard
+          <ShopProductFilterCard
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
             onCountryChange={handleCountryChange} // Pass country handler
             onProvinceChange={handleProvinceChange}
             slug={slug}
-            pageType={pageType}
+            pageType="shop"
           />
         </Grid>
 

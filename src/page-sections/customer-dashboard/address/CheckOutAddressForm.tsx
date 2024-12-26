@@ -484,6 +484,9 @@ import Typography from "@component/Typography";
 import TextArea from "@component/textarea";
 import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import BeatLoader from "react-spinners/BeatLoader";
+import toast, { Toaster } from "react-hot-toast";
+import authService from "services/authService";
 
 export default function CheckOutAddressForm() {
   const router = useRouter();
@@ -491,8 +494,16 @@ export default function CheckOutAddressForm() {
   const [province, setProvince] = useState([]);
   const [city, setCity] = useState([]);
   const [area, setArea] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleFormSubmit = async (values: any) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
+
+  const handleFormSubmit = async (values: any,{ setErrors }: any) => {
+    setLoading(true);
     const authtoken = localStorage.getItem("token");
     const userInfo = localStorage.getItem("userInfo");
     const userId = JSON.parse(userInfo);
@@ -523,10 +534,25 @@ export default function CheckOutAddressForm() {
 
       if (response.status === 200) {
         sessionStorage.setItem("address", JSON.stringify(values));
-        router.push("/checkout");
+        if(isLoggedIn){
+          router.push("/checkout");
+        toast.success("Address Added successfully!");
+        }else{
+          router.push("/login");
+        }
+        // router.push("/checkout");
+        // toast.success("Address Added successfully!");
       }
     } catch (error) {
-      console.error("Error submitting address data:", error);
+      // console.error("Error submitting address data:", error);
+      // setLoading(false);
+      console.error("Failed submitting address data:", error.response.data.message.phone[0]);
+      if (error.response && error.response.data.message.phone) {
+        setErrors({ contact: error.response.data.message.phone[0] });
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+      setLoading(false);
     }
   };
 
@@ -681,7 +707,7 @@ export default function CheckOutAddressForm() {
                 </Grid>
 
                 {touched.selectedLandmark && errors.selectedLandmark && (
-                  <Typography color="error" variant="body2" mt={1}>
+                  <Typography color="#ff3333" variant="body2" mt={1}>
                     {errors.selectedLandmark}
                   </Typography>
                 )}
@@ -771,7 +797,7 @@ export default function CheckOutAddressForm() {
           <Grid container spacing={7}>
             <Grid item sm={6} xs={12}>
               <Button type="submit" variant="contained" color="primary">
-                Save Changes
+              {loading ? <BeatLoader size={18} color="#fff" /> : "Save"}
               </Button>
             </Grid>
           </Grid>

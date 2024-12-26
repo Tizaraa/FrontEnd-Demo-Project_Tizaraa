@@ -25,7 +25,9 @@ async function fetchProductData(slug: string) {
     const response = await axios.get(
       `${ApiBaseUrl.baseUrl}product/details/${slug}`
     );
+    console.log("product details:", response.data)
     return response.data;
+
   } catch (error) {
     console.error("Error fetching product data:", error);
     return null;
@@ -412,7 +414,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
       if (qrCodeData) {
         setQrCodeUrl(qrCodeData);
       }else {
-        console.warn("No QR Code data received."); // Log warning
+        console.log("No QR Code data received."); // Log warning
       }
       setIsLoading(false);
     };
@@ -429,19 +431,19 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
     );
   }
 
-  if (!qrCodeUrl) {
-    return (
-      <div
-        style={{
-          textAlign: "center",
-          padding: "20px",
-          color: "#555",
-        }}
-      >
-        <p>QR Code is not available.</p>
-      </div>
-    );
-  }
+  // if (!qrCodeUrl) {
+  //   return (
+  //     <div
+  //       style={{
+  //         textAlign: "center",
+  //         padding: "20px",
+  //         color: "#555",
+  //       }}
+  //     >
+  //       <p>QR Code is not available.</p>
+  //     </div>
+  //   );
+  // }
 
   if (!productData || !productData.productsingledetails) {
     return (
@@ -449,7 +451,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
       //   Product not found or there was an error loading the product.
       // </div>
       <FlexBox justifyContent="center" alignItems="center" width="100%">
-            <SemiSpan>No products found.</SemiSpan>
+            {/* <SemiSpan>No products found.</SemiSpan> */}
           </FlexBox>
     );
   }
@@ -463,6 +465,9 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   const sellerShopLogo = product.seller_shop_logo;
   const shopUrl = product.seller_shop_slug;
   const delivery_type = product.delivereyType;
+  const warranty = productData.warranty;
+  const warrantyType = productData.warrantytype;
+  const replacewarranty = productData.replacement_warranty;
 
   return (
     <>
@@ -497,6 +502,10 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
               sellerId={product.seller_shop_id}
               sizecolorwithprice={sizecolorwithprice}
               slug={params.slug}
+              brandName={product.brand_name}
+              warranty={warranty}
+              warrantyType= {warrantyType}
+              replacewarranty={replacewarranty}
             />
           </div>
           {isDesktop && (

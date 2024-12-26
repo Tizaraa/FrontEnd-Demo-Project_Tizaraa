@@ -54,7 +54,7 @@ export default function GroceryProducts() {
   }, []);
 
   return (
-    <CategorySectionCreator  title="Grocery" seeMoreLink="https://tizaraa.vercel.app/category/grocery">
+    <CategorySectionCreator  title="Grocery" seeMoreLink="/category/grocery">
       <Box my="-0.25rem">
         <Carousel totalSlides={flashSale.length} visibleSlides={visibleSlides}>
           {flashSale.map((item) => (

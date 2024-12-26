@@ -131,7 +131,9 @@ import TextArea from "@component/textarea";
 import countryList from "@data/countryList";
 import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import {  toast } from 'react-toastify';
+import toast, { Toaster } from "react-hot-toast";
+import BeatLoader from "react-spinners/BeatLoader";
+import authService from "services/authService";
 
 export default function AddressForm() {
   const router = useRouter();
@@ -139,8 +141,16 @@ export default function AddressForm() {
   const [province, setProvince] = useState([]);
   const [city, setCity] = useState([]);
   const [area, setArea] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleFormSubmit = async (values: any) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(authService.isAuthenticated());
+  }, []);
+
+  const handleFormSubmit = async (values: any,{ setErrors }: any) => {
+    setLoading(true);
     const authtoken = localStorage.getItem("token"); // Retrieve the auth token
     const userInfo = localStorage.getItem("userInfo"); // Assume you store user_id in localStorage
     const userId = JSON.parse(userInfo)
@@ -173,14 +183,23 @@ export default function AddressForm() {
         // Handle successful response, e.g., redirect or show a success message
         sessionStorage.setItem("address", JSON.stringify(values));
         //console.log(response.data)
-        
-        router.push("/address");
+
+        if(isLoggedIn){
+          router.push("/address");
         toast.success("Address Added successfully!");
+        }else{
+          router.push("/login");
+        }
 
       }
     } catch (error) {
-      console.error("Failed submitting address data:", error);
-      toast.error("Failed submitting address.");
+      console.error("Failed submitting address data:", error.response.data.message.phone[0]);
+      if (error.response && error.response.data.message.phone) {
+        setErrors({ contact: error.response.data.message.phone[0] });
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+      setLoading(false);
     }
   };
 
@@ -339,7 +358,7 @@ export default function AddressForm() {
 
                 {/* Display error text for landmark selection */}
                 {touched.selectedLandmark && errors.selectedLandmark && (
-                  <Typography color="error" variant="body2" mt={1}>
+                  <Typography color="#ff3333" variant="body2" mt={1}>
                     {errors.selectedLandmark}
                   </Typography>
                 )}
@@ -433,7 +452,7 @@ export default function AddressForm() {
           <Grid container spacing={7}>
             <Grid item sm={6} xs={12}>
               <Button type="submit" variant="contained" color="primary">
-                Save Changes
+              {loading ? <BeatLoader size={18} color="#fff" /> : "Save"}
               </Button>
             </Grid>
           </Grid>
@@ -459,5 +478,6 @@ const checkoutSchema = yup.object().shape({
   address: yup.string().required("Address is required"),
   province: yup.string().required("Province is required"),
   city: yup.string().required("City is required"),
-  selectedLandmark: yup.number().required("Please select a landmark"),
+  area: yup.string().required("Area is required"),
+  selectedLandmark: yup.number().required("Landmark is required"),
 });

@@ -53,7 +53,7 @@
 // GLOBAL CUSTOM COMPONENTS
 import Grid from "@component/grid/Grid";
 import { useAppContext } from "@context/app-context";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams,useRouter } from "next/navigation";
 // PAGE SECTION COMPONENTS
 import CheckoutForm from "@sections/checkout/CheckoutForm";
 import CheckoutSummary from "@sections/checkout/CheckoutSummary";
@@ -61,10 +61,11 @@ import RfqCheckoutForm from "@sections/checkout/RfqCheckoutForm";
 
 import RfqCheckoutSummary from "@sections/checkout/RfqCheckoutSummary";
 import Typography from "@component/Typography";
-import { useState } from "react";
+//import { useState } from "react";
 import axios from "axios";
-import {  toast } from 'react-toastify';
+import {  toast } from 'react-hot-toast';
 import authService from "services/authService";
+import { useState, useEffect } from "react";
 
 export default function Checkout() {
   const { state } = useAppContext();
@@ -74,6 +75,24 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   //const authtoken = authService.getToken();
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = () => {
+      if (!authService.isAuthenticated()) {
+        router.push("/login");
+      } else {
+        setIsLoggedIn(true);
+      }
+    };
+    checkAuth();
+  }, [router]);
+
+  if (!isLoggedIn) {
+    return null; // You can also return a loader or a placeholder here
+  }
+
 
   const getTotalPrice = () => {
     return state.cart.reduce(

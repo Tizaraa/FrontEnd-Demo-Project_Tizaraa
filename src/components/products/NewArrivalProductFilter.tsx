@@ -18,8 +18,8 @@ type Brand = {
 type Category = {
   id: number;
   categorie_name: string;
-  child?: Category[]; // Ensure child is of type Category[]
-  categorie_name_slug: string;
+  // child?: Category[]; // Ensure child is of type Category[]
+  // categorie_name_slug: string;
 };
 
 type Country = {
@@ -36,28 +36,29 @@ type Province = {
 };
 
 
-type ProductFilterCardProps = {
+type NewArrivalProductFilterProps = {
   onBrandChange: (brands: number[]) => void;
-  onCategoryChange: (categorySlug: string) => void; // Ensure this is a string
+  onCategoryChange: (categories: number[]) => void; // Ensure this is a string
   onCountryChange: (countryIds: number[]) => void;
   onProvinceChange: (provinces: number[]) => void;
   slug: string;
   pageType?: string;
 };
 
-const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
+const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
   onBrandChange,
   onCategoryChange,
   onCountryChange,
   onProvinceChange,
   slug,
-  pageType = 'default'
+  pageType = 'newArrival'
 }) =>  {
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [countryList, setCountryList] = useState<Country[]>([]);
   const [provinceList, setProvinceList] = useState<Province[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<number[]>([]);
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [showAllBrands, setShowAllBrands] = useState(false);
@@ -77,6 +78,10 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
           response = await axios.get(`${ApiBaseUrl.baseUrl}search-filter/${slug}`);
         } else if (pageType === 'shop') {
           response = await axios.get(`${ApiBaseUrl.baseUrl}shop-filter/${slug}`);
+        } else if (pageType === 'country') {
+          response = await axios.get(`${ApiBaseUrl.baseUrl}country/product-filter/${slug}`)
+        } else if (pageType === 'newArrival') {
+            response = await axios.get(`${ApiBaseUrl.baseUrl}remark/product-filter/new_arrivals`)
         }
 
         setBrandList(response.data.brand_filter || []);
@@ -104,18 +109,51 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   const visibleProvinces = showAllProvinces ? provinceList : provinceList.slice(0, 5);
   const toggleShowProvinces = () => setShowAllProvinces(!showAllProvinces);
 
-  const handleCategoryClick = (categorySlug: string) => {
-    onCategoryChange(categorySlug); // Pass the slug for filtering
-  };
-
   const handleBrandChange = (brandId: number) => {
     const updatedSelectedBrands = selectedBrands.includes(brandId)
       ? selectedBrands.filter((id) => id !== brandId)
-      : [...selectedBrands, brandId];
+      // : [...selectedBrands, brandId];
+      : [brandId];
 
     setSelectedBrands(updatedSelectedBrands);
     onBrandChange(updatedSelectedBrands);
   };
+
+  // const handleCategoryChange = (categoryId: number) => {
+  //   const updatedSelectedCategories = selectedCategories.includes(categoryId)
+  //     ? selectedCategories.filter((id) => id !== categoryId)
+  //     : [...selectedCategories, categoryId];
+  
+  //   setSelectedCategories(updatedSelectedCategories);
+  //   onCategoryChange(updatedSelectedCategories);
+  // };
+  const handleCategoryChange = (categoryId: number) => {
+    const updatedSelectedCategories = selectedCategories.includes(categoryId)
+      ? selectedCategories.filter((id) => id !== categoryId)
+      : [categoryId]; 
+    
+    setSelectedCategories(updatedSelectedCategories);
+    onCategoryChange(updatedSelectedCategories);
+  };
+  
+  
+  
+  const fetchFilteredData = async (categories: number[]) => {
+    try {
+      const response = await axios.get(
+        `${ApiBaseUrl.baseUrl}remark/product-filter/new_arrivals`, {
+          params: { categories: categories.join(",") }, // Adjust based on API requirements
+        }
+      );
+      // Update your state with the new data
+      console.log("Filtered Data:", response.data);
+      // Example: setProductList(response.data.products || []);
+    } catch (error) {
+      console.error("Error fetching filtered data:", error);
+    }
+  };
+  
+  
 
   const handleCountryChange = (countryId: number) => {
     const updatedSelectedCountry = selectedCountry.includes(countryId)
@@ -126,31 +164,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
     onCountryChange(updatedSelectedCountry);
   };
 
-  const renderCategories = (items: Category[]) => 
-    items.map((item) => (
-      <div key={item.id}>
-        <Paragraph
-          py="6px"
-          pl="22px"
-          fontSize="14px"
-          color="text.muted"
-          className="cursor-pointer"
-          onClick={() => handleCategoryClick(item.categorie_name_slug)} // Ensure you're passing the slug
-        >
-          {item.categorie_name}
-        </Paragraph>
-        {item.child && item.child.length > 0 && (
-          <Accordion key={item.id} expanded>
-            <AccordionHeader px="0px" py="6px" color="text.muted">
-              <SemiSpan className="cursor-pointer" mr="9px">
-                {item.categorie_name}
-              </SemiSpan>
-            </AccordionHeader>
-            {renderCategories(item.child)} {/* Render child categories */}
-          </Accordion>
-        )}
-      </div>
-    ));
+ 
 
   const visibleBrands = showAllBrands ? brandList : brandList.slice(0, 5);
   const visibleCategories = showAllCategories ? categoryList : categoryList.slice(0, 5);
@@ -162,6 +176,57 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
 
   return (
     <Card p="18px 27px" elevation={5} borderRadius={8}>
+       <H6 mb="10px">Categories</H6>
+      <div
+  style={{
+    maxHeight: "200px",
+    overflowY: "auto",
+    paddingRight: "10px", // Add padding for space between scrollbar and content
+  }}
+  className="custom-scrollbar"
+> 
+
+{categoryList.map((item) => (
+  <CheckBox
+    my="10px"
+    key={item.id}
+    name={item.categorie_name}
+    value={item.id}
+    color="secondary"
+    label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
+    onChange={() => handleCategoryChange(item.id)}
+    checked={selectedCategories.includes(item.id)}
+  />
+))}
+
+ </div>
+
+
+       {/* {visibleCategories.map((item) => (
+        <CheckBox
+          my="10px"
+          key={item.id}
+          name={item.categorie_name}
+          value={item.id}
+          color="secondary"
+          label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
+          onChange={() => handleCategoryChange(item.id)}
+          checked={selectedCategories.includes(item.id)}
+        />
+      ))}
+      {categoryList.length > 5 && (
+        <Paragraph
+          py="6px"
+          fontSize="14px"
+          className="cursor-pointer"
+          color="primary.main"
+          onClick={toggleShowCategories}
+        >
+          {showAllCategories ? "Show Less" : "Show More"}
+        </Paragraph>
+      )} */}
+     
+      <Divider my="24px" />
       <H6 mb="16px">Brands</H6>
       <div
   style={{
@@ -171,7 +236,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   }}
   className="custom-scrollbar"
 > 
-{brandList.map((item) => (
+{/* {brandList.map((item) => (
         <CheckBox
           my="10px"
           key={item.id}
@@ -182,8 +247,23 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
           onChange={() => handleBrandChange(item.id)}
           checked={selectedBrands.includes(item.id)}
         />
-      ))}
+      ))} */}
+      {brandList.map((item) => (
+  <CheckBox
+    my="10px"
+    key={item.id}
+    name={item.brand_name}
+    value={item.id}
+    color="secondary"
+    label={<SemiSpan color="inherit">{item.brand_name}</SemiSpan>}
+    onChange={() => handleBrandChange(item.id)}
+    checked={selectedBrands.includes(item.id)}
+  />
+))}
+
 </div>
+
+
 
       {/* {visibleBrands.map((item) => (
         <CheckBox
@@ -210,43 +290,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
         </Paragraph>
       )} */}
 
-      <Divider my="24px" />
-      <H6 mb="10px">Categories</H6>
-      <div
-  style={{
-    maxHeight: "200px",
-    overflowY: "auto",
-    paddingRight: "10px", // Add padding for space between scrollbar and content
-  }}
-  className="custom-scrollbar"
->
-{categoryList.map((item) => (
-        <Link href={`/category/${item.categorie_name_slug}`}>
-        <div key={item.id}>
-          {renderCategories([item])}
-        </div>
-        </Link>
-      ))}
-  </div>
-
-      {/* {visibleCategories.map((item) => (
-        <Link href={`/category/${item.categorie_name_slug}`}>
-        <div key={item.id}>
-          {renderCategories([item])}
-        </div>
-        </Link>
-      ))}
-      {categoryList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowCategories}
-        >
-          {showAllCategories ? "Show Less" : "Show More"}
-        </Paragraph>
-      )} */}
+     
 
       <Divider mt="18px" mb="24px" />
       <H6 mb="10px">Country of Origin</H6>
@@ -257,8 +301,8 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
     paddingRight: "10px", // Add padding for space between scrollbar and content
   }}
   className="custom-scrollbar"
->
-{countryList.map((country) => (
+> 
+ {countryList.map((country) => (
         <CheckBox
           my="10px"
           key={country.id}
@@ -270,8 +314,9 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
           checked={selectedCountry.includes(country.id)}
         />
       ))}
-      
-</div>
+      </div>
+
+
       {/* {visibleCountries.map((country) => (
         <CheckBox
           my="10px"
@@ -297,13 +342,10 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
         </Paragraph>
       )} */}
 
-      {/* Warranty  */}
+      {/* warranty  */}
       {/* <Divider mt="18px" mb="24px" />
       <H6 mb="10px">Warranty</H6> */}
       {/* Add warranty options here */}
-
-
-
       <Divider mt="18px" mb="24px" />
 
       <H6 mb="10px">Shipped From</H6>
@@ -331,7 +373,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
           checked={selectedProvinces.includes(province.id)}
         />
       ))}
-</div>
+       </div>
 
       {/* {visibleProvinces.map((province) => (
         <CheckBox
@@ -361,8 +403,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
         </Paragraph>
       )} */}
 
-
-        {/* scrollbar css  */}
+{/* scrollbar css  */}
 <style jsx>{`
   .custom-scrollbar {
     scrollbar-width: thin; /* Firefox - thin scrollbar */
@@ -390,4 +431,4 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   );
 };
 
-export default ProductFilterCard;
+export default NewArrivalProductFilter;

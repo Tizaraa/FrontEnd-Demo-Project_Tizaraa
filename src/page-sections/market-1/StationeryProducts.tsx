@@ -54,7 +54,7 @@ export default function StationeryProducts() {
   }, []);
 
   return (
-    <CategorySectionCreator  title="Stationery & Craft" seeMoreLink="https://tizaraa.vercel.app/category/stationery-&-craft">
+    <CategorySectionCreator  title="Stationery & Craft" seeMoreLink="/category/stationery-&-craft">
       <Box my="-0.25rem">
         <Carousel totalSlides={flashSale.length} visibleSlides={visibleSlides}>
           {flashSale.map((item) => (
