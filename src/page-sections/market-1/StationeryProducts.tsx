@@ -59,7 +59,7 @@ export default function StationeryProducts() {
         <Carousel totalSlides={flashSale.length} visibleSlides={visibleSlides}>
           {flashSale.map((item) => (
             <Box py="0.25rem" key={item.product_slug}>
-              <Card p="1rem" borderRadius={8} style={{ height: '300px' }}> 
+              <Card p="1rem" borderRadius={8} style={{ height: 'auto', minHeight:"300px" }}> 
 
                          {/* Discount Badge */}
               {!!item.discount_price && item.discount_price < item.seeling_price && (
@@ -95,7 +95,11 @@ export default function StationeryProducts() {
                     />
                   </HoverBox> */}
 
-<Box position="relative">
+<Box 
+ position="relative"
+ style={{
+   padding: "0 0.5rem", // Added padding to prevent content touching the edges
+ }}>
               <img 
                 src={item.product_thumbnail} 
                 alt={item.product_name} 
@@ -126,25 +130,25 @@ export default function StationeryProducts() {
 
 
 {item.discount_price == null && (
-  <FlexBox>
-    <H4 fontWeight="600" fontSize="14px" color="primary.main">
-       {currency(item.seeling_price)}
-    </H4>
-  </FlexBox>
-)}
+        <FlexBox>
+          <H4 fontWeight="600" fontSize="14px" color="primary.main">
+            {currency(item.seeling_price)}
+          </H4>
+        </FlexBox>
+      )}
 
-{item.discount_price != null && (
-  <FlexBox flexDirection="column">
-    <H4 fontWeight="600" fontSize="14px" color="text.muted">
-     BDT <del>{(item.seeling_price)}</del>
-    </H4>
-    <Box marginTop="4px"> {/* Adjust margin as needed */}
-      <H4 fontWeight="600" fontSize="14px" color="primary.main">
-        {currency(item.discount_price)}
-      </H4>
-    </Box>
-  </FlexBox>
-)}
+      {item.discount_price != null && (
+        <FlexBox flexDirection="column" mt="0.25rem">
+          <H4 fontWeight="600" fontSize="14px" color="text.muted">
+            BDT <del>{item.seeling_price}</del>
+          </H4>
+          <Box>
+            <H4 fontWeight="600" fontSize="14px" color="primary.main">
+              {currency(item.discount_price)}
+            </H4>
+          </Box>
+        </FlexBox>
+      )}
 
 
                  

@@ -317,9 +317,13 @@ const JustForYouProducts = () => {
                 key={item.product_slug}
                 className={styles.productCard} // Use a custom class for responsive sizing
               >
-                <Card p="1rem" borderRadius={8} style={{ height: "300px" }}>
+                <Card p="1rem" borderRadius={8} style={{ height: "auto", minHeight:"300px" }}>
                   <Link href={`/product/${item.product_slug}`}>
-                    <Box position="relative">
+                    <Box 
+                     position="relative"
+                     style={{
+                       padding: "0 0.5rem", // Added padding to prevent content touching the edges
+                     }}>
                       <img
                         src={item.product_thumbnail}
                         alt={item.product_name}
@@ -377,7 +381,7 @@ const JustForYouProducts = () => {
                       />
                     )}
 
-                    {item.discount_price == null && (
+                    {/* {item.discount_price == null && (
                       <FlexBox>
                         <H4
                           fontWeight="600"
@@ -396,7 +400,7 @@ const JustForYouProducts = () => {
                         </H4>
                         <Box marginTop="4px">
                           {" "}
-                          {/* Adjust margin as needed */}
+                        
                           <H4
                             fontWeight="600"
                             fontSize="14px"
@@ -406,7 +410,30 @@ const JustForYouProducts = () => {
                           </H4>
                         </Box>
                       </FlexBox>
-                    )}
+                    )} */}
+                    {item.discount_price == null && (
+        <FlexBox>
+          <H4 fontWeight="600" fontSize="14px" color="primary.main">
+            {currency(item.seeling_price)}
+          </H4>
+        </FlexBox>
+      )}
+
+      {item.discount_price != null && (
+        <FlexBox flexDirection="column" mt="0.25rem">
+          <H4 fontWeight="600" fontSize="14px" color="text.muted">
+            BDT <del>{item.seeling_price}</del>
+          </H4>
+          <Box>
+            <H4 fontWeight="600" fontSize="14px" color="primary.main">
+              {currency(item.discount_price)}
+            </H4>
+          </Box>
+        </FlexBox>
+      )}
+
+
+
                   </Link>
                 </Card>
               </Box>

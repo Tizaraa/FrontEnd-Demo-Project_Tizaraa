@@ -16,8 +16,8 @@ export default function ProductReview({ productId }: { productId: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Retrieve token from localStorage/sessionStorage
-  const token = sessionStorage.getItem("token"); // Replace with your token storage method
+  // Retrieve token from sessionStorage
+  const token = sessionStorage.getItem("token");
   const headers = {
     Authorization: `Bearer ${token}`, // Attach token as Authorization header
   };
@@ -26,14 +26,18 @@ export default function ProductReview({ productId }: { productId: string }) {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
-          `${ApiBaseUrl.baseUrl}product/comment/${productId}`,
-          { headers }
+          `${ApiBaseUrl.baseUrl}order/product/review`,
+          {
+            params: { productId }, // Send the productId as a query parameter
+            headers, // Pass the headers with the token
+          }
         );
-        setReviews(response.data.comments || []); // Assuming `comments` is the field in the response
+        setReviews(response.data); // Set the reviews from the response
         setLoading(false);
-      } catch (error) {
-        setError("Failed to load reviews");
+      } catch (err) {
+        setError("Failed to load reviews. Please try again later.");
         setLoading(false);
       }
     };
@@ -53,37 +57,6 @@ export default function ProductReview({ productId }: { productId: string }) {
     comment: yup.string().required("Review is required"),
   });
 
-  const handleFormSubmit = async (values: any, { resetForm }: any) => {
-    try {
-      await axios.post(
-        `${ApiBaseUrl.baseUrl}product/comment/${productId}`,
-        values,
-        { headers } // Attach headers with the token
-      );
-      setReviews([...reviews, values]); // Add the new review to the list
-      resetForm(); // Reset the form after submission
-    } catch (error) {
-      console.error("Error submitting review:", error);
-      setError("Failed to submit review");
-    }
-  };
-
-  const {
-    values,
-    errors,
-    touched,
-    dirty,
-    isValid,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-    setFieldValue,
-  } = useFormik({
-    initialValues,
-    validationSchema,
-    onSubmit: handleFormSubmit,
-  });
-
   if (loading) return <div>Loading reviews...</div>;
   if (error) return <div>{error}</div>;
 
@@ -97,7 +70,6 @@ export default function ProductReview({ productId }: { productId: string }) {
       ) : (
         <div>No reviews yet.</div>
       )}
-
     </div>
   );
 }
