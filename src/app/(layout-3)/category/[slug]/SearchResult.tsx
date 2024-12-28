@@ -258,10 +258,10 @@ export default function SearchResult({ sortOptions, slug }) {
           ) : (
             <ProductListView
               products={products}
-              totalProducts={0}
-              currentPage={0}
-              productsPerPage={0}
-              onPageChange={() => {}}
+              totalProducts={totalProducts}
+                currentPage={currentPage}
+                productsPerPage={productsPerPage}
+                onPageChange={handleLoadMore}
             />
           )}
         </Grid>

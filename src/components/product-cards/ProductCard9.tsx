@@ -17,7 +17,7 @@ import { Button } from "../buttons";
 import { H4, H5, SemiSpan } from "../Typography";
 import ProductQuickView from "@component/products/ProductQuickView";
 import { useAppContext } from "@context/app-context";
-import { calculateDiscount, currency, getTheme } from "@utils/utils";
+import { calculateDiscount, currency, getTheme, DiscountPercentage } from "@utils/utils";
 
 // STYLED COMPONENT
 const Wrapper = styled(Card)`
@@ -100,13 +100,15 @@ type ProductCard9Props = {
   title: string;
   price: number;
   imgUrl: string;
-  productStock: number;
   rating: number;
   images: string[];
-  id: string | number;
-  categories: string[];
-  productId: string | number;
-  sellerId: string | number;
+  productStock: number;
+  discountPrice?: number; // Optional discount price
+  totalDiscount?: number; // Optional total discount
+  id?: string | number;
+  productId?: string | number;
+  sellerId?: string | number;
+  sizecolorwithprice?: any; 
                                                                                                                                           
   [key: string]: unknown;
 };
@@ -120,10 +122,12 @@ export default function ProductCard9({
   price,
   imgUrl,
   productStock,
-  rating,
   images,
-  categories,
- productId, sellerId,
+  rating,
+  discountPrice,
+  productId,
+  sellerId,
+  sizecolorwithprice,
   ...props
 }: ProductCard9Props) {
   const [open, setOpen] = useState(false);
@@ -145,18 +149,20 @@ export default function ProductCard9({
         <Grid item md={3} sm={4} xs={12}>
           <Box position="relative">
             {!!off && (
-              <Chip
-                top="10px"
-                left="10px"
-                p="5px 10px"
-                fontSize="10px"
-                fontWeight="600"
-                bg="primary.main"
-                position="absolute"
-                color="primary.text">
-                {off}% off
-              </Chip>
-            )}
+                       <Chip
+                         top="10px"
+                         left="10px"
+                         p="5px 10px"
+                         fontSize="10px"
+                         fontWeight="600"
+                         bg="primary.main"
+                         position="absolute"
+                         color="primary.text"
+                         zIndex={1}>
+                         {/* {off}%  */}
+                         {DiscountPercentage(price, off as number)}% off
+                       </Chip>
+                     )}
 
             {/* <Icon color="secondary" variant="small" className="quick-view" onClick={toggleDialog}>
               eye-alt
@@ -169,15 +175,7 @@ export default function ProductCard9({
 
         <Grid item md={8} sm={8} xs={12}>
           <FlexBox flexDirection="column" justifyContent="center" height="100%" p="1rem">
-            {/* {!!categories && (
-              <div className="categories">
-                {categories.map((item) => (
-                  <NavLink className="link" href={`/product/search/${item}`} key={item}>
-                    {item}
-                  </NavLink>
-                ))}
-              </div>
-            )} */}
+            
 
             <Link href={`/product/${slug}`}>
               <H5 fontWeight="600" my="0.5rem">
@@ -185,7 +183,9 @@ export default function ProductCard9({
               </H5>
             </Link>
 
-            <Rating value={rating || 0} outof={5} color="warn" />
+           {rating > 0 && (
+             <Rating value={rating} outof={5} color="warn" readOnly />
+           )}
 
             <FlexBox mt="0.5rem" mb="1rem" alignItems="center">
               <H5 fontWeight={600} color="primary.main" mr="0.5rem">
@@ -200,97 +200,9 @@ export default function ProductCard9({
 
             </FlexBox>
 
-            {/* <Hidden up="sm">
-              <FlexBox
-                height="30px"
-                alignItems="center"
-                flexDirection="row-reverse"
-                justifyContent="space-between">
-                <Icon className="favorite-icon outlined-icon" variant="small">
-                  heart
-                </Icon>
-
-                <FlexBox alignItems="center" flexDirection="row-reverse">
-                  <Button
-                    size="none"
-                    padding="5px"
-                    color="primary"
-                    variant="outlined"
-                    borderColor="primary.light"
-                    onClick={handleCartAmountChange((cartItem?.qty || 0) + 1)}>
-                    <Icon variant="small">plus</Icon>
-                  </Button>
-
-                  {cartItem?.qty && (
-                    <Fragment>
-                      <H5 fontWeight="600" fontSize="15px" mx="0.75rem">
-                        {cartItem.qty}
-                      </H5>
-
-                      <Button
-                        size="none"
-                        padding="5px"
-                        color="primary"
-                        variant="outlined"
-                        borderColor="primary.light"
-                        onClick={handleCartAmountChange(cartItem.qty - 1)}>
-                        <Icon variant="small">minus</Icon>
-                      </Button>
-                    </Fragment>
-                  )}
-                </FlexBox>
-              </FlexBox>
-            </Hidden> */}
           </FlexBox>
         </Grid>
 
-        {/* <Hidden as={Grid} down="sm" item md={1} xs={12}>
-          <FlexBox
-            ml="auto"
-            p="1rem 0rem"
-            height="100%"
-            minWidth="30px"
-            alignItems="center"
-            flexDirection="column"
-            justifyContent="space-between">
-            <Icon className="favorite-icon outlined-icon" variant="small">
-              heart
-            </Icon>
-
-            <FlexBox
-              alignItems="center"
-              className="add-cart"
-              flexDirection={cartItem?.qty ? "column" : "column-reverse"}>
-              <Button
-                size="none"
-                padding="5px"
-                color="primary"
-                variant="outlined"
-                borderColor="primary.light"
-                onClick={handleCartAmountChange((cartItem?.qty || 0) + 1)}>
-                <Icon variant="small">plus</Icon>
-              </Button>
-
-              {cartItem?.qty && (
-                <Fragment>
-                  <H5 fontWeight="600" fontSize="15px" m="0.5rem">
-                    {cartItem.qty}
-                  </H5>
-
-                  <Button
-                    size="none"
-                    padding="5px"
-                    color="primary"
-                    variant="outlined"
-                    borderColor="primary.light"
-                    onClick={handleCartAmountChange(cartItem.qty - 1)}>
-                    <Icon variant="small">minus</Icon>
-                  </Button>
-                </Fragment>
-              )}
-            </FlexBox>
-          </FlexBox>
-        </Hidden> */}
       </Grid>
 
       <ProductQuickView
