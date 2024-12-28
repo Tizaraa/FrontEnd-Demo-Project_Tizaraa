@@ -290,14 +290,15 @@ const [errorMessage, setErrorMessage] = useState("");
 
   // Function to handle form submission
   const handleReviewSubmit = async () => {
+    // Check if comments have fewer than 10 characters
     if (comments.length < 10) {
       setErrorMessage("The comments field must be at least 10 characters.");
+      return; // Prevent further execution
     } else {
-      // Proceed with submission (call your API here)
-      setErrorMessage(""); // Clear any existing error messages
-      // Continue with your submit logic
+      setErrorMessage("");
     }
-
+  
+    // Validate other required fields
     if (!item?.order_item_id || !item?.product_id || rating === 0 || !comments) {
       console.error("Missing required fields.");
       return; // Return early if any required fields are missing
@@ -319,11 +320,9 @@ const [errorMessage, setErrorMessage] = useState("");
     const token = localStorage.getItem("token");
     if (!token) {
       console.error("No auth token found");
-      return;
+      return; // Exit if no token is found
     }
   
-    // Inspect FormData content
-
     try {
       const response = await fetch("https://frontend.tizaraa.com/api/order/product/review", {
         method: "POST",
@@ -337,24 +336,23 @@ const [errorMessage, setErrorMessage] = useState("");
         // Handle successful response
         const responseBody = await response.json(); // Parse as JSON
         console.log("Review submitted successfully:", responseBody);
-        toast.success(responseBody.message); // Show only the message
+        toast.success(responseBody.message); // Show success message
         setIsModalOpen(false); // Close modal
       } else {
         // Handle error response
         const responseBody = await response.json(); // Parse as JSON
         console.error("Error submitting review:", responseBody);
-        toast.error(responseBody.message); // Show only the message
+        toast.error(responseBody.message); // Show error message
       }
-      
     } catch (error) {
       console.error("Error submitting review", error);
     }
   
-    // Clear all fields
-    setRating(0); // Reset rating to 0
+    // Clear all fields after submission
+    setRating(0); // Reset rating
     setImage([]); // Clear uploaded images
     setComments(""); // Clear comments
-    setIsModalOpen(false); // Close the modal
+    setIsModalOpen(false); // Close modal
   };
   
   
@@ -555,7 +553,7 @@ const [errorMessage, setErrorMessage] = useState("");
           </Box>
           {errorMessage && (
     <Typography fontSize="12px" color="red" mt="0.5rem">
-      {errorMessage} {/* Display error message */}
+      {errorMessage} 
     </Typography>
   )}
 
