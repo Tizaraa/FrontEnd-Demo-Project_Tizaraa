@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useEffect, useState, CSSProperties } from 'react'
 import axios from 'axios'
 import ApiBaseUrl from 'api/ApiBaseUrl'
+import ProductRating from './product-rating'
 
 export default function ReviewCard({ productId }: { productId: string }) {
   const [isMobile, setIsMobile] = useState(false)
@@ -20,7 +21,8 @@ export default function ReviewCard({ productId }: { productId: string }) {
         const response = await axios.get(
           `${ApiBaseUrl.baseUrl}product/comment/${productId}`
         )
-        setComments(response.data)
+        // Assuming the API response structure provided
+        setComments(response.data.rating || [])
       } catch (err) {
         console.error('Error fetching comments:', err)
         setError("Failed to load reviews. Please try again.")
@@ -62,7 +64,7 @@ export default function ReviewCard({ productId }: { productId: string }) {
     )
   }
 
-  const styles : Record<string, CSSProperties> = {
+  const styles: Record<string, CSSProperties> = {
     container: { padding: isMobile ? '16px' : '20px', margin: '0 auto' },
     header: { display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' },
     avatar: {
@@ -128,14 +130,14 @@ export default function ReviewCard({ productId }: { productId: string }) {
     nextButton: { right: '10px' },
   }
 
-  if (loading)
-    return <div>Loading...</div>
+  if (loading) return <div>Loading...</div>
   if (error) return <p>{error}</p>
 
   return (
     <div style={styles.container}>
+        <ProductRating productId={productId}></ProductRating>
       {comments.map((comment, index) => (
-        <div key={index} style={{marginBottom: '20px' }}>
+        <div key={index} style={{ marginBottom: '20px' }}>
           <div style={styles.header}>
             <div style={styles.avatar}>{comment.user[0]}</div>
             <div style={styles.userInfo}>
@@ -155,23 +157,21 @@ export default function ReviewCard({ productId }: { productId: string }) {
           <div style={{ width: '200px', height: '200px', position: 'relative' }}>
             {comment.allimages.map((image: any, imgIndex: number) => (
               <Image
-    key={imgIndex}
-    src={`https://frontend.tizaraa.com/${image.image}`}
-    alt="Review Image"
-    layout="fill" // Use layout="fill" to make the image fill the container
-    objectFit="cover" // Ensures the image covers the container proportionally
-    style={{ cursor: 'pointer', borderRadius: '4px' }}
-    onClick={() =>
-      openModal(
-        comment.allimages.map((img: any) => `https://frontend.tizaraa.com/${img.image}`),
-        imgIndex
-      )
-    }
-  />
+                key={imgIndex}
+                src={`https://frontend.tizaraa.com/${image.image}`}
+                alt="Review Image"
+                layout="fill" // Use layout="fill" to make the image fill the container
+                objectFit="cover" // Ensures the image covers the container proportionally
+                style={{ cursor: 'pointer', borderRadius: '4px' }}
+                onClick={() =>
+                  openModal(
+                    comment.allimages.map((img: any) => `https://frontend.tizaraa.com/${img.image}`),
+                    imgIndex
+                  )
+                }
+              />
             ))}
           </div>
-        
-
         </div>
       ))}
 
