@@ -189,7 +189,7 @@ export default function ProductGridView({
       </Grid>
 
       {/* Show More button */}
-      <FlexBox justifyContent="center" alignItems="center" mt="32px">
+      {/* <FlexBox justifyContent="center" alignItems="center" mt="32px">
         <Button
           onClick={() => onPageChange(currentPage)} // Increment the page number for loading more products
           variant="contained"
@@ -200,7 +200,8 @@ export default function ProductGridView({
         >
           Show More
         </Button>
-      </FlexBox>
+      </FlexBox> */}
+      
     </div>
   );
 }

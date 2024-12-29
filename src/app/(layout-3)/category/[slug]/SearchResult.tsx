@@ -8,7 +8,7 @@ import Select from "@component/Select";
 import Icon from "@component/icon/Icon";
 import Grid from "@component/grid/Grid";
 import FlexBox from "@component/FlexBox";
-import { IconButton } from "@component/buttons";
+import { Button, IconButton } from "@component/buttons";
 import Sidenav from "@component/sidenav/Sidenav";
 import { H5, Paragraph } from "@component/Typography";
 
@@ -21,6 +21,7 @@ import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import OTCProducts from "@sections/market-1/OTCProducts";
 import OTCcategoryProductView from "./OTCcategoryProductView";
+import BeatLoader from "react-spinners/BeatLoader";
 
 
 const LoaderWrapper = styled.div`
@@ -248,12 +249,30 @@ export default function SearchResult({ sortOptions, slug }) {
                 productsPerPage={productsPerPage}
                 onPageChange={handleLoadMore}
               />
-              {loading && currentPage > 1 && (
+              {/* {loading && currentPage > 1 && (
                 <LoaderWrapper>
                 <Vortex />
               </LoaderWrapper>        
-              )}{" "}
-              {/* Optional: loading indicator for more products */}
+              )}{" "} */}
+       <FlexBox justifyContent="center" alignItems="center" mt="32px">
+  <Button
+    onClick={() => {
+      if (!loading) handleLoadMore(); // No argument passed
+    }}
+    variant="contained"
+    color="primary"
+    disabled={loading}
+    style={{
+      display:
+        currentPage * productsPerPage < totalProducts
+          ? "block"
+          : "none", // Show button only if there are more products to load
+    }}
+  >
+    {loading ?  <BeatLoader size={18} color="#fff" /> : "Show More"}
+  </Button>
+</FlexBox>
+
             </>
           ) : (
             <ProductListView

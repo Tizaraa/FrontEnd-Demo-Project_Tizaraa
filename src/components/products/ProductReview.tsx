@@ -10,6 +10,7 @@ import ProductComment from "./ProductComment";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import ReviewCard from "@component/product-cards/review-card";
 
 export default function ProductReview({ productId }: { productId: string }) {
   const [reviews, setReviews] = useState<any[]>([]);
@@ -23,27 +24,7 @@ export default function ProductReview({ productId }: { productId: string }) {
   };
 
   // Fetch reviews from the API
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `${ApiBaseUrl.baseUrl}order/product/review`,
-          {
-            params: { productId }, // Send the productId as a query parameter
-            headers, // Pass the headers with the token
-          }
-        );
-        setReviews(response.data); // Set the reviews from the response
-        setLoading(false);
-      } catch (err) {
-        setError("Failed to load reviews. Please try again later.");
-        setLoading(false);
-      }
-    };
 
-    fetchReviews();
-  }, [productId]);
 
   // Formik setup for the review form
   const initialValues = {
@@ -57,19 +38,10 @@ export default function ProductReview({ productId }: { productId: string }) {
     comment: yup.string().required("Review is required"),
   });
 
-  if (loading) return <div>Loading reviews...</div>;
-  if (error) return <div>{error}</div>;
 
   return (
     <div>
-      {/* Display reviews */}
-      {reviews.length > 0 ? (
-        reviews.map((review: any, index: number) => (
-          <ProductComment {...review} key={index} />
-        ))
-      ) : (
-        <div>No reviews yet.</div>
-      )}
+      <ReviewCard productId={productId} />
     </div>
   );
 }
