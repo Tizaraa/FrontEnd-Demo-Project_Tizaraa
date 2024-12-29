@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, CSSProperties } from 'react'
 import axios from 'axios'
 import ApiBaseUrl from 'api/ApiBaseUrl'
 
@@ -10,9 +10,11 @@ export default function ReviewCard({ productId }: { productId: string }) {
   const [comments, setComments] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [modalImages, setModalImages] = useState<string[]>([])
 
   useEffect(() => {
-    // Fetch comments data
     const fetchComments = async () => {
       try {
         const response = await axios.get(
@@ -38,18 +40,31 @@ export default function ReviewCard({ productId }: { productId: string }) {
     return () => window.removeEventListener('resize', handleResize)
   }, [productId])
 
-  const styles = {
-    container: {
-      padding: isMobile ? '16px' : '20px',
-      margin: '0 auto',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-    },
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-      marginBottom: '16px',
-    },
+  const openModal = (images: string[], index: number) => {
+    setModalImages(images)
+    setCurrentImageIndex(index)
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setCurrentImageIndex(0)
+    setModalImages([])
+  }
+
+  const showNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % modalImages.length)
+  }
+
+  const showPrevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? modalImages.length - 1 : prevIndex - 1
+    )
+  }
+
+  const styles : Record<string, CSSProperties> = {
+    container: { padding: isMobile ? '16px' : '20px', margin: '0 auto' },
+    header: { display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' },
     avatar: {
       width: '48px',
       height: '48px',
@@ -59,115 +74,134 @@ export default function ReviewCard({ productId }: { productId: string }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontSize: '20px',
-      fontWeight: '600',
     },
-    userInfo: {
+    userInfo: { display: 'flex', flexDirection: 'column' as const },
+    userName: { fontSize: '16px', fontWeight: '500' },
+    date: { color: '#6B7280', fontSize: '14px' },
+    rating: { display: 'flex', gap: '4px', marginBottom: '16px' },
+    star: { color: '#FF9900', fontSize: '24px' },
+    reviewText: { fontSize: '16px', lineHeight: '1.5', color: '#1F2937' },
+    productImage: { borderRadius: '4px', height: '300px', cursor: 'pointer' },
+    modalOverlay: {
+      position: 'fixed' as const,
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
       display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '4px',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
     },
-    userName: {
-      fontSize: '16px',
-      fontWeight: '500',
+    modalContent: {
+      position: 'relative' as const,
+      width: '100%',
+      objectFit: 'cover',
+      maxWidth: '700px',
+      textAlign: 'center',
     },
-    date: {
-      color: '#6B7280',
-      fontSize: '14px',
+    modalImage: { width: '100%', borderRadius: '8px' },
+    closeButton: {
+      position: 'absolute' as const,
+      top: '10px',
+      right: '10px',
+      background: 'white',
+      border: 'none',
+      borderRadius: '50%',
+      width: '30px',
+      height: '30px',
+      cursor: 'pointer',
     },
-    rating: {
-      display: 'flex',
-      gap: '4px',
-      marginBottom: '16px',
+    navButton: {
+      position: 'absolute' as const,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      background: 'white',
+      border: 'none',
+      borderRadius: '50%',
+      width: '40px',
+      height: '40px',
+      cursor: 'pointer',
     },
-    star: {
-      color: '#FF9900',
-      fontSize: '24px',
-    },
-    reviewText: {
-      fontSize: '16px',
-      lineHeight: '1.5',
-      color: '#1F2937',
-      marginBottom: '16px',
-    },
-    productSection: {
-      display: 'flex',
-      gap: '12px',
-    },
-    productImage: {
-      borderRadius: '4px',
-    },
-
-
-    spinnerContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100px',
-      },
-      spinner: {
-        width: '50px',
-        height: '50px',
-        border: '5px solid rgba(0, 0, 0, 0.1)',
-        borderTop: '5px solid #4C6EF5',
-        borderRadius: '50%',
-        animation: 'spin 1s linear infinite',
-      },
-      '@keyframes spin': {
-        from: {
-          transform: 'rotate(0deg)',
-        },
-        to: {
-          transform: 'rotate(360deg)',
-        },
-      },
+    prevButton: { left: '10px' },
+    nextButton: { right: '10px' },
   }
 
   if (loading)
-    return (
-      <div style={styles.spinnerContainer}>
-        <div style={styles.spinner}></div>
-      </div>
-    )
+    return <div>Loading...</div>
   if (error) return <p>{error}</p>
 
   return (
     <div style={styles.container}>
-      {comments.length > 0 ? (
-        comments.map((comment, index) => (
-          <div key={index}>
-            <div style={styles.header}>
-              <div style={styles.avatar}>{comment.user[0]}</div>
-              <div style={styles.userInfo}>
-                <div style={styles.userName}>{comment.user}</div>
-                <div style={styles.date}>{comment.comment_date}</div>
-              </div>
-            </div>
-
-            <div style={styles.rating}>
-              {Array.from({ length: Number(comment.rating) }).map((_, i) => (
-                <span key={i} style={styles.star}>★</span>
-              ))}
-            </div>
-
-            <p style={styles.reviewText}>{comment.user_comment}</p>
-
-            <div style={styles.productSection}>
-              {comment.allimages.map((image, imgIndex) => (
-                <Image
-                  key={imgIndex}
-                  src={`https://frontend.tizaraa.com/${image.image}`}
-                  alt="Review Image"
-                  width={80}
-                  height={80}
-                  style={styles.productImage}
-                />
-              ))}
+      {comments.map((comment, index) => (
+        <div key={index} style={{marginBottom: '20px' }}>
+          <div style={styles.header}>
+            <div style={styles.avatar}>{comment.user[0]}</div>
+            <div style={styles.userInfo}>
+              <div style={styles.userName}>{comment.user}</div>
+              <div style={styles.date}>{comment.comment_date}</div>
             </div>
           </div>
-        ))
-      ) : (
-        <p>No reviews available for this product.</p>
+
+          <div style={styles.rating}>
+            {Array.from({ length: Number(comment.rating) }).map((_, i) => (
+              <span key={i} style={styles.star}>★</span>
+            ))}
+          </div>
+
+          <p style={styles.reviewText}>{comment.user_comment}</p>
+
+          <div style={{ width: '200px', height: '200px', position: 'relative' }}>
+            {comment.allimages.map((image: any, imgIndex: number) => (
+              <Image
+    key={imgIndex}
+    src={`https://frontend.tizaraa.com/${image.image}`}
+    alt="Review Image"
+    layout="fill" // Use layout="fill" to make the image fill the container
+    objectFit="cover" // Ensures the image covers the container proportionally
+    style={{ cursor: 'pointer', borderRadius: '4px' }}
+    onClick={() =>
+      openModal(
+        comment.allimages.map((img: any) => `https://frontend.tizaraa.com/${img.image}`),
+        imgIndex
+      )
+    }
+  />
+            ))}
+          </div>
+        
+
+        </div>
+      ))}
+
+      {isModalOpen && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalContent}>
+            <button style={styles.closeButton} onClick={closeModal}>
+              ✕
+            </button>
+            <Image
+              src={modalImages[currentImageIndex]}
+              alt="Preview"
+              width={500}
+              height={500}
+              style={styles.modalImage}
+            />
+            <button
+              style={{ ...styles.navButton, ...styles.prevButton }}
+              onClick={showPrevImage}
+            >
+              ◀
+            </button>
+            <button
+              style={{ ...styles.navButton, ...styles.nextButton }}
+              onClick={showNextImage}
+            >
+              ▶
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )
