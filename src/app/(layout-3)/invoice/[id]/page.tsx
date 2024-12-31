@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function InvoicePage({ params }) {
   const { id } = params;
@@ -19,7 +20,7 @@ export default function InvoicePage({ params }) {
       }
 
       try {
-        const response = await axios.get(`https://frontend.tizaraa.com/api/get-invoice?id=${id}`, {
+        const response = await axios.get(`${ApiBaseUrl.baseUrl}get-invoice?id=${id}`, {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },

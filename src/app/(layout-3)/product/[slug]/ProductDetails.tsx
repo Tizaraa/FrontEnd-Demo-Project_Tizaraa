@@ -37,7 +37,7 @@ async function fetchProductData(slug: string) {
 async function fetchQRCode(slug: string) {
   try {
     const response = await axios.get(
-      `https://frontend.tizaraa.com/api/product/qr-code/${slug}`,
+      `${ApiBaseUrl.baseUrl}product/qr-code/${slug}`,
       { headers: { Accept: "application/xml" }, responseType: "text" } // Ensure SVG is returned as text
     );
     // console.log("nazim qr", response.data);

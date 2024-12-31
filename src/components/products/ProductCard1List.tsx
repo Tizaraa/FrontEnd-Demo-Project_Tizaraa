@@ -137,6 +137,7 @@ import { SemiSpan } from "@component/Typography";
 import Product from "@models/product.model";
 import { Button } from "@component/buttons";
 import { log } from "util";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 type Props = {
   products: Product[];
@@ -175,8 +176,11 @@ export default function ProductGridView({
                 productStock={item?.product_stock || 0}
                 title={item?.title || "No Title"}
                 off={item?.discount || 0}
-                images={item?.images || []}
-                imgUrl={item?.thumbnail || ""}
+                // images={item?.images || []}
+                images={item?.images?.map(image => `${ApiBaseUrl.ImgUrl}${image}`) || []}
+                // imgUrl={item?.thumbnail || ""}
+                imgUrl={item?.thumbnail ? `${ApiBaseUrl.ImgUrl}${item.thumbnail}` : ""}
+
                 rating={item?.rating || 0}
               />
             </Grid>

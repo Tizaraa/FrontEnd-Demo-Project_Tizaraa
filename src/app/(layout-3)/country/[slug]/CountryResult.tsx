@@ -88,7 +88,7 @@ export default function CountryResult({ sortOptions, slug }) {
   
     try {
       const response = await fetch(
-        `${ApiBaseUrl.baseUrl}country/product/view/${slug}`,
+        `${ApiBaseUrl.baseUrl1}country/product/view/${slug}`,
         {
           method: "POST",
           headers: {

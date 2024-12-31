@@ -253,6 +253,7 @@ import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import { Chip } from "@component/Chip";
 import BeatLoader from "react-spinners/BeatLoader";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -274,7 +275,7 @@ const JustForYouProducts = () => {
     setLoadingMore(page > 1);
     try {
       const response = await axios.get(
-        `https://seller.tizaraa.com/api/frontend/latest/justoforyou/product/view/'?page=${page}`
+        `https://seller.tizaraa.shop/api/frontend/latest/justoforyou/product/view/'?page=${page}`
       );
       const data = response.data;
 
@@ -325,7 +326,8 @@ const JustForYouProducts = () => {
                        padding: "0 0.5rem", // Added padding to prevent content touching the edges
                      }}>
                       <img
-                        src={item.product_thumbnail}
+                        // src={item.product_thumbnail}
+                        src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
                         alt={item.product_name}
                         style={{
                           width: "100%",

@@ -409,7 +409,7 @@ export default function PaymentForm() {
 
       try {
         const response = await axios.post(
-          "https://frontend.tizaraa.com/api/pay-via-ajax",
+          `${ApiBaseUrl.baseUrl}pay-via-ajax`,
           {
             user_id: userinfo?.id,
             seller_id: cartData[0]?.sellerId,

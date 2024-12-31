@@ -6,6 +6,7 @@ import { H4 } from "@component/Typography";
 import Image from "@component/Image";
 import CategorySectionCreator from "@component/CategorySectionCreator";
 import Link from "next/link";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 type Product = {
   id: number;
@@ -20,7 +21,7 @@ export default function CountryList() {
 
   // Fetch data from the API
   useEffect(() => {
-    fetch("https://frontend.tizaraa.com/api/product/all/country")
+    fetch(`${ApiBaseUrl.baseUrl}product/all/country`)
       .then((response) => response.json())
       .then((data) => {
         setServiceList(data.country); // Assuming the API response contains a 'country' array

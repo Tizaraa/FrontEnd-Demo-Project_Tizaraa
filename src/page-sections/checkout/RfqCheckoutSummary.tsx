@@ -9,6 +9,7 @@ import { useAppContext } from "@context/app-context";
 import ProductCard20 from "@component/product-cards/ProductCard20";
 import { currency } from "@utils/utils";
 import authService from "services/authService";
+import ApiBaseUrl from "api/ApiBaseUrl";
 //import { useSearchParams } from "next/navigation";
 
 interface RfqCheckoutSummaryProps {
@@ -41,7 +42,7 @@ const RfqCheckoutSummary: React.FC<RfqCheckoutSummaryProps> = ({ responseId }) =
       try {
         console.log("Fetching data for responseId:", responseId);
         const response = await fetch(
-          `https://frontend.tizaraa.com/api/rfq-seller-reviews/${responseId}`,
+          `${ApiBaseUrl.baseUrl}rfq-seller-reviews/${responseId}`,
           {
             headers: {
               Authorization: `Bearer ${authToken}`,

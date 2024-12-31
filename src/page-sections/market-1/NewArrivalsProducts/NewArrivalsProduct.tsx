@@ -91,7 +91,8 @@ export default function NewArrivalsProduct() {
       }}
     >
       <img
-        src={item.product_thumbnail}
+        // src={item.product_thumbnail}
+        src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
         alt={item.product_name}
         style={{
           width: "100%",

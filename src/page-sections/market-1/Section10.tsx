@@ -79,7 +79,8 @@ export default function Section10() {
                   margin="0 auto"
                 >
                   <img 
-                    src={item.categorie_image} 
+                    // src={item.categorie_image} 
+                    src={`${ApiBaseUrl.ImgUrl}${item.categorie_image}`}
                     alt={item.categorie_name} 
                     style={{ width: "100%", height: "100%", objectFit: "contain" }} // Image scaled up, centered within the box
                   />

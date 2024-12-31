@@ -315,7 +315,7 @@ export default function DashboardNavigation() {
 
         setOrderCount(totalorder); // Set the total order count
         setAddressCount(customeraddress); // Set the customer address count
-        const rfqResponse = await axios.get("https://frontend.tizaraa.com/api/rfqs", {
+        const rfqResponse = await axios.get(`${ApiBaseUrl.baseUrl}api/rfqs`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass token in the Authorization header
           },
@@ -371,8 +371,8 @@ export default function DashboardNavigation() {
       list: [
         { href: "/orders", title: "Orders", iconName: "bag", count: orderCount }, // Use orderCount here
         { href: "/rfq", title: "RFQ", iconName: "request", count: rfqCount },
-        { href: "/wish-list", title: "Wishlist", iconName: "heart", count: 19 },
-        { href: "/support-tickets", title: "Support Tickets", iconName: "customer-service", count: 1 },
+        // { href: "/wish-list", title: "Wishlist", iconName: "heart", count: 19 },
+        // { href: "/support-tickets", title: "Support Tickets", iconName: "customer-service", count: 1 },
       ],
     },
     {
@@ -380,7 +380,7 @@ export default function DashboardNavigation() {
       list: [
         { href: "/profile", title: "Profile Info", iconName: "user", count: 3 },
         { href: "/address", title: "Addresses", iconName: "pin", count: addressCount }, // Use addressCount here
-        { href: "/payment-methods", title: "Payment Methods", iconName: "credit-card", count: 4 },
+        // { href: "/payment-methods", title: "Payment Methods", iconName: "credit-card", count: 4 },
       ],
     },
   ];

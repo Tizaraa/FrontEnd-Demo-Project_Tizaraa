@@ -634,6 +634,7 @@ import { useEffect, useState } from 'react'
 import authService from 'services/authService'
 import RfqComment from './rfq-comment'
 import { useRouter } from 'next/navigation'
+import ApiBaseUrl from 'api/ApiBaseUrl'
 
 export default function Component({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -649,7 +650,7 @@ export default function Component({ params }: { params: { id: string } }) {
   const [selectedResponseId, setSelectedResponseId] = useState<string | null>(null)
 
   const token = authService.getToken()
-  const rfqVendorResponseApiUrl = `https://frontend.tizaraa.com/api/rfq-vendor-responses/${params.id}`
+  const rfqVendorResponseApiUrl = `${ApiBaseUrl.baseUrl}rfq-vendor-responses/${params.id}`
 
   useEffect(() => {
     const fetchProductDetails = async () => {

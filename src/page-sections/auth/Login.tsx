@@ -112,7 +112,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     try {
       setLoading(false); // Ensure "Confirm" button doesn't show loading
       setIsResetOtpDisabled(true); // Disable the "Reset OTP" button during the process
-      const response = await axios.post("https://frontend.tizaraa.com/api/forgot-password", {
+      const response = await axios.post(`${ApiBaseUrl.baseUrl}forgot-password`, {
         email_or_phone: emailOrPhone,
       });
       toast.success(response.data.message); // Show API success message
@@ -132,7 +132,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     }
     setLoading(true);
     try {
-      const response = await axios.post("https://frontend.tizaraa.com/api/forgot-password", {
+      const response = await axios.post(`${ApiBaseUrl.baseUrl}forgot-password`, {
         email_or_phone: emailOrPhone,
       });
 
@@ -160,7 +160,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     }
     setLoading(true);
     try {
-      const response = await axios.post("https://frontend.tizaraa.com/api/verify-otp", {
+      const response = await axios.post(`${ApiBaseUrl.baseUrl}verify-otp`, {
         email_or_phone: emailOrPhone,
         otp: otp,
       });
@@ -194,7 +194,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     }
     setLoading(true);
     try {
-      const response = await axios.post("https://frontend.tizaraa.com/api/reset-password", {
+      const response = await axios.post(`${ApiBaseUrl.baseUrl}reset-password`, {
         email_or_phone: emailOrPhone,
         password: newPassword,
         confirm_password: confirmPassword,

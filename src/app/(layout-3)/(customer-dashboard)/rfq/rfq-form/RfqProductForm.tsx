@@ -157,6 +157,7 @@ import { useRouter } from "next/navigation";
 import { debounce } from "lodash";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 // Define interfaces for API responses
@@ -309,7 +310,7 @@ export default function RfqProductForm() {
     if (value && !selectedProduct) {
       try {
         const response = await axios.get<{ data: ProductSuggestion[] }>(
-          `https://frontend.tizaraa.com/api/product-suggestions?search=${value}`,
+          `${ApiBaseUrl.baseUrl}product-suggestions?search=${value}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -343,7 +344,7 @@ export default function RfqProductForm() {
       const token = authService.getToken();
       try {
         const response = await axios.get<{ data: MeasurementUnit[] }>(
-          `https://frontend.tizaraa.com/api/measurements`,
+          `${ApiBaseUrl.baseUrl}measurements`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -436,7 +437,7 @@ export default function RfqProductForm() {
 
     try {
       await axios.post(
-        "https://frontend.tizaraa.com/api/create-rfq",
+        `${ApiBaseUrl.baseUrl}create-rfq`,
         formData,
         {
           headers: {

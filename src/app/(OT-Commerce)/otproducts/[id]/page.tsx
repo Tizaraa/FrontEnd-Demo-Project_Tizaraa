@@ -313,6 +313,7 @@ import { currency } from "@utils/utils";
 import { Chip } from "@component/Chip";
 
 import styles from "../../../../components/products/RelatedProductsStyle.module.css";
+import ApiBaseUrl from 'api/ApiBaseUrl';
 
 
 
@@ -510,7 +511,7 @@ useEffect(() => {
 
     try {
       const response = await fetch(
-        `https://frontend.tizaraa.com/api/otpi/get-item-full-info/${id}`,
+        `${ApiBaseUrl.baseUrl}otpi/get-item-full-info/${id}`,
         { method: "GET" }
       );
 

@@ -61,6 +61,7 @@ import Image from "@component/Image";
 import CategorySectionCreator from "@component/CategorySectionCreator";
 import { marginTop } from "styled-system";
 import Link from "next/link";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 type Service = {
   id: number;
@@ -74,7 +75,7 @@ export default function Section12() {
 
   // Fetch data from the API
   useEffect(() => {
-    fetch("https://frontend.tizaraa.com/api/product/country/flag")
+    fetch(`${ApiBaseUrl.baseUrl}product/country/flag`)
       .then((response) => response.json())
       .then((data) => {
         

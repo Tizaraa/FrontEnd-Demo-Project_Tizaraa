@@ -138,7 +138,7 @@ export default function OrderDetails({ params }: IDParams) {
 
     try {
       const response = await axios.get(
-        `https://frontend.tizaraa.com/api/get-invoice?id=${params.id}`,
+        `${ApiBaseUrl.baseUrl}get-invoice?id=${params.id}`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -184,7 +184,7 @@ export default function OrderDetails({ params }: IDParams) {
       
 
       const paymentResponse = await axios.post(
-        `https://frontend.tizaraa.com/api/pay-via-ajax`,
+        `${ApiBaseUrl.baseUrl}pay-via-ajax`,
         {
           user_id: orderData.user_id,
           seller_id: orderData.seller_id,

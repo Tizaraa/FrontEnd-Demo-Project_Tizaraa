@@ -188,6 +188,7 @@ import useWindowSize from "@hook/useWindowSize";
 
 import { MobileCategoryNavStyle } from "./styles";
 import MobileCategoryImageBox from "./MobileCategoryImageBox";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 // ==============================================================
 // Define the structure of Suggestion and Category
@@ -250,7 +251,7 @@ export default function MobileCategoryNav() {
         }
 
         // Fetch from API if no cached data
-        const response = await fetch("https://frontend.tizaraa.com/api/categories");
+        const response = await fetch(`${ApiBaseUrl.baseUrl}categories`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

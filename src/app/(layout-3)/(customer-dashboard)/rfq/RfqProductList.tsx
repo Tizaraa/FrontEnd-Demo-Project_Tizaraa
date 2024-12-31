@@ -203,9 +203,10 @@ import {
 import { useRouter } from "next/navigation";
 import authService from "services/authService";
 import Link from "next/link";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 // API endpoint and token
-const rfqApiUrl = "https://frontend.tizaraa.com/api/rfqs";
+const rfqApiUrl = `${ApiBaseUrl.baseUrl}rfqs`;
 
 export default function RfqProductList() {
   const [rfqs, setRfqs] = useState([]);

@@ -402,6 +402,7 @@ import { Button } from "@component/buttons";
 import "react-quill/dist/quill.snow.css";
 import authService from "services/authService";
 import { format } from "date-fns";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 // Dynamic import of react-quill for rich text editing
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -426,7 +427,7 @@ export default function RfqComment({
   const fetchComments = async () => {
     try {
       const response = await fetch(
-        `https://frontend.tizaraa.com/api/rfq-seller-reviews/${rfqId}/${responseId}`,
+        `${ApiBaseUrl.baseUrl}rfq-seller-reviews/${rfqId}/${responseId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -448,7 +449,7 @@ export default function RfqComment({
       formData.append("message_content", comment);
       if (image) formData.append("image", image);
       const response = await fetch(
-        `https://frontend.tizaraa.com/api/rfq-seller-reviews`,
+        `${ApiBaseUrl.baseUrl}rfq-seller-reviews`,
         {
           method: "POST",
           headers: {

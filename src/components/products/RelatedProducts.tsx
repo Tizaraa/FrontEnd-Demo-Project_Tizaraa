@@ -313,6 +313,7 @@ import { Chip } from "@component/Chip";
 import { Vortex } from 'react-loader-spinner';
 import styled from "@emotion/styled";
 import styles from "./RelatedProductsStyle.module.css";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 // Define styled component for loader wrapper
 const LoaderWrapper = styled.div`
@@ -360,7 +361,8 @@ const RelatedProducts = ({ relatedProducts }: RelatedProductsProps) => {
                 <Link href={`/product/${item.product_slug}`}>
                   <Box position="relative">
                     <img 
-                      src={item.product_thumbnail} 
+                      // src={item.product_thumbnail} 
+                      src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
                       alt={item.product_name} 
                       style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
                       className={styles.imgPart}

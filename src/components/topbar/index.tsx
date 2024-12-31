@@ -106,7 +106,7 @@ export default function Topbar() {
 
 const languageList = [
   { title: "Become A Seller", icon: <FaUser />, url: "https://seller.tizaraa.com", },
-  { title: "Find My Showroom / Shop", icon: <FaLocationPin />, url: "/shops" },
+  { title: "Find Seller", icon: <FaLocationPin />, url: "/shops" },
 ];
 const currencyList = [
   { title: "USD", imgUrl: "/assets/images/flags/usa.png" },

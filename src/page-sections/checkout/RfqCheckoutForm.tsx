@@ -14,6 +14,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 interface RfqCheckoutFormProps {
   
@@ -120,7 +121,7 @@ const RfqCheckoutForm: FC<RfqCheckoutFormProps> = ({  responseId }) => {
     
 
 try {
-  const response = await axios.post("https://frontend.tizaraa.com/api/rfq-order", {
+  const response = await axios.post(`${ApiBaseUrl.baseUrl}rfq-order`, {
     vendor_response_id: responseId,
     name: parsedAddress.name,
     phone: parsedAddress.phone,

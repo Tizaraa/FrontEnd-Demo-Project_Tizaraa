@@ -101,7 +101,8 @@ export default function StationeryProducts() {
    padding: "0 0.5rem", // Added padding to prevent content touching the edges
  }}>
               <img 
-                src={item.product_thumbnail} 
+                // src={item.product_thumbnail} 
+                src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
                 alt={item.product_name} 
                 style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
 
