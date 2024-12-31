@@ -144,13 +144,13 @@ export default function CheckoutSummary({ deliveryCharge }) {
       </FlexBox>
 
       <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-        <Typography color="text.hint">Discount:</Typography>
+        {/* <Typography color="text.hint">Discount:</Typography>
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
             -
           </Typography>
-        </FlexBox>
+        </FlexBox> */}
       </FlexBox>
 
       <Divider mb="1rem" />
