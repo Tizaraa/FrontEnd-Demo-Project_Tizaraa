@@ -1,20 +1,14 @@
-
 "use client";
 import { Fragment, useEffect, useState, useRef } from "react";
 import Grid from "@component/grid/Grid";
 import axios from "axios";
 import FlexBox from "@component/FlexBox";
 import ShopCard1 from "@sections/shop/ShopCard1";
-import { H2, SemiSpan, Span } from "@component/Typography";
+import { H2 } from "@component/Typography";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
-import ApiBaseUrl from "api/ApiBaseUrl";
-import SearchBoxStyle from "@component/search-box/styled";
-import Icon from "@component/icon/Icon";
-import TextField from "@component/text-field";
 import Box from "@component/Box";
-import { debounce } from "lodash";
-import Card from "@component/Card";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -31,82 +25,46 @@ const NoShopMessage = styled.div`
   color: gray;
 `;
 
+const SelectWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+`;
+
+const SelectField = styled.select`
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
 export default function ShopList() {
   const [shopList, setShopList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalShops, setTotalShops] = useState(0);
-  const [lastPage, setLastPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
   const [noShopsFound, setNoShopsFound] = useState(false);
+  const [provinces, setProvinces] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [areas, setAreas] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedArea, setSelectedArea] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [isSearching, setIsSearching] = useState(false);
+
   const observerRef = useRef(null);
 
-  const [searchValue, setSearchValue] = useState("");
-
-  // Function to fetch shops data
-  const fetchShops = async (page: number, searchQuery = "") => {
-    setIsLoading(true);
-    try {
-      let response;
-      if (searchQuery) {
-        // If there's a search query, use POST method to fetch search results
-        response = await axios.post(
-          `${ApiBaseUrl.baseUrl}all/seller/profile?search?page=${page}`,
-          { search: searchQuery, page }
-        );
-      } 
-      else {
-        // Else fetch all shops
-        response = await axios.post(
-          `${ApiBaseUrl.baseUrl}all/seller/profile?page=${page}`
-        );
-      }
-
-      const data = response.data;
-
-      if (data.data.length === 0) {
-        setNoShopsFound(true); // Set to true if no shops found
-      } else {
-        setNoShopsFound(false); // Set to false if shops found
-      }
-
-      if (page === 1) {
-        setShopList(data.data); // If first page, replace the shop list
-      } else {
-        setShopList((prevShops) => [...prevShops, ...data.data]); // Append for more pages
-      }
-
-      setTotalShops(data.total);
-      setLastPage(data.last_page);
-    } catch (error) {
-      console.error("Error fetching shop list", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Debounced search function to reduce API calls
-  const searchShops = debounce((value: string) => {
-    if (!value) {
-      setShopList([]); // Clear the current list before showing all shops again
-      setIsSearching(false);
-      fetchShops(1); // Fetch all shops if search is cleared
-    } else {
-      setIsSearching(true);
-      fetchShops(1, value); // Fetch shops based on search value
-    }
-  }, 300);
-
-  // Handle search input change
-  const handleSearch = (e: any) => {
-    const value = e.target?.value;
-    setSearchValue(value);
-    searchShops(value); // Trigger debounced search
-  };
-
-  // Infinite scrolling logic
   useEffect(() => {
-    if (isLoading || currentPage >= lastPage || isSearching) return;
+    fetchProvinces();
+    fetchAllShops();
+  }, []);
+
+  useEffect(() => {
+    if (isLoading || currentPage >= lastPage) return;
 
     const handleScroll = (entries: any) => {
       const target = entries[0];
@@ -126,17 +84,170 @@ export default function ShopList() {
     return () => {
       if (observerRef.current) observer.unobserve(observerRef.current);
     };
-  }, [isLoading, currentPage, lastPage, isSearching]);
+  }, [isLoading, currentPage, lastPage]);
 
   useEffect(() => {
-    if (currentPage > 1 && !isSearching) {
-      fetchShops(currentPage); // Load more shops when currentPage changes, only if not searching
+    if (currentPage > 1) {
+      loadMoreShops(); // Load more shops when currentPage changes, only if not searching
     }
-  }, [currentPage, isSearching]);
+  }, [currentPage]);
 
-  useEffect(() => {
-    fetchShops(1); // Initial fetch when component loads
-  }, []);
+  const fetchProvinces = async () => {
+    try {
+      const response = await axios.get("https://frontend.tizaraa.com/api/all/address");
+      setProvinces(response.data);
+    } catch (error) {
+      console.error("Error fetching provinces", error);
+    }
+  };
+
+  const handleProvinceChange = async (e) => {
+    const provinceId = e.target.value;
+    setSelectedProvince(provinceId);
+    setCities([]); // Clear cities on province change
+    setAreas([]); // Clear areas on province change
+    setSelectedCity(""); // Reset selected city
+    setSelectedArea(""); // Reset selected area
+    setCurrentPage(1);
+    setLastPage(1);
+
+    if (provinceId) {
+      const province = provinces.find((p) => p.id === parseInt(provinceId));
+      if (province && province.city) {
+        setCities(province.city);
+      }
+      await fetchShopsByProvince(provinceId);
+    } else {
+      fetchAllShops();
+    }
+  };
+
+  const handleCityChange = async (e) => {
+    const cityId = e.target.value;
+    setSelectedCity(cityId);
+    setAreas([]); // Clear areas on city change
+    setSelectedArea(""); // Reset selected area
+    setCurrentPage(1);
+    setLastPage(1);
+
+    if (cityId) {
+      const city = cities.find((c) => c.id === parseInt(cityId));
+      if (city && city.areas) {
+        setAreas(city.areas);
+      }
+      await fetchShopsByCity(cityId);
+    } else {
+      fetchAllShops();
+    }
+  };
+
+  const handleAreaChange = async (e) => {
+    const areaId = e.target.value;
+    setSelectedArea(areaId);
+    setCurrentPage(1);
+    setLastPage(1);
+
+    if (areaId) {
+      await fetchShopsByArea(areaId);
+    } else {
+      fetchAllShops();
+    }
+  };
+
+  const fetchAllShops = async () => {
+    setIsLoading(true);
+    setIsSearching(false);
+    try {
+      const response = await axios.post(`${ApiBaseUrl.baseUrl}all/seller/profile?page=${currentPage}`, {
+        page: currentPage,
+      });
+      setShopList((prevShopList) => [
+        ...prevShopList,
+        ...response.data.data,
+      ]);
+      setNoShopsFound(response.data.data.length === 0);
+      setLastPage(response.data.last_page);
+    } catch (error) {
+      console.error("Error fetching shops", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchShopsByProvince = async (provinceId) => {
+    setIsLoading(true);
+    setIsSearching(true);
+    try {
+      const response = await axios.post(`${ApiBaseUrl.baseUrl}all/seller/profile?page=${currentPage}`, {
+        province_id: provinceId,
+        page: currentPage,
+      });
+      setShopList(response.data.data);
+      setNoShopsFound(response.data.data.length === 0);
+      setLastPage(response.data.last_page);
+    } catch (error) {
+      console.error("Error fetching shops by province", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchShopsByCity = async (cityId) => {
+    setIsLoading(true);
+    setIsSearching(true);
+    try {
+      const response = await axios.post(`${ApiBaseUrl.baseUrl}all/seller/profile?page=${currentPage}`, {
+        city_id: cityId,
+        page: currentPage,
+      });
+      setShopList(response.data.data);
+      setNoShopsFound(response.data.data.length === 0);
+      setLastPage(response.data.last_page);
+    } catch (error) {
+      console.error("Error fetching shops by city", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchShopsByArea = async (areaId) => {
+    setIsLoading(true);
+    setIsSearching(true);
+    try {
+      const response = await axios.post(`${ApiBaseUrl.baseUrl}all/seller/profile?page=${currentPage}`, {
+        area_id: areaId,
+        page: currentPage,
+      });
+      setShopList(response.data.data);
+      setNoShopsFound(response.data.data.length === 0);
+      setLastPage(response.data.last_page);
+    } catch (error) {
+      console.error("Error fetching shops by area", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadMoreShops = async () => {
+    if (isLoading || currentPage >= lastPage) return;
+
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${ApiBaseUrl.baseUrl}all/seller/profile?page=${currentPage}`, {
+        page: currentPage,
+      });
+      setShopList((prevShopList) => [
+        ...prevShopList,
+        ...response.data.data,
+      ]);
+      setNoShopsFound(response.data.data.length === 0);
+      setLastPage(response.data.last_page);
+    } catch (error) {
+      console.error("Error fetching more shops", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Fragment>
@@ -150,29 +261,41 @@ export default function ShopList() {
           marginBottom: "20px",
         }}
       >
-        <H2 mb="10px">All Shops</H2>
+        <H2 mb="20px">All Shops</H2>
         <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
-          <SearchBoxStyle>
-            <Icon className="search-icon" size="18px">
-              search
-            </Icon>
-            <TextField
-              fullwidth
-              value={searchValue}
-              onChange={handleSearch}
-              className="search-field"
-              placeholder="Search for a shop..."
-            />
-          </SearchBoxStyle>
+           <SelectWrapper>
+             <SelectField onChange={handleProvinceChange}>
+               <option value="">Select Province</option>
+               {provinces.map((province) => (
+                <option key={province.id} value={province.id}>
+                  {province.province}
+                </option>
+              ))}
+            </SelectField>
+            <SelectField onChange={handleCityChange}>
+              <option value="">Select City</option>
+              {cities.map((city) => (
+                <option key={city.id} value={city.id}>
+                  {city.city}
+                </option>
+              ))}
+            </SelectField>
+            <SelectField onChange={handleAreaChange}>
+              <option value="">Select Area</option>
+              {areas.map((area) => (
+                <option key={area.id} value={area.id}>
+                  {area.area}
+                </option>
+              ))}
+            </SelectField>
+          </SelectWrapper>
         </Box>
       </div>
 
-      {noShopsFound && searchValue ? (
-        <NoShopMessage>No shop found with this name</NoShopMessage>
-      ) : (
-        <Grid container spacing={6}>
+      {shopList.length > 0 ? (
+        <Grid container spacing={3}>
           {shopList.map((item) => (
-            <Grid item lg={4} sm={6} xs={12} key={item.id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
               <ShopCard1
                 name={item.name}
                 phone={item.phone}
@@ -185,6 +308,8 @@ export default function ShopList() {
             </Grid>
           ))}
         </Grid>
+      ) : (
+        !isLoading && <NoShopMessage>No shop found</NoShopMessage>
       )}
 
       {isLoading && (
@@ -193,10 +318,7 @@ export default function ShopList() {
         </LoaderWrapper>
       )}
 
-      <div ref={observerRef} style={{ height: "1px", width: "100%" }}></div>
+      <div ref={observerRef}></div>
     </Fragment>
   );
 }
-
-
-
