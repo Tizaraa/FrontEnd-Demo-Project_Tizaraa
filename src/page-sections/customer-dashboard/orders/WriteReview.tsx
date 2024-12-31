@@ -118,7 +118,10 @@ export default function WriteReview({
     <>
       <FlexBox px="1rem" py="0.5rem" flexWrap="wrap" alignItems="center" key={item.product_name}>
         <FlexBox flex="2 2 260px" m="6px" alignItems="center">
-          <Avatar src={item.product_image} alt={item.product_image} size={64} />
+          <Avatar 
+          // src={item.product_image} 
+          src={`${ApiBaseUrl.ImgUrl}${item.product_image}`}
+          alt={item.product_image} size={64} />
           <Box ml="20px">
             <H6 my="0px">{item.product_name}</H6>
             <Typography fontSize="14px" color="text.muted">

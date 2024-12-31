@@ -640,6 +640,7 @@ import toast, { Toaster } from "react-hot-toast";
 import CheckBox from "@component/CheckBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BeatLoader from "react-spinners/BeatLoader";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 type MiniCartProps = { toggleSidenav?: () => void };
 
@@ -971,7 +972,11 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
               </FlexBox>
 
               <Link href={`/product/${item.slug}`}>
-                <Avatar size={76} mx="1rem" alt={item.name} src={item.imgUrl} />
+                <Avatar size={76} mx="1rem" alt={item.name} 
+                // src={item.imgUrl}
+                src={`${ApiBaseUrl.ImgUrl}${item.imgUrl}`}
+                
+                />
               </Link>
 
               <div className="product-details">

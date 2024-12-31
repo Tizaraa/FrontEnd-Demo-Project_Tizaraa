@@ -180,7 +180,6 @@ export default function ProductGridView({
                 images={item?.images?.map(image => `${ApiBaseUrl.ImgUrl}${image}`) || []}
                 // imgUrl={item?.thumbnail || ""}
                 imgUrl={item?.thumbnail ? `${ApiBaseUrl.ImgUrl}${item.thumbnail}` : ""}
-
                 rating={item?.rating || 0}
               />
             </Grid>
