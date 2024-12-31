@@ -308,7 +308,7 @@
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 import useVisibility from "./useVisibility";
@@ -330,9 +330,12 @@ import { StyledRoot } from "./styles";
 import CommonHeader from "@component/header/CommonHeader";
 
 import BeatLoader from "react-spinners/BeatLoader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 export default function Signup() {
   const router = useRouter();
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
   const { passwordVisibility, togglePasswordVisibility } = useVisibility();
   const [apiError, setApiError] = useState({
     phone: "",
@@ -447,6 +450,13 @@ export default function Signup() {
       validationSchema: formSchema,
     });
 
+    
+  useEffect(() => {
+    const passwordValidation = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{9,}$/;
+    // Check if the password matches the required pattern
+    setIsPasswordValid(passwordValidation.test(values.password));
+  }, [values.password]);
+
   return (
     <>
       <CommonHeader></CommonHeader>
@@ -537,6 +547,18 @@ export default function Signup() {
               </IconButton>
             }
           />
+            {/* FontAwesome Icon indicating password requirements */}
+            {!isPasswordValid && (
+            <div style={{ display: "flex", alignItems: "center", marginTop: "0.5rem" }}>
+              <FontAwesomeIcon
+                icon={faCircleExclamation}
+                style={{ color: "#e94560", marginRight: "0.5rem" }}
+              />
+              <span style={{ fontSize: "0.875rem", color: "#495057" }}>
+                Password should be at least 9 characters, contain 1 uppercase, 1 lowercase, and 1 special character.
+              </span>
+            </div>
+          )}
 
           <TextField
             fullwidth

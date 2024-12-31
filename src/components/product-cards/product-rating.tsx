@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import NoReviews from "./no-reviews";
+
 
 const ProductRating = ({ productId }) => {
   const [ratingData, setRatingData] = useState(null);
@@ -23,7 +25,12 @@ const ProductRating = ({ productId }) => {
     return <div>Loading...</div>;
   }
 
-  const { rating_avarage, total_rating, perrating, rating } = ratingData;
+  const { rating_avarage, total_rating, perrating } = ratingData;
+
+  // Check if there are no reviews
+  if (!total_rating || total_rating === 0) {
+    return <NoReviews></NoReviews>;
+  }
 
   return (
     <div
@@ -50,7 +57,7 @@ const ProductRating = ({ productId }) => {
             }}
           >
             <div style={{ fontSize: "3rem", fontWeight: "bold" }}>
-              {rating_avarage.toFixed(1)}
+              {rating_avarage?.toFixed(1)}
             </div>
             <div>
               <div
@@ -66,7 +73,10 @@ const ProductRating = ({ productId }) => {
                     <span
                       key={index}
                       style={{
-                        color: index < Math.round(rating_avarage) ? "#ffc107" : "#e4e5e9",
+                        color:
+                          index < Math.round(rating_avarage)
+                            ? "#ffc107"
+                            : "#e4e5e9",
                         fontSize: "1.2rem",
                       }}
                     >
@@ -97,7 +107,9 @@ const ProductRating = ({ productId }) => {
                 gap: "10px",
               }}
             >
-              <span style={{ width: "20px", textAlign: "right" }}>{stars} ★</span>
+              <span style={{ width: "20px", textAlign: "right" }}>
+                {stars} ★
+              </span>
               <div
                 style={{
                   flex: 1,
@@ -120,7 +132,6 @@ const ProductRating = ({ productId }) => {
           ))}
         </div>
       </div>
-   
     </div>
   );
 };
