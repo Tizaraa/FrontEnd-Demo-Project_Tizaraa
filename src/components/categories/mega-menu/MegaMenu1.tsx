@@ -9,6 +9,7 @@ import { MegaMenu1Props } from "./type";
 import Icon from "@component/icon/Icon";
 import SubCategoryMenu from "../sub-mega-menu/SubCategoryMenu"; // Import the SubCategoryMenu
 import { StyledCategoryMenuItem } from "../styles";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function MegaMenu1({
   data: { categories, rightImage, bottomImage },
@@ -60,14 +61,14 @@ export default function MegaMenu1({
         {rightImage && (
           <Link href={rightImage.href}>
             <Box position="relative" width="153px" height="100%">
-              <NextImage src={rightImage.imgUrl} width={137} height={318} alt="offer" />
+              <NextImage src={`${ApiBaseUrl.ImgUrl}${rightImage.imgUrl}`} width={137} height={318} alt="offer" />
             </Box>
           </Link>
         )}
         {bottomImage && (
           <Link href={bottomImage.href}>
             <Box position="relative" height="100%">
-              <NextImage src={bottomImage.imgUrl} width={711} height={162} alt="offer" />
+              <NextImage src={`${ApiBaseUrl.ImgUrl}${bottomImage.imgUrl}`} width={711} height={162} alt="offer" />
             </Box>
           </Link>
         )}

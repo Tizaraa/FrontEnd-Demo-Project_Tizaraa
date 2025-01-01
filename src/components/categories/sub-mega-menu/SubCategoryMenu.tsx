@@ -63,6 +63,7 @@ import Link from "next/link";
 import Box from "@component/Box";
 import Icon from "@component/icon/Icon";
 import { StyledCategoryMenuItem } from "../styles";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 interface SubCategoryMenuProps {
   subCategories: Array<{
@@ -126,7 +127,7 @@ export default function SubCategoryMenu({ subCategories }: SubCategoryMenuProps)
               >
 
                 <img 
-                  src={sub.imgUrl} 
+                  src={`${ApiBaseUrl.ImgUrl}${sub.imgUrl}`} 
                   alt={sub.title} 
                   style={{
                     width: "50px",   
