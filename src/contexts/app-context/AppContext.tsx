@@ -68,7 +68,6 @@ const updateCartItem = (
   let calculatedPrice = cartItem.price; // Default to base price
   let b2bPricing =cartItem.b2bPricing;
   
-  console.log("nazim cart data",cartItem);
   //toast.error("Out of Stock");
 
 
@@ -140,7 +139,7 @@ const updateBuyNowItem = (cartItem: any) => {
   };
 
   // Log the selected item to the console
-  console.log("Selected Item:", buyNowItem);
+  // console.log("Selected Item:", buyNowItem);
 
   // Save to localStorage for persistence
   localStorage.setItem("buyNowItem", JSON.stringify(buyNowItem));

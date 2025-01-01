@@ -25,7 +25,7 @@ async function fetchProductData(slug: string) {
     const response = await axios.get(
       `${ApiBaseUrl.baseUrl}product/details/${slug}`
     );
-    console.log("product details:", response.data)
+    // console.log("product details:", response.data)
     return response.data;
 
   } catch (error) {
@@ -414,7 +414,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
       if (qrCodeData) {
         setQrCodeUrl(qrCodeData);
       }else {
-        console.log("No QR Code data received."); // Log warning
+        console.log("No QR Code data received."); 
       }
       setIsLoading(false);
     };

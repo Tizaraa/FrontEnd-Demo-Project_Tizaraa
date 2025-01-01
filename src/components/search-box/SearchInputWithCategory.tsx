@@ -178,7 +178,7 @@ export default function SearchInputWithCategory() {
     if (pathname.startsWith("/product/search")) {
       const searchTerm = pathname.split("/").pop(); // Get the last segment of the path
       setSearchValue(decodeURIComponent(searchTerm || "")); // Decode the search term
-      console.log("Search term from URL:", searchTerm);
+      // console.log("Search term from URL:", searchTerm);
     }
   }, [pathname]);
 

@@ -79,10 +79,7 @@
 //       });
 
 //       const data = response.data;
-//       // console.log("nazim1");
-//       // console.log("nazim",data);
 //       if (Array.isArray(data.orders)) {
-//         console.log("nazim2");
 //         setOrderList(data.orders);
 //         //toast.success("Order placed successfully!");
 //       } else {
@@ -179,8 +176,6 @@ export default function OrderList() {
       });
 
       const data = response.data;
-      // console.log("nazim",data);
-      // console.log("nazim");
       
       
       if (Array.isArray(data.orders)) {
@@ -219,7 +214,6 @@ export default function OrderList() {
   // useEffect(() => {
   //   if (orderSuccess) {
   //     toast.success("Order placed successfully!");
-  //     //console.log("nazim toast");
       
   //     setOrderSuccess(false); // Reset orderSuccess state after toast displays
   //   }

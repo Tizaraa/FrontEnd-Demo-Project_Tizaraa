@@ -72,7 +72,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
         let response;
         if (pageType === 'default') {
           response = await axios.get(`${ApiBaseUrl.baseUrl}category-filter/${slug}`);
-          console.log(response.data)
+          // console.log(response.data)
         } else if (pageType === 'search') {
           response = await axios.get(`${ApiBaseUrl.baseUrl}search-filter/${slug}`);
         } else if (pageType === 'shop') {
@@ -173,36 +173,13 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   className="custom-scrollbar"
 >
 {categoryList.map((item) => (
-        <Link href={`/category/${item.categorie_name_slug}`}>
+        <Link href={`/category/${item.categorie_name_slug}`} key={item.id}>
         <div key={item.id}>
           {renderCategories([item])}
         </div>
         </Link>
       ))}
   </div>
-
-      {/* {visibleCategories.map((item) => (
-        <Link href={`/category/${item.categorie_name_slug}`}>
-        <div key={item.id}>
-          {renderCategories([item])}
-        </div>
-        </Link>
-      ))}
-      {categoryList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowCategories}
-        >
-          {showAllCategories ? "Show Less" : "Show More"}
-        </Paragraph>
-      )} */}
-
-
-
-
 <Divider my="24px" />
       <H6 mb="16px">Brands</H6>
       <div
@@ -226,33 +203,6 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
         />
       ))}
 </div>
-
-      {/* {visibleBrands.map((item) => (
-        <CheckBox
-          my="10px"
-          key={item.id}
-          name={item.brand_name}
-          value={item.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{item.brand_name}</SemiSpan>}
-          onChange={() => handleBrandChange(item.id)}
-          checked={selectedBrands.includes(item.id)}
-        />
-      ))}
-
-      {brandList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowBrands}
-        >
-          {showAllBrands ? "Show Less" : "Show More"}
-        </Paragraph>
-      )} */}
-
-     
       <Divider mt="18px" mb="24px" />
       <H6 mb="10px">Country of Origin</H6>
       <div
@@ -277,37 +227,6 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
       ))}
       
 </div>
-      {/* {visibleCountries.map((country) => (
-        <CheckBox
-          my="10px"
-          key={country.id}
-          name={country.location}
-          value={country.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{country.location}</SemiSpan>}
-          onChange={() => handleCountryChange(country.id)}
-          checked={selectedCountry.includes(country.id)}
-        />
-      ))}
-      
-      {countryList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowCountries}
-        >
-          {showAllCountries ? "Show Less" : "Show More"}
-        </Paragraph>
-      )} */}
-
-      {/* Warranty  */}
-      {/* <Divider mt="18px" mb="24px" />
-      <H6 mb="10px">Warranty</H6> */}
-      {/* Add warranty options here */}
-
-
 
       <Divider mt="18px" mb="24px" />
 
@@ -337,34 +256,6 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
         />
       ))}
 </div>
-
-      {/* {visibleProvinces.map((province) => (
-        <CheckBox
-          my="10px"
-          key={province.id}
-          name={province.province}
-          value={province.id}
-          color="secondary"
-          label={
-            <SemiSpan color="inherit">
-              {province.province} 
-            </SemiSpan>
-          }
-          onChange={() => handleProvinceChange(province.id)}
-          checked={selectedProvinces.includes(province.id)}
-        />
-      ))}
-      {provinceList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowProvinces}
-        >
-          {showAllProvinces ? "Show Less" : "Show More"}
-        </Paragraph>
-      )} */}
 
 
         {/* scrollbar css  */}

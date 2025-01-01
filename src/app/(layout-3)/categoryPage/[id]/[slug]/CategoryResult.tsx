@@ -175,7 +175,7 @@ export default function CategoryResult({ categoryid }) {
         );
 
         // Console log the result before setting state
-        console.log("Category Products Data:", response.data.products);
+        // console.log("Category Products Data:", response.data.products);
 
         setProducts(response.data.products);
         setLoading(false);

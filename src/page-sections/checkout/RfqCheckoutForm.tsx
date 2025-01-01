@@ -70,7 +70,7 @@ const RfqCheckoutForm: FC<RfqCheckoutFormProps> = ({  responseId }) => {
   const handlePayment = async () => {
     //const [user, setUser] = useState(null);
     const addressData = sessionStorage.getItem("address");
-    console.log("Address", addressData);
+    // console.log("Address", addressData);
     
     if (addressData) {
       console.log("Payment:", JSON.parse(addressData));
@@ -116,7 +116,7 @@ const RfqCheckoutForm: FC<RfqCheckoutFormProps> = ({  responseId }) => {
     address: parsedAddress.address,
     }
 
-    console.log("data",data);
+    // console.log("data",data);
     
     
 
@@ -139,7 +139,6 @@ try {
   }
 );
 
-  console.log("nazim", response);
 
   if (response.status === 200) {
     toast.success("Order placed successfully.");

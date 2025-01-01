@@ -73,7 +73,7 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
         let response;
         if (pageType === 'default') {
           response = await axios.get(`${ApiBaseUrl.baseUrl}category-filter/${slug}`);
-          console.log(response.data)
+          // console.log(response.data)
         } else if (pageType === 'search') {
           response = await axios.get(`${ApiBaseUrl.baseUrl}search-filter/${slug}`);
         } else if (pageType === 'shop') {

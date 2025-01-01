@@ -80,7 +80,7 @@ export default function Section12() {
       .then((data) => {
         
         setServiceList(data.country); 
-        console.log(data.country);
+        // console.log(data.country);
       })
       .catch((error) => {
         console.error("Error fetching service list:", error);

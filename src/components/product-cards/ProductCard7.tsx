@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { Styledbutton } from "./style";
 import CheckBox from "@component/CheckBox";
 import toast from "react-hot-toast";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const Wrapper = styled.div.withConfig({
   shouldForwardProp: (prop) => isValidProp(prop)
@@ -100,7 +101,8 @@ export default function ProductCard7(props: ProductCard7Props) {
             alt={name}
             width={140}
             height={140}
-            src={imgUrl || "/assets/images/products/iphone-xi.png"}
+            // src={imgUrl || "/assets/images/products/iphone-xi.png"}
+            src={imgUrl ? `${ApiBaseUrl.ImgUrl}${imgUrl}` : "/assets/images/products/iphone-xi.png"}
           />
         </div>
         <FlexBox

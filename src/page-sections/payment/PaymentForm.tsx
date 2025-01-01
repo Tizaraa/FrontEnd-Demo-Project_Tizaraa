@@ -374,16 +374,16 @@ export default function PaymentForm() {
     // }
     let getData = localStorage.getItem("userInfo");
     let userinfo = JSON.parse(getData);
-    console.log("nazim", userinfo);
+
 
     let shippingData = sessionStorage.getItem("address");
-    console.log("Session Storage Data:", shippingData);
+    // console.log("Session Storage Data:", shippingData);
     let userShippingdata = JSON.parse(shippingData);
-    console.log("nazim Data:", userShippingdata);
+
 
     // let cartData = localStorage.getItem('cart');
     const cartData = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
-    console.log("nazim Data cart:", cartData);
+   
 
     // Ensure cartData is valid and not empty before trying to access its items
     const productType =
@@ -391,9 +391,9 @@ export default function PaymentForm() {
 
     let cart = cartData;
 
-    console.log("Orders:", cart);
-    console.log("Product Type:", productType);
-    console.log("Selected payment method:", paymentMethod);
+    // console.log("Orders:", cart);
+    // console.log("Product Type:", productType);
+    // console.log("Selected payment method:", paymentMethod);
     if (paymentMethod === "Online Payment") {
       // const authtoken = localStorage.getItem("token");
       // const getData = localStorage.getItem("userInfo");
@@ -442,11 +442,11 @@ export default function PaymentForm() {
             },
           }
         );
-        console.log("online Response:", response);
+        // console.log("online Response:", response);
 
         let orderId = response.data?.orderid;
-        console.log("id", orderId);
-        console.log("Selected payment method:", paymentMethod);
+        // console.log("id", orderId);
+        // console.log("Selected payment method:", paymentMethod);
         localStorage.setItem("orderId", orderId);
         localStorage.setItem("orderSuccess", "true");
 
@@ -489,7 +489,7 @@ export default function PaymentForm() {
                 }
               );
 
-              console.log("Cart Item Response:", response.data);
+              // console.log("Cart Item Response:", response.data);
             } catch (error) {
               console.error("Failed to add item to order:", error.response);
               setIsHasLoading(false)
@@ -512,7 +512,7 @@ export default function PaymentForm() {
         });
 
         const redirectUrl = response.data?.redirect_url;
-        console.log(redirectUrl);
+        // console.log(redirectUrl);
         //return
         
         if (redirectUrl) {
@@ -565,7 +565,7 @@ export default function PaymentForm() {
           }
         );
 
-        console.log("Order Response:", orderResponse);
+        // console.log("Order Response:", orderResponse);
 
         let orderId = orderResponse.data.message.orderid;
         localStorage.setItem("orderId", orderId);
@@ -610,7 +610,7 @@ export default function PaymentForm() {
                 }
               );
             
-              console.log("Cart Item Response:", response.data);
+              // console.log("Cart Item Response:", response.data);
             } catch (error) {
               console.error("Failed to add item to order:", error.response);
   setIsHasLoading(false)

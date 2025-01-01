@@ -56,7 +56,7 @@ export default function OTProductsSearchInputWithCategory({ slug }) {
       );
 
       const results = response.data?.Result?.Items?.Content || [];
-      console.log("Search Results:", results);
+      // console.log("Search Results:", results);
       setResultList(results);
     } catch (error) {
       console.error("Error fetching search results:", error);

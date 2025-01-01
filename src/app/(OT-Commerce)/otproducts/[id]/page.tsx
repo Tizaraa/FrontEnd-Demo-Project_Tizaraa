@@ -520,7 +520,7 @@ useEffect(() => {
       }
 
       const data = await response.json();
-      console.log("details:", data);
+      // console.log("details:", data);
 
       if (data && data.Result && data.Result.Item) {
         setProduct(data.Result.Item);

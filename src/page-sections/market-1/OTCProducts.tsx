@@ -57,7 +57,7 @@ const OTCProducts = () => {
         }
 
         const data = await response.json();
-        console.log("Category data:", data);
+        // console.log("Category data:", data);
 
         const firstItem = data.CategoryInfoList.Content[35];
         const formattedItem = firstItem
@@ -92,9 +92,9 @@ const OTCProducts = () => {
       setLoading(position === 0);
       setLoadingMore(position > 0);
       try {
-        console.log(
-          `Fetching products for position: ${position} and category: ${categoryId}`
-        );
+        // console.log(
+        //   `Fetching products for position: ${position} and category: ${categoryId}`
+        // );
         const response = await fetch(`${API_BASE_URL}/otpi/items`, {
           method: "POST",
           headers: {
@@ -113,7 +113,7 @@ const OTCProducts = () => {
 
         const data = await response.json();
 
-        console.log("products:", data);
+        // console.log("products:", data);
         const newProducts = data.Result.Items.Content;
 
         setProducts((prevProducts) => {

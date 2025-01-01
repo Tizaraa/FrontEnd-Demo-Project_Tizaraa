@@ -315,7 +315,7 @@ export default function DashboardNavigation() {
 
         setOrderCount(totalorder); // Set the total order count
         setAddressCount(customeraddress); // Set the customer address count
-        const rfqResponse = await axios.get(`${ApiBaseUrl.baseUrl}api/rfqs`, {
+        const rfqResponse = await axios.get(`${ApiBaseUrl.baseUrl}rfqs`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass token in the Authorization header
           },

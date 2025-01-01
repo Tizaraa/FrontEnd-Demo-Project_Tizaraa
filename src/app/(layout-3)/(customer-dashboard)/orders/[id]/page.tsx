@@ -112,7 +112,7 @@ export default function OrderDetails({ params }: IDParams) {
             },
           }
         );
-        console.log("bina data", response);
+        // console.log("bina data", response);
         setOrder(response.data);
         setStatus(response.data.Order.status);
         setEstimateDate(response.data.Order.deliveredAt);
@@ -147,7 +147,7 @@ export default function OrderDetails({ params }: IDParams) {
         }
       );
       const pdfBlobUrl = URL.createObjectURL(response.data);
-      console.log("ifty", pdfBlobUrl);
+      // console.log("ifty", pdfBlobUrl);
 
       setPdfUrl(pdfBlobUrl);
     } catch (error) {
@@ -211,17 +211,17 @@ export default function OrderDetails({ params }: IDParams) {
         }
       );
 
-      console.log("fg",paymentResponse);
-      console.log("fghhh",paymentResponse.data.redirect_url);
+      // console.log("fg",paymentResponse);
+      // console.log("fghhh",paymentResponse.data.redirect_url);
       const updatedOrder = orderResponse.data;
-      console.log("frrrr",updatedOrder);
+      // console.log("frrrr",updatedOrder);
       const redirectUrl = paymentResponse.data.redirect_url;
         window.location.href = redirectUrl;
       
 
       if (paymentResponse.data.payment_status === "Unpaid") {
         const updatedOrder = orderResponse.data;
-        console.log("frrrr",updatedOrder);
+        // console.log("frrrr",updatedOrder);
         
         updatedOrder.Order.payment_status = "Paid";
         setOrder(updatedOrder);

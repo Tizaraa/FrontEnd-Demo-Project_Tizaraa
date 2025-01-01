@@ -25,7 +25,7 @@ export default function CountryList() {
       .then((response) => response.json())
       .then((data) => {
         setServiceList(data.country); // Assuming the API response contains a 'country' array
-        console.log(data.country);
+        // console.log(data.country);
       })
       .catch((error) => {
         console.error("Error fetching service list:", error);

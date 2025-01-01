@@ -61,7 +61,7 @@ const OTCcategoryProductView = ({ slug }: { slug: string }) => {
                 throw new Error("Network response was not ok");
             }
             const data = await response.json();
-            console.log("Category data:", data);
+            // console.log("Category data:", data);
             const category = data.CategoryInfoList.Content.find((item: any) => item.Id === otid);
             setName(category ? category.Name : "Unknown Category");
     

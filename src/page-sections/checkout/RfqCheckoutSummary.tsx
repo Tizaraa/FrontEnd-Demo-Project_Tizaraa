@@ -57,7 +57,7 @@ const RfqCheckoutSummary: React.FC<RfqCheckoutSummaryProps> = ({ responseId }) =
         }
 
         const data = await response.json();
-        console.log("Fetched RFQ data:", data); // Debug log for API response
+        // console.log("Fetched RFQ data:", data); 
 
         // Ensure data structure matches the expected format
         if (data?.purchaseInfo) {

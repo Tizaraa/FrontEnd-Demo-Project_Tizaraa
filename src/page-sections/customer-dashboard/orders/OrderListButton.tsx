@@ -28,7 +28,7 @@ export default function OrderListButton({ params }) {
         );
         const orderData = response.data.Order;
         setOrderId(orderData?.id); // Set orderId from fetched data
-        console.log("Fetched Order Data:", orderData);
+        // console.log("Fetched Order Data:", orderData);
       } catch (error) {
         console.error("Error fetching order details:", error);
       } finally {

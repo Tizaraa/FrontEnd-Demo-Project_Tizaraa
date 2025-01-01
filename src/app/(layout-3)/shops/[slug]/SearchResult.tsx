@@ -105,7 +105,7 @@ export default function SearchResult({ sortOptions, slug }) {
       }
   
       const data = await response.json();
-      console.log("Shop Details:", data);
+      // console.log("Shop Details:", data);
   
       // Reset products when fetching the first page
       if (currentPage === 1) {

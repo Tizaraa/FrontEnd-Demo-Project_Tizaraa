@@ -33,7 +33,7 @@ export default function Section7({ shops, brands, title, productList }: Props) {
   const [type, setType] = useState<"brands" | "shops">("brands");
 
   const handleCategoryClick = (brand: any) => () => {
-    console.log(brand);
+    // console.log(brand);
     if (selected.match(brand)) setSelected("");
     else setSelected(brand);
   };

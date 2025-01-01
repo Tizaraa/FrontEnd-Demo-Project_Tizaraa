@@ -315,7 +315,7 @@ export default function RfqProductForm() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log(response);
+        // console.log(response);
 
         const results = response.data.data || [];
         //console.log(results);

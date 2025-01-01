@@ -30,7 +30,7 @@ export default function RfqCheckoutAddress({ onAddressSelect }: RfqCheckoutAddre
           Authorization: `Bearer ${authtoken}`,
         },
       });
-      console.log("Provinces data:", response.data);
+      // console.log("Provinces data:", response.data);
 
       if (Array.isArray(response.data)) {
         setProvince(response.data); // Set province data
@@ -49,7 +49,7 @@ export default function RfqCheckoutAddress({ onAddressSelect }: RfqCheckoutAddre
             Authorization: `Bearer ${authtoken}`,
           },
         });
-        console.log("Address data:", response.data);
+        // console.log("Address data:", response.data);
         const fetchedAddresses = response.data.user;
         setAddresses(fetchedAddresses);
 
@@ -110,8 +110,8 @@ export default function RfqCheckoutAddress({ onAddressSelect }: RfqCheckoutAddre
     sessionStorage.setItem("address", JSON.stringify(item)); // Only store in sessionStorage when manually selected
 
     // Log the selected address and delivery charge
-    console.log("Manually Selected Address:", item);
-    console.log("Delivery Charge:", item.deliveryCharge || "Delivery charge not available");
+    // console.log("Manually Selected Address:", item);
+    // console.log("Delivery Charge:", item.deliveryCharge || "Delivery charge not available");
     onAddressSelect(true);
   };
 

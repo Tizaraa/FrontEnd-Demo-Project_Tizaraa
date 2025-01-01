@@ -83,7 +83,7 @@ export default function MobileCategoryImageBox({
   imgUrl
 }: MobileCategoryImageBoxProps) {
 
-  console.log(imgUrl);
+  // console.log(imgUrl);
   return (
     <FlexBox flexDirection="column" alignItems="center" justifyContent="center">
       {/* {imgUrl ? (

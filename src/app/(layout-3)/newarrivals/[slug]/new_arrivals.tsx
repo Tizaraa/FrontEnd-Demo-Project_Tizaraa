@@ -141,7 +141,7 @@ export default function NewArrivals({ sortOptions, slug }: NewArrivalsProps) {
       }
   
       const data = await response.json();
-      console.log("Shop Details:", data);
+      // console.log("Shop Details:", data);
   
       // Reset products when fetching the first page
       if (currentPage === 1) {
