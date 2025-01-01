@@ -173,57 +173,7 @@ const handleBrandChange = (brandId: number) => {
 
   return (
     <Card p="18px 27px" elevation={5} borderRadius={8}>
-      <H6 mb="16px">Brands</H6>
-      <div
-  style={{
-    maxHeight: "200px",
-    overflowY: "auto",
-    paddingRight: "10px", // Add padding for space between scrollbar and content
-  }}
-  className="custom-scrollbar"
->
-{brandList.map((item) => (
-        <CheckBox
-          my="10px"
-          key={item.id}
-          name={item.brand_name}
-          value={item.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{item.brand_name}</SemiSpan>}
-          onChange={() => handleBrandChange(item.id)}
-          checked={selectedBrands.includes(item.id)}
-        />
-      ))}
-
-</div>
-
-      {/* {visibleBrands.map((item) => (
-        <CheckBox
-          my="10px"
-          key={item.id}
-          name={item.brand_name}
-          value={item.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{item.brand_name}</SemiSpan>}
-          onChange={() => handleBrandChange(item.id)}
-          checked={selectedBrands.includes(item.id)}
-        />
-      ))}
-
-      {brandList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowBrands}
-        >
-          {showAllBrands ? "Show Less" : "Show More"}
-        </Paragraph>
-      )} */}
-
-<Divider my="24px" />
-      <H6 mb="10px">Categories</H6>
+        <H6 mb="10px">Categories</H6>
       <div
   style={{
     maxHeight: "200px",
@@ -272,6 +222,58 @@ const handleBrandChange = (brandId: number) => {
           {showAllCategories ? "Show Less" : "Show More"}
         </Paragraph>
       )} */}
+
+<Divider my="24px" />
+<H6 mb="16px">Brands</H6>
+      <div
+  style={{
+    maxHeight: "200px",
+    overflowY: "auto",
+    paddingRight: "10px", // Add padding for space between scrollbar and content
+  }}
+  className="custom-scrollbar"
+>
+{brandList.map((item) => (
+        <CheckBox
+          my="10px"
+          key={item.id}
+          name={item.brand_name}
+          value={item.id}
+          color="secondary"
+          label={<SemiSpan color="inherit">{item.brand_name}</SemiSpan>}
+          onChange={() => handleBrandChange(item.id)}
+          checked={selectedBrands.includes(item.id)}
+        />
+      ))}
+
+</div>
+
+      {/* {visibleBrands.map((item) => (
+        <CheckBox
+          my="10px"
+          key={item.id}
+          name={item.brand_name}
+          value={item.id}
+          color="secondary"
+          label={<SemiSpan color="inherit">{item.brand_name}</SemiSpan>}
+          onChange={() => handleBrandChange(item.id)}
+          checked={selectedBrands.includes(item.id)}
+        />
+      ))}
+
+      {brandList.length > 5 && (
+        <Paragraph
+          py="6px"
+          fontSize="14px"
+          className="cursor-pointer"
+          color="primary.main"
+          onClick={toggleShowBrands}
+        >
+          {showAllBrands ? "Show Less" : "Show More"}
+        </Paragraph>
+      )} */}
+
+    
 
 
       <Divider mt="18px" mb="24px" />

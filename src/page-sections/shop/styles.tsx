@@ -37,5 +37,6 @@ export const ShopCard1Wrapper = styled(Card)<ShopWrapperProps>`
     background-position: center;
     color: white;
     padding: 17px 30px 56px;
+    background-color: rgba(43,52,69,0.98)
   }
 `;

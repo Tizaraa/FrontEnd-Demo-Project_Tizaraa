@@ -301,8 +301,10 @@ export default function ShopList() {
                 phone={item.phone}
                 address={item.address || "Address not found"}
                 rating={item.rating || 5}
-                imgUrl={item.profilePicture}
-                coverImgUrl={item.coverPicture}
+                // imgUrl={item.profilePicture}
+                imgUrl={`${ApiBaseUrl.ImgUrl}${item.profilePicture}`}
+                // coverImgUrl={item.coverPicture}
+                coverImgUrl={`${ApiBaseUrl.ImgUrl}${item.coverPicture}`}
                 shopUrl={`/shops/${item.slug}`}
               />
             </Grid>
