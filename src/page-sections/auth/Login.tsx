@@ -70,7 +70,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   // Start OTP countdown
   const startOtpCountdown = () => {
     setIsResetOtpDisabled(true); // Disable the button
-    let countdown = 120; // 2 minutes
+    let countdown = 60; // 2 minutes
     setOtpTimer(countdown);
 
     clearTimer(); // Clear any existing timer before starting a new one
