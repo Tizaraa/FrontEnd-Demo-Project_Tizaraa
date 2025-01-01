@@ -6,6 +6,10 @@ import axios from 'axios'
 import ApiBaseUrl from 'api/ApiBaseUrl'
 import ProductRating from './product-rating'
 
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+
 export default function ReviewCard({ productId }: { productId: string }) {
   const [isMobile, setIsMobile] = useState(false)
   const [comments, setComments] = useState<any[]>([])
@@ -81,7 +85,7 @@ export default function ReviewCard({ productId }: { productId: string }) {
     userName: { fontSize: '16px', fontWeight: '500' },
     date: { color: '#6B7280', fontSize: '14px' },
     rating: { display: 'flex', gap: '4px', marginBottom: '16px' },
-    star: { color: '#FF9900', fontSize: '24px' },
+    star: { color: '#FFC107', fontSize: '24px' },
     reviewText: { fontSize: '16px', lineHeight: '1.5', color: '#1F2937' },
     productImage: { borderRadius: '4px', height: '300px', cursor: 'pointer' },
     modalOverlay: {
@@ -148,7 +152,7 @@ export default function ReviewCard({ productId }: { productId: string }) {
 
           <div style={styles.rating}>
             {Array.from({ length: Number(comment.rating) }).map((_, i) => (
-              <span key={i} style={styles.star}>★</span>
+              <span key={i} style={styles.star}> <FontAwesomeIcon icon={faStar} /> </span>
             ))}
           </div>
 
@@ -158,14 +162,14 @@ export default function ReviewCard({ productId }: { productId: string }) {
             {comment.allimages.map((image: any, imgIndex: number) => (
               <Image
                 key={imgIndex}
-                src={`https://frontend.tizaraa.com/${image.image}`}
+                src={`${ApiBaseUrl.ImgUrl}${image.image}`}
                 alt="Review Image"
                 layout="fill" // Use layout="fill" to make the image fill the container
                 objectFit="cover" // Ensures the image covers the container proportionally
                 style={{ cursor: 'pointer', borderRadius: '4px' }}
                 onClick={() =>
                   openModal(
-                    comment.allimages.map((img: any) => `https://frontend.tizaraa.com/${img.image}`),
+                    comment.allimages.map((img: any) => `${ApiBaseUrl.ImgUrl}${img.image}`),
                     imgIndex
                   )
                 }

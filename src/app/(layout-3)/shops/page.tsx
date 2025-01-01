@@ -10,6 +10,7 @@ import styled from "@emotion/styled";
 import Box from "@component/Box";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
+
 const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -302,9 +303,10 @@ export default function ShopList() {
                 address={item.address || "Address not found"}
                 rating={item.rating || 5}
                 // imgUrl={item.profilePicture}
-                imgUrl={`${ApiBaseUrl.ImgUrl}${item.profilePicture}`}
+                // imgUrl={`${ApiBaseUrl.ImgUrl}${item.profilePicture}`}
+                imgUrl={item.profilePicture ? `${ApiBaseUrl.ImgUrl}${item.profilePicture}` : 'https://t4.ftcdn.net/jpg/04/15/60/27/360_F_415602715_uy5b6P84JetkpRCLxNmYgrx8pWIATsAD.jpg'}
                 // coverImgUrl={item.coverPicture}
-                coverImgUrl={`${ApiBaseUrl.ImgUrl}${item.coverPicture}`}
+                coverImgUrl={item.coverPicture ? `${ApiBaseUrl.ImgUrl}${item.coverPicture}` : 'https://static.vecteezy.com/system/resources/previews/011/059/783/non_2x/best-seller-text-button-speech-bubble-best-seller-colorful-web-banner-template-illustration-vector.jpg'}
                 shopUrl={`/shops/${item.slug}`}
               />
             </Grid>

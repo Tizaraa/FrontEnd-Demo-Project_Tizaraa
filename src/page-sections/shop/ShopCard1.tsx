@@ -70,7 +70,7 @@ export default function ShopCard1({
       <FlexBox pl="30px" pr="18px" justifyContent="space-between">
         <Link href={shopUrl}>
           <Avatar
-            src={imgUrl}
+            src={imgUrl || 'https://t4.ftcdn.net/jpg/04/15/60/27/360_F_415602715_uy5b6P84JetkpRCLxNmYgrx8pWIATsAD.jpg'}
             size={64}
             mt="-32px"
             border="4px solid"

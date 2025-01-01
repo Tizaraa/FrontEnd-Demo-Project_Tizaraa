@@ -31,7 +31,7 @@ export const ShopCard1Wrapper = styled(Card)<ShopWrapperProps>`
         rgba(${convertHexToRGB(colors.gray[900])}, 0.8),
         rgba(${convertHexToRGB(colors.gray[900])}, 0.8)
       ),
-      url(${(props) => props.coverImgUrl || "/assets/images/banners/cycle.png"});
+      url(${(props) => props.coverImgUrl || "https://static.vecteezy.com/system/resources/previews/011/059/783/non_2x/best-seller-text-button-speech-bubble-best-seller-colorful-web-banner-template-illustration-vector.jpg"});
       height: 18em;
     background-size: cover;
     background-position: center;

@@ -134,7 +134,7 @@ export default function WriteReview({
           <Button
             variant="text"
             color="primary"
-            disabled={status !== "Delivered" && reviewMode === "submit"}
+            disabled={status !== "Pending" && reviewMode === "submit"}
             onClick={() => setIsModalOpen(true)}
           >
             <Typography fontSize="14px">
@@ -286,7 +286,7 @@ export default function WriteReview({
 // image preview *******
 
 
-// {/* <Box mt="1rem">
+// <Box mt="1rem">
 //   <Typography fontSize="14px" mb="0.5rem">
 //     Upload Images:
 //   </Typography>
@@ -370,4 +370,4 @@ export default function WriteReview({
 //       </Box>
 //     ))}
 //   </Box>
-// </Box> */}
+// </Box> 

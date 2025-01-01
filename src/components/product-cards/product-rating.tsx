@@ -3,6 +3,9 @@ import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import NoReviews from "./no-reviews";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+
 
 const ProductRating = ({ productId }) => {
   const [ratingData, setRatingData] = useState(null);
@@ -47,17 +50,17 @@ const ProductRating = ({ productId }) => {
           gap: "20px",
         }}
       >
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <div style={{ marginBottom: "20px" }}>
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "10px",
+              // display: "flex",
+              // justifyContent: "center",
+              // alignItems: "center",
+              // gap: "10px",
             }}
           >
             <div style={{ fontSize: "3rem", fontWeight: "bold" }}>
-              {rating_avarage?.toFixed(1)}
+              {rating_avarage?.toFixed(1)}/5
             </div>
             <div>
               <div
@@ -77,16 +80,18 @@ const ProductRating = ({ productId }) => {
                           index < Math.round(rating_avarage)
                             ? "#ffc107"
                             : "#e4e5e9",
-                        fontSize: "1.2rem",
+                        fontSize: "2rem",
+                       
                       }}
                     >
-                      ★
+                     <FontAwesomeIcon icon={faStar} />
                     </span>
                   ))}
               </div>
               <div style={{ fontSize: "14px", color: "#555" }}>
-                {total_rating} Ratings
+                  {total_rating} {total_rating === 1 ? "Rating" : "Ratings"}
               </div>
+
             </div>
           </div>
         </div>
@@ -94,7 +99,7 @@ const ProductRating = ({ productId }) => {
           style={{
             flexBasis: "100%",
             maxWidth: "500px",
-            margin: "0 auto",
+            margin: "0 50px",
           }}
         >
           {[5, 4, 3, 2, 1].map((stars) => (
@@ -107,9 +112,16 @@ const ProductRating = ({ productId }) => {
                 gap: "10px",
               }}
             >
-              <span style={{ width: "20px", textAlign: "right" }}>
-                {stars} ★
-              </span>
+            <span style={{ display: "inline-flex", textAlign: "right" }}>
+  {Array.from({ length: stars }).map((_, index) => (
+    <FontAwesomeIcon
+      key={index}
+      icon={faStar}
+      style={{ color: "#ffc107", marginRight: "2px" }}
+    />
+  ))}
+</span>
+
               <div
                 style={{
                   flex: 1,
