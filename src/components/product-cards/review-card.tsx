@@ -67,9 +67,16 @@ export default function ReviewCard({ productId }: { productId: string }) {
       prevIndex === 0 ? modalImages.length - 1 : prevIndex - 1
     )
   }
-
+  const isMobilee = window.innerWidth <= 768;
+  const isSmallMobile = window.innerWidth <= 480;
   const styles: Record<string, CSSProperties> = {
-    container: { padding: isMobile ? '16px' : '20px', margin: '0 auto' },
+    container: {
+      padding: isMobilee ? '16px' : '20px',
+      width: isSmallMobile ? '95%' : isMobilee ? '90%' : '70%', // Responsive width
+      maxWidth: '1200px',
+      boxSizing: 'border-box', 
+      boxShadow: 'rgba(0, 0, 0, 0.1) 0px 2px 4px'
+    },
     header: { display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' },
     avatar: {
       width: '48px',
@@ -84,9 +91,9 @@ export default function ReviewCard({ productId }: { productId: string }) {
     userInfo: { display: 'flex', flexDirection: 'column' as const },
     userName: { fontSize: '16px', fontWeight: '500' },
     date: { color: '#6B7280', fontSize: '14px' },
-    rating: { display: 'flex', gap: '4px', marginBottom: '16px' },
-    star: { color: '#FFC107', fontSize: '24px' },
-    reviewText: { fontSize: '16px', lineHeight: '1.5', color: '#1F2937' },
+    rating: { display: 'flex', gap: '4px'},
+    star: { color: '#FFC107', fontSize: '14px' },
+    reviewText: { fontSize: '16px', lineHeight: '1.5', color: '#1F2937', marginTop: '-10px' },
     productImage: { borderRadius: '4px', height: '300px', cursor: 'pointer' },
     modalOverlay: {
       position: 'fixed' as const,
@@ -140,45 +147,63 @@ export default function ReviewCard({ productId }: { productId: string }) {
   return (
     <div style={styles.container}>
         <ProductRating productId={productId}></ProductRating>
-      {comments.map((comment, index) => (
-        <div key={index} style={{ marginBottom: '20px' }}>
-          <div style={styles.header}>
-            <div style={styles.avatar}>{comment.user[0]}</div>
-            <div style={styles.userInfo}>
-              <div style={styles.userName}>{comment.user}</div>
-              <div style={styles.date}>{comment.comment_date}</div>
+        {comments.map((comment, index) => (
+    <div key={index} style={{ marginBottom: '20px' }}>
+      <div style={{ display: 'flex', justifyContent:"space-between" }}>
+        {/* User image, name, rating */}
+        <div style={styles.header}>
+          <div style={styles.avatar}>{comment.user[0]}</div>
+          <div style={styles.userInfo}>
+            <div style={styles.userName}>{comment.user}</div>
+            <div style={styles.rating}>
+              {Array.from({ length: Number(comment.rating) }).map((_, i) => (
+                <span key={i} style={styles.star}>
+                  <FontAwesomeIcon icon={faStar} />
+                </span>
+              ))}
             </div>
           </div>
-
-          <div style={styles.rating}>
-            {Array.from({ length: Number(comment.rating) }).map((_, i) => (
-              <span key={i} style={styles.star}> <FontAwesomeIcon icon={faStar} /> </span>
-            ))}
-          </div>
-
-          <p style={styles.reviewText}>{comment.user_comment}</p>
-
-          <div style={{ width: '200px', height: '200px', position: 'relative' }}>
-            {comment.allimages.map((image: any, imgIndex: number) => (
-              <Image
-                key={imgIndex}
-                src={`${ApiBaseUrl.ImgUrl}${image.image}`}
-                alt="Review Image"
-                layout="fill" // Use layout="fill" to make the image fill the container
-                objectFit="cover" // Ensures the image covers the container proportionally
-                style={{ cursor: 'pointer', borderRadius: '4px' }}
-                onClick={() =>
-                  openModal(
-                    comment.allimages.map((img: any) => `${ApiBaseUrl.ImgUrl}${img.image}`),
-                    imgIndex
-                  )
-                }
-              />
-            ))}
-          </div>
         </div>
-      ))}
+        {/* Rating date */}
+        <div style={styles.date}>{comment.comment_date}</div>
+      </div>
 
+      <p style={styles.reviewText}>{comment.user_comment}</p>
+
+      <div
+        style={{
+          width: '200px',
+          height: comment.allimages.length > 0 ? '200px' : '0', // Set height to 0 if no images
+          position: 'relative',
+          overflow: 'hidden', // Ensures no empty space is visible
+        }}
+      >
+        {comment.allimages.map((image: any, imgIndex: number) => (
+          <Image
+            key={imgIndex}
+            src={`${ApiBaseUrl.ImgUrl}${image.image}`}
+            alt="Review Image"
+            layout="fill" // Use layout="fill" to make the image fill the container
+            objectFit="cover" // Ensures the image covers the container proportionally
+            style={{ cursor: 'pointer', borderRadius: '4px' }}
+            onClick={() =>
+              openModal(
+                comment.allimages.map((img: any) => `${ApiBaseUrl.ImgUrl}${img.image}`),
+                imgIndex
+              )
+            }
+          />
+        ))}
+      </div>
+
+      {/* Only show <hr> if it's not the last comment */}
+      {index !== comments.length - 1 && (
+        <hr style={{ border: '0', borderTop: '1px solid #d3d3d3' }} />
+      )}
+    </div>
+  ))}
+
+{/* image slide  */}
       {isModalOpen && (
         <div style={styles.modalOverlay}>
           <div style={styles.modalContent}>
@@ -207,6 +232,7 @@ export default function ReviewCard({ productId }: { productId: string }) {
           </div>
         </div>
       )}
+
     </div>
   )
 }

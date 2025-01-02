@@ -30,6 +30,9 @@ const ProductRating = ({ productId }) => {
 
   const { rating_avarage, total_rating, perrating } = ratingData;
 
+  const isMobilee = window.innerWidth <= 768;
+  const isSmallMobile = window.innerWidth <= 480
+
   // Check if there are no reviews
   if (!total_rating || total_rating === 0) {
     return <NoReviews></NoReviews>;
@@ -47,7 +50,8 @@ const ProductRating = ({ productId }) => {
       <div
         style={{
           display: "flex",
-          gap: "20px",
+    gap: isSmallMobile ? "10px" : "20px",
+    flexDirection: isMobilee ? "column" : "row", 
         }}
       >
         <div style={{ marginBottom: "20px" }}>
@@ -144,6 +148,7 @@ const ProductRating = ({ productId }) => {
           ))}
         </div>
       </div>
+      <hr style={{ border: '0', borderTop: '1px solid #d3d3d3' }} />
     </div>
   );
 };
