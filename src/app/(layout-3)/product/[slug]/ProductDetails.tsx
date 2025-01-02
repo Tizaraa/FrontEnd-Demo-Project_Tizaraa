@@ -74,7 +74,7 @@ const ShippingInfo: React.FC<{
   return (
     <div
       style={{
-        fontFamily: "Arial, sans-serif",
+        fontFamily: '__Open_Sans_9c011f, __Open_Sans_Fallback_9c011f',
         maxWidth: "400px",
         margin: "0 auto",
         padding: "20px",
@@ -106,7 +106,7 @@ const ShippingInfo: React.FC<{
           <div style={{ marginBottom: "20px" }}>
             <h2
               style={{
-                fontSize: "9.5px",
+                fontSize: "12px",
                 fontWeight: "bold",
                 marginBottom: "10px",
                 color: "#333",
@@ -132,14 +132,14 @@ const ShippingInfo: React.FC<{
                   justifyContent: "center",
                   alignItems: "center",
                   color: "white",
-                  fontSize: "9.5px",
+                  fontSize: "12px",
                 }}
               >
                 🚚
               </span>
               <span
                 style={{
-                  fontSize: "9.5px",
+                  fontSize: "12px",
                   color: "#555",
                 }}
               >
@@ -151,7 +151,7 @@ const ShippingInfo: React.FC<{
           <div style={{ marginBottom: "20px" }}>
             <h2
               style={{
-                fontSize: "9.5px",
+                fontSize: "12px",
                 fontWeight: "bold",
                 marginBottom: "10px",
                 color: "#333",
@@ -177,14 +177,14 @@ const ShippingInfo: React.FC<{
                   justifyContent: "center",
                   alignItems: "center",
                   color: "white",
-                  fontSize: "9.5px",
+                  fontSize: "12px",
                 }}
               >
                 🎧
               </span>
               <span
                 style={{
-                  fontSize: "9.5px",
+                  fontSize: "12px",
                   color: "#555",
                 }}
               >
@@ -198,10 +198,10 @@ const ShippingInfo: React.FC<{
             </div>
           </div>
 
-          <div style={{ marginBottom: "20px" }}>
+          <div style={{ marginBottom: "10px" }}>
             <h2
               style={{
-                fontSize: "9.5px",
+                fontSize: "12px",
                 fontWeight: "bold",
                 marginBottom: "10px",
                 color: "#333",
@@ -213,7 +213,7 @@ const ShippingInfo: React.FC<{
               style={{
                 display: "flex",
                 alignItems: "center",
-                marginBottom: "10px",
+                // marginBottom: "10px",
               }}
             >
               <span
@@ -227,7 +227,7 @@ const ShippingInfo: React.FC<{
                   justifyContent: "center",
                   alignItems: "center",
                   color: "white",
-                  fontSize: "9.5px",
+                  fontSize: "12px",
                   padding: "5px 10px",
                 }}
               >
@@ -235,7 +235,7 @@ const ShippingInfo: React.FC<{
               </span>
               <span
                 style={{
-                  fontSize: "9.5px",
+                  fontSize: "12px",
                   color: "#555",
                 }}
               >
@@ -251,17 +251,17 @@ const ShippingInfo: React.FC<{
 
           
           {qrCodeUrl && (
-  <div style={{ marginBottom: "20px", textAlign: "center" }}>
-    <h2
+  <div style={{textAlign: "center" }}>
+    {/* <h2
       style={{
-        fontSize: "9.5px",
+        fontSize: "12px",
         fontWeight: "bold",
         marginBottom: "10px",
         color: "#333",
       }}
     >
       QR Code
-    </h2>
+    </h2> */}
     <div
       dangerouslySetInnerHTML={{
         __html: DOMPurify.sanitize(qrCodeUrl), // Sanitize and render SVG
@@ -274,7 +274,7 @@ const ShippingInfo: React.FC<{
     ></div>
     <p
       style={{
-        fontSize: "9.5px",
+        fontSize: "12px",
         color: "#555",
       }}
     >
@@ -286,14 +286,14 @@ const ShippingInfo: React.FC<{
           <div
             style={{
               backgroundColor: "#fff",
-              padding: "15px",
+              // padding: "12px",
               borderRadius: "5px",
-              marginTop: "20px",
+              // marginTop: "20px",
             }}
           >
             <h3
               style={{
-                fontSize: "9.5px",
+                fontSize: "12px",
                 fontWeight: "bold",
                 marginBottom: "5px",
                 color: "#333",
@@ -301,7 +301,8 @@ const ShippingInfo: React.FC<{
             >
               Sold By
             </h3>
-            <div
+          <div style={{display: "flex", justifyContent:"space-between"}}>
+          <div
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -331,7 +332,7 @@ const ShippingInfo: React.FC<{
                     justifyContent: "center",
                     alignItems: "center",
                     color: "white",
-                    fontSize: "9.5px",
+                    fontSize: "12px",
                     fontWeight: "bold",
                     textAlign: "center",
                   }}
@@ -342,7 +343,7 @@ const ShippingInfo: React.FC<{
 
               <span
                 style={{
-                  fontSize: "9.5px",
+                  fontSize: "12px",
                   color: "#555",
                   fontWeight: "bold",
                 }}
@@ -360,7 +361,8 @@ const ShippingInfo: React.FC<{
                 Verified Seller
               </span>
             </div>
-            <a
+          <div>
+          <a
               href={`/shops/${shopUrl}`}
               style={{
                 color: "#fff",
@@ -371,10 +373,13 @@ const ShippingInfo: React.FC<{
                 marginTop: "10px",
                 padding: "5px 10px",
                 borderRadius: "10px",
+                fontSize: "12px"
               }}
             >
               Visit Profile
             </a>
+          </div>
+          </div>
           </div>
         </>
       )}
