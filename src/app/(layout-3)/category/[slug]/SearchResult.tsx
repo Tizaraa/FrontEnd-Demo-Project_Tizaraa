@@ -98,6 +98,7 @@ export default function SearchResult({ sortOptions, slug }) {
       }
   
       const data = await response.json();
+      console.log("category data", data)
       // Reset products if on the first page
       if (currentPage === 1) {
         setProducts(data.data);

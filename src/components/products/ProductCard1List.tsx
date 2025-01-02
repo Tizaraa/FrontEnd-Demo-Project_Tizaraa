@@ -176,9 +176,7 @@ export default function ProductGridView({
                 productStock={item?.product_stock || 0}
                 title={item?.title || "No Title"}
                 off={item?.discount || 0}
-                // images={item?.images || []}
                 images={item?.images?.map(image => `${ApiBaseUrl.ImgUrl}${image}`) || []}
-                // imgUrl={item?.thumbnail || ""}
                 imgUrl={item?.thumbnail ? `${ApiBaseUrl.ImgUrl}${item.thumbnail}` : ""}
                 rating={item?.rating || 0}
               />

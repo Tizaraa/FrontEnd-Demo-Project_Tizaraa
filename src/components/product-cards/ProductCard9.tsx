@@ -18,6 +18,7 @@ import { H4, H5, SemiSpan } from "../Typography";
 import ProductQuickView from "@component/products/ProductQuickView";
 import { useAppContext } from "@context/app-context";
 import { calculateDiscount, currency, getTheme, DiscountPercentage } from "@utils/utils";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 // STYLED COMPONENT
 const Wrapper = styled(Card)`
@@ -168,7 +169,7 @@ export default function ProductCard9({
               eye-alt
             </Icon> */}
             <Link href={`/product/${slug}`}>
-            <Image src={imgUrl} alt={title} width="100%" borderRadius="0.5rem" />
+            <Image src={`${ApiBaseUrl.ImgUrl}${imgUrl}`} alt={title} width="100%" borderRadius="0.5rem" />
             </Link>
           </Box>
         </Grid>

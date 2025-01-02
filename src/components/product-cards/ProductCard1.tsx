@@ -14,7 +14,7 @@ import FlexBox from "@component/FlexBox";
 import { Button } from "@component/buttons";
 import NextImage from "@component/NextImage";
 import Card, { CardProps } from "@component/Card";
-import { H3, H4, SemiSpan } from "@component/Typography";
+import { H3, H4, H5, SemiSpan } from "@component/Typography";
 import ProductQuickView from "@component/products/ProductQuickView";
 import { toast } from "react-hot-toast";
 
@@ -230,20 +230,6 @@ export default function ProductCard1({
   <Rating value={rating} outof={5} color="warn" readOnly />
 )}
 
-              {/* <Rating value={rating || 0} outof={5} color="warn" readOnly /> */}
-
-
-    {/* <Box marginTop="4px"> 
-      <H4 fontWeight="600" fontSize="14px" color="primary.main">
-      <del>{currency(price)}</del>
-      </H4>
-    </Box>
-
-    <FlexBox>
-    <H4 fontWeight="600" fontSize="14px" color="primary.main">
-    {calculateDiscount(price, off as number)}
-    </H4>
-  </FlexBox> */}
 
 {(price === 0 && off === 0) ? (
     <H4 fontWeight="600" fontSize="14px" color="primary.main">
@@ -273,6 +259,18 @@ export default function ProductCard1({
     </>
 )}
 
+{/* <FlexBox mt="0.5rem" mb="1rem" alignItems="center">
+              <H5 fontWeight={600} color="primary.main" mr="0.5rem">
+                {calculateDiscount(price, off as number)}
+              </H5>
+
+              {off > 0 && (
+  <SemiSpan fontWeight="600">
+    <del>{currency(price)}</del>
+  </SemiSpan>
+)}
+
+            </FlexBox> */}
 
     
             </Box>
