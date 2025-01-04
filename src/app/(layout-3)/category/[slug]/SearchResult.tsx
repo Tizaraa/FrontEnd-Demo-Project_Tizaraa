@@ -250,12 +250,12 @@ export default function SearchResult({ sortOptions, slug }) {
                 productsPerPage={productsPerPage}
                 onPageChange={handleLoadMore}
               />
-              {/* {loading && currentPage > 1 && (
+              {loading && currentPage > 1 && (
                 <LoaderWrapper>
                 <Vortex />
               </LoaderWrapper>        
-              )}{" "} */}
-       <FlexBox justifyContent="center" alignItems="center" mt="32px">
+              )}{" "}
+       {/* <FlexBox justifyContent="center" alignItems="center" mt="32px">
   <Button
     onClick={() => {
       if (!loading) handleLoadMore(); // No argument passed
@@ -272,7 +272,7 @@ export default function SearchResult({ sortOptions, slug }) {
   >
     {loading ?  <BeatLoader size={18} color="#fff" /> : "Show More"}
   </Button>
-</FlexBox>
+</FlexBox> */}
 
             </>
           ) : (
