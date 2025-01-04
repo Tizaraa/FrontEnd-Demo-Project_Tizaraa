@@ -811,6 +811,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
 
       localStorage.removeItem("orderId");
       sessionStorage.removeItem("selectedProducts");
+      sessionStorage.removeItem("cartItems");
       localStorage.removeItem("cart");
       sessionStorage.removeItem("paymentMethod");
       sessionStorage.removeItem("savedTotalPrice");
@@ -972,12 +973,18 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
               </FlexBox>
 
               <Link href={`/product/${item.slug}`}>
-                <Avatar size={76} mx="1rem" alt={item.name} 
-                // src={item.imgUrl}
-                src={`${ApiBaseUrl.ImgUrl}${item.imgUrl}`}
-                
-                />
-              </Link>
+  <Avatar
+    size={76}
+    mx="1rem"
+    alt={item.name}
+    src={
+      item.productType === "Abroad"
+        ? item.imgUrl // Use imgUrl directly if productType is "Abroad"
+        : `${ApiBaseUrl.ImgUrl}${item.imgUrl}` // Add ApiBaseUrl if not "Abroad"
+    }
+  />
+</Link>
+
 
               <div className="product-details">
                 <Link href={`/product/${item.slug}`}>

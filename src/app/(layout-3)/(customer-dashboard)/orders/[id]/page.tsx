@@ -252,7 +252,149 @@ export default function OrderDetails({ params }: IDParams) {
   if (!order) {
     return <Typography color="red">Failed to fetch order details</Typography>;
   }
+  
+  let abroadProduct = null;
 
+if (order?.Order?.productType === "Abroad") {
+  abroadProduct = (
+    <Box key={order?.Order?.invoice_id} my="1rem">
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        flexDirection: "row",
+        alignItems: "center",
+        flexWrap: "wrap",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0",
+        }}
+      >
+        <Typography fontWeight="bold" fontSize="18px" mb="1rem" p="1rem" style={{ margin: "0" }}>
+          <FontAwesomeIcon icon={faStore} size="1x" color="black" /> {order?.Order?.items?.shop_name || "Product not available"}
+        </Typography>
+  
+        <Box m="6px">
+          <Chip p="0.25rem 1rem" bg={getColor(order?.Order?.items?.status)}>
+            <Small color="white">{order?.Order?.items?.status || "Status not available"}</Small>
+          </Chip>
+        </Box>
+      </div>
+  
+      {order?.Order?.items?.delivered_at && (
+        <p
+          style={{
+            padding: "0.5rem 1rem",
+            backgroundColor: "#FFE1E6",
+            color: "#E94560",
+            borderRadius: "300px",
+            textAlign: "center",
+            height: "40px",
+            marginRight: "20px",
+            marginTop: "10px",
+            minWidth: "200px",
+          }}
+        >
+          Estimated Delivery Date: <b>{order?.Order?.items?.delivered_at}</b>
+        </p>
+      )}
+  
+      <Box mt="1rem" textAlign="center">
+        <Button
+          variant="text"
+          color="primary"
+          onClick={() => toggleSummary(order?.Order?.invoice_id)}
+          style={{
+            padding: "0.5rem 1rem",
+            backgroundColor: "#FFE1E6",
+            color: "#E94560",
+            borderRadius: "300px",
+            textAlign: "center",
+            height: "40px",
+            marginRight: "20px",
+            marginTop: "-20px",
+            minWidth: "200px",
+          }}
+        >
+          {openSummaries[order?.Order?.invoice_id] ? (
+            <>
+              Total Summary <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "8px" }} />
+            </>
+          ) : (
+            <>
+              Total Summary <FontAwesomeIcon icon={faCaretDown} style={{ marginLeft: "8px" }} />
+            </>
+          )}
+        </Button>
+      </Box>
+    </div>
+    {order?.Order?.items?.order_items?.map((item, index) => (
+      <WriteReview
+        key={index}
+        item={item}
+        shopName={order?.Order?.items?.shop_name}
+        orderDetails={order}
+        status={order?.Order?.items?.status}
+      />
+    ))}
+  
+    {openSummaries[order?.Order?.invoice_id] && (
+      <Box p="20px" borderRadius={8} mt="1rem">
+        <Typography variant="h6" mt="0px" mb="14px">
+          Total Summary
+        </Typography>
+  
+        <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+          <Typography fontSize="14px" color="text.hint">
+            Subtotal:
+          </Typography>
+          <Typography fontSize="14px" color="text.hint">
+            {currency(order?.Order?.items?.order_items?.[0]?.price || 0)}
+          </Typography>
+        </FlexBox>
+  
+        <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+          <Typography fontSize="14px" color="text.hint">
+            Shipping fee ({order?.Order?.items?.shop_name}):
+          </Typography>
+          <Typography fontSize="14px" color="text.hint">
+            {currency(order?.Order?.items?.delivery_charge || 0)}
+          </Typography>
+        </FlexBox>
+  
+        <Divider mb="0.5rem" />
+  
+        <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
+          <Typography variant="h6">Total</Typography>
+          <Typography variant="h6">
+            {currency(order?.Order?.items?.order_items?.[0]?.total_price || 0)}
+          </Typography>
+        </FlexBox>
+  
+        <FlexBox alignItems="center" mb="1rem">
+          Payment Method:
+          <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+            {order?.Order?.payment_method}
+          </H6>
+        </FlexBox>
+  
+        <FlexBox alignItems="center" mb="1rem">
+          Payment Status:
+          <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+            {order?.Order?.payment_status}
+          </H6>
+        </FlexBox>
+      </Box>
+    )}
+  </Box>
+  );
+}
+
+  
   return (
     <Fragment>
       <DashboardPageHeader
@@ -306,188 +448,155 @@ export default function OrderDetails({ params }: IDParams) {
             <Typography>No items in this order.</Typography>
           )}
         </Box> */}
-  <Box py="0.5rem">
-      {order?.Order?.items && Object.keys(order.Order.items).length > 0 ? (
-        Object.entries(order.Order.items).map(([shopName, shopDetails]) => {
-          // Cast shopDetails to the appropriate type
-          const details = shopDetails as {
-            delivered_at: string | null;
-            order_items: any[];
-            delivery_charge: number | null;
-            sub_total: number | null;
-            total: number | null;
-            status: string | null
-          };
 
-          return (
-            <Box key={shopName} my="1rem">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                flexDirection: "row",
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              <div
-  style={{
-    display: "flex",
-    alignItems: "center", // Aligns items vertically
-    gap: "0", // No gap between the components
-  }}
->
-  <Typography fontWeight="bold" fontSize="18px" mb="1rem" p="1rem" style={{ margin: "0" }}>
-    <FontAwesomeIcon icon={faStore} size="1x" color="black" /> {shopName}
-  </Typography>
-   <Box m="6px">
-          <Chip p="0.25rem 1rem" bg={getColor(details.status)}>
-            <Small color="white"> {details.status}</Small>
-          </Chip>
-        </Box>
-</div>
+{abroadProduct}
 
-      
-              {/* Check and render the 'delivered_at' property */}
-              {details.delivered_at && (
-                <p
-                  color="text.muted"
+{order?.Order?.productType !== "Abroad" && (
+      <Box py="0.5rem">
+        {order?.Order?.items && Object.keys(order.Order.items).length > 0 ? (
+          Object.entries(order.Order.items).map(([shopName, shopDetails]) => {
+            const details = shopDetails as {
+              delivered_at: string | null;
+              order_items: any[];
+              delivery_charge: number | null;
+              sub_total: number | null;
+              total: number | null;
+              status: string | null;
+              isAbroad: boolean; // Add a flag for checking if the product is from abroad
+            };
+
+            return (
+              <Box key={shopName} my="1rem">
+                <div
                   style={{
-                    padding: "0.5rem 1rem",
-                    backgroundColor: "#FFE1E6",
-                    color: "#E94560",
-                    borderRadius: "300px",
-                    textAlign: "center",
-                    height: "40px",
-                    marginRight: "20px",
-                    marginTop: "10px",
-                    minWidth: "200px", // Minimum width to maintain the design
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    flexWrap: "wrap",
                   }}
                 >
-                  Estimated Delivery Date: <b>{details.delivered_at}</b>
-                </p>
-              )}
-      
-              {/* Total Summary Button */}
-              <Box mt="1rem" textAlign="center">
-                <Button
-                  ref={buttonRef}
-                  variant="text"
-                  color="primary"
-                  onClick={() => toggleSummary(shopName)} 
-                  style={{
-                    padding: "0.5rem 1rem",
-                    backgroundColor: "#FFE1E6",
-                    color: "#E94560",
-                    borderRadius: "300px",
-                    textAlign: "center",
-                    height: "40px",
-                    marginRight: "20px",
-                    marginTop: "-20px",
-                    minWidth: "200px", // Minimum width to maintain the design 
-                  }}
-                >
-                  {/* {openSummaries[shopName] ? "Collapse Total Summary" : "Show Total Summary"} */}
-                  {openSummaries[shopName] ? (
-  <>
-    Total Summary <span style={{ marginLeft: "8px" }}><FontAwesomeIcon icon={faCaretUp} /></span>
-  </>
-) : (
-  <>
-    Total Summary <span style={{ marginLeft: "8px" }}><FontAwesomeIcon icon={faCaretDown} /></span>
-  </>
-)}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0",
+                    }}
+                  >
+                    <Typography fontWeight="bold" fontSize="18px" mb="1rem" p="1rem" style={{ margin: "0" }}>
+                      <FontAwesomeIcon icon={faStore} size="1x" color="black" /> {shopName}
+                    </Typography>
+                    <Box m="6px">
+                      <Chip p="0.25rem 1rem" bg={getColor(details?.status)}>
+                        <Small color="white">{details?.status}</Small>
+                      </Chip>
+                    </Box>
+                  </div>
 
-                </Button>
+                  {details?.delivered_at && (
+                    <p
+                      style={{
+                        padding: "0.5rem 1rem",
+                        backgroundColor: "#FFE1E6",
+                        color: "#E94560",
+                        borderRadius: "300px",
+                        textAlign: "center",
+                        height: "40px",
+                        marginRight: "20px",
+                        marginTop: "10px",
+                        minWidth: "200px",
+                      }}
+                    >
+                      Estimated Delivery Date: <b>{details.delivered_at}</b>
+                    </p>
+                  )}
+
+                  <Box mt="1rem" textAlign="center">
+                    <Button
+                      variant="text"
+                      color="primary"
+                      onClick={() => toggleSummary(shopName)}
+                      style={{
+                        padding: "0.5rem 1rem",
+                        backgroundColor: "#FFE1E6",
+                        color: "#E94560",
+                        borderRadius: "300px",
+                        textAlign: "center",
+                        height: "40px",
+                        marginRight: "20px",
+                        marginTop: "-20px",
+                        minWidth: "200px",
+                      }}
+                    >
+                      {openSummaries[shopName] ? (
+                        <>
+                          Total Summary <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "8px" }} />
+                        </>
+                      ) : (
+                        <>
+                          Total Summary <FontAwesomeIcon icon={faCaretDown} style={{ marginLeft: "8px" }} />
+                        </>
+                      )}
+                    </Button>
+                  </Box>
+                </div>
+
+                {details?.order_items?.map((item, ind) => (
+                  <WriteReview
+                    key={ind}
+                    item={item}
+                    shopName={shopName}
+                    orderDetails={details}
+                    status={details.status}
+                  />
+                ))}
+
+                {openSummaries[shopName] && (
+                  <Box p="20px" borderRadius={8} mt="1rem">
+                    <Typography variant="h6" mt="0px" mb="14px">
+                      Total Summary
+                    </Typography>
+                    <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+                      <Typography fontSize="14px" color="text.hint">
+                        Subtotal:
+                      </Typography>
+                      <Typography fontSize="14px" color="text.hint">
+                        {currency(details.sub_total || 0)}
+                      </Typography>
+                    </FlexBox>
+                    <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+                      <Typography fontSize="14px" color="text.hint">
+                        Shipping fee ({shopName}):
+                      </Typography>
+                      <Typography fontSize="14px" color="text.hint">
+                        {currency(details.delivery_charge || 0)}
+                      </Typography>
+                    </FlexBox>
+                    <Divider mb="0.5rem" />
+                    <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
+                      <Typography variant="h6">Total</Typography>
+                      <Typography variant="h6">{currency(details.total || 0)}</Typography>
+                    </FlexBox>
+                    <FlexBox alignItems="center" mb="1rem">
+                      Payment Method:
+                      <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+                        {order?.Order?.delivery_type}
+                      </H6>
+                    </FlexBox>
+                    <FlexBox alignItems="center" mb="1rem">
+                      Payment Status:
+                      <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+                        {order?.Order?.payment_status}
+                      </H6>
+                    </FlexBox>
+                  </Box>
+                )}
               </Box>
-            </div>
-      
-            {/* Render the items from the shop */}
-            {/* {details.order_items.map((item, ind) => (
-              <WriteReview key={ind} item={item} shopName={shopName} orderDetails={details} />
-            ))} */}
-            {details.order_items.map((item, ind) => (
-  <WriteReview
-    key={ind}
-    item={item}
-    shopName={shopName}
-    orderDetails={details}
-    status={details.status} // Pass the status here
-  />
-))}
-
-      
-            {/* Conditionally render the total summary */}
-            {openSummaries[shopName] && (
-              <div style={{ width: "100%", marginTop: "1rem" }}>
-                <Box p="20px" borderRadius={8}>
-                  <Typography variant="h6" mt="0px" mb="14px">
-                    Total Summary
-                  </Typography>
-      
-                  <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-                    <Typography fontSize="14px" color="text.hint">
-                      Subtotal:
-                    </Typography>
-                    <Typography fontSize="14px" color="text.hint">
-                      {currency(details.sub_total || 0)} {/* Use details.sub_total */}
-                    </Typography>
-                  </FlexBox>
-      
-                  {/* Display the Delivery Charge based on shop */}
-                  <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-                    <Typography fontSize="14px" color="text.hint">
-                      Shipping fee ({shopName}):
-                    </Typography>
-                    <Typography fontSize="14px" color="text.hint">
-                      {currency(details.delivery_charge || 0)} {/* Use details.delivery_charge */}
-                    </Typography>
-                  </FlexBox>
-      
-                  <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-                    <Typography fontSize="14px" color="text.hint">
-                      Discount:
-                    </Typography>
-                    <Typography fontSize="14px" color="text.hint">
-                      {currency(0)} {/* Assuming no discount for now */}
-                    </Typography>
-                  </FlexBox>
-      
-                  <Divider mb="0.5rem" />
-      
-                  <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-                    <Typography variant="h6">Total</Typography>
-                    <Typography variant="h6">{currency(details.total || 0)}</Typography>
-                  </FlexBox>
-
-                  <FlexBox
-              alignItems="center"
-              mb="1rem"
-            >
-              Payment Method:
-              <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
-                {order.Order.delivery_type}
-              </H6>
-            </FlexBox>
-            <FlexBox
-              alignItems="center"
-              mb="1rem"
-            >
-              Payment Status:
-              <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
-                {order.Order.payment_status}
-              </H6>
-            </FlexBox>
-                </Box>
-              </div>
-            )}
-          </Box>
-          );
-        })
-      ) : (
-        <Typography>No order items available.</Typography>
-      )}
-    </Box>
+            );
+          })
+        ) : null}
+      </Box>
+    )}
 
 
 

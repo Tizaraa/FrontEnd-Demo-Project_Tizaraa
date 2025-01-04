@@ -73,7 +73,7 @@ export default function OTSearchResult({ sortOptions, slug }) {
 
       const data = await response.json();
       const newProducts = data.Result.Items.Content;
-      // console.log(data);
+      console.log(data);
 
       setTotalProducts(data.Result.Items.TotalCount);
       setProducts((prevProducts) => {
