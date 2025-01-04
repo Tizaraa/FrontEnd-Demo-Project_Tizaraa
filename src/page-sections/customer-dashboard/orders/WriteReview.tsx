@@ -134,7 +134,7 @@ export default function WriteReview({
           <Button
             variant="text"
             color="primary"
-            disabled={status !== "Pending" && reviewMode === "submit"}
+            disabled={status !== "Delivered" && reviewMode === "submit"}
             onClick={() => setIsModalOpen(true)}
           >
             <Typography fontSize="14px">

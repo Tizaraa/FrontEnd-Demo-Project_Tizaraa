@@ -911,13 +911,18 @@ export default function PaymentForm() {
           <Button
             onClick={orderSubmit}
             //variant="outlined"
-            bg="primary.light"
-            color="primary"
+            // bg="primary.light"
+            // color="primary"
+            style={{
+              color: isSubtotalZero || !paymentMethod ? "#999999" : "#ffe1e6", 
+              backgroundColor: isSubtotalZero || !paymentMethod ? "#cccccc" : "#e94560", 
+              cursor: isSubtotalZero || !paymentMethod ? "not-allowed" : "pointer", 
+            }}
             type="button"
             fullwidth
             disabled={isSubtotalZero || !paymentMethod}
           >
-            {isHasLoading ? <BeatLoader size={18} color="#E94560" /> : "Proceed to Pay"}
+            {isHasLoading ? <BeatLoader size={18} color="white" /> : "Proceed to Pay"}
           </Button>
         </Grid>
       </Grid>

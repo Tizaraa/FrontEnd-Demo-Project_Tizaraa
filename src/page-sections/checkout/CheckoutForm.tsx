@@ -140,8 +140,12 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
         <Grid item sm={6} xs={12}>
         <Button
             //variant="outlined"
-            color="primary"
-            bg="primary.light"
+            // color="primary"
+            // bg="primary.light"
+            style={{
+              color: "#ffe1e6",
+              backgroundColor: "#e94560",
+            }}
             type="button"
             fullwidth
             onClick={handlePayment}
@@ -149,7 +153,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
           >
             {/* Proceed to Pay
             const [isHasPayLoading, setIsHasPayLoading] = useState(false); */}
-            {isHasPayLoading ? <BeatLoader size={18} color="#E94560" /> : "Proceed to Pay"}
+            {isHasPayLoading ? <BeatLoader size={18} color="white" /> : "Proceed to Pay"}
           </Button>
         </Grid>
       </Grid>
