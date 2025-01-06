@@ -112,7 +112,7 @@ export default function OrderDetails({ params }: IDParams) {
             },
           }
         );
-        // console.log("bina data", response);
+        console.log("bina data", response);
         setOrder(response.data);
         setStatus(response.data.Order.status);
         setEstimateDate(response.data.Order.deliveredAt);
@@ -211,26 +211,9 @@ export default function OrderDetails({ params }: IDParams) {
         }
       );
 
-      // console.log("fg",paymentResponse);
-      // console.log("fghhh",paymentResponse.data.redirect_url);
       const updatedOrder = orderResponse.data;
-      // console.log("frrrr",updatedOrder);
       const redirectUrl = paymentResponse.data.redirect_url;
         window.location.href = redirectUrl;
-      
-
-      if (paymentResponse.data.payment_status === "Unpaid") {
-        const updatedOrder = orderResponse.data;
-        // console.log("frrrr",updatedOrder);
-        
-        updatedOrder.Order.payment_status = "Paid";
-        setOrder(updatedOrder);
-      }
-
-      // if (paymentResponse.data.payment_status === "Unpaid") {
-      //   const redirectUrl = paymentResponse.data.redirect_url;
-      //   window.location.href = redirectUrl; // Redirect to the payment URL
-      // }
     } catch (error) {
       console.error("Error processing payment:", error);
       setOnlinePaymentError("Failed to process payment. Please try again.");
@@ -339,6 +322,7 @@ if (order?.Order?.productType === "Abroad") {
         shopName={order?.Order?.items?.shop_name}
         orderDetails={order}
         status={order?.Order?.items?.status}
+        orderItemId = {order?.Order?.items?.order_item_id}
       />
     ))}
   
@@ -548,6 +532,7 @@ if (order?.Order?.productType === "Abroad") {
                     shopName={shopName}
                     orderDetails={details}
                     status={details.status}
+                    orderItemId={item.order_item_id}
                   />
                 ))}
 
@@ -579,13 +564,13 @@ if (order?.Order?.productType === "Abroad") {
                     </FlexBox>
                     <FlexBox alignItems="center" mb="1rem">
                       Payment Method:
-                      <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+                      <H6 my="0px" mx="1rem" backgroundColor="rgba(255,225,230,1)" p="5px" px="10px" borderRadius="1rem" color="rgb(233, 69, 96)">
                         {order?.Order?.delivery_type}
                       </H6>
                     </FlexBox>
                     <FlexBox alignItems="center" mb="1rem">
                       Payment Status:
-                      <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+                      <H6 my="0px" mx="1rem" backgroundColor="rgba(255,225,230,1)" p="5px" px="10px" borderRadius="1rem" color="rgb(233, 69, 96)">
                         {order?.Order?.payment_status}
                       </H6>
                     </FlexBox>

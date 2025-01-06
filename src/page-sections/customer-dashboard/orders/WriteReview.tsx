@@ -8,17 +8,20 @@ import { currency } from "@utils/utils";
 import Modal from "@component/Modal";
 import toast from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import { useRouter } from "next/navigation";
 
 export default function WriteReview({
   item,
   shopName,
   orderDetails,
   status,
+  orderItemId 
 }: {
   item: any;
   shopName: string;
   orderDetails: any;
   status: string;
+  orderItemId : any;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(0);
@@ -32,7 +35,9 @@ export default function WriteReview({
     comments: string;
     images: string[];
   } | null>(null);
+  const router = useRouter();
 
+  const [cancelMode, setCancelMode] = useState<"submit" | "cancelled">("submit");
   const deliveryCharge = orderDetails?.delivery_charge;
 
   useEffect(() => {
@@ -114,6 +119,27 @@ export default function WriteReview({
     }
   };
 
+
+  // const handleCancelClick = () => {
+  //   if (cancelMode === "submit" && status === "Pending") {
+  //     // Encrypt the orderItemId
+  //     const encryptedOrderItemId = btoa(orderItemId);
+  //     // Encrypt product name if needed, or pass directly as part of the URL
+  //     const encodedProductName = encodeURIComponent(item.product_name);
+  //     router.push(`/cancelled-order?orderItemId=${encryptedOrderItemId}`);
+      
+  //   }
+  // };
+
+  const handleCancelClick = () => {
+    if (cancelMode === "submit" && status === "Pending") {
+      const encryptedOrderItemId = btoa(orderItemId);
+      sessionStorage.setItem("cancelItem", JSON.stringify(item));
+      router.push(`/cancelled-order?orderItemId=${encryptedOrderItemId}`);
+    }
+  };
+  
+  
   return (
     <>
       <FlexBox px="1rem" py="0.5rem" flexWrap="wrap" alignItems="center" key={item.product_name}>
@@ -142,7 +168,27 @@ export default function WriteReview({
             </Typography>
           </Button>
         </FlexBox>
+
+       
+       {/* order cancel  */}
+       <FlexBox flex="160px" m="6px" alignItems="center">
+          <Button
+            variant="text"
+            style={{
+              color: (status !== "Pending" && cancelMode === "submit") || status === "Shipped" ? "gray" : "blue",
+            }}
+            onClick={handleCancelClick}
+            disabled={(status !== "Pending" && cancelMode === "submit") || status === "Shipped"} 
+          >
+            <Typography fontSize="14px">
+              {cancelMode === "submit" ? "Cancel" : "cancelled"}
+            </Typography>
+         </Button>
+
+        </FlexBox>
+
       </FlexBox>
+
 
       {/* Render Modal */}
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -216,7 +262,7 @@ export default function WriteReview({
                         background: "transparent",
                         cursor: "pointer",
                         fontSize: "24px",
-                        color: star <= existingReview?.rating ? "#FFD700" : "#ccc", // Yellow for selected stars, gray for unselected
+                        color: star <= existingReview?.rating ? "#FFD700" : "#ccc", 
                         border: "none",
                         padding: "2px",
                       }}
@@ -272,6 +318,10 @@ export default function WriteReview({
           )}
         </Box>
       </Modal>
+
+
+
+
     </>
   );
 }

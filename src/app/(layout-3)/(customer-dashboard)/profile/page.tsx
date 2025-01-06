@@ -20,6 +20,7 @@ import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import authService from "services/authService";
+import Link from "next/link";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -118,12 +119,12 @@ export default function Profile() {
       </LoaderWrapper>
     );
 
-  const infoList = [
-    { title: data.totalOrders, subtitle: "All Orders" },
-    { title: data.confirmedOrders, subtitle: "All Confirm Orders" },
-    { title: data.totalShipments, subtitle: "Total Shipment" },
-    { title: data.totalDeliveries, subtitle: "Total Delivery" },
-  ];
+    const infoList = [
+      { title: data.totalOrders, subtitle: "All Orders", link: "/orders" },
+      { title: data.confirmedOrders, subtitle: "All Confirm Orders", link: "#" },
+      { title: data.totalShipments, subtitle: "Total Shipment", link: "#" },
+      { title: data.totalDeliveries, subtitle: "Total Delivery", link: "#" },
+    ];
 
   return (
     <Suspense fallback={<LoadingFallback />}>
@@ -164,23 +165,48 @@ export default function Profile() {
               <Grid container spacing={4}>
                 {infoList.map((item) => (
                   <Grid item lg={3} sm={6} xs={6} key={item.subtitle}>
-                    <FlexBox
-                      as={Card}
-                      height="100%"
-                      p="1rem 1.25rem"
-                      borderRadius={8}
-                      alignItems="center"
-                      flexDirection="column"
-                      justifyContent="center"
-                    >
-                      <H3 color="primary.main" my="0px" fontWeight="600">
-                        {item?.title}
-                      </H3>
+                    {item.link ? (
+        <Link href={item.link} passHref>
+          <FlexBox
+            as={Card}
+            height="100%"
+            p="1rem 1.25rem"
+            borderRadius={8}
+            alignItems="center"
+            flexDirection="column"
+            justifyContent="center"
+            style={{ cursor: "pointer" }}
+          >
+            <H3 color="primary.main" my="0px" fontWeight="600">
+              {item?.title}
+            </H3>
 
-                      <Small color="text.muted" textAlign="center">
-                        {item?.subtitle}
-                      </Small>
-                    </FlexBox>
+            <Small color="text.muted" textAlign="center">
+              {item?.subtitle}
+            </Small>
+          </FlexBox>
+        </Link>
+      ) : (
+        <div>
+          <FlexBox
+            as={Card}
+            height="100%"
+            p="1rem 1.25rem"
+            borderRadius={8}
+            alignItems="center"
+            flexDirection="column"
+            justifyContent="center"
+          >
+            <H3 color="primary.main" my="0px" fontWeight="600">
+              {item?.title}
+            </H3>
+
+            <Small color="text.muted" textAlign="center">
+              {item?.subtitle}
+            </Small>
+          </FlexBox>
+        </div>
+      )}
                   </Grid>
                 ))}
               </Grid>

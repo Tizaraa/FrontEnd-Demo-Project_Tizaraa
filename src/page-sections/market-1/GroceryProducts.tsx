@@ -24,6 +24,7 @@ export default function GroceryProducts() {
   const [flashSale, setFlashSale] = useState([]);
   const width = useWindowSize();
   const [visibleSlides, setVisibleSlides] = useState(5);
+  const [isLoading, setIsLoading] = useState(false); 
 
   useEffect(() => {
     if (width < 370) setVisibleSlides(1);
@@ -53,8 +54,24 @@ export default function GroceryProducts() {
     fetchProducts();
   }, []);
 
+   // Handle the product click to show loading state
+   const handleProductClick = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);  // Optionally you can set a timeout if you want to stop loading after some delay
+    }, 1000);  // Delay to show loading effect before redirecting
+  };
+
+
   return (
     <CategorySectionCreator  title="Grocery" seeMoreLink="/category/grocery">
+      {/* Show loading overlay when loading */}
+      {isLoading && (
+          <div className={styles.loadingOverlay}>
+            <div className={styles.loader}></div>
+          </div>
+        )}
+
       <Box my="-0.25rem">
         <Carousel totalSlides={flashSale.length} visibleSlides={visibleSlides}>
           {flashSale.map((item) => (
@@ -95,11 +112,13 @@ export default function GroceryProducts() {
                     />
                   </HoverBox> */}
 
-<Box
- position="relative"
- style={{
-   padding: "0 0.5rem", // Added padding to prevent content touching the edges
- }}>
+                <Box
+                position="relative"
+                style={{
+                  padding: "0 0.5rem", // Added padding to prevent content touching the edges
+                }}
+                onClick={handleProductClick}
+                >
               <img 
                 // src={item.product_thumbnail} 
                 src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}

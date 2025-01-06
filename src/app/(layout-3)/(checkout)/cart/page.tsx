@@ -18,6 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import BeatLoader from "react-spinners/BeatLoader";
 import authService from "services/authService";
 import { useRouter } from "next/navigation";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function Cart() {
   const { state, dispatch } = useAppContext();
@@ -222,7 +223,12 @@ export default function Cart() {
               slug={item.slug}
               name={item.name}
               price={item.price}
-              imgUrl={item.imgUrl}
+              // imgUrl={item.imgUrl}
+              imgUrl={
+                item.productType === "Abroad"
+                  ? item.imgUrl 
+                  : `${ApiBaseUrl.ImgUrl}${item.imgUrl}` 
+              }
               productStock={item.productStock}
               discountPrice={item.discountPrice}
               productId={item.productId}

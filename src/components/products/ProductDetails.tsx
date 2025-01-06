@@ -145,7 +145,7 @@ const ProductDetails = ({
 
  <div style={{marginBottom:"10px", marginTop:"5px"}}>
  Warranty:
-  <span style={{ backgroundColor: "rgba(226,226,226,1)", padding: "4px", borderRadius: "4px" }}>
+  <span style={{ backgroundColor: "rgba(249,55,92,0.69)", color: "white", padding: "4px 10px", borderRadius: "4px" }}>
     {warranty || "N/A"}
   </span>
  </div>
@@ -154,7 +154,7 @@ const ProductDetails = ({
         {/* | Warranty type: {warrantyType || "N/A"}  */}
         <div style={{marginBottom:"5px"}}>
         Replacement warranty:
-         <span style={{ backgroundColor: "rgba(226,226,226,1)", padding: "4px", borderRadius: "4px" }}>
+         <span style={{backgroundColor: "rgba(249,55,92,0.69)", color: "white", padding: "4px 10px", borderRadius: "4px"}}>
           {replacewarranty || "N/A"}
           </span>
         </div>
