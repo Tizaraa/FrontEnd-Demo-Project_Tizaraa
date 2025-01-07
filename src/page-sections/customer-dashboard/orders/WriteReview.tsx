@@ -180,8 +180,10 @@ export default function WriteReview({
             style={{
               height: "30px",
               borderRadius: "100px",
-              backgroundColor: reviewMode !== "submit" ? "#e94560" : "transparent", 
-              color: reviewMode !== "submit" ? "white" : "#e94560",
+              backgroundColor: reviewMode !== "submit" ? "#e94560" : "", 
+              color: reviewMode !== "submit" ? "white" : "gray",
+              pointerEvents: "none", // Disable hover interactions
+              transition: "none" // Remove hover transition
             }}
           >
             <Typography fontSize="14px">
@@ -225,7 +227,9 @@ export default function WriteReview({
             ? "gray"
             : "gray", 
         height: "30px",
-        borderRadius: "100px"
+        borderRadius: "100px",
+        pointerEvents: "none", // Disable hover interactions
+        transition: "none" // Remove hover transition
       }}
       onClick={handleCancelClick}
       disabled={cancel_status === 5 || !(cancel_status >= 0 && cancel_status <= 2)} 
