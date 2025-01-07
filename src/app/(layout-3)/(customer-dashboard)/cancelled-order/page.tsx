@@ -1,13 +1,15 @@
 'use client'
 
 import TextArea from '@component/textarea'
-import Typography from '@component/Typography'
+import Typography, { H6, SemiSpan } from '@component/Typography'
 import { Button, Card, CardContent, CardHeader, Checkbox } from '@mui/material'
 import ApiBaseUrl from 'api/ApiBaseUrl'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation' 
+import CheckBox from '@component/CheckBox'
+import FlexBox from '@component/FlexBox'
 
 export default function CancellationForm() {
   const [cancelItem, setCancelItem] = useState<any | null>(null)
@@ -174,7 +176,7 @@ export default function CancellationForm() {
                 </li>
               </ol>
             </div>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+            {/* <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
               <Checkbox
                 id="policy"
                 checked={policyAccepted}
@@ -183,7 +185,36 @@ export default function CancellationForm() {
               <label htmlFor="policy" style={{ fontSize: '0.875rem' }}>
                 I have read and accepted the Cancellation Policy of Tizaraa.
               </label>
-            </div>
+            </div> */}
+             <CheckBox
+            mb="1.75rem"
+            name="agreement"
+            color="secondary"
+            onChange={(e) => setPolicyAccepted(e.target.checked)}
+            checked={policyAccepted}
+            label={
+              <FlexBox>
+                <SemiSpan>I have read and accepted the Cancellation Policy of</SemiSpan>
+                <a
+                  href="/terms_condition"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <H6
+                    ml="0.5rem"
+                    borderBottom="1px solid"
+                    borderColor="gray.900"
+                  >
+                    Tizaraa
+                  </H6>
+                </a>
+              </FlexBox>
+            }
+            required
+          />
+
+
+
           </div>
 
           {/* Submit Button */}
