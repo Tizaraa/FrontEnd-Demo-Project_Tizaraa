@@ -461,7 +461,7 @@ export default function Signup() {
     <>
       <CommonHeader></CommonHeader>
       <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
-        <form className="content" onSubmit={handleSubmit}>
+        <form className="content" onSubmit={handleSubmit} autoComplete="off">
           <H3 textAlign="center" mb="0.5rem">
             Create Your Account
           </H3>
