@@ -133,6 +133,16 @@ export default function WriteReview({
   //   }
   // };
 
+  // product return function 
+
+  const handleReturnClick = () => {
+      const encryptedOrderItemId = btoa(orderItemId);
+      sessionStorage.setItem("returnItem", JSON.stringify(item));
+      router.push(`/return-order?orderItemId=${encryptedOrderItemId}`); 
+  };
+
+
+  // cancek click function
   const handleCancelClick = () => {
     if (cancel_status >= 0 && cancel_status <= 2) {
       const encryptedOrderItemId = btoa(orderItemId);
@@ -140,11 +150,12 @@ export default function WriteReview({
       router.push(`/cancelled-order?orderItemId=${encryptedOrderItemId}`);
     }
   };
-  
+
   return (
     <>
-      <FlexBox px="1rem" py="0.5rem" flexWrap="wrap" alignItems="center" key={item.product_name}>
-        <FlexBox flex="2 2 260px" m="6px" alignItems="center">
+      <FlexBox px="1rem" py="0.5rem" flexWrap="wrap" alignItems="center" key={item.product_name} style={{display:"flex", justifyContent:"space-between"}}>
+       <div>
+       <FlexBox flex="2 2 260px" m="6px" alignItems="center">
           <Avatar 
           // src={item.product_image} 
           src={`${ApiBaseUrl.ImgUrl}${item.product_image}`}
@@ -156,13 +167,22 @@ export default function WriteReview({
             </Typography>
           </Box>
         </FlexBox>
+       </div>
 
-        <FlexBox flex="160px" m="6px" alignItems="center">
+       <div style={{display:"flex"}}>
+         {/* review and preview  */}
+         <FlexBox flex="160px" m="6px" alignItems="center">
           <Button
             variant="text"
             color="primary"
             disabled={status !== "Delivered" && reviewMode === "submit"}
             onClick={() => setIsModalOpen(true)}
+            style={{
+              height: "30px",
+              borderRadius: "100px",
+              backgroundColor: reviewMode !== "submit" ? "#e94560" : "transparent", 
+              color: reviewMode !== "submit" ? "white" : "#e94560",
+            }}
           >
             <Typography fontSize="14px">
               {reviewMode === "submit" ? "Review" : "Preview"}
@@ -170,29 +190,56 @@ export default function WriteReview({
           </Button>
         </FlexBox>
 
+        {/* return policy  */}
+        {status === "Delivered" && (
+      <FlexBox flex="160px" m="6px" alignItems="center">
+        <Button
+          variant="text"
+          color="primary"
+          style={{
+            height: "30px",
+            borderRadius: "100px",
+            backgroundColor: "#e94560",
+            color: "white"
+          }}
+          onClick={handleReturnClick}
+        >
+          <Typography fontSize="14px">
+            Return
+          </Typography>
+        </Button>
+      </FlexBox>
+    )}
+
        
        {/* order cancel  */}
-       <FlexBox flex="160px" m="6px" alignItems="center">
-  <Button
-    variant="text"
-    style={{
-      color:
-        cancel_status >= 0 && cancel_status <= 2 // Show blue when cancel_status is 0-2
-          ? "blue"
-          : cancel_status === 5 // Show gray when cancel_status is 5
-          ? "gray"
-          : "gray", // Default color when status is other than 0-2 or 5
-    }}
-    onClick={handleCancelClick}
-    disabled={cancel_status === 5 || !(cancel_status >= 0 && cancel_status <= 2)} // Disable button when status is 5
-  >
-    <Typography fontSize="14px">
-      {cancel_status >= 0 && cancel_status <= 2 ? "Cancel" : "Cancelled"}
-    </Typography>
-  </Button>
-</FlexBox>
+       {status !== "Delivered" && (
+  <FlexBox flex="160px" m="6px" alignItems="center">
+    <Button
+      variant="text"
+      style={{
+        color:
+          cancel_status >= 0 && cancel_status <= 2 
+            ? "blue"
+            : cancel_status === 5 
+            ? "gray"
+            : "gray", 
+        height: "30px",
+        borderRadius: "100px"
+      }}
+      onClick={handleCancelClick}
+      disabled={cancel_status === 5 || !(cancel_status >= 0 && cancel_status <= 2)} 
+    >
+      <Typography fontSize="14px">
+        {cancel_status >= 0 && cancel_status <= 2 ? "Cancel" : "Cancelled"}
+      </Typography>
+    </Button>
+  </FlexBox>
+)}
 
-      </FlexBox>
+       </div>
+
+        </FlexBox>
 
 
       {/* Render Modal */}

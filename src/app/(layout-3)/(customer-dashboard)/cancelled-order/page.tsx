@@ -70,19 +70,14 @@ export default function CancellationForm() {
   const maxLength = 256
 
   return (
-    <div style={{ margin: '0 auto', padding: '1rem', maxWidth: '768px' }}>
+    <div>
       <Card>
-        <CardHeader>
-          <Typography style={{ fontSize: '1.25rem', fontWeight: '500' }}>
-            Request Cancellation
-          </Typography>
-        </CardHeader>
         <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {/* Product Selection */}
           <div>
-            <h3 style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>
-              Choose the item(s) you want to cancel
-            </h3>
+          <Typography style={{ fontSize: '1.25rem', fontWeight: '700' }}>
+            Request Cancellation
+          </Typography>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
               <div style={{ display: 'flex', gap: '1rem', flex: 1 }}>
                 <Image
