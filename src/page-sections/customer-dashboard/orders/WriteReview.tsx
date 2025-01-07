@@ -227,9 +227,7 @@ export default function WriteReview({
             ? "gray"
             : "gray", 
         height: "30px",
-        borderRadius: "100px",
-        pointerEvents: "none", // Disable hover interactions
-        transition: "none" // Remove hover transition
+        borderRadius: "100px"
       }}
       onClick={handleCancelClick}
       disabled={cancel_status === 5 || !(cancel_status >= 0 && cancel_status <= 2)} 
