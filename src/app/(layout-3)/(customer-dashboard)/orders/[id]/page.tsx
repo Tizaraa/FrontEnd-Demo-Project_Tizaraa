@@ -323,6 +323,7 @@ if (order?.Order?.productType === "Abroad") {
         orderDetails={order}
         status={order?.Order?.items?.status}
         orderItemId = {order?.Order?.items?.order_item_id}
+        cancel_status={order?.Order?.items?.order_items?.status}
       />
     ))}
   
@@ -533,6 +534,7 @@ if (order?.Order?.productType === "Abroad") {
                     orderDetails={details}
                     status={details.status}
                     orderItemId={item.order_item_id}
+                    cancel_status={item.status}
                   />
                 ))}
 

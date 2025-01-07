@@ -15,13 +15,15 @@ export default function WriteReview({
   shopName,
   orderDetails,
   status,
+  cancel_status,
   orderItemId 
 }: {
   item: any;
   shopName: string;
   orderDetails: any;
-  status: string;
+  status: any;
   orderItemId : any;
+  cancel_status:any;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(0);
@@ -37,7 +39,7 @@ export default function WriteReview({
   } | null>(null);
   const router = useRouter();
 
-  const [cancelMode, setCancelMode] = useState<"submit" | "cancelled">("submit");
+
   const deliveryCharge = orderDetails?.delivery_charge;
 
   useEffect(() => {
@@ -132,13 +134,12 @@ export default function WriteReview({
   // };
 
   const handleCancelClick = () => {
-    if (cancelMode === "submit" && status === "Pending") {
+    if (cancel_status >= 0 && cancel_status <= 2) {
       const encryptedOrderItemId = btoa(orderItemId);
       sessionStorage.setItem("cancelItem", JSON.stringify(item));
       router.push(`/cancelled-order?orderItemId=${encryptedOrderItemId}`);
     }
   };
-  
   
   return (
     <>
@@ -172,20 +173,24 @@ export default function WriteReview({
        
        {/* order cancel  */}
        <FlexBox flex="160px" m="6px" alignItems="center">
-          <Button
-            variant="text"
-            style={{
-              color: (status !== "Pending" && cancelMode === "submit") || status === "Shipped" ? "gray" : "blue",
-            }}
-            onClick={handleCancelClick}
-            disabled={(status !== "Pending" && cancelMode === "submit") || status === "Shipped"} 
-          >
-            <Typography fontSize="14px">
-              {cancelMode === "submit" ? "Cancel" : "cancelled"}
-            </Typography>
-         </Button>
-
-        </FlexBox>
+  <Button
+    variant="text"
+    style={{
+      color:
+        cancel_status >= 0 && cancel_status <= 2 // Show blue when cancel_status is 0-2
+          ? "blue"
+          : cancel_status === 5 // Show gray when cancel_status is 5
+          ? "gray"
+          : "gray", // Default color when status is other than 0-2 or 5
+    }}
+    onClick={handleCancelClick}
+    disabled={cancel_status === 5 || !(cancel_status >= 0 && cancel_status <= 2)} // Disable button when status is 5
+  >
+    <Typography fontSize="14px">
+      {cancel_status >= 0 && cancel_status <= 2 ? "Cancel" : "Cancelled"}
+    </Typography>
+  </Button>
+</FlexBox>
 
       </FlexBox>
 
