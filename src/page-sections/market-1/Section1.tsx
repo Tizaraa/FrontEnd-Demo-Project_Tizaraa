@@ -132,6 +132,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import Image from 'next/image';
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -266,7 +267,7 @@ export default function CarouselSlider(): JSX.Element {
                     height: '100%',
                     position: 'relative',
                   }}>
-                    <img
+                    {/* <img
                       src={slide.slider_image}
                       alt={`Slide ${index + 1}`}
                       style={{
@@ -275,7 +276,26 @@ export default function CarouselSlider(): JSX.Element {
                         objectFit: 'fill',
                         borderRadius: '12px',
                       }}
-                    />
+                    /> */}
+
+                       {/* image cache  */}
+                    <div style={{ position: "relative", borderRadius: "8px", overflow: "hidden" }}>
+                        <Image
+                          src={slide.slider_image}
+                          alt={`Slide ${index + 1}`}
+                          layout="responsive" 
+                          width={400} 
+                          height={40} 
+                          objectFit="fill" 
+                          style={{ borderRadius: "12px" }}
+                          
+                          />
+                                      
+                    </div>
+
+
+
+
                     <div className="slide-overlay" style={{
                       position: 'absolute',
                       top: 0,

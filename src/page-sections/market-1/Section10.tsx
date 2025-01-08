@@ -11,6 +11,7 @@ import Typography from "@component/Typography";
 import CategorySectionHeader from "@component/CategorySectionHeader";
 
 import ApiBaseUrl from "../../api/ApiBaseUrl";
+import Image from "next/image";
 
 // ============================================================
 
@@ -78,12 +79,28 @@ export default function Section10() {
                   alignItems="center"
                   margin="0 auto"
                 >
-                  <img 
+                  {/* <img 
                     // src={item.categorie_image} 
                     src={`${ApiBaseUrl.ImgUrl}${item.categorie_image}`}
                     alt={item.categorie_name} 
                     style={{ width: "100%", height: "100%", objectFit: "contain" }} // Image scaled up, centered within the box
-                  />
+                  /> */}
+
+                      {/* image cache  */}
+                <div style={{ position: "relative", borderRadius: "8px", overflow: "hidden" }}>
+                    <Image
+                      src={`${ApiBaseUrl.ImgUrl}${item.categorie_image}`}
+                      alt={item.categorie_name} 
+                      layout="responsive" 
+                      width={1} 
+                      height={1} 
+                      objectFit="contain" 
+                      style={{ borderRadius: "8px" }}
+                      />
+                                  
+                </div>
+
+
                 </Box>
 
                 <Typography 

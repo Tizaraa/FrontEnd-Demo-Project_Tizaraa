@@ -64,6 +64,7 @@ import Box from "@component/Box";
 import Icon from "@component/icon/Icon";
 import { StyledCategoryMenuItem } from "../styles";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import Image from "next/image";
 
 interface SubCategoryMenuProps {
   subCategories: Array<{
@@ -126,7 +127,7 @@ export default function SubCategoryMenu({ subCategories }: SubCategoryMenuProps)
                 }}
               >
 
-                <img 
+                {/* <img 
                   src={`${ApiBaseUrl.ImgUrl}${sub.imgUrl}`} 
                   alt={sub.title} 
                   style={{
@@ -135,7 +136,26 @@ export default function SubCategoryMenu({ subCategories }: SubCategoryMenuProps)
                     borderRadius: "50%",  
                     marginRight: "8px", 
                   }} 
+                /> */}
+
+                 {/* image cache  */}
+                 <Image
+                  src={`${ApiBaseUrl.ImgUrl}${sub.imgUrl}`}
+                  alt={sub.title}
+                  width={200}
+                  height={200}
+                  objectFit="cover"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
                 />
+
+
+
+
                 <span>{sub.title}</span>
               </span>
             </Link>

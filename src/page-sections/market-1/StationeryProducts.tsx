@@ -19,6 +19,7 @@ import styles from "../market-1/JustForYouPeoducts/JustForYouParoducts.module.cs
 import ApiBaseUrl from "../../api/ApiBaseUrl";
 import Rating from "@component/rating";
 import { Chip } from "@component/Chip";
+import Image from "next/image";
 
 export default function StationeryProducts() {
   const [flashSale, setFlashSale] = useState([]);
@@ -119,14 +120,29 @@ export default function StationeryProducts() {
                 }}
                 onClick={handleProductClick}
                 >
-              <img 
+
+              {/* <img 
                 // src={item.product_thumbnail} 
                 src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
                 alt={item.product_name} 
                 style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
 
                 className={styles.imgPart}
-              />
+              /> */}
+               {/* image cache  */}
+       <div style={{ position: "relative", borderRadius: "8px", overflow: "hidden" }}>
+          <Image
+            src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
+            alt={item.product_name}
+            layout="responsive" 
+            width={1} 
+            height={1} 
+            objectFit="cover" 
+            style={{ borderRadius: "8px" }}
+            className={styles.imgPart}
+            />
+                        
+       </div>
 
      
             </Box>

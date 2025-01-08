@@ -19,6 +19,7 @@ import OTsectioncreator from "@component/OTsectioncreator";
 import Icon from "@component/icon/Icon";
 
 import styles from "../market-1/JustForYouPeoducts/JustForYouParoducts.module.css";
+import Image from "next/image";
 
 // Example: Replace this with your actual base URL or env variable
 const API_BASE_URL =
@@ -200,7 +201,7 @@ const OTCProducts = () => {
                   <Card p="1rem" borderRadius={8} style={{ height: "300px" }}>
                     <Link href={`/otproducts/${product.Id}`}>
                       <Box position="relative">
-                        <img
+                        {/* <img
                           src={product.MainPictureUrl}
                           alt={product.Title}
                           style={{
@@ -209,7 +210,21 @@ const OTCProducts = () => {
                             objectFit: "cover",
                           }}
                           className={styles.imgPart}
-                        />
+                        /> */}
+                         {/* image cache  */}
+                        <div style={{ position: "relative", borderRadius: "8px", overflow: "hidden" }}>
+                            <Image
+                              src={product.MainPictureUrl}
+                              alt={product.Title}
+                              layout="responsive" 
+                              width={1} 
+                              height={1} 
+                              objectFit="cover" 
+                              style={{ borderRadius: "8px" }}
+                              className={styles.imgPart}
+                              />
+                                          
+                        </div>
                       </Box>
                       <H4
                         fontWeight="600"

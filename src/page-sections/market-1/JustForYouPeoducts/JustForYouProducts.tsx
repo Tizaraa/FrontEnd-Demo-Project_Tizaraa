@@ -17,6 +17,7 @@ import styled from "@emotion/styled";
 import { Chip } from "@component/Chip";
 import BeatLoader from "react-spinners/BeatLoader";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import Image from "next/image";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -107,23 +108,26 @@ const handleProductClick = () => {
                      }}
                      onClick={handleProductClick}
                      >
-                      <img
-                        // src={item.product_thumbnail}
-                        src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
-                        alt={item.product_name}
-                        style={{
-                          width: "100%",
-                          borderRadius: "8px",
-                          objectFit: "cover",
-                        }}
-                        className={styles.imgPart}
-                      />
-
-                      {/* Discount Badge */}
-                      {!!item.discount_price &&
+                        
+                       {/* image cache  */}
+                        <div style={{ position: "relative", borderRadius: "8px", overflow: "hidden" }}>
+                          <Image
+                            src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
+                            alt={item.product_name}
+                            layout="responsive" 
+                            width={1} 
+                            height={1} 
+                            objectFit="cover" 
+                            style={{ borderRadius: "8px" }}
+                            className={styles.imgPart}
+                          />
+                        
+                        </div>
+                        {/* Discount Badge */}
+                        {!!item.discount_price &&
                         item.discount_price < item.seeling_price && (
                           <Chip
-                            //top="1rem"
+                            top="-0.5rem"
                             left="-10px"
                             p="0.25rem 0.5rem"
                             fontSize="12px"
@@ -141,6 +145,9 @@ const handleProductClick = () => {
                             % off
                           </Chip>
                         )}
+
+
+
                     </Box>
 
                     <H4
