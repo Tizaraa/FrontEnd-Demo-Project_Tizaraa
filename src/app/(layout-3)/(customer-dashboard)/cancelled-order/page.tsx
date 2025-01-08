@@ -10,6 +10,7 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation' 
 import CheckBox from '@component/CheckBox'
 import FlexBox from '@component/FlexBox'
+import toast from 'react-hot-toast'
 
 export default function CancellationForm() {
   const [cancelItem, setCancelItem] = useState<any | null>(null)
@@ -57,7 +58,7 @@ export default function CancellationForm() {
         }
       );
       console.log('Cancellation Successful:', response.data);
-      alert('Cancellation request submitted successfully.');
+      toast.success('Cancellation request submitted successfully.');
 
       
       router.back(); 
