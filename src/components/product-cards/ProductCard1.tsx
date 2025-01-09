@@ -231,7 +231,7 @@ export default function ProductCard1({
 )}
 
 
-{(price === 0 && off === 0) ? (
+{/* {(price === 0 && off === 0) ? (
     <H4 fontWeight="600" fontSize="14px" color="primary.main">
         RFQ
     </H4>
@@ -257,20 +257,26 @@ export default function ProductCard1({
             </H4>
         )}
     </>
+)} */}
+
+{(price === 0 && off === 0) ? (
+    <H4 fontWeight="600" fontSize="14px" color="primary.main">
+        RFQ
+    </H4>
+) : (
+  <FlexBox mt="0.5rem" mb="1rem" alignItems="center">
+  <H5 fontWeight={600} color="primary.main" mr="0.5rem">
+    {calculateDiscount(price, off as number)}
+  </H5>
+
+  {off > 0 && (
+<SemiSpan fontWeight="600">
+<del>{currency(price)}</del>
+</SemiSpan>
 )}
 
-{/* <FlexBox mt="0.5rem" mb="1rem" alignItems="center">
-              <H5 fontWeight={600} color="primary.main" mr="0.5rem">
-                {calculateDiscount(price, off as number)}
-              </H5>
-
-              {off > 0 && (
-  <SemiSpan fontWeight="600">
-    <del>{currency(price)}</del>
-  </SemiSpan>
+</FlexBox>
 )}
-
-            </FlexBox> */}
 
     
             </Box>

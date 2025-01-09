@@ -32,7 +32,7 @@ interface NewArrivalsProps {
   slug: string;
 }
 
-export default function NewArrivals({ sortOptions, slug }: NewArrivalsProps) {
+export default function NewArrivals({ sortOptions, slug }) {
   const router = useRouter();
   const width = useWindowSize();
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -276,11 +276,18 @@ export default function NewArrivals({ sortOptions, slug }: NewArrivalsProps) {
                 productsPerPage={productsPerPage}
                 onPageChange={handleLoadMore}
               />
-              {loading && currentPage > 1 && (
+              {/* {loading && currentPage > 1 && (
                 <LoaderWrapper>
                 <Vortex />
               </LoaderWrapper>        
-              )}
+              )} */}
+               {loading && currentPage > 1 && (
+                              <LoaderWrapper>
+                              <Vortex />
+                            </LoaderWrapper>        
+                            )}{" "}
+
+
             </>
           ) : (
             <ProductListView
