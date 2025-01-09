@@ -206,8 +206,9 @@ export default function WriteReview({
       style={{
         height: "30px",
         borderRadius: "100px",
-        backgroundColor: reviewMode !== "submit" ? "#e94560" : "",  
-        color: reviewMode !== "submit" ? "white" : "#e94560",  
+        backgroundColor: status === "Delivered" ? "#e94560" : "gray", // Set background color
+    color: status === "Delivered" ? "white" : "darkgray", // Set text color
+    cursor: status === "Delivered" ? "pointer" : "not-allowed",
         pointerEvents: status !== "Delivered" ? "none" : "auto", 
         transition: "none"  
       }}
@@ -248,9 +249,10 @@ export default function WriteReview({
             <Button
               variant="text"
               style={{
-                color: "gray",
+                color: "white",
                 height: "30px",
                 borderRadius: "100px",
+                backgroundColor: "#e94560",
               }}
             >
               <Typography fontSize="14px">Returned</Typography>

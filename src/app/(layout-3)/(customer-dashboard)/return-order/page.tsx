@@ -62,7 +62,7 @@ const ReturnPage = () => {
     const formData = new FormData();
     formData.append("order_item_id", String(returnItem?.order_item_id));
     formData.append("product_id", String(returnItem?.product_id));
-    formData.append("comments", additionalInfo);
+    formData.append("comment", additionalInfo);
     formData.append("order_type", productType || 'Local'); 
   
     // Append images to formData
@@ -76,7 +76,7 @@ const ReturnPage = () => {
         {
           headers: {
             Authorization: `Bearer ${authtoken}`,
-            'Content-Type': 'multipart/form-data', // Ensure the correct content type for file uploads
+            'Content-Type': 'multipart/form-data', 
           },
         }
       );
