@@ -9,6 +9,7 @@ import Modal from "@component/Modal";
 import toast from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function WriteReview({
   item,
@@ -155,7 +156,8 @@ export default function WriteReview({
     <>
       <FlexBox px="1rem" py="0.5rem" flexWrap="wrap" alignItems="center" key={item.product_name} style={{display:"flex", justifyContent:"space-between"}}>
        <div>
-       <FlexBox flex="2 2 260px" m="6px" alignItems="center">
+      <Link href={`/product/${item.product_slug}`}>
+      <FlexBox flex="2 2 260px" m="6px" alignItems="center">
           <Avatar 
           // src={item.product_image} 
           src={`${ApiBaseUrl.ImgUrl}${item.product_image}`}
@@ -167,77 +169,120 @@ export default function WriteReview({
             </Typography>
           </Box>
         </FlexBox>
+      
+      </Link>
        </div>
 
        <div style={{display:"flex"}}>
          {/* review and preview  */}
-         <FlexBox flex="160px" m="6px" alignItems="center">
+         {/* <FlexBox flex="160px" m="6px" alignItems="center">
           <Button
             variant="text"
             color="primary"
-            disabled={status !== "Delivered" && reviewMode === "submit"}
-            onClick={() => setIsModalOpen(true)}
+            disabled={status !== "Delivered"}  
+            onClick={() => setIsModalOpen(true)}  
             style={{
               height: "30px",
               borderRadius: "100px",
-              backgroundColor: reviewMode !== "submit" ? "#e94560" : "", 
-              color: reviewMode !== "submit" ? "white" : "gray",
-              pointerEvents: "none", // Disable hover interactions
-              transition: "none" // Remove hover transition
+              backgroundColor: reviewMode !== "submit" ? "#e94560" : "",  
+              color: reviewMode !== "submit" ? "white" : "gray",  
+              pointerEvents: status !== "Delivered" ? "none" : "auto", 
+              transition: "none"  
             }}
           >
             <Typography fontSize="14px">
               {reviewMode === "submit" ? "Review" : "Preview"}
             </Typography>
           </Button>
-        </FlexBox>
+        </FlexBox> */}
 
-        {/* return policy  */}
-        {status === "Delivered" && (
-      <FlexBox flex="160px" m="6px" alignItems="center">
-        <Button
-          variant="text"
-          color="primary"
-          style={{
-            height: "30px",
-            borderRadius: "100px",
-            backgroundColor: "#e94560",
-            color: "white"
-          }}
-          onClick={handleReturnClick}
-        >
-          <Typography fontSize="14px">
-            Return
-          </Typography>
-        </Button>
-      </FlexBox>
-    )}
-
-       
-       {/* order cancel  */}
-       {status !== "Delivered" && (
+{cancel_status !== 5 && cancel_status !== 6 && (
   <FlexBox flex="160px" m="6px" alignItems="center">
     <Button
       variant="text"
+      color="primary"
+      disabled={status !== "Delivered"}  
+      onClick={() => setIsModalOpen(true)}  
       style={{
-        color:
-          cancel_status >= 0 && cancel_status <= 2 
-            ? "blue"
-            : cancel_status === 5 
-            ? "gray"
-            : "gray", 
         height: "30px",
-        borderRadius: "100px"
+        borderRadius: "100px",
+        backgroundColor: reviewMode !== "submit" ? "#e94560" : "",  
+        color: reviewMode !== "submit" ? "white" : "#e94560",  
+        pointerEvents: status !== "Delivered" ? "none" : "auto", 
+        transition: "none"  
       }}
-      onClick={handleCancelClick}
-      disabled={cancel_status === 5 || !(cancel_status >= 0 && cancel_status <= 2)} 
     >
       <Typography fontSize="14px">
-        {cancel_status >= 0 && cancel_status <= 2 ? "Cancel" : "Cancelled"}
+        {reviewMode === "submit" ? "Review" : "Preview"}
       </Typography>
     </Button>
   </FlexBox>
 )}
+
+
+
+        {/* return policy */}
+        {status === "Delivered" && cancel_status !== 6 && (
+          <FlexBox flex="160px" m="6px" alignItems="center">
+            <Button
+              variant="text"
+              color="primary"
+              style={{
+                height: "30px",
+                borderRadius: "100px",
+                backgroundColor: "#e94560",
+                color: "white"
+              }}
+              onClick={handleReturnClick}
+            >
+              <Typography fontSize="14px">
+                Return
+              </Typography>
+            </Button>
+          </FlexBox>
+        )}
+
+        {/* Show "Returned" when status is 6 */}
+        {cancel_status === 6 && (
+          <FlexBox flex="160px" m="6px" alignItems="center">
+            <Button
+              variant="text"
+              style={{
+                color: "gray",
+                height: "30px",
+                borderRadius: "100px",
+              }}
+            >
+              <Typography fontSize="14px">Returned</Typography>
+            </Button>
+          </FlexBox>
+        )}
+
+        {/* order cancel */}
+        {status !== "Delivered" && cancel_status !== 6 && (
+          <FlexBox flex="160px" m="6px" alignItems="center">
+            <Button
+              variant="text"
+              style={{
+                color:
+                  cancel_status >= 0 && cancel_status <= 2
+                    ? "blue"
+                    : cancel_status === 5
+                    ? "gray"
+                    : "gray",
+                height: "30px",
+                borderRadius: "100px",
+              }}
+              onClick={handleCancelClick}
+              disabled={cancel_status === 5 || !(cancel_status >= 0 && cancel_status <= 2)}
+            >
+              <Typography fontSize="14px">
+                {cancel_status >= 0 && cancel_status <= 2 ? "Cancel" : "Cancelled"}
+              </Typography>
+            </Button>
+          </FlexBox>
+        )}
+
 
        </div>
 

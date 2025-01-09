@@ -40,7 +40,11 @@ const JustForYouProducts = () => {
     setLoadingMore(page > 1);
     try {
       const response = await axios.get(
-        `https://seller.tizaraa.shop/api/frontend/latest/justoforyou/product/view/'?page=${page}`
+        `https://seller.tizaraa.shop/api/frontend/latest/justoforyou/product/view/'?page=${page}`,
+        {
+          adapter: "fetch",
+          fetchOptions: { cache: "force-cache" },
+        }
       );
       const data = response.data;
 

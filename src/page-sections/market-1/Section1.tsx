@@ -56,7 +56,9 @@ export default function CarouselSlider(): JSX.Element {
     
       // Make API call if no valid cache exists
       try {
-        const response = await fetch('https://seller.tizaraa.com/api/frontend/slider/all');
+        const response = await fetch('https://seller.tizaraa.com/api/frontend/slider/all',{
+          cache:"force-cache"
+        });
         const data = await response.json();
         
         // Encrypt the slides data before storing it in localStorage

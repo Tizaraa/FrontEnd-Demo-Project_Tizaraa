@@ -471,6 +471,8 @@ if (order?.Order?.productType === "Abroad") {
                     <Typography fontWeight="bold" fontSize="18px" mb="1rem" p="1rem" style={{ margin: "0" }}>
                       <FontAwesomeIcon icon={faStore} size="1x" color="black" /> {shopName}
                     </Typography>
+
+                    {/* status  */}
                     <Box m="6px">
                       <Chip p="0.25rem 1rem" bg={getColor(details?.status)}>
                         <Small color="white">{details?.status}</Small>
