@@ -499,6 +499,7 @@ export default function Login() {
             onChange={handleChange}
             placeholder="Enter Your Email"
             label="Email"
+            autoComplete="new-email"
             errorText={touched.email && errors.email}
           />
 
@@ -508,11 +509,11 @@ export default function Login() {
             fullwidth
             name="password"
             label="Password"
-            autoComplete="on"
             onBlur={handleBlur}
             onChange={handleChange}
             placeholder="Enter Your Passoword"
             value={values.password}
+            autoComplete="new-password"
             errorText={touched.password && errors.password}
             type={passwordVisibility ? "text" : "password"}
             endAdornment={
