@@ -78,6 +78,7 @@ import { IconButton } from "@component/buttons";
 import Typography, { H5, Small } from "@component/Typography";
 import Icon from "@component/icon/Icon";
 import { currency } from "@utils/utils";
+import { useEffect } from "react";
 
 
 // =================================================
@@ -86,6 +87,7 @@ type OrderRowProps = { order: any };
 
 export default function OrderRow({ order }: OrderRowProps) {
   // Function to determine the background color based on order status
+
   const getColor = (status: string) => {
     switch (status) {
       case "Order Pending":

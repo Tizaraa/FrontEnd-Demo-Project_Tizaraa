@@ -27,6 +27,8 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStore, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { Chip } from "@component/Chip";
+import authService from "services/authService";
+import { useRouter } from "next/navigation";
 // import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons"; 
 
 
@@ -67,13 +69,9 @@ export default function OrderDetails({ params }: IDParams) {
   const [invoiceError, setInvoiceError] = useState(""); // Error message for invoice
   const [onlinePaymentError, setOnlinePaymentError] = useState("");
   const [onlinePaymentLoading, setOnlinePaymentLoading] = useState(false);
-
-
-
-  // const [isSummaryOpen, setIsSummaryOpen] = useState(false);
-  // const summaryRef = useRef<HTMLDivElement>(null);
-  // const buttonRef = useRef<HTMLButtonElement>(null);
-
+  const [orderSuccess, setOrderSuccess] = useState(false);
+  const [fetched, setFetched] = useState(false);
+  const router = useRouter();
 
   const [openSummaries, setOpenSummaries] = useState<{ [key: string]: boolean }>({});
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -101,7 +99,7 @@ export default function OrderDetails({ params }: IDParams) {
   };
 
   useEffect(() => {
-    const fetchOrder = async () => {
+    const fetchOrder = async (token: string) => {
       const authtoken = localStorage.getItem("token");
       try {
         const response = await axios.get(
@@ -112,7 +110,7 @@ export default function OrderDetails({ params }: IDParams) {
             },
           }
         );
-        console.log("bina data", response);
+        console.log("Order details data:", response);
         setOrder(response.data);
         setStatus(response.data.Order.status);
         setEstimateDate(response.data.Order.deliveredAt);
@@ -122,9 +120,22 @@ export default function OrderDetails({ params }: IDParams) {
         setLoading(false);
       }
     };
-
-    fetchOrder();
-  }, [params.id]);
+  
+    const token = authService.getToken();
+  
+    if (!token) {
+      router.push("/login");
+    } else if (!fetched) {
+      fetchOrder(token); // Pass the token to the fetchOrder function
+    }
+  
+    const success = localStorage.getItem("orderSuccess");
+    if (success) {
+      setOrderSuccess(true);
+      localStorage.removeItem("orderSuccess");
+    }
+  }, [fetched, params.id, router]);
+  
 
   const fetchInvoice = async () => {
     setInvoiceLoading(true); // Start loading state for invoice
