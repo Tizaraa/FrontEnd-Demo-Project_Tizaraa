@@ -314,6 +314,7 @@ import { Vortex } from 'react-loader-spinner';
 import styled from "@emotion/styled";
 import styles from "./RelatedProductsStyle.module.css";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import Image from "next/image";
 
 // Define styled component for loader wrapper
 const LoaderWrapper = styled.div`
@@ -360,13 +361,26 @@ const RelatedProducts = ({ relatedProducts }: RelatedProductsProps) => {
               <Card p="1rem" borderRadius={8} display="flex" flexDirection="column" height="100%">
                 <Link href={`/product/${item.product_slug}`}>
                   <Box position="relative">
-                    <img 
+                    {/* <img 
                       // src={item.product_thumbnail} 
                       src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
                       alt={item.product_name} 
                       style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} 
                       className={styles.imgPart}
-                    />
+                    /> */}
+
+                    <Image
+                      src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
+                      alt={item.product_name}
+                      layout="responsive" 
+                      width={1} 
+                      height={1} 
+                      objectFit="cover" 
+                      style={{ borderRadius: "8px" }}
+                      className={styles.imgPart}
+                      />
+
+
 
                     {/* Discount Badge */}
                     {!!item.discount_price && item.discount_price < item.seeling_price && (

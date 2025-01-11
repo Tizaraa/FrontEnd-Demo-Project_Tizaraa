@@ -973,17 +973,28 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
               </FlexBox>
 
               <Link href={`/product/${item.slug}`}>
-  <Avatar
-    size={76}
-    mx="1rem"
-    alt={item.name}
-    src={
-      item.productType === "Abroad"
-        ? item.imgUrl // Use imgUrl directly if productType is "Abroad"
-        : `${ApiBaseUrl.ImgUrl}${item.imgUrl}` // Add ApiBaseUrl if not "Abroad"
-    }
-  />
-</Link>
+              {/* <Avatar
+                size={76}
+                mx="1rem"
+                alt={item.name}
+                src={
+                  item.productType === "Abroad"
+                    ? item.imgUrl
+                    : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+                }
+              /> */}
+              <Image
+              width={76}
+              height={76} 
+              style={{ marginInline: "1rem" }} 
+              alt={item.name} 
+              src={
+                item.productType === "Abroad"
+                  ? item.imgUrl
+                  : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+              }
+            />
+            </Link>
 
 
               <div className="product-details">
