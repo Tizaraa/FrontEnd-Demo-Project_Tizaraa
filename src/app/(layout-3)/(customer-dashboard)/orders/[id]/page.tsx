@@ -339,6 +339,7 @@ if (order?.Order?.productType === "Abroad") {
     ))}
   
     {openSummaries[order?.Order?.invoice_id] && (
+      
       <Box p="20px" borderRadius={8} mt="1rem">
         <Typography variant="h6" mt="0px" mb="14px">
           Total Summary
@@ -550,6 +551,7 @@ if (order?.Order?.productType === "Abroad") {
                     cancel_status={item.status}
                   />
                 ))}
+                 <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} />
 
                 {openSummaries[shopName] && (
                   <Box p="20px" borderRadius={8} mt="1rem">
@@ -589,7 +591,7 @@ if (order?.Order?.productType === "Abroad") {
                         {order?.Order?.payment_status}
                       </H6>
                     </FlexBox>
-                  </Box>
+                  </Box>              
                 )}
               </Box>
             );
@@ -597,6 +599,7 @@ if (order?.Order?.productType === "Abroad") {
         ) : null}
       </Box>
     )}
+    
 
 
 

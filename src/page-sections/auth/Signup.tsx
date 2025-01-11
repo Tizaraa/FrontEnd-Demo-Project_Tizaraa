@@ -497,6 +497,7 @@ export default function Signup() {
                 Email <span style={{ color: '#e94560' }}>*</span>
               </>
             }
+            autoComplete="new-email"
             errorText={touched.email && (errors.email || apiError.email)}
           />
 
@@ -514,6 +515,7 @@ export default function Signup() {
                 Phone <span style={{ color: '#e94560' }}>*</span>
               </>
             }
+            autoComplete="new-password"
             errorText={touched.phone && (errors.phone || apiError.phone)}
           />
 
