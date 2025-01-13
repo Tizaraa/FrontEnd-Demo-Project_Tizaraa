@@ -336,7 +336,18 @@ import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 export default function Signup() {
   const router = useRouter();
   const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const { passwordVisibility, togglePasswordVisibility } = useVisibility();
+  // const { passwordVisibility, togglePasswordVisibility } = useVisibility();
+
+  const {
+    passwordVisibility: passwordVisibility1,
+    togglePasswordVisibility: togglePasswordVisibility1,
+  } = useVisibility();
+  
+  const {
+    passwordVisibility: passwordVisibility2,
+    togglePasswordVisibility: togglePasswordVisibility2,
+  } = useVisibility();
+
   const [apiError, setApiError] = useState({
     phone: "",
     email: "",
@@ -534,17 +545,17 @@ export default function Signup() {
             value={values.password}
             onChange={handleChange}
             errorText={touched.password && errors.password}
-            type={passwordVisibility ? "text" : "password"}
+            type={passwordVisibility1 ? "text" : "password"}
             endAdornment={
               <IconButton
                 p="0.25rem"
                 mr="0.25rem"
                 type="button"
-                color={passwordVisibility ? "gray.700" : "gray.600"}
-                onClick={togglePasswordVisibility}
+                color={passwordVisibility1 ? "gray.700" : "gray.600"}
+                onClick={togglePasswordVisibility1}
               >
                 <Icon variant="small" defaultcolor="currentColor">
-                  {passwordVisibility ? "eye-alt" : "eye"}
+                  {passwordVisibility1 ? "eye-alt" : "eye"}
                 </Icon>
               </IconButton>
             }
@@ -577,17 +588,17 @@ export default function Signup() {
             value={values.cpassword}
             onChange={handleChange}
             errorText={touched.cpassword && errors.cpassword}
-            type={passwordVisibility ? "text" : "password"}
+            type={passwordVisibility2 ? "text" : "password"}
             endAdornment={
               <IconButton
                 p="0.25rem"
                 mr="0.25rem"
                 type="button"
-                color={passwordVisibility ? "gray.700" : "gray.600"}
-                onClick={togglePasswordVisibility}
+                color={passwordVisibility2 ? "gray.700" : "gray.600"}
+                onClick={togglePasswordVisibility2}
               >
                 <Icon variant="small" defaultcolor="currentColor">
-                  {passwordVisibility ? "eye-alt" : "eye"}
+                  {passwordVisibility2 ? "eye-alt" : "eye"}
                 </Icon>
               </IconButton>
             }
