@@ -478,6 +478,7 @@ export default function ProfileEditForm() {
       //console.log("Profile updated successfully:", response.data);
       toast.success("Profile updated successfully!");
       //router.push("/profile")
+      router.back()
     } catch (err) {
       //console.error("Failed to update profile:", err);
       toast.error("Failed to update profile.");
