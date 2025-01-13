@@ -22,6 +22,9 @@ import { Footer1, Footer2 } from "@component/footer";
 import StationeryProducts from "@sections/market-1/StationeryProducts";
 import GroceryProducts from "@sections/market-1/GroceryProducts";
 import OTCProducts from "@sections/market-1/OTCProducts";
+import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import Image from "next/image";
+import NextImage from "@component/NextImage";
 
 export default async function Market1() {
   const carList = await api.getCarList();
@@ -44,89 +47,56 @@ export default async function Market1() {
   const topRatedProducts = await api.getTopRatedProduct();
 
   return (
-    <main>
-      {/* HERO CAROUSEL AREA */}
-
-      <Section1 />
-
-        {/* CATEGORIES AREA */}
-        {/* <Section10 categories={bottomCategories} /> */}
-        <Section10></Section10>
-
-
-        {/* NewArrival banner  */}
-
-        <Section8 />
-
-      {/* FLASH DEAL PRODUCTS AREA
-      <Section2 products={flashDealsData} />
-
-      {/* TOP CATEGORIES AREA */}
-      {/* <Section3 categoryList={topCategories} /> */}
-
-      {/* TOP RATING AND BRANDS AREA */}
-      {/* <Section4 topRatedList={topRatedProducts} topRatedBrands={topRatedBrands} />  */}
-
-      {/* NEW ARRIVALS AREA */}
-      {/* <Section5 newArrivalsList={newArrivalsList} /> */}
-
-      <NewArrivalsProduct></NewArrivalsProduct>
-      
-    
-
-      {/* BIG DISCOUNT AREA */}
-      {/* <Section13 /> */}
-
-      {/* CAR LIST AREA */}
-      {/* <Section6 carBrands={carBrands} carList={carList} /> */}
-
-      {/* MOBILE PHONES AREA */}
-      {/* <Section7
-        shops={mobileShops}
-        brands={mobileBrands}
-        title="Mobile Phones"
-        productList={mobileList}
-      /> */}
-
-      {/* FlashSale BANNERS AREA */}
-      <FlashSaleBanner></FlashSaleBanner>
-
-      {/* OPTICS AND WATCH AREA */}
-      {/* <Section7
-        shops={opticsShops}
-        brands={opticsBrands}
-        title="Optics / Watch"
-        productList={opticsList}
-      /> */}
-
-      {/* flashsale  */}
-
-      <FlashSaleProducts></FlashSaleProducts>
-
-      {/* otc products show  */}
-      <OTCProducts></OTCProducts>
-
-      {/* stationery products  */}
-      <StationeryProducts></StationeryProducts>
-
-      {/* Grocery Products  */}
-      <GroceryProducts></GroceryProducts>
-
-    
-
-      {/* MORE PRODUCTS AREA */}
-      {/* <Section11 moreItems={moreItems} /> */}
-     
-
-      <JustForYouProducts></JustForYouProducts>
-    
-
-      
-
-      {/* SERVICES AREA */}
-      <Section12  />
-
-   
-    </main>
+    <main
+    style={{
+      position: "relative",
+      background: "none",
+    }}
+  >
+    <Section1 />
+    <Section10 />
+        {/* Background image in the middle */}
+        {/* <div
+      style={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "100%",
+        height: "300px", 
+        backgroundImage: `url(${tizaraa_watermark})`, 
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        opacity: 0.5, 
+        zIndex: 0,
+      }}
+    ></div> */}
+ <NextImage
+             alt="newArrivalBanner" 
+             src={tizaraa_watermark}
+             priority
+             style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "100%",
+              height: "100vh", 
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              opacity: 0.5, 
+              zIndex: 0,
+            }}
+             />
+    <Section8 />
+    <NewArrivalsProduct />
+    <FlashSaleBanner />
+    <FlashSaleProducts />
+    <OTCProducts />
+    <StationeryProducts />
+    <GroceryProducts />
+    <JustForYouProducts />
+    <Section12 />
+  </main>
   );
 }
