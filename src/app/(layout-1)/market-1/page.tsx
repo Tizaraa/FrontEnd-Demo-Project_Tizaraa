@@ -56,23 +56,25 @@ export default async function Market1() {
     <Section1 />
     <Section10 />
         {/* Background image in the middle */}
- {/* <NextImage
-             alt="newArrivalBanner" 
-             src={tizaraa_watermark}
-             priority
-             style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "100%",
-              height: "100vh", 
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              opacity: 0.5, 
-              zIndex: 0,
-            }}
-             /> */}
+        <NextImage
+  alt="newArrivalBanner"
+  src={tizaraa_watermark}
+  priority
+  style={{
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "70%", // Set to 100% to ensure full responsiveness
+    height: "auto", // Maintain aspect ratio
+    maxWidth: "1200px", // Optional: Limit the maximum width
+    backgroundSize: "contain", // Adjust the scaling behavior
+    backgroundPosition: "center",
+    opacity: 0.1,
+    zIndex: 0,
+  }}
+/>
+
 
     <Section8 />
     <NewArrivalsProduct />
