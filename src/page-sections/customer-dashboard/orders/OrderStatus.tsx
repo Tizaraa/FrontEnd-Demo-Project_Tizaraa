@@ -10,7 +10,7 @@ import Typography from "@component/Typography";
 import useWindowSize from "@hook/useWindowSize";
 import { format } from "date-fns";
 
-type Status =  "Pending" | "Confirm" | "Processing" | "Shipped" | "Delivered";
+type Status =  "Pending" | "Confirmed" | "Processing" | "Shipped" | "Delivered";
 
 interface OrderStatusProps {
   orderStatus: Status; 
@@ -24,7 +24,7 @@ export default function OrderStatus({ orderStatus, deliveredAt }: OrderStatusPro
 
   const breakpoint = 350;
   const statusIndex =
-  orderStatus === "Pending" || orderStatus === "Processing"
+  orderStatus === "Processing"
     ? 0.5 
     : orderStatusList.indexOf(orderStatus);
 
