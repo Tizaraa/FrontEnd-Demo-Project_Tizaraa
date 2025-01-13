@@ -622,6 +622,7 @@ export default function PaymentForm() {
         localStorage.removeItem("orderId");
       sessionStorage.removeItem("selectedProducts");
       //localStorage.removeItem("cart");
+      sessionStorage.removeItem("cartItems");
       sessionStorage.removeItem("paymentMethod");
       sessionStorage.removeItem("savedTotalPrice");
       sessionStorage.removeItem("savedTotalWithDelivery");
