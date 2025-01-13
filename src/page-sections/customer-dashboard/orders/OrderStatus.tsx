@@ -10,11 +10,11 @@ import Typography from "@component/Typography";
 import useWindowSize from "@hook/useWindowSize";
 import { format } from "date-fns";
 
-type Status =  "Pending" | "Confirm" | "Shipped" | "Delivered";
+type Status =  "Pending" | "Confirm" | "Processing" | "Shipped" | "Delivered";
 
 interface OrderStatusProps {
-  orderStatus: Status; // Accept orderStatus as a prop
-  deliveredAt: string; // Add deliveredAt as a prop
+  orderStatus: Status; 
+  deliveredAt: string; 
 }
 
 export default function OrderStatus({ orderStatus, deliveredAt }: OrderStatusProps) {
@@ -23,7 +23,10 @@ export default function OrderStatus({ orderStatus, deliveredAt }: OrderStatusPro
   const orderStatusList = ["Confirmed", "Shipped", "Delivered"]; 
 
   const breakpoint = 350;
-  const statusIndex = orderStatusList.indexOf(orderStatus);
+  const statusIndex =
+  orderStatus === "Pending" || orderStatus === "Processing"
+    ? 0.5 
+    : orderStatusList.indexOf(orderStatus);
 
   // current status 
   useEffect(() => {
