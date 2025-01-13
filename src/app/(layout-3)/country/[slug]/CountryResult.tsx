@@ -267,32 +267,33 @@ export default function CountryResult({ sortOptions, slug }) {
                 productsPerPage={productsPerPage}
                 onPageChange={handleLoadMore}
               />
-              {loading && currentPage > 1 && (
+              {/* {loading && currentPage > 1 && (
                 <LoaderWrapper>
                 <Vortex />
               </LoaderWrapper>        
-              )}{" "}
-               {/* <FlexBox justifyContent="center" alignItems="center" mt="32px">
-  <Button
-    onClick={() => {
-      if (!loading) handleLoadMore(); // No argument passed
-    }}
-    variant="contained"
-    color="primary"
-    disabled={loading}
-    style={{
-      display:
-        currentPage * productsPerPage < totalProducts
-          ? "block"
-          : "none", // Show button only if there are more products to load
-    }}
-  >
-    {loading ?  <BeatLoader size={18} color="#fff" /> : "Show More"}
-  </Button>
-</FlexBox> */}
+              )}{" "} */}
+               <FlexBox justifyContent="center" alignItems="center" mt="32px">
+              <Button
+                onClick={() => {
+                  if (!loading) handleLoadMore(); // No argument passed
+                }}
+                variant="contained"
+                color="primary"
+                disabled={loading}
+                style={{
+                  display:
+                    currentPage * productsPerPage < totalProducts
+                      ? "block"
+                      : "none", // Show button only if there are more products to load
+                }}
+              >
+                {loading ?  <BeatLoader size={18} color="#fff" /> : "Show More"}
+              </Button>
+            </FlexBox>
               
             </>
           ) : (
+            <>
             <ProductListView
               products={products}
               totalProducts={0}
@@ -300,6 +301,27 @@ export default function CountryResult({ sortOptions, slug }) {
               productsPerPage={0}
               onPageChange={() => {}}
             />
+
+             <FlexBox justifyContent="center" alignItems="center" mt="32px">
+              <Button
+                onClick={() => {
+                  if (!loading) handleLoadMore(); // No argument passed
+                }}
+                variant="contained"
+                color="primary"
+                disabled={loading}
+                style={{
+                  display:
+                    currentPage * productsPerPage < totalProducts
+                      ? "block"
+                      : "none", // Show button only if there are more products to load
+                }}
+              >
+                {loading ?  <BeatLoader size={18} color="#fff" /> : "Show More"}
+              </Button>
+            </FlexBox>
+            
+            </>
           )}
         </Grid>
       </Grid>
