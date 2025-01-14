@@ -56,7 +56,7 @@ export default async function Market1() {
     <Section1 />
     <Section10 />
         {/* Background image in the middle */}
-        <NextImage
+        {/* <NextImage
   alt="newArrivalBanner"
   src={tizaraa_watermark}
   priority
@@ -73,7 +73,7 @@ export default async function Market1() {
     opacity: 0.1,
     zIndex: 0,
   }}
-/>
+/> */}
 
 
     <Section8 />
