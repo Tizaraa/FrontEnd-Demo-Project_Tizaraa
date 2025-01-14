@@ -417,7 +417,7 @@ const RelatedProducts = ({ relatedProducts }: RelatedProductsProps) => {
                   <Rating value={item.rating} outof={5} color="warn" readOnly />
                 )}
 
-                {item.discount_price == null ? (
+                {/* {item.discount_price == null ? (
                   <FlexBox>
                     <H4 fontWeight="600" fontSize="14px" color="primary.main">
                       {currency(item.seeling_price)}
@@ -434,7 +434,33 @@ const RelatedProducts = ({ relatedProducts }: RelatedProductsProps) => {
                       </H4>
                     </Box>
                   </FlexBox>
-                )}
+                )} */}
+                {item.seeling_price === 0 ? (
+                <FlexBox>
+                  <H4 fontWeight="600" fontSize="14px" color="primary.main">
+                    RFQ
+                  </H4>
+                </FlexBox>
+              ) : item.discount_price == null ? (
+                <FlexBox>
+                  <H4 fontWeight="600" fontSize="14px" color="primary.main">
+                    {currency(item.seeling_price)}
+                  </H4>
+                </FlexBox>
+              ) : (
+                <FlexBox flexDirection="column">
+                  <H4 fontWeight="600" fontSize="14px" color="text.muted">
+                    BDT <del>{currency(item.seeling_price)}</del>
+                  </H4>
+                  <Box marginTop="4px">
+                    <H4 fontWeight="600" fontSize="14px" color="primary.main">
+                      {currency(item.discount_price)}
+                    </H4>
+                  </Box>
+                </FlexBox>
+              )}
+
+                
               </Card>
             </Box>
           ))
