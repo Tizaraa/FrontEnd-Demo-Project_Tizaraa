@@ -529,7 +529,6 @@ export default function Signup() {
                 Phone <span style={{ color: '#e94560' }}>*</span>
               </>
             }
-            autoComplete="new-password"
             errorText={touched.phone && (errors.phone || apiError.phone)}
           />
 
@@ -547,6 +546,7 @@ export default function Signup() {
             onBlur={handleBlur}
             value={values.password}
             onChange={handleChange}
+            autoComplete="new-password"
             errorText={touched.password && errors.password}
             type={passwordVisibility1 ? "text" : "password"}
             endAdornment={

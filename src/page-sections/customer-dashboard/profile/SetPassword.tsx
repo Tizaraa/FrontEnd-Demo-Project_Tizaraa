@@ -66,7 +66,7 @@ export default function SetPassword() {
     },
     iconButton: {
         position: "absolute" as "absolute",
-        top: "50%",
+        top: "60%",
         right: "12px",
         transform: "translateY(-20%)",
         background: "none",
@@ -90,7 +90,7 @@ export default function SetPassword() {
             <input
               id="password"
               type={showPassword ? "text" : "password"}
-              placeholder="Minimum 8 characters with number, letter and special character"
+              placeholder="Minimum 9 characters with number, letter and special character"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               style={styles.input}
