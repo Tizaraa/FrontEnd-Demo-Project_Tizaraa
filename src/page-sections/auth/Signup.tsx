@@ -376,6 +376,7 @@ export default function Signup() {
       .string()
       .min(9, "Password must be at least 9 characters")
       .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .matches(/[a-z]/, "Password must contain at least one lowercase letter")
       .matches(
         /[!@#$%^&*(),.?":{}|<>]/,
         "Password must contain at least one special character"
@@ -463,7 +464,9 @@ export default function Signup() {
 
     
   useEffect(() => {
-    const passwordValidation = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{9,}$/;
+    // const passwordValidation = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{9,}$/;
+    const passwordValidation = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*(),.?":{}|<>]).{9,}$/;
+
     // Check if the password matches the required pattern
     setIsPasswordValid(passwordValidation.test(values.password));
   }, [values.password]);
