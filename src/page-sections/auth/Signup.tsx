@@ -412,10 +412,11 @@ export default function Signup() {
       });
   
       const data = await response.json();
+      console.log(data)
   
       if (response.ok) {
-        router.push("/profile");
-        toast.success("User registered successfully!");
+        router.push("/emailValidation");
+        toast.success(data.message);
       } else {
         toast.error("Failed to register user.");
   
