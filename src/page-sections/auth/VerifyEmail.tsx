@@ -119,6 +119,8 @@ import { Input } from "@mui/material";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function VerifyEmail() {
   const [otp, setOtp] = useState("");
@@ -127,7 +129,7 @@ export default function VerifyEmail() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://frontend.tizaraa.shop/api/setregister", {
+      const response = await fetch(`${ApiBaseUrl.baseUrl}setregister`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -143,6 +145,7 @@ export default function VerifyEmail() {
         localStorage.setItem("userInfo", JSON.stringify(data.user));
 
         console.log("Success:", data);
+        toast.success("Logged in successfully")
         // Redirect to the home page
         router.push("/");
       } else {
@@ -174,10 +177,10 @@ export default function VerifyEmail() {
           <h1 style={{ fontSize: "1.5rem", fontWeight: "400" }}>Verify email address</h1>
 
           <p style={{ fontSize: "0.875rem" }}>
-            To verify your email, we&apos;ve sent a One Time Password (OTP) to nahidazaman2000@gmail.com{" "}
-            <Link href="#" style={{ color: "#2563eb", textDecoration: "none", cursor: "pointer" }}>
+            To verify your email, we&apos;ve sent a One Time Password (OTP){" "}
+            {/* <Link href="#" style={{ color: "#2563eb", textDecoration: "none", cursor: "pointer" }}>
               (Change)
-            </Link>
+            </Link> */}
           </p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>

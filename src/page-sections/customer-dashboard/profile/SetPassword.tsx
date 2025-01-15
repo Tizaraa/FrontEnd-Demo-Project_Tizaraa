@@ -1,6 +1,7 @@
-"use client";
 import { useState } from "react";
+import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function SetPassword() {
   const [showPassword, setShowPassword] = useState(false);
@@ -8,10 +9,44 @@ export default function SetPassword() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (password === confirmPassword) {
-      console.log("Password reset submitted");
+      try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.error("Authentication token not found!");
+          return;
+        }
+
+        // Call the password reset API
+        const response = await axios.post(
+          "https://frontend.tizaraa.shop/api/password/reset",
+          {
+            password: password,
+            cpassword: confirmPassword,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log("API response:", response.data);
+        alert("Password reset successful");
+        // Optionally, redirect to a success page or handle success UI here
+        router.push("/profile")
+        
+
+      } catch (error) {
+        console.error("Error resetting password:", error);
+        alert("Failed to reset password. Please try again.");
+      }
     } else {
       alert("Passwords do not match.");
     }
@@ -20,7 +55,6 @@ export default function SetPassword() {
   const styles = {
     container: {
       display: "flex",
-    //   justifyContent: "center",
       alignItems: "center",
     },
     formWrapper: {
@@ -28,7 +62,6 @@ export default function SetPassword() {
       maxWidth: "600px",
       backgroundColor: "#fff",
       borderRadius: "8px",
-    
     },
     title: {
       fontSize: "24px",
@@ -50,7 +83,6 @@ export default function SetPassword() {
       padding: "0 12px",
       fontSize: "16px",
       color: "#4a5568",
-    //   marginBottom: "16px",
     },
     button: {
       width: "100%",
@@ -65,14 +97,14 @@ export default function SetPassword() {
       marginTop: "16px",
     },
     iconButton: {
-        position: "absolute" as "absolute",
-        top: "60%",
-        right: "12px",
-        transform: "translateY(-20%)",
-        background: "none",
-        border: "none",
-        cursor: "pointer",
-      },
+      position: "absolute" as "absolute",
+      top: "60%",
+      right: "12px",
+      transform: "translateY(-20%)",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+    },
   };
 
   return (

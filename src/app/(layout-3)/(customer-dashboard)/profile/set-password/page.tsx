@@ -21,8 +21,8 @@ export default async function ProfileEditor() {
       />
 
       <Card1 borderRadius={8}>
-        {/* <SetPasswordForm /> */}
-        <SetPassword></SetPassword>
+        <SetPasswordForm />
+        {/* <SetPassword></SetPassword> */}
       </Card1>
     </Fragment>
   );
