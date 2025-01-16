@@ -2,19 +2,80 @@ import { useState } from "react";
 import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+
 
 export default function SetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [errorMessages, setErrorMessages] = useState([]);
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+  
+
+  const validatePassword = (pwd) => {
+    const errors = [];
+  
+    // Check if the password meets all criteria together
+    if (
+      pwd.length < 9 ||
+      !/[A-Z]/.test(pwd) ||
+      !/[a-z]/.test(pwd) ||
+      !/[@$!%*#?&]/.test(pwd)
+    ) {
+      errors.push(
+        "Password should be at least 9 characters, contain 1 uppercase, 1 lowercase, and 1 special character."
+      );
+    } else {
+      // Check individual patterns if the primary message isn't needed
+      if (!/[A-Z]/.test(pwd)) {
+        errors.push("Password should contain at least 1 uppercase letter.");
+      }
+      if (!/[a-z]/.test(pwd)) {
+        errors.push("Password should contain at least 1 lowercase letter.");
+      }
+      if (!/[@$!%*#?&]/.test(pwd)) {
+        errors.push("Password should contain at least 1 special character.");
+      }
+    }
+  
+    setErrorMessages(errors);
+  };
+  
+  
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    validatePassword(newPassword);
+    if (confirmPassword) {
+      validateConfirmPassword(newPassword, confirmPassword);
+    }
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    const newConfirmPassword = e.target.value;
+    setConfirmPassword(newConfirmPassword);
+    validateConfirmPassword(password, newConfirmPassword);
+  };
+
+  const validateConfirmPassword = (pwd, confirmPwd) => {
+    if (pwd !== confirmPwd) {
+      setConfirmPasswordError("Password do not match.");
+    } else {
+      setConfirmPasswordError("");
+    }
+  };
 
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password === confirmPassword) {
+    if (!confirmPasswordError && password === confirmPassword) {
       try {
         const token = localStorage.getItem("token");
 
@@ -51,6 +112,7 @@ export default function SetPassword() {
       alert("Passwords do not match.");
     }
   };
+  
 
   const styles = {
     container: {
@@ -107,6 +169,8 @@ export default function SetPassword() {
     },
   };
 
+  
+
   return (
     <div style={styles.container}>
       <div style={styles.formWrapper}>
@@ -122,13 +186,11 @@ export default function SetPassword() {
             <input
               id="password"
               type={showPassword ? "text" : "password"}
-              placeholder="Minimum 9 characters with number, letter and special character"
+              placeholder="Enter Your Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               style={styles.input}
               required
-              minLength={8}
-              pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
             />
             <button
               type="button"
@@ -143,16 +205,39 @@ export default function SetPassword() {
             </button>
           </div>
 
+          {errorMessages.length > 0 && (
+            <div style={{ marginTop: "-12px", marginBottom: "13px" }}>
+              {errorMessages.map((error, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: "0.5rem",
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faCircleExclamation}
+                    style={{ color: "#e94560", marginRight: "0.5rem" }}
+                  />
+                  <span style={{ fontSize: "0.875rem", color: "#495057" }}>
+                    {error}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div style={{ position: "relative", marginBottom: "24px" }}>
             <label htmlFor="confirmPassword" style={styles.label}>
-              Retype password<span style={{ color: "#e53e3e" }}>*</span>
+              Confirm password<span style={{ color: "#e53e3e" }}>*</span>
             </label>
             <input
               id="confirmPassword"
               type={showConfirmPassword ? "text" : "password"}
-              placeholder="Please retype your password"
+              placeholder="Enter Your Confirm Password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={handleConfirmPasswordChange}
               style={styles.input}
               required
             />
@@ -168,6 +253,25 @@ export default function SetPassword() {
               )}
             </button>
           </div>
+          {confirmPasswordError && (
+            <div style={{ marginTop: "-12px", marginBottom: "13px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: "0.5rem",
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faCircleExclamation}
+                  style={{ color: "#e94560", marginRight: "0.5rem" }}
+                />
+                <span style={{ fontSize: "0.875rem", color: "#495057" }}>
+                  {confirmPasswordError}
+                </span>
+              </div>
+            </div>
+          )}
 
           <button type="submit" style={styles.button}>
             SUBMIT

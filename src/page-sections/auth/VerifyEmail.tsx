@@ -210,10 +210,10 @@ export default function VerifyEmail() {
             gap: "1rem",
           }}
         >
-          <h1 style={{ fontSize: "1.5rem", fontWeight: "400" }}>Verify email address</h1>
+          <h1 style={{ fontSize: "1.5rem", fontWeight: "400" }}>Verify your email address</h1>
 
           <p style={{ fontSize: "0.875rem" }}>
-            To verify your email, we&apos;ve sent a One Time Password (OTP)
+            To verify your email, we have sent a One Time Password (OTP) to your email. Please check your email. Thank you.
           </p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
@@ -250,7 +250,7 @@ export default function VerifyEmail() {
             }}
             onClick={handleSubmit}
           >
-            Create your Tizaraa account
+            Create account
           </Button>
 
           <Link
