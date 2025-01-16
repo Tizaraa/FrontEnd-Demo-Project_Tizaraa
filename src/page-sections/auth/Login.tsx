@@ -45,6 +45,16 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const [loading, setLoading] = useState(false); // Loading state for the form
   const [isHasLoading, setIsHasLoading] = useState(false);
 
+   const {
+      passwordVisibility: passwordVisibility1,
+      togglePasswordVisibility: togglePasswordVisibility1,
+    } = useVisibility();
+    
+    const {
+      passwordVisibility: passwordVisibility2,
+      togglePasswordVisibility: togglePasswordVisibility2,
+    } = useVisibility();
+
   // Reset modal fields
   const resetModal = () => {
     setEmailOrPhone("");
@@ -323,17 +333,17 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               placeholder="Enter New Password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              type={passwordVisibility ? "text" : "password"}
+              type={passwordVisibility1 ? "text" : "password"}
               endAdornment={
                 <IconButton
                   p="0.25rem"
                   mr="0.25rem"
                   type="button"
-                  onClick={togglePasswordVisibility}
-                  color={passwordVisibility ? "gray.700" : "gray.600"}
+                  onClick={togglePasswordVisibility1}
+                  color={passwordVisibility1 ? "gray.700" : "gray.600"}
                 >
                   <Icon variant="small" defaultcolor="currentColor">
-                    {passwordVisibility ? "eye-alt" : "eye"}
+                    {passwordVisibility1 ? "eye-alt" : "eye"}
                   </Icon>
                 </IconButton>
               }
@@ -345,17 +355,17 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               placeholder="Confirm New Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              type={passwordVisibility ? "text" : "password"}
+              type={passwordVisibility2 ? "text" : "password"}
               endAdornment={
                 <IconButton
                   p="0.25rem"
                   mr="0.25rem"
                   type="button"
-                  onClick={togglePasswordVisibility}
-                  color={passwordVisibility ? "gray.700" : "gray.600"}
+                  onClick={togglePasswordVisibility2}
+                  color={passwordVisibility2 ? "gray.700" : "gray.600"}
                 >
                   <Icon variant="small" defaultcolor="currentColor">
-                    {passwordVisibility ? "eye-alt" : "eye"}
+                    {passwordVisibility2 ? "eye-alt" : "eye"}
                   </Icon>
                 </IconButton>
               }

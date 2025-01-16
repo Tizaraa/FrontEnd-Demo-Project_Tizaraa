@@ -127,19 +127,19 @@
 //             Create account
 //           </Button>
 
-          // <Link
-          //   href="#"
-          //   onClick={handleResendOtp}
-          //   style={{
-          //     fontSize: "0.875rem",
-          //     color: "#2563eb",
-          //     textDecoration: "none",
-          //     cursor: "pointer",
-          //     display: "block",
-          //   }}
-          // >
-          //   Resend OTP
-          // </Link>
+//           <Link
+//             href="#"
+//             onClick={handleResendOtp}
+//             style={{
+//               fontSize: "0.875rem",
+//               color: "#2563eb",
+//               textDecoration: "none",
+//               cursor: "pointer",
+//               display: "block",
+//             }}
+//           >
+//             Resend OTP
+//           </Link>
 //         </div>
 //       </main>
 //     </div>
