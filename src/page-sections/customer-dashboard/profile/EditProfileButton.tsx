@@ -14,7 +14,7 @@ export default function EditProfileButton() {
     </Button>
 
     <Button color="primary" bg="primary.light" px="2rem" onClick={() => push("/profile/set-password")}>
-      Set Password
+      Change Password
     </Button>
     
     </FlexBox>

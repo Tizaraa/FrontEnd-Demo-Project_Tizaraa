@@ -384,7 +384,7 @@ export default function Signup() {
       .required("Password is required"),
     cpassword: yup
       .string()
-      .oneOf([yup.ref("password")], "Passwords must match")
+      .oneOf([yup.ref("password")], "Password must match")
       .required("Confirm password is required"),
     agreement: yup
       .bool()

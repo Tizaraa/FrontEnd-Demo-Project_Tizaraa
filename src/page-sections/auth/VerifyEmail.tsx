@@ -1,32 +1,43 @@
-// "use client"
+// "use client";
 // import { Button } from "@component/buttons";
 // import { Input } from "@mui/material";
 // import Link from "next/link";
 // import { useState } from "react";
+// import { useRouter } from "next/navigation";
+// import { toast } from "react-toastify";
+// import ApiBaseUrl from "api/ApiBaseUrl";
 
 // export default function VerifyEmail() {
 //   const [otp, setOtp] = useState("");
+//   const router = useRouter();
 
 //   const handleSubmit = async (e) => {
-//     e.preventDefault(); 
+//     e.preventDefault();
 //     try {
-//       const response = await fetch("https://frontend.tizaraa.shop/api/setregister", {
+//       const response = await fetch(`${ApiBaseUrl.baseUrl}setregister`, {
 //         method: "POST",
 //         headers: {
 //           "Content-Type": "application/json",
 //         },
-//         body: JSON.stringify({ code: otp }), 
+//         body: JSON.stringify({ code: otp }),
 //       });
 
-//       const data = await response.json(); 
+//       const data = await response.json();
 
-//       if (response.ok) {
-//         console.log("Success:", data); 
+//       if (response.ok && data.token) {
+//         // Save token and user info to localStorage
+//         localStorage.setItem("token", data.token);
+//         localStorage.setItem("userInfo", JSON.stringify(data.user));
+
+//         console.log("Success:", data);
+//         toast.success("Logged in successfully")
+//         // Redirect to the home page
+//         router.push("/");
 //       } else {
 //         console.log("Error:", data);
 //       }
 //     } catch (error) {
-//       console.error("Error:", error); 
+//       console.error("Error:", error);
 //     }
 //   };
 
@@ -51,10 +62,10 @@
 //           <h1 style={{ fontSize: "1.5rem", fontWeight: "400" }}>Verify email address</h1>
 
 //           <p style={{ fontSize: "0.875rem" }}>
-//             To verify your email, we&apos;ve sent a One Time Password (OTP) to nahidazaman2000@gmail.com{" "}
-//             <Link href="#" style={{ color: "#2563eb", textDecoration: "none", cursor: "pointer" }}>
+//             To verify your email, we&apos;ve sent a One Time Password (OTP){" "}
+//             {/* <Link href="#" style={{ color: "#2563eb", textDecoration: "none", cursor: "pointer" }}>
 //               (Change)
-//             </Link>
+//             </Link> */}
 //           </p>
 
 //           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
@@ -65,7 +76,7 @@
 //               id="otp"
 //               type="text"
 //               value={otp}
-//               onChange={(e) => setOtp(e.target.value)} 
+//               onChange={(e) => setOtp(e.target.value)}
 //               style={{
 //                 width: "100%",
 //                 border: "2px solid #e5e7eb",
@@ -89,7 +100,7 @@
 //               textAlign: "center",
 //               cursor: "pointer",
 //             }}
-//             onClick={handleSubmit} 
+//             onClick={handleSubmit}
 //           >
 //             Create your Tizaraa account
 //           </Button>
@@ -111,6 +122,7 @@
 //     </div>
 //   );
 // }
+
 
 
 "use client";
@@ -145,7 +157,7 @@ export default function VerifyEmail() {
         localStorage.setItem("userInfo", JSON.stringify(data.user));
 
         console.log("Success:", data);
-        toast.success("Logged in successfully")
+        toast.success("Logged in successfully");
         // Redirect to the home page
         router.push("/");
       } else {
@@ -153,6 +165,30 @@ export default function VerifyEmail() {
       }
     } catch (error) {
       console.error("Error:", error);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Or fetch token from the appropriate place
+      const response = await fetch(`${ApiBaseUrl.baseUrl}resend/otp/register`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("OTP resent successfully");
+      } else {
+        console.log("Error:", data);
+        toast.error("Failed to resend OTP");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("An error occurred while resending OTP");
     }
   };
 
@@ -177,10 +213,7 @@ export default function VerifyEmail() {
           <h1 style={{ fontSize: "1.5rem", fontWeight: "400" }}>Verify email address</h1>
 
           <p style={{ fontSize: "0.875rem" }}>
-            To verify your email, we&apos;ve sent a One Time Password (OTP){" "}
-            {/* <Link href="#" style={{ color: "#2563eb", textDecoration: "none", cursor: "pointer" }}>
-              (Change)
-            </Link> */}
+            To verify your email, we&apos;ve sent a One Time Password (OTP)
           </p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
@@ -222,6 +255,7 @@ export default function VerifyEmail() {
 
           <Link
             href="#"
+            onClick={handleResendOtp}
             style={{
               fontSize: "0.875rem",
               color: "#2563eb",

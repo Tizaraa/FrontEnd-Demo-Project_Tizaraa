@@ -22,6 +22,9 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 import authService from "services/authService";
 import Link from "next/link";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+
 const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -145,7 +148,13 @@ export default function Profile() {
                 borderRadius={8}
                 alignItems="center"
               >
-                <Avatar src={user?.image} size={64} />
+                {/* <Avatar src={user?.image} size={64} /> */}
+
+                {user?.image ? (
+                <Avatar src={user.image} size={64} />
+              ) : (
+                <FontAwesomeIcon icon={faUser} size="2x" />
+              )}
 
                 <Box ml="12px" flex="1 1 0">
                   <FlexBox
