@@ -120,6 +120,7 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       return;
     }
     try {
+      setOtp("");
       setLoading(false); // Ensure "Confirm" button doesn't show loading
       setIsResetOtpDisabled(true); // Disable the "Reset OTP" button during the process
       const response = await axios.post(`${ApiBaseUrl.baseUrl}forgot-password`, {

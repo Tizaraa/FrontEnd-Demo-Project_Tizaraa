@@ -156,16 +156,19 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import BeatLoader from "react-spinners/BeatLoader";
 
 export default function VerifyEmail() {
   const [otp, setOtp] = useState("");
   const [resendTimer, setResendTimer] = useState(180); // Timer in seconds (3 minutes)
   const [isResendDisabled, setIsResendDisabled] = useState(false); // Track if the button is disabled
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   // Function to handle OTP submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch(`${ApiBaseUrl.baseUrl}setregister`, {
         method: "POST",
@@ -191,6 +194,9 @@ export default function VerifyEmail() {
       }
     } catch (error) {
       console.error("Error:", error);
+    }
+    finally {
+      setLoading(false); // Stop loading after request is complete
     }
   };
 
@@ -319,7 +325,8 @@ export default function VerifyEmail() {
             }}
             onClick={handleSubmit}
           >
-            Create account
+            {/* Create account */}
+            {loading ? <BeatLoader size={18} color="#fff" /> : "Create account"}
           </Button>
 
           {/* Resend OTP Link */}

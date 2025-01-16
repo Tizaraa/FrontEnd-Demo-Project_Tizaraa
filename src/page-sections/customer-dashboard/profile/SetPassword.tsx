@@ -4,6 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import BeatLoader from "react-spinners/BeatLoader";
 
 
 export default function SetPassword() {
@@ -14,6 +15,7 @@ export default function SetPassword() {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [errorMessages, setErrorMessages] = useState([]);
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   
 
@@ -74,6 +76,7 @@ export default function SetPassword() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     if (!confirmPasswordError && password === confirmPassword) {
       try {
@@ -274,7 +277,8 @@ export default function SetPassword() {
           )}
 
           <button type="submit" style={styles.button}>
-            SUBMIT
+            {/* SUBMIT */}
+            {loading ? <BeatLoader size={18} color="#fff" /> : "Submit"}
           </button>
         </form>
       </div>
