@@ -357,23 +357,26 @@ const NewArrivalProductFilter: React.FC<NewArrivalProductFilterProps> = ({
   }}
   className="custom-scrollbar"
 >
-{provinceList.map((province) => (
-        <CheckBox
-          my="10px"
-          key={province.id}
-          name={province.province}
-          value={province.id}
-          color="secondary"
-          label={
-            <SemiSpan color="inherit">
-              {province.province} 
-            </SemiSpan>
-          }
-          onChange={() => handleProvinceChange(province.id)}
-          checked={selectedProvinces.includes(province.id)}
-        />
-      ))}
-       </div>
+  {provinceList
+    .filter((province) => province.province && province.province.trim() !== "")
+    .map((province) => (
+      <CheckBox
+        my="10px"
+        key={province.id}
+        name={province.province}
+        value={province.id}
+        color="secondary"
+        label={
+          <SemiSpan color="inherit">
+            {province.province}
+          </SemiSpan>
+        }
+        onChange={() => handleProvinceChange(province.id)}
+        checked={selectedProvinces.includes(province.id)}
+      />
+    ))}
+</div>
+
 
       {/* {visibleProvinces.map((province) => (
         <CheckBox

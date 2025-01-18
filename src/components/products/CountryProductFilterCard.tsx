@@ -260,22 +260,25 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
       <Divider mt="18px" mb="24px" />
 
       <H6 mb="10px">Shipped From</H6>
-      {visibleProvinces.map((province) => (
-        <CheckBox
-          my="10px"
-          key={province.id}
-          name={province.province}
-          value={province.id}
-          color="secondary"
-          label={
-            <SemiSpan color="inherit">
-              {province.province} 
-            </SemiSpan>
-          }
-          onChange={() => handleProvinceChange(province.id)}
-          checked={selectedProvinces.includes(province.id)}
-        />
-      ))}
+      {visibleProvinces
+  .filter((province) => province.province && province.province.trim() !== "")
+  .map((province) => (
+    <CheckBox
+      my="10px"
+      key={province.id}
+      name={province.province}
+      value={province.id}
+      color="secondary"
+      label={
+        <SemiSpan color="inherit">
+          {province.province}
+        </SemiSpan>
+      }
+      onChange={() => handleProvinceChange(province.id)}
+      checked={selectedProvinces.includes(province.id)}
+    />
+  ))}
+
       {provinceList.length > 5 && (
         <Paragraph
           py="6px"

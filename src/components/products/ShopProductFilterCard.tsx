@@ -348,7 +348,9 @@ const handleBrandChange = (brandId: number) => {
   }}
   className="custom-scrollbar"
 >
-{provinceList.map((province) => (
+{provinceList
+ .filter((province) => province.province && province.province.trim() !== "")
+ .map((province) => (
         <CheckBox
           my="10px"
           key={province.id}
