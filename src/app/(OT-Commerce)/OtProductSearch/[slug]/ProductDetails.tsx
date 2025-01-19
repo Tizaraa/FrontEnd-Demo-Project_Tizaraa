@@ -439,7 +439,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
           />
         )}
 
-        <RelatedProducts relatedProducts={productData.relatedproduct} />
+        <RelatedProducts productId={productData.relatedproduct} />
       </Fragment>
     </>
   );
