@@ -17,7 +17,8 @@ export default function WriteReview({
   orderDetails,
   status,
   cancel_status,
-  orderItemId 
+  orderItemId ,
+  order_days_gone
 }: {
   item: any;
   shopName: string;
@@ -25,6 +26,7 @@ export default function WriteReview({
   status: any;
   orderItemId : any;
   cancel_status:any;
+  order_days_gone:any;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(0);
@@ -223,7 +225,7 @@ export default function WriteReview({
 
 
         {/* return policy */}
-        {status === "Delivered" && cancel_status !== 6 && (
+         {status === "Delivered" && cancel_status !== 6  && order_days_gone !== 3 && (
           <FlexBox flex="160px" m="6px" alignItems="center">
             <Button
               variant="text"
