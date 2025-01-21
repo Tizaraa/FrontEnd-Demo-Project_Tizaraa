@@ -428,13 +428,13 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
     loadQRCode();
   }, [params.slug]);
 
-  if (isLoading) {
-    return (
-      <LoaderWrapper>
-        <Vortex />
-      </LoaderWrapper>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <LoaderWrapper>
+  //       <Vortex />
+  //     </LoaderWrapper>
+  //   );
+  // }
 
   // if (!qrCodeUrl) {
   //   return (

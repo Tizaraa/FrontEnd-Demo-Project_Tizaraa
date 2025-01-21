@@ -291,6 +291,33 @@ export default function WriteReview({
        </div>
 
         </FlexBox>
+                       
+{/* Return Policy Alert */}
+
+{/* <div
+  style={{
+    backgroundColor: '#FFFAE5',
+    border: '1px solid #FFE4B2',
+    borderRadius: '8px',
+    width: '95%',
+    margin: 'auto',
+    paddingLeft: '10px'
+  }}
+>
+  <p
+    style={{
+      color: '#A67C00',
+      fontWeight: '500',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+    }}
+  >
+    <span style={{ color: '#FFC107' }}>⚠️</span>
+    Important: You have {item.order_days_gone} days left to return this product.
+  </p>
+</div> */}
+
 
 
       {/* Render Modal */}
