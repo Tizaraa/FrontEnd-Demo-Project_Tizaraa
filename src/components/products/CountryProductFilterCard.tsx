@@ -254,12 +254,16 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
         </Paragraph>
       )}
 
-      <Divider mt="18px" mb="24px" />
-      <H6 mb="10px">Warranty</H6>
-      {/* Add warranty options here */}
-      <Divider mt="18px" mb="24px" />
 
-      <H6 mb="10px">Shipped From</H6>
+{/* warranty  */}
+      {/* <Divider mt="18px" mb="24px" />
+      <H6 mb="10px">Warranty</H6>
+
+      <Divider mt="18px" mb="24px" /> */}
+
+
+{/* shipped from  */}
+      {/* <H6 mb="10px">Shipped From</H6>
       {visibleProvinces
   .filter((province) => province.province && province.province.trim() !== "")
   .map((province) => (
@@ -289,7 +293,9 @@ const CountryProductFilterCard: React.FC<CountryProductFilterCardProps> = ({
         >
           {showAllProvinces ? "Show Less" : "Show More"}
         </Paragraph>
-      )}
+      )} */}
+
+
     </Card>
   );
 };
