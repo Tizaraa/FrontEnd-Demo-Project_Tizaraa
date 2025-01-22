@@ -383,9 +383,16 @@ export default function PrivacyPolicyPage() {
            11. HOW CAN YOU CONTACT US ABOUT THIS PRIVACY POLICY?        
             </h3>
             <div style={{ marginBottom: "1rem" }}>
-              <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
-              If you have questions or comments about this policy, you may email us at tizaraabd2023@gmail.com
-              </p>
+            <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
+  If you have questions or comments about this policy, you may email us at{" "}
+  <a 
+    href="mailto:tizaraabd2023@gmail.com" 
+    style={{ color: "#3182ce", textDecoration: "underline" }}
+  >
+    tizaraabd2023@gmail.com
+  </a>.
+</p>
+
             </div>
           </div>
 

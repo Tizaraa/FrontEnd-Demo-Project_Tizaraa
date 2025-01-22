@@ -42,7 +42,18 @@ export default function ReturnPolicyPage() {
                 your product is damaged, defective, incorrect, or incomplete at the time of delivery, please file a return
                 request on the app or website within 3 days. Please see below for more information on our return and refund
                 policy. If you wish to return a Product to us you may contact us through our website, by email
-                tizaraabd2023@gmail.com by calling our phone number (+8801792223444). We will then inform of you of the
+                <a 
+                href="mailto:tizaraabd2023@gmail.com" 
+                style={{ color: "#3182ce", textDecoration: "underline" }}
+              >
+                tizaraabd2023@gmail.com
+              </a> by calling our phone number  
+              <a 
+              href="tel:+8801792223444" 
+              style={{ color: "#3182ce", textDecoration: "underline" }}
+            >
+              (+8801792223444)
+            </a>. We will then inform of you of the
                 arrangements to return the Product to us.
               </p>
             </div>

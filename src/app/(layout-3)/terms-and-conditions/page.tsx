@@ -851,9 +851,18 @@ export default function TermsandConditionPage() {
           CONTACT US
               </h3>
               <div style={{ marginBottom: "1rem" }}>
-                <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
-                In order to resolve a complaint regarding the Site or to receive further information regarding the use of the Site, please contact us. To contact us visit the following link https://tizaraa.com/contact
-                </p>  
+              <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
+  In order to resolve a complaint regarding the Site or to receive further information regarding the use of the Site, please contact us. To contact us, visit the following link:{" "}
+  <a 
+    href="https://tizaraa.com/contact" 
+    style={{ color: "#3182ce", textDecoration: "underline" }} 
+    target="_blank" 
+    rel="noopener noreferrer"
+  >
+    https://tizaraa.com/contact
+  </a>.
+</p>
+
               </div>
             </div>
                 
