@@ -178,7 +178,8 @@ import Typography, { Paragraph } from "@component/Typography";
 export const aboutLinks = [
   { name: "Help center", url: "/helpCenter" },
   { name: "How to buy", url: "/howToBuy" },
-  { name: "Tizaraa journey", url: "/tizaraa-journey" }
+  { name: "Tizaraa journey", url: "/tizaraa-journey" },
+  { name: "Return and Refund Policy", url: "/return-and-refund-policy"}
 ];
 
 export const customerCareLinks = [
@@ -186,6 +187,8 @@ export const customerCareLinks = [
   { name: "Tizaraa blog", url: "/tizaraa-blog" },
   { name: "Tizaraa cares", url: "/tizaraa-cares" },
   { name: "Privacy policy", url: "/privacy-policy" },
+  { name: "Terms and Conditions", url: "#"},
+ 
 ];
 
 export const customerCareLink = ["Sell on Tizaraa"];
