@@ -187,7 +187,7 @@ export const customerCareLinks = [
   { name: "Tizaraa blog", url: "/tizaraa-blog" },
   { name: "Tizaraa cares", url: "/tizaraa-cares" },
   { name: "Privacy policy", url: "/privacy-policy" },
-  { name: "Terms and Conditions", url: "#"},
+  { name: "Terms and Conditions", url: "/terms-and-conditions"},
  
 ];
 
