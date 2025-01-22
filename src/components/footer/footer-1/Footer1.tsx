@@ -166,6 +166,7 @@ import Grid from "@component/grid/Grid";
 import FlexBox from "@component/FlexBox";
 import Container from "@component/Container";
 import Typography, { Paragraph } from "@component/Typography";
+import payment_image from "../../../../public/assets/images/Payment-image.png" 
 
 // CUSTOM DATA
 // export const aboutLinks = ["Terms & Conditions", "Privacy Policy"];
@@ -397,6 +398,7 @@ export default function Footer1() {
                 </FlexBox>
               </Grid>
               {/* Logo and Description */}
+             
               <Grid item lg={4} md={12} sm={12} xs={12}>
                 <Link href="/">
                   <Image
@@ -411,7 +413,15 @@ export default function Footer1() {
                   All across Bangladesh with cash on delivery (COD)
                 </Paragraph>
               </Grid>
+              
             </Grid>
+
+           <img 
+  src="/assets/images/Payment-image.png" 
+  alt="Payment" 
+  style={{ width: "100%", maxWidth: "65%" }} 
+/>
+
           </Box>
         </Container>
       </Box>
