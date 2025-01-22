@@ -14,6 +14,7 @@ import FlexBox from "@component/FlexBox";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import { ProductCard1 } from "@component/product-cards";
+import Loading from "./loading";
 const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -392,6 +393,9 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   const [productData, setProductData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const { slug } = params;
+  const [qrCode, setQrCode] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -449,6 +453,20 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   //     </div>
   //   );
   // }
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const data = await fetchProductData(slug);
+      const qrCodeData = await fetchQRCode(slug);
+      setProductData(data);
+      setQrCode(qrCodeData);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [slug]);
+
+  if (loading) return <Loading />;
 
   if (!productData || !productData.productsingledetails) {
     return (
