@@ -27,7 +27,14 @@ export default function PrivacyPolicyPage() {
         <section style={{ marginBottom: "1.5rem" }}>
           <div style={{ marginBottom: "1.5rem" }}>
             <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
-            Thank you for choosing to be part of our community at www.tizaraa.com ("Tizaraa", "we", "us", "our"). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy policy, or our practices with regards to your personal information, please contact us at tizaraabd2023@gmail.com.
+            Thank you for choosing to be part of our community at www.tizaraa.com ("Tizaraa", "we", "us", "our"). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy policy, or our practices with regards to your personal information, please contact us at 
+            <a 
+                href="mailto:info@tizaraa.com" 
+                style={{ color: "#3182ce", textDecoration: "underline", marginLeft: "5px" }}
+              >
+                info@tizaraa.com
+              </a>
+            .
             </p>
             <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
             When you and more generally, use any of our services (the "Services", which include the service/product we provide), we appreciate that you are trusting us with your personal information. We take your privacy very seriously. In this privacy policy, we seek to explain to you in the clearest way possible what information we collect, how we use it and what rights you have in relation to it. We hope you take some time to read through it carefully, as it is important. If there are any terms in this privacy policy that you do not agree with, please discontinue use of our Services immediately.
@@ -386,10 +393,10 @@ export default function PrivacyPolicyPage() {
             <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
   If you have questions or comments about this policy, you may email us at{" "}
   <a 
-    href="mailto:tizaraabd2023@gmail.com" 
+    href="mailto:info@tizaraa.com" 
     style={{ color: "#3182ce", textDecoration: "underline" }}
   >
-    tizaraabd2023@gmail.com
+    info@tizaraa.com
   </a>.
 </p>
 

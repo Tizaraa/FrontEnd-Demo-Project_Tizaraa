@@ -618,7 +618,7 @@ export default function Signup() {
               <FlexBox>
                 <SemiSpan>By signing up, you agree to</SemiSpan>
                 <a
-                  href="/terms_condition"
+                  href="/terms-and-conditions"
                   target="_blank"
                   rel="noreferrer noopener"
                 >

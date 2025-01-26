@@ -96,8 +96,8 @@
 
 
 //                 <Typography py="0.3rem" color="gray.500">
-//                   <a href="mailto:tizaraabd2023@gmail.com" style={{ textDecoration: 'none', color: 'inherit' }}>
-//                   Email: tizaraabd2023@gmail.com
+//                   <a href="mailto:info@tizaraa.com" style={{ textDecoration: 'none', color: 'inherit' }}>
+//                   Email: info@tizaraa.com
 //                   </a>
                  
 //                 </Typography>
@@ -158,7 +158,7 @@
 //   );
 // }
 
-
+"use client"
 import Link from "next/link";
 import Box from "@component/Box";
 import Image from "@component/Image";
@@ -166,16 +166,8 @@ import Grid from "@component/grid/Grid";
 import FlexBox from "@component/FlexBox";
 import Container from "@component/Container";
 import Typography, { Paragraph } from "@component/Typography";
-import payment_image from "../../../../public/assets/images/Payment-image.png" 
+import { useEffect, useState } from "react";
 
-// CUSTOM DATA
-// export const aboutLinks = ["Terms & Conditions", "Privacy Policy"];
-// export const customerCareLinks = [
-//   "Help Center",
-//   "Track Your Order",
-//   "Corporate & Bulk Purchasing",
-//   "Returns & Refunds",
-// ];
 export const aboutLinks = [
   { name: "Help center", url: "/helpCenter" },
   { name: "How to buy", url: "/howToBuy" },
@@ -191,6 +183,7 @@ export const customerCareLinks = [
   { name: "Terms and Conditions", url: "/terms-and-conditions"},
  
 ];
+
 
 export const customerCareLink = ["Sell on Tizaraa"];
 export const iconList = [
@@ -222,6 +215,17 @@ export const iconList = [
 ];
 
 export default function Footer1() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize(); // Check on initial render
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
     <footer>
       <Box style={{ backgroundColor: "#656844" }}>
@@ -343,10 +347,10 @@ export default function Footer1() {
                 </Typography>
                 <Typography style={{ padding: "0.3rem 0", color: "inherit" }}>
                     <a
-                      href="mailto:tizaraabd2023@gmail.com"
+                      href="mailto:info@tizaraa.com"
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      Email: tizaraabd2023@gmail.com
+                      Email: info@tizaraa.com
                     </a>
                 </Typography>
                 <Typography
@@ -416,11 +420,15 @@ export default function Footer1() {
               
             </Grid>
 
-           <img 
-  src="/assets/images/Payment-image.png" 
-  alt="Payment" 
-  style={{ width: "100%", maxWidth: "65%" }} 
-/>
+            <img
+      src="/assets/images/banners/Payment Banner.png"
+      alt="Payment"
+      style={{
+        width: isMobile ? "100%" : "65%",
+        height: "auto",
+      }}
+    />
+
 
           </Box>
         </Container>

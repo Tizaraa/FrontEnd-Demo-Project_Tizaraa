@@ -123,10 +123,10 @@ const ContactUsPage = () => {
               <FontAwesomeIcon icon={faEnvelope} style={{ color: "#e94560", width: "30px" }} />
             </div>
             <div>
-            <a href="mailto:tizaraabd2023@gmail.com"
+            <a href="mailto:info@tizaraa.com"
                 style={{ textDecoration: "none", color: "inherit" }}
             >
-                      tizaraabd2023@gmail.com
+                      info@tizaraa.com
             </a>
             </div>
           </div>
@@ -141,7 +141,7 @@ const ContactUsPage = () => {
                <FontAwesomeIcon icon={faLocationDot} style={{ color: "#e94560", width: "25px" }} />
             </div>
             <div>
-              <p>House No: 15A, Road No: 35, 15A Rd 35, Dhaka 1212</p>
+              <p>Ga. 131/1, Middle Badda, Dhaka - 1212, Bangladesh</p>
               
             </div>
           </div>

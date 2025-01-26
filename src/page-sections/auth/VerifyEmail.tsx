@@ -325,8 +325,8 @@ export default function VerifyEmail() {
             }}
             onClick={handleSubmit}
           >
-            {/* Create account */}
-            {loading ? <BeatLoader size={18} color="#fff" /> : "Create account"}
+            {/* Verify account */}
+            {loading ? <BeatLoader size={18} color="#fff" /> : "Verify account"}
           </Button>
 
           {/* Resend OTP Link */}

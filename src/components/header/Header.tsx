@@ -77,7 +77,7 @@ export default function Header({ isFixed, className }: HeaderProps) {
     localStorage.removeItem('token');
     setIsLoggedIn(false); // Update login state
     //Cookies.remove("token");
-    router.push("/");
+    router.push("/login");
     toast.success("Logout Successfully")
   };
 

@@ -41,16 +41,16 @@ export default function ReturnPolicyPage() {
                 satisfied with your purchase for any reason, you may return it to us for a full refund or an exchange. If
                 your product is damaged, defective, incorrect, or incomplete at the time of delivery, please file a return
                 request on the app or website within 3 days. Please see below for more information on our return and refund
-                policy. If you wish to return a Product to us you may contact us through our website, by email
+                policy. If you wish to return a Product to us you may contact us through our website, by email 
                 <a 
-                href="mailto:tizaraabd2023@gmail.com" 
-                style={{ color: "#3182ce", textDecoration: "underline" }}
+                href="mailto:info@tizaraa.com" 
+                style={{ color: "#3182ce", textDecoration: "underline", marginLeft: "5px" }}
               >
-                tizaraabd2023@gmail.com
+                info@tizaraa.com
               </a> by calling our phone number  
               <a 
               href="tel:+8801792223444" 
-              style={{ color: "#3182ce", textDecoration: "underline" }}
+              style={{ color: "#3182ce", textDecoration: "underline", marginLeft: "5px" }}
             >
               (+8801792223444)
             </a>. We will then inform of you of the
@@ -73,7 +73,14 @@ export default function ReturnPolicyPage() {
                 <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
                   Subject to the terms below, if you believe that a Product you have ordered from us is defective, you
                   should contact us via our website or by email or by telephoning the Customer Call Centre (details are
-                  available under Contact Us). We will advise you of the appropriate steps to take. If you notify us
+                  available under  <a 
+    href="https://tizaraa.com/contact" 
+    style={{ color: "#3182ce", textDecoration: "underline" }} 
+    target="_blank" 
+    rel="noopener noreferrer"
+  >
+    Contact Us
+  </a>). We will advise you of the appropriate steps to take. If you notify us
                   within 3 days of delivery of the Product that the Product is defective, you will have the option to
                   select a repair, an exchange or a refund. If a fault is found after 3 days from delivery of the Product,
                   you should contact us by telephoning and we will at our discretion either repair or replace the Product
@@ -82,7 +89,7 @@ export default function ReturnPolicyPage() {
                 <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
                   Customers have a legal obligation to take reasonable care of the Products while they are in your
                   possession. If you fail to comply with this obligation and return the Products to us, we may have a
-                  right of action against you for compensation. When returning a Product to us we recommend you obtain
+                  right of action against you for compensation. When returning a Product to us, we recommend you obtain
                   proof of posting. In all cases, we reserve the right to inspect the Product and verify the fault. For an
                   exchange or refund, the Product must be in otherwise 'as new' condition and if possible, with the
                   original packaging. We reserve the right to refuse a refund or exchange if the Product returned is
@@ -96,7 +103,7 @@ export default function ReturnPolicyPage() {
                   We do not cover faults caused by misuse, neglect, physical damage, tampering or incorrect adjustment or
                   normal wear and tear. Products sold on our website are intended for domestic use only and are not for
                   commercial use or resale. Nor do we cover faults due to incorrect installation in your home. Please do
-                  not remove the serial number.
+                  not remove the serial numbers.
                 </p>
                 <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
                   In case the product was not delivered and you received a delivery confirmation email/SMS, report the
@@ -207,7 +214,7 @@ export default function ReturnPolicyPage() {
                 PAYMENT REFUND POLICY
               </h3>
               <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
-              If your product is eligible for a refund, you can choose your preferred refund method based on the table below. The shipping fee is refunded along with the amount paid for your returned product except the Bank Charges charges on EMI in case of product shipped properly & customer decline at during delivery process.
+              If your product is eligible for a refund, you can choose your preferred refund method based on the table below. The shipping fee is refunded along with the amount paid for your returned product except the Bank Charges charges on EMI in case of product shipped properly & customer declines during the delivery process.
                 </p>
               <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
               The time required to complete a refund depends on the refund method you have selected. Once we have received your product (6 working days) and it has undergone a quality control (2 working days), the expected refund processing times are as follows:
@@ -284,7 +291,7 @@ export default function ReturnPolicyPage() {
                 Note: Maximum refund timeline excludes weekends and public holidays.
                 </p>
                 <p style={{ color: "#4a5568", lineHeight: "1.625" }}>
-                Important Note: The Voucher discount code can only be applied once. The leftover amount will not be refunded or used for the next purchase even if the value of the order is smaller than the voucher value. Tizaraa reserve the rights to deduct the Bank Charges on EMI if the product initiated to deliver as per the order.
+                Important Note: The Voucher discount code can only be applied once. The leftover amount will not be refunded or used for the next purchase even if the value of the order is smaller than the voucher value. Tizaraa reserves the right to deduct the Bank Charges on EMI if the product initiated to deliver as per the order.
                 </p>
             </div>
                     </div>

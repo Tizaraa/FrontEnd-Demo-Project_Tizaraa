@@ -25,6 +25,13 @@ const AboutUs: React.FC = () => {
         </p>
       </section>
 
+      <section style={{ marginBottom: '40px' }}>
+        <h2 style={{ fontSize: '22px', color: '#ff6600' }}>Trade License</h2>
+        <p>
+        Tizaraa is a legally registered business with the appropriate trade licenses to operate in the e-commerce space.Our Trade License Number is <strong>TRAD/DNCC/010245/2024</strong>. We are committed to complying with all local regulations and standards to ensure a safe and reliable shopping experience.
+        </p>
+      </section>
+
       {/* What Sets Us Apart Section */}
       <section style={{ marginBottom: '40px' }}>
         <h2 style={{ fontSize: '22px', color: '#ff6600' }}>What Sets Us Apart</h2>
@@ -72,8 +79,20 @@ const AboutUs: React.FC = () => {
               Beyond transactions, Tizaraa is a community. Join us in building connections, sharing experiences, and creating a vibrant space for buyers and sellers alike.
             </p>
           </div>
+          <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+            <h3 style={{ fontSize: '20px' }}>Shipping Information</h3>
+            <p>
+            We are committed to delivering your orders in a timely manner. Here’s our shipping policy:
+            <ul>
+              <li>Inside Dhaka: Delivery within 3 business days</li>
+              <li>Outside Dhaka: Delivery within 5 business days</li>
+            </ul>
+          </p>
+          </div>
         </div>
       </section>
+
+      
 
     </div>
   );

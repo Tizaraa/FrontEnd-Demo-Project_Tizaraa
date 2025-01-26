@@ -544,16 +544,24 @@ export default function CheckOutAddressForm() {
         // toast.success("Address Added successfully!");
       }
     } catch (error) {
-      // console.error("Error submitting address data:", error);
-      // setLoading(false);
-      console.error("Failed submitting address data:", error.response.data.message.phone[0]);
-      if (error.response && error.response.data.message.phone) {
-        setErrors({ contact: error.response.data.message.phone[0] });
+      console.error("Failed submitting address data:", error);
+    
+      if (error.response && error.response.data.message) {
+        const { phone, address } = error.response.data.message;
+    
+        if (phone) {
+          setErrors({ contact: phone[0] }); 
+        }
+    
+        if (address) {
+          setErrors({ address: address[0] }); 
+        }
       } else {
         toast.error("Something went wrong. Please try again.");
       }
+    
       setLoading(false);
-    }
+    }    
   };
 
   const fetchProvince = async () => {
@@ -669,12 +677,13 @@ export default function CheckOutAddressForm() {
                 <TextArea
                   fullwidth
                   label="Address"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
+                  onBlur={handleBlur} // Marks the field as touched
+                  onChange={handleChange} // Updates the field value
                   name="address"
-                  value={values.address}
-                  errorText={touched.address && errors.address}
+                  value={values.address} // Field value
+                  errorText={touched.address && errors.address ? errors.address : ""} // Show error if touched and has error
                 />
+
 
                 <Typography fontWeight="600" mb="0.5rem">
                   Select a label for effective delivery:

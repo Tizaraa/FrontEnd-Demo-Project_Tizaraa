@@ -269,7 +269,7 @@ import FlexBox from "@component/FlexBox";
 import Divider from "@component/Divider";
 import { Button } from "@component/buttons";
 import TextField from "@component/text-field";
-import Typography from "@component/Typography";
+import Typography, { H6, SemiSpan } from "@component/Typography";
 import useWindowSize from "@hook/useWindowSize";
 import axios from "axios";
 import { useAppContext } from "@context/app-context";
@@ -299,42 +299,11 @@ export default function PaymentForm() {
   const [isHasPayLoading, setIsHasPayLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+
   useEffect(() => {
     setIsLoggedIn(authService.isAuthenticated());
   }, []);
-  //const searchParams = useSearchParams();
-  //const { state } = useAppContext();
-
-  // useEffect(() => {
-  //   const queryString = window.location.search;
-  //   console.log("Query String:", queryString); // Log query string
-  
-  //   const urlParams = new URLSearchParams(queryString);
-  //   const status = urlParams.get("status");
-  //   const message = urlParams.get("message");
-  //   console.log("Status:", status);
-  //   console.log("Message:", decodeURIComponent(message || ""));
-  
-  //   if (status === "success" && message) {
-  //     toast.success(decodeURIComponent(message));
-  //   } else if (status === "error" && message) {
-  //     toast.error(decodeURIComponent(message));
-  //   }
-  // }, []);
-  
-
-  // const getTotalPrice = () => {
-  //   return (
-  //     state.cart.reduce(
-  //       (accumulator, item) =>
-  //         // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
-  //         accumulator +
-  //         (item.discountPrice ? item.discountPrice : item.price) * item.qty,
-  //       0
-  //     ) || 0
-  //   );
-  // };
-
   const getTotalPrice = () => {
     return state.cart.reduce((accumulator, item) => {
       if (state.selectedProducts.includes(item.id)) {
@@ -353,25 +322,13 @@ export default function PaymentForm() {
 
   const router = useRouter();
 
-  
-
-  //const router = useRouter();
-  //const searchParams = useSearchParams();
-
-  
-
   let authtoken = localStorage.getItem("token");
   const orderSubmit = async () => {
   setIsHasLoading(true)
     if (isSubtotalZero) {
       toast.error("Your cart is empty. Please add items before proceeding.");
-      return; // Prevent form submission
+      return; 
     }
-    // if (redirectUrl) {
-    //   window.location.href = redirectUrl; // Redirect to the stored URL
-    // } else {
-    //   toast.error("No redirect URL available for payment.");
-    // }
     let getData = localStorage.getItem("userInfo");
     let userinfo = JSON.parse(getData);
 
@@ -395,18 +352,7 @@ export default function PaymentForm() {
     // console.log("Product Type:", productType);
     // console.log("Selected payment method:", paymentMethod);
     if (paymentMethod === "Online Payment") {
-      // const authtoken = localStorage.getItem("token");
-      // const getData = localStorage.getItem("userInfo");
-      // const userinfo = JSON.parse(getData || "{}");
-
-      // const shippingData = sessionStorage.getItem("address");
-      // const userShippingdata = JSON.parse(shippingData || "{}");
-
-      // const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
-      // const productType = cartData.length > 0 ? cartData[0]?.productType : "General";
-
-      // let cart = cartData;
-
+     
       try {
         const response = await axios.post(
           `${ApiBaseUrl.baseUrl}pay-via-ajax`,
@@ -672,12 +618,6 @@ export default function PaymentForm() {
       sessionStorage.removeItem("paymentMethod");
     }
   };
-  // const handlePaymentMethodChange = async ({
-  //   target: { name },
-  // }: ChangeEvent<HTMLInputElement>) => {
-  //   // Update the payment method to the selected value
-  //   setPaymentMethod((prevMethod) => (prevMethod === name ? "" : name));
-  // };
 
   const handleClick = () => {
             setIsHasPayLoading(true)
@@ -687,6 +627,11 @@ export default function PaymentForm() {
       router.push("/login");
     }
   };
+
+  const handleCheckboxChange = (e) => {
+    setIsCheckboxChecked(e.target.checked);
+  };
+
 
   return (
     <Fragment>
@@ -890,40 +835,90 @@ export default function PaymentForm() {
   </div>
 </Card1>
 
+
+
 </FlexBox>
 
+<div style={{marginBottom: "20px"}}>
+<CheckBox
+        mb="20px"
+        name="agreement"
+        color="secondary"
+        label={
+          <FlexBox>
+            <SemiSpan>By proceeding to checkout, you agree to our</SemiSpan>
+            <a
+              href="/terms-and-conditions"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <H6
+                ml="0.5rem"
+                borderBottom="1px solid"
+                borderColor="gray.900"
+              >
+                 Terms & Conditions
+              </H6>
+            </a>
+          </FlexBox>
+        }
+        onChange={handleCheckboxChange} // Update checkbox state
+        required
+      />
+
+</div>
       <Grid container spacing={7}>
         <Grid item sm={6} xs={12}>
-          
-            <Button 
-            //variant="outlined" 
-            color="primary" 
-            bg="primary.light" 
-            type="button" 
-            fullwidth 
-            onClick={handleClick}>
-
-              {isHasPayLoading ? <BeatLoader size={18} color="#E94560" /> : "Back to Checkout Details"}
-            </Button>
-          
+          <Button
+            color="primary"
+            bg="primary.light"
+            type="button"
+            fullwidth
+            onClick={handleClick}
+            
+          >
+            {isHasPayLoading ? (
+              <BeatLoader size={18} color="#E94560" />
+            ) : (
+              "Back to Checkout Details"
+            )}
+          </Button>
         </Grid>
 
         <Grid item sm={6} xs={12}>
           <Button
             onClick={orderSubmit}
-            //variant="outlined"
-            // bg="primary.light"
-            // color="primary"
             style={{
-              color: isSubtotalZero || !paymentMethod ? "#999999" : "#ffe1e6", 
-              backgroundColor: isSubtotalZero || !paymentMethod ? "#cccccc" : "#e94560", 
-              cursor: isSubtotalZero || !paymentMethod ? "not-allowed" : "pointer", 
+              color:
+                isSubtotalZero ||
+                !paymentMethod ||
+                !isCheckboxChecked 
+                  ? "#999999"
+                  : "#ffe1e6",
+              backgroundColor:
+                isSubtotalZero ||
+                !paymentMethod ||
+                !isCheckboxChecked 
+                  ? "#cccccc"
+                  : "#e94560",
+              cursor:
+                isSubtotalZero ||
+                !paymentMethod ||
+                !isCheckboxChecked // Disable button if checkbox is unchecked
+                  ? "not-allowed"
+                  : "pointer",
             }}
             type="button"
             fullwidth
-            disabled={isSubtotalZero || !paymentMethod}
+            disabled={
+              isSubtotalZero || !paymentMethod || !isCheckboxChecked // Disable button if checkbox is unchecked
+            }
           >
-            {isHasLoading ? <BeatLoader size={18} color="white" /> : "Proceed to Pay"}
+            {isHasLoading ? (
+              <BeatLoader size={18} color="white" />
+            ) : (
+              "Proceed to Pay"
+            )}
           </Button>
         </Grid>
       </Grid>
