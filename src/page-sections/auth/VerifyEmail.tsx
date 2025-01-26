@@ -164,6 +164,35 @@ export default function VerifyEmail() {
   const [isResendDisabled, setIsResendDisabled] = useState(false); // Track if the button is disabled
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // For loading state
+  const [error, setError] = useState<string | null>(null); // For error messages
+  useEffect(() => {
+    // Retrieve the timestamp from sessionStorage if it exists
+    const storedTimestamp = sessionStorage.getItem('otpTimestamp');
+    if (storedTimestamp) {
+      const elapsedTime = Math.floor((Date.now() - parseInt(storedTimestamp)) / 1000); // Calculate elapsed time
+      const remainingTime = Math.max(0, resendTimer - elapsedTime); // Ensure the timer doesn't go negative
+      setResendTimer(remainingTime);
+    } else {
+      // Store the timestamp when starting the timer
+      sessionStorage.setItem('otpTimestamp', Date.now().toString());
+    }
+
+    // Timer interval to update the resendTimer
+    const timerInterval = setInterval(() => {
+      setResendTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(timerInterval); // Stop the timer when it reaches 0
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timerInterval);
+  }, []);
+
+
 
   // Function to handle OTP submission
   const handleSubmit = async (e) => {
@@ -203,7 +232,8 @@ export default function VerifyEmail() {
   // Function to handle Resend OTP button click
   const handleResendOtp = async () => {
     try {
-      const token = localStorage.getItem("token"); // Or fetch token from the appropriate place
+      setIsLoading(true); // Set loading state to true while the API request is in progress
+      const token = localStorage.getItem("token"); // Get the token from localStorage
       const response = await fetch(`${ApiBaseUrl.baseUrl}resend/otp/register`, {
         method: "GET",
         headers: {
@@ -211,19 +241,24 @@ export default function VerifyEmail() {
         },
       });
 
+      if (!response.ok) {
+        throw new Error('Failed to resend OTP');
+      }
+
       const data = await response.json();
 
-      if (response.ok) {
-        toast.success("OTP resent successfully");
-        // Reset the timer after OTP is resent
-        setResendTimer(180); // Reset to 3 minutes
-      } else {
-        console.log("Error:", data);
-        toast.error("Failed to resend OTP");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("An error occurred while resending OTP");
+      // If OTP is successfully sent, reset the timer and update the timestamp
+      setResendTimer(180); // Reset timer to 3 minutes
+      sessionStorage.setItem('otpTimestamp', Date.now().toString()); // Store the current timestamp
+
+      // You can show a success message here if necessary
+      alert('OTP sent successfully!');
+
+    } catch (error: any) {
+      // Handle error (e.g., show a message to the user)
+      setError(error.message || 'An error occurred while resending the OTP.');
+    } finally {
+      setIsLoading(false); // Reset loading state once the request is done
     }
   };
 
