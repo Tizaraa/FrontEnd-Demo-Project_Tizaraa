@@ -370,7 +370,7 @@ export default function Signup() {
     email: yup.string().email("Invalid email").required("Email is required"),
     phone: yup
       .string()
-      .matches(/^[0-9]+$/, "Only numbers are allowed")
+      .matches(/^[0-9]{11}$/, "Phone number must be exactly 11 digits")
       .required("Phone is required"),
     password: yup
       .string()
@@ -415,6 +415,7 @@ export default function Signup() {
       console.log(data)
   
       if (response.ok) {
+        sessionStorage.setItem('userId', data.id);
         router.push("/emailValidation");
         toast.success(data.message);
       } else {
@@ -521,6 +522,7 @@ export default function Signup() {
             mb="0.75rem"
             name="phone"
             type="text"
+            maxLength="11"
             onBlur={handleBlur}
             value={values.phone}
             onChange={handleChange}
