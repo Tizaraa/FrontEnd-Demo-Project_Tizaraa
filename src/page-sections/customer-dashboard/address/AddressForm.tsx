@@ -193,10 +193,8 @@ export default function AddressForm() {
 
       }
     } catch (error) {
-      console.error("Failed submitting address data:", error.response.data.message.phone[0]);
-      // if (error.response && error.response.data.message.phone) {
-      //   setErrors({ contact: error.response.data.message.phone[0] });
-      // } 
+      console.error("Failed submitting address data:", error.response.data.message);
+
       if (error.response && error.response.data.message) {
         const { phone, address } = error.response.data.message;
     
@@ -207,8 +205,7 @@ export default function AddressForm() {
         if (address) {
           setErrors({ address: address[0] }); 
         }
-      }
-      else {
+      } else {
         toast.error("Something went wrong. Please try again.");
       }
       setLoading(false);
@@ -328,15 +325,16 @@ export default function AddressForm() {
                   errorText={touched.contact && errors.contact}
                 />
 
-                  <TextArea
-                                 fullwidth
-                                 label="Address"
-                                 onBlur={handleBlur} // Marks the field as touched
-                                 onChange={handleChange} // Updates the field value
-                                 name="address"
-                                 value={values.address} // Field value
-                                 errorText={touched.address && errors.address ? errors.address : ""} // Show error if touched and has error
-                               />
+<TextArea
+    fullwidth
+    label="Address"
+    onBlur={handleBlur}
+    onChange={handleChange}
+    name="address"
+    value={values.address}
+    errorText={touched.address && errors.address ? errors.address : ""}
+  />
+ 
 
                 <Typography fontWeight="600" mb="0.5rem">
                   Select a label for effective delivery:
