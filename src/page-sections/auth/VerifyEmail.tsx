@@ -483,6 +483,7 @@ import { toast } from "react-toastify";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import BeatLoader from "react-spinners/BeatLoader";
 import axios from "axios";
+import CommonHeader from "@component/header/CommonHeader";
 
 export default function VerifyEmail() {
   const [otp, setOtp] = useState("");
@@ -648,6 +649,9 @@ export default function VerifyEmail() {
   }, [resendTimer]);
 
   return (
+    <>
+    <CommonHeader></CommonHeader>
+    
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       {/* Main Content */}
       <main style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", padding: "2rem 1rem" }}>
@@ -917,5 +921,6 @@ export default function VerifyEmail() {
         </div>
       </main>
     </div>
+    </>
   );
 }
