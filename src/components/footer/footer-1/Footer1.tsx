@@ -420,14 +420,59 @@ export default function Footer1() {
               
             </Grid>
 
-            <img
+            <div
+    style={{
+      display: "flex",
+      justifyContent: "flex-start",
+      flexWrap: isMobile ? "wrap" : "nowrap", // Flex wrap for mobile
+      flexDirection: isMobile ? "column" : "row", // Stack elements on mobile
+    }}
+  >
+    <img
       src="/assets/images/banners/Payment Banner.png"
       alt="Payment"
       style={{
-        width: isMobile ? "100%" : "65%",
+        width: "100%", // Default for mobile and smaller devices
         height: "auto",
+        maxWidth: isMobile ? "100%" : "65%", // For desktop, 65% width
       }}
     />
+    
+    <a href="https://otcommerce.com/" style={{ textDecoration: "none" }}>
+  <div
+    style={{
+      display: "flex",
+      marginLeft: isMobile ? "0" : "26px",
+      marginTop: isMobile ? "20px" : "0", // Adjust spacing on mobile
+      flexDirection: isMobile ? "column" : "row", // Stack text on mobile
+    }}
+  >
+    <img
+      src="/assets/images/footer_image/otCommerce.png"
+      alt=""
+      style={{ width: "100px" }}
+    />
+    <span
+      className="hr1-a-1-b"
+      style={{
+        marginTop: isMobile ? "0" : "26px",
+        textAlign: isMobile ? "left" : "left", 
+        color: "white"
+      }}
+    >
+      <span className="hr1-a-1">
+        OpenTrade
+      </span>
+      <br />
+      <span className="hr1-a-2">
+        Commerce
+      </span>
+    </span>
+  </div>
+</a>
+
+  </div>
+
 
 
           </Box>
