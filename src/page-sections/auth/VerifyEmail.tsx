@@ -488,7 +488,12 @@ import CommonHeader from "@component/header/CommonHeader";
 export default function VerifyEmail() {
   const [otp, setOtp] = useState("");
   const [resendTimer, setResendTimer] = useState(180); // Timer in seconds (3 minutes)
-  const [isResendDisabled, setIsResendDisabled] = useState(false); // Track if the button is disabled
+  const [isResendDisabled, setIsResendDisabled] = useState(true); // Track if the button is disabled
+
+  const [initialCountdown, setInitialCountdown] = useState(180); // Start with 3 minutes for the second timer
+  const [isResendButtonClicked, setIsResendButtonClicked] = useState(false);
+
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -534,11 +539,51 @@ export default function VerifyEmail() {
   };
 
   // Handle form submission to change phone number
+  // const handleChangePhoneNumber = async (e) => {
+  //   e.preventDefault();
+  
+  //   if (newPhoneNumber.length < 11) {
+  //     setErrorMessage("Phone number must be 11 digits.");
+  //     return;
+  //   }
+  //   if (newPhoneNumber === currentPhoneNumber) {
+  //     setErrorMessage("New phone number cannot be the same as the current number.");
+  //     return;
+  //   }
+  
+  //   try {
+  //     const userId = sessionStorage.getItem("userId");
+  //     const response = await axios.post(
+  //       `${ApiBaseUrl.baseUrl}set/provided/register/number/${userId}`,
+  //       { phone: newPhoneNumber }
+  //     );
+  
+  //     if (response.status === 200) {
+  //       toast.success(`Phone number changed to: ${newPhoneNumber}`);
+  //       setCurrentPhoneNumber(newPhoneNumber); // Update the current phone number
+  //       toggleModal(); // Close the modal
+  
+  //       // Reset timer to 3 minutes when phone number is changed
+  //       setResendTimer(180); // Reset the resend timer to 3 minutes
+  //       sessionStorage.setItem("resendTimer", "180"); // Save the reset timer in sessionStorage
+  //       sessionStorage.setItem("resendTimer", String(Date.now())); // Save timestamp to restart countdown
+  //     } else {
+  //       toast.error("Failed to update phone number");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating phone number:", error);
+  //     toast.error("An error occurred while updating the phone number.");
+  //   }
+  // };
   const handleChangePhoneNumber = async (e) => {
     e.preventDefault();
   
     if (newPhoneNumber.length < 11) {
       setErrorMessage("Phone number must be 11 digits.");
+      return;
+    }
+    if (newPhoneNumber === currentPhoneNumber) {
+      setErrorMessage("New phone number cannot be the same as the current number.");
       return;
     }
   
@@ -550,21 +595,25 @@ export default function VerifyEmail() {
       );
   
       if (response.status === 200) {
-        alert(`Phone number changed to: ${newPhoneNumber}`);
+        toast.success(`Phone number changed to: ${newPhoneNumber}`);
         setCurrentPhoneNumber(newPhoneNumber); // Update the current phone number
         toggleModal(); // Close the modal
+  
+        // Reset timer to 3 minutes when phone number is changed
+        setResendTimer(180); // Reset the resend timer to 3 minutes
+        sessionStorage.setItem("resendTimer", "180"); // Save the reset timer in sessionStorage
+        sessionStorage.setItem("resendTimestamp", String(Date.now())); // Save timestamp to restart countdown
       } else {
-        alert("Failed to update phone number");
+        toast.error("Failed to update phone number");
       }
     } catch (error) {
       console.error("Error updating phone number:", error);
-      alert("An error occurred while updating the phone number.");
+      toast.error("An error occurred while updating the phone number.");
     }
   };
   
-
-
-
+  
+  
 
 
 
@@ -608,9 +657,110 @@ export default function VerifyEmail() {
   };
 
   // Function to handle Resend OTP button click
+
+  // const handleResendOtp = async () => {
+  //   try {
+  //     const token = localStorage.getItem("token"); // Or fetch token from the appropriate place
+  //     const userId = sessionStorage.getItem("userId");
+  //     const response = await fetch(`${ApiBaseUrl.baseUrl}resend/otp/register/${userId}`, {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (response.ok) {
+  //       toast.success("OTP resent successfully");
+  //       // Reset the timer after OTP is resent
+  //       setResendTimer(180); // Reset to 3 minutes
+  //     } else {
+  //       console.log("Error:", data);
+  //       toast.error("Failed to resend OTP");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     toast.error("An error occurred while resending OTP");
+  //   }
+  // };
+
+  // // Effect to update the resend timer
+  // useEffect(() => {
+  //   let interval;
+  //   if (resendTimer > 0) {
+  //     interval = setInterval(() => {
+  //       setResendTimer((prev) => prev - 1);
+  //     }, 1000);
+  //   } else {
+  //     setIsResendDisabled(false); // Enable the button after 3 minutes
+  //   }
+  //   return () => clearInterval(interval);
+  // }, [resendTimer]);
+
+  // Timer for session-based resend functionality
+  useEffect(() => {
+    const storedTime = sessionStorage.getItem("resendTimer");
+    const storedTimestamp = sessionStorage.getItem("resendTimestamp");
+
+    // Check if session storage has timer and timestamp
+    if (storedTime && storedTimestamp) {
+      const elapsedTime = Math.floor((Date.now() - Number(storedTimestamp)) / 1000);
+      const remainingTime = Math.max(0, Number(storedTime) - elapsedTime);
+
+      setResendTimer(remainingTime); // Use remaining time from sessionStorage
+    } else {
+      // If no session storage, start from 3 minutes
+      setResendTimer(180); 
+    }
+  }, []);
+
+  // Countdown timer for session-based resend functionality
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (resendTimer > 0 && isResendButtonClicked) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          const newTime = prev - 1;
+          sessionStorage.setItem("resendTimer", String(newTime)); // Store updated time in sessionStorage
+          sessionStorage.setItem("resendTimestamp", String(Date.now())); // Store timestamp
+          return newTime;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [resendTimer, isResendButtonClicked]);
+
+  // Countdown timer that always starts from 3 minutes
+  useEffect(() => {
+    let initialInterval: NodeJS.Timeout;
+
+    if (initialCountdown > 0) {
+      initialInterval = setInterval(() => {
+        setInitialCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(initialInterval);
+            toast.error("OTP time has expired!");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(initialInterval);
+  }, [initialCountdown]);
+
+  // Handle OTP Resend
   const handleResendOtp = async () => {
     try {
-      const token = localStorage.getItem("token"); // Or fetch token from the appropriate place
+      const token = localStorage.getItem("token");
       const userId = sessionStorage.getItem("userId");
       const response = await fetch(`${ApiBaseUrl.baseUrl}resend/otp/register/${userId}`, {
         method: "GET",
@@ -623,8 +773,10 @@ export default function VerifyEmail() {
 
       if (response.ok) {
         toast.success("OTP resent successfully");
-        // Reset the timer after OTP is resent
-        setResendTimer(180); // Reset to 3 minutes
+        setResendTimer(180); // Reset timer to 3 minutes when OTP is resent
+        sessionStorage.setItem("resendTimer", "180"); // Save reset timer in sessionStorage
+        sessionStorage.setItem("resendTimestamp", String(Date.now())); // Save timestamp
+        setIsResendButtonClicked(true); // Mark resend as clicked
       } else {
         console.log("Error:", data);
         toast.error("Failed to resend OTP");
@@ -635,18 +787,6 @@ export default function VerifyEmail() {
     }
   };
 
-  // Effect to update the resend timer
-  useEffect(() => {
-    let interval;
-    if (resendTimer > 0) {
-      interval = setInterval(() => {
-        setResendTimer((prev) => prev - 1);
-      }, 1000);
-    } else {
-      setIsResendDisabled(false); // Enable the button after 3 minutes
-    }
-    return () => clearInterval(interval);
-  }, [resendTimer]);
 
   return (
     <>
@@ -676,9 +816,28 @@ export default function VerifyEmail() {
           </p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-            <label htmlFor="otp" style={{ fontSize: "0.875rem", fontWeight: "500" }}>
-              Enter OTP
-            </label>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+  {/* OTP Label */}
+  <label htmlFor="otp" style={{ fontSize: "0.875rem", fontWeight: "500" }}>
+    Enter OTP
+  </label>
+
+  {/* OTP Timer */}
+  {!isResendButtonClicked ? (
+          <span style={{ color: "#2563eb" }}>
+           OTP expires in {Math.floor(initialCountdown / 60)}:{String(initialCountdown % 60).padStart(2, "0")}
+          </span>
+        ) : (
+          <>
+            {/* Show Resend Timer after Resend OTP is clicked */}
+            <span style={{ color: "#2563eb" }}>
+              OTP expires in {Math.floor(resendTimer / 60)}:{String(resendTimer % 60).padStart(2, "0")}
+            </span>
+           
+          </>
+        )}
+</div>
+
             {/* <Input
               id="otp"
               type="text"
@@ -742,27 +901,23 @@ export default function VerifyEmail() {
 
           {/* Resend OTP Link */}
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div style={{ fontSize: "0.875rem", display: "flex", justifyContent:"space-between" }}>
-            {resendTimer > 0 ? (
-              <span style={{ color: "#2563eb" }}>
-                OTP expires in {Math.floor(resendTimer / 60)}:{String(resendTimer % 60).padStart(2, "0")}
-              </span>
-            ) : (
-              <Link
-              href="#"
-              onClick={handleResendOtp}
-              style={{
-                fontSize: "0.875rem",
-                color: "#2563eb",
-                textDecoration: "none",
-                cursor: "pointer",
-                display: "block",
-              }}
-            >
-              Resend OTP
-            </Link>
-            )}
-          </div>
+          
+
+      {/* Resend OTP Button */}
+      <button
+        onClick={handleResendOtp}
+        style={{
+          fontSize: "0.875rem",
+          color: "#2563eb",
+          textDecoration: "none",
+          cursor: "pointer",
+          background: "none",
+          border: "none",
+          outline: "none",
+        }}
+      >
+        Resend OTP
+      </button>
           <div>
           <button
             onClick={toggleModal}
