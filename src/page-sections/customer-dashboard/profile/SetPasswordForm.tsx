@@ -1,7 +1,7 @@
 // "use client";
 // import { Button } from "@component/buttons";
 // import { Shield } from "lucide-react";
-// import { useState, CSSProperties } from "react";
+// import { useState, CSSProperties, useEffect } from "react";
 // import SetPassword from "./SetPassword"; 
 // import axios from "axios";
 // import { toast } from "react-toastify";
@@ -64,38 +64,43 @@
 //     borderRadius: "0.375rem",
 //     marginBottom: "1rem",
 //   } as CSSProperties,
+//   errorMessage: {
+//     color: "red",
+//     fontSize: "0.875rem",
+//     marginTop: "0.5rem",
+//   } as CSSProperties,
+//   timer: {
+//     textAlign: "center",
+//     marginTop: "20px",
+//   } as CSSProperties,
 // };
 
 // export default function SetPasswordForm() {
 //   const [isOtpPage, setIsOtpPage] = useState(false);
 //   const [isPasswordPage, setIsPasswordPage] = useState(false);
 //   const [otp, setOtp] = useState("");
+//   const [error, setError] = useState("");
+//   const [timer, setTimer] = useState(180); // 3 minutes in seconds
+//   const [isTimerActive, setIsTimerActive] = useState(true);
 
 //   // Handle verification through email
 //   const handleVerifyThroughEmail = async () => {
 //     try {
-//       // Get token from localStorage
 //       const token = localStorage.getItem("token");
 
-//       // Check if token exists
 //       if (!token) {
 //         console.error("Authentication token not found!");
 //         return;
 //       }
 
-//       // Make the API request with the token for authentication
 //       const response = await axios.get("https://frontend.tizaraa.shop/api/verify/password/reset", {
 //         headers: {
-//           Authorization: `Bearer ${token}`, // Attach the token to the request headers
+//           Authorization: `Bearer ${token}`,
 //         },
 //       });
 
 //       console.log("API response:", response.data);
-      
-//       // Show success toast with message from the API response
 //       toast.success(response.data.message || "OTP sent successfully to your email.");
-
-//       // Move to OTP page
 //       setIsOtpPage(true);
 //     } catch (error) {
 //       console.error("Error verifying through email:", error);
@@ -105,17 +110,19 @@
 
 //   // Handle OTP submission
 //   const handleOtpSubmit = async () => {
+//     if (otp.length !== 6) {
+//       setError("OTP must be exactly 6 digits.");
+//       return;
+//     }
+
 //     try {
-//       // Get token from localStorage
 //       const token = localStorage.getItem("token");
 
-//       // Check if token exists
 //       if (!token) {
 //         console.error("Authentication token not found!");
 //         return;
 //       }
 
-//       // Make the API request to check the OTP
 //       const response = await axios.post(
 //         "https://frontend.tizaraa.shop/api/check/password/reset",
 //         { code: otp },
@@ -127,8 +134,6 @@
 //       );
 
 //       console.log("OTP verification response:", response.data);
-
-//       // Show success toast and move to password page
 //       toast.success(response.data.message || "OTP verified successfully.");
 //       setIsPasswordPage(true);
 //     } catch (error) {
@@ -137,31 +142,88 @@
 //     }
 //   };
 
+//   // Timer effect
+//   useEffect(() => {
+//     if (isTimerActive && timer > 0) {
+//       const interval = setInterval(() => {
+//         setTimer((prevTimer) => prevTimer - 1);
+//       }, 1000);
+
+//       return () => clearInterval(interval);
+//     } else if (timer === 0) {
+//       setIsTimerActive(false);
+//     }
+//   }, [timer, isTimerActive]);
+
+//   // Format timer in MM:SS format
+//   const formatTime = (seconds) => {
+//     const minutes = Math.floor(seconds / 60);
+//     const remainingSeconds = seconds % 60;
+//     return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+//   };
+
+//   // Handle OTP input change
+//   const handleOtpChange = (e) => {
+//     const newOtp = e.target.value;
+  
+//     // Allow only digits and limit the length to 6
+//     if (/^\d{0,6}$/.test(newOtp)) {
+//       setOtp(newOtp);
+//       if (newOtp.length > 6) {
+//         setError("OTP cannot be more than 6 digits.");
+//       } else {
+//         setError("");
+//       }
+//     } else {
+//       // If the input contains any non-numeric characters, reset the OTP value
+//       setOtp(newOtp.replace(/[^0-9]/g, "")); // Remove anything that is not a number
+//       setError("Only numeric values are allowed.");
+//     }
+//   };
+  
+
 //   return (
 //     <div style={styles.container}>
 //       <div style={styles.innerContainer}>
 //         {isPasswordPage ? (
-//           <SetPassword /> 
+//           <SetPassword />
 //         ) : isOtpPage ? (
 //           <>
 //             <div style={styles.textContent}>
 //               <h1 style={styles.title}>Enter OTP</h1>
-//               <p style={styles.subtitle}>We have sent an OTP to your email. Please enter it below:</p>
+//               <p style={styles.subtitle}>
+//                 We have sent an OTP to your email. Please enter it below:
+//               </p>
 //             </div>
 //             <input
 //               type="text"
 //               value={otp}
-//               onChange={(e) => setOtp(e.target.value)}
+//               onChange={handleOtpChange}
 //               style={styles.input}
 //               placeholder="Enter OTP"
+//               maxLength={6}
 //             />
+//             {/* {error && <p style={styles.errorMessage}>{error}</p>} */}
+//             <span style={{
+//               marginBottom: "12px",
+//               marginTop: "-12px",
+//               color: "red"
+//             }}>OTP must be a 6-digit number.</span>
 //             <Button
 //               variant="outlined"
 //               style={{ width: "100%" }}
 //               onClick={handleOtpSubmit}
+//               disabled={isTimerActive && timer > 0 ? false : true}
 //             >
 //               Submit OTP
 //             </Button>
+//             <div style={styles.timer}>
+//               {isTimerActive ? (
+//                 <p>Time remaining: {formatTime(timer)}</p>
+//               ) : (
+//                 <p style={{ color: "red" }}>OTP expired. Please request a new one.</p>
+//               )}
+//             </div>
 //           </>
 //         ) : (
 //           <>
@@ -199,6 +261,7 @@ import { useState, CSSProperties, useEffect } from "react";
 import SetPassword from "./SetPassword"; 
 import axios from "axios";
 import { toast } from "react-toastify";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const styles = {
   container: {
@@ -276,6 +339,7 @@ export default function SetPasswordForm() {
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(180); // 3 minutes in seconds
   const [isTimerActive, setIsTimerActive] = useState(true);
+  const [verificationMethod, setVerificationMethod] = useState<"email" | "phone">("email"); // Track verification method
 
   // Handle verification through email
   const handleVerifyThroughEmail = async () => {
@@ -287,7 +351,7 @@ export default function SetPasswordForm() {
         return;
       }
 
-      const response = await axios.get("https://frontend.tizaraa.shop/api/verify/password/reset", {
+      const response = await axios.get(`${ApiBaseUrl.baseUrl}verify/password/reset`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -296,8 +360,35 @@ export default function SetPasswordForm() {
       console.log("API response:", response.data);
       toast.success(response.data.message || "OTP sent successfully to your email.");
       setIsOtpPage(true);
+      setVerificationMethod("email");
     } catch (error) {
       console.error("Error verifying through email:", error);
+      toast.error("Error sending OTP. Please try again.");
+    }
+  };
+
+  // Handle verification through phone
+  const handleVerifyThroughPhone = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.error("Authentication token not found!");
+        return;
+      }
+
+      const response = await axios.get(`${ApiBaseUrl.baseUrl}verify/password/phone/reset`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("API response:", response.data);
+      toast.success(response.data.message || "OTP sent successfully to your phone.");
+      setIsOtpPage(true);
+      setVerificationMethod("phone");
+    } catch (error) {
+      console.error("Error verifying through phone:", error);
       toast.error("Error sending OTP. Please try again.");
     }
   };
@@ -318,7 +409,7 @@ export default function SetPasswordForm() {
       }
 
       const response = await axios.post(
-        "https://frontend.tizaraa.shop/api/check/password/reset",
+        `${ApiBaseUrl.baseUrl}check/password/reset`,
         { code: otp },
         {
           headers: {
@@ -386,7 +477,7 @@ export default function SetPasswordForm() {
             <div style={styles.textContent}>
               <h1 style={styles.title}>Enter OTP</h1>
               <p style={styles.subtitle}>
-                We have sent an OTP to your email. Please enter it below:
+                We have sent an OTP to your {verificationMethod === "email" ? "email" : "phone"}. Please enter it below:
               </p>
             </div>
             <input
@@ -438,6 +529,13 @@ export default function SetPasswordForm() {
                 onClick={handleVerifyThroughEmail}
               >
                 Verify through Email
+              </Button>
+              <Button
+                variant="outlined"
+                style={{ width: "100%" }}
+                onClick={handleVerifyThroughPhone}
+              >
+                Verify through Phone
               </Button>
             </div>
           </>
