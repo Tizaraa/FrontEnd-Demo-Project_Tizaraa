@@ -64,7 +64,7 @@ export default function VerifyEmail() {
 
   const handleChangePhoneNumber = async (e) => {
     e.preventDefault();
-
+  
     if (newPhoneNumber.length < 11) {
       setErrorMessage("Phone number must be 11 digits.");
       return;
@@ -73,37 +73,38 @@ export default function VerifyEmail() {
       setErrorMessage("New phone number cannot be the same as the current number.");
       return;
     }
-
+  
     try {
       const userId = sessionStorage.getItem("userId");
       const response = await axios.post(
         `${ApiBaseUrl.baseUrl}set/provided/register/number/${userId}`,
         { phone: newPhoneNumber }
       );
-
+  
       if (response.status === 200) {
         toast.success(`Phone number changed to: ${newPhoneNumber}`);
         setCurrentPhoneNumber(newPhoneNumber); // Update the current phone number
         toggleModal(); // Close the modal
-
+  
         // Reset timer to 3 minutes when phone number is changed
         setResendTimer(180); // Reset the resend timer to 3 minutes
         sessionStorage.setItem("resendTimer", "180"); // Save the reset timer in sessionStorage
         sessionStorage.setItem("resendTimestamp", String(Date.now())); // Save timestamp to restart countdown
+        setIsResendButtonClicked(true); // Mark resend as clicked to start the timer
       } else {
         toast.error("Failed to update phone number");
       }
     } catch (error) {
       console.error("Error updating phone number:", error);
-
+  
       // Ensure API error response is handled correctly
       if (error.response?.data?.message?.phone?.[0]) {
-          toast.error(error.response.data.message.phone[0]); // Show the first validation error
+        toast.error(error.response.data.message.phone[0]); // Show the first validation error
       } else {
-        toast.error(error.response.data.message.phone[0]);
+        toast.error("Failed to update phone number");
       }
-  }
-};
+    }
+  };
 
   // Function to handle OTP submission
   const handleSubmit = async (e) => {
