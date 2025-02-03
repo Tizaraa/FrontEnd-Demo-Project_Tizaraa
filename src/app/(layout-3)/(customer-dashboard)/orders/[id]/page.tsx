@@ -630,7 +630,7 @@ if (order?.Order?.productType === "Abroad") {
             >
               {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
             </Button>
-            {order.Order.payment_status === "Unpaid" && (
+            {/* {order.Order.payment_status === "Unpaid" && (
              <Button
              px="2rem"
              color="success" // Or another green variant available in your theme
@@ -646,7 +646,26 @@ if (order?.Order?.productType === "Abroad") {
              )}
            </Button>
            
-            )}
+            )} */}
+            {order.Order.payment_status === "Unpaid" && 
+  !["Delivered", "Cancelled", "Return"].includes(order.Order.status) && (
+    <Button
+      px="2rem"
+      color="success" // Or another green variant available in your theme
+      bg="success.light" // Or a specific green shade
+      mt="2rem"
+      onClick={handleOnlinePayment}
+      disabled={onlinePaymentLoading}
+    >
+      {onlinePaymentLoading ? (
+        <BeatLoader size={18} color="rgba(51,208,103,0.79)" />
+      ) : (
+        "Online Payment"
+      )}
+    </Button>
+  )
+}
+
           </div>
 
           {/* Invoice Display */}
