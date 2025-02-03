@@ -846,7 +846,7 @@ export default function PaymentForm() {
         color="secondary"
         label={
           <FlexBox>
-            <SemiSpan>By proceeding to checkout, you agree to our</SemiSpan>
+            <SemiSpan style={{fontSize: "11px"}}>By proceeding to checkout, you agree to our</SemiSpan>
             <a
               href="/terms-and-conditions"
               target="_blank"
@@ -856,8 +856,37 @@ export default function PaymentForm() {
                 ml="0.5rem"
                 borderBottom="1px solid"
                 borderColor="gray.900"
+                fontSize="11px"
               >
-                 Terms & Conditions
+                 Terms & Conditions,
+              </H6>
+            </a>
+            <a
+              href="/return-and-refund-policy"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <H6
+                ml="0.5rem"
+                borderBottom="1px solid"
+                borderColor="gray.900"
+                fontSize="11px"
+              >
+                 Return & Return Policy,
+              </H6>
+            </a>
+            <a
+              href="/privacy-policy"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <H6
+                ml="0.5rem"
+                borderBottom="1px solid"
+                borderColor="gray.900"
+                fontSize="11px"
+              >
+                 Privacy Policy
               </H6>
             </a>
           </FlexBox>
