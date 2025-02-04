@@ -565,6 +565,11 @@ import useWindowSize from "@hook/useWindowSize";
 import { ProductCard1 } from "@component/product-cards";
 import Script from "next/script";
 
+// import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import Image from "next/image";
+import NextImage from "@component/NextImage";
+
 export default function LocationList() {
   const [locationList, setLocationList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -725,6 +730,33 @@ export default function LocationList() {
   };
 
   return (
+    <>
+     {/* Background image */}
+     <NextImage
+  alt="newArrivalBanner"
+  src={tizaraa_watermark}
+  priority
+  style={{
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -20%)",
+    width: "100%", // Set to 100% to ensure full responsiveness
+    height: "auto", // Maintain aspect ratio
+    maxWidth: "1200px", // Optional: Limit the maximum width
+    backgroundSize: "contain", // Adjust the scaling behavior
+    backgroundPosition: "center",
+    opacity: 0.1,
+    zIndex: 0,
+  }}
+/>
+
+     <main
+    style={{
+      position: "relative",
+      background: "none",
+    }}
+  >
     <Fragment>
       <div style={{ display: "flex", gap: "10px", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
         <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto" mb="3rem">
@@ -812,6 +844,9 @@ export default function LocationList() {
         </H2>
       )}
     </Fragment>
+    </main>
+    
+    </>
   );
 }
 

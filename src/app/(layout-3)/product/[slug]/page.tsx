@@ -723,6 +723,11 @@ import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import ResponsiveCategory from "./ResponsiveCategory";
 
+// import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import Image from "next/image";
+import NextImage from "@component/NextImage";
+
 // Fetch product data for server-side metadata
 async function fetchProductData(slug: string) {
   try {
@@ -770,8 +775,36 @@ export default async function ProductDetailsPage({ params }: Props) {
 
   return (
     <>
+       {/* Background image */}
+       <NextImage
+  alt="newArrivalBanner"
+  src={tizaraa_watermark}
+  priority
+  style={{
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -20%)",
+    width: "100%", // Set to 100% to ensure full responsiveness
+    height: "auto", // Maintain aspect ratio
+    maxWidth: "1200px", // Optional: Limit the maximum width
+    backgroundSize: "contain", // Adjust the scaling behavior
+    backgroundPosition: "center",
+    opacity: 0.1,
+    zIndex: 0,
+  }}
+/>
+
+     <main
+    style={{
+      position: "relative",
+      background: "none",
+    }}
+  >
     <ResponsiveCategory slug={params.slug} />
     <ProductDetails params={params} />
+
+  </main>
     </>
   )
 }

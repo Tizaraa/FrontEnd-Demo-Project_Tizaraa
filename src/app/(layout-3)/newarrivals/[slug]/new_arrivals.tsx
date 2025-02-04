@@ -20,6 +20,11 @@ import { Vortex } from "react-loader-spinner";
 import NewArrivalProductFilter from "@component/products/NewArrivalProductFilter";
 import BeatLoader from "react-spinners/BeatLoader";
 
+// import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import Image from "next/image";
+import NextImage from "@component/NextImage";
+
 const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -175,6 +180,32 @@ export default function NewArrivals({ sortOptions, slug }) {
 
   return (
     <>
+    {/* Background image */}
+    <NextImage
+  alt="newArrivalBanner"
+  src={tizaraa_watermark}
+  priority
+  style={{
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -20%)",
+    width: "100%", // Set to 100% to ensure full responsiveness
+    height: "auto", // Maintain aspect ratio
+    maxWidth: "1200px", // Optional: Limit the maximum width
+    backgroundSize: "contain", // Adjust the scaling behavior
+    backgroundPosition: "center",
+    opacity: 0.1,
+    zIndex: 0,
+  }}
+/>
+
+     <main
+    style={{
+      position: "relative",
+      background: "none",
+    }}
+  >
       <FlexBox
         as={Card}
         mb="55px"
@@ -341,6 +372,7 @@ export default function NewArrivals({ sortOptions, slug }) {
           )}
         </Grid>
       </Grid>
+    </main>
     </>
   );
 }
