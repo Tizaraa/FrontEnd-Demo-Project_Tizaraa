@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@component/buttons";
-import { Input } from "@mui/material";
+import { Input, TextField } from "@mui/material";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -82,7 +82,7 @@ export default function VerifyEmail() {
       );
   
       if (response.status === 200) {
-        toast.success(`Phone number changed to: ${newPhoneNumber}`);
+        toast.success(response.data.message);
         setCurrentPhoneNumber(newPhoneNumber); // Update the current phone number
         toggleModal(); // Close the modal
   
@@ -276,7 +276,7 @@ export default function VerifyEmail() {
                 )}
               </div>
 
-              <Input
+              {/* <Input
                 id="otp"
                 type="text"
                 value={otp}
@@ -295,6 +295,23 @@ export default function VerifyEmail() {
                   borderRadius: "4px",
                   outline: "none",
                   transition: "border-color 0.3s, box-shadow 0.3s",
+                }}
+              /> */}
+               <TextField
+                id="otp"
+                type="text"
+                value={otp}
+                onChange={(e) => {
+                  const newOtp = e.target.value;
+
+                  // Allow only digits and limit the length to 6
+                  if (/^\d{0,6}$/.test(newOtp)) {
+                    setOtp(newOtp);
+                  }
+                }}
+                style={{
+                  transition: "border-color 0.3s, box-shadow 0.3s",
+                  marginBottom: "5px"
                 }}
               />
 
