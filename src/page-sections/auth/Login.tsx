@@ -27,6 +27,9 @@ import BeatLoader from "react-spinners/BeatLoader";
 
 import "./CustomOtpInput.css"; // Import the custom CSS file for styling
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+
 // Modal Component
 function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [emailOrPhone, setEmailOrPhone] = useState(""); // Store email or phone input
@@ -42,8 +45,11 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const { passwordVisibility, togglePasswordVisibility } = useVisibility();
   const timerRef = useRef<NodeJS.Timeout | null>(null); // Ref to store timer ID
 
+const [passwordError, setPasswordError] = useState("");
+
   const [loading, setLoading] = useState(false); // Loading state for the form
   const [isHasLoading, setIsHasLoading] = useState(false);
+  
 
    const {
       passwordVisibility: passwordVisibility1,
@@ -245,6 +251,32 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   }
   }
 
+
+  const validatePassword = (password) => {
+    const minLength = /.{9,}/;
+    const hasUpperCase = /[A-Z]/;
+    const hasLowerCase = /[a-z]/;
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
+  
+    let errorMessage = "";
+  
+    if (!minLength.test(password)) errorMessage += "At least 9 characters. ";
+    if (!hasUpperCase.test(password)) errorMessage += "1 uppercase letter. ";
+    if (!hasLowerCase.test(password)) errorMessage += "1 lowercase letter. ";
+    if (!hasSpecialChar.test(password)) errorMessage += "1 special character. ";
+  
+    return errorMessage;
+  };
+  
+  const handlePasswordChange = (e) => {
+    const password = e.target.value;
+    setNewPassword(password);
+  
+    const error = validatePassword(password);
+    setPasswordError(error);
+  };
+  
+
   return (
     <div style={{
       position: "fixed",
@@ -327,50 +359,65 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
           </>
         ) : (
           <>
-            <TextField
-              fullwidth
-              mb="1rem"
-              name="newPassword"
-              placeholder="Enter New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              type={passwordVisibility1 ? "text" : "password"}
-              endAdornment={
-                <IconButton
-                  p="0.25rem"
-                  mr="0.25rem"
-                  type="button"
-                  onClick={togglePasswordVisibility1}
-                  color={passwordVisibility1 ? "gray.700" : "gray.600"}
-                >
-                  <Icon variant="small" defaultcolor="currentColor">
-                    {passwordVisibility1 ? "eye-alt" : "eye"}
-                  </Icon>
-                </IconButton>
-              }
-            />
-            <TextField
-              fullwidth
-              mb="1rem"
-              name="confirmPassword"
-              placeholder="Confirm New Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              type={passwordVisibility2 ? "text" : "password"}
-              endAdornment={
-                <IconButton
-                  p="0.25rem"
-                  mr="0.25rem"
-                  type="button"
-                  onClick={togglePasswordVisibility2}
-                  color={passwordVisibility2 ? "gray.700" : "gray.600"}
-                >
-                  <Icon variant="small" defaultcolor="currentColor">
-                    {passwordVisibility2 ? "eye-alt" : "eye"}
-                  </Icon>
-                </IconButton>
-              }
-            />
+          <TextField
+      fullwidth
+      mb="1rem"
+      name="newPassword"
+      placeholder="Enter New Password"
+      value={newPassword}
+      onChange={handlePasswordChange}
+      type={passwordVisibility1 ? "text" : "password"}
+      endAdornment={
+        <IconButton
+          p="0.25rem"
+          mr="0.25rem"
+          type="button"
+          onClick={togglePasswordVisibility1}
+          color={passwordVisibility1 ? "gray.700" : "gray.600"}
+        >
+          <Icon variant="small" defaultcolor="currentColor">
+            {passwordVisibility1 ? "eye-alt" : "eye"}
+          </Icon>
+        </IconButton>
+      }
+    />
+    {passwordError && (
+      // <FormHelperText style={{ color: "red", fontSize: "12px" }}>
+      //   {passwordError}
+      // </FormHelperText>
+      <div style={{ display: "flex", alignItems: "center", marginTop: "0.5rem" }}>
+      <FontAwesomeIcon
+        icon={faCircleExclamation}
+        style={{ color: "#e94560", marginRight: "0.5rem" }}
+      />
+      <span style={{ fontSize: "0.875rem", color: "#495057" }}>
+      {passwordError}
+      </span>
+    </div>
+    )}
+
+    <TextField
+      fullwidth
+      mb="1rem"
+      name="confirmPassword"
+      placeholder="Confirm New Password"
+      value={confirmPassword}
+      onChange={(e) => setConfirmPassword(e.target.value)}
+      type={passwordVisibility2 ? "text" : "password"}
+      endAdornment={
+        <IconButton
+          p="0.25rem"
+          mr="0.25rem"
+          type="button"
+          onClick={togglePasswordVisibility2}
+          color={passwordVisibility2 ? "gray.700" : "gray.600"}
+        >
+          <Icon variant="small" defaultcolor="currentColor">
+            {passwordVisibility2 ? "eye-alt" : "eye"}
+          </Icon>
+        </IconButton>
+      }
+    />
           </>
         )}
 
