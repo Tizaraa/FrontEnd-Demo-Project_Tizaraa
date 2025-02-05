@@ -73,6 +73,7 @@ export default function Cart() {
 
       localStorage.removeItem("orderId");
       sessionStorage.removeItem("selectedProducts");
+      sessionStorage.removeItem("cartItems");
       localStorage.removeItem("cart");
       sessionStorage.removeItem("paymentMethod");
       sessionStorage.removeItem("savedTotalPrice");
