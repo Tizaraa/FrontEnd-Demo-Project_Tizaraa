@@ -86,7 +86,7 @@ const [passwordError, setPasswordError] = useState("");
   // Start OTP countdown
   const startOtpCountdown = () => {
     setIsResetOtpDisabled(true); // Disable the button
-    let countdown = 60; // 2 minutes
+    let countdown = 180; 
     setOtpTimer(countdown);
 
     clearTimer(); // Clear any existing timer before starting a new one
@@ -102,6 +102,12 @@ const [passwordError, setPasswordError] = useState("");
         toast.error("OTP Session Time Out");
       }
     }, 1000);
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
    // Handle OTP validation
@@ -317,7 +323,7 @@ const [passwordError, setPasswordError] = useState("");
         </IconButton>
 
         <H5 mb="1rem" fontSize="20px">Forgot your password?</H5>
-        <Small mb="1rem" display="block">Reset password.</Small>
+        <Small mb="1rem" display="block">Change password.</Small>
 
         {!isOtpStage && !isPasswordStage ? (
           <TextField
@@ -344,7 +350,7 @@ const [passwordError, setPasswordError] = useState("");
                 {otpError}
               </Small>
             )}
-            <FlexBox justifyContent="space-between" alignItems="center">
+            {/* <FlexBox justifyContent="space-between" alignItems="center">
               <Small>OTP expires in: {otpTimer || "0"}s</Small>
               <Button
                 variant="outlined"
@@ -355,7 +361,19 @@ const [passwordError, setPasswordError] = useState("");
               >
                 {isResetOtpDisabled ? <BeatLoader size={18} color="#E94560" /> : "Reset OTP"}
               </Button>
-            </FlexBox>
+            </FlexBox> */}
+            <FlexBox justifyContent="space-between" alignItems="center">
+            <Small>OTP expires in: {otpTimer !== null ? formatTime(otpTimer) : "0:00"}</Small>
+            <Button
+              variant="outlined"
+              color="secondary"
+              disabled={isResetOtpDisabled}
+              onClick={handleResetOtp}
+              mt="1rem"
+            >
+              {isResetOtpDisabled ? <BeatLoader size={18} color="#E94560" /> : "Reset OTP"}
+            </Button>
+          </FlexBox>
           </>
         ) : (
           <>
