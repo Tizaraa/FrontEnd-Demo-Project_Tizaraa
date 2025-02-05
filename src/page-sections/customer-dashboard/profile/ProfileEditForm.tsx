@@ -533,7 +533,7 @@ export default function ProfileEditForm() {
               </Grid>
 
               <Grid item md={6} xs={12}>
-              <TextField
+              {/* <TextField
                   fullwidth
                   type="date"
                   name="birth_date"
@@ -542,7 +542,18 @@ export default function ProfileEditForm() {
                   onChange={handleChange}
                   value={values.birth_date} // Birthdate now correctly set
                   errorText={touched.birth_date && errors.birth_date}
-                />
+                /> */}
+                 <TextField
+                fullwidth
+                type="date"
+                name="birth_date"
+                label="Birth Date"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.birth_date}
+                errorText={touched.birth_date && errors.birth_date}
+                max={format(new Date(), "yyyy-MM-dd")} // Prevents future dates
+              />
               </Grid>
 
               <Grid item md={6} xs={12}>
