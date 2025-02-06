@@ -20,6 +20,11 @@ import authService from "services/authService";
 import { useRouter } from "next/navigation";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
+// import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import Image from "next/image";
+import NextImage from "@component/NextImage";
+
 export default function Cart() {
   const { state, dispatch } = useAppContext();
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
@@ -161,6 +166,36 @@ export default function Cart() {
   const totalPrice = getTotalPrice();
 
   return (
+    <>
+     {/* Background image */}
+     <NextImage
+  alt="newArrivalBanner"
+  src={tizaraa_watermark}
+  priority
+  style={{
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -25%)",
+    width: "100%", // Set to 100% to ensure full responsiveness
+    height: "auto", // Maintain aspect ratio
+    maxWidth: "1200px", // Optional: Limit the maximum width
+    backgroundSize: "contain", // Adjust the scaling behavior
+    backgroundPosition: "center",
+    opacity: 0.1,
+    zIndex: 0,
+  }}
+/>
+
+     <main
+    style={{
+      position: "relative",
+      background: "none",
+    }}
+  >
+
+
+    
     <Fragment>
       <Grid container spacing={6}>
         <Grid item lg={8} md={8} xs={12}>
@@ -279,5 +314,7 @@ export default function Cart() {
         }
       `}</style>
     </Fragment>
+  </main>
+    </>
   );
 }

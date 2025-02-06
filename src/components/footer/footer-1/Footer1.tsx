@@ -227,6 +227,15 @@ export default function Footer1() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   return (
+    <>
+         <main
+    style={{
+      position: "relative",
+      background: "none",
+    }}
+  >
+
+
     <footer>
       <Box style={{ backgroundColor: "#656844" }}>
         <Container style={{ padding: "1rem", color: "white" }}>
@@ -479,5 +488,8 @@ export default function Footer1() {
         </Container>
       </Box>
     </footer>
+  </main>
+    </>
+
   );
 }
