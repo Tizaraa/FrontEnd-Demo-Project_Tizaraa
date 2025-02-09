@@ -190,8 +190,8 @@ export default function CancellationForm() {
             checked={policyAccepted}
             label={
               <FlexBox>
-                <SemiSpan>I have read and accepted the Cancellation Policy of</SemiSpan>
-                <a
+                <SemiSpan>I have read and accepted the Cancellation Policy of Tizaraa</SemiSpan>
+                {/* <a
                   href="/terms_condition"
                   target="_blank"
                   rel="noreferrer noopener"
@@ -203,7 +203,7 @@ export default function CancellationForm() {
                   >
                     Tizaraa
                   </H6>
-                </a>
+                </a> */}
               </FlexBox>
             }
             required
