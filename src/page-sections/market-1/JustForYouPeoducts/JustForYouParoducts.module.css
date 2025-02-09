@@ -111,7 +111,7 @@
   display: inline-block;
   text-align: center;
   border: none;
-
+  cursor: pointer;
 }
 
 .cardContainer {
