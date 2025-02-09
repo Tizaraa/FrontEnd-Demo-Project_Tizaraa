@@ -872,7 +872,7 @@ export default function PaymentForm() {
                 borderColor="gray.900"
                 fontSize="11px"
               >
-                 Return & Return Policy,
+                 Return & Refund Policy,
               </H6>
             </a>
             <a
