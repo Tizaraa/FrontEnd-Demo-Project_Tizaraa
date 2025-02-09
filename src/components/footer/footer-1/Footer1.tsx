@@ -239,7 +239,7 @@ export default function Footer1() {
     <footer>
       <Box style={{ backgroundColor: "#656844" }}>
         <Container style={{ padding: "1rem", color: "white" }}>
-          <Box style={{ padding: "5rem 0", overflow: "hidden" }}>
+          <Box style={{ padding: "2rem 0", overflow: "hidden" }}>
             <Grid container spacing={6}>
               {/* Customer Services */}
               <Grid item lg={2} md={3} sm={6} xs={12}>
