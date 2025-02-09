@@ -257,7 +257,7 @@ export default function OrderList() {
   return (
     <>
       {/* Background image */}
-      <NextImage
+      {/* <NextImage
   alt="newArrivalBanner"
   src={tizaraa_watermark}
   priority
@@ -281,7 +281,7 @@ export default function OrderList() {
       position: "relative",
       background: "none",
     }}
-  >
+  > */}
 
 
     
@@ -321,7 +321,7 @@ export default function OrderList() {
         onPageChange={setCurrentPage}
       />
     </Fragment>
-  </main>
+  {/* </main> */}
     </>
   );
 }
