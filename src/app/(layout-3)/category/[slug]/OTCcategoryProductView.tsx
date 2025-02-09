@@ -137,7 +137,19 @@ const OTCcategoryProductView = ({ slug }: { slug: string }) => {
        justifyContent="space-between">
       <H5>{name}</H5>
       <Link href={`/OtCategory/${otid}`}>
-      <span style={{fontSize: '14px', color: 'rgb(125, 135, 156)'}}>View All </span>
+      {/* <span style={{fontSize: '14px', color: 'rgb(125, 135, 156)'}}>View All </span> */}
+      <FlexBox 
+  p="1.25rem"  
+  flexDirection="row" 
+  alignItems="flex-start" 
+  justifyContent="space-between">
+  {products.length > 0 && (
+    <Link href={`/OtCategory/${otid}`}>
+      <span style={{ fontSize: '14px', color: 'rgb(125, 135, 156)' }}>View All</span>
+    </Link>
+  )}
+</FlexBox>
+
       </Link>
      </FlexBox>
             {loading && <div>Loading...</div>}
