@@ -187,6 +187,10 @@ export interface CartItem {
   productType?: string;
   attributes?: string;
   total_amount?: number;
+  shopname?: string;
+  shopimage?: string;
+  brand?: string;
+  delivereyType?: string;
 }
 
 export type ActionType =

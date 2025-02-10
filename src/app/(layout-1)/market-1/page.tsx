@@ -55,7 +55,7 @@ export default async function Market1() {
   priority
   style={{
     position: "fixed",
-    top: "50%",
+    top: "70%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "100%", // Set to 100% to ensure full responsiveness

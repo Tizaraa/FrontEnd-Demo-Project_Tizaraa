@@ -14,6 +14,8 @@ import authService from "services/authService";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BeatLoader from "react-spinners/BeatLoader";
+import OrderedItem from "./OrderedItem";
+import Cart from "app/(layout-3)/(checkout)/cart/page";
 
 export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   const router = useRouter();
@@ -105,6 +107,8 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   return (
     <>
       <ToastContainer autoClose={4000} />
+      {/* <OrderedItem></OrderedItem> */}
+      
       
       <FlexBox style={flexBoxStyle}>
         <Typography>Billing and Shipping</Typography>
