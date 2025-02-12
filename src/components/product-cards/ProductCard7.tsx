@@ -241,7 +241,21 @@ interface ProductCard7Props extends SpaceProps {
 }
 
 export default function ProductCard7(props: ProductCard7Props) {
-  const { id, name, qty, price, imgUrl, productStock, slug, discountPrice, productId, sellerId, b2bPricing, total_amount, ...others } = props;
+  const {
+    id,
+    name,
+    qty,
+    price,
+    imgUrl,
+    productStock,
+    slug,
+    discountPrice,
+    productId,
+    sellerId,
+    b2bPricing,
+    total_amount,
+    ...others
+  } = props;
   const { state, dispatch } = useAppContext();
   const [quantity, setQuantity] = useState(qty);
   const [productInfo, setProductInfo] = useState<{
@@ -257,47 +271,59 @@ export default function ProductCard7(props: ProductCard7Props) {
   useEffect(() => {
     const fetchProductInfo = async () => {
       try {
-        const response = await axios.get(`${ApiBaseUrl.baseUrl}cart/product/info/${productId}`, {
-          headers: {
-            Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
-          },
-        });
-        
-        console.log(response.data);
+        const response = await axios.get(
+          `${ApiBaseUrl.baseUrl}cart/product/info/${productId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
+            },
+          }
+        );
+
         setProductInfo(response.data);
       } catch (error) {
         console.error("Failed to fetch product info:", error);
       }
     };
-  
+
     fetchProductInfo();
   }, [productId]);
-  
 
   useEffect(() => {
-    const itemInCart = state.cart.find(item => item.id === id);
+    const itemInCart = state.cart.find((item) => item.id === id);
     if (itemInCart) {
       setQuantity(itemInCart.qty);
     }
   }, [state.cart, id]);
 
-  const handleCartAmountChange = (amount: number) => {
-    if (amount > productStock) {
+  const handleCartAmountChange = (amount: number, product: any) => () => {
+    if (amount > product.productStock) {
       toast.error("Out of Stock");
       return;
     }
-    setQuantity(amount);
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { qty: amount, name, price, imgUrl, productStock, id, discountPrice, productId, sellerId, b2bPricing, total_amount }
+      payload: { ...product, qty: amount },
     });
   };
 
-  useEffect(() => {
-    if (qty === 0) {
-      dispatch({ type: "DESELECT_PRODUCT", payload: id });
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    product: any
+  ) => {
+    const newQty = Math.min(
+      product.productStock,
+      Math.max(1, parseInt(e.target.value))
+    );
+    if (newQty > product.productStock) {
+      toast.error("Out of Stock");
+      return;
     }
-  }, [qty, id, dispatch]);
+    dispatch({
+      type: "CHANGE_CART_AMOUNT",
+      payload: { ...product, qty: newQty },
+    });
+  };
 
   const handleProductSelect = () => {
     if (state.selectedProducts.includes(id)) {
@@ -307,23 +333,28 @@ export default function ProductCard7(props: ProductCard7Props) {
     }
   };
 
+  const currentCartItem = state.cart.find((item) => item.id === id);
+
   return (
-    <>
     <Card>
-
-      <div style={{padding: "3px"}}>
-      <Typography fontSize="14px" color="gray.600">
-  <FontAwesomeIcon icon={faShop} style={{marginRight: "5px"}} /> 
-  {productInfo ? productInfo.shopname : "Loading..."}
-</Typography>
-
-      <hr />
+      <div style={{ padding: "3px" }}>
+        <Typography fontSize="14px" color="gray.600">
+          <FontAwesomeIcon icon={faShop} style={{ marginRight: "5px" }} />
+          {productInfo ? productInfo.shopname : "Loading..."}
+        </Typography>
+        <hr />
       </div>
 
-    
       <Wrapper {...others}>
-
-        <div style={{ display: "flex", flexDirection: "row", gap: "5px", marginLeft: "16px", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "5px",
+            marginLeft: "16px",
+            alignItems: "center",
+          }}
+        >
           <CheckBox
             checked={state.selectedProducts.includes(id)}
             onChange={handleProductSelect}
@@ -333,7 +364,6 @@ export default function ProductCard7(props: ProductCard7Props) {
             width={140}
             height={140}
             src={imgUrl || "/assets/images/products/iphone-xi.png"}
-            // src={imgUrl ? `${ApiBaseUrl.ImgUrl}${imgUrl}` : "/assets/images/products/iphone-xi.png"}
           />
         </div>
         <FlexBox
@@ -341,36 +371,31 @@ export default function ProductCard7(props: ProductCard7Props) {
           minWidth="0px"
           flexDirection="column"
           className="product-details"
-          justifyContent="space-between">
+          justifyContent="space-between"
+        >
           <Link href={`/product/${slug}`}>
-            <Typography className="title" fontWeight="600" fontSize="18px" mb="0.5rem">
+            <Typography
+              className="title"
+              fontWeight="600"
+              fontSize="18px"
+              mb="0.5rem"
+            >
               {name}
             </Typography>
           </Link>
-          <Box position="absolute" right="1rem" top="1rem">
-            <IconButton padding="4px" ml="12px" onClick={() => handleCartAmountChange(0)}>
-              <Icon size="1.25rem">close</Icon>
-            </IconButton>
-          </Box>
+
           {/* Display fetched product info */}
           {productInfo && (
             <Box mb="0.5rem">
-             
               <Typography fontSize="14px" color="gray.600">
                 Brand: {productInfo.brand}
               </Typography>
               <Typography fontSize="14px" color="gray.600">
                 Delivery: {productInfo.delivereyType}
               </Typography>
-              {/* <LazyImage
-                src={productInfo.shopimage}
-                alt={productInfo.shopname}
-                width={50}
-                height={50}
-                style={{ borderRadius: "4px", marginTop: "8px" }}
-              /> */}
             </Box>
           )}
+
           <FlexBox justifyContent="space-between" alignItems="flex-end">
             <FlexBox flexWrap="wrap" alignItems="center">
               {discountPrice ? (
@@ -385,42 +410,59 @@ export default function ProductCard7(props: ProductCard7Props) {
                 </Typography>
               )}
             </FlexBox>
-            <FlexBox alignItems="center">
-              <Button
-                size="none"
-                padding="5px"
-                color="primary"
-                variant="outlined"
-                disabled={quantity <= 1}
-                borderColor="primary.light"
-                onClick={() => handleCartAmountChange(quantity - 1)}>
-                <Icon variant="small">minus</Icon>
-              </Button>
-              <Styledbutton>
-                <input
-                  type="number"
-                  value={quantity}
-                  className="no-spin-button"
-                  onChange={(e) => handleCartAmountChange(Math.min(productStock, Math.max(1, parseInt(e.target.value))))}
-                  style={{ width: "50px", textAlign: "center", margin: "0 10px", borderRadius: "4px", padding: "5px", border: "1px solid #E94560" }}
-                  min="1"
-                />
-              </Styledbutton>
-              <Button
-                size="none"
-                padding="5px"
-                color="primary"
-                variant="outlined"
-                borderColor="primary.light"
-                onClick={() => handleCartAmountChange(quantity + 1)}>
-                <Icon variant="small">plus</Icon>
-              </Button>
-            </FlexBox>
+
+            {currentCartItem && (
+              <FlexBox alignItems="center">
+                <Button
+                  size="none"
+                  padding="5px"
+                  color="primary"
+                  variant="outlined"
+                  borderColor="primary.light"
+                  onClick={handleCartAmountChange(
+                    currentCartItem.qty - 1,
+                    currentCartItem
+                  )}
+                  disabled={currentCartItem.qty === 1}
+                >
+                  <Icon variant="small">minus</Icon>
+                </Button>
+                <Styledbutton>
+                  <input
+                    className="no-spin-button"
+                    type="number"
+                    value={currentCartItem.qty}
+                    min={1}
+                    onChange={(e) => handleInputChange(e, currentCartItem)}
+                    style={{
+                      textDecoration: "none",
+                      borderRadius: "30px",
+                      scrollBehavior: "unset",
+                      border: "1px solid #E94560",
+                      padding: "8px",
+                      width: "50px",
+                      textAlign: "center",
+                    }}
+                  ></input>
+                </Styledbutton>
+                <Button
+                  size="none"
+                  padding="5px"
+                  color="primary"
+                  variant="outlined"
+                  borderColor="primary.light"
+                  onClick={handleCartAmountChange(
+                    currentCartItem.qty + 1,
+                    currentCartItem
+                  )}
+                >
+                  <Icon variant="small">plus</Icon>
+                </Button>
+              </FlexBox>
+            )}
           </FlexBox>
         </FlexBox>
       </Wrapper>
-
-
 
       <style jsx>{`
         input.no-spin-button::-webkit-inner-spin-button,
@@ -430,6 +472,5 @@ export default function ProductCard7(props: ProductCard7Props) {
         }
       `}</style>
     </Card>
-    </>
   );
 }
