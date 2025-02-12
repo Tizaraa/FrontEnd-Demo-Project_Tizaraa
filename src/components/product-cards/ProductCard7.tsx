@@ -281,17 +281,28 @@ export default function ProductCard7(props: ProductCard7Props) {
     }
   }, [state.cart, id]);
 
-  const handleCartAmountChange = (amount: number) => {
-    if (amount > productStock) {
+  // const handleCartAmountChange = (amount: number) => {
+  //   if (amount > productStock) {
+  //     toast.error("Out of Stock");
+  //     return;
+  //   }
+  //   setQuantity(amount);
+  //   dispatch({
+  //     type: "CHANGE_CART_AMOUNT",
+  //     payload: { qty: amount, name, price, imgUrl, productStock, id, discountPrice, productId, sellerId, b2bPricing, total_amount }
+  //   });
+  // };
+  const handleCartAmountChange = (amount: number, product: any) => {
+    if (amount > product.productStock) {
       toast.error("Out of Stock");
       return;
     }
-    setQuantity(amount);
     dispatch({
       type: "CHANGE_CART_AMOUNT",
-      payload: { qty: amount, name, price, imgUrl, productStock, id, discountPrice, productId, sellerId, b2bPricing, total_amount }
+      payload: { ...product, qty: amount },
     });
   };
+  
 
   useEffect(() => {
     if (qty === 0) {
@@ -336,88 +347,113 @@ export default function ProductCard7(props: ProductCard7Props) {
             // src={imgUrl ? `${ApiBaseUrl.ImgUrl}${imgUrl}` : "/assets/images/products/iphone-xi.png"}
           />
         </div>
-        <FlexBox
-          width="100%"
-          minWidth="0px"
-          flexDirection="column"
-          className="product-details"
-          justifyContent="space-between">
-          <Link href={`/product/${slug}`}>
-            <Typography className="title" fontWeight="600" fontSize="18px" mb="0.5rem">
-              {name}
+
+        {state.cart.map((item) => (
+  <FlexBox
+    key={item.id} // Add a unique key to avoid rendering issues
+    width="100%"
+    minWidth="0px"
+    flexDirection="column"
+    className="product-details"
+    justifyContent="space-between"
+  >
+    <Link href={`/product/${item.slug}`}>
+      <Typography
+        className="title"
+        fontWeight="600"
+        fontSize="18px"
+        mb="0.5rem"
+      >
+        {item.name}
+      </Typography>
+    </Link>
+    <Box position="absolute" right="1rem" top="1rem">
+      <IconButton
+        padding="4px"
+        ml="12px"
+        onClick={() => handleCartAmountChange(0, item)} // Use item here
+      >
+        <Icon size="1.25rem">close</Icon>
+      </IconButton>
+    </Box>
+    {/* Display fetched product info */}
+    {productInfo && (
+      <Box mb="0.5rem">
+        <Typography fontSize="14px" color="gray.600">
+          Brand: {productInfo.brand}
+        </Typography>
+        <Typography fontSize="14px" color="gray.600">
+          Delivery: {productInfo.delivereyType}
+        </Typography>
+      </Box>
+    )}
+    <FlexBox justifyContent="space-between" alignItems="flex-end">
+      <FlexBox flexWrap="wrap" alignItems="center">
+        {item.discountPrice ? (
+          <>
+            <Typography color="primary.main" mr="0.5rem">
+              {currency(item.discountPrice, 0)} x {item.qty}
             </Typography>
-          </Link>
-          <Box position="absolute" right="1rem" top="1rem">
-            <IconButton padding="4px" ml="12px" onClick={() => handleCartAmountChange(0)}>
-              <Icon size="1.25rem">close</Icon>
-            </IconButton>
-          </Box>
-          {/* Display fetched product info */}
-          {productInfo && (
-            <Box mb="0.5rem">
-             
-              <Typography fontSize="14px" color="gray.600">
-                Brand: {productInfo.brand}
-              </Typography>
-              <Typography fontSize="14px" color="gray.600">
-                Delivery: {productInfo.delivereyType}
-              </Typography>
-              {/* <LazyImage
-                src={productInfo.shopimage}
-                alt={productInfo.shopname}
-                width={50}
-                height={50}
-                style={{ borderRadius: "4px", marginTop: "8px" }}
-              /> */}
-            </Box>
-          )}
-          <FlexBox justifyContent="space-between" alignItems="flex-end">
-            <FlexBox flexWrap="wrap" alignItems="center">
-              {discountPrice ? (
-                <>
-                  <Typography color="primary.main" mr="0.5rem">
-                    {currency(discountPrice, 0)} x {quantity}
-                  </Typography>
-                </>
-              ) : (
-                <Typography fontWeight={600} color="primary.main" mr="1rem">
-                  {currency(price, 0)} x {quantity}
-                </Typography>
-              )}
-            </FlexBox>
-            <FlexBox alignItems="center">
-              <Button
-                size="none"
-                padding="5px"
-                color="primary"
-                variant="outlined"
-                disabled={quantity <= 1}
-                borderColor="primary.light"
-                onClick={() => handleCartAmountChange(quantity - 1)}>
-                <Icon variant="small">minus</Icon>
-              </Button>
-              <Styledbutton>
-                <input
-                  type="number"
-                  value={quantity}
-                  className="no-spin-button"
-                  onChange={(e) => handleCartAmountChange(Math.min(productStock, Math.max(1, parseInt(e.target.value))))}
-                  style={{ width: "50px", textAlign: "center", margin: "0 10px", borderRadius: "4px", padding: "5px", border: "1px solid #E94560" }}
-                  min="1"
-                />
-              </Styledbutton>
-              <Button
-                size="none"
-                padding="5px"
-                color="primary"
-                variant="outlined"
-                borderColor="primary.light"
-                onClick={() => handleCartAmountChange(quantity + 1)}>
-                <Icon variant="small">plus</Icon>
-              </Button>
-            </FlexBox>
-          </FlexBox>
-        </FlexBox>
+          </>
+        ) : (
+          <Typography fontWeight={600} color="primary.main" mr="1rem">
+            {currency(item.price, 0)} x {item.qty}
+          </Typography>
+        )}
+      </FlexBox>
+      <FlexBox alignItems="center">
+        <Button
+          size="none"
+          padding="5px"
+          color="primary"
+          variant="outlined"
+          disabled={item.qty <= 1}
+          borderColor="primary.light"
+          onClick={() => handleCartAmountChange(item.qty - 1, item)} // Decrement
+        >
+          <Icon variant="small">minus</Icon>
+        </Button>
+        <Styledbutton>
+          <input
+            type="number"
+            value={item.qty}
+            className="no-spin-button"
+            onChange={(e) =>
+              handleCartAmountChange(
+                Math.min(item.productStock, Math.max(1, parseInt(e.target.value))),
+                item
+              )
+            }
+            style={{
+              width: "50px",
+              textAlign: "center",
+              margin: "0 10px",
+              borderRadius: "4px",
+              padding: "5px",
+              border: "1px solid #E94560",
+            }}
+            min="1"
+          />
+        </Styledbutton>
+        <Button
+          size="none"
+          padding="5px"
+          color="primary"
+          variant="outlined"
+          borderColor="primary.light"
+          onClick={() => handleCartAmountChange(item.qty + 1, item)} // Increment
+        >
+          <Icon variant="small">plus</Icon>
+        </Button>
+      </FlexBox>
+    </FlexBox>
+  </FlexBox>
+))}
+
+
+   
+
+
       </Wrapper>
 
 
