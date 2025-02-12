@@ -60,24 +60,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
     }
     
   }, [state.cart, deliveryCharge]);
-  // useEffect(() => {
-  //   const savedPrice = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
-  //   const savedWithDelivery = parseFloat(
-  //     sessionStorage.getItem("savedTotalWithDelivery") || "0"
-  //   );
-
-  //   if (savedPrice > 0) setSavedTotalPrice(savedPrice);
-  //   if (savedWithDelivery > 0) setSavedTotalWithDelivery(savedWithDelivery);
-  // }, []);
-
-  // User shipping data
-      
-  // let shippingData = sessionStorage.getItem('address');
-  // let userShippingdata = JSON.parse(shippingData);
-
-  // const deliveryChargeDisplay = userShippingdata && userShippingdata.deliveryCharge
-  // ? userShippingdata.deliveryCharge
-  // : deliveryCharge || "-";
+  
   return (
     <Card1>
        
@@ -104,14 +87,8 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          {/* {currency(getTotalPrice())} */}
-          {/* {savedTotalPrice !== 0 ? currency(savedTotalPrice) : "0"} */}
           {currency(savedTotalPrice)}
           </Typography>
-
-          {/* <Typography fontWeight="600" fontSize="14px" lineHeight="1">
-            00
-          </Typography> */}
         </FlexBox>
       </FlexBox>
 
@@ -121,13 +98,10 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          {/* {deliveryChargeDisplay !== "-" ? currency(deliveryChargeDisplay) : "-"} */}
           {currency(savedTotalWithDelivery)}
           </Typography>
         </FlexBox>
       </FlexBox>
-
-   
 
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
         <Typography color="text.hint">VAT:</Typography>
@@ -136,49 +110,18 @@ export default function CheckoutSummary({ deliveryCharge }) {
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
           -
           </Typography>
-
-          {/* <Typography fontWeight="600" fontSize="14px" lineHeight="1">
-            00
-          </Typography> */}
         </FlexBox>
       </FlexBox>
 
       <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-        {/* <Typography color="text.hint">Discount:</Typography>
-
-        <FlexBox alignItems="flex-end">
-          <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-            -
-          </Typography>
-        </FlexBox> */}
       </FlexBox>
 
       <Divider mb="1rem" />
 
       <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
-      {/* {currency(getTotalPrice())} */}
-      {/* {currency(getTotalPrice() + (parseFloat(deliveryChargeDisplay) || 0))} */}
-      {/* {currency(savedTotalWithDelivery)} */}
       {currency(savedTotalWithDelivery + savedTotalPrice)}
       </Typography>
-
-      {/* <TextField placeholder="Voucher" fullwidth />
-
-      <Button variant="outlined" color="primary" mt="1rem" mb="30px" fullwidth>
-        Apply Voucher
-      </Button> */}
     </Card1>
   );
 }
 
-
-// import  Typography  from "@component/Typography";
-
-// export default function CheckoutSummary({ deliveryCharge }) {
-//   return (
-//     <div>
-//       <Typography variant="h6">Delivery Charge: {deliveryCharge ? `$${deliveryCharge}` : "Not selected"}</Typography>
-//       {/* Other summary details */}
-//     </div>
-//   );
-// }

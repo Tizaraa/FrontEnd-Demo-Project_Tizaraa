@@ -16,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import OrderedItem from "./OrderedItem";
 import Cart from "app/(layout-3)/(checkout)/cart/page";
+import ExpressedDelivery from "./ExpressedDelivery";
 
 export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   const router = useRouter();
@@ -27,6 +28,20 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   const [isHasLoading, setIsHasLoading] = useState(false);
   const [isHasPayLoading, setIsHasPayLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [isExpressedDelivery, setIsExpressedDelivery] = useState(false);
+
+  // Handle checkbox change for Expressed Delivery
+  const handleExpressedDeliveryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsExpressedDelivery(e.target.checked);
+    // If Expressed Delivery is checked, set delivery charge to 10
+    if (e.target.checked) {
+      setDeliveryCharge(10); // Set the delivery charge for Expressed Delivery
+    } else {
+      setDeliveryCharge(0); // Reset to default delivery charge
+    }
+  };
+  
 
   useEffect(() => {
     setIsLoggedIn(authService.isAuthenticated());
@@ -107,7 +122,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   return (
     <>
       <ToastContainer autoClose={4000} />
-      {/* <OrderedItem></OrderedItem> */}
+     
       
       
       <FlexBox style={flexBoxStyle}>
@@ -122,11 +137,13 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
           {isLoading ? <BeatLoader size={18} color="#E94560" /> : "Add New Address"}
         </Button>
       </FlexBox>
+      
 
       {/* <CheckoutAddress /> */}
       <CheckoutAddress setDeliveryCharge={setDeliveryCharge} onAddressChange={handleAddressChange} />
+      <OrderedItem></OrderedItem>
 
-      <Grid container spacing={7}>
+      <Grid container spacing={7} style={{ marginTop: "2px" }}>
         <Grid item sm={6} xs={12}>
           <Button
             //variant="outlined"
@@ -141,7 +158,11 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
           </Button>
         </Grid>
 
+        
+
         <Grid item sm={6} xs={12}>
+        {/* <ExpressedDelivery onChange={handleExpressedDeliveryChange} /> */}
+
         <Button
             //variant="outlined"
             // color="primary"
