@@ -10,6 +10,10 @@ import toast from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import ReturnedOrderStatus from "./ReturnedOrderStatus";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStore, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 export default function WriteReview({
   item,
@@ -18,7 +22,9 @@ export default function WriteReview({
   status,
   cancel_status,
   orderItemId ,
-  order_days_gone
+  order_days_gone,
+  return_status,
+  delivered_at
 }: {
   item: any;
   shopName: string;
@@ -27,7 +33,10 @@ export default function WriteReview({
   orderItemId : any;
   cancel_status:any;
   order_days_gone:any;
+  return_status:any;
+  delivered_at:any;
 }) {
+  const [showOrderStatus, setShowOrderStatus] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [comments, setComments] = useState("");
@@ -154,6 +163,11 @@ export default function WriteReview({
     }
   };
 
+  const handleToggle = () => {
+    setShowOrderStatus((prev) => !prev); // Toggle the state
+  };
+
+
   return (
     <>
       <FlexBox px="1rem" py="0.5rem" flexWrap="wrap" alignItems="center" key={item.product_name} style={{display:"flex", justifyContent:"space-between"}}>
@@ -247,7 +261,8 @@ export default function WriteReview({
 
         {/* Show "Returned" when status is 6 */}
         {cancel_status === 6 && (
-          <FlexBox flex="160px" m="6px" alignItems="center">
+        <>
+          <FlexBox flex="160px" m="6px" alignItems="center" flexDirection="column">
             <Button
               variant="text"
               style={{
@@ -256,12 +271,22 @@ export default function WriteReview({
                 borderRadius: "100px",
                 backgroundColor: "#e94560",
               }}
+              onClick={handleToggle} // Toggle the component visibility on click
             >
-              <Typography fontSize="14px">Returned</Typography>
+              <Typography fontSize="14px">Returned
+
+
+              </Typography>
+
+              <FontAwesomeIcon
+            icon={showOrderStatus ? faCaretUp : faCaretDown}
+            style={{ marginLeft: "8px" }}
+          />
             </Button>
           </FlexBox>
-        )}
-
+        </>
+      )}
+  
         {/* order cancel */}
         {status !== "Delivered" && cancel_status !== 6 && (
           <FlexBox flex="160px" m="6px" alignItems="center">
@@ -291,35 +316,7 @@ export default function WriteReview({
        </div>
 
         </FlexBox>
-                       
-{/* Return Policy Alert */}
-
-{/* <div
-  style={{
-    backgroundColor: '#FFFAE5',
-    border: '1px solid #FFE4B2',
-    borderRadius: '8px',
-    width: '95%',
-    margin: 'auto',
-    paddingLeft: '10px'
-  }}
->
-  <p
-    style={{
-      color: '#A67C00',
-      fontWeight: '500',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-    }}
-  >
-    <span style={{ color: '#FFC107' }}>⚠️</span>
-    Important: You have {item.order_days_gone} days left to return this product.
-  </p>
-</div> */}
-
-
-
+                      
       {/* Render Modal */}
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <Box
@@ -448,6 +445,17 @@ export default function WriteReview({
           )}
         </Box>
       </Modal>
+
+        {/* Show the component outside of FlexBox, but directly underneath */}
+        {showOrderStatus && (
+            <Box mt="10px" p="10px" border="1px solid #e94560" borderRadius="8px">
+             <ReturnedOrderStatus 
+  return_status={return_status}
+  deliveredAt={delivered_at}
+/>
+
+            </Box>
+          )}
 
 
 

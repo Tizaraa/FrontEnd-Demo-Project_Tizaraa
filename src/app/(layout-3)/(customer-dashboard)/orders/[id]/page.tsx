@@ -333,9 +333,11 @@ if (order?.Order?.productType === "Abroad") {
         shopName={order?.Order?.items?.shop_name}
         orderDetails={order}
         status={order?.Order?.items?.status}
+        delivered_at={order?.Order?.item?.delivered_at}
         orderItemId = {order?.Order?.items?.order_item_id}
         cancel_status={order?.Order?.items?.order_items?.status}
         order_days_gone={order?.Order?.items?.order_items?.order_days_gone}
+        return_status={order?.Order?.items?.order_items?.return_status}
       />
     ))}
   
@@ -551,6 +553,8 @@ if (order?.Order?.productType === "Abroad") {
                     orderItemId={item.order_item_id}
                     cancel_status={item.status}
                     order_days_gone={item.order_days_gone}
+                    return_status={item.return_status}
+                    delivered_at={details.delivered_at}
                   />
                 ))}
                  <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} />
