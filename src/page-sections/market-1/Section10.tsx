@@ -73,7 +73,7 @@ export default function Section10() {
               >
                 <Box 
                   height={120} // Fixed height for the box
-                  width={120} // Fixed width for the box
+                  // width={120}
                   display="flex" 
                   justifyContent="center" 
                   alignItems="center"

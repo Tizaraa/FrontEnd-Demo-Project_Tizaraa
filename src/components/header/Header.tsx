@@ -39,8 +39,24 @@ export default function Header({ isFixed, className }: HeaderProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter(); 
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
   useEffect(() => {
     setIsLoggedIn(authService.isAuthenticated());
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // When scrollY is greater than 50, set isScrolled to true
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const CART_HANDLE = (
@@ -128,8 +144,17 @@ export default function Header({ isFixed, className }: HeaderProps) {
     </Tooltip>
   );
 
+  // #f18c5138
+
   return (
-    <StyledHeader className={className}>
+    <StyledHeader
+    className={className}
+    style={{
+      backgroundColor: isScrolled
+        ? "white" // Remove transparency when scrolled
+        : "rgba(241, 140, 81, 0.22)" // Transparent background when not scrolled
+    }}
+  >
       <Container display="flex" alignItems="center" justifyContent="space-between" height="100%">
         <FlexBox className="logo" alignItems="center" mr="1rem">
           <Link href="/">
