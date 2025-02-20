@@ -36,12 +36,12 @@
 //       try {
 //         const response = await axios.get(
 //           `https://frontend.tizaraa.com/api/user/address`,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
-//             },
-//           }
-//         );
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
+        //     },
+        //   }
+        // );
 //         setAddresses(response.data.user); // Assuming the data is structured as shown in the API response
 //       } catch (error) {
 //         console.error("Error fetching addresses:", error);

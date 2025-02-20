@@ -62,6 +62,7 @@ const ShippingInfo: React.FC<{
   shopUrl: string;
   delivery_type: string;
   qrCodeUrl: string | null;
+  express_deliverey: number;
 }> = ({
   isDesktop,
   sellerShopName,
@@ -69,6 +70,7 @@ const ShippingInfo: React.FC<{
   shopUrl,
   delivery_type,
   qrCodeUrl,
+  express_deliverey
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -148,6 +150,55 @@ const ShippingInfo: React.FC<{
               </span>
             </div>
           </div>
+
+          {/* express delivery  */}
+          <div style={{ marginBottom: "20px" }}>
+  <h2
+    style={{
+      fontSize: "12px",
+      fontWeight: "bold",
+      marginBottom: "10px",
+      color: "#333",
+    }}
+  >
+    Express Delivery
+  </h2>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      marginBottom: "10px",
+    }}
+  >
+    <span
+      style={{
+        width: "30px",
+        height: "30px",
+        marginRight: "10px",
+        backgroundColor: express_deliverey === 1 ? "#E94560" : "#ccc",
+        borderRadius: "50%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        color: "white",
+        fontSize: "12px",
+      }}
+    >
+      🚚
+    </span>
+    <span
+      style={{
+        fontSize: "12px",
+        color: "#555",
+      }}
+    >
+      {express_deliverey === 1
+        ? "Express Delivery is possible!"
+        : "Express Delivery is not available."}
+    </span>
+  </div>
+</div>
+
 
           <div style={{ marginBottom: "20px" }}>
             <h2
@@ -491,6 +542,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   const warranty = productData.warranty;
   const warrantyType = productData.warrantytype;
   const replacewarranty = productData.replacement_warranty;
+  const express_deliverey= product.express_deliverey;
 
   return (
     <>
@@ -544,6 +596,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
                 shopUrl={shopUrl}
                 delivery_type={delivery_type}
                 qrCodeUrl={qrCodeUrl}
+                express_deliverey={express_deliverey}
               />
             </div>
           )}
@@ -559,6 +612,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
             shopUrl={shopUrl}
             delivery_type={delivery_type}
             qrCodeUrl={qrCodeUrl}
+            express_deliverey={express_deliverey}
           />
         )}
 

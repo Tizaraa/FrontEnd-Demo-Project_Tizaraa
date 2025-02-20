@@ -193,9 +193,6 @@ export default function Cart() {
       background: "none",
     }}
   >
-
-
-    
     <Fragment>
       <Grid container spacing={6}>
         <Grid item lg={8} md={8} xs={12}>
@@ -227,29 +224,7 @@ export default function Cart() {
       )}
     </Button>
             </FlexBox>
-          </Card1>
-          {/* {state.buyNowItem && (
-  <ProductCard21
-    mb="1.5rem"
-    id={state.buyNowItem.id} 
-    key={state.buyNowItem.id}
-    qty={state.buyNowItem.qty}
-    slug={state.buyNowItem.slug}
-    name={state.buyNowItem.name}
-    price={state.buyNowItem.price}
-    imgUrl={state.buyNowItem.imgUrl}
-    productStock={state.buyNowItem.productStock}
-    discountPrice={state.buyNowItem.discountPrice}
-    productId={state.buyNowItem.productId}
-    sellerId={state.buyNowItem.sellerId}
-    b2bPricing={state.buyNowItem.b2bPricing}
-  />
-)} */}
-
-
-
-
-          
+          </Card1>          
           {state.cart.map((item) => (
             <ProductCard7
               mb="1.5rem"

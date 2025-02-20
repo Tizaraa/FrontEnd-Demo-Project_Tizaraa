@@ -171,7 +171,7 @@ const ProductPage = () => {
   const bengaliTextStyle: React.CSSProperties = {
     flex: isMobileOrTablet ? 'none' : '1',
     backgroundColor: '#f3f4f6',
-    border: '2px solid #ff6e33',
+    border: '2px solid #e94560',
     borderRadius: '15px',
     padding: '20px',
     textAlign: 'center',
@@ -180,7 +180,7 @@ const ProductPage = () => {
   const headingStyle: React.CSSProperties = {
     fontSize: '1.25rem',
     fontWeight: 600,
-    borderBottom: '2px solid #ff6e33',
+    borderBottom: '2px solid #e94560',
     paddingBottom: '4px',
     marginBottom: '10px',
   };
@@ -194,7 +194,7 @@ const ProductPage = () => {
   const categoryStyle: React.CSSProperties = {
     fontSize: '1.25rem',
     fontWeight: 700,
-    color: '#ff6e33',
+    color: '#e94560',
     marginBottom: '5px',
   };
 
@@ -426,7 +426,7 @@ const renderAttributes = (attributes: Attribute[]) => {
                   padding: '10px 20px', 
                   fontSize: '16px', 
                   cursor: 'pointer',
-                  backgroundColor: '#e74c3c',
+                  backgroundColor: '#e94560',
                   border: 'none',
                   borderRadius: '8px',
                   color: 'white',

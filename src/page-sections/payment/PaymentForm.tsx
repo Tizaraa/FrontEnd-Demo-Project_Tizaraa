@@ -566,6 +566,7 @@ export default function PaymentForm() {
 
         router.push("/orders?status=success&message=Order placed successfully");
         localStorage.removeItem("orderId");
+        localStorage.removeItem("selectedProducts");
       sessionStorage.removeItem("selectedProducts");
       //localStorage.removeItem("cart");
       sessionStorage.removeItem("cartItems");

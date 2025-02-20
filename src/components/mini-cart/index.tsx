@@ -787,11 +787,25 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     }
   };
 
+  // const handleProductSelect = (productId: string | number) => {
+  //   if (state.selectedProducts.includes(productId)) {
+  //     dispatch({ type: "DESELECT_PRODUCT", payload: productId });
+  //   } else {
+  //     dispatch({ type: "SELECT_PRODUCT", payload: productId });
+  //   }
+  // };
+
   const handleProductSelect = (productId: string | number) => {
     if (state.selectedProducts.includes(productId)) {
       dispatch({ type: "DESELECT_PRODUCT", payload: productId });
+      const updatedProducts = state.selectedProducts.filter(id => id !== productId);
+      const selectedItems = state.cart.filter((item) => updatedProducts.includes(item.id));
+      sessionStorage.setItem('selectedProducts', JSON.stringify(selectedItems));
     } else {
       dispatch({ type: "SELECT_PRODUCT", payload: productId });
+      const updatedProducts = [...state.selectedProducts, productId];
+      const selectedItems = state.cart.filter((item) => updatedProducts.includes(item.id));
+      sessionStorage.setItem('selectedProducts', JSON.stringify(selectedItems));
     }
   };
 
