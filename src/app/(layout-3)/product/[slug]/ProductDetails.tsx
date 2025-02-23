@@ -26,7 +26,7 @@ async function fetchProductData(slug: string) {
     const response = await axios.get(
       `${ApiBaseUrl.baseUrl}product/details/${slug}`
     );
-    // console.log("product details:", response.data)
+    console.log("product details:", response.data)
     return response.data;
 
   } catch (error) {
@@ -41,7 +41,6 @@ async function fetchQRCode(slug: string) {
       `${ApiBaseUrl.baseUrl}product/qr-code/${slug}`,
       { headers: { Accept: "application/xml" }, responseType: "text" } // Ensure SVG is returned as text
     );
-    // console.log("nazim qr", response.data);
     
     return response.data; // Return the raw SVG XML string
   } catch (error) {
@@ -483,27 +482,6 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
     loadQRCode();
   }, [params.slug]);
 
-  // if (isLoading) {
-  //   return (
-  //     <LoaderWrapper>
-  //       <Vortex />
-  //     </LoaderWrapper>
-  //   );
-  // }
-
-  // if (!qrCodeUrl) {
-  //   return (
-  //     <div
-  //       style={{
-  //         textAlign: "center",
-  //         padding: "20px",
-  //         color: "#555",
-  //       }}
-  //     >
-  //       <p>QR Code is not available.</p>
-  //     </div>
-  //   );
-  // }
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -521,9 +499,6 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
 
   if (!productData || !productData.productsingledetails) {
     return (
-      // <div style={{ padding: '20px', textAlign: 'center' }}>
-      //   Product not found or there was an error loading the product.
-      // </div>
       <FlexBox justifyContent="center" alignItems="center" width="100%">
             {/* <SemiSpan>No products found.</SemiSpan> */}
           </FlexBox>
@@ -531,7 +506,8 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   }
 
   const product = productData.productsingledetails;
-  const sizecolorwithprice = productData.SizeColor.sizecolorwithprice;
+  const sizecolorwithprice = productData.SizeColor?.color; 
+  // const sizecolorwithprice = productData.SizeColor.color;
   const productImages = productData.productmultiimages;
   const images = productImages.map((img: any) => img.product_img);
   const description = product.short_description;
@@ -562,6 +538,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
               flex: isDesktop ? "1 1 70%" : "1 1 100%",
             }}
           >
+            
             <ProductIntro
               id={product.id}
               price={product.seeling_price}
@@ -575,7 +552,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
               productStock={product.product_stock}
               productId={product.product_id}
               sellerId={product.seller_shop_id}
-              sizecolorwithprice={sizecolorwithprice}
+              // sizecolorwithprice={sizecolorwithprice}
               slug={params.slug}
               brandName={product.brand_name}
               warranty={warranty}

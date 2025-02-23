@@ -401,7 +401,8 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
               productStock={product.product_stock}
               productId={product.product_id}
               sellerId={product.seller_shop_id}
-              sizecolorwithprice={sizecolorwithprice}
+              // sizecolorwithprice={sizecolorwithprice}
+              // sizeColor={SizeColor}
               slug={params.slug}
               brandName={product.brandName}
               warranty={product.warranty}

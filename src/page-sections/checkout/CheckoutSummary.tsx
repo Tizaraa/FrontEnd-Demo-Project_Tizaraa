@@ -81,6 +81,45 @@ export default function CheckoutSummary({ deliveryCharge }) {
               sellerId={item.sellerId}
             />
           ))}
+
+<FlexBox
+  flexDirection="column"
+  // border="1px solid #ccc"
+  // borderRadius="8px"
+  // p="1rem"
+  mb="1rem"
+>
+  <Typography fontWeight="600" mb="0.5rem">
+    Promotion
+  </Typography>
+  <FlexBox justifyContent="space-between" alignItems="center">
+    <input
+      type="text"
+      placeholder="Enter Store/Tizaraa Code"
+      style={{
+        flex: 1,
+        padding: "0.5rem",
+        border: "1px solid #ddd",
+        borderRadius: "4px",
+        marginRight: "0.5rem",
+        fontSize: "14px",
+      }}
+    />
+    <button
+      style={{
+        backgroundColor: "#E94560",
+        color: "#fff",
+        padding: "0.5rem 1rem",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        fontSize: "14px",
+      }}
+    >
+      APPLY
+    </button>
+  </FlexBox>
+</FlexBox>
        
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
         <Typography color="text.hint">Subtotal:</Typography>

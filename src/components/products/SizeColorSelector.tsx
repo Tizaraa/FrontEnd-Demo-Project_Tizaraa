@@ -1,104 +1,19 @@
-// import Box from "@component/Box";
-// import { useState } from "react";
-// import Typography from "@component/Typography";
+"use client";
 
-// type SizeColorOption = {
-//   size: string;
-//   color: string;
-//   price: number;
-//   b2bPricing: { min_qty: number; price: number }[];
-//   stock_quantity: number;
-// };
-
-// type SizeColorSelectorProps = {
-//   productId: string | number;
-//   sellerId: string | number;
-//   stockQuantity: number;
-//   setSelectedSize: (size: string | null) => void;
-//   setSelectedColor: (color: string | null) => void;
-//   dummySizes: SizeColorOption[];
-// };
-
-// const SizeColorSelector = ({
-//   productId,
-//   sellerId,
-//   stockQuantity,
-//   setSelectedSize,
-//   setSelectedColor,
-//   dummySizes,
-// }: SizeColorSelectorProps) => {
-
-
-
-//   const [selectedRows, setSelectedRows] = useState<SizeColorOption[]>([]);
-
-//   const handleRowClick = (item: SizeColorOption) => {
-//     if (selectedRows.includes(item)) {
-//       setSelectedRows(selectedRows.filter((selectedItem) => selectedItem !== item));
-//       setSelectedSize(null); // Reset size
-//       setSelectedColor(null); // Reset color
-//     } else {
-//       setSelectedRows([item]); // Allow only one selection
-//       setSelectedSize(item.size); // Update selected size
-//       setSelectedColor(item.color); // Update selected color
-//     }
-//   };
-
-//   return (
-    // <Box>
-    //   {dummySizes.map((item) => (
-    //     <Box
-    //       key={`${item.size}-${item.color}`} // Unique key for each item
-    //       onClick={() => handleRowClick(item)}
-    //       style={{
-    //         border: selectedRows.includes(item) ? '2px solid blue' : '1px solid gray',
-    //         backgroundColor: selectedRows.includes(item) ? '#e0f7fa' : 'white', // Change background color for selected item
-    //         padding: '10px',
-    //         margin: '5px',
-    //         borderRadius: '5px',
-    //         cursor: 'pointer',
-    //         display: 'flex',
-    //         justifyContent: 'space-between',
-    //         alignItems: 'center',
-    //       }}
-    //       role="button"
-    //       tabIndex={0} // Make it focusable
-    //       aria-selected={selectedRows.includes(item)} // Accessibility attribute
-    //     >
-    //       <Box style={{ display: 'flex', flexDirection: 'column' }}>
-    //         <Typography variant="h6">{`${item.size} - ${item.color}`}</Typography>
-    //         <Typography variant="body1">{`Price: $${item.price}`}</Typography>
-    //       </Box>
-
-    //       {/* Display B2B Pricing */}
-    //       <Box>
-    //         <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-    //           B2B Pricing:
-    //         </Typography>
-    //         {item.b2bPricing.map((b2b, b2bIndex) => (
-    //           <Typography key={b2bIndex} variant="body2">
-    //             {`Min Qty: ${b2b.min_qty} - Price: $${b2b.price}`}
-    //           </Typography>
-    //         ))}
-    //       </Box>
-    //     </Box>
-    //   ))}
-    // </Box>
-//   );
-// };
-
-// export default SizeColorSelector;
-
-
-import Box from "@component/Box";
-import { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Typography from "@component/Typography";
+
+// ----- Types -----
+type B2BPrice = {
+  min_qty: number;
+  price: number;
+};
 
 type SizeColorOption = {
   size: string;
   color: string;
   price: number;
-  b2bPricing: { min_qty: number; price: number }[];
+  b2bPricing: B2BPrice[];
   stock: number;
 };
 
@@ -111,70 +26,192 @@ type SizeColorSelectorProps = {
   dummySizes: SizeColorOption[];
 };
 
-const SizeColorSelector = ({
+export default function SizeColorSelector({
   productId,
   sellerId,
   stockQuantity,
   setSelectedSize,
   setSelectedColor,
   dummySizes,
-}: SizeColorSelectorProps) => {
-  const [selectedRows, setSelectedRows] = useState<SizeColorOption[]>([]);
+}: SizeColorSelectorProps) {
+  const [selectedColor, setLocalSelectedColor] = useState<string | null>(null);
+  const [selectedModel, setLocalSelectedModel] = useState<string | null>(null);
 
-  const handleRowClick = (item: SizeColorOption) => {
-    if (selectedRows.includes(item)) {
-      setSelectedRows(selectedRows.filter((selectedItem) => selectedItem !== item));
-      setSelectedSize(null); // Reset size
-      setSelectedColor(null); // Reset color
-    } else {
-      setSelectedRows([item]); // Allow only one selection
-      setSelectedSize(item.size); // Update selected size
-      setSelectedColor(item.color); // Update selected color
-    }
+  const uniqueColors = useMemo(() => {
+    const colorSet = new Set<string>();
+    dummySizes.forEach((item) => {
+      colorSet.add(item.color);
+    });
+    return Array.from(colorSet);
+  }, [dummySizes]);
+
+  const uniqueSizes = useMemo(() => {
+    const sizeSet = new Set<string>();
+    dummySizes.forEach((item) => {
+      sizeSet.add(item.size);
+    });
+    return Array.from(sizeSet);
+  }, [dummySizes]);
+
+  const handleColorClick = (color: string) => {
+    setLocalSelectedColor((prev) => (prev === color ? null : color));
+    setSelectedColor(color);
+  };
+
+  const handleModelClick = (model: string) => {
+    setLocalSelectedModel((prev) => (prev === model ? null : model));
+    setSelectedSize(model);
   };
 
   return (
-    <Box>
-      {dummySizes.map((item) => (
-        <Box
-          key={`${item.size}-${item.color}`} // Unique key for each item
-          onClick={() => handleRowClick(item)}
-          style={{
-            border: selectedRows.includes(item) ? '2px solid blue' : '1px solid gray',
-            backgroundColor: selectedRows.includes(item) ? '#e0f7fa' : 'white', // Change background color for selected item
-            padding: '10px',
-            margin: '5px',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-          role="button"
-          tabIndex={0} // Make it focusable
-          aria-selected={selectedRows.includes(item)} // Accessibility attribute
-        >
-          <Box style={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="h6">{`${item.size} - ${item.color}`}</Typography>
-            <Typography variant="body1">{`Price: ${item.price}`}</Typography>
-          </Box>
+    <div
+      style={{
+        fontFamily: "system-ui, -apple-system, sans-serif",
+        maxWidth: "800px",
+        margin: "0 auto",
+        marginBottom: "20px",
+      }}
+    >
+      {/* ========== Color Family Section ========== */}
+      {uniqueColors.length > 0 && (
+        <div style={{ marginBottom: "24px" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "8px",
+              fontSize: "14px",
+              color: "#666",
+              marginBottom: "12px",
+            }}
+          >
+            <span>Color Family</span>
+            {selectedColor && (
+              <span style={{ color: "#333", fontWeight: 500 }}>
+                {selectedColor}
+              </span>
+            )}
+          </div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            {uniqueColors.map((color) => {
+              const isSelected = selectedColor === color;
+              return (
+                <div
+                  key={color}
+                  onClick={() => handleColorClick(color)}
+                  style={{
+                    padding: "4px",
+                    border: `1px solid ${
+                      isSelected ? "#ff6b00" : "#e0e0e0"
+                    }`,
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    position: "relative",
+                    transition: "border-color 0.2s ease",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      backgroundColor: "#f0f0f0",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    <Typography variant="body2">{color}</Typography>
+                  </div>
+                  {isSelected && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: "-4px",
+                        right: "-4px",
+                        width: "16px",
+                        height: "16px",
+                        backgroundColor: "#ff6b00",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
-          {/* Display B2B Pricing */}
-          <Box>
-            <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-              B2B Pricing:
-            </Typography>
-            {item.b2bPricing.map((b2b, b2bIndex) => (
-              <Typography key={b2bIndex} variant="body2">
-                {`Min Qty: ${b2b.min_qty} - Price: ${b2b.price}`}
-              </Typography>
-            ))}
-          </Box>
-        </Box>
-      ))}
-    </Box>
+      {/* ========== Model Section ========== */}
+      {uniqueSizes.length > 0 && (
+        <div>
+          <div
+            style={{
+              display: "flex",
+              gap: "2px",
+              alignItems: "baseline",
+              fontSize: "14px",
+              color: "#666",
+              marginBottom: "12px",
+            }}
+          >
+            <span>Model: </span>
+            {selectedModel && (
+              <span style={{ color: "#333", fontWeight: 500 }}>
+                {selectedModel}
+              </span>
+            )}
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
+              gap: "8px",
+            }}
+          >
+            {uniqueSizes.map((model) => {
+              const isSelected = selectedModel === model;
+              return (
+                <button
+                  key={model}
+                  onClick={() => handleModelClick(model)}
+                  style={{
+                    padding: "8px 16px",
+                    border: `1px solid ${
+                      isSelected ? "#ff6b00" : "#e0e0e0"
+                    }`,
+                    borderRadius: "8px",
+                    backgroundColor: "white",
+                    color: isSelected ? "#ff6b00" : "#333",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    fontWeight: isSelected ? 500 : 400,
+                    position: "relative",
+                    textAlign: "center",
+                    transition: "all 0.2s ease",
+                    outline: "none",
+                  }}
+                >
+                  {model}
+                  {isSelected && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: "-4px",
+                        right: "-4px",
+                        width: "16px",
+                        height: "16px",
+                        backgroundColor: "#ff6b00",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
   );
-};
-
-export default SizeColorSelector;
-
+}

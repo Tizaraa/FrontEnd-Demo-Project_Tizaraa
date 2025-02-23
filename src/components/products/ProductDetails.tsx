@@ -9,6 +9,12 @@ import { currency } from "@utils/utils";
 import { Chip } from "@component/Chip";
 import Link from "next/link";
 
+type SizeColorOption = {
+  size: string;
+  price: string;
+  qty: string;
+};
+
 type ProductDetailsProps = {
   title: string;
   rating: number;
@@ -17,12 +23,13 @@ type ProductDetailsProps = {
   totalDiscount?: number;
   productStock: number;
   isDirectAdd?: boolean;
-  sellerShopName,
-  sellerShopLogo,
-  brandName,
-  warranty,
-  warrantyType,
-  replacewarranty,
+  sellerShopName: string;
+  sellerShopLogo: string;
+  brandName: string;
+  warranty: string;
+  warrantyType: string;
+  replacewarranty: string;
+  sizeColor?: SizeColorOption[]; // Add SizeColor data
 };
 
 const ProductDetails = ({
@@ -32,15 +39,16 @@ const ProductDetails = ({
   discountPrice,
   totalDiscount,
   productStock,
-  isDirectAdd = false, 
+  isDirectAdd = false,
   sellerShopName,
   sellerShopLogo,
   brandName,
   warranty,
   warrantyType,
   replacewarranty,
+  sizeColor, // Destructure sizeColor
 }: ProductDetailsProps) => {
-  const displayPrice = isDirectAdd ? (discountPrice || price) : price; // Choose price based on direct add
+  const displayPrice = isDirectAdd ? discountPrice || price : price;
 
   return (
     <Box>
@@ -50,132 +58,98 @@ const ProductDetails = ({
           {rating > 0 && <Rating value={rating} outof={5} color="warn" readOnly />}
         </Box>
       </FlexBox>
-      
-      <Box mb="24px">
 
-  {/* Show price and discount only if the price is not 0 */}
-  {/* {price !== 0 && (
-    <FlexBox alignItems="center">
-      <H5 color="primary.main" mb="4px" lineHeight="1" fontSize="18px">
-        {discountPrice ? (
-          <>
-            {currency(discountPrice)}
+      <Box mb="24px">
+        {price !== 0 && (
+          <FlexBox alignItems="center">
+            <H5 color="primary.main" mb="4px" lineHeight="1" fontSize="18px">
+              {discountPrice && price !== discountPrice ? (
+                <>
+                  {currency(discountPrice)}
+                  <span
+                    style={{
+                      textDecoration: "line-through",
+                      color: "gray",
+                      marginRight: "10px",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    {currency(price)}
+                  </span>
+                </>
+              ) : (
+                currency(price)
+              )}
+            </H5>
+
+            {!!discountPrice && price !== discountPrice && totalDiscount && (
+              <Chip
+                bg="primary.main"
+                color="white"
+                px="6px"
+                py="0.28rem"
+                fontWeight="600"
+                fontSize="12px"
+                textAlign="center"
+              >
+                {Math.floor(totalDiscount)}% off
+              </Chip>
+            )}
+          </FlexBox>
+        )}
+
+        {/* Brand Name */}
+        <Typography style={{ fontSize: "16px" }}>
+          Brand:{" "}
+          <a
+            href={"#"}
+            style={{ textDecoration: "none", color: "blue", cursor: "text" }}
+          >
+            {brandName || "N/A"}
+          </a>
+        </Typography>
+
+        {/* Warranty */}
+        <Typography>
+          <div style={{ marginBottom: "10px", marginTop: "5px" }}>
+            Warranty:
             <span
               style={{
-                textDecoration: "line-through",
-                color: "gray",
-                marginRight: "10px",
-                marginLeft: "10px",
+                backgroundColor: "rgba(249,55,92,0.69)",
+                color: "white",
+                padding: "4px 10px",
+                borderRadius: "4px",
               }}
             >
-              {currency(price)}
+              {warranty || "N/A"}
             </span>
-          </>
-        ) : (
-          currency(price)
+          </div>
+
+          {/* Replacement Warranty */}
+          <div style={{ marginBottom: "5px" }}>
+            Replacement warranty:
+            <span
+              style={{
+                backgroundColor: "rgba(249,55,92,0.69)",
+                color: "white",
+                padding: "4px 10px",
+                borderRadius: "4px",
+              }}
+            >
+              {replacewarranty || "N/A"}
+            </span>
+          </div>
+        </Typography>
+
+        {/* Stock Availability */}
+        {price !== 0 && (
+          <SemiSpan color="inherit" style={{ fontSize: "16px" }}>
+            {productStock > 0
+              ? `${productStock} Products Available`
+              : "Stock Out"}
+          </SemiSpan>
         )}
-      </H5>
-
-      {!!discountPrice && totalDiscount && (
-        <Chip
-          bg="primary.main"
-          color="white"
-          px="6px"
-          py="0.28rem"
-          fontWeight="600"
-          fontSize="12px"
-          textAlign="center"
-        >
-          {Math.floor(totalDiscount)}% off
-        </Chip>
-      )}
-    </FlexBox>
-  )} */}
-{price !== 0 && (
-  <FlexBox alignItems="center">
-    <H5 color="primary.main" mb="4px" lineHeight="1" fontSize="18px">
-      {discountPrice && price !== discountPrice ? (
-        <>
-          {currency(discountPrice)}
-          <span
-            style={{
-              textDecoration: "line-through",
-              color: "gray",
-              marginRight: "10px",
-              marginLeft: "10px",
-            }}
-          >
-            {currency(price)}
-          </span>
-        </>
-      ) : (
-        currency(price)
-      )}
-    </H5>
-
-    {!!discountPrice && price !== discountPrice && totalDiscount && (
-      <Chip
-        bg="primary.main"
-        color="white"
-        px="6px"
-        py="0.28rem"
-        fontWeight="600"
-        fontSize="12px"
-        textAlign="center"
-      >
-        {Math.floor(totalDiscount)}% off
-      </Chip>
-    )}
-  </FlexBox>
-)}
-
-  {/* brand name  */}
-  <Typography style={{fontSize: "16px"}}>
-  Brand:{" "}
-  <a 
-    href={"#"} 
-    style={{ textDecoration: "none", color: "blue", cursor: "text" }}
-  >
-    {brandName || "N/A"}
-  </a>
-</Typography>
-
-{/* warranty */}
-<Typography>
-
- <div style={{marginBottom:"10px", marginTop:"5px"}}>
- Warranty:
-  <span style={{ backgroundColor: "rgba(249,55,92,0.69)", color: "white", padding: "4px 10px", borderRadius: "4px" }}>
-    {warranty || "N/A"}
-  </span>
- </div>
-
-
-        {/* | Warranty type: {warrantyType || "N/A"}  */}
-        <div style={{marginBottom:"5px"}}>
-        Replacement warranty:
-         <span style={{backgroundColor: "rgba(249,55,92,0.69)", color: "white", padding: "4px 10px", borderRadius: "4px"}}>
-          {replacewarranty || "N/A"}
-          </span>
-        </div>
-    </Typography>
-
-  {/* Show stock availability only if price is not 0 */}
-  {price !== 0 && (
-    <SemiSpan color="inherit" style={{fontSize: "16px"}}>
-      {/* {productStock > 0 ? "Stock Available" : "Stock Out"} */}
-      {price !== 0 && (
-  <SemiSpan color="inherit">
-    {productStock > 0
-      ? `${productStock} Products Available`
-      : "Stock Out"}
-  </SemiSpan>
-)}
-
-    </SemiSpan>
-  )}
-</Box>
-
+      </Box>
     </Box>
   );
 };

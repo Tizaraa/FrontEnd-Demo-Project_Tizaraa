@@ -745,12 +745,12 @@ export default function OtProductsIntro({
         price={selectedPrice}
         slug={slug}
         productStock={productStock}
-        selectedSize={''} 
-        selectedColor={''} 
-        selectedSpec={''} 
-        dummySizes={[]}
+        // selectedSize={''} 
+        // selectedColor={''} 
+        // selectedSpec={''} 
+        // dummySizes={[]}
         productType="Abroad"
-        attributes={getSelectedAttributes()}
+        // attributes={getSelectedAttributes()}
       />
         </div>
       )}
@@ -770,12 +770,12 @@ export default function OtProductsIntro({
             price={selectedPrice}
             slug={slug}
             productStock={getSelectedRowQuantity()}
-            selectedSize={''}
-            selectedSpec={selectedSpec}
-            selectedColor={''}
-            dummySizes={[]} 
+            // selectedSize={''}
+            // selectedSpec={selectedSpec}
+            // selectedColor={''}
+            // dummySizes={[]} 
             productType="Abroad"
-            attributes={getSelectedAttributes()}
+            // attributes={getSelectedAttributes()}
         
           />
         </div>
