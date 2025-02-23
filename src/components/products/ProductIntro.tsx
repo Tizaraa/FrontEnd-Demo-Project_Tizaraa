@@ -315,49 +315,7 @@ export default function ProductIntro({
             // SizeColor={SizeColor}
             // sizeColor={SizeColor}
           />
-          <SizeColorSelector
-            productId={productId} 
-            sellerId={sellerId} 
-            stockQuantity={productStock}
-            setSelectedSize={setSelectedSize} 
-            setSelectedColor={setSelectedColor} 
-            dummySizes={sizecolorwithprice} // Use API data instead of dummy
-          />
-          {/* <AddToCartButton
-            productId={productId}
-            sellerId={sellerId}
-            images={images}
-            title={title}
-            discountPrice={discountPrice}
-            slug={slug}
-            selectedSize={selectedSize} 
-            selectedColor={selectedColor} 
-            price={selectedPrice} 
-            dummySizes={formattedSizeColorOptions} 
-            selectedSpec={''} 
-            productType = "General"
-
-          /> */}
-
-            {/* Conditionally render "Add to Cart" or "Request for Quote" based on price */}
-            {selectedPrice === 0 ? (
-            <Box mt="1rem">
-              <Link href="/rfq">
-                <button
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#E94560",
-                    color: "white",
-                    borderRadius: "5px",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  Request for Quote
-                </button>
-              </Link>
-            </Box>
-          ) : (
+         
             <AddToCartButton
             productId={productId}
             sellerId={sellerId}
