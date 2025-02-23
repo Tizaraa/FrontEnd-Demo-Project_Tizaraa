@@ -67,4 +67,9 @@ export const StyledCategoryMenuItem = styled.div`
       display: block;
     }
   }
+
+.non-clickable:hover {
+  background: transparent;
+  color: #2B3445;
+  }
 `;
