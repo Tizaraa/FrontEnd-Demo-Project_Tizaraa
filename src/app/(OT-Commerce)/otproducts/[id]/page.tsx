@@ -50,18 +50,6 @@ export interface Price {
 }
 
 export interface Product {
-  // Id: string;
-  // Title: string;
-  // OriginalTitle: string;
-  // MainPictureUrl: string;
-  // Pictures: Picture[];
-  // Price: Price;
-  // VendorDisplayName: string;
-  // VendorName: string;
-  // Location: Location;
-  // ExternalItemUrl: string;
-  // Description: string;
-
   Id: string;
   Title: string;
   OriginalTitle: string;
@@ -300,7 +288,7 @@ const renderAttributes = (attributes: Attribute[]) => {
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="max-w-4xl w-full bg-white shadow-lg rounded-lg p-6">
         {/* Replace this section with ProductIntro */}
-        {/* <OTProductsIntro
+        <OTProductsIntro
   images={product.Pictures.map((p) => p.Url)}
   title={product.Title}
   price={parseFloat(product.Price.ConvertedPriceWithoutSign)}
@@ -313,10 +301,10 @@ const renderAttributes = (attributes: Attribute[]) => {
   productStock={product.MasterQuantity}  // Replace with actual stock if available
   productId={""}
   sellerId={""}
-  // configuredItems={product.ConfiguredItems || []}
-  // Attributes={product.Attributes || []}
+  configuredItems={product?.ConfiguredItems || []}
+  Attributes={product.Attributes || []}
 
-/> */}
+/>
 
        {/* <Component /> */}
        <div style={containerStyle}>
