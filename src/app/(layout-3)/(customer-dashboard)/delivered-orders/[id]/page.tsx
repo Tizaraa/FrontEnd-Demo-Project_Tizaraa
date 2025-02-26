@@ -98,13 +98,13 @@ export default function OrderDetails({ params }: IDParams) {
     }));
   };
 
-// ======= START: Fetch Order Details based on PENDING status ===========
+// ======= START: Fetch Order Details based on DELIVERED status ===========
 useEffect(() => {
   const fetchOrder = async (token: string) => {
     const authtoken = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        `${ApiBaseUrl.baseUrl}user/status/wise/order/details/pending/${params.id}`,
+        `${ApiBaseUrl.baseUrl}user/status/wise/order/details/delivered/${params.id}`,
         {
           headers: {
             Authorization: `Bearer ${authtoken}`,
@@ -113,7 +113,7 @@ useEffect(() => {
       );
       console.log("Order details data:", response);
 
-      // Since the API only returns orders with status "Pending", you can directly set the state
+      // Since the API only returns orders with status "delivered", you can directly set the state
       setOrder(response.data);
       setStatus(response.data.Order.status);
       setEstimateDate(response.data.Order.deliveredAt);
@@ -138,7 +138,7 @@ useEffect(() => {
     localStorage.removeItem("orderSuccess");
   }
 }, [fetched, params.id, router]);
-// ======= END: Fetch Order Details based on PENDING status ===========
+// ======= END: Fetch Order Details based on DELIVERED status ===========
 
   const fetchInvoice = async () => {
     setInvoiceLoading(true); // Start loading state for invoice
@@ -401,8 +401,8 @@ if (order?.Order?.productType === "Abroad") {
   return (
     <Fragment>
       <DashboardPageHeader
-        title="Pending Order Details"
-        iconName="bag"
+        title="Delivered Order Details"
+        iconName="delivery"
         // button={<OrderListButton params={params} />}
       />
 
@@ -627,10 +627,11 @@ if (order?.Order?.productType === "Abroad") {
             </Paragraph>
           </Card>
 
-          <div style={{ display: "flex", gap: "20px" }}>\
+          <div style={{ display: "flex", gap: "20px" }}>
 
-  {/* ============= Invoice ============= */}
-            {/* <Button
+            {/* =========== Invoice ========== */}
+
+            <Button
               px="2rem"
               color="primary"
               bg="primary.light"
@@ -638,9 +639,9 @@ if (order?.Order?.productType === "Abroad") {
               onClick={fetchInvoice} // Fetch invoice when button is clicked
             >
               {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
-            </Button> */}
+            </Button>
 
-
+            
             {/* {order.Order.payment_status === "Unpaid" && (
              <Button
              px="2rem"
@@ -658,11 +659,7 @@ if (order?.Order?.productType === "Abroad") {
            </Button>
            
             )} */}
-
-
-  {/* ============= Online Payment ============= */}
-
-  {/* {order.Order.payment_status === "Unpaid" && 
+            {order.Order.payment_status === "Unpaid" && 
   !["Delivered", "Cancelled", "Return"].includes(order.Order.status) && (
     <Button
       px="2rem"
@@ -679,7 +676,7 @@ if (order?.Order?.productType === "Abroad") {
       )}
     </Button>
   )
-} */}
+}
 
           </div>
 

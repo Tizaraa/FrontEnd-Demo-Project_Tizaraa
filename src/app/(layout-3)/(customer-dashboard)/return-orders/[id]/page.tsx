@@ -29,6 +29,7 @@ import { faStore, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-ico
 import { Chip } from "@component/Chip";
 import authService from "services/authService";
 import { useRouter } from "next/navigation";
+import { backgroundColor } from "styled-system";
 // import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons"; 
 
 
@@ -98,13 +99,13 @@ export default function OrderDetails({ params }: IDParams) {
     }));
   };
 
-// ======= START: Fetch Order Details based on PENDING status ===========
+// ======= START: Fetch Order Details based on DELIVERED status ===========
 useEffect(() => {
   const fetchOrder = async (token: string) => {
     const authtoken = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        `${ApiBaseUrl.baseUrl}user/status/wise/order/details/pending/${params.id}`,
+        `${ApiBaseUrl.baseUrl}user/status/wise/order/details/return/${params.id}`,
         {
           headers: {
             Authorization: `Bearer ${authtoken}`,
@@ -113,7 +114,7 @@ useEffect(() => {
       );
       console.log("Order details data:", response);
 
-      // Since the API only returns orders with status "Pending", you can directly set the state
+      // Since the API only returns orders with status "delivered", you can directly set the state
       setOrder(response.data);
       setStatus(response.data.Order.status);
       setEstimateDate(response.data.Order.deliveredAt);
@@ -138,7 +139,7 @@ useEffect(() => {
     localStorage.removeItem("orderSuccess");
   }
 }, [fetched, params.id, router]);
-// ======= END: Fetch Order Details based on PENDING status ===========
+// ======= END: Fetch Order Details based on DELIVERED status ===========
 
   const fetchInvoice = async () => {
     setInvoiceLoading(true); // Start loading state for invoice
@@ -401,8 +402,8 @@ if (order?.Order?.productType === "Abroad") {
   return (
     <Fragment>
       <DashboardPageHeader
-        title="Pending Order Details"
-        iconName="bag"
+        title="Return Order Details"
+        iconName="truck"
         // button={<OrderListButton params={params} />}
       />
 
@@ -492,13 +493,13 @@ if (order?.Order?.productType === "Abroad") {
 
                     {/* status  */}
                     <Box m="6px">
-                      <Chip p="0.25rem 1rem" bg={getColor(details?.status)}>
-                        <Small color="white">{details?.status}</Small>
+                      <Chip p="0.25rem 1rem" style={{backgroundColor: "rgb(233, 69, 96)"}}>
+                        <Small color="white">Return</Small>
                       </Chip>
                     </Box>
                   </div>
 
-                  {details?.delivered_at && (
+                  {/* {details?.delivered_at && (
                     <p
                       style={{
                         padding: "0.5rem 1rem",
@@ -514,7 +515,7 @@ if (order?.Order?.productType === "Abroad") {
                     >
                       Estimated Delivery Date: <b>{details.delivered_at}</b>
                     </p>
-                  )}
+                  )} */}
 
                   <Box mt="1rem" textAlign="center">
                     <Button
@@ -560,7 +561,7 @@ if (order?.Order?.productType === "Abroad") {
                     delivered_at={details.delivered_at}
                   />
                 ))}
-                 <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} />
+                 {/* <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} /> */}
 
                 {openSummaries[shopName] && (
                   <Box p="20px" borderRadius={8} mt="1rem">
@@ -627,9 +628,10 @@ if (order?.Order?.productType === "Abroad") {
             </Paragraph>
           </Card>
 
-          <div style={{ display: "flex", gap: "20px" }}>\
+          <div style={{ display: "flex", gap: "20px" }}>
 
-  {/* ============= Invoice ============= */}
+            {/* =========== Invoice ========== */}
+
             {/* <Button
               px="2rem"
               color="primary"
@@ -640,7 +642,7 @@ if (order?.Order?.productType === "Abroad") {
               {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
             </Button> */}
 
-
+            
             {/* {order.Order.payment_status === "Unpaid" && (
              <Button
              px="2rem"
@@ -658,11 +660,7 @@ if (order?.Order?.productType === "Abroad") {
            </Button>
            
             )} */}
-
-
-  {/* ============= Online Payment ============= */}
-
-  {/* {order.Order.payment_status === "Unpaid" && 
+            {order.Order.payment_status === "Unpaid" && 
   !["Delivered", "Cancelled", "Return"].includes(order.Order.status) && (
     <Button
       px="2rem"
@@ -679,7 +677,7 @@ if (order?.Order?.productType === "Abroad") {
       )}
     </Button>
   )
-} */}
+}
 
           </div>
 

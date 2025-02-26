@@ -298,6 +298,7 @@ export default function DashboardNavigation() {
   const [pendingOrderCount, setPendingOrderCount] = useState(0); // State for pending order count
   const [deliveredOrderCount, setDeliveredOrderCount] = useState(0); // State for delivered order count
   const [canceledOrderCount, setCanceledOrderCount] = useState(0); // State for Canceled order count
+  const [returnOrderCount, setReturnOrderCount] = useState(0); // State for Canceled order count
   const [addressCount, setAddressCount] = useState(0); // State for address count
   const [rfqCount, setRfqCount] = useState(0); // State for RFQ count
 
@@ -315,12 +316,13 @@ export default function DashboardNavigation() {
         });
 
         // Extract the needed fields from the API response
-        const { totalorder, pending, deliveryitem, cancelitem, customeraddress } = response.data;
+        const { totalorder, pending, deliveryitem, cancelitem, returnlitem, customeraddress } = response.data;
 
         setOrderCount(totalorder); // Set the total order count
         setPendingOrderCount(pending); // Set the pending order count
         setDeliveredOrderCount(deliveryitem); // Set the delivered order count
         setCanceledOrderCount(cancelitem); // Set the delivered order count
+        setReturnOrderCount(returnlitem); // Set the delivered order count
         setAddressCount(customeraddress); // Set the customer address count
         const rfqResponse = await axios.get(`${ApiBaseUrl.baseUrl}rfqs`, {
           headers: {
@@ -380,6 +382,7 @@ export default function DashboardNavigation() {
         { href: "/pending-orders", title: "Pending Orders", iconName: "bag", count: pendingOrderCount },
         { href: "/delivered-orders", title: "Delivered Orders", iconName: "delivery", count: deliveredOrderCount },
         { href: "/cancel-orders", title: "Cancelled Orders", iconName: "delete", count: canceledOrderCount },
+        { href: "/return-orders", title: "Return Orders", iconName: "truck", count: returnOrderCount },
         { href: "/rfq", title: "RFQ", iconName: "request", count: rfqCount },
         // { href: "/wish-list", title: "Wishlist", iconName: "heart", count: 19 },
         // { href: "/support-tickets", title: "Support Tickets", iconName: "customer-service", count: 1 },

@@ -154,6 +154,7 @@ import "react-toastify/dist/ReactToastify.css";
 import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
 import Image from "next/image";
 import NextImage from "@component/NextImage";
+import DeliveredOrderRow from "@sections/customer-dashboard/orders/DeliveredOrderRow";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -312,7 +313,7 @@ export default function OrderList() {
       </Hidden>
 
       {currentOrders.map((order) => (
-        <OrderRow key={order.invoice} order={order} />
+        <DeliveredOrderRow key={order.invoice} order={order} />
       ))}
       <OrdersPagination
         orderList={orderList}

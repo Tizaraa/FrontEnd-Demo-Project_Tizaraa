@@ -98,13 +98,13 @@ export default function OrderDetails({ params }: IDParams) {
     }));
   };
 
-// ======= START: Fetch Order Details based on PENDING status ===========
+// ======= START: Fetch Order Details based on CANCELLED status ===========
 useEffect(() => {
   const fetchOrder = async (token: string) => {
     const authtoken = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        `${ApiBaseUrl.baseUrl}user/status/wise/order/details/pending/${params.id}`,
+        `${ApiBaseUrl.baseUrl}user/status/wise/order/details/cancel/${params.id}`,
         {
           headers: {
             Authorization: `Bearer ${authtoken}`,
@@ -113,7 +113,7 @@ useEffect(() => {
       );
       console.log("Order details data:", response);
 
-      // Since the API only returns orders with status "Pending", you can directly set the state
+      // Since the API only returns orders with status "cancel", you can directly set the state
       setOrder(response.data);
       setStatus(response.data.Order.status);
       setEstimateDate(response.data.Order.deliveredAt);
@@ -138,7 +138,7 @@ useEffect(() => {
     localStorage.removeItem("orderSuccess");
   }
 }, [fetched, params.id, router]);
-// ======= END: Fetch Order Details based on PENDING status ===========
+// ======= END: Fetch Order Details based on CANCELLED status ===========
 
   const fetchInvoice = async () => {
     setInvoiceLoading(true); // Start loading state for invoice
@@ -401,8 +401,8 @@ if (order?.Order?.productType === "Abroad") {
   return (
     <Fragment>
       <DashboardPageHeader
-        title="Pending Order Details"
-        iconName="bag"
+        title="Cencelled Order Details"
+        iconName="delete"
         // button={<OrderListButton params={params} />}
       />
 
@@ -491,14 +491,27 @@ if (order?.Order?.productType === "Abroad") {
                     </Typography>
 
                     {/* status  */}
-                    <Box m="6px">
+                    {/* <Box m="6px">
                       <Chip p="0.25rem 1rem" bg={getColor(details?.status)}>
                         <Small color="white">{details?.status}</Small>
                       </Chip>
-                    </Box>
+                    </Box> */}
+              
+              <Box 
+                m="6px" 
+                p="0.5rem 1rem" 
+                borderRadius="100px" 
+                textAlign="center"
+                color="gray!important"
+                fontWeight={600}
+                backgroundColor="#ddd"
+              >
+                Cancelled
+              </Box>
+
                   </div>
 
-                  {details?.delivered_at && (
+                  {/* {details?.delivered_at && (
                     <p
                       style={{
                         padding: "0.5rem 1rem",
@@ -514,9 +527,9 @@ if (order?.Order?.productType === "Abroad") {
                     >
                       Estimated Delivery Date: <b>{details.delivered_at}</b>
                     </p>
-                  )}
+                  )} */}
 
-                  <Box mt="1rem" textAlign="center">
+                  {/* <Box mt="1rem" textAlign="center">
                     <Button
                       variant="text"
                       color="primary"
@@ -543,7 +556,7 @@ if (order?.Order?.productType === "Abroad") {
                         </>
                       )}
                     </Button>
-                  </Box>
+                  </Box> */}
                 </div>
 
                 {details?.order_items?.map((item, ind) => (
@@ -560,9 +573,11 @@ if (order?.Order?.productType === "Abroad") {
                     delivered_at={details.delivered_at}
                   />
                 ))}
-                 <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} />
 
-                {openSummaries[shopName] && (
+                
+                 {/* <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} /> */}
+
+                {/* {openSummaries[shopName] && (
                   <Box p="20px" borderRadius={8} mt="1rem">
                     <Typography variant="h6" mt="0px" mb="14px">
                       Total Summary
@@ -601,7 +616,7 @@ if (order?.Order?.productType === "Abroad") {
                       </H6>
                     </FlexBox>
                   </Box>              
-                )}
+                )} */}
               </Box>
             );
           })
@@ -618,18 +633,17 @@ if (order?.Order?.productType === "Abroad") {
 
       <Grid container spacing={6}>
         <Grid item lg={6} md={6} xs={12}>
-          <Card p="20px 30px" borderRadius={8}>
+          {/* <Card p="20px 30px" borderRadius={8}>
             <H5 mt="0px" mb="14px">
               Shipping Address
             </H5>
             <Paragraph fontSize="14px" my="0px">
               {order.Order.address}
             </Paragraph>
-          </Card>
+          </Card> */}
 
-          <div style={{ display: "flex", gap: "20px" }}>\
+          <div style={{ display: "flex", gap: "20px" }}>
 
-  {/* ============= Invoice ============= */}
             {/* <Button
               px="2rem"
               color="primary"
@@ -660,9 +674,7 @@ if (order?.Order?.productType === "Abroad") {
             )} */}
 
 
-  {/* ============= Online Payment ============= */}
-
-  {/* {order.Order.payment_status === "Unpaid" && 
+            {/* {order.Order.payment_status === "Unpaid" && 
   !["Delivered", "Cancelled", "Return"].includes(order.Order.status) && (
     <Button
       px="2rem"
