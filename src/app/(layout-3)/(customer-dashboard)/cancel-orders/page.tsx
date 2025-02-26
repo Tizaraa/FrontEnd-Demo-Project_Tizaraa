@@ -174,7 +174,7 @@ export default function OrderList() {
   const fetchOrderList = async (token: string) => {
 
     try {
-      const response = await axios.get(`${ApiBaseUrl.baseUrl}user/order`, {
+      const response = await axios.get(`${ApiBaseUrl.baseUrl}user/cancel/order`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -287,7 +287,7 @@ export default function OrderList() {
     
     <Fragment>
        {/* Render ToastContainer for toast notifications */}
-      <DashboardPageHeader title="My Orders" iconName="bag_filled" />
+      <DashboardPageHeader title="Cancelled Orders" iconName="delete" />
 
       <Hidden down={769}>
         <TableRow
