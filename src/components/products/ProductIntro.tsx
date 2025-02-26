@@ -261,8 +261,11 @@ type ProductIntroProps = {
   slug?: string;
   productId: string | number;
   sellerId: string | number;
-  // sizecolorwithprice: any;
-  // SizeColor: any;
+  sizeColor?: {
+    colorwithsize: {
+      [color: string]: { size: string; price: string; qty: string }[];
+    };
+  };
 };
 
 export default function ProductIntro({
@@ -283,8 +286,7 @@ export default function ProductIntro({
   productStock,
   productId,
   sellerId,
-  // sizecolorwithprice,
-  // SizeColor
+  sizeColor,
 }: ProductIntroProps) {
   const param = useParams();
   const { state } = useAppContext();
@@ -312,8 +314,7 @@ export default function ProductIntro({
             warranty={warranty}
             warrantyType= {warrantyType}
             replacewarranty= {replacewarranty}
-            // SizeColor={SizeColor}
-            // sizeColor={SizeColor}
+            sizeColor={sizeColor}
           />
          
             <AddToCartButton
