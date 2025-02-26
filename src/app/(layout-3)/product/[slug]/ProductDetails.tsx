@@ -506,8 +506,6 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   }
 
   const product = productData.productsingledetails;
-  const sizecolorwithprice = productData.SizeColor?.color; 
-  // const sizecolorwithprice = productData.SizeColor.color;
   const productImages = productData.productmultiimages;
   const images = productImages.map((img: any) => img.product_img);
   const description = product.short_description;
@@ -519,6 +517,10 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   const warrantyType = productData.warrantytype;
   const replacewarranty = productData.replacement_warranty;
   const express_deliverey= product.express_deliverey;
+  const sizeColor = productData.productsingledetails.SizeColor;
+
+  console.log(sizeColor)
+
 
   return (
     <>
@@ -552,12 +554,12 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
               productStock={product.product_stock}
               productId={product.product_id}
               sellerId={product.seller_shop_id}
-              // sizecolorwithprice={sizecolorwithprice}
               slug={params.slug}
               brandName={product.brand_name}
               warranty={warranty}
               warrantyType= {warrantyType}
               replacewarranty={replacewarranty}
+              sizeColor={sizeColor} 
             />
           </div>
           {isDesktop && (
