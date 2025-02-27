@@ -565,7 +565,7 @@ if (order?.Order?.productType === "Abroad") {
                     item={item}
                     shopName={shopName}
                     orderDetails={details}
-                    status={details.status}
+                    status={null}
                     orderItemId={item.order_item_id}
                     cancel_status={item.status}
                     order_days_gone={item.order_days_gone}
