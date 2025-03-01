@@ -391,7 +391,7 @@ export default function DashboardNavigation() {
     {
       title: "ACCOUNT SETTINGS",
       list: [
-        { href: "/profile", title: "Profile Info", iconName: "user", count: 3 },
+        { href: "/profile", title: "Profile Info", iconName: "user" },
         { href: "/address", title: "Addresses", iconName: "pin", count: addressCount }, // Use addressCount here
         // { href: "/payment-methods", title: "Payment Methods", iconName: "credit-card", count: 4 },
       ],

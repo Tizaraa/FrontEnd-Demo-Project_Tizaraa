@@ -324,7 +324,7 @@ export default function Footer1() {
                     <a
 
                     target="_blank"
-                      href="https://seller.tizaraa.com/"
+                      href="https://seller.tizaraa.shop/"
                       key={ind}
                       style={{
                         display: "block",
