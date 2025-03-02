@@ -238,6 +238,7 @@ interface ProductCard7Props extends SpaceProps {
   sellerId: string | number;
   b2bPricing: any;
   total_amount: any;
+  sizeColor: any;
 }
 
 export default function ProductCard7(props: ProductCard7Props) {
@@ -254,6 +255,7 @@ export default function ProductCard7(props: ProductCard7Props) {
     sellerId,
     b2bPricing,
     total_amount,
+    sizeColor,
     ...others
   } = props;
   const { state, dispatch } = useAppContext();
@@ -398,7 +400,7 @@ export default function ProductCard7(props: ProductCard7Props) {
 
           <FlexBox justifyContent="space-between" alignItems="flex-end">
             <FlexBox flexWrap="wrap" alignItems="center">
-              {discountPrice ? (
+              {/* {discountPrice ? (
                 <>
                   <Typography color="primary.main" mr="0.5rem">
                     {currency(discountPrice, 0)} x {quantity}
@@ -408,7 +410,18 @@ export default function ProductCard7(props: ProductCard7Props) {
                 <Typography fontWeight={600} color="primary.main" mr="1rem">
                   {currency(price, 0)} x {quantity}
                 </Typography>
-              )}
+              )} */}
+            {sizeColor?.nosize?.length === 0 && discountPrice ? (
+  <Typography color="primary.main" mr="0.5rem">
+    {currency(discountPrice, 0)} x {quantity}
+  </Typography>
+) : (
+  <Typography fontWeight={600} color="primary.main" mr="1rem">
+    {currency(price, 0)} x {quantity}
+  </Typography>
+)}
+
+
             </FlexBox>
 
             {currentCartItem && (

@@ -95,13 +95,26 @@ export default function Cart() {
     }
   };
 
+  // const getTotalPrice = () => {
+  //   return state.cart.reduce((accumulator, item) => {
+  //     if (state.selectedProducts.includes(item.id)) {
+  //       return (
+  //         accumulator +
+  //         (item.discountPrice ? item.discountPrice : item.price) * item.qty
+  //       );
+  //     }
+  //     return accumulator;
+  //   }, 0);
+  // };
   const getTotalPrice = () => {
     return state.cart.reduce((accumulator, item) => {
       if (state.selectedProducts.includes(item.id)) {
-        return (
-          accumulator +
-          (item.discountPrice ? item.discountPrice : item.price) * item.qty
-        );
+        const price =
+          item.sizeColor?.nosize?.length === 0 && item.discountPrice
+            ? item.discountPrice
+            : item.price;
+  
+        return accumulator + price * item.qty;
       }
       return accumulator;
     }, 0);
@@ -246,6 +259,7 @@ export default function Cart() {
               sellerId={item.sellerId}
               b2bPricing={item.b2bPricing}
               total_amount={item.total_amount}
+              sizeColor={item.sizeColor}
             />
           ))}
         </Grid>

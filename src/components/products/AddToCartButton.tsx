@@ -17,7 +17,17 @@ type AddToCartButtonProps = {
   price?: number;
   productStock: number;
   slug?: string;
-  productType: string; // <-- Added this field
+  productType: string; 
+  sizeColor?: {
+    colorwithsize?: {
+      [color: string]: { size: string; price: string; qty: string }[];
+    };
+    size?: { size: string; price: string; qty: string }[];
+    color?: { color: string; price: string; qty: string }[];
+  };
+  selectedColor?: string | null;
+  selectedSize?: string | null;
+  selectedPrice?: number;
 };
 
 const AddToCartButton = ({
@@ -29,13 +39,18 @@ const AddToCartButton = ({
   price,
   productStock,
   slug,
-  productType
+  productType,
+  sizeColor,
+  selectedColor,
+  selectedSize,
+  selectedPrice,
 }: AddToCartButtonProps) => {
   const { state, dispatch } = useAppContext();
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  const uniqueKey = `${productId}-${productType}`;
+  // Generate a unique key for the product variant
+  const uniqueKey = `${productId}-${selectedColor || "default"}-${selectedSize || "default"}`;
 
   const cartItem = state.cart.find(item => item.id === uniqueKey);
 
@@ -45,6 +60,17 @@ const AddToCartButton = ({
     }
   }, [cartItem]);
 
+  // Calculate the final price based on selected color and size
+  const calculateFinalPrice = () => {
+    if (sizeColor?.colorwithsize && selectedColor && selectedSize) {
+      const selectedProduct = sizeColor.colorwithsize[selectedColor]?.find(
+        (item) => item.size === selectedSize
+      );
+      return selectedProduct ? parseFloat(selectedProduct.price) : selectedPrice || discountPrice || price || 0;
+    }
+    return selectedPrice || discountPrice || price || 0;
+  };
+
   const handleCartAmountChange = (amount: number) => {
     if (amount > productStock) {
       toast.error("Out of Stock");
@@ -53,7 +79,7 @@ const AddToCartButton = ({
 
     setQuantity(amount);
 
-    const finalPrice = discountPrice || price || 0;
+    const finalPrice = calculateFinalPrice();
 
     dispatch({
       type: "CHANGE_CART_AMOUNT",
@@ -69,7 +95,10 @@ const AddToCartButton = ({
         productId,
         sellerId,
         productType,
-        total_amount: finalPrice * amount
+        total_amount: finalPrice * amount,
+        sizeColor,
+        selectedColor,
+        selectedSize,
       },
     });
   };
