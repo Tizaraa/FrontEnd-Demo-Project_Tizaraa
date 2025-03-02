@@ -16,6 +16,9 @@ interface SelectedProduct {
   shopimage?: string;
   brand?: string;
   delivereyType?: string;
+  sizeColor?: any;
+  discountPrice?: number;
+
 }
 
 export default function OrderedItem() {
@@ -177,14 +180,28 @@ export default function OrderedItem() {
                 </p>
               )}
             </div>
-            <div
+            {/* <div
               style={{
                 fontSize: "16px",
                 fontWeight: 500,
               }}
             >
-              BDT {product.total_amount.toLocaleString()}
-            </div>
+              BDT {product.price.toLocaleString()}
+            </div> */}
+            <div
+  style={{
+    fontSize: "16px",
+    fontWeight: 500,
+  }}
+>
+  BDT{" "}
+  {(
+    product.sizeColor?.nosize?.length === 0 && product.discountPrice
+      ? product.discountPrice
+      : product.price
+  ).toLocaleString()}
+</div>
+
           </div>
         ))
       ) : (

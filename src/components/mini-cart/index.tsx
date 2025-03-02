@@ -701,17 +701,31 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     });
   };
 
+  // const getTotalPrice = () => {
+  //   return state.cart.reduce((accumulator, item) => {
+  //     if (state.selectedProducts.includes(item.id)) {
+  //       return (
+  //         accumulator +
+  //         (item.discountPrice ? item.discountPrice : item.price) * item.qty
+  //       );
+  //     }
+  //     return accumulator;
+  //   }, 0);
+  // };
   const getTotalPrice = () => {
     return state.cart.reduce((accumulator, item) => {
       if (state.selectedProducts.includes(item.id)) {
-        return (
-          accumulator +
-          (item.discountPrice ? item.discountPrice : item.price) * item.qty
-        );
+        const price =
+          item.sizeColor?.nosize?.length === 0 && item.discountPrice
+            ? item.discountPrice
+            : item.price;
+  
+        return accumulator + price * item.qty;
       }
       return accumulator;
     }, 0);
   };
+  
 
   // const handleCheckout = () => {
   //   const selectedItems = state.cart.filter((item) =>
@@ -1019,10 +1033,19 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                 </Link>
 
                 <Tiny color="text.muted">
-                  {currency(
+                  {/* {currency(
                     item.discountPrice ? item.discountPrice : item.price,
                     0
-                  )}{" "}
+                  )}{" "} */}
+               {currency(
+  item.sizeColor?.nosize?.length === 0
+    ? item.discountPrice ?? item.price 
+    : item.price, 
+  0
+)} {" "}
+
+
+
                   x {item.qty}
                 </Tiny>
 
@@ -1034,7 +1057,9 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                 >
                   {currency(
                     item.qty *
-                      (item.discountPrice ? item.discountPrice : item.price)
+                      ( item.sizeColor?.nosize?.length === 0
+                        ? item.discountPrice ?? item.price 
+                        : item.price)
                   )}
                 </Typography>
               </div>

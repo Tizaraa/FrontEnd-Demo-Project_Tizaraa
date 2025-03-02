@@ -22,13 +22,26 @@ export default function CheckoutSummary({ deliveryCharge }) {
   });
 
   useEffect(() => {
+    // const getTotalPrice = () => {
+    //   return state.cart.reduce((accumulator, item) => {
+    //     if (state.selectedProducts.includes(item.id)) {
+    //       return (
+    //         accumulator +
+    //         (item.discountPrice ? item.discountPrice : item.price) * item.qty
+    //       );
+    //     }
+    //     return accumulator;
+    //   }, 0);
+    // };
     const getTotalPrice = () => {
       return state.cart.reduce((accumulator, item) => {
         if (state.selectedProducts.includes(item.id)) {
-          return (
-            accumulator +
-            (item.discountPrice ? item.discountPrice : item.price) * item.qty
-          );
+          const price =
+            item.sizeColor?.nosize?.length === 0 && item.discountPrice
+              ? item.discountPrice
+              : item.price;
+    
+          return accumulator + price * item.qty;
         }
         return accumulator;
       }, 0);
