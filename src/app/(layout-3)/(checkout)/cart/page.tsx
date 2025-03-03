@@ -260,6 +260,8 @@ export default function Cart() {
               b2bPricing={item.b2bPricing}
               total_amount={item.total_amount}
               sizeColor={item.sizeColor}
+              selectedSize={item.selectedSize}
+              selectedColor={item.selectedColor}
             />
           ))}
         </Grid>

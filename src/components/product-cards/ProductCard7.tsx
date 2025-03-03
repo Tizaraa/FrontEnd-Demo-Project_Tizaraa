@@ -239,6 +239,8 @@ interface ProductCard7Props extends SpaceProps {
   b2bPricing: any;
   total_amount: any;
   sizeColor: any;
+  selectedColor: string;
+  selectedSize: string;
 }
 
 export default function ProductCard7(props: ProductCard7Props) {
@@ -256,6 +258,8 @@ export default function ProductCard7(props: ProductCard7Props) {
     b2bPricing,
     total_amount,
     sizeColor,
+    selectedColor,
+    selectedSize,
     ...others
   } = props;
   const { state, dispatch } = useAppContext();
@@ -397,6 +401,24 @@ export default function ProductCard7(props: ProductCard7Props) {
               </Typography>
             </Box>
           )}
+
+          {/* display size and color  */}
+          {sizeColor && (
+            <Box display="flex">
+              {selectedColor && (
+                <Typography fontSize="14px" color="gray.600" mr="8px">
+                  Color: {selectedColor}
+                </Typography>
+              )}
+              {selectedSize && (
+                <Typography fontSize="14px" color="gray.600">
+                  Size: {selectedSize}
+                </Typography>
+              )}
+            </Box>
+          )}
+
+
 
           <FlexBox justifyContent="space-between" alignItems="flex-end">
             <FlexBox flexWrap="wrap" alignItems="center">

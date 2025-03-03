@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import authService from "services/authService";
+import Box from "@component/Box";
 
 interface SelectedProduct {
   productId: number;
@@ -18,6 +19,8 @@ interface SelectedProduct {
   delivereyType?: string;
   sizeColor?: any;
   discountPrice?: number;
+  selectedColor?: string;
+  selectedSize?: string;
 
 }
 
@@ -179,6 +182,32 @@ export default function OrderedItem() {
                   Delivery: {product.delivereyType}
                 </p>
               )}
+
+<Box display="flex">
+  {product.selectedColor && (
+    <p
+      style={{
+        margin: "4px 8px 0 0", // Added right margin for spacing
+        fontSize: "14px",
+        color: "#666",
+      }}
+    >
+      Color: {product.selectedColor}
+    </p>
+  )}
+  {product.selectedSize && (
+    <p
+      style={{
+        margin: "4px 0 0 0",
+        fontSize: "14px",
+        color: "#666",
+      }}
+    >
+      Size: {product.selectedSize}
+    </p>
+  )}
+</Box>
+
             </div>
             {/* <div
               style={{
