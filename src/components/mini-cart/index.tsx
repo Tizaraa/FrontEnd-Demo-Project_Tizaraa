@@ -726,37 +726,6 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     }, 0);
   };
   
-
-  // const handleCheckout = () => {
-  //   const selectedItems = state.cart.filter((item) =>
-  //     state.selectedProducts.includes(item.id)
-  //   );
-  //   if (selectedItems.length === 0) {
-  //     toast.error("Please select products to checkout");
-  //     setLoading(false);
-  //     return;
-  //   }
-  //   setLoading(true); // Set navigating to true
-  //   const checkoutData = JSON.stringify(selectedItems);
-  //   localStorage.setItem("selectedProducts", checkoutData);
-  //   //setVisible(false); // Hide the cart
-  //   if (isLoggedIn) {
-  //     setLoading(true); // Reset on navigation complete
-  //     // router.push("/checkout")
-  //     setTimeout(() => {
-  //       router.push("/checkout") // Navigate to the cart page
-  //       setLoading(false); // Optional: reset loading state after navigation
-  //       toggleSidenav();// Adjust the delay time as needed (e.g., 1000ms = 1 second)
-  //     }, 5000); 
-  //     //setLoading(false);
-  //   } else {
-  //     setLoading(true);
-  //     router.push("/login")
-  //     //setLoading(false); // Reset on navigation complete
-  //   }
-  //   setLoading(false);
-  // };
-
   const handleCheckout = () => {
     // Get selected items from the cart
     const selectedItems = state.cart.filter((item) =>
@@ -801,13 +770,6 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     }
   };
 
-  // const handleProductSelect = (productId: string | number) => {
-  //   if (state.selectedProducts.includes(productId)) {
-  //     dispatch({ type: "DESELECT_PRODUCT", payload: productId });
-  //   } else {
-  //     dispatch({ type: "SELECT_PRODUCT", payload: productId });
-  //   }
-  // };
 
   const handleProductSelect = (productId: string | number) => {
     if (state.selectedProducts.includes(productId)) {
@@ -822,7 +784,6 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
       sessionStorage.setItem('selectedProducts', JSON.stringify(selectedItems));
     }
   };
-
   const handleDeleteSelected = async () => {
     setIsDeleting(true);
 
@@ -858,11 +819,6 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
 
   const totalPrice = getTotalPrice();
 
-  // const handleViewCart = () => {
-  //   setViewCartLoading(true);
-  //   toggleSidenav();
-  //   router.push("/cart")
-  // };
 
   const handleViewCart = () => {
     setViewCartLoading(true); // Show the loading state
@@ -1001,16 +957,6 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
               </FlexBox>
 
               <Link href={`/product/${item.slug}`}>
-              {/* <Avatar
-                size={76}
-                mx="1rem"
-                alt={item.name}
-                src={
-                  item.productType === "Abroad"
-                    ? item.imgUrl
-                    : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
-                }
-              /> */}
               <Image
               width={76}
               height={76} 
@@ -1033,19 +979,12 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                 </Link>
 
                 <Tiny color="text.muted">
-                  {/* {currency(
-                    item.discountPrice ? item.discountPrice : item.price,
-                    0
-                  )}{" "} */}
                {currency(
   item.sizeColor?.nosize?.length === 0
     ? item.discountPrice ?? item.price 
     : item.price, 
   0
 )} {" "}
-
-
-
                   x {item.qty}
                 </Tiny>
 
