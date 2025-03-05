@@ -19,6 +19,9 @@ export default function PaymentSummary() {
   const [shippingCharge, setShippingCharge] = useState(0);
   const [cartItems, setCartItems] = useState([]);
 
+  const [discount, setDiscount] = useState(0);
+  const [newTotal, setNewTotal] = useState(0);
+
   // const getTotalPrice = () => {
   //   return state.cart.reduce((accumulator, item) => 
   //     // accumulator + (item.discountPrice ?? item.price) * item.qty, 0
@@ -32,9 +35,18 @@ export default function PaymentSummary() {
     const savedShipping = parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
     const savedCart = JSON.parse(sessionStorage.getItem("cartItems") || "[]");
 
+    const savedDiscount = parseFloat(sessionStorage.getItem("discount") || "0");
+    const savedNewTotal = parseFloat(
+      sessionStorage.getItem("newTotal") || (savedPrice + savedShipping).toString()
+    );
+    
+ 
     setTotalPrice(savedPrice);
     setShippingCharge(savedShipping);
     setCartItems(savedCart);
+
+    setDiscount(savedDiscount);
+    setNewTotal(savedNewTotal);
   }, [state.cart]);
 
   const getTotalPrice = () => {
@@ -52,6 +64,7 @@ export default function PaymentSummary() {
       
    let shippingData = sessionStorage.getItem('address');
    let userShippingdata = JSON.parse(shippingData);
+   let discountData = sessionStorage.getItem('discount');
 
    const deliveryChargeDisplay = userShippingdata && userShippingdata.deliveryCharge 
 ? userShippingdata.deliveryCharge 
@@ -60,6 +73,8 @@ export default function PaymentSummary() {
 
 
   return (
+
+    
     <Card1>
        
           {state.cart.map((item) => (
@@ -121,20 +136,20 @@ export default function PaymentSummary() {
       </FlexBox>
 
       <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-        {/* <Typography color="text.hint">Discount:</Typography>
+        <Typography color="text.hint">Discount:</Typography>
 
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-            -
+          {currency(discount)}
           </Typography>
-        </FlexBox> */}
+        </FlexBox>
       </FlexBox>
 
       <Divider mb="1rem" />
 
       <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
       {/* {currency(getTotalPrice() + (parseFloat(deliveryChargeDisplay) || 0))} */}
-      {currency(totalPrice + shippingCharge)}
+      {currency((totalPrice + shippingCharge)-discount)}
 
       </Typography>
     </Card1>

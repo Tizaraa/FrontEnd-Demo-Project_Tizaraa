@@ -168,7 +168,7 @@
 //   );
 // }
 
-
+// ================================================================
 
 
 import { useEffect, useState } from "react";
@@ -188,128 +188,199 @@ import authService from "services/authService";
 export default function CheckoutSummary({ deliveryCharge }) {
   const { state } = useAppContext();
   const authtoken = authService.getToken();
-  const [savedTotalPrice, setSavedTotalPrice] = useState(() => {
-    return parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
-  });
-  const [savedTotalWithDelivery, setSavedTotalWithDelivery] = useState(() => {
-    return parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
-  });
+
+  // const [savedTotalPrice, setSavedTotalPrice] = useState(() => {
+  //   return parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
+  // });
+  // const [savedTotalWithDelivery, setSavedTotalWithDelivery] = useState(() => {
+  //   return parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
+  // });
+
+  const [savedTotalPrice, setSavedTotalPrice] = useState(0); 
+  const [savedTotalWithDelivery, setSavedTotalWithDelivery] = useState(0); 
   const [promoCode, setPromoCode] = useState("");
-  const [discount, setDiscount] = useState(0);
-  const [newTotal, setNewTotal] = useState(savedTotalPrice + savedTotalWithDelivery);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  
+  const [discount, setDiscount] = useState(0);
+  const [newTotal, setNewTotal] = useState(0);
+  
+  // useEffect(() => {
+  //   // const getTotalPrice = () => {
+  //   //   return state.cart.reduce((accumulator, item) => {
+  //   //     if (state.selectedProducts.includes(item.id)) {
+  //   //       return (
+  //   //         accumulator +
+  //   //         (item.discountPrice ? item.discountPrice : item.price) * item.qty
+  //   //       );
+  //   //     }
+  //   //     return accumulator;
+  //   //   }, 0);
+  //   // };
+
+  //   const getTotalPrice = () => {
+  //     return state.cart.reduce((accumulator, item) => {
+  //       if (state.selectedProducts.includes(item.id)) {
+  //         const price =
+  //           item.sizeColor?.nosize?.length === 0 && item.discountPrice
+  //             ? item.discountPrice
+  //             : item.price;
+    
+  //         return accumulator + price * item.qty;
+  //       }
+  //       return accumulator;
+  //     }, 0);
+  //   };
+
+  //   const storedAddress = sessionStorage.getItem("address");
+  //   const selectedAddress = storedAddress ? JSON.parse(storedAddress) : null;
+  //   const deliveryChargeDisplay =
+  //     selectedAddress?.deliveryCharge || deliveryCharge || 0;
+
+  //   const totalPrice = getTotalPrice();
+  //   const totalWithDelivery = parseFloat(deliveryChargeDisplay);
+
+  //   if (totalPrice > 0) {
+  //     setSavedTotalPrice(totalPrice);
+  //     sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
+  //   }
+
+  //   if (totalWithDelivery > 0) {
+  //     setSavedTotalWithDelivery(totalWithDelivery);
+  //     sessionStorage.setItem("savedTotalWithDelivery", totalWithDelivery.toString());
+  //   }
+
+  //   if (state.cart.length === 0) {
+  //     setSavedTotalPrice(0);
+  //     setSavedTotalWithDelivery(0);
+  //     setDiscount(0);
+  //     setNewTotal(0); // Reset newTotal
+  //     sessionStorage.removeItem("savedTotalPrice");
+  //     sessionStorage.removeItem("savedTotalWithDelivery");
+  //     sessionStorage.removeItem("discount"); // Clear discount
+  //     sessionStorage.removeItem("newTotal"); // Clear newTotal
+  //   }
+  // }, [state.cart, deliveryCharge]);
+
+
+  // useEffect(() => {
+  //   const getTotalPrice = () => {
+  //     return state.cart.reduce((accumulator, item) => {
+  //       if (state.selectedProducts.includes(item.id)) {
+  //         const price =
+  //           item.sizeColor?.nosize?.length === 0 && item.discountPrice
+  //             ? item.discountPrice
+  //             : item.price;
+      
+  //         return accumulator + price * item.qty;
+  //       }
+  //       return accumulator;
+  //     }, 0);
+  //   };
+  
+  //   const storedAddress = sessionStorage.getItem("address");
+  //   const selectedAddress = storedAddress ? JSON.parse(storedAddress) : null;
+  //   const deliveryChargeDisplay =
+  //     selectedAddress?.deliveryCharge || deliveryCharge || 0;
+  
+  //   const totalPrice = getTotalPrice();
+  //   const totalWithDelivery = parseFloat(deliveryChargeDisplay);
+  
+  //   // Reset discount and newTotal when cart changes
+  //   setDiscount(0);
+  //   setNewTotal(totalPrice + totalWithDelivery);
+  //   sessionStorage.setItem("discount", "0");
+  //   sessionStorage.setItem("newTotal", (totalPrice + totalWithDelivery).toString());
+  
+  //   if (totalPrice > 0) {
+  //     setSavedTotalPrice(totalPrice);
+  //     sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
+  //   }
+  
+  //   if (totalWithDelivery > 0) {
+  //     setSavedTotalWithDelivery(totalWithDelivery);
+  //     sessionStorage.setItem("savedTotalWithDelivery", totalWithDelivery.toString());
+  //   }
+  
+  //   if (state.cart.length === 0) {
+  //     setSavedTotalPrice(0);
+  //     setSavedTotalWithDelivery(0);
+  //     setDiscount(0);
+  //     setNewTotal(0);
+  //     sessionStorage.removeItem("savedTotalPrice");
+  //     sessionStorage.removeItem("savedTotalWithDelivery");
+  //     sessionStorage.removeItem("discount");
+  //     sessionStorage.removeItem("newTotal");
+  //   }
+  
+  //   // Reset promo code related UI states
+  //   setPromoCode("");
+  //   setError("");
+  //   setMessage("");
+  
+  // }, [state.cart, deliveryCharge]);
+
+
 
   useEffect(() => {
     const getTotalPrice = () => {
       return state.cart.reduce((accumulator, item) => {
         if (state.selectedProducts.includes(item.id)) {
-          return (
-            accumulator +
-            (item.discountPrice ? item.discountPrice : item.price) * item.qty
-          );
+          const price =
+            item.sizeColor?.nosize?.length === 0 && item.discountPrice
+              ? item.discountPrice
+              : item.price;
+  
+          return accumulator + price * item.qty;
         }
         return accumulator;
       }, 0);
     };
-
+  
     const storedAddress = sessionStorage.getItem("address");
     const selectedAddress = storedAddress ? JSON.parse(storedAddress) : null;
     const deliveryChargeDisplay =
       selectedAddress?.deliveryCharge || deliveryCharge || 0;
-
+  
     const totalPrice = getTotalPrice();
     const totalWithDelivery = parseFloat(deliveryChargeDisplay);
-
+  
+    // Update state and sessionStorage
     if (totalPrice > 0) {
       setSavedTotalPrice(totalPrice);
       sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
+    } else {
+      setSavedTotalPrice(0);
+      sessionStorage.removeItem("savedTotalPrice");
     }
-
+  
     if (totalWithDelivery > 0) {
       setSavedTotalWithDelivery(totalWithDelivery);
       sessionStorage.setItem("savedTotalWithDelivery", totalWithDelivery.toString());
+    } else {
+      setSavedTotalWithDelivery(0);
+      sessionStorage.removeItem("savedTotalWithDelivery");
     }
-
+  
+    // Clear sessionStorage if cart is empty
     if (state.cart.length === 0) {
       setSavedTotalPrice(0);
       setSavedTotalWithDelivery(0);
+      setDiscount(0);
+      setNewTotal(0); // Reset newTotal
       sessionStorage.removeItem("savedTotalPrice");
       sessionStorage.removeItem("savedTotalWithDelivery");
+      sessionStorage.removeItem("discount"); // Clear discount
+      sessionStorage.removeItem("newTotal"); // Clear newTotal
     }
-  }, [state.cart, deliveryCharge]);
+  }, [state.cart, state.selectedProducts, deliveryCharge]);
+
 
   const handlePromoCodeChange = (e) => {
     setPromoCode(e.target.value);
     setError("");
     setMessage("");
   };
-
-  // const applyPromoCode = async () => {
-  //   if (!promoCode) {
-  //     setError("Please enter a promo code.");
-  //     return;
-  //   }
-
-  //   // Prepare the request body
-  //   const requestBody = {
-  //     code: promoCode,
-  //     products: state.cart.map((item) => ({
-  //       price: item.price,
-  //       qty: item.qty,
-  //       name: item.name,
-  //       imgUrl: item.imgUrl,
-  //       productStock: item.productStock,
-  //       id: item.id,
-  //       discountPrice: item.discountPrice,
-  //       slug: item.slug,
-  //       productId: item.productId,
-  //       sellerId: item.sellerId,
-  //       b2bPricing: item.b2bPricing || [],
-  //       productType: item.productType || "General",
-  //       total_amount: (item.discountPrice || item.price) * item.qty,
-  //     })),
-  //   };
-
-  //   try {
-  //     const response = await fetch("https://frontend.tizaraa.shop/api/promo/apply", {
-  //       method: "POST",
-  //       headers: {
-  //         Authorization: `Bearer ${authtoken}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(requestBody),
-  //     });
-
-  //     const contentType = response.headers.get("content-type");
-  //     if (!contentType || !contentType.includes("application/json")) {
-  //       const text = await response.text();
-  //       console.error("Unexpected response:", text);
-  //       throw new Error("The server returned an invalid response. Please try again later.");
-  //     }
-
-  //     const data = await response.json();
-  //     console.log("API Data:", data);
-
-  //     // Handle the success case
-  //     if (response.ok) {
-  //       setMessage(data.message); // Set the success message
-  //       setDiscount(parseFloat(data.discount));
-  //       setNewTotal(parseFloat(data.new_total));
-  //       // setError(data.error);
-  //     } else {
-  //       setError(data.error);
-  //       setDiscount(0);
-  //       setNewTotal(savedTotalPrice + savedTotalWithDelivery);
-  //     }
-  //   } catch (error) {
-  //     console.error("API Error:", error);
-  //     setError(error.message || "An error occurred. Please try again.");
-  //     setDiscount(0);
-  //     setNewTotal(savedTotalPrice + savedTotalWithDelivery);
-  //   }
-  // };
-
 
 
   const applyPromoCode = async () => {
@@ -321,26 +392,60 @@ export default function CheckoutSummary({ deliveryCharge }) {
     // Prepare the request body
     const requestBody = {
       code: promoCode,
-      products: state.cart.map((item) => ({
-        price: item.price,
-        qty: item.qty,
-        name: item.name,
-        imgUrl: item.imgUrl,
-        productStock: item.productStock,
-        id: item.id,
-        discountPrice: item.discountPrice,
-        slug: item.slug,
-        productId: item.productId,
-        sellerId: item.sellerId,
-        b2bPricing: item.b2bPricing || [],
-        productType: item.productType || "General",
-        total_amount: (item.discountPrice || item.price) * item.qty,
-        sizeColor: item.sizeColor || { nosize: [] },
-        selectedColor: item.selectedColor || null,
-        selectedSize: item.selectedSize || null,
-      })),
+      products: state.cart.map((item) => {
+        let price = item.discountPrice ? item.discountPrice : item.price;
+
+
+        if (item.sizeColor && item.selectedSize) {
+          const selectedSize = item.sizeColor.size?.find(
+            (sizeOption) => sizeOption.size === item.selectedSize
+          );
+
+          if (selectedSize && selectedSize.price) {
+            price = selectedSize.price;
+          } else {
+            price = item.price;
+          }
+        }
+
+        if (item.selectedColor) {
+          const selectedColor = item.sizeColor?.color?.find(
+            (colorOption) => colorOption.color === item.selectedColor
+          );
+
+          if (selectedColor && selectedColor.price) {
+            price = parseFloat(selectedColor.price);
+          } else {
+            price = item.price;
+          }
+        }
+
+        if (item.discountPrice && (!item.selectedColor || !item.selectedSize)) {
+          price = item.discountPrice;
+        }
+
+        const totalAmount = price * item.qty;
+
+        return {
+          price: price,
+          qty: item.qty,
+          total_amount: totalAmount,
+          name: item.name,
+          imgUrl: item.imgUrl,
+          productStock: item.productStock,
+          id: item.id,
+          discountPrice: item.discountPrice,
+          slug: item.slug,
+          productId: item.productId,
+          sellerId: item.sellerId,
+          productType: item.productType || "General",
+          sizeColor: item.sizeColor || { colorwithsize: {} },
+          selectedColor: item.selectedColor || null,
+          selectedSize: item.selectedSize || null,
+        };
+      }),
     };
-  
+
     try {
       const response = await fetch("https://frontend.tizaraa.shop/api/promo/apply", {
         method: "POST",
@@ -350,40 +455,62 @@ export default function CheckoutSummary({ deliveryCharge }) {
         },
         body: JSON.stringify(requestBody),
       });
-  
+
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         const text = await response.text();
         console.error("Unexpected response:", text);
         throw new Error("The server returned an invalid response. Please try again later.");
       }
-  
+
       const data = await response.json();
-      console.log("API Data:", data);
-  
-      // Handle the response
+
       if (response.ok) {
-        // Success case
-        setMessage(data.message || "Promo code applied successfully!"); // Set success message or fallback
-        setDiscount(parseFloat(data.discount));
-        setNewTotal(parseFloat(data.new_total));
+        // setMessage(data.message || "Promo code applied successfully!");
+        // setDiscount(parseFloat(data.discount));
+
+        // // Recalculate the new total after applying the promo code, including the shipping charge
+        // const totalPrice = savedTotalPrice;
+        // const shippingCharge = savedTotalWithDelivery;
+        // const finalPrice = totalPrice + shippingCharge - data.discount;  // Add shipping charge
+        // console.log('PromoApply:: ', data.discount, newTotal)
+
+        // setNewTotal(finalPrice);
+        
+          setMessage(data.message || "Promo code applied successfully!");
+          const discountValue = parseFloat(data.discount);
+          setDiscount(discountValue);
+
+          const totalPrice = savedTotalPrice;
+          const shippingCharge = savedTotalWithDelivery;
+          const finalPrice = totalPrice + shippingCharge - discountValue;
+
+          setNewTotal(finalPrice);
+
+
+          // Save discount and newTotal to sessionStorage
+          sessionStorage.setItem("discount", discountValue.toString());
+          sessionStorage.setItem("newTotal", finalPrice.toString());
+        
       } else {
-        // Error case
-        setError(data.message || data.error || "An error occurred. Please try again."); // Check for error messages
+        setError(data.message || data.error || "An error occurred. Please try again.");
         setDiscount(0);
-        setNewTotal(savedTotalPrice + savedTotalWithDelivery);
+        setNewTotal(savedTotalPrice + savedTotalWithDelivery);  // Use saved totals (without promo)
+        sessionStorage.setItem("discount", "0"); // Reset discount
+        sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
       }
     } catch (error) {
       console.error("API Error:", error);
-      setError(error.message || "An error occurred. Please try again.");
+      setError(error.message = "Wrong Promo");
       setDiscount(0);
-      setNewTotal(savedTotalPrice + savedTotalWithDelivery);
+      setNewTotal(savedTotalPrice + savedTotalWithDelivery);  // Use saved totals (without promo)
+      sessionStorage.setItem("discount", "0"); // Reset discount
+      sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
     }
-  };
-  
-  
+};
 
-  
+
+
   return (
     <Card1>
       {state.cart.map((item) => (
@@ -480,8 +607,11 @@ export default function CheckoutSummary({ deliveryCharge }) {
       <Divider mb="1rem" />
 
       <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
-        {currency(newTotal)}
+        {currency((savedTotalWithDelivery + savedTotalPrice)-discount)}
       </Typography>
     </Card1>
   );
 }
+
+
+
