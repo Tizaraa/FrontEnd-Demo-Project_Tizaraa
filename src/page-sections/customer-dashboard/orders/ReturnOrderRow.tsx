@@ -85,7 +85,7 @@ import { useEffect } from "react";
 type OrderRowProps = { order: any };
 // =================================================
 
-export default function OrderRow({ order }: OrderRowProps) {
+export default function ReturnOrderRow({ order }: OrderRowProps) {
   // Function to determine the background color based on order status
 
   const getColor = (status: string) => {
@@ -104,7 +104,7 @@ export default function OrderRow({ order }: OrderRowProps) {
   };
 
   return (
-    <Link href={`/orders/${order.invoice}`}>
+    <Link href={`/return-orders/${order.invoice}`}>
       <TableRow my="1rem" padding="6px 18px">
         <H5 m="6px" textAlign="left">
           {order.invoice}

@@ -51,6 +51,9 @@ export default function Profile() {
   const [data, setData] = useState({
     totalOrders: 0,
     confirmedOrders: 0,
+    pendingOrders: 0,
+    deliveredOrders: 0,
+    cancelOrders: 0,
     totalShipments: 0,
     totalDeliveries: 0,
     customerAddresses: [],
@@ -103,6 +106,9 @@ export default function Profile() {
         setData({
           totalOrders: profileData.totalorder,
           confirmedOrders: profileData.conformitem,
+          pendingOrders: profileData.pending,
+          deliveredOrders: profileData.deliveryitem,
+          cancelOrders: profileData.cancelitem,
           totalShipments: profileData.shipeditem,
           totalDeliveries: profileData.deliveryitem,
           customerAddresses: profileData.customeraddress,
@@ -124,9 +130,10 @@ export default function Profile() {
 
     const infoList = [
       { title: data.totalOrders, subtitle: "All Orders", link: "/orders" },
-      { title: data.confirmedOrders, subtitle: "All Confirm Orders", link: "#" },
-      { title: data.totalShipments, subtitle: "Total Shipment", link: "#" },
-      { title: data.totalDeliveries, subtitle: "Total Delivery", link: "#" },
+      { title: data.pendingOrders, subtitle: "Pending Orders", link: "/pending-orders" },
+      { title: data.deliveredOrders, subtitle: "Delivered Orders", link: "/delivered-orders" },
+      { title: data.cancelOrders, subtitle: "Cancelled Orders", link: "/cancel-orders" },
+      // { title: data.totalDeliveries, subtitle: "Total Delivery", link: "#" },
     ];
 
   return (

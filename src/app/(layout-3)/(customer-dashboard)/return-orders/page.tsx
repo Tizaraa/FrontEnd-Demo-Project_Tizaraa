@@ -154,6 +154,8 @@ import "react-toastify/dist/ReactToastify.css";
 import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
 import Image from "next/image";
 import NextImage from "@component/NextImage";
+import DeliveredOrderRow from "@sections/customer-dashboard/orders/DeliveredOrderRow";
+import ReturnOrderRow from "@sections/customer-dashboard/orders/ReturnOrderRow";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -174,7 +176,7 @@ export default function OrderList() {
   const fetchOrderList = async (token: string) => {
 
     try {
-      const response = await axios.get(`${ApiBaseUrl.baseUrl}user/order`, {
+      const response = await axios.get(`${ApiBaseUrl.baseUrl}user/return/order`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -287,7 +289,7 @@ export default function OrderList() {
     
     <Fragment>
        {/* Render ToastContainer for toast notifications */}
-      <DashboardPageHeader title="My Orders" iconName="bag_filled" />
+      <DashboardPageHeader title="Return Orders" iconName="truck" />
 
       <Hidden down={769}>
         <TableRow
@@ -312,7 +314,7 @@ export default function OrderList() {
       </Hidden>
 
       {currentOrders.map((order) => (
-        <OrderRow key={order.invoice} order={order} />
+        <ReturnOrderRow key={order.invoice} order={order} />
       ))}
       <OrdersPagination
         orderList={orderList}
