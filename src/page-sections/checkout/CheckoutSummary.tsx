@@ -184,6 +184,7 @@ import { ProductCard2, ProductCard7 } from "@component/product-cards";
 import { currency } from "@utils/utils";
 import ProductCard20 from "@component/product-cards/ProductCard20";
 import authService from "services/authService";
+import { toast } from "react-toastify";
 
 export default function CheckoutSummary({ deliveryCharge }) {
   const { state } = useAppContext();
@@ -252,9 +253,9 @@ export default function CheckoutSummary({ deliveryCharge }) {
     setNewTotal(totalPrice + totalWithDelivery); // Reset to total without discount
     sessionStorage.setItem("discount", "0");
     sessionStorage.setItem("newTotal", (totalPrice + totalWithDelivery).toString());
-    setPromoCode(""); // Optionally clear the promo code input
-    setMessage(""); // Clear any success message
-    setError(""); // Clear any error message
+    setPromoCode("");
+    setMessage("");
+    setError(""); 
   
     // Clear sessionStorage if cart is empty
     if (state.cart.length === 0) {
@@ -276,11 +277,12 @@ export default function CheckoutSummary({ deliveryCharge }) {
     setMessage("");
   };
 
-const applyPromoCode = async () => {
-  if (!promoCode) {
-    setError("Please enter a promo code.");
-    return;
-  }
+  const applyPromoCode = async () => {
+    if (!promoCode) {
+      // setError("Please enter a promo code.");
+      toast.warning("Please Enter a Promo Code !"); // Show message as a toast alert
+      return;
+    }
 
   // Filter cart items to include only those that are in selectedProducts
   const selectedItems = state.cart.filter((item) => state.selectedProducts.includes(item.id));
@@ -361,7 +363,8 @@ const applyPromoCode = async () => {
     const data = await response.json();
 
     if (response.ok) {
-      setMessage(data.message || "Promo code applied successfully!");
+      // setMessage(data.message || "Promo code applied successfully!");
+      toast.success(data.message); // Show message as a toast alert
       const discountValue = parseFloat(data.discount);
       setDiscount(discountValue);
 
@@ -373,25 +376,61 @@ const applyPromoCode = async () => {
 
 
       // Save discount and newTotal to sessionStorage
+      // sessionStorage.setItem("discount", discountValue.toString());
+      // sessionStorage.setItem("newTotal", finalPrice.toString());
+
+      // Save discount, newTotal, and promoCode to sessionStorage
       sessionStorage.setItem("discount", discountValue.toString());
       sessionStorage.setItem("newTotal", finalPrice.toString());
-    } else {
-      setError(data.message || data.error || "An error occurred. Please try again.");
+    } 
+    // else {
+    //   // setError(data.message || data.error || "An error occurred. Please try again."); 
+    //   toast.error(data.message); // Show message as a toast alert
+    //   console.error(" Error:", data.error);
+    //   setDiscount(0);
+    //   setNewTotal(savedTotalPrice + savedTotalWithDelivery);  // Use saved totals (without promo)
+    //   sessionStorage.setItem("discount", "0"); // Reset discount
+    //   sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
+    // }
+
+    else {
+      const errorMsg = data.message || data.error || "An error occurred. Please try again.";
+      // setError("All products must be from the same seller!");
+      toast.error(errorMsg);
+      console.error(" Error:", data.error);
+
       setDiscount(0);
       setNewTotal(savedTotalPrice + savedTotalWithDelivery);  // Use saved totals (without promo)
       sessionStorage.setItem("discount", "0"); // Reset discount
       sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
+  }
+
+  }
+
+  // catch (error) {
+  //   console.error("API Error:", error.message);
+  //   setError(error.message || "Wrong Promo");
+  //   setDiscount(0);
+  //   setNewTotal(savedTotalPrice + savedTotalWithDelivery);  // Use saved totals (without promo)
+  //   sessionStorage.setItem("discount", "0"); // Reset discount
+  //   sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
+  // }
+
+  catch (error) {
+    console.error("API Error:", error.message);
+    // Check if the error is a fetch failure or a specific condition
+    if (error.message === "Failed to fetch") {
+        // setError("Wrong Promo"); // Set the error message to "Wrong Promo"
+        toast.error("Wrong Promo !"); // Show message as a toast alert
+    } else {
+        setError(error.message || "Wrong Promo");
     }
-  } catch (error) {
-    console.error("API Error:", error);
-    setError(error.message || "Wrong Promo");
     setDiscount(0);
     setNewTotal(savedTotalPrice + savedTotalWithDelivery);  // Use saved totals (without promo)
     sessionStorage.setItem("discount", "0"); // Reset discount
     sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
-  }
+}
 };
-
 
 
   return (
@@ -495,5 +534,6 @@ const applyPromoCode = async () => {
     </Card1>
   );
 }
+
 
 
