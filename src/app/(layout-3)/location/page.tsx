@@ -80,7 +80,7 @@ export default function LocationList() {
       const locations = response.data;
       setNearbyLocations(locations);
 
-      console.log("location:", response.data)
+      console.log("location:", response.data);
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -251,20 +251,20 @@ export default function LocationList() {
     }
 
     // Add markers for nearby locations
-    if (selectedLatLonData && selectedLatLonData.data) {
-      selectedLatLonData.data.forEach((location) => {
+    if (nearbyLocations && nearbyLocations.length > 0) {
+      nearbyLocations.forEach((location) => {
         const marker = new google.maps.Marker({
           position: { lat: location.lat, lng: location.lon },
           map: mapInstanceRef.current,
-          title: location.title || "Nearby Location",
+          title: "Nearby Location",
         });
 
-        // Add click listener to show InfoWindow
+        // Add click listener to show InfoWindow for nearby locations
         marker.addListener("click", () => {
           if (infoWindowRef.current) {
             const content = `
               <div style="padding: 10px;">
-                <h3 style="margin: 0; font-size: 16px;">${location.title || "Nearby Location"}</h3>
+                <h3 style="margin: 0; font-size: 16px;">Nearby Location</h3>
                 <p style="margin: 5px 0; font-size: 14px;">Lat: ${location.lat.toFixed(4)}, Lng: ${location.lon.toFixed(4)}</p>
                 <img 
                   src="https://via.placeholder.com/100" 
@@ -281,7 +281,7 @@ export default function LocationList() {
         markersRef.current.push(marker);
       });
     }
-  }, [isLoaded, userLocation, selectedLatLonData]);
+  }, [isLoaded, userLocation, nearbyLocations]);
 
   if (!isLoaded) return <div>Loading...</div>;
 
@@ -341,12 +341,12 @@ export default function LocationList() {
           </div>
 
           {/* Flex container for map and products */}
-          <div 
-          style={{
-            display: window.innerWidth > 1024 ? "flex" : "block", // Flex on large screens, block on small
-            gap: "20px",
-            marginBottom: "20px",
-          }}
+          <div
+            style={{
+              display: window.innerWidth > 1024 ? "flex" : "block", // Flex on large screens, block on small
+              gap: "20px",
+              marginBottom: "20px",
+            }}
           >
             {/* Map container */}
             <div style={{ flex: 1 }}>
