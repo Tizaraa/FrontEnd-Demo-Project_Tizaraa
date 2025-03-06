@@ -25,7 +25,8 @@
       "@reducer/*": ["reducers/*"],
       "@component/*": ["components/*"],
       "@sections/*": ["page-sections/*"],
-      "@models/*": ["models/*"]
+      "@models/*": ["models/*"],
+      "typeRoots": ["./node_modules/@types", "./node_modules/@react-google-maps/api"]
     }
     
   },

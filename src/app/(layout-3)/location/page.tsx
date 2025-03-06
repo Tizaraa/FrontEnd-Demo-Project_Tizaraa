@@ -1,576 +1,39 @@
-// // "use client";
-// // import { Fragment, useEffect, useState, useRef } from "react";
-// // import Grid from "@component/grid/Grid";
-// // import axios from "axios";
-// // import FlexBox from "@component/FlexBox";
-// // import ShopCard1 from "@sections/shop/ShopCard1";
-// // import { H2, SemiSpan, Span } from "@component/Typography";
-// // import { Vortex } from "react-loader-spinner";
-// // import styled from "@emotion/styled";
-// // import ApiBaseUrl from "api/ApiBaseUrl";
-// // import SearchBoxStyle from "@component/search-box/styled";
-// // import Icon from "@component/icon/Icon";
-// // import TextField from "@component/text-field";
-// // import Box from "@component/Box";
-// // import { debounce } from "lodash";
-// // import Card from "@component/Card";
-// // import { MdLocationSearching } from "react-icons/md";
-// // import useWindowSize from "@hook/useWindowSize";
-// // import { ProductCard1 } from "@component/product-cards";
-// // import Script from "next/script";
-
-
-
-// // export default function LocationList() {
-// //   const [locationList, setLocationList] = useState([]);
-// //   const [currentPage, setCurrentPage] = useState(1);
-// //   const [totalLocations, setTotalLocations] = useState(0);
-// //   const [lastPage, setLastPage] = useState(1);
-// //   const [isLoading, setIsLoading] = useState(false);
-// //   const [isSearching, setIsSearching] = useState(false);
-// //   const [noLocationsFound, setNoLocationsFound] = useState(false);
-// //   const observerRef = useRef(null);
-// //   const [searchValue, setSearchValue] = useState("");
-  
-
-
-// //   const [selectedLatLonData, setSelectedLatLonData] = useState(null);
-
-// //   const [currentItemsCount, setCurrentItemsCount] = useState(12);
-
-// //   const loadMoreProducts = () => {
-// //     setCurrentItemsCount((prevCount) => prevCount + 12); // Load 12 more items
-// //   };
-
-
-// //   const width = useWindowSize();
-// //   const isTabletOrMobile = width < 1024; // Detect small devices
-
-  
-// //   // Geolocation and address fetching
-
-  
-
-
-// //   async function getLocation() {
-// //     try {
-// //       // Fetch seller locations from the API
-// //       const response = await axios.get(
-// //         "https://seller.tizaraa.com/api/get/seller/lanlon"
-// //       );
-// //       const locations = response.data; // Assuming API response is an array of { lat, lon }
-// //       console.log("Fetched locations:", locations);
-  
-// //       if (navigator.geolocation) {
-// //         navigator.geolocation.getCurrentPosition(
-// //           (position) => showPosition(position, locations),
-// //           showError
-// //         );
-// //       } else {
-// //         alert("Geolocation is not supported by this browser.");
-// //       }
-// //     } catch (error) {
-// //       console.error("Error fetching seller locations:", error);
-// //       alert("Could not fetch seller locations. Please try again later.");
-// //     }
-// //   }
-  
-// //   function showPosition(position, locations) {
-// //     const latitude = position.coords.latitude;
-// //     const longitude = position.coords.longitude;
-  
-// //     // Calculate distance and filter nearby locations
-// //     function calculateDistance(lat1, lon1, lat2, lon2) {
-// //       const R = 6371; // Radius of the Earth in kilometers
-// //       const dLat = (lat2 - lat1) * (Math.PI / 180);
-// //       const dLon = (lon2 - lon1) * (Math.PI / 180);
-// //       const a =
-// //         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-// //         Math.cos(lat1 * (Math.PI / 180)) *
-// //           Math.cos(lat2 * (Math.PI / 180)) *
-// //           Math.sin(dLon / 2) *
-// //           Math.sin(dLon / 2);
-// //       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-// //       return R * c; // Distance in kilometers
-// //     }
-  
-// //     const nearbyLocations = locations.filter((location) => {
-// //       const distance = calculateDistance(
-// //         latitude,
-// //         longitude,
-// //         location.lat,
-// //         location.lon
-// //       );
-// //       return distance <= 5; // Filter for distances within 5 kilometers
-// //     });
-  
-// //     console.log("Nearby locations within 5 km:", nearbyLocations);
-
-// //     const latlon = nearbyLocations;
-// // // console.log(latlon)
-
-// //     fetchSelectedLatLong(nearbyLocations);
-  
-// //     // Continue to fetch address details using the Nominatim API
-// //     fetch(
-// //       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-// //     )
-// //       .then((response) => response.json())
-// //       .then((data) => {
-// //         const province = data.address.state || data.address.province || "N/A";
-// //         const city =
-// //           data.address.city ||
-// //           data.address.town ||
-// //           data.address.village ||
-// //           "N/A";
-// //         const area =
-// //           data.address.suburb ||
-// //           data.address.neighbourhood ||
-// //           data.address.district ||
-// //           "N/A";
-// //         const street = data.address.road || "N/A";
-// //         const streetNumber = data.address.house_number || "N/A";
-// //         const postalCode = data.address.postcode || "N/A";
-
-// //         setSearchValue(`${province}, ${city}, ${area}, ${street}`)
-// //       })
-// //       .catch((error) => {
-// //         console.error("Error getting address:", error);
-     
-// //       });
-// //   }
-
-// //     async function fetchSelectedLatLong(latlon) {
-// //       try {
-// //         const response = await axios.get(
-// //           `https://seller.tizaraa.com/api/get/selected/latlong`,
-// //           {
-// //             params: { latlon },
-// //           }
-// //         );
-// //         console.log("Selected LatLong API Response:", response.data);
-// //         setSelectedLatLonData(response.data); // Set the fetched data to the state
-// //       } catch (error) {
-// //         console.error("Error calling selected latlong API:", error);
-// //       }
-// //     }
-    
-    
-  
-// //   function showError(error) {
-// //     switch (error.code) {
-// //       case error.PERMISSION_DENIED:
-// //         alert("User denied the request for Geolocation.");
-// //         break;
-// //       case error.POSITION_UNAVAILABLE:
-// //         alert("Location information is unavailable.");
-// //         break;
-// //       case error.TIMEOUT:
-// //         alert("The request to get user location timed out.");
-// //         break;
-// //       case error.UNKNOWN_ERROR:
-// //         alert("An unknown error occurred.");
-// //         break;
-// //     }
-// //   }
-  
-
-// //   return (
-// //     <Fragment>
-// //       <div
-// //         style={{
-// //           display: "flex",
-// //           gap: "10px",
-// //           alignContent: "center",
-// //           alignItems: "center",
-// //           justifyContent: "center",
-// //           marginBottom: "20px",
-// //         }}
-// //       >
-    
-// //         <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto" mb="3rem">
-// //           <SearchBoxStyle>
-// //             <TextField
-// //               fullwidth
-// //               value={searchValue}
-// //               className="search-field"
-// //               placeholder="Search for a product..."
-// //               disabled
-// //             />
-// //             <div
-// //               style={{
-// //                 marginLeft: "-100px",
-// //                 zIndex: "999",
-// //                 display: "flex",
-// //                 alignItems: "center",
-// //                 justifyContent: "space-between",
-// //                 cursor: "pointer",
-// //               }}
-// //               onClick={getLocation}
-// //             >
-// //               <MdLocationSearching style={{ marginRight: "8px" }} />
-// //               Locate me
-// //             </div>
-// //           </SearchBoxStyle>
-// //         </Box>
-// //       </div>
-
-// //       {selectedLatLonData && selectedLatLonData.data && selectedLatLonData.data.length > 0 ? (
-// //         <>
-// //           <Grid container spacing={2}>
-// //             {selectedLatLonData.data.slice(0, currentItemsCount).map((item, index) => (
-// //               <Grid item lg={3} sm={6} xs={12} key={index} style={{ marginBottom: '3rem' }}>
-// //                 <ProductCard1
-// //                   id={item?.id || ""}
-// //                   slug={item?.slug || ""}
-// //                   price={item?.price || 0}
-// //                   title={item?.title || "No Title"}
-// //                   off={item?.discount || 0}
-// //                   images={item?.images || []}
-// //                   imgUrl={item?.thumbnail || ""}
-// //                   rating={item?.rating || 0}
-// //                 />
-// //               </Grid>
-// //             ))}
-// //           </Grid>
-
-// //           {/* Show 'Show More' button if there are more products to load */}
-// //           {currentItemsCount < selectedLatLonData.data.length && (
-// //             <FlexBox
-// //               mt={4}
-// //               justifyContent="center"
-// //               alignItems="center"
-// //             >
-// //               <button
-// //                 onClick={loadMoreProducts}
-// //                 style={{
-// //                   padding: '10px 20px',
-// //                   fontSize: '16px',
-// //                   backgroundColor: '#E94560',
-// //                   color: 'white',
-// //                   border: 'none',
-// //                   borderRadius: '5px',
-// //                   cursor: 'pointer',
-// //                 }}
-// //               >
-// //                 Show More
-// //               </button>
-// //             </FlexBox>
-// //           )}
-// //         </>
-// //       ) : (
-// //         <>
-// //           {!isTabletOrMobile && (
-// //             <H2
-// //               mb="10px"
-// //               textAlign="center"
-// //               style={{
-// //                 fontFamily: "Oswald, sans-serif",
-// //                 fontWeight: "700",
-// //                 fontSize: "26px",
-// //                 fontOpticalSizing: "auto",
-// //               }}
-// //             >
-// //               Discover top products available in your area, delivered to your door.
-// //             </H2>
-// //           )}
-// //         </>
-// //       )}
-
-
-// //     </Fragment>
-// //   );
-// // }
-
-
-// "use client";
-// import { Fragment, useEffect, useState, useRef } from "react";
-// import Grid from "@component/grid/Grid";
-// import axios from "axios";
-// import FlexBox from "@component/FlexBox";
-// import ShopCard1 from "@sections/shop/ShopCard1";
-// import { H2, SemiSpan, Span } from "@component/Typography";
-// import { Vortex } from "react-loader-spinner";
-// import styled from "@emotion/styled";
-// import ApiBaseUrl from "api/ApiBaseUrl";
-// import SearchBoxStyle from "@component/search-box/styled";
-// import Icon from "@component/icon/Icon";
-// import TextField from "@component/text-field";
-// import Box from "@component/Box";
-// import { debounce } from "lodash";
-// import Card from "@component/Card";
-// import { MdLocationSearching } from "react-icons/md";
-// import useWindowSize from "@hook/useWindowSize";
-// import { ProductCard1 } from "@component/product-cards";
-// import Script from "next/script";
-
-// export default function LocationList() {
-//   const [locationList, setLocationList] = useState([]);
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const [totalLocations, setTotalLocations] = useState(0);
-//   const [lastPage, setLastPage] = useState(1);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [isSearching, setIsSearching] = useState(false);
-//   const [noLocationsFound, setNoLocationsFound] = useState(false);
-//   const observerRef = useRef(null);
-//   const [searchValue, setSearchValue] = useState("");
-//   const [selectedLatLonData, setSelectedLatLonData] = useState<any>(null);
-//   const [nearbyLocations, setNearbyLocations] = useState<any>([]);
-
-//   const width = useWindowSize();
-//   const isTabletOrMobile = width < 1024; // Detect small devices
-//   const itemsPerPage = 1000; // Number of items per page
-
-//   // Fetch locations and handle geolocation
-//   async function getLocation() {
-//     try {
-//       const response = await axios.get("https://seller.tizaraa.com/api/get/seller/lanlon");
-//       const locations = response.data;
-//       setNearbyLocations(locations);
-
-//       if (navigator.geolocation) {
-//         navigator.geolocation.getCurrentPosition(
-//           (position) => showPosition(position, locations),
-//           showError
-//         );
-//       } else {
-//         alert("Geolocation is not supported by this browser.");
-//       }
-//     } catch (error) {
-//       console.error("Error fetching seller locations:", error);
-//       alert("Could not fetch seller locations. Please try again later.");
-//     }
-//   }
-
-//   function showPosition(position, locations) {
-//     const latitude = position.coords.latitude;
-//     const longitude = position.coords.longitude;
-
-//     // Reverse geocoding to get the address details
-//     fetch(
-//       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-//     )
-//       .then((response) => response.json())
-//       .then((data) => {
-//         const province = data.address.state || data.address.province || "N/A";
-//         const city =
-//           data.address.city ||
-//           data.address.town ||
-//           data.address.village ||
-//           "N/A";
-//         const area =
-//           data.address.suburb ||
-//           data.address.neighbourhood ||
-//           data.address.district ||
-//           "N/A";
-//         const street = data.address.road || "N/A";
-//         const streetNumber = data.address.house_number || "N/A";
-//         const postalCode = data.address.postcode || "N/A";
-
-//         // Set search value with the full address
-//         setSearchValue(`${province}, ${city}, ${area}, ${street}`);
-//       })
-//       .catch((error) => {
-//         console.error("Error getting address:", error);
-//       });
-
-//     // Filter nearby locations based on user's coordinates
-//     const nearbyLocations = locations.filter((location) => {
-//       const distance = calculateDistance(latitude, longitude, location.lat, location.lon);
-//       return distance <= 5; // Filter for distances within 5 kilometers
-//     });
-
-//     fetchSelectedLatLong(nearbyLocations, currentPage); // Fetch products for the first page
-//   }
-
-//   function calculateDistance(lat1, lon1, lat2, lon2) {
-//     const R = 6371; // Radius of the Earth in kilometers
-//     const dLat = (lat2 - lat1) * (Math.PI / 180);
-//     const dLon = (lon2 - lon1) * (Math.PI / 180);
-//     const a =
-//       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-//       Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-//       Math.sin(dLon / 2) * Math.sin(dLon / 2);
-//     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//     return R * c; // Distance in kilometers
-//   }
-
-//   async function fetchSelectedLatLong(latlon, page: number) {
-//     try {
-//       const response = await axios.get(
-//         `https://seller.tizaraa.com/api/get/selected/latlong?page=${page}`,
-//         {
-//           params: { latlon, page },
-//         }
-//       );
-
-//       // Append new data to the existing selectedLatLonData
-//       setSelectedLatLonData((prevData) => ({
-//         ...response.data,
-//         data: [...(prevData?.data || []), ...response.data.data],
-//       }));
-//     } catch (error) {
-//       console.error("Error calling selected latlong API:", error);
-//     }
-//   }
-
-//   function showError(error) {
-//     switch (error.code) {
-//       case error.PERMISSION_DENIED:
-//         alert("User denied the request for Geolocation.");
-//         break;
-//       case error.POSITION_UNAVAILABLE:
-//         alert("Location information is unavailable.");
-//         break;
-//       case error.TIMEOUT:
-//         alert("The request to get user location timed out.");
-//         break;
-//       case error.UNKNOWN_ERROR:
-//         alert("An unknown error occurred.");
-//         break;
-//     }
-//   }
-
-//   // Function to handle the "Show More" button click
-//   const handleShowMore = () => {
-//     setCurrentPage((prevPage) => {
-//       const nextPage = prevPage + 1;
-//       fetchSelectedLatLong(nearbyLocations, nextPage); // Fetch the next page of products
-//       return nextPage;
-//     });
-//   };
-
-//   // const handleClick = () => {
-//   //   alert('Please select "Locate Me"');
-//   // };
-  
-
-//   return (
-//     <Fragment>
-//       <div style={{ display: "flex", gap: "10px", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
-//         <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto" mb="3rem">
-//           <SearchBoxStyle>
-//             <TextField
-//               fullwidth
-//               value={searchValue}
-//               className="search-field"
-//               placeholder="Street, Postal Code"
-//               // onClick={handleClick}
-//               disabled
-              
-//             />
-//             <div
-//               style={{
-//                 marginLeft: "-110px",
-//                 zIndex: "999",
-//                 display: "flex",
-//                 alignItems: "center",
-//                 justifyContent: "space-between",
-//                 cursor: "pointer",
-//                 backgroundColor: "#E94560",
-//     // width: "100px",
-//     // height: "30px",
-//     padding: "5px",
-//     borderRadius: "300px",
-//     color: "white",
-//               }}
-//               onClick={getLocation}
-//             >
-//               <MdLocationSearching style={{ marginRight: "8px" }} />
-//               Locate me
-//             </div>
-//           </SearchBoxStyle>
-//         </Box>
-//       </div>
-
-//       {selectedLatLonData && selectedLatLonData.data && selectedLatLonData.data.length > 0 ? (
-//         <>
-//           <Grid container spacing={2}>
-//             {selectedLatLonData.data.slice(0, currentPage * itemsPerPage).map((item, index) => (
-//               <Grid item lg={3} sm={6} xs={12} key={index} style={{ marginBottom: '3rem' }}>
-//                 <ProductCard1
-//                   id={item?.id || ""}
-//                   slug={item?.slug || ""}
-//                   price={item?.price || 0}
-//                   title={item?.title || "No Title"}
-//                   off={item?.discount || 0}
-//                   images={item?.images || []}
-//                   imgUrl={item?.thumbnail || ""}
-//                   rating={item?.rating || 0}
-//                 />
-//               </Grid>
-//             ))}
-//           </Grid>
-
-//           {/* Show 'Show More' button if there are more products to load */}
-//           <FlexBox mt={4} justifyContent="center" alignItems="center">
-//             {selectedLatLonData.data.length > currentPage &&  (
-//               <button
-//                 style={{
-//                   padding: '10px 20px',
-//                   fontSize: '16px',
-//                   backgroundColor: '#E94560',
-//                   color: 'white',
-//                   border: 'none',
-//                   borderRadius: '5px',
-//                   cursor: 'pointer',
-//                 }}
-//                 onClick={handleShowMore}
-//               >
-//                 Show More
-//               </button>
-//             )}
-//           </FlexBox>
-//         </>
-//       ) : (
-//         <H2
-//           mb="10px"
-//           textAlign="center"
-//           style={{
-//             fontFamily: "Oswald, sans-serif",
-//             fontWeight: "700",
-//             fontSize: "26px",
-//           }}
-//         >
-//          Discover top products available in your area, delivered to your door.
-//         </H2>
-//       )}
-//     </Fragment>
-//   );
-// }
-
-
-
-
-
-
 "use client";
 import { Fragment, useEffect, useState, useRef } from "react";
+import { useLoadScript } from "@react-google-maps/api";
 import Grid from "@component/grid/Grid";
 import axios from "axios";
 import FlexBox from "@component/FlexBox";
-import ShopCard1 from "@sections/shop/ShopCard1";
-import { H2, SemiSpan, Span } from "@component/Typography";
-import { Vortex } from "react-loader-spinner";
+import { H2 } from "@component/Typography";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import SearchBoxStyle from "@component/search-box/styled";
-import Icon from "@component/icon/Icon";
 import TextField from "@component/text-field";
 import Box from "@component/Box";
-import { debounce } from "lodash";
-import Card from "@component/Card";
 import { MdLocationSearching } from "react-icons/md";
 import useWindowSize from "@hook/useWindowSize";
 import { ProductCard1 } from "@component/product-cards";
-import Script from "next/script";
-
-// import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
-import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
-import Image from "next/image";
+import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
 import NextImage from "@component/NextImage";
 
+const mapContainerStyle = {
+  width: "100%",
+  height: "400px", // Adjust height as needed
+  borderRadius: "10px", // Rounded corners
+  border: "1px solid #ccc", // Add a border
+};
+
+const center = {
+  lat: 23.8103, // Default center: Dhaka
+  lng: 90.4125,
+};
+
 export default function LocationList() {
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+    libraries: ["places", "marker"],
+  });
+
   const [locationList, setLocationList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalLocations, setTotalLocations] = useState(0);
@@ -578,26 +41,37 @@ export default function LocationList() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [noLocationsFound, setNoLocationsFound] = useState(false);
-  const observerRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");
   const [selectedLatLonData, setSelectedLatLonData] = useState<any>(null);
   const [nearbyLocations, setNearbyLocations] = useState<any>([]);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  // Ref for the map container (HTMLDivElement)
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // Ref for the Google Map instance
+  const mapInstanceRef = useRef<google.maps.Map | null>(null);
+
+  // Ref for the InfoWindow
+  const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
+
+  const markersRef = useRef<google.maps.Marker[]>([]);
 
   const width = useWindowSize();
-  const isTabletOrMobile = width < 1024; // Detect small devices
-  const itemsPerPage = 1000; // Number of items per page
+  const isTabletOrMobile = width < 1024;
+  const itemsPerPage = 1000;
 
   useEffect(() => {
     const storedSearchValue = localStorage.getItem("searchValue");
     if (storedSearchValue) {
-      setSearchValue(storedSearchValue); // Set the search value from localStorage
+      setSearchValue(storedSearchValue);
     }
 
     const storedLatLon = localStorage.getItem("selectedLatLonData");
     if (storedLatLon) {
       setSelectedLatLonData(JSON.parse(storedLatLon));
     }
-  }, []); // Only run on initial render
+  }, []);
 
   // Fetch locations and handle geolocation
   async function getLocation() {
@@ -605,6 +79,8 @@ export default function LocationList() {
       const response = await axios.get("https://seller.tizaraa.com/api/get/seller/lanlon");
       const locations = response.data;
       setNearbyLocations(locations);
+
+      console.log("location:", response.data)
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -623,6 +99,9 @@ export default function LocationList() {
   function showPosition(position, locations) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
+
+    // Set user location
+    setUserLocation({ lat: latitude, lng: longitude });
 
     // Reverse geocoding to get the address details
     fetch(
@@ -645,24 +124,21 @@ export default function LocationList() {
         const streetNumber = data.address.house_number || "N/A";
         const postalCode = data.address.postcode || "N/A";
 
-        // Set search value with the full address
         const fullAddress = `${province}, ${city}, ${area}, ${street}`;
         setSearchValue(fullAddress);
-
-        // Save the full address to localStorage
         localStorage.setItem("searchValue", fullAddress);
       })
       .catch((error) => {
         console.error("Error getting address:", error);
       });
 
-    // Filter nearby locations based on user's coordinates
+    // Filter nearby locations
     const nearbyLocations = locations.filter((location) => {
       const distance = calculateDistance(latitude, longitude, location.lat, location.lon);
       return distance <= 5; // Filter for distances within 5 kilometers
     });
 
-    fetchSelectedLatLong(nearbyLocations, currentPage); // Fetch products for the first page
+    fetchSelectedLatLong(nearbyLocations, currentPage);
   }
 
   function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -686,16 +162,12 @@ export default function LocationList() {
         }
       );
 
-      // Append new data to the existing selectedLatLonData
       setSelectedLatLonData((prevData) => {
         const updatedData = {
           ...response.data,
           data: [...(prevData?.data || []), ...response.data.data],
         };
-
-        // Save data to localStorage
         localStorage.setItem("selectedLatLonData", JSON.stringify(updatedData));
-        // console.log("latlon:", updatedData)
         return updatedData;
       });
     } catch (error) {
@@ -720,99 +192,206 @@ export default function LocationList() {
     }
   }
 
-  // Function to handle the "Show More" button click
   const handleShowMore = () => {
     setCurrentPage((prevPage) => {
       const nextPage = prevPage + 1;
-      fetchSelectedLatLong(nearbyLocations, nextPage); // Fetch the next page of products
+      fetchSelectedLatLong(nearbyLocations, nextPage);
       return nextPage;
     });
   };
 
+  // Initialize the map and markers
+  useEffect(() => {
+    if (!isLoaded || !mapContainerRef.current || !window.google) return;
+
+    // Initialize the map
+    mapInstanceRef.current = new google.maps.Map(mapContainerRef.current, {
+      center: userLocation || center,
+      zoom: 12,
+    });
+
+    // Initialize the InfoWindow
+    infoWindowRef.current = new google.maps.InfoWindow();
+
+    // Clear existing markers
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
+
+    // Add marker for user's location
+    if (userLocation) {
+      const userMarker = new google.maps.Marker({
+        position: userLocation,
+        map: mapInstanceRef.current,
+        title: "Your Location",
+        icon: {
+          url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png", // Blue dot for user's location
+        },
+      });
+
+      // Add click listener to show InfoWindow
+      userMarker.addListener("click", () => {
+        if (infoWindowRef.current) {
+          const content = `
+            <div style="padding: 10px;">
+              <h3 style="margin: 0; font-size: 16px;">Your Location</h3>
+              <p style="margin: 5px 0; font-size: 14px;">Lat: ${userLocation.lat.toFixed(4)}, Lng: ${userLocation.lng.toFixed(4)}</p>
+              <img 
+                src="https://via.placeholder.com/100" 
+                alt="Your Location" 
+                style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;"
+              />
+            </div>
+          `;
+          infoWindowRef.current.setContent(content);
+          infoWindowRef.current.open(mapInstanceRef.current, userMarker);
+        }
+      });
+
+      markersRef.current.push(userMarker);
+    }
+
+    // Add markers for nearby locations
+    if (selectedLatLonData && selectedLatLonData.data) {
+      selectedLatLonData.data.forEach((location) => {
+        const marker = new google.maps.Marker({
+          position: { lat: location.lat, lng: location.lon },
+          map: mapInstanceRef.current,
+          title: location.title || "Nearby Location",
+        });
+
+        // Add click listener to show InfoWindow
+        marker.addListener("click", () => {
+          if (infoWindowRef.current) {
+            const content = `
+              <div style="padding: 10px;">
+                <h3 style="margin: 0; font-size: 16px;">${location.title || "Nearby Location"}</h3>
+                <p style="margin: 5px 0; font-size: 14px;">Lat: ${location.lat.toFixed(4)}, Lng: ${location.lon.toFixed(4)}</p>
+                <img 
+                  src="https://via.placeholder.com/100" 
+                  alt="Nearby Location" 
+                  style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;"
+                />
+              </div>
+            `;
+            infoWindowRef.current.setContent(content);
+            infoWindowRef.current.open(mapInstanceRef.current, marker);
+          }
+        });
+
+        markersRef.current.push(marker);
+      });
+    }
+  }, [isLoaded, userLocation, selectedLatLonData]);
+
+  if (!isLoaded) return <div>Loading...</div>;
+
   return (
     <>
-     {/* Background image */}
-     <NextImage
-  alt="newArrivalBanner"
-  src={tizaraa_watermark}
-  priority
-  style={{
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -20%)",
-    width: "100%", // Set to 100% to ensure full responsiveness
-    height: "auto", // Maintain aspect ratio
-    maxWidth: "1200px", // Optional: Limit the maximum width
-    backgroundSize: "contain", // Adjust the scaling behavior
-    backgroundPosition: "center",
-    opacity: 0.1,
-    zIndex: 0,
-  }}
-/>
+      <NextImage
+        alt="newArrivalBanner"
+        src={tizaraa_watermark}
+        priority
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -20%)",
+          width: "100%",
+          height: "auto",
+          maxWidth: "1200px",
+          backgroundSize: "contain",
+          backgroundPosition: "center",
+          opacity: 0.1,
+          zIndex: 0,
+        }}
+      />
 
-     <main
-    style={{
-      position: "relative",
-      background: "none",
-    }}
-  >
-    <Fragment>
-      <div style={{ display: "flex", gap: "10px", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
-        <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto" mb="3rem">
-          <SearchBoxStyle>
-            <TextField
-              fullwidth
-              value={searchValue}
-              className="search-field"
-              placeholder="Street, Postal Code"
-              disabled
-            />
-            <div
-              style={{
-                marginLeft: "-110px",
-                zIndex: "999",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                cursor: "pointer",
-                backgroundColor: "#E94560",
-                padding: "5px",
-                borderRadius: "300px",
-                color: "white",
-              }}
-              onClick={getLocation}
-            >
-              <MdLocationSearching style={{ marginRight: "8px" }} />
-              Locate me
-            </div>
-          </SearchBoxStyle>
-        </Box>
-      </div>
-
-      {selectedLatLonData && selectedLatLonData.data && selectedLatLonData.data.length > 0 ? (
-        <>
-          <Grid container spacing={2}>
-            {selectedLatLonData.data.slice(0, currentPage * itemsPerPage).map((item, index) => (
-              <Grid item lg={3} sm={6} xs={12} key={index} style={{ marginBottom: '3rem' }}>
-                <ProductCard1
-                  id={item?.id || ""}
-                  slug={item?.slug || ""}
-                  price={item?.price || 0}
-                  title={item?.title || "No Title"}
-                  off={item?.discount || 0}
-                  productStock={item?.product_stock || 0}
-                  images={item?.images || []}
-                  imgUrl={item?.thumbnail || ""}
-                  rating={item?.rating || 0}
+      <main style={{ position: "relative", background: "none" }}>
+        <Fragment>
+          <div style={{ display: "flex", gap: "10px", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
+            <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto" mb="3rem">
+              <SearchBoxStyle>
+                <TextField
+                  fullwidth
+                  value={searchValue}
+                  className="search-field"
+                  placeholder="Street, Postal Code"
+                  disabled
                 />
-              </Grid>
-            ))}
-          </Grid>
+                <div
+                  style={{
+                    marginLeft: "-110px",
+                    zIndex: "999",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    cursor: "pointer",
+                    backgroundColor: "#E94560",
+                    padding: "5px",
+                    borderRadius: "300px",
+                    color: "white",
+                  }}
+                  onClick={getLocation}
+                >
+                  <MdLocationSearching style={{ marginRight: "8px" }} />
+                  Locate me
+                </div>
+              </SearchBoxStyle>
+            </Box>
+          </div>
 
-          {/* Show 'Show More' button if there are more products to load */}
+          {/* Flex container for map and products */}
+          <div 
+          style={{
+            display: window.innerWidth > 1024 ? "flex" : "block", // Flex on large screens, block on small
+            gap: "20px",
+            marginBottom: "20px",
+          }}
+          >
+            {/* Map container */}
+            <div style={{ flex: 1 }}>
+              <div ref={mapContainerRef} style={mapContainerStyle} />
+            </div>
+
+            {/* Products container */}
+            <div style={{ flex: 2 }}>
+              {selectedLatLonData && selectedLatLonData.data && selectedLatLonData.data.length > 0 ? (
+                <Grid container spacing={2}>
+                  {selectedLatLonData.data.slice(0, currentPage * itemsPerPage).map((item, index) => (
+                    <Grid item lg={4} sm={6} xs={12} key={index} style={{ marginBottom: '1rem' }}>
+                      <ProductCard1
+                        id={item?.id || ""}
+                        slug={item?.slug || ""}
+                        price={item?.price || 0}
+                        title={item?.title || "No Title"}
+                        off={item?.discount || 0}
+                        productStock={item?.product_stock || 0}
+                        images={item?.images || []}
+                        imgUrl={item?.thumbnail || ""}
+                        rating={item?.rating || 0}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <H2
+                  mb="10px"
+                  textAlign="center"
+                  style={{
+                    fontFamily: "Oswald, sans-serif",
+                    fontWeight: "700",
+                    fontSize: "26px",
+                  }}
+                >
+                  Discover top products available in your area, delivered to your door.
+                </H2>
+              )}
+            </div>
+          </div>
+
+          {/* Show More button */}
           <FlexBox mt={4} justifyContent="center" alignItems="center">
-            {selectedLatLonData.data.length > currentPage && (
+            {selectedLatLonData && selectedLatLonData.data.length > currentPage * itemsPerPage && (
               <button
                 style={{
                   padding: '10px 20px',
@@ -829,352 +408,8 @@ export default function LocationList() {
               </button>
             )}
           </FlexBox>
-        </>
-      ) : (
-        <H2
-          mb="10px"
-          textAlign="center"
-          style={{
-            fontFamily: "Oswald, sans-serif",
-            fontWeight: "700",
-            fontSize: "26px",
-          }}
-        >
-         Discover top products available in your area, delivered to your door.
-        </H2>
-      )}
-    </Fragment>
-    </main>
-    
+        </Fragment>
+      </main>
     </>
   );
 }
-
-
-
-
-
-
-
-
-// "use client";
-// import { Fragment, useEffect, useState, useRef } from "react";
-// import Grid from "@component/grid/Grid";
-// import axios from "axios";
-// import FlexBox from "@component/FlexBox";
-// import ShopCard1 from "@sections/shop/ShopCard1";
-// import { H2, SemiSpan, Span } from "@component/Typography";
-// import { Vortex } from "react-loader-spinner";
-// import styled from "@emotion/styled";
-// import ApiBaseUrl from "api/ApiBaseUrl";
-// import SearchBoxStyle from "@component/search-box/styled";
-// import Icon from "@component/icon/Icon";
-// import TextField from "@component/text-field";
-// import Box from "@component/Box";
-// import { debounce } from "lodash";
-// import Card from "@component/Card";
-// import { MdLocationSearching } from "react-icons/md";
-// import useWindowSize from "@hook/useWindowSize";
-// import { ProductCard1 } from "@component/product-cards";
-// import Script from "next/script";
-// import GoogleMap from "@component/GoogleMap";
-
-// export default function LocationList() {
-//   const [locationList, setLocationList] = useState([]);
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const [totalLocations, setTotalLocations] = useState(0);
-//   const [lastPage, setLastPage] = useState(1);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [isSearching, setIsSearching] = useState(false);
-//   const [noLocationsFound, setNoLocationsFound] = useState(false);
-//   const observerRef = useRef(null);
-//   const [searchValue, setSearchValue] = useState("");
-//   const [selectedLatLonData, setSelectedLatLonData] = useState<any>(null);
-//   const [nearbyLocations, setNearbyLocations] = useState<any>([]);
-
-//   const width = useWindowSize();
-//   const isTabletOrMobile = width < 1024; // Detect small devices
-//   const itemsPerPage = 1000; // Number of items per page
-
-
-//   const [latitude, setLatitude] = useState(null);
-//   const [longitude, setLongitude] = useState(null);
-
-
-
-//   useEffect(() => {
-//     const storedSearchValue = localStorage.getItem("searchValue");
-//     if (storedSearchValue) {
-//       setSearchValue(storedSearchValue); // Set the search value from localStorage
-//     }
-
-//     const storedLatLon = localStorage.getItem("selectedLatLonData");
-//     if (storedLatLon) {
-//       setSelectedLatLonData(JSON.parse(storedLatLon));
-//     }
-    
-//   }, []); // Only run on initial render
-
-//   // Fetch locations and handle geolocation
-// // Modify the getLocation function to prevent duplicate fetching
-// async function getLocation() {
-//   try {
-//     const response = await axios.get("https://seller.tizaraa.com/api/get/seller/lanlon");
-//     const locations = response.data;
-//     console.log(locations)
-//     setNearbyLocations(locations);
-
-//     if (navigator.geolocation) {
-//       navigator.geolocation.getCurrentPosition(
-//         (position) => {
-//           const currentLat = position.coords.latitude;
-//           const currentLon = position.coords.longitude;
-
-//           // Check if the current latitude and longitude match the previous ones
-//           if (
-//             selectedLatLonData?.latitude === currentLat &&
-//             selectedLatLonData?.longitude === currentLon
-//           ) {
-//             // If the coordinates are the same, don't fetch the data again
-//             return;
-//           }
-
-//           showPosition(position, locations);
-//         },
-//         showError
-//       );
-//     } else {
-//       alert("Geolocation is not supported by this browser.");
-//     }
-//   } catch (error) {
-//     console.error("Error fetching seller locations:", error);
-//     alert("Could not fetch seller locations. Please try again later.");
-//   }
-
-//   if (navigator.geolocation) {
-//     navigator.geolocation.getCurrentPosition(
-//       (position) => {
-//         setLatitude(position.coords.latitude);
-//         setLongitude(position.coords.longitude);
-//       },
-//       showError
-//     );
-//   } else {
-//     alert("Geolocation is not supported by this browser.");
-//   }
-// }
-
-// // Modify the showPosition function to store the latitude and longitude
-// function showPosition(position, locations) {
-//   const latitude = position.coords.latitude;
-//   const longitude = position.coords.longitude;
-
-//   // Reverse geocoding logic to get the address
-//   fetch(
-//     `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-//   )
-//     .then((response) => response.json())
-//     .then((data) => {
-//       const province = data.address.state || data.address.province || "N/A";
-//       const city =
-//         data.address.city ||
-//         data.address.town ||
-//         data.address.village ||
-//         "N/A";
-//       const area =
-//         data.address.suburb ||
-//         data.address.neighbourhood ||
-//         data.address.district ||
-//         "N/A";
-//       const street = data.address.road || "N/A";
-//       const streetNumber = data.address.house_number || "N/A";
-//       const postalCode = data.address.postcode || "N/A";
-
-//       // Set search value with the full address
-//       const fullAddress = `${province}, ${city}, ${area}, ${street}`;
-//       setSearchValue(fullAddress);
-
-//       // Save the full address to localStorage
-//       localStorage.setItem("searchValue", fullAddress);
-
-//       // Store the latitude and longitude to prevent duplicate fetching
-//       setSelectedLatLonData({ latitude, longitude });
-//     })
-//     .catch((error) => {
-//       console.error("Error getting address:", error);
-//     });
-
-//   // Filter nearby locations based on the user's coordinates
-//   const nearbyLocations = locations.filter((location) => {
-//     const distance = calculateDistance(latitude, longitude, location.lat, location.lon);
-//     return distance <= 5; // Filter for distances within 5 kilometers
-//   });
-
-//   fetchSelectedLatLong(nearbyLocations, currentPage); // Fetch products for the first page
-// }
-
-
-//   function calculateDistance(lat1, lon1, lat2, lon2) {
-//     const R = 6371; // Radius of the Earth in kilometers
-//     const dLat = (lat2 - lat1) * (Math.PI / 180);
-//     const dLon = (lon2 - lon1) * (Math.PI / 180);
-//     const a =
-//       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-//       Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-//       Math.sin(dLon / 2) * Math.sin(dLon / 2);
-//     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//     return R * c; // Distance in kilometers
-//   }
-
-//   async function fetchSelectedLatLong(latlon, page: number) {
-//     try {
-//       const response = await axios.get(
-//         `https://seller.tizaraa.com/api/get/selected/latlong?page=${page}`,
-//         {
-//           params: { latlon, page },
-//         }
-//       );
-
-//       // Append new data to the existing selectedLatLonData
-//       setSelectedLatLonData((prevData) => {
-//         const updatedData = {
-//           ...response.data,
-//           data: [...(prevData?.data || []), ...response.data.data],
-//         };
-
-//         // Save data to localStorage
-//         localStorage.setItem("selectedLatLonData", JSON.stringify(updatedData));
-//         return updatedData;
-//       });
-//     } catch (error) {
-//       console.error("Error calling selected latlong API:", error);
-//     }
-//   }
-
-//   function showError(error) {
-//     switch (error.code) {
-//       case error.PERMISSION_DENIED:
-//         alert("User denied the request for Geolocation.");
-//         break;
-//       case error.POSITION_UNAVAILABLE:
-//         alert("Location information is unavailable.");
-//         break;
-//       case error.TIMEOUT:
-//         alert("The request to get user location timed out.");
-//         break;
-//       case error.UNKNOWN_ERROR:
-//         alert("An unknown error occurred.");
-//         break;
-//     }
-//   }
-
-//   // Function to handle the "Show More" button click
-//   const handleShowMore = () => {
-//     setCurrentPage((prevPage) => {
-//       const nextPage = prevPage + 1;
-//       fetchSelectedLatLong(nearbyLocations, nextPage); // Fetch the next page of products
-//       return nextPage;
-//     });
-//   };
-
-//   return (
-//     <Fragment>
-//       <div style={{ display: "flex", gap: "10px", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
-//         <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto" mb="3rem">
-//           <SearchBoxStyle>
-//             <TextField
-//               fullwidth
-//               value={searchValue}
-//               className="search-field"
-//               placeholder="Street, Postal Code"
-//               disabled
-//             />
-//             <div
-//               style={{
-//                 marginLeft: "-110px",
-//                 zIndex: "999",
-//                 display: "flex",
-//                 alignItems: "center",
-//                 justifyContent: "space-between",
-//                 cursor: "pointer",
-//                 backgroundColor: "#E94560",
-//                 padding: "5px",
-//                 borderRadius: "300px",
-//                 color: "white",
-//               }}
-//               onClick={getLocation}
-//             >
-//               <MdLocationSearching style={{ marginRight: "8px" }} />
-//               Locate me
-//             </div>
-//           </SearchBoxStyle>
-//         </Box>
-//       </div>
-
-//             {/* google map api = "AIzaSyDTxD7JNSSuJe5z5SDp4MZO55juRxNSAXE" */}
-//             {/* {latitude && longitude && <GoogleMap latitude={latitude} longitude={longitude} />} */}
-//             {latitude && longitude && nearbyLocations.length > 0 && (
-//   <GoogleMap 
-//     latitude={latitude} 
-//     longitude={longitude} 
-//     locations={nearbyLocations} 
-//   />
-// )}
-
-
-      
-//       {selectedLatLonData && selectedLatLonData.data && selectedLatLonData.data.length > 0 ? (
-//         <>
-//           <Grid container spacing={2}>
-//             {selectedLatLonData.data.slice(0, currentPage * itemsPerPage).map((item, index) => (
-//               <Grid item lg={3} sm={6} xs={12} key={index} style={{ marginBottom: '3rem' }}>
-//                 <ProductCard1
-//                   id={item?.id || ""}
-//                   slug={item?.slug || ""}
-//                   price={item?.price || 0}
-//                   title={item?.title || "No Title"}
-//                   off={item?.discount || 0}
-//                   images={item?.images || []}
-//                   imgUrl={item?.thumbnail || ""}
-//                   rating={item?.rating || 0}
-//                 />
-//               </Grid>
-//             ))}
-//           </Grid>
-
-//           {/* Show 'Show More' button if there are more products to load */}
-//           <FlexBox mt={4} justifyContent="center" alignItems="center">
-//             {selectedLatLonData.data.length > currentPage && (
-//               <button
-//                 style={{
-//                   padding: '10px 20px',
-//                   fontSize: '14px',
-//                   backgroundColor: '#E94560',
-//                   color: 'white',
-//                   border: 'none',
-//                   borderRadius: '25px',
-//                   cursor: 'pointer',
-//                 }}
-//                 onClick={handleShowMore}
-//               >
-//                 Show More
-//               </button>
-//             )}
-//           </FlexBox>
-//         </>
-//       ) : (
-//         <H2
-//           mb="10px"
-//           textAlign="center"
-//           style={{
-//             fontFamily: "Oswald, sans-serif",
-//             fontWeight: "700",
-//             fontSize: "26px",
-//           }}
-//         >
-//          Discover top products available in your area, delivered to your door.
-//         </H2>
-//       )}
-//     </Fragment>
-//   );
-// }
