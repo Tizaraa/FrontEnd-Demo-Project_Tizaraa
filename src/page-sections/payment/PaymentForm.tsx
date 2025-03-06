@@ -315,10 +315,15 @@ export default function PaymentForm() {
       return accumulator;
     }, 0);
   };
-  const total = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
+  // const total = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
   const savedShipping = parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
-  const total_ammount = total;
+  // const total_ammount = total;
+  // const isSubtotalZero = total_ammount === 0;
+
+  const totalFromNewTotal = parseFloat(sessionStorage.getItem("newTotal") || "0");
+  const total_ammount = totalFromNewTotal - savedShipping;
   const isSubtotalZero = total_ammount === 0;
+
 
   const router = useRouter();
 
