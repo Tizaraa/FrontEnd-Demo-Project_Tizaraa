@@ -26,7 +26,8 @@ const mapContainerStyle = {
   width: "100%",
   height: "400px",
   borderRadius: "10px",
-  marginBottom: "10px"
+  marginBottom: "10px",
+  marginTop: "10px"
 };
 
 const center = {
@@ -44,6 +45,8 @@ const VendorMapPage: React.FC<VendorMapPageProps> = ({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
     libraries: ["marker"],
   });
+
+
 
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
   const [filteredVendors, setFilteredVendors] = useState<Vendor[]>([]);
@@ -97,8 +100,8 @@ const VendorMapPage: React.FC<VendorMapPageProps> = ({
   if (!isLoaded) return null;
 
   return (
-    <div>
-      <h1 className="text-xl font-bold mb-4">Tizaraa Vendors on Map</h1>
+    <div style={{lineHeight: "0", marginLeft: "10px", marginTop: "-10px"}} className="ml-0"> 
+      <h1 className="text-xl font-bold mb-4">Tizaraa Authorized Seller</h1>
       <div ref={mapRef} style={mapContainerStyle} />
 
       {/* Vendor details popup */}

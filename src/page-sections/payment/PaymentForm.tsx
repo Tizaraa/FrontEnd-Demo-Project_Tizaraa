@@ -548,8 +548,14 @@ export default function PaymentForm() {
                       size: null,
                       qty: cartdata.qty,
                       note1: "lorem10",
-                      single_amount: cartdata.price,
-                      total_amount: cartdata.total_amount,
+                      // single_amount: cartdata.price,
+                      single_amount: cartdata.discountPrice ? cartdata.discountPrice : cartdata.price, // Use discount price if available, else use original price
+
+                      // total_amount: cartdata.total_amount,
+                      // total_amount: (cartdata.discountPrice !== undefined && !isNaN(cartdata.discountPrice)) 
+                      // ? cartdata.discountPrice 
+                      // : cartdata.total_amount,
+                      total_amount: cartdata.discountPrice ? cartdata.discountPrice : cartdata.total_amount, // Use discount price if available, else use original total_amount
                     },
                   ],
                 },

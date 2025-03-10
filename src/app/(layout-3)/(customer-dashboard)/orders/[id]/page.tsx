@@ -585,6 +585,16 @@ if (order?.Order?.productType === "Abroad") {
                       <Typography variant="h6">Total</Typography>
                       <Typography variant="h6">{currency(details.total || 0)}</Typography>
                     </FlexBox>
+                    {/* <Divider mb="0.5rem" />
+                    <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
+                      <Typography variant="h6" backgroundColor="#E94560" padding="8px 12px" color="#FFF" fontWeight="bold" borderRadius="10px" >
+                        Applied Discount
+                      </Typography>
+                      <Typography variant="h6" backgroundColor="#E94560" padding="8px 12px" borderRadius="10px" color="#FFF" fontWeight="bold">
+                        {currency(order.Order.totalPrice || 0)}
+                      </Typography>
+                    </FlexBox> */}
+
                     <FlexBox alignItems="center" mb="1rem">
                       Payment Method:
                       <H6 my="0px" mx="1rem" backgroundColor="rgba(255,225,230,1)" p="5px" px="10px" borderRadius="1rem" color="rgb(233, 69, 96)">

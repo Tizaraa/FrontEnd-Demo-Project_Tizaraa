@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import Image from 'next/image';
+import ApiBaseUrl from 'api/ApiBaseUrl';
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -56,9 +57,11 @@ export default function CarouselSlider(): JSX.Element {
     
       // Make API call if no valid cache exists
       try {
-        const response = await fetch('https://seller.tizaraa.com/api/frontend/slider/all',{
+        const response = await fetch('https://seller.tizaraa.shop/api/frontend/slider/all',{
           cache:"force-cache"
         });
+
+
         const data = await response.json();
         
         // Encrypt the slides data before storing it in localStorage
@@ -181,7 +184,8 @@ export default function CarouselSlider(): JSX.Element {
                   }}>
                     <div style={{ position: "relative", borderRadius: "8px", overflow: "hidden" }}>
                       <Image
-                        src={slide.slider_image}
+                        // src={slide.slider_image}
+                        src={`${ApiBaseUrl.ImgUrl}${slide.slider_image}`}
                         alt={`Slide ${index + 1}`}
                         layout="responsive"
                         width={400}
