@@ -162,6 +162,8 @@ export default function LocationList() {
         }
       );
 
+      console.log("products:", response.data)
+
       setSelectedLatLonData((prevData) => {
         const updatedData = {
           ...response.data,

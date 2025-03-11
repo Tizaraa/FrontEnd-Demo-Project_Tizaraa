@@ -423,8 +423,8 @@ export default function PaymentForm() {
                       seller_id: cartdata.sellerId,
                       order_id: orderId,
                       product_id: cartdata.productId,
-                      color: null,
-                      size: null,
+                      color: cartdata.selectedColor,
+                      size: cartdata.selectedSize,
                       qty: cartdata.qty,
                       note1: "lorem10",
                       single_amount: cartdata.price,
@@ -440,7 +440,7 @@ export default function PaymentForm() {
                 }
               );
 
-              // console.log("Cart Item Response:", response.data);
+              console.log("Cart Item Response:", response.data);
             } catch (error) {
               console.error("Failed to add item to order:", error.response);
               setIsHasLoading(false)
@@ -544,8 +544,8 @@ export default function PaymentForm() {
                       seller_id: cartdata.sellerId,
                       order_id: orderId,
                       product_id: cartdata.productId,
-                      color: null,
-                      size: null,
+                      color: cartdata.selectedColor,
+                      size: cartdata.selectedSize,
                       qty: cartdata.qty,
                       note1: "lorem10",
                       // single_amount: cartdata.price,
@@ -567,7 +567,7 @@ export default function PaymentForm() {
                 }
               );
             
-              // console.log("Cart Item Response:", response.data);
+              console.log("Cart Item Response:", response.data);
             } catch (error) {
               console.error("Failed to add item to order:", error.response);
   setIsHasLoading(false)
