@@ -14,31 +14,39 @@ import { height } from "styled-system";
 
 // =====================================================
 type ShopCard1Props = {
-  name: string;
+  // name: string;
+  shop_name: string;
   phone: string;
   rating: number;
   imgUrl: string;
-  address: string;
-  shopUrl: string;
+  seller_address: string;
+  province_name: string;
+  city_name: string;
+  area_name: string;
+  shop_name_slug: string;
   coverImgUrl: string;
 };
 // =====================================================
 
 export default function ShopCard1({
-  name,
+  // name,
+  shop_name,
   phone,
   rating,
   imgUrl,
-  address,
-  shopUrl,
+  seller_address,
+  province_name,
+  city_name,
+  area_name,
+  shop_name_slug,
   coverImgUrl,
 }: ShopCard1Props) {
   return (
     <ShopCard1Wrapper overflow="hidden" coverImgUrl={coverImgUrl}>
       <div className="black-box">
-        <Link href={shopUrl} style={{ color: "white" }}>
+        <Link href={shop_name_slug} style={{ color: "white" }}>
           <H3 fontWeight="600" mb="8px">
-            {name}
+            {shop_name}
           </H3>
         </Link>
 
@@ -52,7 +60,17 @@ export default function ShopCard1({
           </Icon>
 
           <SemiSpan color="white" ml="12px">
-            {address}
+            {seller_address}
+          </SemiSpan>
+        </FlexBox>
+
+        <FlexBox mb="8px">
+          <Icon defaultcolor="currentColor" size="15px" mt="5px">
+            map-pin-2
+          </Icon>
+
+          <SemiSpan color="white" ml="12px">
+            Province: {province_name}, City: {city_name}, Area: {area_name}
           </SemiSpan>
         </FlexBox>
 
@@ -68,7 +86,7 @@ export default function ShopCard1({
       </div>
 
       <FlexBox pl="30px" pr="18px" justifyContent="space-between">
-        <Link href={shopUrl}>
+        <Link href={shop_name_slug}>
           <Avatar
             src={imgUrl || 'https://t4.ftcdn.net/jpg/04/15/60/27/360_F_415602715_uy5b6P84JetkpRCLxNmYgrx8pWIATsAD.jpg'}
             size={64}
@@ -77,7 +95,7 @@ export default function ShopCard1({
             borderColor="gray.100"
           />
         </Link>
-        <Link href={shopUrl}>
+        <Link href={shop_name_slug}>
           <IconButton my="0.25rem">
             <Icon defaultcolor="auto">arrow-long-right</Icon>
           </IconButton>
