@@ -181,8 +181,11 @@ export default function WriteReview({
           <Box ml="20px">
             <H6 my="0px">{item.product_name}</H6>
             <Typography fontSize="14px" color="text.muted">
-              {currency(item.price)} x {item.quantity}
-            </Typography>
+  {currency(item.price)} x {item.quantity}
+  {item.color && `, Color: ${item.color}`}
+  {item.size && `, Size: ${item.size}`}
+</Typography>
+
           </Box>
         </FlexBox>
       
