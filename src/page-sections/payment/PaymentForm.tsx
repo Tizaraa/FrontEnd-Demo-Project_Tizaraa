@@ -567,7 +567,7 @@ export default function PaymentForm() {
                 }
               );
             
-              console.log("Cart Item Response:", response.data);
+              console.log("Cart Item Responsee:", response.data);
             } catch (error) {
               console.error("Failed to add item to order:", error.response);
   setIsHasLoading(false)
