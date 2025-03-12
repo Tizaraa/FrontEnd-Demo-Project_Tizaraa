@@ -7,6 +7,7 @@ import { useState } from "react";
 import ProductImages from "./ProductImages";
 import AddToCartButton from "./AddToCartButton";
 import ProductDetails from "./ProductDetails";
+import Link from "next/link";
 
 type ProductIntroProps = {
   price: number;
@@ -92,7 +93,7 @@ export default function ProductIntro({
             onSelectionChange={handleSelectionChange}
           />
          
-          <AddToCartButton
+          {/* <AddToCartButton
             productId={productId}
             sellerId={sellerId}
             images={images}
@@ -106,7 +107,43 @@ export default function ProductIntro({
             selectedColor={selectedColor}
             selectedSize={selectedSize}
             selectedPrice={selectedPrice}
-          />
+          /> */}
+       
+            {selectedPrice === 0 ? (
+             <Box mt="1rem">
+               <Link href="/rfq">
+                 <button
+                   style={{
+                     padding: "10px 20px",
+                     backgroundColor: "#E94560",
+                     color: "white",
+                     borderRadius: "5px",
+                     border: "none",
+                   }}
+                 >
+                   Request for Quote
+                 </button>
+               </Link>
+             </Box>
+           ) : (
+             <AddToCartButton
+             productId={productId}
+             sellerId={sellerId}
+             images={images}
+             title={title}
+             discountPrice={discountPrice}
+             slug={slug}
+             productStock={productStock}
+             price={price} 
+             productType="General"
+             sizeColor={sizeColor}
+             selectedColor={selectedColor}
+             selectedSize={selectedSize}
+             selectedPrice={selectedPrice}
+ 
+           />
+           )}
+ 
         </Grid>
       </Grid>
     </Box>

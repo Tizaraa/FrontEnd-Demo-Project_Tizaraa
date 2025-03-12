@@ -139,9 +139,13 @@ const AddToCartButton = ({
             <Icon variant="small">minus</Icon>
           </Button>
 
-          <H3 fontWeight="600" mx="20px">
+          {/* <H3 fontWeight="600" mx="20px">
             {cartItem.qty.toString().padStart(2, "0")}
+          </H3> */}
+          <H3 fontWeight="600" mx="20px">
+            {(cartItem.qty ?? 1).toString().padStart(2, "0")}
           </H3>
+
 
           <Button
             p="9px"
