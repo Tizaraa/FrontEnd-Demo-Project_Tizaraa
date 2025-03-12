@@ -119,6 +119,7 @@ export default function ProductIntro({
                      color: "white",
                      borderRadius: "5px",
                      border: "none",
+                     cursor: "pointer"
                    }}
                  >
                    Request for Quote
