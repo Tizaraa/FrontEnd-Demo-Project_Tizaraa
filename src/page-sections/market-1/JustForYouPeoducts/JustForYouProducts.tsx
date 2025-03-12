@@ -206,7 +206,8 @@ const handleProductClick = () => {
                         </Box>
                       </FlexBox>
                     )} */}
-                    {item.discount_price == null && (
+
+                    {/* {item.discount_price == null && (
         <FlexBox>
           <H4 fontWeight="600" fontSize="14px" color="primary.main">
             {currency(item.seeling_price)}
@@ -225,7 +226,33 @@ const handleProductClick = () => {
             </H4>
           </Box>
         </FlexBox>
-      )}
+      )} */}
+
+{item.seeling_price == 0 ? (
+  <FlexBox>
+    <H4 fontWeight="600" fontSize="14px" color="primary.main">
+      RFQ
+    </H4>
+  </FlexBox>
+) : item.discount_price == null ? (
+  <FlexBox>
+    <H4 fontWeight="600" fontSize="14px" color="primary.main">
+      {currency(item.seeling_price)}
+    </H4>
+  </FlexBox>
+) : (
+  <FlexBox flexDirection="column" mt="0.25rem">
+    <H4 fontWeight="600" fontSize="14px" color="text.muted">
+      BDT <del>{item.seeling_price}</del>
+    </H4>
+    <Box>
+      <H4 fontWeight="600" fontSize="14px" color="primary.main">
+        {currency(item.discount_price)}
+      </H4>
+    </Box>
+  </FlexBox>
+)}
+
 
 
 
