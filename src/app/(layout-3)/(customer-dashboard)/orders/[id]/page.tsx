@@ -461,6 +461,7 @@ if (order?.Order?.productType === "Abroad") {
               delivered_at: string | null;
               order_items: any[];
               delivery_charge: number | null;
+              promocodeStatus: number | null;
               sub_total: number | null;
               total: number | null;
               status: string | null;
@@ -571,8 +572,8 @@ if (order?.Order?.productType === "Abroad") {
                         Subtotal:
                       </Typography>
                       <Typography fontSize="14px" color="text.hint">
-                        {/* {currency(details.sub_total || 0)} */}
-                        {currency(order?.Order?.amount)}
+                        {currency(details.sub_total || 0)}
+                        {/* {currency(order?.Order?.amount)} */}
                       </Typography>
                     </FlexBox>
                     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
@@ -584,11 +585,23 @@ if (order?.Order?.productType === "Abroad") {
                       </Typography>
                     </FlexBox>
                     <Divider mb="0.5rem" />
+                    {/* Conditionally show Promo Applied if promocodeStatus is 1 */}
+                    {details.promocodeStatus === 1 && (
+                      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+                        <Typography fontSize="14px" color="text.hint">
+                          Promo Applied:
+                        </Typography>
+                        <Typography fontSize="14px" color="success.main">
+                          Yes
+                        </Typography>
+                      </FlexBox>
+                    )}
+
                     <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
                       <Typography variant="h6">Total</Typography>
                       <Typography variant="h6">
-                        {/* {currency(details.total || 0)} */}
-                        {currency(order?.Order?.totalPrice)}
+                        {currency(details.total || 0)}
+                        {/* {currency(order?.Order?.totalPrice)} */}
                         </Typography>
                     </FlexBox>
                   
