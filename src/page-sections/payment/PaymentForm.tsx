@@ -324,6 +324,7 @@ export default function PaymentForm() {
   const total_ammount = totalFromNewTotal - savedShipping;
   const isSubtotalZero = total_ammount === 0;
 
+  // promocode & promocode_price get from session storage
   const promocode = sessionStorage.getItem("promoCode");
   const promocode_price = parseFloat(sessionStorage.getItem("discount"));
 
@@ -511,7 +512,8 @@ export default function PaymentForm() {
             // payment_method: "cod",
             productType: productType,
             promocode: promocode,
-            promocode_price: promocode_price,
+            // promocode_price: promocode_price,
+            promocode_price: promocode_price > 0 ? promocode_price : null,
           },
 
           {

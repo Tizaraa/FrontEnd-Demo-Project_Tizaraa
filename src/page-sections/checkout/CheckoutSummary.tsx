@@ -168,6 +168,7 @@
 //   );
 // }
 
+
 // ================================================================
 
 
@@ -515,11 +516,9 @@
 
 
 
-// ============================
+// ======================================================================
 
-
-
-
+"use client";
 import { useEffect, useState } from "react";
 import { Card1 } from "@component/Card1";
 import Divider from "@component/Divider";
@@ -623,12 +622,144 @@ export default function CheckoutSummary({ deliveryCharge }) {
     setMessage("");
   };
 
-  const applyPromoCode = async () => {
-    if (!promoCode) {
-      // setError("Please enter a promo code.");
-      toast.warning("Please Enter a Promo Code !"); // Show message as a toast alert
-      return;
-    }
+//   const applyPromoCode = async () => {
+//     if (!promoCode) {
+//       // setError("Please enter a promo code.");
+//       toast.warning("Please Enter a Promo Code !"); // Show message as a toast alert
+//       return;
+//     }
+
+//   // Filter cart items to include only those that are in selectedProducts
+//   const selectedItems = state.cart.filter((item) => state.selectedProducts.includes(item.id));
+
+//   // Prepare the request body for only selected items
+//   const requestBody = {
+//     code: promoCode,
+//     products: selectedItems.map((item) => {
+//       let price = item.discountPrice ? item.discountPrice : item.price;
+
+//       if (item.sizeColor && item.selectedSize) {
+//         const selectedSize = item.sizeColor.size?.find(
+//           (sizeOption) => sizeOption.size === item.selectedSize
+//         );
+
+//         if (selectedSize && selectedSize.price) {
+//           price = selectedSize.price;
+//         } else {
+//           price = item.price;
+//         }
+//       }
+
+//       if (item.selectedColor) {
+//         const selectedColor = item.sizeColor?.color?.find(
+//           (colorOption) => colorOption.color === item.selectedColor
+//         );
+
+//         if (selectedColor && selectedColor.price) {
+//           price = parseFloat(selectedColor.price);
+//         } else {
+//           price = item.price;
+//         }
+//       }
+
+//       if (item.discountPrice && (!item.selectedColor || !item.selectedSize)) {
+//         price = item.discountPrice;
+//       }
+
+//       const totalAmount = price * item.qty;
+
+//       return {
+//         price: price,
+//         qty: item.qty,
+//         total_amount: totalAmount,
+//         name: item.name,
+//         imgUrl: item.imgUrl,
+//         productStock: item.productStock,
+//         id: item.id,
+//         discountPrice: item.discountPrice,
+//         slug: item.slug,
+//         productId: item.productId,
+//         sellerId: item.sellerId,
+//         productType: item.productType || "General",
+//         sizeColor: item.sizeColor || { colorwithsize: {} },
+//         selectedColor: item.selectedColor || null,
+//         selectedSize: item.selectedSize || null,
+//       };
+//     }),
+//   };
+
+//   try {
+//     const response = await fetch("https://frontend.tizaraa.shop/api/promo/apply", {
+//       method: "POST",
+//       headers: {
+//         Authorization: `Bearer ${authtoken}`,
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(requestBody),
+//     });
+
+//     const contentType = response.headers.get("content-type");
+//     if (!contentType || !contentType.includes("application/json")) {
+//       const text = await response.text();
+//       console.error("Unexpected response:", text);
+//       throw new Error("The server returned an invalid response. Please try again later.");
+//     }
+
+//     const data = await response.json();
+
+//     if (response.ok) {
+//       // setMessage(data.message || "Promo code applied successfully!");
+//       toast.success(data.message); // Show message as a toast alert
+//       const discountValue = parseFloat(data.discount);
+//       setDiscount(discountValue);
+
+//       const totalPrice = savedTotalPrice;
+//       const shippingCharge = savedTotalWithDelivery;
+//       const finalPrice = totalPrice + shippingCharge - discountValue;
+
+//       setNewTotal(finalPrice);
+
+
+//       // Save discount, newTotal, and promoCode to sessionStorage
+//       sessionStorage.setItem("discount", discountValue.toString());
+//       sessionStorage.setItem("newTotal", finalPrice.toString());
+//     } 
+//     else {
+//       const errorMsg = data.message || data.error || "An error occurred. Please try again.";
+//       // setError("All products must be from the same seller!");
+//       toast.error(errorMsg);
+//       console.error(" Error:", data.error);
+
+//       setDiscount(0);
+//       setNewTotal(savedTotalPrice + savedTotalWithDelivery);  // Use saved totals (without promo)
+//       sessionStorage.setItem("discount", "0"); // Reset discount
+//       sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
+//   }
+
+//   }
+//   catch (error) {
+//     console.error("API Error:", error.message);
+//     // Check if the error is a fetch failure or a specific condition
+//     if (error.message === "Failed to fetch") {
+//         // setError("Wrong Promo"); // Set the error message to "Wrong Promo"
+//         toast.error("Wrong Promo !"); // Show message as a toast alert
+//     } else {
+//         setError(error.message || "Wrong Promo");
+//     }
+//     setDiscount(0);
+//     setNewTotal(savedTotalPrice + savedTotalWithDelivery);  // Use saved totals (without promo)
+//     sessionStorage.setItem("discount", "0"); // Reset discount
+//     sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
+// }
+// };
+
+
+
+const applyPromoCode = async () => {
+  if (!promoCode) {
+    toast.warning("Please Enter a Promo Code !");
+    return;
+  }
 
   // Filter cart items to include only those that are in selectedProducts
   const selectedItems = state.cart.filter((item) => state.selectedProducts.includes(item.id));
@@ -709,8 +840,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
     const data = await response.json();
 
     if (response.ok) {
-      // setMessage(data.message || "Promo code applied successfully!");
-      toast.success(data.message); // Show message as a toast alert
+      toast.success(data.message);
       const discountValue = parseFloat(data.discount);
       setDiscount(discountValue);
 
@@ -720,40 +850,50 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
       setNewTotal(finalPrice);
 
-
-      // Save discount, newTotal, and promoCode to sessionStorage
+      // Save discount and newTotal to sessionStorage
       sessionStorage.setItem("discount", discountValue.toString());
       sessionStorage.setItem("newTotal", finalPrice.toString());
-    } 
-    else {
+
+      // Requirement 1 & 2: Handle promoCode in session based on discount
+      if (discountValue > 0) {
+        // If discount > 0, keep the promoCode in session
+        sessionStorage.setItem("promoCode", promoCode);
+      } else {
+        // If discount = 0, set promoCode to empty string in session
+        sessionStorage.setItem("promoCode", "");
+        setPromoCode(""); // Also clear the input field
+      }
+    } else {
       const errorMsg = data.message || data.error || "An error occurred. Please try again.";
-      // setError("All products must be from the same seller!");
       toast.error(errorMsg);
-      console.error(" Error:", data.error);
+      console.error("Error:", data.error);
 
       setDiscount(0);
-      setNewTotal(savedTotalPrice + savedTotalWithDelivery);  // Use saved totals (without promo)
-      sessionStorage.setItem("discount", "0"); // Reset discount
+      setNewTotal(savedTotalPrice + savedTotalWithDelivery);
+      sessionStorage.setItem("discount", "0");
       sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
-  }
 
-  }
-  catch (error) {
+      // If there's an error, set promoCode to empty string in session
+      sessionStorage.setItem("promoCode", "");
+      setPromoCode(""); // Also clear the input field
+    }
+  } catch (error) {
     console.error("API Error:", error.message);
-    // Check if the error is a fetch failure or a specific condition
     if (error.message === "Failed to fetch") {
-        // setError("Wrong Promo"); // Set the error message to "Wrong Promo"
-        toast.error("Wrong Promo !"); // Show message as a toast alert
+      toast.error("Wrong Promo !");
     } else {
-        setError(error.message || "Wrong Promo");
+      setError(error.message || "Wrong Promo");
     }
     setDiscount(0);
-    setNewTotal(savedTotalPrice + savedTotalWithDelivery);  // Use saved totals (without promo)
-    sessionStorage.setItem("discount", "0"); // Reset discount
+    setNewTotal(savedTotalPrice + savedTotalWithDelivery);
+    sessionStorage.setItem("discount", "0");
     sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
-}
-};
 
+    // If there's an error, set promoCode to empty string in session
+    sessionStorage.setItem("promoCode", "");
+    setPromoCode(""); // Also clear the input field
+  }
+};
 
   return (
     <Card1>
