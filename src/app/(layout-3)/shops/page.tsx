@@ -820,8 +820,6 @@
 // }
 
 
-
-
 // ===============================
 
 "use client";
@@ -839,6 +837,7 @@ import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermar
 import Image from "next/image";
 import NextImage from "@component/NextImage";
 import VendorMapPage from "@sections/shop/VendorMapPage";
+import { Autocomplete, TextField } from "@mui/material";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -873,7 +872,7 @@ const SelectField = styled.select`
 `;
 
 export default function ShopList() {
-  const [shopList, setShopList] = useState([]);
+const [shopList, setShopList] = useState([]);
 const [isLoading, setIsLoading] = useState(false);
 const [noShopsFound, setNoShopsFound] = useState(false);
 const [provinces, setProvinces] = useState([]);
@@ -1052,7 +1051,7 @@ const fetchShopsByArea = async (areaId) => {
             }}
           >
             <H2 mb="20px">All Shops</H2>
-            <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
+            {/* <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
               <SelectWrapper>
                 <SelectField onChange={handleProvinceChange}>
                   <option value="">Select Province</option>
@@ -1079,6 +1078,50 @@ const fetchShopsByArea = async (areaId) => {
                   ))}
                 </SelectField>
               </SelectWrapper>
+            </Box> */}
+
+            {/* ==================================================================== */}
+
+              <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+
+                  <Autocomplete
+                    options={provinces}
+                    getOptionLabel={(option) => option.province || ""}
+                    value={provinces.find((p) => p.id === parseInt(selectedProvince)) || null}
+                    onChange={(event, value) => handleProvinceChange({ target: { value: value ? value.id : "" } })}
+                    renderInput={(params) => <TextField {...params} label="Select Province" variant="outlined" />}
+                    sx={{ width: 300 }}
+                  />
+
+                  <Autocomplete
+                    options={cities}
+                    getOptionLabel={(option) => option.city || ""}
+                    value={cities.find((c) => c.id === parseInt(selectedCity)) || null}
+                    onChange={(event, value) => handleCityChange({ target: { value: value ? value.id : "" } })}
+                    renderInput={(params) => <TextField {...params} label="Select City" variant="outlined" />}
+                    disabled={!selectedProvince || cities.length === 0}
+                    sx={{ width: 300 }}
+                  />
+
+                  <Autocomplete
+                    options={areas}
+                    getOptionLabel={(option) => option.area || ""}
+                    value={areas.find((a) => a.id === parseInt(selectedArea)) || null}
+                    onChange={(event, value) => handleAreaChange({ target: { value: value ? value.id : "" } })}
+                    renderInput={(params) => <TextField {...params} label="Select Area" variant="outlined" />}
+                    disabled={!selectedCity || areas.length === 0}
+                    sx={{ width: 300 }}
+                  />
+                </div>
             </Box>
           </div>
 
