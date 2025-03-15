@@ -586,7 +586,7 @@ if (order?.Order?.productType === "Abroad") {
                     </FlexBox>
                     <Divider mb="0.5rem" />
                     {/* Conditionally show Promo Applied if promocodeStatus is 1 */}
-                    {details.promocodeStatus === 1 && (
+                    {/* {details.promocodeStatus === 1 && (
                       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
                         <Typography fontSize="14px" color="text.hint">
                           Promo Applied:
@@ -595,15 +595,44 @@ if (order?.Order?.productType === "Abroad") {
                           Yes
                         </Typography>
                       </FlexBox>
-                    )}
+                    )} */}
 
-                    <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
+                    {/* <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
                       <Typography variant="h6">Total</Typography>
                       <Typography variant="h6">
                         {currency(details.total || 0)}
-                        {/* {currency(order?.Order?.totalPrice)} */}
                         </Typography>
-                    </FlexBox>
+                    </FlexBox> */}
+
+
+                    <FlexBox justifyContent="space-between" alignItems="center" mb="1rem" position="relative">
+                      <Typography variant="h6" color={"text.primary"}>
+                        Total
+                    </Typography>
+                    
+                    <Typography variant="h6" display="flex" alignItems="center">
+                      {details.promocodeStatus === 1 && (
+                      <Box 
+                      mr="0.5rem"
+                      px="0.4rem"
+                      py="0.2rem"
+                      backgroundColor="#E94560"
+                      color="#fff"
+                      borderRadius="12px"
+                      fontSize="13px"
+                      display="flex"
+                      alignItems="center"
+                      letterSpacing="1px"
+                    >
+                      Promo Applied &nbsp;
+                      <span style={{ color: "#fff", fontWeight: "bold", letterSpacing: "1px" }}>&#10003;</span>
+                    </Box>
+
+                        )}
+                      {currency(details.total || 0)}
+                    </Typography>
+                  </FlexBox>
+
                   
                     <FlexBox alignItems="center" mb="1rem">
                       Payment Method:
@@ -625,12 +654,6 @@ if (order?.Order?.productType === "Abroad") {
         ) : null}
       </Box>
     )}
-    
-
-
-
-
-
       </Card>
 
       <Grid container spacing={6}>
@@ -645,7 +668,7 @@ if (order?.Order?.productType === "Abroad") {
           </Card>
 
           <div style={{ display: "flex", gap: "20px" }}>
-            <Button
+            {/* <Button
               px="2rem"
               color="primary"
               bg="primary.light"
@@ -653,7 +676,10 @@ if (order?.Order?.productType === "Abroad") {
               onClick={fetchInvoice} // Fetch invoice when button is clicked
             >
               {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
-            </Button>
+            </Button> */}
+
+
+
             {/* {order.Order.payment_status === "Unpaid" && (
              <Button
              px="2rem"
@@ -671,24 +697,24 @@ if (order?.Order?.productType === "Abroad") {
            </Button>
            
             )} */}
-            {order.Order.payment_status === "Unpaid" && 
-  !["Delivered", "Cancelled", "Return"].includes(order.Order.status) && (
-    <Button
-      px="2rem"
-      color="success" // Or another green variant available in your theme
-      bg="success.light" // Or a specific green shade
-      mt="2rem"
-      onClick={handleOnlinePayment}
-      disabled={onlinePaymentLoading}
-    >
-      {onlinePaymentLoading ? (
-        <BeatLoader size={18} color="rgba(51,208,103,0.79)" />
-      ) : (
-        "Online Payment"
-      )}
-    </Button>
-  )
-}
+            {/* {order.Order.payment_status === "Unpaid" && 
+            !["Delivered", "Cancelled", "Return"].includes(order.Order.status) && (
+              <Button
+                px="2rem"
+                color="success" // Or another green variant available in your theme
+                bg="success.light" // Or a specific green shade
+                mt="2rem"
+                onClick={handleOnlinePayment}
+                disabled={onlinePaymentLoading}
+              >
+                {onlinePaymentLoading ? (
+                  <BeatLoader size={18} color="rgba(51,208,103,0.79)" />
+                ) : (
+                  "Online Payment"
+                )}
+              </Button>
+            )
+          } */}
 
           </div>
 
