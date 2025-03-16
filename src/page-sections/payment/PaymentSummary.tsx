@@ -32,7 +32,7 @@ export default function PaymentSummary() {
   useEffect(() => {
     // Load values from sessionStorage
     const savedPrice = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
-    const savedShipping = parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
+    const savedShipping = parseFloat(sessionStorage.getItem("deliveryCharge") || "0");
     const savedCart = JSON.parse(sessionStorage.getItem("cartItems") || "[]");
 
     const savedDiscount = parseFloat(sessionStorage.getItem("discount") || "0");

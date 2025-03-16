@@ -565,8 +565,9 @@ export default function CheckoutSummary({ deliveryCharge }) {
   
     const storedAddress = sessionStorage.getItem("address");
     const selectedAddress = storedAddress ? JSON.parse(storedAddress) : null;
-    const deliveryChargeDisplay =
-      selectedAddress?.deliveryCharge || deliveryCharge || 0;
+    // const deliveryChargeDisplay =
+    //   selectedAddress?.deliveryCharge || deliveryCharge || 0;    
+    const deliveryChargeDisplay = deliveryCharge || 0;
   
     const totalPrice = getTotalPrice();
     const totalWithDelivery = parseFloat(deliveryChargeDisplay);
