@@ -571,6 +571,10 @@ export default function CheckoutSummary({ deliveryCharge }) {
   
     const totalPrice = getTotalPrice();
     const totalWithDelivery = parseFloat(deliveryChargeDisplay);
+
+    // ✅ Reset promoCode when selectedProducts changes
+    sessionStorage.removeItem("promoCode");
+    setPromoCode(""); // Reflect on UI as well
   
     // Update state and sessionStorage
     if (totalPrice > 0) {
@@ -595,7 +599,13 @@ export default function CheckoutSummary({ deliveryCharge }) {
     setNewTotal(totalPrice + totalWithDelivery); // Reset to total without discount
     sessionStorage.setItem("discount", "0");
     sessionStorage.setItem("newTotal", (totalPrice + totalWithDelivery).toString());
-    setPromoCode("");
+
+    // setPromoCode("");
+
+      // Reset promoCode from session storage
+  setPromoCode("");
+  sessionStorage.setItem("promoCode", ""); // Reset promo code
+
     setMessage("");
     setError(""); 
   
@@ -855,15 +865,17 @@ const applyPromoCode = async () => {
       sessionStorage.setItem("discount", discountValue.toString());
       sessionStorage.setItem("newTotal", finalPrice.toString());
 
-      // Requirement 1 & 2: Handle promoCode in session based on discount
-      if (discountValue > 0) {
-        // If discount > 0, keep the promoCode in session
-        sessionStorage.setItem("promoCode", promoCode);
+      // Handle promoCode in session based on discount
+      if (discountValue === 0) {
+        sessionStorage.removeItem("promoCode");
+        setPromoCode("");
       } else {
-        // If discount = 0, set promoCode to empty string in session
-        sessionStorage.setItem("promoCode", "");
-        setPromoCode(""); // Also clear the input field
+        sessionStorage.setItem("promoCode", promoCode);
       }
+
+      // ✅ After success, reset promo code in storage and UI
+      // sessionStorage.removeItem("promoCode");
+      // setPromoCode("");
     } else {
       const errorMsg = data.message || data.error || "An error occurred. Please try again.";
       toast.error(errorMsg);

@@ -121,7 +121,7 @@ export default function Header({ isFixed, className }: HeaderProps) {
       <Menu
         handler={
           // <Tooltip title="User">
-          <Tooltip title={userInfo.name}>
+          <Tooltip title={userInfo.name || "User"}>
             <IconButton ml="1rem" bg="gray.200" p="8px">
               <Icon size="28px">user</Icon>
             </IconButton>
