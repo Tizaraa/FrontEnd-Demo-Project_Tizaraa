@@ -579,8 +579,8 @@ const VendorMapPage: React.FC<VendorMapPageProps> = ({
     // </div>
 
 
-    <div style={{ lineHeight: "0", marginLeft: "10px", marginTop: "-10px" }} className="ml-0">
-  <h1 className="text-xl font-bold mb-4">Tizaraa Authorized Seller</h1>
+  <div style={{ lineHeight: "0", marginLeft: "10px", marginTop: "-10px" }} className="ml-0">
+  {/* <h1 className="text-xl font-bold mb-4">Tizaraa Authorized Seller</h1> */}
   <div style={mapContainerStyle}>
     {/* Map Container */}
     <div

@@ -11,6 +11,7 @@ import { IconButton } from "@component/buttons";
 import { H3, SemiSpan } from "@component/Typography";
 import { ShopCard1Wrapper } from "./styles";
 import { height } from "styled-system";
+import { Button } from "@mui/material";
 
 // =====================================================
 type ShopCard1Props = {
@@ -42,7 +43,11 @@ export default function ShopCard1({
   coverImgUrl,
 }: ShopCard1Props) {
   return (
-    <ShopCard1Wrapper overflow="hidden" coverImgUrl={coverImgUrl}>
+    <ShopCard1Wrapper overflow="hidden" coverImgUrl={coverImgUrl}
+      style={{
+        padding: "5px 0px"
+      }}
+    >
       <div className="black-box">
         <Link href={shop_name_slug} style={{ color: "white" }}>
           <H3 fontWeight="600" mb="8px">
@@ -95,11 +100,43 @@ export default function ShopCard1({
             borderColor="gray.100"
           />
         </Link>
-        <Link href={shop_name_slug}>
+
+        {/* <Link href={shop_name_slug}>
           <IconButton my="0.25rem">
             <Icon defaultcolor="auto">arrow-long-right</Icon>
           </IconButton>
+        </Link> */}
+
+        <Link href={shop_name_slug}>
+            <Button
+            variant="contained"
+            sx={{
+              marginTop: '0.25rem',
+              marginBottom: '0.25rem',
+              padding: '0.25rem 0.75rem',
+              borderRadius: '0.25rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 'bold',
+              textTransform: 'none',
+              backgroundColor: '#E94560',
+              fontSize: '14px', 
+            }}
+            >
+            <span
+              style={{
+                color: '#FFFFFF',
+              }}
+            >
+              Visit Shop
+            </span>
+            <Icon>
+              chevron-right
+            </Icon>
+            </Button>
         </Link>
+
       </FlexBox>
     </ShopCard1Wrapper>
   );

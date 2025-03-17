@@ -1130,7 +1130,11 @@ const fetchAllShops = async () => {
             }}
           >
           <div>
-            <H2 mb="20px">All Shops</H2>
+            <H2 mb="20px"
+            style={{
+              color: "#E94560",
+            }}
+            >All Shops</H2>
             <TextField
             label="Search by Shop Name"
             variant="outlined"
