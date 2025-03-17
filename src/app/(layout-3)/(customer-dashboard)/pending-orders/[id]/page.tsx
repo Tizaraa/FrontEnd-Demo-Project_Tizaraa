@@ -627,10 +627,10 @@ if (order?.Order?.productType === "Abroad") {
             </Paragraph>
           </Card>
 
-          <div style={{ display: "flex", gap: "20px" }}>\
+          <div style={{ display: "flex", gap: "20px" }}>
 
-  {/* ============= Invoice ============= */}
-            {/* <Button
+            {/* ============= Invoice ============= */}
+            <Button
               px="2rem"
               color="primary"
               bg="primary.light"
@@ -638,7 +638,7 @@ if (order?.Order?.productType === "Abroad") {
               onClick={fetchInvoice} // Fetch invoice when button is clicked
             >
               {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
-            </Button> */}
+            </Button>
 
 
             {/* {order.Order.payment_status === "Unpaid" && (
