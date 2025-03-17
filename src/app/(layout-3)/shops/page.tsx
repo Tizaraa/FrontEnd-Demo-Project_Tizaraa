@@ -883,8 +883,7 @@ const [selectedCity, setSelectedCity] = useState("");
 const [selectedArea, setSelectedArea] = useState("");
 const [isSearching, setIsSearching] = useState(false);
 
-// Removed pagination-related state: currentPage, lastPage
-// Removed observerRef since we're not using IntersectionObserver for infinite scrolling
+const [searchQuery, setSearchQuery] = useState(""); // State for global search input
 
 useEffect(() => {
   fetchProvinces();
@@ -949,13 +948,39 @@ const handleAreaChange = async (e) => {
   }
 };
 
+const handleSearchChange = (query) => {
+  setSearchQuery(query);
+  fetchAllShops();
+};
+
+// const fetchAllShops = async () => {
+//   setIsLoading(true);
+//   setIsSearching(false);
+//   try {
+//     const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {});
+//     const shops = response.data.sellerDetails || [];
+//     setShopList(shops); // Replace the shop list entirely
+//     setNoShopsFound(shops.length === 0);
+//   } catch (error) {
+//     console.error("Error fetching shops", error);
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
+
 const fetchAllShops = async () => {
   setIsLoading(true);
   setIsSearching(false);
   try {
     const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {});
-    const shops = response.data.sellerDetails || [];
-    setShopList(shops); // Replace the shop list entirely
+    let shops = response.data.sellerDetails || [];
+    if (searchQuery) {
+      shops = shops.filter((shop) =>
+        shop.shop_name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    console.log("fetchAllShops response:", shops);
+    setShopList(shops);
     setNoShopsFound(shops.length === 0);
   } catch (error) {
     console.error("Error fetching shops", error);
@@ -964,58 +989,111 @@ const fetchAllShops = async () => {
   }
 };
 
-const fetchShopsByProvince = async (provinceId) => {
-  setIsLoading(true);
-  setIsSearching(true);
-  try {
-    const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
-      province_id: provinceId,
-    });
-    const shops = response.data.sellerDetails || [];
-    setShopList(shops);
-    setNoShopsFound(shops.length === 0);
-  } catch (error) {
-    console.error("Error fetching shops by province", error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+// const fetchShopsByProvince = async (provinceId) => {
+//   setIsLoading(true);
+//   setIsSearching(true);
+//   try {
+//     const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
+//       province_id: provinceId,
+//     });
+//     const shops = response.data.sellerDetails || [];
+//     setShopList(shops);
+//     setNoShopsFound(shops.length === 0);
+//   } catch (error) {
+//     console.error("Error fetching shops by province", error);
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
 
-const fetchShopsByCity = async (cityId) => {
-  setIsLoading(true);
-  setIsSearching(true);
-  try {
-    const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
-      city_id: cityId,
-    });
-    const shops = response.data.sellerDetails || [];
-    setShopList(shops);
-    setNoShopsFound(shops.length === 0);
-  } catch (error) {
-    console.error("Error fetching shops by city", error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+// const fetchShopsByCity = async (cityId) => {
+//   setIsLoading(true);
+//   setIsSearching(true);
+//   try {
+//     const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
+//       city_id: cityId,
+//     });
+//     const shops = response.data.sellerDetails || [];
+//     setShopList(shops);
+//     setNoShopsFound(shops.length === 0);
+//   } catch (error) {
+//     console.error("Error fetching shops by city", error);
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
 
-const fetchShopsByArea = async (areaId) => {
-  setIsLoading(true);
-  setIsSearching(true);
-  try {
-    const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
-      area_id: areaId,
-    });
-    const shops = response.data.sellerDetails || [];
-    setShopList(shops);
-    setNoShopsFound(shops.length === 0);
-  } catch (error) {
-    console.error("Error fetching shops by area", error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+// const fetchShopsByArea = async (areaId) => {
+//   setIsLoading(true);
+//   setIsSearching(true);
+//   try {
+//     const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
+//       area_id: areaId,
+//     });
+//     const shops = response.data.sellerDetails || [];
+//     setShopList(shops);
+//     setNoShopsFound(shops.length === 0);
+//   } catch (error) {
+//     console.error("Error fetching shops by area", error);
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
 
-// Removed loadMoreShops since pagination is not used
+
+    const fetchShopsByProvince = async (provinceId) => {
+      setIsLoading(true);
+      setIsSearching(true);
+      try {
+        const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
+          province_id: provinceId,
+          ...(searchQuery && { shop_name: searchQuery }), // Include search query if present
+        });
+        const shops = response.data.sellerDetails || [];
+        setShopList(shops);
+        setNoShopsFound(shops.length === 0);
+      } catch (error) {
+        console.error("Error fetching shops by province", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const fetchShopsByCity = async (cityId) => {
+      setIsLoading(true);
+      setIsSearching(true);
+      try {
+        const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
+          city_id: cityId,
+          ...(searchQuery && { shop_name: searchQuery }), // Include search query if present
+        });
+        const shops = response.data.sellerDetails || [];
+        setShopList(shops);
+        setNoShopsFound(shops.length === 0);
+      } catch (error) {
+        console.error("Error fetching shops by city", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const fetchShopsByArea = async (areaId) => {
+      setIsLoading(true);
+      setIsSearching(true);
+      try {
+        const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
+          area_id: areaId,
+          ...(searchQuery && { shop_name: searchQuery }), // Include search query if present
+        });
+        const shops = response.data.sellerDetails || [];
+        setShopList(shops);
+        setNoShopsFound(shops.length === 0);
+      } catch (error) {
+        console.error("Error fetching shops by area", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   return (
     <>
@@ -1043,14 +1121,28 @@ const fetchShopsByArea = async (areaId) => {
           <div
             style={{
               display: "flex",
-              gap: "10px",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
+              // gap: "10px",
+              // alignContent: "center",
+              alignItems: "flex-end",
+              // justifyContent: "center",
               marginBottom: "20px",
+              padding: "0px 10px",
             }}
           >
+          <div>
             <H2 mb="20px">All Shops</H2>
+            <TextField
+            label="Search by Shop Name"
+            variant="outlined"
+            value={searchQuery}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            sx={{ width: 300 }}
+            // fullWidth
+          />
+          </div>
+
+
+
             {/* <Box position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
               <SelectWrapper>
                 <SelectField onChange={handleProvinceChange}>
@@ -1121,6 +1213,14 @@ const fetchShopsByArea = async (areaId) => {
                     disabled={!selectedCity || areas.length === 0}
                     sx={{ width: 300 }}
                   />
+
+                  {/* <TextField
+                    label="Search by Shop Name"
+                    variant="outlined"
+                    value={searchQuery}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    sx={{ width: 300 }}
+                  /> */}
                 </div>
             </Box>
           </div>
