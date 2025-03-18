@@ -892,7 +892,7 @@ useEffect(() => {
 const fetchProvinces = async () => {
   try {
     // const response = await axios.get("https://frontend.tizaraa.com/api/all/address");
-    const response = await axios.get(`${ApiBaseUrl.baseUrl1}all/address`);
+    const response = await axios.get(`${ApiBaseUrl.baseUrl}all/address`);
     setProvinces(response.data);
   } catch (error) {
     console.error("Error fetching provinces", error);
