@@ -78,7 +78,7 @@ const OTCProducts = () => {
         }
       } catch (error) {
         console.error("Error fetching menu items:", error);
-        setError("Failed to load menu items");
+        // setError("Failed to load menu items");
       } finally {
         setLoading(false);
       }
@@ -165,119 +165,93 @@ const OTCProducts = () => {
 
   return (
     <div>
-      <OTsectioncreator 
-        title={
-          menuItems.length > 0 ? menuItems[0].name : "No Category Available"
-        }
-        
-        seeMoreLink={
-          menuItems.length > 0 ? (
-            <ul>
-              {menuItems.map((item) => (
-                <div key={item.id}>
-                  <a href={item.link}>
-                    <FlexBox alignItems="center" ml="0.5rem" color="text.muted">
-                      <SemiSpan mr="0.5rem">View all</SemiSpan>
-                      <Icon size="12px" defaultcolor="currentColor">
-                        right-arrow
-                      </Icon>
-                    </FlexBox>
-                  </a>
-                </div>
-              ))}
-            </ul>
-          ) : (
-            <ul>
-              <li>No categories available</li>
-            </ul>
-          )
-        }
-      >
-        <Box my="-0.25rem">
-          <Carousel totalSlides={products.length} visibleSlides={visibleSlides}>
-            {products.length > 0 ? (
-              products.map((product) => (
-                <Box py="0.25rem" key={product.Id}>
-                  <Card p="1rem" borderRadius={8} style={{ height: "300px" }}>
-                    <Link href={`/otproducts/${product.Id}`}>
-                      <Box position="relative">
-                        {/* <img
-                          src={product.MainPictureUrl}
-                          alt={product.Title}
-                          style={{
-                            width: "100%",
-                            borderRadius: "8px",
-                            objectFit: "cover",
-                          }}
-                          className={styles.imgPart}
-                        /> */}
-                         {/* image cache  */}
-                        <div style={{ position: "relative", borderRadius: "8px", overflow: "hidden" }}>
-                            <Image
-                              src={product.MainPictureUrl}
-                              alt={product.Title}
-                              layout="responsive" 
-                              width={1} 
-                              height={1} 
-                              objectFit="cover" 
-                              style={{ borderRadius: "8px" }}
-                              className={styles.imgPart}
-                              />
-                                          
-                        </div>
-                      </Box>
-                      <H4
-                        fontWeight="600"
-                        fontSize="18px"
-                        mb="0.25rem"
-                        style={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        {product.Title}
-                      </H4>
-                      <FlexBox flexDirection="column">
-                        {product.Price.DiscountPrice > 0 ? (
-                          <>
-                            <H4
-                              fontWeight="600"
-                              fontSize="14px"
-                              color="text.muted"
-                            >
-                              BDT <del>{product.Price.OriginalPrice}</del>
-                            </H4>
-                            <Box marginTop="4px">
-                              <H4
-                                fontWeight="600"
-                                fontSize="14px"
-                                color="primary.main"
-                              >
-                                {currency(product.Price.DiscountPrice)}
-                              </H4>
-                            </Box>
-                          </>
-                        ) : (
-                          <H4
-                            fontWeight="600"
-                            fontSize="14px"
-                            color="primary.main"
-                          >
-                            {currency(product.Price.ConvertedPriceWithoutSign)}
-                          </H4>
-                        )}
-                      </FlexBox>
-                    </Link>
-                  </Card>
+   
+      {products.length > 0 && (
+  <OTsectioncreator 
+    title={
+      menuItems.length > 0 ? menuItems[0].name : "No Category Available"
+    }
+    seeMoreLink={
+      menuItems.length > 0 ? (
+        <ul>
+          {menuItems.map((item) => (
+            <div key={item.id}>
+              <a href={item.link}>
+                <FlexBox alignItems="center" ml="0.5rem" color="text.muted">
+                  <SemiSpan mr="0.5rem">View all</SemiSpan>
+                  <Icon size="12px" defaultcolor="currentColor">
+                    right-arrow
+                  </Icon>
+                </FlexBox>
+              </a>
+            </div>
+          ))}
+        </ul>
+      ) : (
+        <ul>
+          <li>No categories available</li>
+        </ul>
+      )
+    }
+  >
+    <Box my="-0.25rem">
+      <Carousel totalSlides={products.length} visibleSlides={visibleSlides}>
+        {products.map((product) => (
+          <Box py="0.25rem" key={product.Id}>
+            <Card p="1rem" borderRadius={8} style={{ height: "300px" }}>
+              <Link href={`/otproducts/${product.Id}`}>
+                <Box position="relative">
+                  <div style={{ position: "relative", borderRadius: "8px", overflow: "hidden" }}>
+                    <Image
+                      src={product.MainPictureUrl}
+                      alt={product.Title}
+                      layout="responsive" 
+                      width={1} 
+                      height={1} 
+                      objectFit="cover" 
+                      style={{ borderRadius: "8px" }}
+                      className={styles.imgPart}
+                    />
+                  </div>
                 </Box>
-              ))
-            ) : (
-              <div>No products available</div>
-            )}
-          </Carousel>
-        </Box>
-      </OTsectioncreator>
+                <H4
+                  fontWeight="600"
+                  fontSize="18px"
+                  mb="0.25rem"
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {product.Title}
+                </H4>
+                <FlexBox flexDirection="column">
+                  {product.Price.DiscountPrice > 0 ? (
+                    <>
+                      <H4 fontWeight="600" fontSize="14px" color="text.muted">
+                        BDT <del>{product.Price.OriginalPrice}</del>
+                      </H4>
+                      <Box marginTop="4px">
+                        <H4 fontWeight="600" fontSize="14px" color="primary.main">
+                          {currency(product.Price.DiscountPrice)}
+                        </H4>
+                      </Box>
+                    </>
+                  ) : (
+                    <H4 fontWeight="600" fontSize="14px" color="primary.main">
+                      {currency(product.Price.ConvertedPriceWithoutSign)}
+                    </H4>
+                  )}
+                </FlexBox>
+              </Link>
+            </Card>
+          </Box>
+        ))}
+      </Carousel>
+    </Box>
+  </OTsectioncreator>
+)}
 
       {/* <h2>Category: {menuItems.length > 0 ? menuItems[0].name : 'No Category Available'}</h2>
 
