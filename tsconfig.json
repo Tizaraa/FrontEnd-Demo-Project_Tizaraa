@@ -2,7 +2,11 @@
   "compilerOptions": {
     "baseUrl": "src",
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -15,21 +19,54 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "@lib/*": ["lib/*"],
-      "@data/*": ["data/*"],
-      "@hook/*": ["hooks/*"],
-      "@utils/*": ["utils/*"],
-      "@context/*": ["contexts/*"],
-      "@reducer/*": ["reducers/*"],
-      "@component/*": ["components/*"],
-      "@sections/*": ["page-sections/*"],
-      "@models/*": ["models/*"],
-      "typeRoots": ["./node_modules/@types", "./node_modules/@react-google-maps/api"]
+      "@lib/*": [
+        "lib/*"
+      ],
+      "@data/*": [
+        "data/*"
+      ],
+      "@hook/*": [
+        "hooks/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@context/*": [
+        "contexts/*"
+      ],
+      "@reducer/*": [
+        "reducers/*"
+      ],
+      "@component/*": [
+        "components/*"
+      ],
+      "@sections/*": [
+        "page-sections/*"
+      ],
+      "@models/*": [
+        "models/*"
+      ],
+      "typeRoots": [
+        "./node_modules/@types",
+        "./node_modules/@react-google-maps/api"
+      ]
     }
-    
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(layout-3)/product/[slug]/ResponsiveCategory.tsx"],
-  "exclude": ["node_modules", "./src/components/icon/Icon.tsx"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/app/(layout-3)/product/[slug]/ResponsiveCategory.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "./src/components/icon/Icon.tsx"
+  ]
 }
