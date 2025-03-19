@@ -299,11 +299,27 @@ export default function RfqProductForm() {
     marginBottom: "20px",
   };
 
+  // const quillStyle: React.CSSProperties = {
+  //   ...inputStyle,
+  //   height: "auto",
+  //   minHeight: "300px",
+  // };
+
   const quillStyle: React.CSSProperties = {
     ...inputStyle,
     height: "auto",
     minHeight: "300px",
   };
+  
+  // Apply additional styles to the Quill editor container
+  const quillEditorStyle = `
+  .ql-container {
+    min-height: 300px !important; /* Minimum height */
+    max-height: 500px !important; /* Set a reasonable max height */
+    overflow-y: auto !important;  /* Enables vertical scroll after exceeding min-height */
+  }
+`;
+
 
   const fetchSuggestions = async (value: string) => {
     const token = authService.getToken();
@@ -590,55 +606,56 @@ export default function RfqProductForm() {
       <div style={{ marginBottom: "20px" }}>
         <label style={labelStyle}>Detailed Requirements</label>
         <ReactQuill
-          value={specifications}
-          onChange={(content) => {
-            setSpecifications(content);
-            setErrors((prev) => ({ ...prev, specifications: "" }));
-          }}
-          placeholder="I'm looking for..."
-          style={quillStyle}
-          modules={{
-            toolbar: [
-              [{ font: [] }],
-              [{ header: [1, 2, 3, 4, 5, 6, false] }],
-              [{ size: ["small", false, "large", "huge"] }],
-              [{ color: [] }, { background: [] }],
-              ["bold", "italic", "underline", "strike", "blockquote"],
-              [{ script: "sub" }, { script: "super" }],
-              [
-                { list: "ordered" },
-                { list: "bullet" },
-                { indent: "-1" },
-                { indent: "+1" },
-              ],
-              [{ direction: "rtl" }],
-              [{ align: [] }],
-              ["link", "image", "video"],
-              ["clean"], // Removes formatting
-            ],
-          }}
-          formats={[
-            "font",
-            "header",
-            "size",
-            "color",
-            "background",
-            "bold",
-            "italic",
-            "underline",
-            "strike",
-            "blockquote",
-            "script",
-            "list",
-            "bullet",
-            "indent",
-            "direction",
-            "align",
-            "link",
-            "image",
-            "video",
-          ]}
-        />
+  value={specifications}
+  onChange={(content) => {
+    setSpecifications(content);
+    setErrors((prev) => ({ ...prev, specifications: "" }));
+  }}
+  placeholder="I'm looking for..."
+  style={quillStyle}
+  modules={{
+    toolbar: [
+      [{ font: [] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ size: ["small", false, "large", "huge"] }],
+      [{ color: [] }, { background: [] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ script: "sub" }, { script: "super" }],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      [{ direction: "rtl" }],
+      [{ align: [] }],
+      ["link", "image", "video"],
+      ["clean"], // Removes formatting
+    ],
+  }}
+  formats={[
+    "font",
+    "header",
+    "size",
+    "color",
+    "background",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "script",
+    "list",
+    "bullet",
+    "indent",
+    "direction",
+    "align",
+    "link",
+    "image",
+    "video",
+  ]}
+/>
+<style>{quillEditorStyle}</style>
         {errors.specifications && (
           <div style={{ color: "red" }}>{errors.specifications}</div>
         )}
