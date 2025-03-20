@@ -975,7 +975,7 @@ const applyPromoCode = async () => {
         />
       ))}
 
-      <FlexBox flexDirection="column" mb="1rem">
+      <FlexBox flexDirection="column">
         <Typography fontWeight="600" mb="0.5rem">
           Promotion
         </Typography>
