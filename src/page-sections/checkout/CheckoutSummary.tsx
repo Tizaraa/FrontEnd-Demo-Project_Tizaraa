@@ -828,14 +828,13 @@ const applyPromoCode = async () => {
       position: "top-right",
       autoClose: 3000,
       style: {
-        background: "#ff9800",
-        color: "#fff",
-        fontWeight: "bold",
+        background: "rgb(245, 124, 0)",
+        color: "#000",
         fontSize: "16px",
         border: "2px solid #fff",
         boxShadow: "0 0 10px rgba(255, 152, 0, 0.7)",
       },
-      icon: <FaExclamationTriangle style={{ color: "#fff", fontSize: "20px" }} />, // Custom icon
+      icon: <FaExclamationTriangle style={{ color: "#000", fontSize: "20px" }} />, // Custom icon
       progressStyle: {
         background: "#fff",
       },
