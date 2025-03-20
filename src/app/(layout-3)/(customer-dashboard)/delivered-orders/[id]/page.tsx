@@ -462,6 +462,7 @@ if (order?.Order?.productType === "Abroad") {
               delivered_at: string | null;
               order_items: any[];
               delivery_charge: number | null;
+              promocodeStatus: number | null;
               sub_total: number | null;
               total: number | null;
               status: string | null;
@@ -584,10 +585,39 @@ if (order?.Order?.productType === "Abroad") {
                       </Typography>
                     </FlexBox>
                     <Divider mb="0.5rem" />
-                    <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
+                    {/* <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
                       <Typography variant="h6">Total</Typography>
                       <Typography variant="h6">{currency(details.total || 0)}</Typography>
+                    </FlexBox> */}
+
+                    <FlexBox justifyContent="space-between" alignItems="center" mb="1rem" position="relative">
+                      <Typography variant="h6" color={"text.primary"}>
+                          Total
+                      </Typography>
+                      
+                      <Typography variant="h6" display="flex" alignItems="center">
+                        {details.promocodeStatus === 1 && (
+                        <Box 
+                        mr="0.5rem"
+                        px="0.4rem"
+                        py="0.2rem"
+                        backgroundColor="#E94560"
+                        color="#fff"
+                        borderRadius="12px"
+                        fontSize="13px"
+                        display="flex"
+                        alignItems="center"
+                        letterSpacing="1px"
+                      >
+                        Promo Applied &nbsp;
+                        <span style={{ color: "#fff", fontWeight: "bold", letterSpacing: "1px" }}>&#10003;</span>
+                      </Box>
+
+                          )}
+                        {currency(details.total || 0)}
+                      </Typography>
                     </FlexBox>
+                    
                     <FlexBox alignItems="center" mb="1rem">
                       Payment Method:
                       <H6 my="0px" mx="1rem" backgroundColor="rgba(255,225,230,1)" p="5px" px="10px" borderRadius="1rem" color="rgb(233, 69, 96)">
