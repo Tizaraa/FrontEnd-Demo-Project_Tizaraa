@@ -533,6 +533,7 @@ import { currency } from "@utils/utils";
 import ProductCard20 from "@component/product-cards/ProductCard20";
 import authService from "services/authService";
 import { toast } from "react-toastify";
+import { FaExclamationTriangle } from "react-icons/fa";
 
 export default function CheckoutSummary({ deliveryCharge }) {
   const { state } = useAppContext();
@@ -814,6 +815,35 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
 
 const applyPromoCode = async () => {
+
+  const storedAddress = JSON.parse(sessionStorage.getItem("address"));
+
+  // if (!storedAddress) {
+  //   toast.warning("Please select an address first!");
+  //   return;
+  // }
+
+  if (!storedAddress) {
+    toast.warning("Please select an address first!", {
+      position: "top-right",
+      autoClose: 3000,
+      style: {
+        background: "#ff9800",
+        color: "#fff",
+        fontWeight: "bold",
+        fontSize: "16px",
+        border: "2px solid #fff",
+        boxShadow: "0 0 10px rgba(255, 152, 0, 0.7)",
+      },
+      icon: <FaExclamationTriangle style={{ color: "#fff", fontSize: "20px" }} />, // Custom icon
+      progressStyle: {
+        background: "#fff",
+      },
+    });
+    return;
+  }
+  
+
   if (!promoCode) {
     toast.warning("Please Enter a Promo Code !");
     return;
