@@ -21,12 +21,21 @@ export default function SearchInputWithCategory() {
   // ✅ Extract search term from URL and set as searchValue
   useEffect(() => {
     const pathParts = pathname.split("/"); 
-    const lastPart = decodeURIComponent(pathParts[pathParts.length - 1]); 
-    if (lastPart && lastPart !== "search") {
-      setSearchValue(lastPart); // ✅ Set input field value from URL
+  
+    // ✅ Ensure the pathname starts with "/product/search/" before extracting
+    if (pathname.startsWith("/product/search/")) {
+      const lastPart = decodeURIComponent(pathParts[pathParts.length - 1]); 
+  
+      if (lastPart && lastPart !== "search") {
+        setSearchValue(lastPart); // ✅ Set input field value from URL
+      }
+    } else {
+      setSearchValue(""); // ✅ Reset input if not in /product/search/
     }
+  
     setResultList([]); // ✅ Hide suggestions on navigation
   }, [pathname]);
+  
 
   const fetchSearchResults = async (query: string) => {
     try {
