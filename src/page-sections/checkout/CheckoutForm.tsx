@@ -29,18 +29,18 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   const [isHasPayLoading, setIsHasPayLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const [isExpressedDelivery, setIsExpressedDelivery] = useState(false);
+  // const [isExpressedDelivery, setIsExpressedDelivery] = useState(false);
 
-  // Handle checkbox change for Expressed Delivery
-  const handleExpressedDeliveryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsExpressedDelivery(e.target.checked);
-    // If Expressed Delivery is checked, set delivery charge to 10
-    if (e.target.checked) {
-      setDeliveryCharge(10); // Set the delivery charge for Expressed Delivery
-    } else {
-      setDeliveryCharge(0); // Reset to default delivery charge
-    }
-  };
+  // // Handle checkbox change for Expressed Delivery
+  // const handleExpressedDeliveryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setIsExpressedDelivery(e.target.checked);
+  //   // If Expressed Delivery is checked, set delivery charge to 10
+  //   if (e.target.checked) {
+  //     setDeliveryCharge(10); // Set the delivery charge for Expressed Delivery
+  //   } else {
+  //     setDeliveryCharge(0); // Reset to default delivery charge
+  //   }
+  // };
   
 
   useEffect(() => {

@@ -547,6 +547,85 @@ export default function CheckoutSummary({ deliveryCharge }) {
   const [discount, setDiscount] = useState(0);
   const [newTotal, setNewTotal] = useState(0);
 
+  // newly added 
+  const [isExpressDelivery, setIsExpressDelivery] = useState(false);
+
+
+  // useEffect(() => {
+  //   const getTotalPrice = () => {
+  //     return state.cart.reduce((accumulator, item) => {
+  //       if (state.selectedProducts.includes(item.id)) {
+  //         const price =
+  //           item.sizeColor?.nosize?.length === 0 && item.discountPrice
+  //             ? item.discountPrice
+  //             : item.price;
+  
+  //         return accumulator + price * item.qty;
+  //       }
+  //       return accumulator;
+  //     }, 0);
+  //   };
+  
+  //   const storedAddress = sessionStorage.getItem("address");
+  //   const selectedAddress = storedAddress ? JSON.parse(storedAddress) : null;
+  //   // const deliveryChargeDisplay =
+  //   //   selectedAddress?.deliveryCharge || deliveryCharge || 0;    
+  //   const deliveryChargeDisplay = deliveryCharge || 0;
+  
+  //   const totalPrice = getTotalPrice();
+  //   const totalWithDelivery = parseFloat(deliveryChargeDisplay);
+
+  //   // ✅ Reset promoCode when selectedProducts changes
+  //   sessionStorage.removeItem("promoCode");
+  //   setPromoCode(""); // Reflect on UI as well
+  
+  //   // Update state and sessionStorage
+  //   if (totalPrice > 0) {
+  //     setSavedTotalPrice(totalPrice);
+  //     sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
+  //   } else {
+  //     setSavedTotalPrice(0);
+  //     sessionStorage.removeItem("savedTotalPrice");
+  //   }
+  
+  //   if (totalWithDelivery > 0) {
+  //     setSavedTotalWithDelivery(totalWithDelivery);
+  //     sessionStorage.setItem("savedTotalWithDelivery", totalWithDelivery.toString());
+  //   } else {
+  //     setSavedTotalWithDelivery(0);
+  //     sessionStorage.removeItem("savedTotalWithDelivery");
+  //   }
+
+
+  //   // Reset discount and newTotal when selectedProducts change
+  //   setDiscount(0);
+  //   setNewTotal(totalPrice + totalWithDelivery); // Reset to total without discount
+  //   sessionStorage.setItem("discount", "0");
+  //   sessionStorage.setItem("newTotal", (totalPrice + totalWithDelivery).toString());
+
+  //   // setPromoCode("");
+
+  //     // Reset promoCode from session storage
+  // setPromoCode("");
+  // sessionStorage.setItem("promoCode", ""); // Reset promo code
+
+  //   setMessage("");
+  //   setError(""); 
+  
+  //   // Clear sessionStorage if cart is empty
+  //   if (state.cart.length === 0) {
+  //     setSavedTotalPrice(0);
+  //     setSavedTotalWithDelivery(0);
+  //     setDiscount(0);
+  //     setNewTotal(0); // Reset newTotal
+  //     sessionStorage.removeItem("savedTotalPrice");
+  //     sessionStorage.removeItem("savedTotalWithDelivery");
+  //     sessionStorage.removeItem("discount"); // Clear discount
+  //     sessionStorage.removeItem("newTotal"); // Clear newTotal
+  //     sessionStorage.removeItem("promoCode");
+  //     setPromoCode("");
+  //   }
+  // }, [state.cart, state.selectedProducts, deliveryCharge]);
 
   useEffect(() => {
     const getTotalPrice = () => {
@@ -556,74 +635,42 @@ export default function CheckoutSummary({ deliveryCharge }) {
             item.sizeColor?.nosize?.length === 0 && item.discountPrice
               ? item.discountPrice
               : item.price;
-  
           return accumulator + price * item.qty;
         }
         return accumulator;
       }, 0);
     };
   
-    const storedAddress = sessionStorage.getItem("address");
-    const selectedAddress = storedAddress ? JSON.parse(storedAddress) : null;
-    // const deliveryChargeDisplay =
-    //   selectedAddress?.deliveryCharge || deliveryCharge || 0;    
     const deliveryChargeDisplay = deliveryCharge || 0;
-  
     const totalPrice = getTotalPrice();
-    const totalWithDelivery = parseFloat(deliveryChargeDisplay);
-
-    // ✅ Reset promoCode when selectedProducts changes
-    sessionStorage.removeItem("promoCode");
-    setPromoCode(""); // Reflect on UI as well
+    const totalWithDelivery = parseFloat(deliveryChargeDisplay) + (isExpressDelivery ? 10 : 0); // Add 10 if Express Delivery is selected
   
     // Update state and sessionStorage
-    if (totalPrice > 0) {
-      setSavedTotalPrice(totalPrice);
-      sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
-    } else {
-      setSavedTotalPrice(0);
-      sessionStorage.removeItem("savedTotalPrice");
-    }
+    setSavedTotalPrice(totalPrice);
+    setSavedTotalWithDelivery(totalWithDelivery);
+    sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
+    sessionStorage.setItem("savedTotalWithDelivery", totalWithDelivery.toString());
   
-    if (totalWithDelivery > 0) {
-      setSavedTotalWithDelivery(totalWithDelivery);
-      sessionStorage.setItem("savedTotalWithDelivery", totalWithDelivery.toString());
-    } else {
-      setSavedTotalWithDelivery(0);
-      sessionStorage.removeItem("savedTotalWithDelivery");
-    }
-
-
-    // Reset discount and newTotal when selectedProducts change
+    // Reset discount and newTotal
     setDiscount(0);
-    setNewTotal(totalPrice + totalWithDelivery); // Reset to total without discount
+    setNewTotal(totalPrice + totalWithDelivery);
     sessionStorage.setItem("discount", "0");
     sessionStorage.setItem("newTotal", (totalPrice + totalWithDelivery).toString());
-
-    // setPromoCode("");
-
-      // Reset promoCode from session storage
-  setPromoCode("");
-  sessionStorage.setItem("promoCode", ""); // Reset promo code
-
-    setMessage("");
-    setError(""); 
   
     // Clear sessionStorage if cart is empty
     if (state.cart.length === 0) {
       setSavedTotalPrice(0);
       setSavedTotalWithDelivery(0);
       setDiscount(0);
-      setNewTotal(0); // Reset newTotal
+      setNewTotal(0);
       sessionStorage.removeItem("savedTotalPrice");
       sessionStorage.removeItem("savedTotalWithDelivery");
-      sessionStorage.removeItem("discount"); // Clear discount
-      sessionStorage.removeItem("newTotal"); // Clear newTotal
+      sessionStorage.removeItem("discount");
+      sessionStorage.removeItem("newTotal");
       sessionStorage.removeItem("promoCode");
       setPromoCode("");
     }
-  }, [state.cart, state.selectedProducts, deliveryCharge]);
-
+  }, [state.cart, state.selectedProducts, deliveryCharge, isExpressDelivery]); // Add isExpressDelivery to dependencies
 
   const handlePromoCodeChange = (e) => {
     const newPromoCode = e.target.value;
@@ -969,6 +1016,26 @@ const applyPromoCode = async () => {
         </Typography>
       </FlexBox>
 
+
+{/* Express delivery  */}
+      <FlexBox flexDirection="column" mb="1rem" p="0.5rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f9f9f9">
+  <Typography fontWeight="500" fontSize="14px">Delivery Option</Typography>
+  
+  <FlexBox alignItems="center">
+  <input
+    type="checkbox" // Change to checkbox for toggling
+    id="expressDelivery"
+    checked={isExpressDelivery}
+    onChange={() => setIsExpressDelivery(!isExpressDelivery)}
+  />
+  <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px" }}>
+    Express Delivery (+10)
+  </label>
+</FlexBox>
+
+</FlexBox>
+
+
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
         <Typography color="text.hint">Subtotal:</Typography>
         <FlexBox alignItems="flex-end">
@@ -978,14 +1045,22 @@ const applyPromoCode = async () => {
         </FlexBox>
       </FlexBox>
 
-      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      {/* <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
         <Typography color="text.hint">Shipping:</Typography>
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
             {currency(savedTotalWithDelivery)}
           </Typography>
         </FlexBox>
-      </FlexBox>
+      </FlexBox> */}
+      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+  <Typography color="text.hint">Shipping:</Typography>
+  <FlexBox alignItems="flex-end">
+    <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+      {currency(savedTotalWithDelivery)}
+    </Typography>
+  </FlexBox>
+</FlexBox>
 
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
         <Typography color="text.hint">VAT:</Typography>
@@ -1003,9 +1078,12 @@ const applyPromoCode = async () => {
 
       <Divider mb="1rem" />
 
-      <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
+      {/* <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
         {currency((savedTotalWithDelivery + savedTotalPrice)-discount)}
-      </Typography>
+      </Typography> */}
+      <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
+  {currency((savedTotalWithDelivery + savedTotalPrice) - discount)}
+</Typography>
     </Card1>
   );
 }
