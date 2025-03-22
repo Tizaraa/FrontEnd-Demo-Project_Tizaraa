@@ -245,6 +245,8 @@ import authService from "services/authService";
 import Address from "@models/address.model";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { SemiSpan } from "@component/Typography";
+import { Truck, TruckIcon } from "lucide-react";
+import { FaTruckFast } from "react-icons/fa6";
 
 export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) {
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -427,6 +429,35 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
 
   return (
     <Fragment>
+      <FlexBox flexDirection="column" mb="1rem" p="0.5rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f9f9f9">
+        <Grid container spacing={2} alignItems="center">
+
+          <Grid item xs={6}>
+            <FlexBox alignItems="center">
+            <FaTruckFast style={{ fontSize: "24px", color: "#E94560" }} />
+              <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
+                <span style={{ color: "#E94560", fontWeight: "600" }}>Delivery Options</span>
+              </label>
+            </FlexBox>
+          </Grid>
+
+          <Grid item xs={6}>
+            <FlexBox alignItems="center" justifyContent="flex-end">
+              <input
+                type="checkbox"
+                id="expressDelivery"
+                style={{ cursor: "pointer", accentColor: "#E94560" }}
+              />
+              <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
+                <span style={{ color: "#E94560", fontWeight: "600" }}>Express Delivery</span>
+              </label>
+            </FlexBox>
+          </Grid>
+
+        </Grid>
+      </FlexBox>
+
+
       {addresses.length > 0 ? (
         addresses.map((item) => (
           <AddressItem
@@ -496,3 +527,4 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
     </Grid>
   );
 }
+
