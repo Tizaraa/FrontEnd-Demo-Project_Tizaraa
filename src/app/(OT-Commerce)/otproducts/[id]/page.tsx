@@ -90,6 +90,16 @@ type ConfiguredItem = {
   Configurators: {
     Vid: string;
   }[];
+  QuantityRanges: {
+    MinQuantity: number;
+    MaxQuantity: number;
+    Price: {
+      OriginalPrice: number;
+      MarginPrice: number;
+      ConvertedPrice: string;
+      ConvertedPriceWithoutSign: string;
+    };
+  }[];
 };
 
 
@@ -110,6 +120,7 @@ const ProductPage = () => {
   const [relatedProducts, setRelatedProducts] = useState<RelatedProduct[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [windowWidth, setWindowWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+  const [pricingTiers, setPricingTiers] = useState([]);
 
    // Inline style for images
    const imageStyle = {
@@ -198,47 +209,59 @@ const ProductPage = () => {
   }, []);
 
   // Fetch and render product attributes
-useEffect(() => {
-  const fetchProductData = async () => {
-    if (!id) return;
-
-    try {
-      const response = await fetch(
-        `${ApiBaseUrl.baseUrl}otpi/get-item-full-info/${id}`,
-        { method: "GET" }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch product data");
-      }
-
-      const data = await response.json();
-      // console.log("details:", data);
-
-      if (data && data.Result && data.Result.Item) {
-        setProduct(data.Result.Item);
-
-        // Handle Related Products
-        if (
-          data.Result.Item.RelatedGroups &&
-          data.Result.Item.RelatedGroups.length > 0
-        ) {
-          setRelatedProducts(data.Result.Item.RelatedGroups[0].Items);
-        } else {
-          setRelatedProducts([]);
+  useEffect(() => {
+    const fetchProductData = async () => {
+      if (!id) return;
+  
+      try {
+        const response = await fetch(
+          `${ApiBaseUrl.baseUrl}otpi/get-item-full-info/${id}`,
+          { method: "GET" }
+        );
+  
+        if (!response.ok) {
+          throw new Error("Failed to fetch product data");
         }
-      } else {
-        throw new Error("Product not found");
+  
+        const data = await response.json();
+        console.log("details:", data);
+  
+        if (data && data.Result && data.Result.Item) {
+          setProduct(data.Result.Item);
+        
+          // Extract pricing tiers from the QuantityRanges array
+          const pricingTiers = data.Result.Item.QuantityRanges?.map((range) => ({
+            MinQuantity: range.MinQuantity, // Extract MinQuantity
+            Price: {
+              ConvertedPriceWithoutSign: range.Price.ConvertedPrice.replace(/[^0-9.]/g, ""), // Extract numeric value from "199.50৳"
+              CurrencySign: range.Price.ConvertedPrice.replace(/[0-9.]/g, ""), // Extract currency sign from "199.50৳"
+            },
+          })) || []; // Fallback to an empty array if QuantityRanges is missing
+        
+          // Set pricing tiers in the state
+          setPricingTiers(pricingTiers);
+        
+          // Handle Related Products
+          if (
+            data.Result.Item.RelatedGroups &&
+            data.Result.Item.RelatedGroups.length > 0
+          ) {
+            setRelatedProducts(data.Result.Item.RelatedGroups[0].Items);
+          } else {
+            setRelatedProducts([]);
+          }
+        } else {
+          throw new Error("Product not found");
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchProductData();
-}, [id]);
+    };
+  
+    fetchProductData();
+  }, [id]);
 
 // Rendering Attributes
 const renderAttributes = (attributes: Attribute[]) => {
@@ -303,6 +326,7 @@ const renderAttributes = (attributes: Attribute[]) => {
   sellerId={""}
   configuredItems={product?.ConfiguredItems || []}
   Attributes={product.Attributes || []}
+  pricingTiers={pricingTiers}
 
 />
 
