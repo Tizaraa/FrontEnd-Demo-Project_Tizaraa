@@ -103,9 +103,27 @@ const AddToCartButton = ({
     });
   };
 
-  const handleAddToCart = () => {
-    setIsLoading(true);
+  // const handleAddToCart = () => {
+  //   setIsLoading(true);
 
+  //   setTimeout(() => {
+  //     handleCartAmountChange(1);
+  //     setIsLoading(false);
+  //     toast.success("Added to cart successfully!");
+  //   }, 1000); // Simulate API call delay
+  // };
+
+  // newly added 
+  const handleAddToCart = () => {
+    const existingProductType = state.cart.length > 0 ? state.cart[0].productType : null;
+  
+    if (existingProductType && existingProductType !== productType) {
+      toast.error(`You cannot add ${productType} products to the cart with ${existingProductType} products.`);
+      return;
+    }
+  
+    setIsLoading(true);
+  
     setTimeout(() => {
       handleCartAmountChange(1);
       setIsLoading(false);
