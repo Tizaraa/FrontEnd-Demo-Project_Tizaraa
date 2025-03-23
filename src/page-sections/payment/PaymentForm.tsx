@@ -529,63 +529,175 @@ export default function PaymentForm() {
         localStorage.setItem("orderId", orderId);
         localStorage.setItem("orderSuccess", "true");
 
-        await Promise.all(
-          cart.map(async (cartdata) => {
-            try {
-              // Set color handling logic
-              let color = cartdata.id;
-              if (/\D--\d+$/.test(cartdata.id)) {
-                color = cartdata.id.replace(/--\d+$/, "");
-              } else if (cartdata.id) {
-                color = "";
-              }
+  // await Promise.all(
+  //         cart.map(async (cartdata) => {
+  //           try {
+  //             // Set color handling logic
+  //             let color = cartdata.id;
+  //             if (/\D--\d+$/.test(cartdata.id)) {
+  //               color = cartdata.id.replace(/--\d+$/, "");
+  //             } else if (cartdata.id) {
+  //               color = "";
+  //             }
 
-              // Place order items for all products, including OTC
-              const response = await axios.post(
-                `${ApiBaseUrl.baseUrl}checkout/order-items`,
-                {
-                  orders: [
-                    {
-                      delivery_charge: savedShipping,
-                      user_id: userinfo.id,
-                      seller_id: cartdata.sellerId,
-                      order_id: orderId,
-                      product_id: cartdata.productId,
-                      color: cartdata.selectedColor,
-                      size: cartdata.selectedSize,
-                      qty: cartdata.qty,
-                      note1: "lorem10",
+  //             // Place order items for all products, including OTC
+  //             const response = await axios.post(
+  //               `${ApiBaseUrl.baseUrl}checkout/order-items`,
+  //               // {
+  //               //   orders: [
+  //               //     {
+  //               //       delivery_charge: savedShipping,
+  //               //       user_id: userinfo.id,
+  //               //       seller_id: cartdata.sellerId,
+  //               //       order_id: orderId,
+  //               //       product_id: cartdata.productId,
+  //               //       color: cartdata.selectedColor,
+  //               //       size: cartdata.selectedSize,
+  //               //       qty: cartdata.qty,
+  //               //       note1: "lorem10",
                       
-                      // single_amount: cartdata.price,
-                      single_amount: cartdata.discountPrice ? cartdata.discountPrice : cartdata.price,
+  //               //       // single_amount: cartdata.price,
+  //               //       single_amount: cartdata.discountPrice ? cartdata.discountPrice : cartdata.price,
 
-                      // total_amount: cartdata.total_amount,
-                      // total_amount: cartdata.discountPrice ? cartdata.discountPrice : cartdata.total_amount,
+  //               //       // total_amount: cartdata.total_amount,
+  //               //       // total_amount: cartdata.discountPrice ? cartdata.discountPrice : cartdata.total_amount,
 
-                      // Total price for the quantity
-                      total_amount: (cartdata.discountPrice ? cartdata.discountPrice : cartdata.price) * cartdata.qty,
-                    },
-                  ],
-                },
-                {
-                  headers: {
-                    Authorization: `Bearer ${authtoken}`,
-                    "Content-Type": "application/json",
-                  },
-                }
-              );
+  //               //       // Total price for the quantity
+  //               //       total_amount: (cartdata.discountPrice ? cartdata.discountPrice : cartdata.price) * cartdata.qty,
+  //               //     },
+  //               //   ],
+  //               // },
+
+  //               {
+  //                 orders: [
+  //                   {
+  //                     delivery_charge: savedShipping,
+  //                     user_id: userinfo.id,
+  //                     seller_id: cartdata.sellerId,
+  //                     order_id: orderId,
+  //                     product_id: cartdata.productId,
+  //                     color: cartdata.selectedColor,
+  //                     size: cartdata.selectedSize,
+  //                     qty: cartdata.qty,
+  //                     note1: "lorem10",
+
+  //                     // Calculate the price for a single item (single_amount):
+  //                     // If both color and size are selected, fetch the price from sizeColor based on the selected color and size.
+  //                     // If the size/color price isn't found, fall back to the base product price (cartdata.price).
+  //                     // If color/size are not selected, check if a discountPrice exists — use that instead.
+  //                     // Ensure the final price is always a number (even if it comes as a string like "100.00").
+  //                     single_amount: Number(
+  //                       cartdata.selectedColor && cartdata.selectedSize
+  //                         ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
+  //                             (s) => s.size === cartdata.selectedSize
+  //                           )?.price || cartdata.price
+  //                         : cartdata.discountPrice || cartdata.price
+  //                     ),
+
+  //                     // Calculate the total price for the item (total_amount):
+  //                     // Uses the same logic as single_amount to get the correct price.
+  //                     // Multiplies the price by the item quantity (cartdata.qty).
+  //                     // Converts the final total amount to a number to avoid string multiplication errors.
+  //                     // total_amount: Number(
+  //                     //   (cartdata.selectedColor && cartdata.selectedSize
+  //                     //     ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
+  //                     //         (s) => s.size === cartdata.selectedSize
+  //                     //       )?.price || cartdata.price
+  //                     //     : cartdata.discountPrice || cartdata.price) * cartdata.qty
+  //                     // ),
+
+  //                     total_amount: single_amount * cartdata.qty
+  //                   },
+  //                 ],
+  //               },
+                
+  //               {
+  //                 headers: {
+  //                   Authorization: `Bearer ${authtoken}`,
+  //                   "Content-Type": "application/json",
+  //                 },
+  //               }
+  //             );
             
-              console.log("Cart Item Responsee:", response.data);
-            } catch (error) {
-              console.error("Failed to add item to order:", error.response);
-  setIsHasLoading(false)
-            }
-          })
-        );
+  //             console.log("Cart Item Responsee:", response.data);
+  //           } catch (error) {
+  //             console.error("Failed to add item to order:", error.response);
+  // setIsHasLoading(false)
+  //           }
+  //         })
+  //       );
 
-        router.push("/orders?status=success&message=Order placed successfully");
-        localStorage.removeItem("orderId");
-        localStorage.removeItem("selectedProducts");
+
+      const handleOrderItems = async () => {
+        try {
+          // Wait for all async operations to finish using Promise.all
+          await Promise.all(
+            cart.map(async (cartdata) => {
+              try {
+                // Set color handling logic
+                let color = cartdata.id;
+                if (/\D--\d+$/.test(cartdata.id)) {
+                  color = cartdata.id.replace(/--\d+$/, "");
+                } else if (cartdata.id) {
+                  color = "";
+                }
+      
+                // Calculate the price for a single item (single_amount):
+                const single_amount = Number(
+                  cartdata.selectedColor && cartdata.selectedSize
+                    ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
+                        (s) => s.size === cartdata.selectedSize
+                      )?.price || cartdata.price
+                    : cartdata.discountPrice || cartdata.price
+                );
+      
+                // Create the order object
+                const order = {
+                  delivery_charge: savedShipping,
+                  user_id: userinfo.id,
+                  seller_id: cartdata.sellerId,
+                  order_id: orderId,
+                  product_id: cartdata.productId,
+                  color: cartdata.selectedColor,
+                  size: cartdata.selectedSize,
+                  qty: cartdata.qty,
+                  note1: "lorem10",
+                  single_amount: single_amount,
+                  total_amount: single_amount * cartdata.qty, // Calculate the total price based on quantity
+                };
+      
+                // Send the order to the API
+                const response = await axios.post(
+                  `${ApiBaseUrl.baseUrl}checkout/order-items`,
+                  { orders: [order] },
+                  {
+                    headers: {
+                      Authorization: `Bearer ${authtoken}`,
+                      "Content-Type": "application/json",
+                    },
+                  }
+                );
+      
+                console.log("Cart Item Response:", response.data);
+      
+              } catch (error) {
+                console.error("Failed to add item to order:", error.response);
+              }
+            })
+          );
+        } catch (error) {
+          console.error("Error in processing cart items:", error);
+        } finally {
+          setIsHasLoading(false);
+        }
+      };
+      
+      // Call the function to handle the order items
+      handleOrderItems();
+  
+      router.push("/orders?status=success&message=Order placed successfully");
+      localStorage.removeItem("orderId");
+      localStorage.removeItem("selectedProducts");
       sessionStorage.removeItem("selectedProducts");
       //localStorage.removeItem("cart");
       sessionStorage.removeItem("cartItems");

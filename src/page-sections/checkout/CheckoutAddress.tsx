@@ -653,7 +653,8 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
             }
           )
             .then((response) => {
-              const totalDeliveryCost = response.data.totalDeliveryCost;
+              // const totalDeliveryCost = response.data.totalDeliveryCost;
+              const totalDeliveryCost = Math.round(response.data.totalDeliveryCost);
               setDeliveryCharge(totalDeliveryCost);
               sessionStorage.setItem("deliveryCharge", totalDeliveryCost.toString());
             })
