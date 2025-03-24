@@ -1163,106 +1163,105 @@ export default function OtProductsIntro({
             </div>
 
             <div className={styles.tableContainerStyle}>
-              {configuredItems.length > 0 && configuredItems.some(item => 
-                  item.Configurators.some(config => config.Vid === selectedSpec)
-                ) ? (
-                <table className={styles.tableStyle}>
-                  <thead>
-                    <tr className={styles.tableHeaderStyle}>
-                      <th className={styles.tableHeaderCellStyle}>Variants</th>
-                      <th className={styles.tableHeaderCellStyle}>Price</th>
-                      <th className={styles.tableHeaderCellStyle}>Quantity</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {configuredItems
-                      .filter(item => 
-                        item.Configurators.some(config => config.Vid === selectedSpec)
-                      )
-                      .map((item) => (
-                        <tr
-                          key={item.Id}
-                          onClick={() => {
-                            handleRowClick(item.Id);
-                          }}
-                          style={{
-                            backgroundColor: selectedRowId === item.Id ? '#e0e0e0' : 'transparent',
-                            cursor: 'pointer',
-                            transition: 'background-color 0.3s ease', 
-                          }}
-                        >
-                          <td className={styles.tableCellStyle}>
-                            {item.Configurators.map((config, index) => {
-                              const matchingAttribute = Attributes.find(attr => attr.Vid === config.Vid);
-                              return (
-                                <Fragment key={index}>
-                                  {matchingAttribute ? matchingAttribute.Value : config.Vid} 
-                                  {index < item.Configurators.length - 1 && ", "}
-                                </Fragment>
-                              );
-                            })}
-                          </td>
-                          {item.QuantityRanges?.length ? (
-  <td className={styles.tableCellStyle}>
-    {item.Price.CurrencySign}
-    {item.QuantityRanges[0].Price.ConvertedPriceWithoutSign}
-  </td>
-) : (
-  <td className={styles.tableCellStyle}>
-    {item.Price.CurrencySign}
-    {item.Price.ConvertedPriceWithoutSign}
-  </td>
-)}
+  {configuredItems.length > 0 && configuredItems.some(item => 
+      item.Configurators.some(config => config.Vid === selectedSpec)
+    ) ? (
+    <table className={styles.tableStyle}>
+      <thead>
+        <tr className={styles.tableHeaderStyle}>
+          <th className={styles.tableHeaderCellStyle}>Variants</th>
+          <th className={styles.tableHeaderCellStyle}>Price</th>
+          <th className={styles.tableHeaderCellStyle}>Action</th> 
+        </tr>
+      </thead>
+      <tbody>
+  {configuredItems
+    .filter(item => 
+      item.Configurators.some(config => config.Vid === selectedSpec)
+    )
+    .map((item) => (
+      <tr
+        key={item.Id}
+        onClick={() => {
+          handleRowClick(item.Id);
+        }}
+        style={{
+         
+          cursor: 'pointer',
+          transition: 'background-color 0.3s ease', 
+        }}
+      >
+        <td className={styles.tableCellStyle}>
+          {item.Configurators.map((config, index) => {
+            const matchingAttribute = Attributes.find(attr => attr.Vid === config.Vid);
+            return (
+              <Fragment key={index}>
+                {matchingAttribute ? matchingAttribute.Value : config.Vid} 
+                {index < item.Configurators.length - 1 && ", "}
+              </Fragment>
+            );
+          })}
+        </td>
+        {item.QuantityRanges?.length ? (
+          <td className={styles.tableCellStyle}>
+            {item.Price.CurrencySign}
+            {item.QuantityRanges[0].Price.ConvertedPriceWithoutSign}
+          </td>
+        ) : (
+          <td className={styles.tableCellStyle}>
+            {item.Price.CurrencySign}
+            {item.Price.ConvertedPriceWithoutSign}
+          </td>
+        )}
+        <td className={styles.tableCellStyle} style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+  <AddToCartButton
+    productId={item.Id}
+    sellerId={sellerId}
+    images={images}
+    title={title}
+    discountPrice={discountPrice}
+    price={item.Price.ConvertedPriceWithoutSign} 
+    slug={slug}
+    productStock={item.Quantity} 
+    productType="Abroad"
+    sizeColor={sizeColor}
+    selectedColor={selectedColor}
+    selectedSize={selectedSize}
+    selectedPrice={item.Price.ConvertedPriceWithoutSign} 
+  />
+  <span style={{ fontSize: '14px', fontWeight: 'bold', marginTop: '-40px' }}>{item.Quantity}</span>
+</div>
 
-                          <td className={styles.tableCellStyle}>
-                            <span>{item.Quantity}</span>
-                          </td>
-                        </tr>
-                      ))
-                    }
-                  </tbody>
-                </table>
-              ) : (
-                <div>
-                  <AddToCartButton
-                    productId={productId || id}
-                    sellerId={sellerId}
-                    images={images}
-                    title={title}
-                    discountPrice={discountPrice}
-                    price={selectedPrice}
-                    slug={slug}
-                    productStock={productStock}
-                    productType="Abroad"
-                    sizeColor={sizeColor}
-                    selectedColor={selectedColor}
-                    selectedSize={selectedSize}
-                    selectedPrice={selectedPrice}
-                  />
-                </div>
-              )}
-            </div>
 
-            {selectedRowId && (
-              <div style={{ marginTop: '20px' }}>
-                <AddToCartButton
-                  productId={id}
-                  sellerId={sellerId}
-                  images={images}
-                  title={title}
-                  discountPrice={discountPrice}
-                  price={selectedPrice}
-                  slug={slug}
-                  productStock={getSelectedRowQuantity()}
-                  productType="Abroad"
-                  sizeColor={sizeColor}
-                  selectedColor={selectedColor}
-                  selectedSize={selectedSize}
-                  selectedPrice={selectedPrice}
-                />
-              </div>
-            )}
-          </div>
+
+        </td>
+      </tr>
+    ))
+  }
+</tbody>
+    </table>
+  ) : (
+    <div>
+      <AddToCartButton
+        productId={productId || id}
+        sellerId={sellerId}
+        images={images}
+        title={title}
+        discountPrice={discountPrice}
+        price={selectedPrice}
+        slug={slug}
+        productStock={productStock}
+        productType="Abroad"
+        sizeColor={sizeColor}
+        selectedColor={selectedColor}
+        selectedSize={selectedSize}
+        selectedPrice={selectedPrice}
+      />
+    </div>
+  )}
+</div>
+</div>
 
         
         </Grid>
