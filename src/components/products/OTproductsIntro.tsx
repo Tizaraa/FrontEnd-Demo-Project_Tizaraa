@@ -1082,29 +1082,35 @@ export default function OtProductsIntro({
   {pricingTiers &&
     pricingTiers.length > 0 &&
     pricingTiers.map((tier, index) => {
-      // Determine the active price with a fallback
-      const activePrice = discountPrice || selectedPrice || 0;
+      // Find the selected configured item
+      const selectedConfiguredItem = configuredItems.find(
+        (item) =>
+          item.Id === selectedRowId ||
+          item.Configurators.some((config) => config.Vid === selectedSpec)
+      );
 
-      // Log for debugging
-      console.log("Active Price:", activePrice);
-      console.log("Tier Price:", tier.Price.ConvertedPriceWithoutSign);
+      // Determine the price to compare from the selected configured item
+      const itemPrice = selectedConfiguredItem
+        ? selectedConfiguredItem.QuantityRanges?.length
+          ? selectedConfiguredItem.QuantityRanges[0].Price.ConvertedPriceWithoutSign
+          : selectedConfiguredItem.Price.ConvertedPriceWithoutSign
+        : price; // Fallback to the base price if no configured item is selected
 
-      // Check if the active price matches the tier's price with a tolerance
-      const isMatchedPrice =
-        tier.Price &&
-        tier.Price.ConvertedPrice &&
-        Math.abs(parseFloat(tier.Price.ConvertedPriceWithoutSign) - activePrice) < 0.01;
+      // Check if the tier price matches the item price
+      const isMatchingPrice =
+        tier.Price.ConvertedPriceWithoutSign === itemPrice;
 
       return (
         <div
           key={index}
           style={{
-            background: isMatchedPrice ? "#00a9ff" : "#f5f5f5", // Highlight if matched
-            color: isMatchedPrice ? "white" : "black", // Change text color for better contrast
+            background: isMatchingPrice ? "#e74c3ca3" : "#f5f5f5", // Highlight if price matches
+            color: "black",
             padding: "15px",
             borderRadius: "8px",
             textAlign: "center",
             width: "120px",
+            border: isMatchingPrice ? "2px solid #e74c3c" : "none", // Optional: Add a border for emphasis
           }}
         >
           <div style={{ fontSize: "18px", fontWeight: "bold" }}>
