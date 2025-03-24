@@ -59,7 +59,7 @@ export default function ShopCard1({
           <Rating size="small" value={rating || 0} outof={5} color="warn" />
         </Box>
 
-        <FlexBox mb="8px">
+        {/* <FlexBox mb="8px">
           <Icon defaultcolor="currentColor" size="15px" mt="5px">
             map-pin-2
           </Icon>
@@ -67,7 +67,7 @@ export default function ShopCard1({
           <SemiSpan color="white" ml="12px">
             {seller_address}
           </SemiSpan>
-        </FlexBox>
+        </FlexBox> */}
 
         <FlexBox mb="8px">
           <Icon defaultcolor="currentColor" size="15px" mt="5px">
@@ -77,6 +77,11 @@ export default function ShopCard1({
           <SemiSpan color="white" ml="12px">
             Province: {province_name}, City: {city_name}, Area: {area_name}
           </SemiSpan>
+
+          {/* <SemiSpan color="white" ml="12px">
+            {`Province: ${province_name}, City: ${city_name}, Area: ${area_name}, ${seller_address?.split(",")[0]}`}
+          </SemiSpan> */}
+
         </FlexBox>
 
         <FlexBox>

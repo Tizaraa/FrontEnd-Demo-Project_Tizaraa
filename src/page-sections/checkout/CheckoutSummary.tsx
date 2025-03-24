@@ -1046,23 +1046,23 @@ const applyPromoCode = async () => {
       </FlexBox>
 
 
-{/* Express delivery  */}
-      <FlexBox flexDirection="column" mb="1rem" p="0.5rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f9f9f9">
-  <Typography fontWeight="500" fontSize="14px">Delivery Option</Typography>
-  
-  <FlexBox alignItems="center">
-  <input
-    type="checkbox" // Change to checkbox for toggling
-    id="expressDelivery"
-    checked={isExpressDelivery}
-    onChange={() => setIsExpressDelivery(!isExpressDelivery)}
-  />
-  <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px" }}>
-    Express Delivery (+10)
-  </label>
-</FlexBox>
+          {/* Express delivery  */}
+          {/* <FlexBox flexDirection="column" mb="1rem" p="0.5rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f9f9f9">
+            <Typography fontWeight="500" fontSize="14px">Delivery Option</Typography>
+            
+            <FlexBox alignItems="center">
+            <input
+              type="checkbox" // Change to checkbox for toggling
+              id="expressDelivery"
+              checked={isExpressDelivery}
+              onChange={() => setIsExpressDelivery(!isExpressDelivery)}
+            />
+            <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px" }}>
+              Express Delivery (+10)
+            </label>
+          </FlexBox>
 
-</FlexBox>
+          </FlexBox> */}
 
 
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">

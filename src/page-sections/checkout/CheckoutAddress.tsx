@@ -230,6 +230,314 @@
 //  ==============================================================
 
 
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import { Fragment } from "react";
+// import CheckBox from "@component/CheckBox";
+// import FlexBox from "@component/FlexBox";
+// import Grid from "@component/grid/Grid";
+// import { Chip } from "@component/Chip";
+// import { Small } from "@component/Typography";
+// import Typography from "@component/Typography";
+// import authService from "services/authService";
+// import Address from "@models/address.model";
+// import ApiBaseUrl from "api/ApiBaseUrl";
+// import { SemiSpan } from "@component/Typography";
+// import { Truck, TruckIcon } from "lucide-react";
+// import { FaTruckFast } from "react-icons/fa6";
+
+// export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) {
+//   const [addresses, setAddresses] = useState<Address[]>([]);
+//   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+//   const [province, setProvince] = useState([]); // State for storing provinces
+//   const authtoken = authService.getToken();
+
+//   // Fetch provinces data
+//   const fetchProvince = async () => {
+//     const authtoken = localStorage.getItem("token");
+//     try {
+//       const response = await axios.get(`${ApiBaseUrl.baseUrl}checkout/address`, {
+//         headers: {
+//           Authorization: `Bearer ${authtoken}`,
+//         },
+//       });
+
+//       if (Array.isArray(response.data)) {
+//         setProvince(response.data); // Set province data
+//       }
+//     } catch (error) {
+//       console.error("Error fetching provinces:", error);
+//     }
+//   };
+
+//   // Fetch addresses data
+//   useEffect(() => {
+//     const fetchAddresses = async () => {
+//       try {
+//         const response = await axios.get(`${ApiBaseUrl.baseUrl}user/address`, {
+//           headers: {
+//             Authorization: `Bearer ${authtoken}`,
+//           },
+//         });
+//         const fetchedAddresses = response.data.user;
+//         setAddresses(fetchedAddresses);
+//         onAddressChange(fetchedAddresses.length > 0, true);
+
+//         // Load the selected address from sessionStorage
+//         const storedAddress = sessionStorage.getItem("address");
+//         if (storedAddress) {
+//           const parsedAddress = JSON.parse(storedAddress);
+//           const matchingAddress = fetchedAddresses.find((addr) => addr.id === parsedAddress.id);
+//           if (matchingAddress) {
+//             handleSelect(matchingAddress, true); // Auto-select the stored address
+//             return;
+//           }
+//         }
+
+//         onAddressChange(fetchedAddresses.length > 0, false);
+//       } catch (error) {
+//         console.error("Error fetching addresses:", error);
+//         onAddressChange(false, false);
+//       }
+//     };
+
+//     fetchAddresses();
+//     fetchProvince(); // Fetch provinces when the component mounts
+//   }, [authtoken, onAddressChange]);
+
+//   // Calculate delivery charge when selectedAddress or selectedProducts change
+//   useEffect(() => {
+//     if (selectedAddress) {
+//       // Fetch the product data from sessionStorage
+//       const selectedProducts = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
+
+//       // Prepare the product data for the API request
+//       const products = selectedProducts.map((product) => ({
+//         id: `${product.productId}-${product.productType}`,
+//         name: product.name,
+//         price: product.discountPrice || product.price,
+//         productId: product.productId,
+//         productStock: product.productStock,
+//         productType: product.productType,
+//         qty: product.qty,
+//         sellerId: product.sellerId,
+//         slug: product.slug,
+//         total_amount: product.qty * (product.discountPrice || product.price),
+//       }));
+
+//       if (selectedAddress && selectedAddress.province_id) {
+//         const selectedProvince = province.find((prov: any) => prov.id === selectedAddress.province_id);
+//         if (selectedProvince) {
+//           // Call the API to get the delivery charge
+//           axios.post(
+//             `${ApiBaseUrl.baseUrl}delivery/charge/apply`,
+//             {
+//               province: selectedAddress.province_id,
+//               city: selectedAddress.city_id,
+//               area: selectedAddress.area_id,
+//               products: products,
+//             },
+//             {
+//               headers: {
+//                 Authorization: `Bearer ${authtoken}`,
+//               },
+//             }
+//           )
+//             .then((response) => {
+//               const totalDeliveryCost = response.data.totalDeliveryCost;
+//               setDeliveryCharge(totalDeliveryCost);
+//               sessionStorage.setItem("deliveryCharge", totalDeliveryCost.toString()); // Store in sessionStorage
+//             })
+//             .catch((error) => {
+//               console.error("Error fetching delivery charge:", error);
+//             });
+//         }
+//       }
+//     }
+//   }, [selectedAddress, province]); // Dependencies to trigger recalculation
+
+//   // Handle selection of an address and fetch shipping fee
+//   const handleSelect = async (item: Address, isAutoSelect = false) => {
+//     const selectedProvince = province.find((prov: any) => prov.id === item.province_id);
+
+//     // Fetch the product data from sessionStorage
+//     const selectedProducts = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
+
+//     // Prepare the product data for the API request
+//     const products = selectedProducts.map((product) => ({
+//       id: `${product.productId}-${product.productType}`,
+//       name: product.name,
+//       price: product.discountPrice || product.price,
+//       productId: product.productId,
+//       productStock: product.productStock,
+//       productType: product.productType,
+//       qty: product.qty,
+//       sellerId: product.sellerId,
+//       slug: product.slug,
+//       total_amount: product.qty * (product.discountPrice || product.price),
+//     }));
+
+//     if (selectedProvince) {
+//       try {
+//         const response = await axios.post(
+//           `${ApiBaseUrl.baseUrl}delivery/charge/apply`,
+//           {
+//             province: item.province_id,
+//             city: item.city_id,
+//             area: item.area_id,
+//             products: products,
+//           },
+//           {
+//             headers: {
+//               Authorization: `Bearer ${authtoken}`, // Added Authorization header
+//             },
+//           }
+//         );
+
+//         const totalDeliveryCost = response.data.totalDeliveryCost;
+//         setDeliveryCharge(totalDeliveryCost);
+//         sessionStorage.setItem("deliveryCharge", totalDeliveryCost.toString()); // Store in sessionStorage
+
+//         item.deliveryCharge = totalDeliveryCost; // Add deliveryCharge to the selected item
+//       } catch (error) {
+//         console.error("Error fetching delivery charge:", error);
+//       }
+//     }
+
+//     setSelectedAddress(item);
+//     if (!isAutoSelect) {
+//       sessionStorage.setItem("address", JSON.stringify(item)); // Store in sessionStorage only on manual selection
+//     }
+
+//     onAddressChange(true, true);
+//   };
+
+//   useEffect(() => {
+//     const storedAddress = sessionStorage.getItem("address");
+//     const storedCharge = sessionStorage.getItem("deliveryCharge");
+
+//     if (storedAddress) {
+//       setSelectedAddress(JSON.parse(storedAddress));
+//     }
+
+//     if (storedCharge) {
+//       setDeliveryCharge(parseFloat(storedCharge));
+//     }
+//   }, [setDeliveryCharge]);
+
+//   return (
+//     <Fragment>
+//       <FlexBox flexDirection="column" mb="1rem" p="0.5rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f9f9f9">
+//         <Grid container spacing={2} alignItems="center">
+
+//           <Grid item xs={6}>
+//             <FlexBox alignItems="center">
+//             <FaTruckFast style={{ fontSize: "24px", color: "#E94560" }} />
+//               <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
+//                 <span style={{ color: "#E94560", fontWeight: "600" }}>Delivery Options</span>
+//               </label>
+//             </FlexBox>
+//           </Grid>
+
+//           <Grid item xs={6}>
+//             <FlexBox alignItems="center" justifyContent="flex-end">
+//               <input
+//                 type="checkbox"
+//                 id="expressDelivery"
+//                 style={{ cursor: "pointer", accentColor: "#E94560" }}
+//               />
+//               <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
+//                 <span style={{ color: "#E94560", fontWeight: "600" }}>Express Delivery</span>
+//               </label>
+//             </FlexBox>
+//           </Grid>
+
+//         </Grid>
+//       </FlexBox>
+
+
+//       {addresses.length > 0 ? (
+//         addresses.map((item) => (
+//           <AddressItem
+//             key={item.id}
+//             item={item}
+//             isSelected={selectedAddress?.id === item.id}
+//             onSelect={handleSelect}
+//           />
+//         ))
+//       ) : (
+//         <FlexBox justifyContent="center" alignItems="center" width="100%">
+//           <SemiSpan>No addresses found</SemiSpan>
+//         </FlexBox>
+//       )}
+//     </Fragment>
+//   );
+// }
+
+// interface AddressItemProps {
+//   item: Address;
+//   isSelected: boolean;
+//   onSelect: (item: Address, isAutoSelect?: boolean) => void;
+// }
+
+// function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
+//   const handleCheckboxChange = () => {
+//     onSelect(item);
+//   };
+
+//   const landmarkMap: { [key: number]: string } = {
+//     1: "Home",
+//     2: "Office",
+//   };
+
+//   const landmarkLabel = landmarkMap[item.landmark] || "Other";
+
+//   return (
+//     <Grid
+//       style={{
+//         border: "0.5px solid #E94560",
+//         marginBottom: "1rem",
+//         borderRadius: "1rem",
+//         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+//       }}
+//     >
+//       <FlexBox my="0.5rem" padding="1px 14px">
+//         <CheckBox checked={isSelected} onChange={handleCheckboxChange} />
+//         <FlexBox fontWeight="600">
+//           <Typography className="pre" m="6px" textAlign="left">
+//             {item.name || "No Name"}
+//           </Typography>
+//           <Typography className="pre" m="6px" textAlign="left">
+//             {item.phone}
+//           </Typography>
+//         </FlexBox>
+//       </FlexBox>
+
+//       <FlexBox m="6px" textAlign="left" fontWeight="600">
+//         <Chip p="0.35rem 1rem" bg="#4CAF50">
+//           <Small color="white">{landmarkLabel}</Small>
+//         </Chip>
+
+//         <Typography className="pre" m="6px" textAlign="left">
+//           {item.address}
+//         </Typography>
+//       </FlexBox>
+//     </Grid>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+// ====================== UPDATE: Express Delivery Functionality added ==========================
 "use client";
 
 import { useEffect, useState } from "react";
@@ -245,12 +553,16 @@ import authService from "services/authService";
 import Address from "@models/address.model";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { SemiSpan } from "@component/Typography";
+import { FaTruckFast } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import { FaExclamationTriangle } from "react-icons/fa";
 
 export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
-  const [province, setProvince] = useState([]); // State for storing provinces
+  const [province, setProvince] = useState([]);
   const authtoken = authService.getToken();
+  const [expressDelivery, setExpressDelivery] = useState(false);
 
   // Fetch provinces data
   const fetchProvince = async () => {
@@ -263,7 +575,7 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
       });
 
       if (Array.isArray(response.data)) {
-        setProvince(response.data); // Set province data
+        setProvince(response.data);
       }
     } catch (error) {
       console.error("Error fetching provinces:", error);
@@ -289,7 +601,7 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
           const parsedAddress = JSON.parse(storedAddress);
           const matchingAddress = fetchedAddresses.find((addr) => addr.id === parsedAddress.id);
           if (matchingAddress) {
-            handleSelect(matchingAddress, true); // Auto-select the stored address
+            handleSelect(matchingAddress, true);
             return;
           }
         }
@@ -302,16 +614,13 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
     };
 
     fetchAddresses();
-    fetchProvince(); // Fetch provinces when the component mounts
+    fetchProvince();
   }, [authtoken, onAddressChange]);
 
-  // Calculate delivery charge when selectedAddress or selectedProducts change
+  // Recalculate delivery charge when selectedAddress or expressDelivery changes
   useEffect(() => {
     if (selectedAddress) {
-      // Fetch the product data from sessionStorage
       const selectedProducts = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
-
-      // Prepare the product data for the API request
       const products = selectedProducts.map((product) => ({
         id: `${product.productId}-${product.productType}`,
         name: product.name,
@@ -325,28 +634,28 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
         total_amount: product.qty * (product.discountPrice || product.price),
       }));
 
-      if (selectedAddress && selectedAddress.province_id) {
+      if (selectedAddress.province_id) {
         const selectedProvince = province.find((prov: any) => prov.id === selectedAddress.province_id);
         if (selectedProvince) {
-          // Call the API to get the delivery charge
+          const payload = {
+            express_delivery: expressDelivery ? 1 : 0,
+            province: selectedAddress.province_id,
+            city: selectedAddress.city_id,
+            area: selectedAddress.area_id,
+            products: products,
+          };
           axios.post(
-            `${ApiBaseUrl.baseUrl}delivery/charge/apply`,
-            {
-              province: selectedAddress.province_id,
-              city: selectedAddress.city_id,
-              area: selectedAddress.area_id,
-              products: products,
-            },
-            {
+            `${ApiBaseUrl.baseUrl}delivery/charge/apply`, payload, {
               headers: {
                 Authorization: `Bearer ${authtoken}`,
               },
             }
           )
             .then((response) => {
-              const totalDeliveryCost = response.data.totalDeliveryCost;
+              // const totalDeliveryCost = response.data.totalDeliveryCost;
+              const totalDeliveryCost = Math.round(response.data.totalDeliveryCost);
               setDeliveryCharge(totalDeliveryCost);
-              sessionStorage.setItem("deliveryCharge", totalDeliveryCost.toString()); // Store in sessionStorage
+              sessionStorage.setItem("deliveryCharge", totalDeliveryCost.toString());
             })
             .catch((error) => {
               console.error("Error fetching delivery charge:", error);
@@ -354,64 +663,46 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
         }
       }
     }
-  }, [selectedAddress, province]); // Dependencies to trigger recalculation
+  }, [selectedAddress, expressDelivery, province, authtoken, setDeliveryCharge]);
 
-  // Handle selection of an address and fetch shipping fee
+  // Handle selection of an address
   const handleSelect = async (item: Address, isAutoSelect = false) => {
-    const selectedProvince = province.find((prov: any) => prov.id === item.province_id);
-
-    // Fetch the product data from sessionStorage
-    const selectedProducts = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
-
-    // Prepare the product data for the API request
-    const products = selectedProducts.map((product) => ({
-      id: `${product.productId}-${product.productType}`,
-      name: product.name,
-      price: product.discountPrice || product.price,
-      productId: product.productId,
-      productStock: product.productStock,
-      productType: product.productType,
-      qty: product.qty,
-      sellerId: product.sellerId,
-      slug: product.slug,
-      total_amount: product.qty * (product.discountPrice || product.price),
-    }));
-
-    if (selectedProvince) {
-      try {
-        const response = await axios.post(
-          `${ApiBaseUrl.baseUrl}delivery/charge/apply`,
-          {
-            province: item.province_id,
-            city: item.city_id,
-            area: item.area_id,
-            products: products,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${authtoken}`, // Added Authorization header
-            },
-          }
-        );
-
-        const totalDeliveryCost = response.data.totalDeliveryCost;
-        setDeliveryCharge(totalDeliveryCost);
-        sessionStorage.setItem("deliveryCharge", totalDeliveryCost.toString()); // Store in sessionStorage
-
-        item.deliveryCharge = totalDeliveryCost; // Add deliveryCharge to the selected item
-      } catch (error) {
-        console.error("Error fetching delivery charge:", error);
-      }
-    }
-
     setSelectedAddress(item);
     if (!isAutoSelect) {
-      sessionStorage.setItem("address", JSON.stringify(item)); // Store in sessionStorage only on manual selection
+      sessionStorage.setItem("address", JSON.stringify(item));
     }
-
     onAddressChange(true, true);
   };
 
+  // Handle express delivery checkbox change
+  const handleExpressDeliveryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+      const storedAddress = JSON.parse(sessionStorage.getItem("address"));
+    
+      if (!storedAddress) {
+        toast.warning("Please select an address first!", {
+          position: "top-right",
+          autoClose: 3000,
+          style: {
+            background: "rgb(245, 124, 0)",
+            color: "#000",
+            fontSize: "16px",
+            border: "2px solid #fff",
+            boxShadow: "0 0 10px rgba(255, 152, 0, 0.7)",
+          },
+          icon: <FaExclamationTriangle style={{ color: "#000", fontSize: "20px" }} />, // Custom icon
+          progressStyle: {
+            background: "#fff",
+          },
+        });
+        return;
+      }
+
+    const isChecked = event.target.checked;
+    setExpressDelivery(isChecked);
+  };
+
+  // Load stored address and delivery charge on component mount
   useEffect(() => {
     const storedAddress = sessionStorage.getItem("address");
     const storedCharge = sessionStorage.getItem("deliveryCharge");
@@ -427,6 +718,33 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
 
   return (
     <Fragment>
+      <FlexBox flexDirection="column" mb="1rem" p="0.5rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f7eded">
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={6}>
+            <FlexBox alignItems="center">
+              <FaTruckFast style={{ fontSize: "24px", color: "#E94560" }} />
+              <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
+                <span style={{ color: "#E94560", fontWeight: "600" }}>Delivery Options</span>
+              </label>
+            </FlexBox>
+          </Grid>
+          <Grid item xs={6}>
+            <FlexBox alignItems="center" justifyContent="flex-end">
+              <input
+                checked={expressDelivery}
+                onChange={handleExpressDeliveryChange}
+                type="checkbox"
+                id="expressDelivery"
+                style={{ cursor: "pointer", accentColor: "#E94560" }}
+              />
+              <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
+                <span style={{ color: "#E94560", fontWeight: "600" }}>Express Delivery</span>
+              </label>
+            </FlexBox>
+          </Grid>
+        </Grid>
+      </FlexBox>
+
       {addresses.length > 0 ? (
         addresses.map((item) => (
           <AddressItem

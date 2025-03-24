@@ -1341,14 +1341,15 @@ const fetchShopsByArea = async (areaId) => {
                         city_name={item.city_name}
                         area_name={item.area_name}
                         rating={item.rating || 5}
+                        // seller_logo={item.seller_logo}
                         imgUrl={
-                          item.profilePicture
-                            ? `${ApiBaseUrl.ImgUrl}${item.profilePicture}`
+                          item.seller_logo
+                            ? `${ApiBaseUrl.ImgUrl}${item.seller_logo}`
                             : 'https://t4.ftcdn.net/jpg/04/15/60/27/360_F_415602715_uy5b6P84JetkpRCLxNmYgrx8pWIATsAD.jpg'
                         }
                         coverImgUrl={
-                          item.coverPicture
-                            ? `${ApiBaseUrl.ImgUrl}${item.coverPicture}`
+                          item.seller_banner
+                            ? `${ApiBaseUrl.ImgUrl}${item.seller_banner}`
                             : 'https://static.vecteezy.com/system/resources/previews/011/059/783/non_2x/best-seller-text-button-speech-bubble-best-seller-colorful-web-banner-template-illustration-vector.jpg'
                         }
                         shop_name_slug={`/shops/${item.shop_name_slug}`}

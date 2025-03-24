@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { Styledbutton } from "./style";
 import toast from 'react-hot-toast';
 import BeatLoader from "react-spinners/BeatLoader";
+import { FaShoppingCart } from "react-icons/fa";
 
 type AddToCartButtonProps = {
   productId: string | number;
@@ -127,7 +128,13 @@ const AddToCartButton = ({
     setTimeout(() => {
       handleCartAmountChange(1);
       setIsLoading(false);
-      toast.success("Added to cart successfully!");
+      // toast.success("Added to cart successfully!");
+      toast.success(
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <FaShoppingCart style={{ marginRight: '10px' }} />
+          Added to cart successfully!
+        </div>
+      );
     }, 1000); // Simulate API call delay
   };
 
