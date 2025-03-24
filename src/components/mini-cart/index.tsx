@@ -641,6 +641,7 @@ import CheckBox from "@component/CheckBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BeatLoader from "react-spinners/BeatLoader";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import { FaTrashAlt } from "react-icons/fa";
 
 type MiniCartProps = { toggleSidenav?: () => void };
 
@@ -808,7 +809,13 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
 
       dispatch({ type: "DESELECT_ALL_PRODUCTS" });
 
-      toast.success("Selected items deleted successfully");
+      // toast.success("Selected items deleted successfully");
+      toast.success(
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <FaTrashAlt style={{ marginRight: '10px', color:'red' }} />
+          Selected items deleted successfully
+        </div>
+      );
     } catch (error) {
       toast.error("Failed to delete selected items");
     } finally {
