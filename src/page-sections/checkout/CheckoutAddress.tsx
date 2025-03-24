@@ -637,16 +637,15 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
       if (selectedAddress.province_id) {
         const selectedProvince = province.find((prov: any) => prov.id === selectedAddress.province_id);
         if (selectedProvince) {
+          const payload = {
+            express_delivery: expressDelivery ? 1 : 0,
+            province: selectedAddress.province_id,
+            city: selectedAddress.city_id,
+            area: selectedAddress.area_id,
+            products: products,
+          };
           axios.post(
-            `${ApiBaseUrl.baseUrl}delivery/charge/apply`,
-            {
-              express_delivery: expressDelivery ? 1 : 0,
-              province: selectedAddress.province_id,
-              city: selectedAddress.city_id,
-              area: selectedAddress.area_id,
-              products: products,
-            },
-            {
+            `${ApiBaseUrl.baseUrl}delivery/charge/apply`, payload, {
               headers: {
                 Authorization: `Bearer ${authtoken}`,
               },
