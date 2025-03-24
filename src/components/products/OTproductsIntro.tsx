@@ -303,10 +303,10 @@
 // //                       );
 // //                     })}
 // //                   </td>
-// //                   <td className={styles.tableCellStyle}>
-// //                     {item.Price.CurrencySign}
-// //                     {item.Price.ConvertedPriceWithoutSign}
-// //                   </td>
+                  // <td className={styles.tableCellStyle}>
+                  //   {item.Price.CurrencySign}
+                  //   {item.Price.ConvertedPriceWithoutSign}
+                  // </td>
 // //                   <td className={styles.tableCellStyle}>
 // //                         <span>{item.Quantity}</span>
 // //                   </td>
@@ -1038,16 +1038,19 @@ export default function OtProductsIntro({
 
           <Box mb="24px">
             <FlexBox alignItems="center">
-              <H3 color="primary.main" mb="4px" lineHeight="1">
-                {discountPrice ? (
-                  <>
-                    <span className={styles.currentPriceStyle}>{currency(discountPrice)}</span>
-                    <span className={styles.originalPriceStyle}>{currency(selectedPrice)}</span> 
-                  </>
-                ) : (
-                  <span>{currency(selectedPrice)}</span> 
-                )}
-              </H3>
+            {!configuredItems.some(item => item.QuantityRanges?.length) && (
+  <H3 color="primary.main" mb="4px" lineHeight="1">
+    {discountPrice ? (
+      <>
+        <span className={styles.currentPriceStyle}>{currency(discountPrice)}</span>
+        <span className={styles.originalPriceStyle}>{currency(selectedPrice)}</span> 
+      </>
+    ) : (
+      <span>{currency(selectedPrice)}</span> 
+    )}
+  </H3>
+)}
+
 
               {!!discountPrice && totalDiscount && (
                 <Chip
@@ -1193,10 +1196,18 @@ export default function OtProductsIntro({
                               );
                             })}
                           </td>
-                          <td className={styles.tableCellStyle}>
-                    {item.Price.CurrencySign}
-                    {item.QuantityRanges[0].Price.ConvertedPriceWithoutSign}
-                  </td>
+                          {item.QuantityRanges?.length ? (
+  <td className={styles.tableCellStyle}>
+    {item.Price.CurrencySign}
+    {item.QuantityRanges[0].Price.ConvertedPriceWithoutSign}
+  </td>
+) : (
+  <td className={styles.tableCellStyle}>
+    {item.Price.CurrencySign}
+    {item.Price.ConvertedPriceWithoutSign}
+  </td>
+)}
+
                           <td className={styles.tableCellStyle}>
                             <span>{item.Quantity}</span>
                           </td>
