@@ -643,13 +643,22 @@ export default function PaymentForm() {
                 }
       
                 // Calculate the price for a single item (single_amount):
+                // const single_amount = Number(
+                //   cartdata.selectedColor && cartdata.selectedSize
+                //     ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
+                //         (s) => s.size === cartdata.selectedSize
+                //       )?.price || cartdata.price
+                //     : cartdata.discountPrice || cartdata.price
+                // );
+
                 const single_amount = Number(
                   cartdata.selectedColor && cartdata.selectedSize
                     ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
                         (s) => s.size === cartdata.selectedSize
-                      )?.price || cartdata.price
+                      )?.price || cartdata.discountPrice || cartdata.price
                     : cartdata.discountPrice || cartdata.price
                 );
+                
       
                 // Create the order object
                 const order = {
@@ -663,7 +672,7 @@ export default function PaymentForm() {
                   qty: cartdata.qty,
                   note1: "lorem10",
                   single_amount: single_amount,
-                  total_amount: single_amount * cartdata.qty, // Calculate the total price based on quantity
+                  total_amount: single_amount * cartdata.qty,
                 };
       
                 // Send the order to the API
