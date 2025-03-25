@@ -511,7 +511,7 @@ export default function PaymentForm() {
             seller_id: cartData[0]?.sellerId,
             // payment_method: "cod",
             productType: productType,
-            promocode: promocode,
+            promocode: promocode_price > 0 ? promocode : null,
             // promocode_price: promocode_price,
             promocode_price: promocode_price > 0 ? promocode_price : null,
           },
