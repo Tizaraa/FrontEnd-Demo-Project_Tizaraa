@@ -230,7 +230,7 @@ const ShippingInfo: React.FC<{
                   width: "300px"
                 }}>
                   <h3 style={{
-                    fontSize: "14px",
+                    fontSize: "15px",
                     fontWeight: "bold",
                     marginBottom: "15px",
                     color: "#333",
@@ -241,11 +241,11 @@ const ShippingInfo: React.FC<{
                     <button 
                       onClick={() => setShowDeliveryChart(false)}
                       style={{
-                        background: "none",
+                        background: "#E94560",
                         border: "none",
-                        fontSize: "16px",
+                        fontSize: "18px",
                         cursor: "pointer",
-                        color: "#777"
+                        color: "#fff"
                       }}
                     >
                       ×
@@ -257,15 +257,15 @@ const ShippingInfo: React.FC<{
                     margin: 0,
                     fontSize: "12px"
                   }}>
-                    <li style={{ padding: "8px 0", borderBottom: "1px solid #eee" }}>
-                      First kg: <strong>60 BDT</strong>
+                    <li style={{ padding: "8px 0", borderBottom: "1px solid #eee", fontSize: "14px" }}>
+                    Base Rate (First 1 kg): <strong>60 BDT</strong>
                     </li>
-                    <li style={{ padding: "8px 0", borderBottom: "1px solid #eee" }}>
-                      Each additional kg: <strong>25 BDT/kg</strong>
+                    <li style={{ padding: "8px 0", borderBottom: "1px solid #eee", fontSize: "14px"  }}>
+                    Additional Weight (Per kg): <strong>25 BDT/kg</strong>
                     </li>
                   </ul>
-                  <div style={{ marginTop: "15px", fontSize: "10px", color: "#E94560" }}>
-                    * Delivery charges are calculated based on total order weight
+                  <div style={{ marginTop: "15px", fontSize: "12px", color: "#E94560" }}>
+                    * Delivery charges are calculated based on the total weight of your order.
                   </div>
                 </div>
               </div>
