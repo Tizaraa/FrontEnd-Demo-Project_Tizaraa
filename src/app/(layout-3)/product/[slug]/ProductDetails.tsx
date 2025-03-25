@@ -72,6 +72,7 @@ const ShippingInfo: React.FC<{
   express_deliverey
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showDeliveryChart, setShowDeliveryChart] = useState(false);
 
   return (
     <div
@@ -105,7 +106,7 @@ const ShippingInfo: React.FC<{
       )}
       {(isDesktop || isExpanded) && (
         <>
-          <div style={{ marginBottom: "20px" }}>
+          {/* <div style={{ marginBottom: "20px" }}>
             <h2
               style={{
                 fontSize: "12px",
@@ -148,6 +149,127 @@ const ShippingInfo: React.FC<{
                 {delivery_type}
               </span>
             </div>
+          </div> */}
+
+          <div style={{ marginBottom: "20px" }}>
+            <h2
+              style={{
+                fontSize: "12px",
+                fontWeight: "bold",
+                marginBottom: "10px",
+                color: "#333",
+              }}
+            >
+              Shipping
+            </h2>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "10px",
+              }}
+            >
+              <span
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  marginRight: "10px",
+                  backgroundColor: "#E94560",
+                  borderRadius: "50%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  color: "white",
+                  fontSize: "12px",
+                }}
+              >
+                🚚
+              </span>
+              <span
+                style={{
+                  fontSize: "12px",
+                  color: "#555",
+                }}
+              >
+                {delivery_type}
+              </span>
+              <button 
+                onClick={() => setShowDeliveryChart(true)}
+                style={{
+                  marginLeft: "10px",
+                  fontSize: "10px",
+                  color: "#E94560",
+                  background: "none",
+                  border: "none",
+                  textDecoration: "underline",
+                  cursor: "pointer"
+                }}
+              >
+                Price Chart for Delivery
+              </button>
+            </div>
+
+            {/* Delivery Price Chart Modal */}
+            {showDeliveryChart && (
+              <div style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "rgba(0,0,0,0.5)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 1000
+              }}>
+                <div style={{
+                  backgroundColor: "white",
+                  padding: "20px",
+                  borderRadius: "8px",
+                  width: "300px"
+                }}>
+                  <h3 style={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    marginBottom: "15px",
+                    color: "#333",
+                    display: "flex",
+                    justifyContent: "space-between"
+                  }}>
+                    Delivery Cost Breakdown
+                    <button 
+                      onClick={() => setShowDeliveryChart(false)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        fontSize: "16px",
+                        cursor: "pointer",
+                        color: "#777"
+                      }}
+                    >
+                      ×
+                    </button>
+                  </h3>
+                  <ul style={{
+                    listStyle: "none",
+                    padding: 0,
+                    margin: 0,
+                    fontSize: "12px"
+                  }}>
+                    <li style={{ padding: "8px 0", borderBottom: "1px solid #eee" }}>
+                      First kg: <strong>60 BDT</strong>
+                    </li>
+                    <li style={{ padding: "8px 0", borderBottom: "1px solid #eee" }}>
+                      Each additional kg: <strong>25 BDT/kg</strong>
+                    </li>
+                  </ul>
+                  <div style={{ marginTop: "15px", fontSize: "10px", color: "#E94560" }}>
+                    * Delivery charges are calculated based on total order weight
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* express delivery  */}
