@@ -15,7 +15,7 @@ type AddToCartButtonProps = {
   images: string[];
   title: string;
   discountPrice?: number;
-  price?: number;
+  price?: any;
   productStock: number;
   slug?: string;
   productType: string; 
@@ -28,7 +28,7 @@ type AddToCartButtonProps = {
   };
   selectedColor?: string | null;
   selectedSize?: string | null;
-  selectedPrice?: number;
+  selectedPrice?: number | any;
   currentQuantity?: number;
   setCurrentQuantity?: (quantity: number) => void;
 };
@@ -87,6 +87,9 @@ const AddToCartButton = ({
     if (amount > productStock) {
       toast.error("Out of Stock");
       return;
+    }
+    if (setCurrentQuantity) {
+      setCurrentQuantity(amount);
     }
 
     setQuantity(amount);
