@@ -29,6 +29,8 @@ type AddToCartButtonProps = {
   selectedColor?: string | null;
   selectedSize?: string | null;
   selectedPrice?: number;
+  currentQuantity?: number;
+  setCurrentQuantity?: (quantity: number) => void;
 };
 
 const AddToCartButton = ({
@@ -45,6 +47,8 @@ const AddToCartButton = ({
   selectedColor,
   selectedSize,
   selectedPrice,
+  currentQuantity,
+  setCurrentQuantity,
 }: AddToCartButtonProps) => {
   const { state, dispatch } = useAppContext();
   const [quantity, setQuantity] = useState(1);
@@ -72,6 +76,13 @@ const AddToCartButton = ({
     return selectedPrice || discountPrice || price || 0;
   };
 
+  // const handleCartAmountChange = (amount: number) => {
+  //   if (amount > productStock) {
+  //     toast.error("Out of Stock");
+  //     return;
+  //   }
+
+  //   setQuantity(amount);
   const handleCartAmountChange = (amount: number) => {
     if (amount > productStock) {
       toast.error("Out of Stock");
@@ -79,6 +90,9 @@ const AddToCartButton = ({
     }
 
     setQuantity(amount);
+    if (setCurrentQuantity) {
+      setCurrentQuantity(amount);
+    }
 
     const finalPrice = calculateFinalPrice();
 

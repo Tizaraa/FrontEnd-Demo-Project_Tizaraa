@@ -919,6 +919,7 @@ export default function OtProductsIntro({
 
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [currentQuantity, setCurrentQuantity] = useState(1);
 
   const routerId = param.slug as string;
   const cartItem = state.cart.find((item) => item.id === id || item.id === routerId);
@@ -1089,28 +1090,21 @@ export default function OtProductsIntro({
           item.Configurators.some((config) => config.Vid === selectedSpec)
       );
 
-      // Determine the price to compare from the selected configured item
-      const itemPrice = selectedConfiguredItem
-        ? selectedConfiguredItem.QuantityRanges?.length
-          ? selectedConfiguredItem.QuantityRanges[0].Price.ConvertedPriceWithoutSign
-          : selectedConfiguredItem.Price.ConvertedPriceWithoutSign
-        : price; // Fallback to the base price if no configured item is selected
-
-      // Check if the tier price matches the item price
-      const isMatchingPrice =
-        tier.Price.ConvertedPriceWithoutSign === itemPrice;
+      // Determine if current quantity qualifies for this tier
+      const isActiveTier = currentQuantity >= tier.MinQuantity && 
+        (!pricingTiers[index + 1] || currentQuantity < pricingTiers[index + 1].MinQuantity);
 
       return (
         <div
           key={index}
           style={{
-            background: isMatchingPrice ? "#e74c3ca3" : "#f5f5f5", // Highlight if price matches
+            background: isActiveTier ? "#e74c3ca3" : "#f5f5f5",
             color: "black",
             padding: "15px",
             borderRadius: "8px",
             textAlign: "center",
             width: "120px",
-            border: isMatchingPrice ? "2px solid #e74c3c" : "none", // Optional: Add a border for emphasis
+            border: isActiveTier ? "2px solid #e74c3c" : "none",
           }}
         >
           <div style={{ fontSize: "18px", fontWeight: "bold" }}>
@@ -1124,7 +1118,6 @@ export default function OtProductsIntro({
       );
     })}
 </div>
-
           <div className={styles.containerStyle}>
             <div className={styles.buttonContainerStyle}>
               {Attributes?.filter(item =>
@@ -1229,6 +1222,8 @@ export default function OtProductsIntro({
     selectedColor={selectedColor}
     selectedSize={selectedSize}
     selectedPrice={item.Price.ConvertedPriceWithoutSign} 
+    currentQuantity={currentQuantity}
+    setCurrentQuantity={setCurrentQuantity}
   />
   <span style={{ fontSize: '14px', fontWeight: 'bold', marginTop: '-40px' }}>{item.Quantity}</span>
 </div>
@@ -1257,6 +1252,8 @@ export default function OtProductsIntro({
         selectedColor={selectedColor}
         selectedSize={selectedSize}
         selectedPrice={selectedPrice}
+        currentQuantity={currentQuantity}
+        setCurrentQuantity={setCurrentQuantity}
       />
     </div>
   )}
