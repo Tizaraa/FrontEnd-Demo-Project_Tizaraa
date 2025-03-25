@@ -233,10 +233,10 @@ const ProductPage = () => {
           const pricingTiers = data.Result.Item.QuantityRanges?.map((range) => ({
             MinQuantity: range.MinQuantity, // Extract MinQuantity
             Price: {
-              ConvertedPriceWithoutSign: range.Price.ConvertedPrice.replace(/[^0-9.]/g, ""), // Extract numeric value from "199.50৳"
-              CurrencySign: range.Price.ConvertedPrice.replace(/[0-9.]/g, ""), // Extract currency sign from "199.50৳"
+              ConvertedPriceWithoutSign: range.Price.ConvertedPrice.replace(/[^0-9.]/g, ""),
+              CurrencySign: range.Price.ConvertedPrice.replace(/[0-9.]/g, ""), 
             },
-          })) || []; // Fallback to an empty array if QuantityRanges is missing
+          })) || []; 
         
           // Set pricing tiers in the state
           setPricingTiers(pricingTiers);

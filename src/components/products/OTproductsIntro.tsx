@@ -924,6 +924,18 @@ export default function OtProductsIntro({
   const routerId = param.slug as string;
   const cartItem = state.cart.find((item) => item.id === id || item.id === routerId);
 
+  const getSelectedColor = (item: ConfiguredItem): string | null => {
+    if (!Attributes) return null;
+    
+    // Find color attribute in this item's configurators
+    const colorAttribute = Attributes.find(attr => 
+      item.Configurators.some(config => config.Vid === attr.Vid) && 
+      attr.PropertyName.toLowerCase() === 'color'
+    );
+    
+    return colorAttribute ? colorAttribute.Value : null;
+  };
+
   const handleVariantSelect = (item) => {
     setSelectedSpec(item.Vid);
     setSelectedImage(item.ImageUrl); 
@@ -948,6 +960,25 @@ export default function OtProductsIntro({
   const getSelectedRowQuantity = () => {
     const selectedItem = configuredItems.find((item) => item.Id === selectedRowId);
     return selectedItem?.Quantity || 0;
+  };
+
+  const getDisplayPrice = (item: ConfiguredItem, quantity: number) => {
+    // If item has quantity ranges, use tiered pricing logic
+    if (item.QuantityRanges?.length) {
+      const applicableTier = item.QuantityRanges
+        .slice()
+        .sort((a, b) => b.MinQuantity - a.MinQuantity)
+        .find(tier => quantity >= tier.MinQuantity);
+      
+      return applicableTier 
+        ? applicableTier.Price.ConvertedPriceWithoutSign
+        : item.Price.ConvertedPriceWithoutSign;
+    }
+    
+    // Fallback to selectedPrice if available, otherwise use item's base price
+    return selectedPrice !== null 
+      ? selectedPrice 
+      : item.Price.ConvertedPriceWithoutSign;
   };
 
   useEffect(() => {
@@ -1197,14 +1228,55 @@ export default function OtProductsIntro({
         </td>
         {item.QuantityRanges?.length ? (
           <td className={styles.tableCellStyle}>
-            {item.Price.CurrencySign}
-            {item.QuantityRanges[0].Price.ConvertedPriceWithoutSign}
-          </td>
+          {(() => {
+            // Find the applicable price based on current quantity and pricing tiers
+            const selectedItem = configuredItems.find(item => 
+              item.Id === selectedRowId || 
+              item.Configurators.some(config => config.Vid === selectedSpec)
+            );
+        
+            // If no quantity ranges exist, use base price
+            if (!selectedItem?.QuantityRanges?.length) {
+              return `${selectedItem?.Price.CurrencySign}${selectedItem?.Price.ConvertedPriceWithoutSign}`;
+            }
+        
+            // Find the active pricing tier (matches the highlighted tier logic)
+            const activeTier = pricingTiers?.find(tier => 
+              currentQuantity >= tier.MinQuantity && 
+              (!pricingTiers[pricingTiers.indexOf(tier) + 1] || 
+               currentQuantity < pricingTiers[pricingTiers.indexOf(tier) + 1].MinQuantity)
+            );
+        
+            // Use the active tier price if found, otherwise fall back to first range
+            const displayPrice = activeTier 
+              ? activeTier.Price.ConvertedPriceWithoutSign
+              : selectedItem.QuantityRanges[0].Price.ConvertedPriceWithoutSign;
+        
+            return `${selectedItem.Price.CurrencySign}${displayPrice}`;
+          })()}
+        </td>
         ) : (
           <td className={styles.tableCellStyle}>
-            {item.Price.CurrencySign}
-            {item.Price.ConvertedPriceWithoutSign}
-          </td>
+          {(() => {
+            // If no quantity ranges, use base price
+            if (!item.QuantityRanges?.length) {
+              return `${item.Price.CurrencySign}${item.Price.ConvertedPriceWithoutSign}`;
+            }
+            
+            // Find the applicable tier price based on current quantity
+            const applicableTier = item.QuantityRanges
+              .slice() // Create a copy
+              .sort((a, b) => b.MinQuantity - a.MinQuantity) // Sort descending
+              .find(tier => currentQuantity >= tier.MinQuantity);
+            
+            // Use tier price if found, otherwise use base price
+            const displayPrice = applicableTier 
+              ? applicableTier.Price.ConvertedPriceWithoutSign 
+              : item.Price.ConvertedPriceWithoutSign;
+            
+            return `${item.Price.CurrencySign}${displayPrice}`;
+          })()}
+        </td>
         )}
         <td className={styles.tableCellStyle} style={{ textAlign: 'center', verticalAlign: 'middle' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
@@ -1214,14 +1286,15 @@ export default function OtProductsIntro({
     images={images}
     title={title}
     discountPrice={discountPrice}
-    price={item.Price.ConvertedPriceWithoutSign} 
+    // price={item.QuantityRanges[0].Price.ConvertedPriceWithoutSign} 
+    price={getDisplayPrice(item, currentQuantity)}
     slug={slug}
     productStock={item.Quantity} 
     productType="Abroad"
     sizeColor={sizeColor}
-    selectedColor={selectedColor}
+    selectedColor={getSelectedColor(item)}
     selectedSize={selectedSize}
-    selectedPrice={item.Price.ConvertedPriceWithoutSign} 
+    selectedPrice={getDisplayPrice(item, currentQuantity)} 
     currentQuantity={currentQuantity}
     setCurrentQuantity={setCurrentQuantity}
   />

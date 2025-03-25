@@ -134,7 +134,13 @@ export default function OrderedItem() {
               }}
             >
               <Image
-                src={product.imgUrl ? `${ApiBaseUrl.ImgUrl}${product.imgUrl}` : "/placeholder.svg"}
+              src={
+                product.imgUrl
+                  ? product.imgUrl.startsWith('http') || product.imgUrl.startsWith(ApiBaseUrl.ImgUrl)
+                    ? product.imgUrl
+                    : `${ApiBaseUrl.ImgUrl}${product.imgUrl}`
+                  : "/placeholder.svg"
+              }
                 alt={product.name}
                 width={48}
                 height={48}
