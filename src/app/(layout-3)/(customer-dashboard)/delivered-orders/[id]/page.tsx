@@ -111,10 +111,18 @@ useEffect(() => {
           },
         }
       );
-      console.log("Order details data:", response);
+      console.log("delivered orders details data:", response);
 
       // Since the API only returns orders with status "delivered", you can directly set the state
       setOrder(response.data);
+
+
+      // Extract the status from the items object
+      // const items = response.data.Order.items;
+      // const firstShopKey = Object.keys(items)[0];
+      // const shopStatus = items[firstShopKey].status;
+      // setStatus(shopStatus);
+
       setStatus(response.data.Order.status);
       setEstimateDate(response.data.Order.deliveredAt);
     } catch (error) {
