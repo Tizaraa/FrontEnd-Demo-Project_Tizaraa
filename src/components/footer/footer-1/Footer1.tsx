@@ -417,7 +417,8 @@ export default function Footer1() {
                   <Image
                     alt="logo"
                     style={{ marginBottom: "1.25rem", maxWidth: "150px" }}
-                    src="https://frontend.tizaraa.com/public/frontend/assets/img/site-logo/tizaraa-logo.png"
+                    // src="https://frontend.tizaraa.com/public/frontend/assets/img/site-logo/tizaraa-logo.png"
+                    src="https://minio.tizaraa.shop/tizaraa/frontend/logo/tizaraa.png"
                   />
                 </Link>
                 <Paragraph style={{ marginBottom: "1.25rem", color: "inherit" }}>
