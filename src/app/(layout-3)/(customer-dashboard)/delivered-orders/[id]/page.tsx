@@ -121,7 +121,22 @@ useEffect(() => {
       // const items = response.data.Order.items;
       // const firstShopKey = Object.keys(items)[0];
       // const shopStatus = items[firstShopKey].status;
+      // console.log(shopStatus);
       // setStatus(shopStatus);
+
+      // interface ShopItem {
+      //   status: string; // Adjust the type (string, number, etc.) based on your actual data
+      //   // Add other properties if they exist
+      // }
+      
+      // const items = response.data.Order.items;
+      // const shopStatuses = Object.values(items).map((item: ShopItem) => item.status);
+      // console.log(shopStatuses);
+      // const status = shopStatuses[0];
+      // console.log(status);
+      // setStatus(status);
+
+
 
       setStatus(response.data.Order.status);
       setEstimateDate(response.data.Order.deliveredAt);
@@ -569,7 +584,9 @@ if (order?.Order?.productType === "Abroad") {
                     delivered_at={details.delivered_at}
                   />
                 ))}
-                 <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} />
+                 {/* <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} /> */}
+
+                 <OrderStatus orderStatus={details.status} deliveredAt={details.delivered_at} />
 
                 {openSummaries[shopName] && (
                   <Box p="20px" borderRadius={8} mt="1rem">

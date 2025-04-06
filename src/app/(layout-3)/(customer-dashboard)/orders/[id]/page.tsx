@@ -468,6 +468,8 @@ if (order?.Order?.productType === "Abroad") {
               isAbroad: boolean; // Add a flag for checking if the product is from abroad
             };
 
+            console.log('Check from ORDERS:: ', details.status);
+
             return (
               <Box key={shopName} my="1rem">
                 <div
@@ -560,7 +562,9 @@ if (order?.Order?.productType === "Abroad") {
                     delivered_at={details.delivered_at}
                   />
                 ))}
-                 <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} />
+                 {/* <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} /> */}
+
+                 <OrderStatus orderStatus={details.status} deliveredAt={details.delivered_at} />
 
                 {openSummaries[shopName] && (
                   <Box p="20px" borderRadius={8} mt="1rem">
