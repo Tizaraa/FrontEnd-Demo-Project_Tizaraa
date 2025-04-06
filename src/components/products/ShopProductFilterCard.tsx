@@ -98,13 +98,23 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
   const visibleProvinces = showAllProvinces ? provinceList : provinceList.slice(0, 5);
   const toggleShowProvinces = () => setShowAllProvinces(!showAllProvinces);
 
+// const handleBrandChange = (brandId: number) => {
+//     const updatedBrands = selectedBrands.includes(brandId)
+//       ? selectedBrands.filter((id) => id !== brandId)
+//       : [...selectedBrands, brandId];
+//     setSelectedBrands(updatedBrands);
+//     onBrandChange(updatedBrands);
+//   };
+
 const handleBrandChange = (brandId: number) => {
-    const updatedBrands = selectedBrands.includes(brandId)
-      ? selectedBrands.filter((id) => id !== brandId)
-      : [...selectedBrands, brandId];
-    setSelectedBrands(updatedBrands);
-    onBrandChange(updatedBrands);
-  };
+  const updatedSelectedBrands = selectedBrands.includes(brandId)
+    ? selectedBrands.filter((id) => id !== brandId)
+    // : [...selectedBrands, brandId];
+    : [brandId];
+
+  setSelectedBrands(updatedSelectedBrands);
+  onBrandChange(updatedSelectedBrands);
+};
   
   // const handleCategoryClick = (categorySlug: string) => {
   //   onCategoryChange(categorySlug);
@@ -118,11 +128,20 @@ const handleBrandChange = (brandId: number) => {
     onCountryChange(updatedCountries);
   };
 
-  const handleCategoryChange = (categoryId: number) => {
-    const updatedSelectedCategories = selectedCategories.includes(categoryId)
-      ? selectedCategories.filter((id) => id !== categoryId)
-      : [...selectedCategories, categoryId];
+  // const handleCategoryChange = (categoryId: number) => {
+  //   const updatedSelectedCategories = selectedCategories.includes(categoryId)
+  //     ? selectedCategories.filter((id) => id !== categoryId)
+  //     : [...selectedCategories, categoryId];
   
+  //   setSelectedCategories(updatedSelectedCategories);
+  //   onCategoryChange(updatedSelectedCategories);
+  // };
+
+  const handleCategoryChange = (categoryId: number) => {
+    const updatedSelectedCategories = selectedCategories.includes(categoryId) 
+      ? selectedCategories.filter((id) => id !== categoryId)
+      : [categoryId]; 
+    
     setSelectedCategories(updatedSelectedCategories);
     onCategoryChange(updatedSelectedCategories);
   };

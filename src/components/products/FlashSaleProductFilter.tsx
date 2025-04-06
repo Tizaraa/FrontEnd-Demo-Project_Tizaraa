@@ -111,20 +111,39 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
   const visibleProvinces = showAllProvinces ? provinceList : provinceList.slice(0, 5);
   const toggleShowProvinces = () => setShowAllProvinces(!showAllProvinces);
 
+  // const handleBrandChange = (brandId: number) => {
+  //   const updatedSelectedBrands = selectedBrands.includes(brandId)
+  //     ? selectedBrands.filter((id) => id !== brandId)
+  //     : [...selectedBrands, brandId];
+
+  //   setSelectedBrands(updatedSelectedBrands);
+  //   onBrandChange(updatedSelectedBrands);
+  // };
+
   const handleBrandChange = (brandId: number) => {
     const updatedSelectedBrands = selectedBrands.includes(brandId)
       ? selectedBrands.filter((id) => id !== brandId)
-      : [...selectedBrands, brandId];
-
+      // : [...selectedBrands, brandId];
+      : [brandId];
+  
     setSelectedBrands(updatedSelectedBrands);
     onBrandChange(updatedSelectedBrands);
   };
 
-  const handleCategoryChange = (categoryId: number) => {
-    const updatedSelectedCategories = selectedCategories.includes(categoryId)
-      ? selectedCategories.filter((id) => id !== categoryId)
-      : [...selectedCategories, categoryId];
+  // const handleCategoryChange = (categoryId: number) => {
+  //   const updatedSelectedCategories = selectedCategories.includes(categoryId)
+  //     ? selectedCategories.filter((id) => id !== categoryId)
+  //     : [...selectedCategories, categoryId];
   
+  //   setSelectedCategories(updatedSelectedCategories);
+  //   onCategoryChange(updatedSelectedCategories);
+  // };
+
+  const handleCategoryChange = (categoryId: number) => {
+    const updatedSelectedCategories = selectedCategories.includes(categoryId) 
+      ? selectedCategories.filter((id) => id !== categoryId)
+      : [categoryId]; 
+    
     setSelectedCategories(updatedSelectedCategories);
     onCategoryChange(updatedSelectedCategories);
   };
