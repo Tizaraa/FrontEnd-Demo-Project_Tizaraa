@@ -247,6 +247,7 @@ export default function FlashSale({ sortOptions, slug }: FlashSaleProps) {
       </FlexBox>
 
       <Grid container spacing={6}>
+      {!isTablet && (
         <Grid item lg={3} xs={12}>
           <FlashSaleProductFilter
             onBrandChange={handleBrandChange}
@@ -257,6 +258,7 @@ export default function FlashSale({ sortOptions, slug }: FlashSaleProps) {
             pageType="flashSale"
           />
         </Grid>
+      )}
 
         <Grid item lg={9} xs={12}>
           {currentPage === 1 && loading ? (

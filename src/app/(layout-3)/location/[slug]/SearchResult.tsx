@@ -232,7 +232,7 @@ export default function SearchResult({ sortOptions, slug }) {
       </FlexBox>
 
       <Grid container spacing={6}>
-        <Grid item lg={3} xs={12}>
+        {/* <Grid item lg={3} xs={12}>
           <ProductFilterCard
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
@@ -241,7 +241,20 @@ export default function SearchResult({ sortOptions, slug }) {
             slug={slug}
             pageType={pageType}
           />
-        </Grid>
+        </Grid> */}
+
+        {!isTablet && (
+          <Grid item lg={3} xs={12}>
+            <ProductFilterCard
+            onBrandChange={handleBrandChange}
+            onCategoryChange={handleCategoryChange}
+            onCountryChange={handleCountryChange} // Pass country handler
+            onProvinceChange={handleProvinceChange}
+            slug={slug}
+            pageType={pageType}
+            />
+          </Grid>
+        )}
 
         <Grid item lg={9} xs={12}>
           {currentPage === 1 && loading ? ( // Show loading only on initial load

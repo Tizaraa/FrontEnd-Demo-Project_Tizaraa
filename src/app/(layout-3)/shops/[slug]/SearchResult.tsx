@@ -272,6 +272,7 @@ export default function SearchResult({ sortOptions, slug }) {
       </FlexBox>
 
       <Grid container spacing={6}>
+      {!isTablet && (
         <Grid item lg={3} xs={12}>
           <ShopProductFilterCard
             onBrandChange={handleBrandChange}
@@ -282,6 +283,7 @@ export default function SearchResult({ sortOptions, slug }) {
             pageType="shop"
           />
         </Grid>
+      )}
 
         <Grid item lg={9} xs={12}>
           {currentPage === 1 && loading ? ( // Show loading only on initial load

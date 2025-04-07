@@ -283,7 +283,7 @@ export default function NewArrivals({ sortOptions, slug }) {
       </FlexBox>
 
       <Grid container spacing={6}>
-        <Grid item lg={3} xs={12}>
+        {/* <Grid item lg={3} xs={12}>
           <NewArrivalProductFilter
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
@@ -292,7 +292,20 @@ export default function NewArrivals({ sortOptions, slug }) {
             slug={slug}
             pageType="newArrival"
           />
-        </Grid>
+        </Grid> */}
+
+        {!isTablet && (
+          <Grid item lg={3} xs={12}>
+            <NewArrivalProductFilter
+              onBrandChange={handleBrandChange}
+              onCategoryChange={handleCategoryChange}
+              onCountryChange={handleCountryChange}
+              onProvinceChange={handleProvinceChange}
+              slug={slug}
+              pageType="newArrival"
+            />
+          </Grid>
+        )}
 
         <Grid item lg={9} xs={12}>
           {currentPage === 1 && loading ? (
