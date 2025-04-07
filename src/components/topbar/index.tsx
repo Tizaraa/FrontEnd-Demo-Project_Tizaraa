@@ -52,7 +52,8 @@ export default function Topbar() {
           <div className="logo">
             <a href="/" style={{ display: "block" }}>
               <img
-                src="https://frontend.tizaraa.com/public/frontend/assets/img/site-logo/tizaraa-logo.png"
+                // src="https://frontend.tizaraa.com/public/frontend/assets/img/site-logo/tizaraa-logo.png"
+                src="https://minio.tizaraa.shop/tizaraa/frontend/logo/tizaraa.png"
                 alt="logo"
               />
             </a>

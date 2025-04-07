@@ -274,7 +274,7 @@ export default function CountryResult({ sortOptions, slug }) {
       </FlexBox>
 
       <Grid container spacing={6}>
-      {!isTablet && (
+      {/* {!isTablet && (
         <Grid item lg={3} xs={12}>
           <CountryProductFilterCard
             onBrandChange={handleBrandChange}
@@ -285,7 +285,20 @@ export default function CountryResult({ sortOptions, slug }) {
             pageType="country"
           />
         </Grid>
-      )}
+      )} */}
+
+    { !isTablet && (
+      <Grid item lg={3} xs={12}>
+        <CountryProductFilterCard
+          onBrandChange={handleBrandChange}
+          onCategoryChange={handleCategoryChange}
+          onCountryChange={handleCountryChange}
+          onProvinceChange={handleProvinceChange}
+          slug={slug}
+          pageType="country"
+        />
+      </Grid>
+    )}
 
         <Grid item lg={9} xs={12}>
           {currentPage === 1 && loading ? ( // Show loading only on initial load
