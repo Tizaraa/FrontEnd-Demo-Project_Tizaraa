@@ -667,3 +667,246 @@ const VendorMapPage: React.FC<VendorMapPageProps> = ({
 };
 
 export default VendorMapPage;
+
+
+
+
+
+
+// If any error in shop page - use this code
+// "use client";
+// import { useEffect, useRef, useState } from "react";
+// import { useLoadScript } from "@react-google-maps/api";
+// import ApiBaseUrl from "api/ApiBaseUrl";
+
+// interface Vendor {
+//   id: number;
+//   shop_name: string;
+//   lat: string | null;
+//   lon: string | null;
+//   seller_address: string;
+//   seller_logo: string;
+//   shop_name_slug: string;
+//   province_name?: string;
+//   city_name?: string;
+//   area_name?: string;
+//   rating?: number;
+// }
+
+// interface VendorMapPageProps {
+//   selectedProvince: string;
+//   selectedCity: string;
+//   selectedArea: string;
+//   vendors: Vendor[];
+// }
+
+// const mapContainerStyle = {
+//   width: "100%",
+//   height: "600px",
+//   borderRadius: "10px",
+//   marginBottom: "10px",
+//   marginTop: "10px",
+//   position: "relative" as const,
+// };
+
+// const defaultCenter = {
+//   lat: 23.8103,
+//   lng: 90.4125,
+// };
+
+// const VendorMapPage: React.FC<VendorMapPageProps> = ({
+//   selectedProvince,
+//   selectedCity,
+//   selectedArea,
+//   vendors,
+// }) => {
+//   const [showOverlay, setShowOverlay] = useState(true);
+//   const { isLoaded } = useLoadScript({
+//     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+//     libraries: ["places"],
+//   });
+
+//   const mapRef = useRef<HTMLDivElement | null>(null);
+//   const markersRef = useRef<google.maps.Marker[]>([]);
+//   const mapInstanceRef = useRef<google.maps.Map | null>(null);
+//   const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
+
+//   useEffect(() => {
+//     if (!isLoaded || !mapRef.current || !window.google) return;
+
+//     // Initialize the map
+//     const map = new google.maps.Map(mapRef.current, {
+//       center: defaultCenter,
+//       zoom: 15,
+//       mapTypeId: "roadmap",
+//       streetViewControl: true,
+//       mapTypeControl: true,
+//       zoomControl: true,
+//       fullscreenControl: true,
+//       draggable: !showOverlay,
+//       scrollwheel: !showOverlay,
+//     });
+//     mapInstanceRef.current = map;
+
+//     // Initialize InfoWindow
+//     infoWindowRef.current = new google.maps.InfoWindow();
+
+//     // Clear existing markers
+//     markersRef.current.forEach((marker) => marker.setMap(null));
+//     markersRef.current = [];
+
+//     // Calculate center if we have valid vendors
+//     const validVendors = vendors.filter((vendor) => vendor.lat && vendor.lon);
+//     if (validVendors.length > 0) {
+//       const avgLat = validVendors.reduce((sum, vendor) => sum + parseFloat(vendor.lat!), 0) / validVendors.length;
+//       const avgLon = validVendors.reduce((sum, vendor) => sum + parseFloat(vendor.lon!), 0) / validVendors.length;
+//       map.setCenter({ lat: avgLat, lng: avgLon });
+
+//       // Set bounds to include all markers
+//       const bounds = new google.maps.LatLngBounds();
+//       validVendors.forEach((vendor) => {
+//         bounds.extend({
+//           lat: parseFloat(vendor.lat!),
+//           lng: parseFloat(vendor.lon!),
+//         });
+//       });
+//       map.fitBounds(bounds);
+
+//       // Set a maximum zoom level
+//       google.maps.event.addListenerOnce(map, "bounds_changed", () => {
+//         if (map.getZoom() > 15) {
+//           map.setZoom(15);
+//         }
+//       });
+//     }
+
+//     // Add markers
+//     validVendors.forEach((vendor) => {
+//       const lat = parseFloat(vendor.lat!);
+//       const lon = parseFloat(vendor.lon!);
+
+//       if (isNaN(lat) || isNaN(lon)) return;
+
+//       // Create standard marker
+//       const marker = new google.maps.Marker({
+//         position: { lat, lng: lon },
+//         map,
+//         title: vendor.shop_name,
+//       });
+
+//       // Add click listener
+//       marker.addListener("click", () => {
+//         const shopNameSlug = vendor.shop_name_slug || vendor.shop_name.toLowerCase().replace(/\s+/g, "-");
+        
+//         const contentString = `
+//           <a href="/shops/${shopNameSlug}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+//             <div style="padding: 10px; max-width: 200px; cursor: pointer;">
+//               ${vendor.seller_logo
+//                 ? `<img
+//                      src="${ApiBaseUrl.ImgUrl}${vendor.seller_logo}"
+//                      alt="Seller Logo"
+//                      style="width: 64px; height: 64px; margin-bottom: 8px; object-fit: contain;"
+//                      onerror="this.style.display='none';"
+//                    />`
+//                 : `<div style="width: 64px; height: 64px; margin-bottom: 8px; background-color: #e5e7eb; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+//                      No Logo
+//                    </div>`
+//               }
+//               <h3 style="font-weight: bold; margin-bottom: 5px;">${vendor.shop_name}</h3>
+//               <p style="margin-bottom: 5px;">${vendor.seller_address}</p>
+//               ${vendor.rating ? `<p style="margin-bottom: 5px;">Rating: ⭐${vendor.rating}</p>` : ''}
+//             </div>
+//           </a>
+//         `;
+//         infoWindowRef.current!.setContent(contentString);
+//         infoWindowRef.current!.open(map, marker);
+//       });
+
+//       markersRef.current.push(marker);
+//     });
+//   }, [isLoaded, vendors, showOverlay]);
+
+//   if (!isLoaded) return <div>Loading Google Maps...</div>;
+
+//   return (
+//     <div style={{ lineHeight: "0", marginLeft: "10px", marginTop: "-10px" }} className="ml-0">
+//       <div style={mapContainerStyle}>
+//         <div
+//           ref={mapRef}
+//           style={{
+//             ...mapContainerStyle,
+//           }}
+//         />
+//         {showOverlay && (
+//           <div
+//             style={{
+//               position: "absolute",
+//               top: 0,
+//               left: 0,
+//               width: "100%",
+//               height: "100%",
+//               display: "flex",
+//               flexDirection: "column",
+//               justifyContent: "center",
+//               alignItems: "center",
+//               borderRadius: "10px",
+//               zIndex: 1,
+//               backgroundImage: `url('https://minio.tizaraa.shop/tizaraa/frontend/map.png')`,
+//               backgroundSize: "cover",
+//               backgroundPosition: "center",
+//               backgroundColor: "rgba(0, 0, 0, 0.5)",
+//               backgroundBlendMode: "darken",
+//             }}
+//           >
+//             <h2
+//               style={{
+//                 color: "white",
+//                 fontSize: "24px",
+//                 fontWeight: "bold",
+//                 marginBottom: "20px",
+//                 textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+//               }}
+//             >
+//               Seller Locations
+//             </h2>
+//             <button
+//               onClick={() => setShowOverlay(false)}
+//               style={{
+//                 padding: "10px 20px",
+//                 fontSize: "16px",
+//                 fontWeight: "bold",
+//                 backgroundColor: "#E94560",
+//                 color: "white",
+//                 border: "none",
+//                 borderRadius: "5px",
+//                 cursor: "pointer",
+//                 zIndex: 2,
+//                 display: "flex",
+//                 alignItems: "center",
+//                 justifyContent: "center",
+//                 gap: "8px",
+//                 minWidth: "150px",
+//               }}
+//             >
+//               <svg
+//                 xmlns="http://www.w3.org/2000/svg"
+//                 width="16"
+//                 height="16"
+//                 fill="currentColor"
+//                 viewBox="0 0 16 16"
+//               >
+//                 <path
+//                   fillRule="evenodd"
+//                   d="M8 0a5.5 5.5 0 0 1 5.5 5.5c0 3.038-5.5 10.5-5.5 10.5S2.5 8.538 2.5 5.5A5.5 5.5 0 0 1 8 0zm0 2a3.5 3.5 0 0 0-3.5 3.5c0 2.038 3.5 7.5 3.5 7.5s3.5-5.462 3.5-7.5A3.5 3.5 0 0 0 8 2zM8 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"
+//                 />
+//               </svg>
+//               <span>Show on Map</span>
+//             </button>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default VendorMapPage;

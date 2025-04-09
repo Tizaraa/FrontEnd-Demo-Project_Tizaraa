@@ -121,6 +121,26 @@ const AddToCartButton = ({
     });
   };
 
+
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    product: any
+  ) => {
+    const newQty = Math.min(
+      product.productStock,
+      Math.max(1, parseInt(e.target.value))
+    );
+    if (newQty > product.productStock) {
+      toast.error("Out of Stock");
+      return;
+    }
+    dispatch({
+      type: "CHANGE_CART_AMOUNT",
+      payload: { ...product, qty: newQty },
+    });
+  };
+
   // const handleAddToCart = () => {
   //   setIsLoading(true);
 
@@ -156,7 +176,7 @@ const AddToCartButton = ({
   };
 
   return (
-    <>
+    <Styledbutton>
       {!cartItem ? (
         <Button
           mb="36px"
@@ -169,7 +189,7 @@ const AddToCartButton = ({
           {isLoading ? <BeatLoader size={18} color="#fff" /> : 'Add to Cart'}
         </Button>
       ) : (
-        <FlexBox alignItems="center" mb="36px">
+        <FlexBox alignItems="center" mb="36px" style={{ gap: "10px" }}>
           <Button
             p="9px"
             size="small"
@@ -184,9 +204,27 @@ const AddToCartButton = ({
           {/* <H3 fontWeight="600" mx="20px">
             {cartItem.qty.toString().padStart(2, "0")}
           </H3> */}
-          <H3 fontWeight="600" mx="20px">
+          {/* <H3 fontWeight="600" mx="20px">
             {(cartItem.qty ?? 1).toString().padStart(2, "0")}
-          </H3>
+          </H3> */}
+
+
+          <input
+                  className="no-spin-button"
+                  type="number"
+                  value={cartItem.qty}
+                  min={1}
+                  onChange={(e) => handleInputChange(e, cartItem)}
+                  style={{
+                    textDecoration: "none",
+                    borderRadius: "30px",
+                    scrollBehavior: "unset",
+                    border: "1px solid #E94560",
+                    padding: "8px",
+                    width: "60px",
+                    textAlign: "center",
+                  }}
+                />
 
 
           <Button
@@ -200,7 +238,7 @@ const AddToCartButton = ({
           </Button>
         </FlexBox>
       )}
-    </>
+    </Styledbutton>
   );
 };
 
