@@ -66,6 +66,9 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [showAllCountries, setShowAllCountries] = useState(false);
   const [showAllProvinces, setShowAllProvinces] = useState(false);
+  const [filteredCategories, setFilteredCategories] = useState(null);
+  const [filteredBrand, setFilteredBrand] = useState(null);
+  const [filteredCountry, setFilteredCountry] = useState(null);
 
 
   useEffect(() => {
@@ -193,7 +196,7 @@ const handleBrandChange = (brandId: number) => {
   return (
     <Card p="18px 27px" elevation={5} borderRadius={8}>
         <H6 mb="10px">Categories</H6>
-      <div
+      {/* <div
   style={{
     maxHeight: "200px",
     overflowY: "auto",
@@ -213,7 +216,52 @@ const handleBrandChange = (brandId: number) => {
           checked={selectedCategories.includes(item.id)}
         />
       ))}
-       </div>
+       </div> */}
+
+<div
+  style={{
+    maxHeight: "200px",
+    overflowY: "auto",
+    paddingRight: "10px", // Add padding for space between scrollbar and content
+  }}
+  className="custom-scrollbar"
+>
+  {/* Search input field */}
+  <div style={{ padding: "10px", position: "sticky", top: 0, background: "white", zIndex: 1 }}>
+    <input
+      type="text"
+      placeholder="Search categories..."
+      style={{
+        width: "100%",
+        padding: "8px",
+        borderRadius: "4px",
+        border: "1px solid #ccc",
+      }}
+      onChange={(e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        setFilteredCategories(
+          categoryList.filter(item => 
+            item.categorie_name.toLowerCase().includes(searchTerm)
+          )
+        );
+      }}
+    />
+  </div>
+
+  {/* Filtered category list */}
+  {(filteredCategories || categoryList).map((item) => (
+    <CheckBox
+      my="10px"
+      key={item.id}
+      name={item.categorie_name}
+      value={item.id}
+      color="secondary"
+      label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
+      onChange={() => handleCategoryChange(item.id)}
+      checked={selectedCategories.includes(item.id)}
+    />
+  ))}
+</div>
 
 
 
@@ -252,7 +300,28 @@ const handleBrandChange = (brandId: number) => {
   }}
   className="custom-scrollbar"
 >
-{brandList.map((item) => (
+    {/* Search input field */}
+    <div style={{ padding: "10px", position: "sticky", top: 0, background: "white", zIndex: 1 }}>
+    <input
+      type="text"
+      placeholder="Search Brand..."
+      style={{
+        width: "100%",
+        padding: "8px",
+        borderRadius: "4px",
+        border: "1px solid #ccc",
+      }}
+      onChange={(e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        setFilteredBrand(
+          brandList.filter(item => 
+            item.brand_name.toLowerCase().includes(searchTerm)
+          )
+        );
+      }}
+    />
+  </div>
+{(filteredBrand || brandList).map((item) => (
         <CheckBox
           my="10px"
           key={item.id}
@@ -264,7 +333,6 @@ const handleBrandChange = (brandId: number) => {
           checked={selectedBrands.includes(item.id)}
         />
       ))}
-
 </div>
 
       {/* {visibleBrands.map((item) => (
@@ -306,18 +374,41 @@ const handleBrandChange = (brandId: number) => {
   className="custom-scrollbar"
 >
 
-{countryList.map((country) => (
-        <CheckBox
-          my="10px"
-          key={country.id}
-          name={country.location}
-          value={country.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{country.location}</SemiSpan>}
-          onChange={() => handleCountryChange(country.id)}
-          checked={selectedCountry.includes(country.id)}
-        />
-      ))}
+    {/* Search input field */}
+    <div style={{ padding: "10px", position: "sticky", top: 0, background: "white", zIndex: 1 }}>
+      <input
+        type="text"
+        placeholder="Search country..."
+        style={{
+          width: "100%",
+          padding: "8px",
+          borderRadius: "4px",
+          border: "1px solid #ccc",
+        }}
+        onChange={(e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          setFilteredCountry(
+            countryList.filter(item => 
+              item.location.toLowerCase().includes(searchTerm)
+            )
+          );
+        }}
+      />
+    </div>
+
+    {(filteredCountry ? filteredCountry : countryList).map((country) => (
+      <CheckBox
+        my="10px"
+        key={country.id}
+        name={country.location}
+        value={country.id}
+        color="secondary"
+        label={<SemiSpan color="inherit">{country.location}</SemiSpan>}
+        onChange={() => handleCountryChange(country.id)}
+        checked={selectedCountry.includes(country.id)}
+      />
+    ))}
+
 
 </div>
 
