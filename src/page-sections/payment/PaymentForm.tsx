@@ -794,7 +794,7 @@ export default function PaymentForm() {
     style={{
       display: "flex",
       flexWrap: "wrap",
-      gap: "10px", // Adds consistent spacing between elements
+      gap: "5px", // Adds consistent spacing between elements
     }}
   >
     {/* Cash on Delivery */}
@@ -980,63 +980,137 @@ export default function PaymentForm() {
 
 </FlexBox>
 
-<div style={{marginBottom: "20px"}}>
-<CheckBox
-        mb="20px"
-        name="agreement"
-        color="secondary"
-        label={
-          <FlexBox>
-            <SemiSpan style={{fontSize: "11px"}}>By proceeding to checkout, you agree to our</SemiSpan>
-            <a
-              href="/terms-and-conditions"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <H6
-                ml="0.5rem"
-                borderBottom="1px solid"
-                borderColor="gray.900"
-                fontSize="11px"
-              >
-                 Terms & Conditions,
-              </H6>
-            </a>
-            <a
-              href="/return-and-refund-policy"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <H6
-                ml="0.5rem"
-                borderBottom="1px solid"
-                borderColor="gray.900"
-                fontSize="11px"
-              >
-                 Return & Refund Policy,
-              </H6>
-            </a>
-            <a
-              href="/privacy-policy"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <H6
-                ml="0.5rem"
-                borderBottom="1px solid"
-                borderColor="gray.900"
-                fontSize="11px"
-              >
-                 Privacy Policy
-              </H6>
-            </a>
-          </FlexBox>
-        }
-        onChange={handleCheckboxChange} // Update checkbox state
-        required
-      />
+      {/* <div style={{marginBottom: "20px"}}>
+      <CheckBox
+              mb="20px"
+              name="agreement"
+              color="secondary"
+              label={
+                <FlexBox>
+                  <SemiSpan style={{fontSize: "11px"}}>By proceeding to checkout, you agree to our</SemiSpan>
+                  <a
+                    href="/terms-and-conditions"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <H6
+                      ml="0.5rem"
+                      borderBottom="1px solid"
+                      borderColor="gray.900"
+                      fontSize="11px"
+                    >
+                      Terms & Conditions,
+                    </H6>
+                  </a>
+                  <a
+                    href="/return-and-refund-policy"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <H6
+                      ml="0.5rem"
+                      borderBottom="1px solid"
+                      borderColor="gray.900"
+                      fontSize="11px"
+                    >
+                      Return & Refund Policy,
+                    </H6>
+                  </a>
+                  <a
+                    href="/privacy-policy"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <H6
+                      ml="0.5rem"
+                      borderBottom="1px solid"
+                      borderColor="gray.900"
+                      fontSize="11px"
+                    >
+                      Privacy Policy
+                    </H6>
+                  </a>
+                </FlexBox>
+              }
+              onChange={handleCheckboxChange} // Update checkbox state
+              required
+            />
 
-</div>
+      </div> */}
+
+
+
+      <div style={{ marginBottom: "20px" }}>
+        <CheckBox
+          name="agreement"
+          color="secondary"
+          label={
+            <FlexBox 
+              flexWrap="wrap" 
+              alignItems="center"
+              style={{ 
+                fontSize: "11px",
+                lineHeight: "1.4"
+              }}
+            >
+              <SemiSpan>By proceeding to checkout, you agree to our</SemiSpan>
+              <Box display="inline-flex" flexWrap="wrap">
+                <a
+                  href="/terms-and-conditions"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  <H6
+                    ml="0.5rem"
+                    borderBottom="1px solid"
+                    borderColor="gray.900"
+                    fontSize="11px"
+                    display="inline"
+                  >
+                    Terms & Conditions,
+                  </H6>
+                </a>
+                <a
+                  href="/return-and-refund-policy"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  <H6
+                    ml="0.5rem"
+                    borderBottom="1px solid"
+                    borderColor="gray.900"
+                    fontSize="11px"
+                    display="inline"
+                  >
+                    Return & Refund Policy,
+                  </H6>
+                </a>
+                <a
+                  href="/privacy-policy"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  <H6
+                    ml="0.5rem"
+                    borderBottom="1px solid"
+                    borderColor="gray.900"
+                    fontSize="11px"
+                    display="inline"
+                  >
+                    Privacy Policy
+                  </H6>
+                </a>
+              </Box>
+            </FlexBox>
+          }
+          onChange={handleCheckboxChange}
+          required
+        />
+      </div>
+
       <Grid container spacing={7}>
         <Grid item sm={6} xs={12}>
           <Button
