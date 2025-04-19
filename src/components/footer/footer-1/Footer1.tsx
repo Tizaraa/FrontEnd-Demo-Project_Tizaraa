@@ -170,9 +170,12 @@ import { useEffect, useState } from "react";
 
 export const aboutLinks = [
   { name: "Help center", url: "/helpCenter" },
+  { name: "Order Tracking", url: "/orderTracking" },
+  { name: "Shipping & Delivery", url: "/" },
+  { name: "Return and Refund Policy", url: "/return-and-refund-policy"},
+  { name: "Replacement", url: "/" },
   { name: "How to buy", url: "/howToBuy" },
   { name: "Tizaraa journey", url: "/tizaraa-journey" },
-  { name: "Return and Refund Policy", url: "/return-and-refund-policy"}
 ];
 
 export const customerCareLinks = [
