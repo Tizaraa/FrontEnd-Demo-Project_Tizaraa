@@ -665,7 +665,7 @@ export default function TermsAndConditions() {
 
           <section className="section">
             <h2 className="section-title">
-              <span className="section-number">1</span>
+              <span className="section-number">১</span>
               মেধাস্বত্ব অধিকার
             </h2>
             <div className="section-content">
@@ -684,7 +684,7 @@ export default function TermsAndConditions() {
 
           <section className="section">
             <h2 className="section-title">
-              <span className="section-number">2</span>
+              <span className="section-number">২</span>
               ব্যবহারকারীর উপস্থাপনা
             </h2>
             <div className="section-content">
@@ -710,7 +710,7 @@ export default function TermsAndConditions() {
 
           <section className="section">
             <h2 className="section-title">
-              <span className="section-number">3</span>
+              <span className="section-number">৩</span>
               ব্যবহারকারীর নিবন্ধন
             </h2>
             <div className="section-content">
@@ -722,7 +722,7 @@ export default function TermsAndConditions() {
 
           <section className="section">
             <h2 className="section-title">
-              <span className="section-number">3</span>
+              <span className="section-number">৪</span>
               নিষিদ্ধ কার্যকলাপ
             </h2>
             <div className="section-content">
@@ -741,7 +741,7 @@ export default function TermsAndConditions() {
 
           <section className="section">
             <h2 className="section-title">
-              <span className="section-number">4</span>
+              <span className="section-number">৫</span>
               অবদান লাইসেন্স
             </h2>
             <div className="section-content">
@@ -775,7 +775,7 @@ export default function TermsAndConditions() {
 
           <section className="section">
             <h2 className="section-title">
-              <span className="section-number">5</span>
+              <span className="section-number">৬</span>
               পর্যালোচনাগুলির জন্য নির্দেশিকা
             </h2>
             <div className="section-content">
@@ -806,7 +806,7 @@ export default function TermsAndConditions() {
 
           <section className="section">
           <h2 className="section-title">
-            <span className="section-number">6</span>
+            <span className="section-number">৭</span>
             মোবাইল অ্যাপ্লিকেশন লাইসেন্স
           </h2>
           <div className="section-content">
@@ -831,7 +831,7 @@ export default function TermsAndConditions() {
 
           <section className="section">
           <h2 className="section-title">
-            <span className="section-number">7</span>
+            <span className="section-number">৮</span>
             সোশ্যাল মিডিয়া
           </h2>
           <div className="section-content">
@@ -873,7 +873,7 @@ export default function TermsAndConditions() {
 
           <section className="section">
             <h2 className="section-title">
-              <span className="section-number">7</span>
+              <span className="section-number">৯</span>
               জমা
             </h2>
             <div className="section-content">
@@ -889,7 +889,7 @@ export default function TermsAndConditions() {
 
           <section className="section">
             <h2 className="section-title">
-              <span className="section-number">8</span>
+              <span className="section-number">১০</span>
               তৃতীয় পক্ষের ওয়েবসাইট এবং বিষয়বস্তু
             </h2>
             <div className="section-content">
