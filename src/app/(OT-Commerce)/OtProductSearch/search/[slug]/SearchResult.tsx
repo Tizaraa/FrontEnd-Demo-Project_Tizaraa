@@ -9,8 +9,24 @@ import Card from "@component/Card";
 import { ProductCard1 } from "@component/product-cards";
 import { currency } from "@utils/utils";
 import Link from "next/link";
+import styled from "@emotion/styled";
+import { Vortex } from "react-loader-spinner";
 
 const productsPerPage = 10000;
+
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
+
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+`;
 
 export default function SearchResult({ slug }: { slug: string }) {
   const [products, setProducts] = useState<any[]>([]);
@@ -146,7 +162,13 @@ export default function SearchResult({ slug }: { slug: string }) {
 </Grid>
 
 
-      {loading && <Paragraph>Loading...</Paragraph>}
+      {/* {loading && <Paragraph>Loading...</Paragraph>} */}
+      
+                    {loading && (
+                      <LoaderWrapper>
+                        <Vortex />
+                      </LoaderWrapper>
+                    )}
 
       {currentPage * productsPerPage < totalProducts && (
         <FlexBox justifyContent="center" mt="20px">

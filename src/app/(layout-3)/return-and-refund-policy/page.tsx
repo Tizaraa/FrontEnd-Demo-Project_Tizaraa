@@ -6,7 +6,7 @@ import '../return-and-refund-policy/terms.css'
 import { useState } from 'react';
 
 
-export default function TermsAndConditions() {
+export default function ReturnRefundPolicy() {
   
   const [language, setLanguage] = useState('english');
 
