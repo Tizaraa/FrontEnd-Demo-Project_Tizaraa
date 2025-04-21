@@ -23,7 +23,7 @@ import Image from "next/image";
 
 // Example: Replace this with your actual base URL or env variable
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "https://frontend.tizaraa.com/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://frontend.tizaraa.shop/api";
 const pageSize = 20; // Page size for product fetching
 
 const OTCProducts = () => {

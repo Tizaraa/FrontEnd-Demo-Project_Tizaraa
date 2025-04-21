@@ -21,7 +21,7 @@ import { SearchInputWithCategory } from "@component/search-box";
 import OTProductsSearchInputWithCategory from "@component/search-box/OTProductsSearchInputWithCategory";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "https://frontend.tizaraa.com/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://frontend.tizaraa.shop/api";
 const pageSize = 20;
 
 const LoaderWrapper = styled.div`

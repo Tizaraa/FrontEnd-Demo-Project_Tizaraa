@@ -3,7 +3,7 @@ import Card from "@component/Card";
 import { H6, Paragraph } from "@component/Typography";
 import Link from 'next/link';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://frontend.tizaraa.com/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://frontend.tizaraa.shop/api';
 
 type Category = {
   Id: string;
