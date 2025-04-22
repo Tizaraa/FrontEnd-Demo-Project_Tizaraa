@@ -169,21 +169,22 @@ import Typography, { Paragraph } from "@component/Typography";
 import { useEffect, useState } from "react";
 
 export const aboutLinks = [
-  { name: "Help center", url: "/helpCenter" },
   { name: "Order Tracking", url: "/orderTracking" },
   { name: "Shipping & Delivery", url: "/shipiingAndDelivery" },
   { name: "Return and Refund Policy", url: "/return-and-refund-policy"},
   { name: "Replacement", url: "/replacement" },
+  { name: "Help center", url: "/helpCenter" },
   { name: "How to buy", url: "/howToBuy" },
   { name: "Tizaraa journey", url: "/tizaraa-journey" },
 ];
 
 export const customerCareLinks = [
   { name: "About Tizaraa", url: "/about-tizaraa" },
-  { name: "Tizaraa blog", url: "/tizaraa-blog" },
-  { name: "Tizaraa cares", url: "/tizaraa-cares" },
   { name: "Privacy policy", url: "/privacy-policy" },
   { name: "Terms and Conditions", url: "/terms-and-conditions"},
+  { name: "Terms and Conditions", url: "/terms-and-conditions"},
+  { name: "Contact Us", url: "/contact" },
+  { name: "Tizaraa cares", url: "/tizaraa-cares" },
  
 ];
 
