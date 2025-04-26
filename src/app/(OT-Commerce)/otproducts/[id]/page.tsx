@@ -19,6 +19,14 @@ import { Chip } from "@component/Chip";
 
 import styles from "../../../../components/products/RelatedProductsStyle.module.css";
 import ApiBaseUrl from 'api/ApiBaseUrl';
+import { Vortex } from 'react-loader-spinner'
+import  styled from "@emotion/styled";
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 
 
@@ -283,9 +291,9 @@ const renderAttributes = (attributes: Attribute[]) => {
 };
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        Loading...
-      </div>
+        <LoaderWrapper>
+          <Vortex />
+        </LoaderWrapper>
     );
   }
 
