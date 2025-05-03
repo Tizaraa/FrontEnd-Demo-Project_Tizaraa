@@ -63,7 +63,7 @@
 //             return;
 //           }
 //         }
-        
+
 //         //onAddressChange(fetchedAddresses.length > 0, fetchedAddresses.length > 0);
 //         onAddressChange(response.data.user.length > 0, false);
 //       } catch (error) {
@@ -101,7 +101,7 @@
 //       setDeliveryCharge(selectedProvince.delivery_charge);
 //       item.deliveryCharge = selectedProvince.delivery_charge; // Add deliveryCharge to the selected item
 //       sessionStorage.setItem("deliveryCharge", selectedProvince.delivery_charge.toString());
-     
+
 //     }
 
 //     setSelectedAddress(item);
@@ -129,7 +129,7 @@
 //   }, [setDeliveryCharge]);
 
 
-  
+
 //   return (
 //     <Fragment>
 //       {addresses.length > 0 ? (
@@ -177,7 +177,7 @@
 //         borderRadius: "1rem",
 //         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", 
 //         // padding: "0.5rem 0.5rem"
-    
+
 //       }}
 //     >
 //       <FlexBox
@@ -534,10 +534,6 @@
 
 
 
-
-
-
-// ====================== UPDATE: Express Delivery Functionality added ==========================
 "use client";
 
 import { useEffect, useState } from "react";
@@ -563,6 +559,13 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
   const [province, setProvince] = useState([]);
   const authtoken = authService.getToken();
   const [expressDelivery, setExpressDelivery] = useState(false);
+
+
+  const [selectedPaymentOption, setSelectedPaymentOption] = useState<number | null>(null);
+
+  const handlePaymentOptionSelect = (percentage: number) => {
+    setSelectedPaymentOption(percentage);
+  };
 
   // Fetch provinces data
   const fetchProvince = async () => {
@@ -646,10 +649,10 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
           };
           axios.post(
             `${ApiBaseUrl.baseUrl}delivery/charge/apply`, payload, {
-              headers: {
-                Authorization: `Bearer ${authtoken}`,
-              },
-            }
+            headers: {
+              Authorization: `Bearer ${authtoken}`,
+            },
+          }
           )
             .then((response) => {
               // const totalDeliveryCost = response.data.totalDeliveryCost;
@@ -677,26 +680,26 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
   // Handle express delivery checkbox change
   const handleExpressDeliveryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
-      const storedAddress = JSON.parse(sessionStorage.getItem("address"));
-    
-      if (!storedAddress) {
-        toast.warning("Please select an address first!", {
-          position: "top-right",
-          autoClose: 3000,
-          style: {
-            background: "rgb(245, 124, 0)",
-            color: "#000",
-            fontSize: "16px",
-            border: "2px solid #fff",
-            boxShadow: "0 0 10px rgba(255, 152, 0, 0.7)",
-          },
-          icon: <FaExclamationTriangle style={{ color: "#000", fontSize: "20px" }} />, // Custom icon
-          progressStyle: {
-            background: "#fff",
-          },
-        });
-        return;
-      }
+    const storedAddress = JSON.parse(sessionStorage.getItem("address"));
+
+    if (!storedAddress) {
+      toast.warning("Please select an address first!", {
+        position: "top-right",
+        autoClose: 3000,
+        style: {
+          background: "rgb(245, 124, 0)",
+          color: "#000",
+          fontSize: "16px",
+          border: "2px solid #fff",
+          boxShadow: "0 0 10px rgba(255, 152, 0, 0.7)",
+        },
+        icon: <FaExclamationTriangle style={{ color: "#000", fontSize: "20px" }} />, // Custom icon
+        progressStyle: {
+          background: "#fff",
+        },
+      });
+      return;
+    }
 
     const isChecked = event.target.checked;
     setExpressDelivery(isChecked);
@@ -716,34 +719,75 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
     }
   }, [setDeliveryCharge]);
 
+
   return (
     <Fragment>
-      <FlexBox flexDirection="column" mb="1rem" p="0.5rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f7eded">
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={6}>
-            <FlexBox alignItems="center">
-              <FaTruckFast style={{ fontSize: "24px", color: "#E94560" }} />
-              <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
-                <span style={{ color: "#E94560", fontWeight: "600" }}>Delivery Options</span>
-              </label>
+
+      {(() => {
+        const selectedProducts = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
+        const hasAbroadProduct = selectedProducts.some((product: any) => product.productType === "Abroad");
+
+        if (hasAbroadProduct) {
+          return (
+            <FlexBox flexDirection="column" mb="1rem" p="1rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f7f7f7">
+              <Typography variant="h6" style={{ marginBottom: "1rem", color: "#E94560", fontWeight: "600" }}>
+                Advance Payment Options
+              </Typography>
+
+              <Grid container spacing={2}>
+                {/* Option 1 - 50% */}
+                <Grid item xs={12} sm={4}>
+                  <FlexBox
+                    flexDirection="column"
+                    p="1rem"
+                    border={`1px solid ${selectedPaymentOption === 65 ? 'rgb(233, 69, 96)' : '#ddd'}`}
+                    borderRadius="8px"
+                    backgroundColor={selectedPaymentOption === 65 ? 'rgb(233, 69, 96)' : 'white'}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handlePaymentOptionSelect(65)}
+                  >
+                    <Typography style={{
+                      fontWeight: "600",
+                      color: selectedPaymentOption === 65 ? 'white' : "#333"
+                    }}>
+                      Pay Now 50%
+                    </Typography>
+                  </FlexBox>
+                </Grid>
+              </Grid>
             </FlexBox>
-          </Grid>
-          <Grid item xs={6}>
-            <FlexBox alignItems="center" justifyContent="flex-end">
-              <input
-                checked={expressDelivery}
-                onChange={handleExpressDeliveryChange}
-                type="checkbox"
-                id="expressDelivery"
-                style={{ cursor: "pointer", accentColor: "#E94560" }}
-              />
-              <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
-                <span style={{ color: "#E94560", fontWeight: "600" }}>Express Delivery</span>
-              </label>
+          );
+        } else {
+          return (
+            <FlexBox flexDirection="column" mb="1rem" p="0.5rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f7eded">
+              <Grid container spacing={2} alignItems="center">
+                <Grid item xs={6}>
+                  <FlexBox alignItems="center">
+                    <FaTruckFast style={{ fontSize: "24px", color: "#E94560" }} />
+                    <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
+                      <span style={{ color: "#E94560", fontWeight: "600" }}>Delivery Options</span>
+                    </label>
+                  </FlexBox>
+                </Grid>
+                <Grid item xs={6}>
+                  <FlexBox alignItems="center" justifyContent="flex-end">
+                    <input
+                      checked={expressDelivery}
+                      onChange={handleExpressDeliveryChange}
+                      type="checkbox"
+                      id="expressDelivery"
+                      style={{ cursor: "pointer", accentColor: "#E94560" }}
+                    />
+                    <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
+                      <span style={{ color: "#E94560", fontWeight: "600" }}>Express Delivery</span>
+                    </label>
+                  </FlexBox>
+                </Grid>
+              </Grid>
             </FlexBox>
-          </Grid>
-        </Grid>
-      </FlexBox>
+          );
+        }
+      })()}
 
       {addresses.length > 0 ? (
         addresses.map((item) => (

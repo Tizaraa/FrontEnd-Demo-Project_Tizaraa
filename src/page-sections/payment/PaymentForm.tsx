@@ -256,7 +256,7 @@
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
-import { useRouter,usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { ChangeEvent, Fragment, useState } from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -333,10 +333,10 @@ export default function PaymentForm() {
 
   let authtoken = localStorage.getItem("token");
   const orderSubmit = async () => {
-  setIsHasLoading(true)
+    setIsHasLoading(true)
     if (isSubtotalZero) {
       toast.error("Your cart is empty. Please add items before proceeding.");
-      return; 
+      return;
     }
     let getData = localStorage.getItem("userInfo");
     let userinfo = JSON.parse(getData);
@@ -349,7 +349,7 @@ export default function PaymentForm() {
 
     // let cartData = localStorage.getItem('cart');
     const cartData = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
-   
+
 
     // Ensure cartData is valid and not empty before trying to access its items
     const productType =
@@ -361,7 +361,7 @@ export default function PaymentForm() {
     // console.log("Product Type:", productType);
     // console.log("Selected payment method:", paymentMethod);
     if (paymentMethod === "Online Payment") {
-     
+
       try {
         const response = await axios.post(
           `${ApiBaseUrl.baseUrl}pay-via-ajax`,
@@ -454,11 +454,11 @@ export default function PaymentForm() {
 
         //router.push("/orders");
         localStorage.removeItem("orderId");
-      sessionStorage.removeItem("selectedProducts");
-      //localStorage.removeItem("cart");
-      sessionStorage.removeItem("paymentMethod");
-      sessionStorage.removeItem("savedTotalPrice");
-      sessionStorage.removeItem("savedTotalWithDelivery");
+        sessionStorage.removeItem("selectedProducts");
+        //localStorage.removeItem("cart");
+        sessionStorage.removeItem("paymentMethod");
+        sessionStorage.removeItem("savedTotalPrice");
+        sessionStorage.removeItem("savedTotalWithDelivery");
         cart.forEach((item) => {
           dispatch({
             type: "CHANGE_CART_AMOUNT",
@@ -469,7 +469,7 @@ export default function PaymentForm() {
         const redirectUrl = response.data?.redirect_url;
         // console.log(redirectUrl);
         //return
-        
+
         if (redirectUrl) {
           //const searchParams = useSearchParams();
           window.location.href = redirectUrl;
@@ -481,9 +481,9 @@ export default function PaymentForm() {
       } catch (error) {
         console.error("Online Payment Error:", error);
         toast.error("Error initiating online payment payment!");
-  setIsHasLoading(false)
+        setIsHasLoading(false)
       }
-    } else if(paymentMethod === "cod") {
+    } else if (paymentMethod === "cod") {
       try {
         const orderResponse = await axios.post(
           `${ApiBaseUrl.baseUrl}checkout/order`,
@@ -505,7 +505,7 @@ export default function PaymentForm() {
             address:
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             delivery_charge: savedShipping || 0,
-            total_ammount: 
+            total_ammount:
               total_ammount,
             payment_type: 1,
             seller_id: cartData[0]?.sellerId,
@@ -529,190 +529,190 @@ export default function PaymentForm() {
         localStorage.setItem("orderId", orderId);
         localStorage.setItem("orderSuccess", "true");
 
-  // await Promise.all(
-  //         cart.map(async (cartdata) => {
-  //           try {
-  //             // Set color handling logic
-  //             let color = cartdata.id;
-  //             if (/\D--\d+$/.test(cartdata.id)) {
-  //               color = cartdata.id.replace(/--\d+$/, "");
-  //             } else if (cartdata.id) {
-  //               color = "";
-  //             }
+        // await Promise.all(
+        //         cart.map(async (cartdata) => {
+        //           try {
+        //             // Set color handling logic
+        //             let color = cartdata.id;
+        //             if (/\D--\d+$/.test(cartdata.id)) {
+        //               color = cartdata.id.replace(/--\d+$/, "");
+        //             } else if (cartdata.id) {
+        //               color = "";
+        //             }
 
-  //             // Place order items for all products, including OTC
-  //             const response = await axios.post(
-  //               `${ApiBaseUrl.baseUrl}checkout/order-items`,
-  //               // {
-  //               //   orders: [
-  //               //     {
-  //               //       delivery_charge: savedShipping,
-  //               //       user_id: userinfo.id,
-  //               //       seller_id: cartdata.sellerId,
-  //               //       order_id: orderId,
-  //               //       product_id: cartdata.productId,
-  //               //       color: cartdata.selectedColor,
-  //               //       size: cartdata.selectedSize,
-  //               //       qty: cartdata.qty,
-  //               //       note1: "lorem10",
-                      
-  //               //       // single_amount: cartdata.price,
-  //               //       single_amount: cartdata.discountPrice ? cartdata.discountPrice : cartdata.price,
+        //             // Place order items for all products, including OTC
+        //             const response = await axios.post(
+        //               `${ApiBaseUrl.baseUrl}checkout/order-items`,
+        //               // {
+        //               //   orders: [
+        //               //     {
+        //               //       delivery_charge: savedShipping,
+        //               //       user_id: userinfo.id,
+        //               //       seller_id: cartdata.sellerId,
+        //               //       order_id: orderId,
+        //               //       product_id: cartdata.productId,
+        //               //       color: cartdata.selectedColor,
+        //               //       size: cartdata.selectedSize,
+        //               //       qty: cartdata.qty,
+        //               //       note1: "lorem10",
 
-  //               //       // total_amount: cartdata.total_amount,
-  //               //       // total_amount: cartdata.discountPrice ? cartdata.discountPrice : cartdata.total_amount,
+        //               //       // single_amount: cartdata.price,
+        //               //       single_amount: cartdata.discountPrice ? cartdata.discountPrice : cartdata.price,
 
-  //               //       // Total price for the quantity
-  //               //       total_amount: (cartdata.discountPrice ? cartdata.discountPrice : cartdata.price) * cartdata.qty,
-  //               //     },
-  //               //   ],
-  //               // },
+        //               //       // total_amount: cartdata.total_amount,
+        //               //       // total_amount: cartdata.discountPrice ? cartdata.discountPrice : cartdata.total_amount,
 
-  //               {
-  //                 orders: [
-  //                   {
-  //                     delivery_charge: savedShipping,
-  //                     user_id: userinfo.id,
-  //                     seller_id: cartdata.sellerId,
-  //                     order_id: orderId,
-  //                     product_id: cartdata.productId,
-  //                     color: cartdata.selectedColor,
-  //                     size: cartdata.selectedSize,
-  //                     qty: cartdata.qty,
-  //                     note1: "lorem10",
+        //               //       // Total price for the quantity
+        //               //       total_amount: (cartdata.discountPrice ? cartdata.discountPrice : cartdata.price) * cartdata.qty,
+        //               //     },
+        //               //   ],
+        //               // },
 
-  //                     // Calculate the price for a single item (single_amount):
-  //                     // If both color and size are selected, fetch the price from sizeColor based on the selected color and size.
-  //                     // If the size/color price isn't found, fall back to the base product price (cartdata.price).
-  //                     // If color/size are not selected, check if a discountPrice exists — use that instead.
-  //                     // Ensure the final price is always a number (even if it comes as a string like "100.00").
-  //                     single_amount: Number(
-  //                       cartdata.selectedColor && cartdata.selectedSize
-  //                         ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
-  //                             (s) => s.size === cartdata.selectedSize
-  //                           )?.price || cartdata.price
-  //                         : cartdata.discountPrice || cartdata.price
-  //                     ),
+        //               {
+        //                 orders: [
+        //                   {
+        //                     delivery_charge: savedShipping,
+        //                     user_id: userinfo.id,
+        //                     seller_id: cartdata.sellerId,
+        //                     order_id: orderId,
+        //                     product_id: cartdata.productId,
+        //                     color: cartdata.selectedColor,
+        //                     size: cartdata.selectedSize,
+        //                     qty: cartdata.qty,
+        //                     note1: "lorem10",
 
-  //                     // Calculate the total price for the item (total_amount):
-  //                     // Uses the same logic as single_amount to get the correct price.
-  //                     // Multiplies the price by the item quantity (cartdata.qty).
-  //                     // Converts the final total amount to a number to avoid string multiplication errors.
-  //                     // total_amount: Number(
-  //                     //   (cartdata.selectedColor && cartdata.selectedSize
-  //                     //     ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
-  //                     //         (s) => s.size === cartdata.selectedSize
-  //                     //       )?.price || cartdata.price
-  //                     //     : cartdata.discountPrice || cartdata.price) * cartdata.qty
-  //                     // ),
+        //                     // Calculate the price for a single item (single_amount):
+        //                     // If both color and size are selected, fetch the price from sizeColor based on the selected color and size.
+        //                     // If the size/color price isn't found, fall back to the base product price (cartdata.price).
+        //                     // If color/size are not selected, check if a discountPrice exists — use that instead.
+        //                     // Ensure the final price is always a number (even if it comes as a string like "100.00").
+        //                     single_amount: Number(
+        //                       cartdata.selectedColor && cartdata.selectedSize
+        //                         ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
+        //                             (s) => s.size === cartdata.selectedSize
+        //                           )?.price || cartdata.price
+        //                         : cartdata.discountPrice || cartdata.price
+        //                     ),
 
-  //                     total_amount: single_amount * cartdata.qty
-  //                   },
-  //                 ],
-  //               },
-                
-  //               {
-  //                 headers: {
-  //                   Authorization: `Bearer ${authtoken}`,
-  //                   "Content-Type": "application/json",
-  //                 },
-  //               }
-  //             );
-            
-  //             console.log("Cart Item Responsee:", response.data);
-  //           } catch (error) {
-  //             console.error("Failed to add item to order:", error.response);
-  // setIsHasLoading(false)
-  //           }
-  //         })
-  //       );
+        //                     // Calculate the total price for the item (total_amount):
+        //                     // Uses the same logic as single_amount to get the correct price.
+        //                     // Multiplies the price by the item quantity (cartdata.qty).
+        //                     // Converts the final total amount to a number to avoid string multiplication errors.
+        //                     // total_amount: Number(
+        //                     //   (cartdata.selectedColor && cartdata.selectedSize
+        //                     //     ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
+        //                     //         (s) => s.size === cartdata.selectedSize
+        //                     //       )?.price || cartdata.price
+        //                     //     : cartdata.discountPrice || cartdata.price) * cartdata.qty
+        //                     // ),
+
+        //                     total_amount: single_amount * cartdata.qty
+        //                   },
+        //                 ],
+        //               },
+
+        //               {
+        //                 headers: {
+        //                   Authorization: `Bearer ${authtoken}`,
+        //                   "Content-Type": "application/json",
+        //                 },
+        //               }
+        //             );
+
+        //             console.log("Cart Item Responsee:", response.data);
+        //           } catch (error) {
+        //             console.error("Failed to add item to order:", error.response);
+        // setIsHasLoading(false)
+        //           }
+        //         })
+        //       );
 
 
-      const handleOrderItems = async () => {
-        try {
-          // Wait for all async operations to finish using Promise.all
-          await Promise.all(
-            cart.map(async (cartdata) => {
-              try {
-                // Set color handling logic
-                let color = cartdata.id;
-                if (/\D--\d+$/.test(cartdata.id)) {
-                  color = cartdata.id.replace(/--\d+$/, "");
-                } else if (cartdata.id) {
-                  color = "";
-                }
-      
-                // Calculate the price for a single item (single_amount):
-                // const single_amount = Number(
-                //   cartdata.selectedColor && cartdata.selectedSize
-                //     ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
-                //         (s) => s.size === cartdata.selectedSize
-                //       )?.price || cartdata.price
-                //     : cartdata.discountPrice || cartdata.price
-                // );
+        const handleOrderItems = async () => {
+          try {
+            // Wait for all async operations to finish using Promise.all
+            await Promise.all(
+              cart.map(async (cartdata) => {
+                try {
+                  // Set color handling logic
+                  let color = cartdata.id;
+                  if (/\D--\d+$/.test(cartdata.id)) {
+                    color = cartdata.id.replace(/--\d+$/, "");
+                  } else if (cartdata.id) {
+                    color = "";
+                  }
 
-                const single_amount = Number(
-                  cartdata.selectedColor && cartdata.selectedSize
-                    ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
+                  // Calculate the price for a single item (single_amount):
+                  // const single_amount = Number(
+                  //   cartdata.selectedColor && cartdata.selectedSize
+                  //     ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
+                  //         (s) => s.size === cartdata.selectedSize
+                  //       )?.price || cartdata.price
+                  //     : cartdata.discountPrice || cartdata.price
+                  // );
+
+                  const single_amount = Number(
+                    cartdata.selectedColor && cartdata.selectedSize
+                      ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
                         (s) => s.size === cartdata.selectedSize
                       )?.price || cartdata.discountPrice || cartdata.price
-                    : cartdata.discountPrice || cartdata.price
-                );
-                
-      
-                // Create the order object
-                const order = {
-                  delivery_charge: savedShipping,
-                  user_id: userinfo.id,
-                  seller_id: cartdata.sellerId,
-                  order_id: orderId,
-                  product_id: cartdata.productId,
-                  color: cartdata.selectedColor,
-                  size: cartdata.selectedSize,
-                  qty: cartdata.qty,
-                  note1: "lorem10",
-                  single_amount: single_amount,
-                  total_amount: single_amount * cartdata.qty,
-                };
-      
-                // Send the order to the API
-                const response = await axios.post(
-                  `${ApiBaseUrl.baseUrl}checkout/order-items`,
-                  { orders: [order] },
-                  {
-                    headers: {
-                      Authorization: `Bearer ${authtoken}`,
-                      "Content-Type": "application/json",
-                    },
-                  }
-                );
-      
-                console.log("Cart Item Response:", response.data);
-      
-              } catch (error) {
-                console.error("Failed to add item to order:", error.response);
-              }
-            })
-          );
-        } catch (error) {
-          console.error("Error in processing cart items:", error);
-        } finally {
-          setIsHasLoading(false);
-        }
-      };
-      
-      // Call the function to handle the order items
-      handleOrderItems();
-  
-      router.push("/orders?status=success&message=Order placed successfully");
-      localStorage.removeItem("orderId");
-      localStorage.removeItem("selectedProducts");
-      sessionStorage.removeItem("selectedProducts");
-      //localStorage.removeItem("cart");
-      sessionStorage.removeItem("cartItems");
-      sessionStorage.removeItem("paymentMethod");
-      sessionStorage.removeItem("savedTotalPrice");
-      sessionStorage.removeItem("savedTotalWithDelivery");
+                      : cartdata.discountPrice || cartdata.price
+                  );
+
+
+                  // Create the order object
+                  const order = {
+                    delivery_charge: savedShipping,
+                    user_id: userinfo.id,
+                    seller_id: cartdata.sellerId,
+                    order_id: orderId,
+                    product_id: cartdata.productId,
+                    color: cartdata.selectedColor,
+                    size: cartdata.selectedSize,
+                    qty: cartdata.qty,
+                    note1: "lorem10",
+                    single_amount: single_amount,
+                    total_amount: single_amount * cartdata.qty,
+                  };
+
+                  // Send the order to the API
+                  const response = await axios.post(
+                    `${ApiBaseUrl.baseUrl}checkout/order-items`,
+                    { orders: [order] },
+                    {
+                      headers: {
+                        Authorization: `Bearer ${authtoken}`,
+                        "Content-Type": "application/json",
+                      },
+                    }
+                  );
+
+                  console.log("Cart Item Response:", response.data);
+
+                } catch (error) {
+                  console.error("Failed to add item to order:", error.response);
+                }
+              })
+            );
+          } catch (error) {
+            console.error("Error in processing cart items:", error);
+          } finally {
+            setIsHasLoading(false);
+          }
+        };
+
+        // Call the function to handle the order items
+        handleOrderItems();
+
+        router.push("/orders?status=success&message=Order placed successfully");
+        localStorage.removeItem("orderId");
+        localStorage.removeItem("selectedProducts");
+        sessionStorage.removeItem("selectedProducts");
+        //localStorage.removeItem("cart");
+        sessionStorage.removeItem("cartItems");
+        sessionStorage.removeItem("paymentMethod");
+        sessionStorage.removeItem("savedTotalPrice");
+        sessionStorage.removeItem("savedTotalWithDelivery");
         cart.forEach((item) => {
           dispatch({
             type: "CHANGE_CART_AMOUNT",
@@ -722,12 +722,12 @@ export default function PaymentForm() {
       } catch (error) {
         console.error("Error placing order:", error);
         toast.error("Error placing cash on delivery order!");
-        if(isLoggedIn){
+        if (isLoggedIn) {
           router.push("/payment");
-        }else{
+        } else {
           router.push("/login");
         }
-  setIsHasLoading(false)
+        setIsHasLoading(false)
       }
     }
   };
@@ -761,10 +761,10 @@ export default function PaymentForm() {
   };
 
   const handleClick = () => {
-            setIsHasPayLoading(true)
-    if(isLoggedIn){
+    setIsHasPayLoading(true)
+    if (isLoggedIn) {
       push("/checkout");
-    }else{
+    } else {
       router.push("/login");
     }
   };
@@ -773,212 +773,215 @@ export default function PaymentForm() {
     setIsCheckboxChecked(e.target.checked);
   };
 
+  const selectedProducts = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
+  const hasAbroadProduct = selectedProducts.some((product: any) => product.productType === "Abroad");
+
 
   return (
     <Fragment>
-<FlexBox>
-<Card1
-  mb="2rem"
-  display="flex"
-  flexDirection="column" // Default direction
-  marginRight="2px"
-  width="100%"
+      <FlexBox>
+        <Card1
+          mb="2rem"
+          display="flex"
+          flexDirection="column" // Default direction
+          marginRight="2px"
+          width="100%"
 
-  style={{
-    gap: "20px",
-    background : "#FFFFFF",
-    boxShadow: "0px 1px 3px rgba(3, 0, 71, 0.09)"
-  }}
->
-  <div
-    style={{
-      display: "flex",
-      flexWrap: "wrap",
-      gap: "5px", // Adds consistent spacing between elements
-    }}
-  >
-    {/* Cash on Delivery */}
-    <PaymentCheckBox
-      mb="1.5rem"
-      color="secondary"
-      name="cod"
-      onChange={handlePaymentMethodChange}
-      checked={paymentMethod === "cod"}
-      label={
-        <div
           style={{
-            width: "100px", // Ensures equal width for all items
-            height: "120px",
-            // border: paymentMethod === "cod" ? "1px solid blue" : "1px solid black",
-            boxShadow: paymentMethod === "cod" ? "0px 1px 3px rgba(3, 0, 71, 0.09) blue" : "0 0 1px 0px black",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "8px",
-            background: paymentMethod === "cod" ? "rgba(0, 0, 255, 0.1)" : "white",
-            transition: "background 0.1s",
-            boxSizing: "border-box",
-            borderRadius: "4px"
+            gap: "20px",
+            background: "#FFFFFF",
+            boxShadow: "0px 1px 3px rgba(3, 0, 71, 0.09)"
           }}
         >
-          <PaymentImage
-            alt="Cash on Delivery"
-            src={cashOnDeliveryImage}
+          <div
             style={{
-              width: "60px",
-              height: "60px",
-              marginBottom: "8px",
-            }}
-            priority
-          />
-          <span
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              textAlign: "center",
-              // color: paymentMethod === "cod" ? "blue" : "black",
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "5px", // Adds consistent spacing between elements
             }}
           >
-            Cash on Delivery
-          </span>
-        </div>
-      }
-    />
+            {/* Cash on Delivery */}
+            {!hasAbroadProduct && (
+              <PaymentCheckBox
+                mb="1.5rem"
+                color="secondary"
+                name="cod"
+                onChange={handlePaymentMethodChange}
+                checked={paymentMethod === "cod"}
+                label={
+                  <div
+                    style={{
+                      width: "100px",
+                      height: "120px",
+                      boxShadow: paymentMethod === "cod" ? "0px 1px 3px rgba(3, 0, 71, 0.09) blue" : "0 0 1px 0px black",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "8px",
+                      background: paymentMethod === "cod" ? "rgba(0, 0, 255, 0.1)" : "white",
+                      transition: "background 0.1s",
+                      boxSizing: "border-box",
+                      borderRadius: "4px"
+                    }}
+                  >
+                    <PaymentImage
+                      alt="Cash on Delivery"
+                      src={cashOnDeliveryImage}
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        marginBottom: "8px",
+                      }}
+                      priority
+                    />
+                    <span
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        textAlign: "center",
+                      }}
+                    >
+                      Cash on Delivery
+                    </span>
+                  </div>
+                }
+              />
+            )}
 
-    {/* Online Payment */}
-    <PaymentCheckBox
-      mb="1.5rem"
-      color="secondary"
-      name="Online Payment"
-      onChange={handlePaymentMethodChange}
-      checked={paymentMethod === "Online Payment"}
-      label={
-        <div
-          style={{
-            width: "100px", // Ensures equal width for all items
-            height: "120px",
-            // border: paymentMethod === "Online Payment" ? "1px solid blue" : "1px solid black",
-            boxShadow: paymentMethod === "Online Payment" ? "0px 1px 3px rgba(3, 0, 71, 0.09) blue" : "0 0 1px 0px black",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "8px",
-            background: paymentMethod === "Online Payment" ? "rgba(0, 0, 255, 0.1)" : "white",
-            transition: "background 0.1s",
-            boxSizing: "border-box",
-            borderRadius: "4px"
-          }}
-        >
-          <PaymentImage
-            alt="Online Payment"
-            src={onlinePayment}
-            style={{
-              width: "60px",
-              height: "60px",
-              marginBottom: "8px",
-            }}
-            priority
-          />
-          <span
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              textAlign: "center",
-            }}
-          >
-            Online Payment
-          </span>
-        </div>
-      }
-    />
+            {/* Online Payment */}
+            <PaymentCheckBox
+              mb="1.5rem"
+              color="secondary"
+              name="Online Payment"
+              onChange={handlePaymentMethodChange}
+              checked={paymentMethod === "Online Payment"}
+              label={
+                <div
+                  style={{
+                    width: "100px", // Ensures equal width for all items
+                    height: "120px",
+                    // border: paymentMethod === "Online Payment" ? "1px solid blue" : "1px solid black",
+                    boxShadow: paymentMethod === "Online Payment" ? "0px 1px 3px rgba(3, 0, 71, 0.09) blue" : "0 0 1px 0px black",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "8px",
+                    background: paymentMethod === "Online Payment" ? "rgba(0, 0, 255, 0.1)" : "white",
+                    transition: "background 0.1s",
+                    boxSizing: "border-box",
+                    borderRadius: "4px"
+                  }}
+                >
+                  <PaymentImage
+                    alt="Online Payment"
+                    src={onlinePayment}
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      marginBottom: "8px",
+                    }}
+                    priority
+                  />
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      textAlign: "center",
+                    }}
+                  >
+                    Online Payment
+                  </span>
+                </div>
+              }
+            />
 
-    {/* Disabled Payment Options (Nagad) */}
-    <div
-      style={{
-        width: "100px", // Ensures equal width for all items
-        height: "120px",
-        // border: "1px solid rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "8px",
-        background: "rgba(0, 0, 0, 0.5)", // Disabled background
-        pointerEvents: "none", // Disable interactions
-        boxSizing: "border-box", // Include padding in size
-        borderRadius: "4px"
-      }}
-    >
-      <PaymentImage
-        alt="Nagad Payment"
-        src={NagadImage}
-        style={{
-          width: "60px",
-          height: "60px",
-          marginBottom: "8px",
-          filter: "grayscale(100%) opacity(50%)",
-        }}
-        priority
-      />
-      <span
-        style={{
-          fontSize: "14px",
-          fontWeight: "600",
-          textAlign: "center",
-          color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
-        }}
-      >
-        Nagad
-      </span>
-    </div>
+            {/* Disabled Payment Options (Nagad) */}
+            <div
+              style={{
+                width: "100px", // Ensures equal width for all items
+                height: "120px",
+                // border: "1px solid rgba(0, 0, 0, 0.5)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "8px",
+                background: "rgba(0, 0, 0, 0.5)", // Disabled background
+                pointerEvents: "none", // Disable interactions
+                boxSizing: "border-box", // Include padding in size
+                borderRadius: "4px"
+              }}
+            >
+              <PaymentImage
+                alt="Nagad Payment"
+                src={NagadImage}
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  marginBottom: "8px",
+                  filter: "grayscale(100%) opacity(50%)",
+                }}
+                priority
+              />
+              <span
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  textAlign: "center",
+                  color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
+                }}
+              >
+                Nagad
+              </span>
+            </div>
 
-    {/* Disabled Payment Options (Bkash) */}
-    <div
-      style={{
-        width: "100px", // Ensures equal width for all items
-        height: "120px",
-        // border: "1px solid rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "8px",
-        background: "rgba(0, 0, 0, 0.5)", // Disabled background
-        pointerEvents: "none", // Disable interactions
-        boxSizing: "border-box", // Include padding in size
-        borderRadius: "4px"
-      }}
-    >
-      <PaymentImage
-        alt="Bkash Payment"
-        src={BkashImage}
-        style={{
-          width: "60px",
-          height: "60px",
-          marginBottom: "8px",
-          filter: "grayscale(100%) opacity(50%)",
-        }}
-        priority
-      />
-      <span
-        style={{
-          fontSize: "14px",
-          fontWeight: "600",
-          textAlign: "center",
-          color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
-        }}
-      >
-        Bkash
-      </span>
-    </div>
-  </div>
-</Card1>
+            {/* Disabled Payment Options (Bkash) */}
+            <div
+              style={{
+                width: "100px", // Ensures equal width for all items
+                height: "120px",
+                // border: "1px solid rgba(0, 0, 0, 0.5)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "8px",
+                background: "rgba(0, 0, 0, 0.5)", // Disabled background
+                pointerEvents: "none", // Disable interactions
+                boxSizing: "border-box", // Include padding in size
+                borderRadius: "4px"
+              }}
+            >
+              <PaymentImage
+                alt="Bkash Payment"
+                src={BkashImage}
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  marginBottom: "8px",
+                  filter: "grayscale(100%) opacity(50%)",
+                }}
+                priority
+              />
+              <span
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  textAlign: "center",
+                  color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
+                }}
+              >
+                Bkash
+              </span>
+            </div>
+          </div>
+        </Card1>
 
 
 
-</FlexBox>
+      </FlexBox>
 
       {/* <div style={{marginBottom: "20px"}}>
       <CheckBox
@@ -1045,10 +1048,10 @@ export default function PaymentForm() {
           name="agreement"
           color="secondary"
           label={
-            <FlexBox 
-              flexWrap="wrap" 
+            <FlexBox
+              flexWrap="wrap"
               alignItems="center"
-              style={{ 
+              style={{
                 fontSize: "11px",
                 lineHeight: "1.4"
               }}
@@ -1119,7 +1122,7 @@ export default function PaymentForm() {
             type="button"
             fullwidth
             onClick={handleClick}
-            
+
           >
             {isHasPayLoading ? (
               <BeatLoader size={18} color="#E94560" />
@@ -1135,20 +1138,20 @@ export default function PaymentForm() {
             style={{
               color:
                 isSubtotalZero ||
-                !paymentMethod ||
-                !isCheckboxChecked 
+                  !paymentMethod ||
+                  !isCheckboxChecked
                   ? "#999999"
                   : "#ffe1e6",
               backgroundColor:
                 isSubtotalZero ||
-                !paymentMethod ||
-                !isCheckboxChecked 
+                  !paymentMethod ||
+                  !isCheckboxChecked
                   ? "#cccccc"
                   : "#e94560",
               cursor:
                 isSubtotalZero ||
-                !paymentMethod ||
-                !isCheckboxChecked // Disable button if checkbox is unchecked
+                  !paymentMethod ||
+                  !isCheckboxChecked // Disable button if checkbox is unchecked
                   ? "not-allowed"
                   : "pointer",
             }}
