@@ -552,6 +552,8 @@ import { SemiSpan } from "@component/Typography";
 import { FaTruckFast } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import { FaExclamationTriangle } from "react-icons/fa";
+import { CreditCardIcon, InfoIcon } from "lucide-react";
+import { Tooltip } from "@mui/material";
 
 export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) {
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -730,8 +732,17 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
         if (hasAbroadProduct) {
           return (
             <FlexBox flexDirection="column" mb="1rem" p="1rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f7f7f7">
-              <Typography variant="h6" style={{ marginBottom: "1rem", color: "#E94560", fontWeight: "600" }}>
-                Advance Payment Options
+              <FlexBox alignItems="center" style={{ gap: "8px" }}>
+                <Tooltip title="Select your preferred advance payment percentage. The remaining amount will be paid later.">
+                  <InfoIcon style={{ color: "#E94560", fontSize: "18px", cursor: "pointer" }} />
+                </Tooltip>
+
+                <Typography variant="h6" style={{ color: "#E94560", fontWeight: "600" }}>
+                  Advance Payment Options
+                </Typography>
+              </FlexBox>
+              <Typography style={{ marginBottom: "1rem", fontSize: "13px", color: "#333" }}>
+                Select your advance payment from the options below
               </Typography>
 
               <Grid container spacing={2}>
@@ -740,18 +751,87 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
                   <FlexBox
                     flexDirection="column"
                     p="1rem"
-                    border={`1px solid ${selectedPaymentOption === 65 ? 'rgb(233, 69, 96)' : '#ddd'}`}
+                    border={`1px solid ${selectedPaymentOption === 50 ? 'rgb(233, 69, 96)' : '#ddd'}`}
                     borderRadius="8px"
-                    backgroundColor={selectedPaymentOption === 65 ? 'rgb(233, 69, 96)' : 'white'}
+                    backgroundColor={selectedPaymentOption === 50 ? 'rgb(233, 69, 96)' : 'white'}
                     style={{ cursor: "pointer" }}
-                    onClick={() => handlePaymentOptionSelect(65)}
+                    onClick={() => handlePaymentOptionSelect(50)}
                   >
-                    <Typography style={{
-                      fontWeight: "600",
-                      color: selectedPaymentOption === 65 ? 'white' : "#333"
-                    }}>
-                      Pay Now 50%
-                    </Typography>
+                    <FlexBox alignItems="center">
+                      <CreditCardIcon
+                        style={{
+                          color: selectedPaymentOption === 50 ? 'white' : '#333',
+                          marginRight: '8px',
+                        }}
+                      />
+                      <Typography
+                        style={{
+                          fontWeight: "600",
+                          color: selectedPaymentOption === 50 ? 'white' : "#333",
+                        }}
+                      >
+                        Pay Now 50%
+                      </Typography>
+                    </FlexBox>
+                  </FlexBox>
+                </Grid>
+
+                {/* Option 1 - 80% */}
+                <Grid item xs={12} sm={4}>
+                  <FlexBox
+                    flexDirection="column"
+                    p="1rem"
+                    border={`1px solid ${selectedPaymentOption === 80 ? 'rgb(233, 69, 96)' : '#ddd'}`}
+                    borderRadius="8px"
+                    backgroundColor={selectedPaymentOption === 80 ? 'rgb(233, 69, 96)' : 'white'}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handlePaymentOptionSelect(80)}
+                  >
+                    <FlexBox alignItems="center">
+                      <CreditCardIcon
+                        style={{
+                          color: selectedPaymentOption === 80 ? 'white' : '#333',
+                          marginRight: '8px',
+                        }}
+                      />
+                      <Typography
+                        style={{
+                          fontWeight: "600",
+                          color: selectedPaymentOption === 80 ? 'white' : "#333",
+                        }}
+                      >
+                        Pay Now 80%
+                      </Typography>
+                    </FlexBox>
+                  </FlexBox>
+                </Grid>
+                {/* Option 1 - 50% */}
+                <Grid item xs={12} sm={4}>
+                  <FlexBox
+                    flexDirection="column"
+                    p="1rem"
+                    border={`1px solid ${selectedPaymentOption === 100 ? 'rgb(233, 69, 96)' : '#ddd'}`}
+                    borderRadius="8px"
+                    backgroundColor={selectedPaymentOption === 100 ? 'rgb(233, 69, 96)' : 'white'}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handlePaymentOptionSelect(100)}
+                  >
+                    <FlexBox alignItems="center">
+                      <CreditCardIcon
+                        style={{
+                          color: selectedPaymentOption === 100 ? 'white' : '#333',
+                          marginRight: '8px',
+                        }}
+                      />
+                      <Typography
+                        style={{
+                          fontWeight: "600",
+                          color: selectedPaymentOption === 100 ? 'white' : "#333",
+                        }}
+                      >
+                        Pay Now 100%
+                      </Typography>
+                    </FlexBox>
                   </FlexBox>
                 </Grid>
               </Grid>
