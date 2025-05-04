@@ -282,10 +282,10 @@ import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
 import PaymentCheckBox from "@component/PaymentCheckBox";
 import PaymentImage from "@component/PaymentImage";
 
-import cashOnDeliveryImage from "../../../public/assets/images/payment/cashOnDelivery.jpg"
-import onlinePayment from "../../../public/assets/images/payment/Mobile_Banking.jpg"
-import NagadImage from "../../../public/assets/images/payment/Nagad.avif"
-import BkashImage from "../../../public/assets/images/payment/Bkash.png"
+import cashOnDeliveryImage from "../../../public/assets/images/payment/cashOnDelivery.jpg";
+import onlinePayment from "../../../public/assets/images/payment/Mobile_Banking.jpg";
+import NagadImage from "../../../public/assets/images/payment/Nagad.avif";
+import BkashImage from "../../../public/assets/images/payment/Bkash.png";
 import BeatLoader from "react-spinners/BeatLoader";
 import authService from "services/authService";
 
@@ -316,11 +316,15 @@ export default function PaymentForm() {
     }, 0);
   };
   // const total = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
-  const savedShipping = parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
+  const savedShipping = parseFloat(
+    sessionStorage.getItem("savedTotalWithDelivery") || "0"
+  );
   // const total_ammount = total;
   // const isSubtotalZero = total_ammount === 0;
 
-  const totalFromNewTotal = parseFloat(sessionStorage.getItem("newTotal") || "0");
+  const totalFromNewTotal = parseFloat(
+    sessionStorage.getItem("newTotal") || "0"
+  );
   const total_ammount = totalFromNewTotal - savedShipping;
   const isSubtotalZero = total_ammount === 0;
 
@@ -328,12 +332,11 @@ export default function PaymentForm() {
   const promocode = sessionStorage.getItem("promoCode");
   const promocode_price = parseFloat(sessionStorage.getItem("discount"));
 
-
   const router = useRouter();
 
   let authtoken = localStorage.getItem("token");
   const orderSubmit = async () => {
-    setIsHasLoading(true)
+    setIsHasLoading(true);
     if (isSubtotalZero) {
       toast.error("Your cart is empty. Please add items before proceeding.");
       return;
@@ -341,15 +344,14 @@ export default function PaymentForm() {
     let getData = localStorage.getItem("userInfo");
     let userinfo = JSON.parse(getData);
 
-
     let shippingData = sessionStorage.getItem("address");
     // console.log("Session Storage Data:", shippingData);
     let userShippingdata = JSON.parse(shippingData);
 
-
     // let cartData = localStorage.getItem('cart');
-    const cartData = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
-
+    const cartData = JSON.parse(
+      sessionStorage.getItem("selectedProducts") || "[]"
+    );
 
     // Ensure cartData is valid and not empty before trying to access its items
     const productType =
@@ -361,7 +363,6 @@ export default function PaymentForm() {
     // console.log("Product Type:", productType);
     // console.log("Selected payment method:", paymentMethod);
     if (paymentMethod === "Online Payment") {
-
       try {
         const response = await axios.post(
           `${ApiBaseUrl.baseUrl}pay-via-ajax`,
@@ -385,8 +386,7 @@ export default function PaymentForm() {
             cus_add1:
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             currency: "BDT",
-            total_amount:
-              total_ammount,
+            total_amount: total_ammount,
             productType: productType,
             payment_type: "Online Payment",
             payment_method: "Online Payment",
@@ -447,7 +447,7 @@ export default function PaymentForm() {
               console.log("Cart Item Response:", response.data);
             } catch (error) {
               console.error("Failed to add item to order:", error.response);
-              setIsHasLoading(false)
+              setIsHasLoading(false);
             }
           })
         );
@@ -476,12 +476,12 @@ export default function PaymentForm() {
           localStorage.setItem("redirectUrl", redirectUrl);
         } else {
           toast.error("Payment initiation failed. No redirect URL received.");
-          setIsHasLoading(false)
+          setIsHasLoading(false);
         }
       } catch (error) {
         console.error("Online Payment Error:", error);
         toast.error("Error initiating online payment payment!");
-        setIsHasLoading(false)
+        setIsHasLoading(false);
       }
     } else if (paymentMethod === "cod") {
       try {
@@ -505,8 +505,7 @@ export default function PaymentForm() {
             address:
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             delivery_charge: savedShipping || 0,
-            total_ammount:
-              total_ammount,
+            total_ammount: total_ammount,
             payment_type: 1,
             seller_id: cartData[0]?.sellerId,
             // payment_method: "cod",
@@ -627,7 +626,6 @@ export default function PaymentForm() {
         //         })
         //       );
 
-
         const handleOrderItems = async () => {
           try {
             // Wait for all async operations to finish using Promise.all
@@ -653,12 +651,14 @@ export default function PaymentForm() {
 
                   const single_amount = Number(
                     cartdata.selectedColor && cartdata.selectedSize
-                      ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
-                        (s) => s.size === cartdata.selectedSize
-                      )?.price || cartdata.discountPrice || cartdata.price
+                      ? cartdata.sizeColor?.colorwithsize?.[
+                          cartdata.selectedColor
+                        ]?.find((s) => s.size === cartdata.selectedSize)
+                          ?.price ||
+                          cartdata.discountPrice ||
+                          cartdata.price
                       : cartdata.discountPrice || cartdata.price
                   );
-
 
                   // Create the order object
                   const order = {
@@ -688,7 +688,6 @@ export default function PaymentForm() {
                   );
 
                   console.log("Cart Item Response:", response.data);
-
                 } catch (error) {
                   console.error("Failed to add item to order:", error.response);
                 }
@@ -727,7 +726,7 @@ export default function PaymentForm() {
         } else {
           router.push("/login");
         }
-        setIsHasLoading(false)
+        setIsHasLoading(false);
       }
     }
   };
@@ -748,7 +747,9 @@ export default function PaymentForm() {
     }
   }, []);
 
-  const handlePaymentMethodChange = ({ target: { name } }: ChangeEvent<HTMLInputElement>) => {
+  const handlePaymentMethodChange = ({
+    target: { name },
+  }: ChangeEvent<HTMLInputElement>) => {
     const newPaymentMethod = paymentMethod === name ? "" : name;
     setPaymentMethod(newPaymentMethod);
 
@@ -761,7 +762,7 @@ export default function PaymentForm() {
   };
 
   const handleClick = () => {
-    setIsHasPayLoading(true)
+    setIsHasPayLoading(true);
     if (isLoggedIn) {
       push("/checkout");
     } else {
@@ -773,9 +774,12 @@ export default function PaymentForm() {
     setIsCheckboxChecked(e.target.checked);
   };
 
-  const selectedProducts = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
-  const hasAbroadProduct = selectedProducts.some((product: any) => product.productType === "Abroad");
-
+  const selectedProducts = JSON.parse(
+    sessionStorage.getItem("selectedProducts") || "[]"
+  );
+  const hasAbroadProduct = selectedProducts.some(
+    (product: any) => product.productType === "Abroad"
+  );
 
   return (
     <Fragment>
@@ -786,11 +790,10 @@ export default function PaymentForm() {
           flexDirection="column" // Default direction
           marginRight="2px"
           width="100%"
-
           style={{
             gap: "20px",
             background: "#FFFFFF",
-            boxShadow: "0px 1px 3px rgba(3, 0, 71, 0.09)"
+            boxShadow: "0px 1px 3px rgba(3, 0, 71, 0.09)",
           }}
         >
           <div
@@ -802,51 +805,102 @@ export default function PaymentForm() {
           >
             {/* Cash on Delivery */}
             {/* {!hasAbroadProduct && ( */}
-              <PaymentCheckBox
-                mb="1.5rem"
-                color="secondary"
-                name="cod"
-                onChange={handlePaymentMethodChange}
-                checked={paymentMethod === "cod"}
-                label={
-                  <div
-                    style={{
-                      width: "100px",
-                      height: "120px",
-                      boxShadow: paymentMethod === "cod" ? "0px 1px 3px rgba(3, 0, 71, 0.09) blue" : "0 0 1px 0px black",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      padding: "8px",
-                      background: paymentMethod === "cod" ? "rgba(0, 0, 255, 0.1)" : "white",
-                      transition: "background 0.1s",
-                      boxSizing: "border-box",
-                      borderRadius: "4px"
-                    }}
-                  >
-                    <PaymentImage
-                      alt="Cash on Delivery"
-                      src={cashOnDeliveryImage}
+            <PaymentCheckBox
+              mb="1.5rem"
+              color="secondary"
+              name="cod"
+              onChange={handlePaymentMethodChange}
+              checked={paymentMethod === "cod"}
+              label={
+                <div
+                  style={{
+                    width: "100px",
+                    height: "120px",
+                    boxShadow:
+                      paymentMethod === "cod"
+                        ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
+                        : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "8px",
+                    background:
+                      paymentMethod === "cod"
+                        ? "rgba(233, 69, 96, 0.05)"
+                        : "white",
+                    transition: "all 0.3s ease",
+                    boxSizing: "border-box",
+                    borderRadius: "8px",
+                    border:
+                      paymentMethod === "cod"
+                        ? "1px solid #E94560"
+                        : "1px solid transparent",
+                    position: "relative",
+                  }}
+                >
+                  {/* More visible check indicator */}
+                  {paymentMethod === "cod" && (
+                    <div
                       style={{
-                        width: "60px",
-                        height: "60px",
-                        marginBottom: "8px",
-                      }}
-                      priority
-                    />
-                    <span
-                      style={{
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        textAlign: "center",
+                        position: "absolute",
+                        top: "4px",
+                        right: "4px",
+                        width: "18px",
+                        height: "18px",
+                        backgroundColor: "#E94560",
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
-                      Cash on Delivery
-                    </span>
-                  </div>
-                }
-              />
+                      <svg
+                        width="10"
+                        height="8"
+                        viewBox="0 0 10 8"
+                        fill="none"
+                        style={{
+                          marginLeft: "1px", // slight visual adjustment
+                        }}
+                      >
+                        <path
+                          d="M1 4L3.5 6.5L9 1"
+                          stroke="white"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  )}
+
+                  <PaymentImage
+                    alt="Cash on Delivery"
+                    src={cashOnDeliveryImage}
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      marginBottom: "8px",
+                      filter:
+                        paymentMethod === "cod" ? "none" : "grayscale(20%)",
+                      opacity: paymentMethod === "cod" ? 1 : 0.8,
+                    }}
+                    priority
+                  />
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      textAlign: "center",
+                      color: paymentMethod === "cod" ? "#E94560" : "#333",
+                    }}
+                  >
+                    Cash on Delivery
+                  </span>
+                </div>
+              }
+            />
             {/* )} */}
 
             {/* Online Payment */}
@@ -859,21 +913,65 @@ export default function PaymentForm() {
               label={
                 <div
                   style={{
-                    width: "100px", // Ensures equal width for all items
+                    width: "100px",
                     height: "120px",
-                    // border: paymentMethod === "Online Payment" ? "1px solid blue" : "1px solid black",
-                    boxShadow: paymentMethod === "Online Payment" ? "0px 1px 3px rgba(3, 0, 71, 0.09) blue" : "0 0 1px 0px black",
+                    boxShadow:
+                      paymentMethod === "Online Payment"
+                        ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
+                        : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
                     padding: "8px",
-                    background: paymentMethod === "Online Payment" ? "rgba(0, 0, 255, 0.1)" : "white",
-                    transition: "background 0.1s",
+                    background:
+                      paymentMethod === "Online Payment"
+                        ? "rgba(233, 69, 96, 0.05)"
+                        : "white",
+                    transition: "all 0.3s ease",
                     boxSizing: "border-box",
-                    borderRadius: "4px"
+                    borderRadius: "8px",
+                    border:
+                      paymentMethod === "Online Payment"
+                        ? "1px solid #E94560"
+                        : "1px solid transparent",
+                    position: "relative",
                   }}
                 >
+                  {/* Check indicator */}
+                  {paymentMethod === "Online Payment" && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "4px",
+                        right: "4px",
+                        width: "18px",
+                        height: "18px",
+                        backgroundColor: "#E94560",
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <svg
+                        width="10"
+                        height="8"
+                        viewBox="0 0 10 8"
+                        fill="none"
+                        style={{ marginLeft: "1px" }}
+                      >
+                        <path
+                          d="M1 4L3.5 6.5L9 1"
+                          stroke="white"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  )}
+
                   <PaymentImage
                     alt="Online Payment"
                     src={onlinePayment}
@@ -881,6 +979,11 @@ export default function PaymentForm() {
                       width: "60px",
                       height: "60px",
                       marginBottom: "8px",
+                      filter:
+                        paymentMethod === "Online Payment"
+                          ? "none"
+                          : "grayscale(20%)",
+                      opacity: paymentMethod === "Online Payment" ? 1 : 0.8,
                     }}
                     priority
                   />
@@ -889,6 +992,8 @@ export default function PaymentForm() {
                       fontSize: "14px",
                       fontWeight: "600",
                       textAlign: "center",
+                      color:
+                        paymentMethod === "Online Payment" ? "#E94560" : "#333",
                     }}
                   >
                     Online Payment
@@ -911,7 +1016,7 @@ export default function PaymentForm() {
                 background: "rgba(0, 0, 0, 0.5)", // Disabled background
                 pointerEvents: "none", // Disable interactions
                 boxSizing: "border-box", // Include padding in size
-                borderRadius: "4px"
+                borderRadius: "4px",
               }}
             >
               <PaymentImage
@@ -951,7 +1056,7 @@ export default function PaymentForm() {
                 background: "rgba(0, 0, 0, 0.5)", // Disabled background
                 pointerEvents: "none", // Disable interactions
                 boxSizing: "border-box", // Include padding in size
-                borderRadius: "4px"
+                borderRadius: "4px",
               }}
             >
               <PaymentImage
@@ -978,9 +1083,6 @@ export default function PaymentForm() {
             </div>
           </div>
         </Card1>
-
-
-
       </FlexBox>
 
       {/* <div style={{marginBottom: "20px"}}>
@@ -1041,8 +1143,6 @@ export default function PaymentForm() {
 
       </div> */}
 
-
-
       <div style={{ marginBottom: "20px" }}>
         <CheckBox
           name="agreement"
@@ -1053,7 +1153,7 @@ export default function PaymentForm() {
               alignItems="center"
               style={{
                 fontSize: "11px",
-                lineHeight: "1.4"
+                lineHeight: "1.4",
               }}
             >
               <SemiSpan>By proceeding to checkout, you agree to our</SemiSpan>
@@ -1122,7 +1222,6 @@ export default function PaymentForm() {
             type="button"
             fullwidth
             onClick={handleClick}
-
           >
             {isHasPayLoading ? (
               <BeatLoader size={18} color="#E94560" />
@@ -1137,21 +1236,15 @@ export default function PaymentForm() {
             onClick={orderSubmit}
             style={{
               color:
-                isSubtotalZero ||
-                  !paymentMethod ||
-                  !isCheckboxChecked
+                isSubtotalZero || !paymentMethod || !isCheckboxChecked
                   ? "#999999"
                   : "#ffe1e6",
               backgroundColor:
-                isSubtotalZero ||
-                  !paymentMethod ||
-                  !isCheckboxChecked
+                isSubtotalZero || !paymentMethod || !isCheckboxChecked
                   ? "#cccccc"
                   : "#e94560",
               cursor:
-                isSubtotalZero ||
-                  !paymentMethod ||
-                  !isCheckboxChecked // Disable button if checkbox is unchecked
+                isSubtotalZero || !paymentMethod || !isCheckboxChecked // Disable button if checkbox is unchecked
                   ? "not-allowed"
                   : "pointer",
             }}
