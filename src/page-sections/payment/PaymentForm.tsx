@@ -800,7 +800,7 @@ export default function PaymentForm() {
             style={{
               display: "flex",
               flexWrap: "wrap",
-              gap: "5px", // Adds consistent spacing between elements
+              gap: "10px", // Adds consistent spacing between elements
             }}
           >
             {/* Cash on Delivery */}
