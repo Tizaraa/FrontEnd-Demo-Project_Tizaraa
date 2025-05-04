@@ -331,6 +331,7 @@ const renderAttributes = (attributes: Attribute[]) => {
   slug={""}
   productStock={product.MasterQuantity}  // Replace with actual stock if available
   productId={""}
+  variantId={""}
   sellerId={""}
   configuredItems={product?.ConfiguredItems || []}
   Attributes={product.Attributes || []}

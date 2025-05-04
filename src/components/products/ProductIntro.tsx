@@ -129,6 +129,7 @@ export default function ProductIntro({
            ) : (
              <AddToCartButton
              productId={productId}
+             variantId={""}
              sellerId={sellerId}
              images={images}
              title={title}
