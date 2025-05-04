@@ -11,6 +11,7 @@ import { FaShoppingCart } from "react-icons/fa";
 
 type AddToCartButtonProps = {
   productId: string | number;
+  variantId: string | number | null;
   sellerId: string | number;
   images: string[];
   title: string;
@@ -35,6 +36,7 @@ type AddToCartButtonProps = {
 
 const AddToCartButton = ({
   productId,
+  variantId,
   sellerId,
   images,
   title,
@@ -55,7 +57,7 @@ const AddToCartButton = ({
   const [isLoading, setIsLoading] = useState(false);
 
   // Generate a unique key for the product variant
-  const uniqueKey = `${productId}-${selectedColor || "default"}-${selectedSize || "default"}`;
+  const uniqueKey = `${productId}-${variantId || "default"}-${selectedColor || "default"}-${selectedSize || "default"}`;
 
   const cartItem = state.cart.find(item => item.id === uniqueKey);
 
@@ -111,6 +113,7 @@ const AddToCartButton = ({
         discountPrice,
         slug,
         productId,
+        variantId,
         sellerId,
         productType,
         total_amount: finalPrice * amount,

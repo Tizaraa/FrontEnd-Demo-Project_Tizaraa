@@ -59,7 +59,7 @@
 // //   sellerId: string | number;
 // //   configuredItems: ConfiguredItem[];
 // //   Attributes?: Attribute[];
-  
+
 // // };
 
 // // // ========================================
@@ -90,8 +90,8 @@
 // //   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
 
 // //   const [selectedPrice, setSelectedPrice] = useState<number | null>(price);
-  
-  
+
+
 
 // //   const handleRowClick = (itemId: string) => {
 // //     setSelectedRowId(itemId === selectedRowId ? null : itemId);
@@ -111,7 +111,7 @@
 // //         configuredItem.Configurators.some(config => config.Vid === item.Vid)
 // //       )
 // //     );
-    
+
 // //     if (initialItem) {
 // //       setSelectedSpec(initialItem.Vid); 
 // //     }
@@ -121,7 +121,7 @@
 // //     const selectedItem = configuredItems.find(item => 
 // //       item.Configurators.some(config => config.Vid === selectedSpec)
 // //     );
-    
+
 // //     if (selectedItem) {
 // //       setSelectedPrice(selectedItem.Price.ConvertedPriceWithoutSign);
 // //     } else {
@@ -131,7 +131,7 @@
 
 
 // //   // const handleImageClick = (ind: number) => () => setSelectedImage(ind);
-  
+
 // //   const handleCartAmountChange = (amount: number) => () => {
 // //     dispatch({
 // //       type: "CHANGE_CART_AMOUNT",
@@ -236,7 +236,7 @@
 // //     )
 // //   )
 // //     .reduce((uniqueItems, item) => {
- 
+
 // //       const hasImage = item.ImageUrl;
 // //       const hasSize = item.Value && item.PropertyName === "Size"; 
 
@@ -303,10 +303,10 @@
 // //                       );
 // //                     })}
 // //                   </td>
-                  // <td className={styles.tableCellStyle}>
-                  //   {item.Price.CurrencySign}
-                  //   {item.Price.ConvertedPriceWithoutSign}
-                  // </td>
+// <td className={styles.tableCellStyle}>
+//   {item.Price.CurrencySign}
+//   {item.Price.ConvertedPriceWithoutSign}
+// </td>
 // //                   <td className={styles.tableCellStyle}>
 // //                         <span>{item.Quantity}</span>
 // //                   </td>
@@ -333,10 +333,10 @@
 // //         </div>
 // //       )}
 
-    
+
 // //     </div>
 // //     {/* table container ends  */}
-    
+
 // //     {selectedRowId && (
 // //         <div style={{ marginTop: '20px' }}>
 // //           <AddToCartButton
@@ -351,7 +351,7 @@
 // //             selectedSpec={selectedSpec}
 // //             selectedColor={''}
 // //             dummySizes={[]} 
-        
+
 // //           />
 // //         </div>
 // //       )}
@@ -436,7 +436,7 @@
 //   sellerId: string | number;
 //   configuredItems: ConfiguredItem[];
 //   Attributes?: Attribute[];
-  
+
 // };
 
 // // ========================================
@@ -468,8 +468,8 @@
 
 //   const [selectedPrice, setSelectedPrice] = useState<number | null>(price);
 
-  
-  
+
+
 
 //   // const handleRowClick = (itemId: string) => {
 //   //   setSelectedRowId(itemId === selectedRowId ? null : itemId);
@@ -499,13 +499,13 @@
 //     const attributeValues = selectedAttributes.map(attr => attr.Value);
 //     return attributeValues.join(", ");
 //   };
-  
-  
+
+
 //   // const handleRowClick = (id) => {
 //   //   // Set the selected row ID only
 //   //   setSelectedRowId(id);
 //   // };
-  
+
 //    const handleRowClick = (itemId: string) => {
 //     setSelectedRowId(itemId === selectedRowId ? null : itemId);
 //   };
@@ -525,7 +525,7 @@
 //         configuredItem.Configurators.some(config => config.Vid === item.Vid)
 //       )
 //     );
-    
+
 //     if (initialItem) {
 //       setSelectedSpec(initialItem.Vid); 
 //     }
@@ -535,7 +535,7 @@
 //     const selectedItem = configuredItems.find(item => 
 //       item.Configurators.some(config => config.Vid === selectedSpec)
 //     );
-    
+
 //     if (selectedItem) {
 //       setSelectedPrice(selectedItem.Price.ConvertedPriceWithoutSign);
 //     } else {
@@ -545,7 +545,7 @@
 
 
 //   // const handleImageClick = (ind: number) => () => setSelectedImage(ind);
-  
+
 //   const handleCartAmountChange = (amount: number) => () => {
 //     dispatch({
 //       type: "CHANGE_CART_AMOUNT",
@@ -657,7 +657,7 @@
 //     )
 //   )
 //     .reduce((uniqueItems, item) => {
- 
+
 //       const hasImage = item.ImageUrl;
 //       const hasSize = item.Value && item.PropertyName === "Size"; 
 
@@ -731,10 +731,10 @@
 //                       );
 //                     })}
 //                   </td>
-                  // <td className={styles.tableCellStyle}>
-                  //   {item.Price.CurrencySign}
-                  //   {item.QuantityRanges[0].Price.ConvertedPrice}
-                  // </td>
+// <td className={styles.tableCellStyle}>
+//   {item.Price.CurrencySign}
+//   {item.QuantityRanges[0].Price.ConvertedPrice}
+// </td>
 //                   <td className={styles.tableCellStyle}>
 //                         <span>{item.Quantity}</span>
 //                   </td>
@@ -764,10 +764,10 @@
 //         </div>
 //       )}
 
-    
+
 //     </div>
 //     {/* table container ends  */}
-    
+
 //     {selectedRowId && (
 //         <div style={{ marginTop: '20px' }}>
 //           <AddToCartButton
@@ -785,7 +785,7 @@
 //             // dummySizes={[]} 
 //             productType="Abroad"
 //             // attributes={getSelectedAttributes()}
-        
+
 //           />
 //         </div>
 //       )}
@@ -834,7 +834,7 @@ type ConfiguredItem = {
   Configurators: {
     Vid: string;
   }[];
- QuantityRanges: {
+  QuantityRanges: {
     MinQuantity: number;
     MaxQuantity: number;
     Price: {
@@ -874,11 +874,12 @@ type OTProductsIntroProps = {
   id: string | number;
   sellerShopName: string;
   rating: number;
-  discountPrice?: number; 
-  totalDiscount?: number; 
+  discountPrice?: number;
+  totalDiscount?: number;
   slug?: string;
   productStock: number;
   productId: string | number;
+  variantId: string | number | null;
   sellerId: string | number;
   configuredItems: ConfiguredItem[];
   Attributes?: Attribute[];
@@ -913,7 +914,7 @@ export default function OtProductsIntro({
   const param = useParams();
   const { state, dispatch } = useAppContext();
   const [selectedImage, setSelectedImage] = useState(images[0] || "");
-  const [selectedSpec, setSelectedSpec] = useState<string | null>(null); 
+  const [selectedSpec, setSelectedSpec] = useState<string | null>(null);
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<number | null>(price);
 
@@ -926,24 +927,24 @@ export default function OtProductsIntro({
 
   const getSelectedColor = (item: ConfiguredItem): string | null => {
     if (!Attributes) return null;
-    
+
     // Find color attribute in this item's configurators
-    const colorAttribute = Attributes.find(attr => 
-      item.Configurators.some(config => config.Vid === attr.Vid) && 
+    const colorAttribute = Attributes.find(attr =>
+      item.Configurators.some(config => config.Vid === attr.Vid) &&
       attr.PropertyName.toLowerCase() === 'color'
     );
-    
+
     return colorAttribute ? colorAttribute.Value : null;
   };
 
   const handleVariantSelect = (item) => {
     setSelectedSpec(item.Vid);
-    setSelectedImage(item.ImageUrl); 
-    setSelectedRowId(null); 
+    setSelectedImage(item.ImageUrl);
+    setSelectedRowId(null);
   };
 
   const getSelectedAttributes = () => {
-    if (!selectedSpec || !Attributes) return ""; 
+    if (!selectedSpec || !Attributes) return "";
     const selectedAttributes = Attributes.filter(attr =>
       configuredItems.some(item =>
         item.Configurators.some(config => config.Vid === selectedSpec && config.Vid === attr.Vid)
@@ -952,7 +953,7 @@ export default function OtProductsIntro({
     const attributeValues = selectedAttributes.map(attr => attr.Value);
     return attributeValues.join(", ");
   };
-  
+
   const handleRowClick = (itemId: string) => {
     setSelectedRowId(itemId === selectedRowId ? null : itemId);
   };
@@ -969,35 +970,35 @@ export default function OtProductsIntro({
         .slice()
         .sort((a, b) => b.MinQuantity - a.MinQuantity)
         .find(tier => quantity >= tier.MinQuantity);
-      
-      return applicableTier 
+
+      return applicableTier
         ? applicableTier.Price.ConvertedPriceWithoutSign
         : item.Price.ConvertedPriceWithoutSign;
     }
-    
+
     // Fallback to selectedPrice if available, otherwise use item's base price
-    return selectedPrice !== null 
-      ? selectedPrice 
+    return selectedPrice !== null
+      ? selectedPrice
       : item.Price.ConvertedPriceWithoutSign;
   };
 
   useEffect(() => {
-    const initialItem = Attributes?.find(item => 
-      configuredItems.some(configuredItem => 
+    const initialItem = Attributes?.find(item =>
+      configuredItems.some(configuredItem =>
         configuredItem.Configurators.some(config => config.Vid === item.Vid)
       )
     );
-    
+
     if (initialItem) {
-      setSelectedSpec(initialItem.Vid); 
+      setSelectedSpec(initialItem.Vid);
     }
   }, [Attributes, configuredItems]);
 
   useEffect(() => {
-    const selectedItem = configuredItems.find(item => 
+    const selectedItem = configuredItems.find(item =>
       item.Configurators.some(config => config.Vid === selectedSpec)
     );
-    
+
     if (selectedItem) {
       setSelectedPrice(selectedItem.Price.ConvertedPriceWithoutSign);
     } else {
@@ -1049,8 +1050,8 @@ export default function OtProductsIntro({
                   borderRadius="10px"
                   alignItems="center"
                   justifyContent="center"
-                  borderColor={selectedImage === url ? "primary.main" : "gray.400"} 
-                  onClick={() => setSelectedImage(url)} 
+                  borderColor={selectedImage === url ? "primary.main" : "gray.400"}
+                  onClick={() => setSelectedImage(url)}
                 >
                   <Avatar src={url} borderRadius="10px" size={65} />
                 </Box>
@@ -1070,18 +1071,18 @@ export default function OtProductsIntro({
 
           <Box mb="24px">
             <FlexBox alignItems="center">
-            {!configuredItems.some(item => item.QuantityRanges?.length) && (
-  <H3 color="primary.main" mb="4px" lineHeight="1">
-    {discountPrice ? (
-      <>
-        <span className={styles.currentPriceStyle}>{currency(discountPrice)}</span>
-        <span className={styles.originalPriceStyle}>{currency(selectedPrice)}</span> 
-      </>
-    ) : (
-      <span>{currency(selectedPrice)}</span> 
-    )}
-  </H3>
-)}
+              {!configuredItems.some(item => item.QuantityRanges?.length) && (
+                <H3 color="primary.main" mb="4px" lineHeight="1">
+                  {discountPrice ? (
+                    <>
+                      <span className={styles.currentPriceStyle}>{currency(discountPrice)}</span>
+                      <span className={styles.originalPriceStyle}>{currency(selectedPrice)}</span>
+                    </>
+                  ) : (
+                    <span>{currency(selectedPrice)}</span>
+                  )}
+                </H3>
+              )}
 
 
               {!!discountPrice && totalDiscount && (
@@ -1101,54 +1102,54 @@ export default function OtProductsIntro({
             </FlexBox>
             <SemiSpan color="inherit">
               {selectedRowId
-              ? getSelectedRowQuantity() > 0
-                ? "Stock Available"
-                : "Stock Out"
-              : productStock > 0
-              ? "Stock Available"
-              : "Stock Out"}
+                ? getSelectedRowQuantity() > 0
+                  ? "Stock Available"
+                  : "Stock Out"
+                : productStock > 0
+                  ? "Stock Available"
+                  : "Stock Out"}
             </SemiSpan>
           </Box>
 
           <div style={{ display: "flex", gap: "10px", marginBottom: "5px" }}>
-  {pricingTiers &&
-    pricingTiers.length > 0 &&
-    pricingTiers.map((tier, index) => {
-      // Find the selected configured item
-      const selectedConfiguredItem = configuredItems.find(
-        (item) =>
-          item.Id === selectedRowId ||
-          item.Configurators.some((config) => config.Vid === selectedSpec)
-      );
+            {pricingTiers &&
+              pricingTiers.length > 0 &&
+              pricingTiers.map((tier, index) => {
+                // Find the selected configured item
+                const selectedConfiguredItem = configuredItems.find(
+                  (item) =>
+                    item.Id === selectedRowId ||
+                    item.Configurators.some((config) => config.Vid === selectedSpec)
+                );
 
-      // Determine if current quantity qualifies for this tier
-      const isActiveTier = currentQuantity >= tier.MinQuantity && 
-        (!pricingTiers[index + 1] || currentQuantity < pricingTiers[index + 1].MinQuantity);
+                // Determine if current quantity qualifies for this tier
+                const isActiveTier = currentQuantity >= tier.MinQuantity &&
+                  (!pricingTiers[index + 1] || currentQuantity < pricingTiers[index + 1].MinQuantity);
 
-      return (
-        <div
-          key={index}
-          style={{
-            background: isActiveTier ? "#e74c3ca3" : "#f5f5f5",
-            color: "black",
-            padding: "15px",
-            borderRadius: "8px",
-            textAlign: "center",
-            width: "120px",
-            border: isActiveTier ? "2px solid #e74c3c" : "none",
-          }}
-        >
-          <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-            {tier.Price.CurrencySign}
-            {tier.Price.ConvertedPriceWithoutSign}
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      background: isActiveTier ? "#e74c3ca3" : "#f5f5f5",
+                      color: "black",
+                      padding: "15px",
+                      borderRadius: "8px",
+                      textAlign: "center",
+                      width: "120px",
+                      border: isActiveTier ? "2px solid #e74c3c" : "none",
+                    }}
+                  >
+                    <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+                      {tier.Price.CurrencySign}
+                      {tier.Price.ConvertedPriceWithoutSign}
+                    </div>
+                    <div style={{ fontSize: "12px", marginTop: "5px" }}>
+                      {tier.MinQuantity} or More
+                    </div>
+                  </div>
+                );
+              })}
           </div>
-          <div style={{ fontSize: "12px", marginTop: "5px" }}>
-            {tier.MinQuantity} or More
-          </div>
-        </div>
-      );
-    })}
-</div>
           <div className={styles.containerStyle}>
             <div className={styles.buttonContainerStyle}>
               {Attributes?.filter(item =>
@@ -1158,7 +1159,7 @@ export default function OtProductsIntro({
               )
                 .reduce((uniqueItems, item) => {
                   const hasImage = item.ImageUrl;
-                  const hasSize = item.Value && item.PropertyName === "Size"; 
+                  const hasSize = item.Value && item.PropertyName === "Size";
 
                   if (hasImage || !hasSize) {
                     if (!uniqueItems.some(uniqueItem => uniqueItem.Vid === item.Vid)) {
@@ -1171,7 +1172,7 @@ export default function OtProductsIntro({
                   <button
                     key={item.Vid}
                     onClick={() => handleVariantSelect(item)}
-                    className={styles.getButtonStyle + (selectedSpec === item.Vid ? ` ${styles.getButtonStyleSelected}` : '')} 
+                    className={styles.getButtonStyle + (selectedSpec === item.Vid ? ` ${styles.getButtonStyleSelected}` : '')}
                   >
                     {item.ImageUrl ? (
                       <img
@@ -1187,153 +1188,151 @@ export default function OtProductsIntro({
             </div>
 
             <div className={styles.tableContainerStyle}>
-  {configuredItems.length > 0 && configuredItems.some(item => 
-      item.Configurators.some(config => config.Vid === selectedSpec)
-    ) ? (
-    <table className={styles.tableStyle}>
-      <thead>
-        <tr className={styles.tableHeaderStyle}>
-          <th className={styles.tableHeaderCellStyle}>Variants</th>
-          <th className={styles.tableHeaderCellStyle}>Price</th>
-          <th className={styles.tableHeaderCellStyle}>Action</th> 
-        </tr>
-      </thead>
-      <tbody>
-  {configuredItems
-    .filter(item => 
-      item.Configurators.some(config => config.Vid === selectedSpec)
-    )
-    .map((item) => (
-      <tr
-        key={item.Id}
-        onClick={() => {
-          handleRowClick(item.Id);
-        }}
-        style={{
-         
-          cursor: 'pointer',
-          transition: 'background-color 0.3s ease', 
-        }}
-      >
-        <td className={styles.tableCellStyle}>
-          {item.Configurators.map((config, index) => {
-            const matchingAttribute = Attributes.find(attr => attr.Vid === config.Vid);
-            return (
-              <Fragment key={index}>
-                {matchingAttribute ? matchingAttribute.Value : config.Vid} 
-                {index < item.Configurators.length - 1 && ", "}
-              </Fragment>
-            );
-          })}
-        </td>
-        {item.QuantityRanges?.length ? (
-          <td className={styles.tableCellStyle}>
-          {(() => {
-            // Find the applicable price based on current quantity and pricing tiers
-            const selectedItem = configuredItems.find(item => 
-              item.Id === selectedRowId || 
-              item.Configurators.some(config => config.Vid === selectedSpec)
-            );
-        
-            // If no quantity ranges exist, use base price
-            if (!selectedItem?.QuantityRanges?.length) {
-              return `${selectedItem?.Price.CurrencySign}${selectedItem?.Price.ConvertedPriceWithoutSign}`;
-            }
-        
-            // Find the active pricing tier (matches the highlighted tier logic)
-            const activeTier = pricingTiers?.find(tier => 
-              currentQuantity >= tier.MinQuantity && 
-              (!pricingTiers[pricingTiers.indexOf(tier) + 1] || 
-               currentQuantity < pricingTiers[pricingTiers.indexOf(tier) + 1].MinQuantity)
-            );
-        
-            // Use the active tier price if found, otherwise fall back to first range
-            const displayPrice = activeTier 
-              ? activeTier.Price.ConvertedPriceWithoutSign
-              : selectedItem.QuantityRanges[0].Price.ConvertedPriceWithoutSign;
-        
-            return `${selectedItem.Price.CurrencySign}${displayPrice}`;
-          })()}
-        </td>
-        ) : (
-          <td className={styles.tableCellStyle}>
-          {(() => {
-            // If no quantity ranges, use base price
-            if (!item.QuantityRanges?.length) {
-              return `${item.Price.CurrencySign}${item.Price.ConvertedPriceWithoutSign}`;
-            }
-            
-            // Find the applicable tier price based on current quantity
-            const applicableTier = item.QuantityRanges
-              .slice() // Create a copy
-              .sort((a, b) => b.MinQuantity - a.MinQuantity) // Sort descending
-              .find(tier => currentQuantity >= tier.MinQuantity);
-            
-            // Use tier price if found, otherwise use base price
-            const displayPrice = applicableTier 
-              ? applicableTier.Price.ConvertedPriceWithoutSign 
-              : item.Price.ConvertedPriceWithoutSign;
-            
-            return `${item.Price.CurrencySign}${displayPrice}`;
-          })()}
-        </td>
-        )}
-        <td className={styles.tableCellStyle} style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-  <AddToCartButton
-    productId={item.Id}
-    sellerId={sellerId}
-    images={images}
-    title={title}
-    discountPrice={discountPrice}
-    // price={item.QuantityRanges[0].Price.ConvertedPriceWithoutSign} 
-    price={getDisplayPrice(item, currentQuantity)}
-    slug={slug}
-    productStock={item.Quantity} 
-    productType="Abroad"
-    sizeColor={sizeColor}
-    selectedColor={getSelectedColor(item)}
-    selectedSize={selectedSize}
-    selectedPrice={getDisplayPrice(item, currentQuantity)} 
-    currentQuantity={currentQuantity}
-    setCurrentQuantity={setCurrentQuantity}
-  />
-  <span style={{ fontSize: '14px', fontWeight: 'bold', marginTop: '-40px' }}>{item.Quantity}</span>
-</div>
+              {configuredItems.length > 0 && configuredItems.some(item =>
+                item.Configurators.some(config => config.Vid === selectedSpec)
+              ) ? (
+                <table className={styles.tableStyle}>
+                  <thead>
+                    <tr className={styles.tableHeaderStyle}>
+                      <th className={styles.tableHeaderCellStyle}>Variants</th>
+                      <th className={styles.tableHeaderCellStyle}>Price</th>
+                      <th className={styles.tableHeaderCellStyle}>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {configuredItems
+                      .filter(item =>
+                        item.Configurators.some(config => config.Vid === selectedSpec)
+                      )
+                      .map((item) => (
+                        <tr
+                          key={item.Id}
+                          onClick={() => {
+                            handleRowClick(item.Id);
+                          }}
+                          style={{
 
+                            cursor: 'pointer',
+                            transition: 'background-color 0.3s ease',
+                          }}
+                        >
+                          <td className={styles.tableCellStyle}>
+                            {item.Configurators.map((config, index) => {
+                              const matchingAttribute = Attributes.find(attr => attr.Vid === config.Vid);
+                              return (
+                                <Fragment key={index}>
+                                  {matchingAttribute ? matchingAttribute.Value : config.Vid}
+                                  {index < item.Configurators.length - 1 && ", "}
+                                </Fragment>
+                              );
+                            })}
+                          </td>
+                          {item.QuantityRanges?.length ? (
+                            <td className={styles.tableCellStyle}>
+                              {(() => {
+                                // Find the applicable price based on current quantity and pricing tiers
+                                const selectedItem = configuredItems.find(item =>
+                                  item.Id === selectedRowId ||
+                                  item.Configurators.some(config => config.Vid === selectedSpec)
+                                );
 
+                                // If no quantity ranges exist, use base price
+                                if (!selectedItem?.QuantityRanges?.length) {
+                                  return `${selectedItem?.Price.CurrencySign}${selectedItem?.Price.ConvertedPriceWithoutSign}`;
+                                }
 
-        </td>
-      </tr>
-    ))
-  }
-</tbody>
-    </table>
-  ) : (
-    <div>
-      <AddToCartButton
-        productId={productId || id}
-        sellerId={sellerId}
-        images={images}
-        title={title}
-        discountPrice={discountPrice}
-        price={selectedPrice}
-        slug={slug}
-        productStock={productStock}
-        productType="Abroad"
-        sizeColor={sizeColor}
-        selectedColor={selectedColor}
-        selectedSize={selectedSize}
-        selectedPrice={selectedPrice}
-        currentQuantity={currentQuantity}
-        setCurrentQuantity={setCurrentQuantity}
-      />
-    </div>
-  )}
-</div>
-</div>
+                                // Find the active pricing tier (matches the highlighted tier logic)
+                                const activeTier = pricingTiers?.find(tier =>
+                                  currentQuantity >= tier.MinQuantity &&
+                                  (!pricingTiers[pricingTiers.indexOf(tier) + 1] ||
+                                    currentQuantity < pricingTiers[pricingTiers.indexOf(tier) + 1].MinQuantity)
+                                );
 
-        
+                                // Use the active tier price if found, otherwise fall back to first range
+                                const displayPrice = activeTier
+                                  ? activeTier.Price.ConvertedPriceWithoutSign
+                                  : selectedItem.QuantityRanges[0].Price.ConvertedPriceWithoutSign;
+
+                                return `${selectedItem.Price.CurrencySign}${displayPrice}`;
+                              })()}
+                            </td>
+                          ) : (
+                            <td className={styles.tableCellStyle}>
+                              {(() => {
+                                // If no quantity ranges, use base price
+                                if (!item.QuantityRanges?.length) {
+                                  return `${item.Price.CurrencySign}${item.Price.ConvertedPriceWithoutSign}`;
+                                }
+
+                                // Find the applicable tier price based on current quantity
+                                const applicableTier = item.QuantityRanges
+                                  .slice() // Create a copy
+                                  .sort((a, b) => b.MinQuantity - a.MinQuantity) // Sort descending
+                                  .find(tier => currentQuantity >= tier.MinQuantity);
+
+                                // Use tier price if found, otherwise use base price
+                                const displayPrice = applicableTier
+                                  ? applicableTier.Price.ConvertedPriceWithoutSign
+                                  : item.Price.ConvertedPriceWithoutSign;
+
+                                return `${item.Price.CurrencySign}${displayPrice}`;
+                              })()}
+                            </td>
+                          )}
+                          <td className={styles.tableCellStyle} style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+                              <AddToCartButton
+                                // productId={item.Id}
+                                productId={productId || id}
+                                variantId={item.Id}
+                                sellerId={sellerId}
+                                images={images}
+                                title={title}
+                                discountPrice={discountPrice}
+                                // price={item.QuantityRanges[0].Price.ConvertedPriceWithoutSign} 
+                                price={getDisplayPrice(item, currentQuantity)}
+                                slug={slug}
+                                productStock={item.Quantity}
+                                productType="Abroad"
+                                sizeColor={sizeColor}
+                                selectedColor={getSelectedColor(item)}
+                                selectedSize={selectedSize}
+                                selectedPrice={getDisplayPrice(item, currentQuantity)}
+                                currentQuantity={currentQuantity}
+                                setCurrentQuantity={setCurrentQuantity}
+                              />
+                              <span style={{ fontSize: '14px', fontWeight: 'bold', marginTop: '-40px' }}>{item.Quantity}</span>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    }
+                  </tbody>
+                </table>
+              ) : (
+                <div>
+                  <AddToCartButton
+                    productId={productId || id}
+                    variantId={null}
+                    sellerId={sellerId}
+                    images={images}
+                    title={title}
+                    discountPrice={discountPrice}
+                    price={selectedPrice}
+                    slug={slug}
+                    productStock={productStock}
+                    productType="Abroad"
+                    sizeColor={sizeColor}
+                    selectedColor={selectedColor}
+                    selectedSize={selectedSize}
+                    selectedPrice={selectedPrice}
+                    currentQuantity={currentQuantity}
+                    setCurrentQuantity={setCurrentQuantity}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
         </Grid>
       </Grid>
     </Box>

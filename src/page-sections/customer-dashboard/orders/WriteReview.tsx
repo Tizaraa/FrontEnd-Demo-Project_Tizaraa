@@ -13,7 +13,11 @@ import Link from "next/link";
 import ReturnedOrderStatus from "./ReturnedOrderStatus";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStore, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faStore,
+  faCaretDown,
+  faCaretUp,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function WriteReview({
   item,
@@ -21,20 +25,20 @@ export default function WriteReview({
   orderDetails,
   status,
   cancel_status,
-  orderItemId ,
+  orderItemId,
   order_days_gone,
   return_status,
-  delivered_at
+  delivered_at,
 }: {
   item: any;
   shopName: string;
   orderDetails: any;
   status: any;
-  orderItemId : any;
-  cancel_status:any;
-  order_days_gone:any;
-  return_status:any;
-  delivered_at:any;
+  orderItemId: any;
+  cancel_status: any;
+  order_days_gone: any;
+  return_status: any;
+  delivered_at: any;
 }) {
   const [showOrderStatus, setShowOrderStatus] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,7 +54,6 @@ export default function WriteReview({
     images: string[];
   } | null>(null);
   const router = useRouter();
-
 
   const deliveryCharge = orderDetails?.delivery_charge;
 
@@ -81,7 +84,12 @@ export default function WriteReview({
       return;
     }
 
-    if (!item?.order_item_id || !item?.product_id || rating === 0 || !comments) {
+    if (
+      !item?.order_item_id ||
+      !item?.product_id ||
+      rating === 0 ||
+      !comments
+    ) {
       console.error("Missing required fields.");
       return;
     }
@@ -101,25 +109,31 @@ export default function WriteReview({
     }
 
     try {
-      const response = await fetch(`${ApiBaseUrl.baseUrl}order/product/review`, {
-        method: "POST",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${ApiBaseUrl.baseUrl}order/product/review`,
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         const responseBody = await response.json();
         toast.success(responseBody.message);
-        
+
         // Save the review in localStorage for persistence across page reloads
         const reviewData = {
           rating: String(rating),
           comments,
           images: image.map((img) => URL.createObjectURL(img)),
         };
-        localStorage.setItem(`review-${item.order_item_id}`, JSON.stringify(reviewData));
+        localStorage.setItem(
+          `review-${item.order_item_id}`,
+          JSON.stringify(reviewData)
+        );
 
         setReviewMode("preview"); // Switch to preview mode
         setExistingReview(reviewData);
@@ -133,7 +147,6 @@ export default function WriteReview({
     }
   };
 
-
   // const handleCancelClick = () => {
   //   if (cancelMode === "submit" && status === "Pending") {
   //     // Encrypt the orderItemId
@@ -141,18 +154,17 @@ export default function WriteReview({
   //     // Encrypt product name if needed, or pass directly as part of the URL
   //     const encodedProductName = encodeURIComponent(item.product_name);
   //     router.push(`/cancelled-order?orderItemId=${encryptedOrderItemId}`);
-      
+
   //   }
   // };
 
-  // product return function 
+  // product return function
 
   const handleReturnClick = () => {
-      const encryptedOrderItemId = btoa(orderItemId);
-      sessionStorage.setItem("returnItem", JSON.stringify(item));
-      router.push(`/return-order?orderItemId=${encryptedOrderItemId}`); 
+    const encryptedOrderItemId = btoa(orderItemId);
+    sessionStorage.setItem("returnItem", JSON.stringify(item));
+    router.push(`/return-order?orderItemId=${encryptedOrderItemId}`);
   };
-
 
   // cancek click function
   const handleCancelClick = () => {
@@ -167,34 +179,56 @@ export default function WriteReview({
     setShowOrderStatus((prev) => !prev); // Toggle the state
   };
 
+  console.log("item");
+  console.log(item);
+
+  // Conditionally Handle Image URL for product image for General and Abroad products
+  const getProductImageUrl = (imagePath) => {
+    if (/^https?:\/\//i.test(imagePath)) {
+      return imagePath;
+    }
+    if (imagePath.startsWith("/")) {
+      return `${ApiBaseUrl.ImgUrl}${imagePath}`;
+    }
+    return `${ApiBaseUrl.ImgUrl}/${imagePath}`;
+  };
+  console.log("getProductImageUrl: ", getProductImageUrl(item.product_image));
 
   return (
     <>
-      <FlexBox px="1rem" py="0.5rem" flexWrap="wrap" alignItems="center" key={item.product_name} style={{display:"flex", justifyContent:"space-between"}}>
-       <div>
-      <Link href={`/product/${item.product_slug}`}>
-      <FlexBox flex="2 2 260px" m="6px" alignItems="center">
-          <Avatar 
-          // src={item.product_image} 
-          src={`${ApiBaseUrl.ImgUrl}${item.product_image}`}
-          alt={item.product_image} size={64} />
-          <Box ml="20px">
-            <H6 my="0px">{item.product_name}</H6>
-            <Typography fontSize="14px" color="text.muted">
-  {currency(item.price)} x {item.quantity}
-  {item.color && `, Color: ${item.color}`}
-  {item.size && `, Size: ${item.size}`}
-</Typography>
+      <FlexBox
+        px="1rem"
+        py="0.5rem"
+        flexWrap="wrap"
+        alignItems="center"
+        key={item.product_name}
+        style={{ display: "flex", justifyContent: "space-between" }}
+      >
+        <div>
+          <Link href={`/product/${item.product_slug}`}>
+            <FlexBox flex="2 2 260px" m="6px" alignItems="center">
+              <Avatar
+                // src={item.product_image}
+                // src={`${ApiBaseUrl.ImgUrl}${item.product_image}`}
+                src={getProductImageUrl(item.product_image)}
+                alt={item.product_image}
+                size={64}
+              />
+              <Box ml="20px">
+                <H6 my="0px">{item.product_name}</H6>
+                <Typography fontSize="14px" color="text.muted">
+                  {currency(item.price)} x {item.quantity}
+                  {item.color && `, Color: ${item.color}`}
+                  {item.size && `, Size: ${item.size}`}
+                </Typography>
+              </Box>
+            </FlexBox>
+          </Link>
+        </div>
 
-          </Box>
-        </FlexBox>
-      
-      </Link>
-       </div>
-
-       <div style={{display:"flex"}}>
-         {/* review and preview  */}
-         {/* <FlexBox flex="160px" m="6px" alignItems="center">
+        <div style={{ display: "flex" }}>
+          {/* review and preview  */}
+          {/* <FlexBox flex="160px" m="6px" alignItems="center">
           <Button
             variant="text"
             color="primary"
@@ -215,111 +249,113 @@ export default function WriteReview({
           </Button>
         </FlexBox> */}
 
-{cancel_status !== 5 && cancel_status !== 6 && (
-  <FlexBox flex="160px" m="6px" alignItems="center">
-    <Button
-      variant="text"
-      color="primary"
-      disabled={status !== "Delivered"}  
-      onClick={() => setIsModalOpen(true)}  
-      style={{
-        height: "30px",
-        borderRadius: "100px",
-        backgroundColor: status === "Delivered" ? "#e94560" : "gray", // Set background color
-    color: status === "Delivered" ? "white" : "darkgray", // Set text color
-    cursor: status === "Delivered" ? "pointer" : "not-allowed",
-        pointerEvents: status !== "Delivered" ? "none" : "auto", 
-        transition: "none"  
-      }}
-    >
-      <Typography fontSize="14px">
-        {reviewMode === "submit" ? "Review" : "Preview"}
-      </Typography>
-    </Button>
-  </FlexBox>
-)}
+          {cancel_status !== 5 && cancel_status !== 6 && (
+            <FlexBox flex="160px" m="6px" alignItems="center">
+              <Button
+                variant="text"
+                color="primary"
+                disabled={status !== "Delivered"}
+                onClick={() => setIsModalOpen(true)}
+                style={{
+                  height: "30px",
+                  borderRadius: "100px",
+                  backgroundColor: status === "Delivered" ? "#e94560" : "gray", // Set background color
+                  color: status === "Delivered" ? "white" : "darkgray", // Set text color
+                  cursor: status === "Delivered" ? "pointer" : "not-allowed",
+                  pointerEvents: status !== "Delivered" ? "none" : "auto",
+                  transition: "none",
+                }}
+              >
+                <Typography fontSize="14px">
+                  {reviewMode === "submit" ? "Review" : "Preview"}
+                </Typography>
+              </Button>
+            </FlexBox>
+          )}
 
+          {/* return policy */}
+          {status === "Delivered" &&
+            cancel_status !== 6 &&
+            order_days_gone !== 3 && (
+              <FlexBox flex="160px" m="6px" alignItems="center">
+                <Button
+                  variant="text"
+                  color="primary"
+                  style={{
+                    height: "30px",
+                    borderRadius: "100px",
+                    backgroundColor: "#e94560",
+                    color: "white",
+                  }}
+                  onClick={handleReturnClick}
+                >
+                  <Typography fontSize="14px">Return</Typography>
+                </Button>
+              </FlexBox>
+            )}
 
+          {/* Show "Returned" when status is 6 */}
+          {cancel_status === 6 && (
+            <>
+              <FlexBox
+                flex="160px"
+                m="6px"
+                alignItems="center"
+                flexDirection="column"
+              >
+                <Button
+                  variant="text"
+                  style={{
+                    color: "white",
+                    height: "30px",
+                    borderRadius: "100px",
+                    backgroundColor: "#e94560",
+                  }}
+                  onClick={handleToggle} // Toggle the component visibility on click
+                >
+                  <Typography fontSize="14px">Returned</Typography>
 
-        {/* return policy */}
-         {status === "Delivered" && cancel_status !== 6  && order_days_gone !== 3 && (
-          <FlexBox flex="160px" m="6px" alignItems="center">
-            <Button
-              variant="text"
-              color="primary"
-              style={{
-                height: "30px",
-                borderRadius: "100px",
-                backgroundColor: "#e94560",
-                color: "white"
-              }}
-              onClick={handleReturnClick}
-            >
-              <Typography fontSize="14px">
-                Return
-              </Typography>
-            </Button>
-          </FlexBox>
-        )}
+                  <FontAwesomeIcon
+                    icon={showOrderStatus ? faCaretUp : faCaretDown}
+                    style={{ marginLeft: "8px" }}
+                  />
+                </Button>
+              </FlexBox>
+            </>
+          )}
 
-        {/* Show "Returned" when status is 6 */}
-        {cancel_status === 6 && (
-        <>
-          <FlexBox flex="160px" m="6px" alignItems="center" flexDirection="column">
-            <Button
-              variant="text"
-              style={{
-                color: "white",
-                height: "30px",
-                borderRadius: "100px",
-                backgroundColor: "#e94560",
-              }}
-              onClick={handleToggle} // Toggle the component visibility on click
-            >
-              <Typography fontSize="14px">Returned
+          {/* order cancel */}
+          {status !== "Delivered" && cancel_status !== 6 && (
+            <FlexBox flex="160px" m="6px" alignItems="center">
+              <Button
+                variant="text"
+                style={{
+                  color:
+                    cancel_status >= 0 && cancel_status <= 2
+                      ? "blue"
+                      : cancel_status === 5
+                      ? "gray"
+                      : "gray",
+                  height: "30px",
+                  borderRadius: "100px",
+                }}
+                onClick={handleCancelClick}
+                disabled={
+                  cancel_status === 5 ||
+                  !(cancel_status >= 0 && cancel_status <= 2)
+                }
+              >
+                <Typography fontSize="14px">
+                  {cancel_status >= 0 && cancel_status <= 2
+                    ? "Cancel"
+                    : "Cancelled"}
+                </Typography>
+              </Button>
+            </FlexBox>
+          )}
+        </div>
+      </FlexBox>
 
-
-              </Typography>
-
-              <FontAwesomeIcon
-            icon={showOrderStatus ? faCaretUp : faCaretDown}
-            style={{ marginLeft: "8px" }}
-          />
-            </Button>
-          </FlexBox>
-        </>
-      )}
-  
-        {/* order cancel */}
-        {status !== "Delivered" && cancel_status !== 6 && (
-          <FlexBox flex="160px" m="6px" alignItems="center">
-            <Button
-              variant="text"
-              style={{
-                color:
-                  cancel_status >= 0 && cancel_status <= 2
-                    ? "blue"
-                    : cancel_status === 5
-                    ? "gray"
-                    : "gray",
-                height: "30px",
-                borderRadius: "100px",
-              }}
-              onClick={handleCancelClick}
-              disabled={cancel_status === 5 || !(cancel_status >= 0 && cancel_status <= 2)}
-            >
-              <Typography fontSize="14px">
-                {cancel_status >= 0 && cancel_status <= 2 ? "Cancel" : "Cancelled"}
-              </Typography>
-            </Button>
-          </FlexBox>
-        )}
-
-
-       </div>
-
-        </FlexBox>
-                      
       {/* Render Modal */}
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <Box
@@ -371,10 +407,18 @@ export default function WriteReview({
                   rows={4}
                   placeholder="Share your experience..."
                   onChange={(e) => setComments(e.target.value)}
-                  style={{ width: "100%", border: "1px solid #ccc", padding: "8px" }}
+                  style={{
+                    width: "100%",
+                    border: "1px solid #ccc",
+                    padding: "8px",
+                  }}
                 />
               </Box>
-              <Button variant="contained" color="primary" onClick={handleReviewSubmit}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleReviewSubmit}
+              >
                 Submit Review
               </Button>
             </>
@@ -392,7 +436,8 @@ export default function WriteReview({
                         background: "transparent",
                         cursor: "pointer",
                         fontSize: "24px",
-                        color: star <= existingReview?.rating ? "#FFD700" : "#ccc", 
+                        color:
+                          star <= existingReview?.rating ? "#FFD700" : "#ccc",
                         border: "none",
                         padding: "2px",
                       }}
@@ -405,21 +450,26 @@ export default function WriteReview({
               <Box mt="1rem">
                 <Typography>Upload Images:</Typography>
                 {/* Display already reviewed images */}
-                {existingReview?.images && existingReview?.images.length > 0 && (
-                  <Box mt="1rem">
-                    <Typography>Reviewed Images:</Typography>
-                    <Box>
-                      {existingReview.images.map((src, idx) => (
-                        <img
-                          key={idx}
-                          src={`${ApiBaseUrl.baseUrl}${src}`}
-                          alt={`Review Image ${idx}`}
-                          style={{ width: "100px", height: "100px", marginRight: "8px" }}
-                        />
-                      ))}
+                {existingReview?.images &&
+                  existingReview?.images.length > 0 && (
+                    <Box mt="1rem">
+                      <Typography>Reviewed Images:</Typography>
+                      <Box>
+                        {existingReview.images.map((src, idx) => (
+                          <img
+                            key={idx}
+                            src={`${ApiBaseUrl.baseUrl}${src}`}
+                            alt={`Review Image ${idx}`}
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              marginRight: "8px",
+                            }}
+                          />
+                        ))}
+                      </Box>
                     </Box>
-                  </Box>
-                )}
+                  )}
                 {/* Input to upload new images */}
                 <input
                   type="file"
@@ -434,7 +484,7 @@ export default function WriteReview({
                 <Typography>Share your experience:</Typography>
                 <textarea
                   rows={4}
-                  value={comments || existingReview?.comments || ""} 
+                  value={comments || existingReview?.comments || ""}
                   placeholder="Share your experience..."
                   onChange={(e) => setComments(e.target.value)}
                   style={{
@@ -449,33 +499,20 @@ export default function WriteReview({
         </Box>
       </Modal>
 
-        {/* Show the component outside of FlexBox, but directly underneath */}
-        {showOrderStatus && (
-            <Box mt="10px" p="10px" border="1px solid #e94560" borderRadius="8px">
-             <ReturnedOrderStatus 
-  return_status={return_status}
-  deliveredAt={delivered_at}
-/>
-
-            </Box>
-          )}
-
-
-
-
+      {/* Show the component outside of FlexBox, but directly underneath */}
+      {showOrderStatus && (
+        <Box mt="10px" p="10px" border="1px solid #e94560" borderRadius="8px">
+          <ReturnedOrderStatus
+            return_status={return_status}
+            deliveredAt={delivered_at}
+          />
+        </Box>
+      )}
     </>
   );
 }
 
-
-
-
-
-
-
-
 // image preview *******
-
 
 // <Box mt="1rem">
 //   <Typography fontSize="14px" mb="0.5rem">
@@ -547,7 +584,7 @@ export default function WriteReview({
 //           display="flex"
 //           alignItems="center"
 //           justifyContent="center"
-         
+
 //           color="black"
 //           fontSize="24px"
 //           fontWeight="bold"
@@ -561,4 +598,4 @@ export default function WriteReview({
 //       </Box>
 //     ))}
 //   </Box>
-// </Box> 
+// </Box>
