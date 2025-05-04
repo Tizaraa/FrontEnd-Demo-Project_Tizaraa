@@ -182,7 +182,7 @@ export const customerCareLinks = [
   { name: "About Tizaraa", url: "/about-tizaraa" },
   { name: "Privacy policy", url: "/privacy-policy" },
   { name: "Terms and Conditions", url: "/terms-and-conditions"},
-  { name: "Terms and Conditions", url: "/terms-and-conditions"},
+  // { name: "Terms and Conditions", url: "/terms-and-conditions"},
   { name: "Contact Us", url: "/contact" },
   { name: "Tizaraa cares", url: "/tizaraa-cares" },
  
