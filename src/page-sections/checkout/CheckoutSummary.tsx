@@ -522,6 +522,8 @@ import ProductCard20 from "@component/product-cards/ProductCard20";
 import authService from "services/authService";
 import { toast } from "react-toastify";
 import { FaExclamationTriangle } from "react-icons/fa";
+import { Box, Tooltip } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export default function CheckoutSummary({ deliveryCharge }) {
   const { state } = useAppContext();
@@ -724,6 +726,16 @@ export default function CheckoutSummary({ deliveryCharge }) {
       return;
     }
 
+    // Check if all products are abroad
+    const hasAbroadProduct = state.cart.every(
+      (product: any) => product.productType === "Abroad"
+    );
+
+    if (hasAbroadProduct) {
+      toast.warning("Promo codes cannot be applied to abroad products");
+      return;
+    }
+
     if (!promoCode) {
       toast.warning("Please Enter a Promo Code !");
       return;
@@ -818,6 +830,21 @@ export default function CheckoutSummary({ deliveryCharge }) {
         toast.success(data.message);
         const discountValue = parseFloat(data.discount);
         setDiscount(discountValue);
+
+        // Skip discount calculation for abroad products start
+        if (hasAbroadProduct) {
+          const advancePayment = otcAdvancePaymentAmount || 0;
+          setNewTotal(advancePayment);
+          sessionStorage.setItem("newTotal", advancePayment.toString());
+        } else {
+          const totalPrice = savedTotalPrice;
+          const shippingCharge = savedTotalWithDelivery;
+          const finalPrice = totalPrice + shippingCharge - discountValue;
+
+          setNewTotal(finalPrice);
+          sessionStorage.setItem("newTotal", finalPrice.toString());
+        }
+        // Skip discount calculation for abroad products end
 
         const totalPrice = savedTotalPrice;
         const shippingCharge = savedTotalWithDelivery;
@@ -1017,7 +1044,13 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
       <Divider mb="1rem" />
 
-      <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb="1.5rem">
+      <Typography
+        fontSize="25px"
+        fontWeight="600"
+        lineHeight="1"
+        textAlign="right"
+        mb="1.5rem"
+      >
         {hasAbroadProduct
           ? currency(otcAdvancePaymentAmount || 0)
           : currency(savedTotalWithDelivery + savedTotalPrice - discount)}
@@ -1026,10 +1059,42 @@ export default function CheckoutSummary({ deliveryCharge }) {
       <Divider mb="1rem" />
 
       {hasAbroadProduct && (
-        <Typography fontSize="13px" color="text.hint" display="block" fontWeight="600">
-          Pay on Delivery {currency(savedTotalPrice)} + Shipping & Courier
-          Charge
-        </Typography>
+        // <Typography fontSize="13px" color="text.hint" display="block" fontWeight="600">
+        //   Pay on Delivery {currency(savedTotalPrice)} + Shipping & Courier
+        //   Charge
+        // </Typography>
+
+        <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
+          <Box sx={{ flex: 1 }}>
+            <Box sx={{ display: "flex", gap: 0.5 }}>
+              <Tooltip
+                title={
+                  <>
+                    Shipping & Courier Charge will be calculated based on actual
+                    weight & dimensions when the product is in-house by Tizaraa
+                    <br />
+                    -
+                    <br />
+                    পণ্যটি Tizaraa-তে পৌঁছানোর পর, প্রকৃত ওজন ও মাত্রার ভিত্তিতে
+                    শিপিং ও কুরিয়ার চার্জ নির্ধারণ করা হবে
+                  </>
+                }
+                arrow
+                placement="top"
+              >
+                <InfoOutlinedIcon
+                  fontSize="small"
+                  style={{ color: "#E94560" }}
+                  sx={{ opacity: 0.7 }}
+                />
+              </Tooltip>
+              <Typography fontSize="13px" color="text.primary">
+                Pay on Delivery {currency(Math.ceil(savedTotalPrice))} +
+                Shipping & Courier Charge
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
       )}
 
       {/* <Typography
