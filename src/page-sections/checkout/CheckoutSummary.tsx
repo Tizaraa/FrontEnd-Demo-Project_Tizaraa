@@ -570,7 +570,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
         } else {
           setOtcAdvancePaymentAmount(null);
         }
-      }, 500);
+      }, 200);
   
       // Cleanup interval on unmount
       return () => {
@@ -1101,14 +1101,14 @@ const applyPromoCode = async () => {
         </FlexBox>
       </FlexBox>
 
-      {/* <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
         <Typography color="text.hint">Pay Now:</Typography>
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
             {otcAdvancePaymentAmount !== null ? currency(otcAdvancePaymentAmount) : "BDT 0.00"}
           </Typography>
         </FlexBox>
-      </FlexBox> */}
+      </FlexBox>
 
       {/* <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
         <Typography color="text.hint">Shipping:</Typography>

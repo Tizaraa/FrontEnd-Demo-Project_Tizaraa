@@ -828,7 +828,7 @@ export default function CheckoutAddress({
               </Typography>
 
               {/* Display Advance Payment Amount */}
-              {advancePaymentAmount !== null && (
+              {/* {advancePaymentAmount !== null && (
                 <Typography
                   style={{
                     marginBottom: "1rem",
@@ -840,7 +840,7 @@ export default function CheckoutAddress({
                   Advance Payment Amount: BDT&nbsp;
                   {advancePaymentAmount.toFixed(2)}
                 </Typography>
-              )}
+              )} */}
 
               <Grid container spacing={2}>
                 {/* Option 1 - 50% */}
