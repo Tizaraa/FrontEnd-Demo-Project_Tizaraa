@@ -551,6 +551,33 @@ export default function CheckoutSummary({ deliveryCharge }) {
   // newly added 
   const [isExpressDelivery, setIsExpressDelivery] = useState(false);
 
+    // State for otcAdvancePaymentAmount
+    const [otcAdvancePaymentAmount, setOtcAdvancePaymentAmount] = useState<number | null>(null);
+
+    // Load otcAdvancePaymentAmount from sessionStorage on mount and poll for updates
+    useEffect(() => {
+      // Initial load
+      const storedAdvancePayment = sessionStorage.getItem("otcAdvancePaymentAmount");
+      if (storedAdvancePayment) {
+        setOtcAdvancePaymentAmount(parseFloat(storedAdvancePayment));
+      }
+  
+      // Poll sessionStorage every 500ms
+      const intervalId = setInterval(() => {
+        const updatedAdvancePayment = sessionStorage.getItem("otcAdvancePaymentAmount");
+        if (updatedAdvancePayment) {
+          setOtcAdvancePaymentAmount(parseFloat(updatedAdvancePayment));
+        } else {
+          setOtcAdvancePaymentAmount(null);
+        }
+      }, 500);
+  
+      // Cleanup interval on unmount
+      return () => {
+        clearInterval(intervalId);
+      };
+    }, []);
+
 
   // useEffect(() => {
   //   const getTotalPrice = () => {
@@ -1073,6 +1100,15 @@ const applyPromoCode = async () => {
           </Typography>
         </FlexBox>
       </FlexBox>
+
+      {/* <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+        <Typography color="text.hint">Pay Now:</Typography>
+        <FlexBox alignItems="flex-end">
+          <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+            {otcAdvancePaymentAmount !== null ? currency(otcAdvancePaymentAmount) : "BDT 0.00"}
+          </Typography>
+        </FlexBox>
+      </FlexBox> */}
 
       {/* <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
         <Typography color="text.hint">Shipping:</Typography>

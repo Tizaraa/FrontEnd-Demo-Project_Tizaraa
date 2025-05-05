@@ -128,8 +128,6 @@
 //     }
 //   }, [setDeliveryCharge]);
 
-
-
 //   return (
 //     <Fragment>
 //       {addresses.length > 0 ? (
@@ -175,7 +173,7 @@
 //         border: "0.5px solid #E94560",
 //         marginBottom: "1rem",
 //         borderRadius: "1rem",
-//         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", 
+//         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
 //         // padding: "0.5rem 0.5rem"
 
 //       }}
@@ -226,9 +224,7 @@
 //   );
 // }
 
-
 //  ==============================================================
-
 
 // "use client";
 
@@ -457,7 +453,6 @@
 //         </Grid>
 //       </FlexBox>
 
-
 //       {addresses.length > 0 ? (
 //         addresses.map((item) => (
 //           <AddressItem
@@ -528,12 +523,6 @@
 //   );
 // }
 
-
-
-
-
-
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -555,29 +544,75 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import { CreditCardIcon, InfoIcon } from "lucide-react";
 import { Tooltip } from "@mui/material";
 
-export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) {
+export default function CheckoutAddress({
+  setDeliveryCharge,
+  onAddressChange,
+}) {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [province, setProvince] = useState([]);
   const authtoken = authService.getToken();
   const [expressDelivery, setExpressDelivery] = useState(false);
 
+  const [selectedPaymentOption, setSelectedPaymentOption] = useState<
+    number | null
+  >(null);
+  const [advancePaymentAmount, setAdvancePaymentAmount] = useState<
+    number | null
+  >(null);
 
-  const [selectedPaymentOption, setSelectedPaymentOption] = useState<number | null>(null);
-
-  const handlePaymentOptionSelect = (percentage: number) => {
+  const handlePaymentOptionSelect = async (percentage: number) => {
     setSelectedPaymentOption(percentage);
+
+    // Calculate advance payment
+    const selectedProducts = JSON.parse(
+      sessionStorage.getItem("selectedProducts") || "[]"
+    );
+    const totalAmount = selectedProducts.reduce(
+      (sum, product) => sum + product.qty * product.price,
+      0
+    );
+
+    if (selectedAddress && totalAmount > 0) {
+      try {
+        const payload = {
+          total_ammount: totalAmount,
+        };
+
+        const response = await axios.post(
+          `${ApiBaseUrl.baseUrl}otc/price/percentage?total=${totalAmount}&percentage=${percentage}`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${authtoken}`,
+            },
+          }
+        );
+
+        const newTotal = response.data.newtotal;
+        setAdvancePaymentAmount(newTotal);
+        sessionStorage.setItem("otcAdvancePaymentAmount", newTotal.toString());
+      } catch (error) {
+        console.error("Error calculating advance payment:", error);
+        toast.error("Failed to calculate advance payment");
+      }
+    } else {
+      toast.warning("Please select an address and ensure products are added");
+    }
   };
 
   // Fetch provinces data
   const fetchProvince = async () => {
     const authtoken = localStorage.getItem("token");
     try {
-      const response = await axios.get(`${ApiBaseUrl.baseUrl}checkout/address`, {
-        headers: {
-          Authorization: `Bearer ${authtoken}`,
-        },
-      });
+      const response = await axios.get(
+        `${ApiBaseUrl.baseUrl}checkout/address`,
+        {
+          headers: {
+            Authorization: `Bearer ${authtoken}`,
+          },
+        }
+      );
 
       if (Array.isArray(response.data)) {
         setProvince(response.data);
@@ -604,7 +639,9 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
         const storedAddress = sessionStorage.getItem("address");
         if (storedAddress) {
           const parsedAddress = JSON.parse(storedAddress);
-          const matchingAddress = fetchedAddresses.find((addr) => addr.id === parsedAddress.id);
+          const matchingAddress = fetchedAddresses.find(
+            (addr) => addr.id === parsedAddress.id
+          );
           if (matchingAddress) {
             handleSelect(matchingAddress, true);
             return;
@@ -625,7 +662,9 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
   // Recalculate delivery charge when selectedAddress or expressDelivery changes
   useEffect(() => {
     if (selectedAddress) {
-      const selectedProducts = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
+      const selectedProducts = JSON.parse(
+        sessionStorage.getItem("selectedProducts") || "[]"
+      );
       const products = selectedProducts.map((product) => ({
         id: `${product.productId}-${product.productType}`,
         name: product.name,
@@ -640,7 +679,9 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
       }));
 
       if (selectedAddress.province_id) {
-        const selectedProvince = province.find((prov: any) => prov.id === selectedAddress.province_id);
+        const selectedProvince = province.find(
+          (prov: any) => prov.id === selectedAddress.province_id
+        );
         if (selectedProvince) {
           const payload = {
             express_delivery: expressDelivery ? 1 : 0,
@@ -649,18 +690,22 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
             area: selectedAddress.area_id,
             products: products,
           };
-          axios.post(
-            `${ApiBaseUrl.baseUrl}delivery/charge/apply`, payload, {
-            headers: {
-              Authorization: `Bearer ${authtoken}`,
-            },
-          }
-          )
+          axios
+            .post(`${ApiBaseUrl.baseUrl}delivery/charge/apply`, payload, {
+              headers: {
+                Authorization: `Bearer ${authtoken}`,
+              },
+            })
             .then((response) => {
               // const totalDeliveryCost = response.data.totalDeliveryCost;
-              const totalDeliveryCost = Math.round(response.data.totalDeliveryCost);
+              const totalDeliveryCost = Math.round(
+                response.data.totalDeliveryCost
+              );
               setDeliveryCharge(totalDeliveryCost);
-              sessionStorage.setItem("deliveryCharge", totalDeliveryCost.toString());
+              sessionStorage.setItem(
+                "deliveryCharge",
+                totalDeliveryCost.toString()
+              );
             })
             .catch((error) => {
               console.error("Error fetching delivery charge:", error);
@@ -668,7 +713,13 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
         }
       }
     }
-  }, [selectedAddress, expressDelivery, province, authtoken, setDeliveryCharge]);
+  }, [
+    selectedAddress,
+    expressDelivery,
+    province,
+    authtoken,
+    setDeliveryCharge,
+  ]);
 
   // Handle selection of an address
   const handleSelect = async (item: Address, isAutoSelect = false) => {
@@ -680,8 +731,9 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
   };
 
   // Handle express delivery checkbox change
-  const handleExpressDeliveryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-
+  const handleExpressDeliveryChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const storedAddress = JSON.parse(sessionStorage.getItem("address"));
 
     if (!storedAddress) {
@@ -695,7 +747,9 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
           border: "2px solid #fff",
           boxShadow: "0 0 10px rgba(255, 152, 0, 0.7)",
         },
-        icon: <FaExclamationTriangle style={{ color: "#000", fontSize: "20px" }} />, // Custom icon
+        icon: (
+          <FaExclamationTriangle style={{ color: "#000", fontSize: "20px" }} />
+        ), // Custom icon
         progressStyle: {
           background: "#fff",
         },
@@ -711,6 +765,7 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
   useEffect(() => {
     const storedAddress = sessionStorage.getItem("address");
     const storedCharge = sessionStorage.getItem("deliveryCharge");
+    const storedAdvancePayment = sessionStorage.getItem("otcAdvancePaymentAmount");
 
     if (storedAddress) {
       setSelectedAddress(JSON.parse(storedAddress));
@@ -719,31 +774,73 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
     if (storedCharge) {
       setDeliveryCharge(parseFloat(storedCharge));
     }
-  }, [setDeliveryCharge]);
 
+    if (storedAdvancePayment) {
+      setAdvancePaymentAmount(parseFloat(storedAdvancePayment));
+    }
+  }, [setDeliveryCharge]);
 
   return (
     <Fragment>
-
       {(() => {
-        const selectedProducts = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
-        const hasAbroadProduct = selectedProducts.some((product: any) => product.productType === "Abroad");
+        const selectedProducts = JSON.parse(
+          sessionStorage.getItem("selectedProducts") || "[]"
+        );
+        const hasAbroadProduct = selectedProducts.some(
+          (product: any) => product.productType === "Abroad"
+        );
 
         if (hasAbroadProduct) {
           return (
-            <FlexBox flexDirection="column" mb="1rem" p="1rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f7f7f7">
+            <FlexBox
+              flexDirection="column"
+              mb="1rem"
+              p="1rem"
+              border="1px solid #ddd"
+              borderRadius="8px"
+              backgroundColor="#f7f7f7"
+            >
               <FlexBox alignItems="center" style={{ gap: "8px" }}>
                 <Tooltip title="Select your preferred advance payment percentage. The remaining amount will be paid later.">
-                  <InfoIcon style={{ color: "#E94560", fontSize: "18px", cursor: "pointer" }} />
+                  <InfoIcon
+                    style={{
+                      color: "#E94560",
+                      fontSize: "18px",
+                      cursor: "pointer",
+                    }}
+                  />
                 </Tooltip>
-
-                <Typography variant="h6" style={{ color: "#E94560", fontWeight: "600" }}>
+                <Typography
+                  variant="h6"
+                  style={{ color: "#E94560", fontWeight: "600" }}
+                >
                   Advance Payment Options
                 </Typography>
               </FlexBox>
-              <Typography style={{ marginBottom: "1rem", fontSize: "13px", color: "#333" }}>
+              <Typography
+                style={{
+                  marginBottom: "1rem",
+                  fontSize: "13px",
+                  color: "#333",
+                }}
+              >
                 Select your advance payment from the options below
               </Typography>
+
+              {/* Display Advance Payment Amount */}
+              {advancePaymentAmount !== null && (
+                <Typography
+                  style={{
+                    marginBottom: "1rem",
+                    fontSize: "16px",
+                    color: "#E94560",
+                    fontWeight: "600",
+                  }}
+                >
+                  Advance Payment Amount: BDT&nbsp;
+                  {advancePaymentAmount.toFixed(2)}
+                </Typography>
+              )}
 
               <Grid container spacing={2}>
                 {/* Option 1 - 50% */}
@@ -751,23 +848,31 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
                   <FlexBox
                     flexDirection="column"
                     p="1rem"
-                    border={`1px solid ${selectedPaymentOption === 50 ? 'rgb(233, 69, 96)' : '#ddd'}`}
+                    border={`1px solid ${
+                      selectedPaymentOption === 50 ? "rgb(233, 69, 96)" : "#ddd"
+                    }`}
                     borderRadius="8px"
-                    backgroundColor={selectedPaymentOption === 50 ? 'rgb(233, 69, 96)' : 'white'}
+                    backgroundColor={
+                      selectedPaymentOption === 50
+                        ? "rgb(233, 69, 96)"
+                        : "white"
+                    }
                     style={{ cursor: "pointer" }}
                     onClick={() => handlePaymentOptionSelect(50)}
                   >
                     <FlexBox alignItems="center">
                       <CreditCardIcon
                         style={{
-                          color: selectedPaymentOption === 50 ? 'white' : '#333',
-                          marginRight: '8px',
+                          color:
+                            selectedPaymentOption === 50 ? "white" : "#333",
+                          marginRight: "8px",
                         }}
                       />
                       <Typography
                         style={{
                           fontWeight: "600",
-                          color: selectedPaymentOption === 50 ? 'white' : "#333",
+                          color:
+                            selectedPaymentOption === 50 ? "white" : "#333",
                         }}
                       >
                         Pay Now 50%
@@ -776,28 +881,36 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
                   </FlexBox>
                 </Grid>
 
-                {/* Option 1 - 80% */}
+                {/* Option 2 - 80% */}
                 <Grid item xs={12} sm={4}>
                   <FlexBox
                     flexDirection="column"
                     p="1rem"
-                    border={`1px solid ${selectedPaymentOption === 80 ? 'rgb(233, 69, 96)' : '#ddd'}`}
+                    border={`1px solid ${
+                      selectedPaymentOption === 80 ? "rgb(233, 69, 96)" : "#ddd"
+                    }`}
                     borderRadius="8px"
-                    backgroundColor={selectedPaymentOption === 80 ? 'rgb(233, 69, 96)' : 'white'}
+                    backgroundColor={
+                      selectedPaymentOption === 80
+                        ? "rgb(233, 69, 96)"
+                        : "white"
+                    }
                     style={{ cursor: "pointer" }}
                     onClick={() => handlePaymentOptionSelect(80)}
                   >
                     <FlexBox alignItems="center">
                       <CreditCardIcon
                         style={{
-                          color: selectedPaymentOption === 80 ? 'white' : '#333',
-                          marginRight: '8px',
+                          color:
+                            selectedPaymentOption === 80 ? "white" : "#333",
+                          marginRight: "8px",
                         }}
                       />
                       <Typography
                         style={{
                           fontWeight: "600",
-                          color: selectedPaymentOption === 80 ? 'white' : "#333",
+                          color:
+                            selectedPaymentOption === 80 ? "white" : "#333",
                         }}
                       >
                         Pay Now 80%
@@ -805,28 +918,39 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
                     </FlexBox>
                   </FlexBox>
                 </Grid>
-                {/* Option 1 - 50% */}
+
+                {/* Option 3 - 100% */}
                 <Grid item xs={12} sm={4}>
                   <FlexBox
                     flexDirection="column"
                     p="1rem"
-                    border={`1px solid ${selectedPaymentOption === 100 ? 'rgb(233, 69, 96)' : '#ddd'}`}
+                    border={`1px solid ${
+                      selectedPaymentOption === 100
+                        ? "rgb(233, 69, 96)"
+                        : "#ddd"
+                    }`}
                     borderRadius="8px"
-                    backgroundColor={selectedPaymentOption === 100 ? 'rgb(233, 69, 96)' : 'white'}
+                    backgroundColor={
+                      selectedPaymentOption === 100
+                        ? "rgb(233, 69, 96)"
+                        : "white"
+                    }
                     style={{ cursor: "pointer" }}
                     onClick={() => handlePaymentOptionSelect(100)}
                   >
                     <FlexBox alignItems="center">
                       <CreditCardIcon
                         style={{
-                          color: selectedPaymentOption === 100 ? 'white' : '#333',
-                          marginRight: '8px',
+                          color:
+                            selectedPaymentOption === 100 ? "white" : "#333",
+                          marginRight: "8px",
                         }}
                       />
                       <Typography
                         style={{
                           fontWeight: "600",
-                          color: selectedPaymentOption === 100 ? 'white' : "#333",
+                          color:
+                            selectedPaymentOption === 100 ? "white" : "#333",
                         }}
                       >
                         Pay Now 100%
@@ -839,13 +963,32 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
           );
         } else {
           return (
-            <FlexBox flexDirection="column" mb="1rem" p="0.5rem" border="1px solid #ddd" borderRadius="8px" backgroundColor="#f7eded">
+            <FlexBox
+              flexDirection="column"
+              mb="1rem"
+              p="0.5rem"
+              border="1px solid #ddd"
+              borderRadius="8px"
+              backgroundColor="#f7eded"
+            >
               <Grid container spacing={2} alignItems="center">
                 <Grid item xs={6}>
                   <FlexBox alignItems="center">
-                    <FaTruckFast style={{ fontSize: "24px", color: "#E94560" }} />
-                    <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
-                      <span style={{ color: "#E94560", fontWeight: "600" }}>Delivery Options</span>
+                    <FaTruckFast
+                      style={{ fontSize: "24px", color: "#E94560" }}
+                    />
+                    <label
+                      htmlFor="expressDelivery"
+                      style={{
+                        marginLeft: "0.5rem",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        color: "#333",
+                      }}
+                    >
+                      <span style={{ color: "#E94560", fontWeight: "600" }}>
+                        Delivery Options
+                      </span>
                     </label>
                   </FlexBox>
                 </Grid>
@@ -858,8 +1001,18 @@ export default function CheckoutAddress({ setDeliveryCharge, onAddressChange }) 
                       id="expressDelivery"
                       style={{ cursor: "pointer", accentColor: "#E94560" }}
                     />
-                    <label htmlFor="expressDelivery" style={{ marginLeft: "0.5rem", fontSize: "14px", fontWeight: "500", color: "#333" }}>
-                      <span style={{ color: "#E94560", fontWeight: "600" }}>Express Delivery</span>
+                    <label
+                      htmlFor="expressDelivery"
+                      style={{
+                        marginLeft: "0.5rem",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        color: "#333",
+                      }}
+                    >
+                      <span style={{ color: "#E94560", fontWeight: "600" }}>
+                        Express Delivery
+                      </span>
                     </label>
                   </FlexBox>
                 </Grid>
