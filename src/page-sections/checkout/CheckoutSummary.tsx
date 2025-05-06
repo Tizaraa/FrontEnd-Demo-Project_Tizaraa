@@ -979,8 +979,8 @@ export default function CheckoutSummary({ deliveryCharge }) {
         <Typography color="text.hint">Subtotal:</Typography>
         <FlexBox alignItems="flex-end">
           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-            {/* {currency(savedTotalPrice)} */}
-            {currency(Math.ceil(savedTotalPrice))}
+            {currency(savedTotalPrice)}
+            {/* {currency(Math.ceil(savedTotalPrice))} */}
           </Typography>
         </FlexBox>
       </FlexBox>
