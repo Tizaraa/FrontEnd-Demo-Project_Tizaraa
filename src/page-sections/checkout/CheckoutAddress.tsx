@@ -557,16 +557,12 @@ export default function CheckoutAddress({
   const [loading, setLoading] = useState(false);
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<
     number | null
-  >(null);
+  >(50);
   const [advancePaymentAmount, setAdvancePaymentAmount] = useState<
     number | null
   >(null);
 
-  const handlePaymentOptionSelect = async (percentage: number) => {
-    setSelectedPaymentOption(percentage);
-    setLoading(true); // Start loading
-
-    // Calculate advance payment
+  const handlePaymentOptionSelect = async (percentage) => {
     const selectedProducts = JSON.parse(
       sessionStorage.getItem("selectedProducts") || "[]"
     );
@@ -574,77 +570,50 @@ export default function CheckoutAddress({
       (sum, product) => sum + product.qty * product.price,
       0
     );
+    setSelectedPaymentOption(percentage);
+    setLoading(true);
 
-    if (selectedAddress && totalAmount > 0) {
-      try {
-        const payload = {
-          total_ammount: totalAmount,
-        };
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-        const response = await axios.post(
-          `${ApiBaseUrl.baseUrl}otc/price/percentage?total=${totalAmount}&percentage=${percentage}`,
-          payload,
-          {
-            headers: {
-              Authorization: `Bearer ${authtoken}`,
-            },
-          }
-        );
+    try {
+      const { data } = await axios.post(
+        `${ApiBaseUrl.baseUrl}otc/price/percentage`,
+        { total_ammount: totalAmount },
+        {
+          params: { total: totalAmount, percentage },
+          headers: { Authorization: `Bearer ${authtoken}` },
+          signal: controller.signal,
+        }
+      );
 
-        const newTotal = response.data.newtotal;
-        setAdvancePaymentAmount(newTotal);
-        sessionStorage.setItem("otcAdvancePaymentAmount", newTotal.toString());
-      } catch (error) {
-        console.error("Error calculating advance payment:", error);
-        toast.error("Failed to calculate advance payment");
-      } finally {
-        setLoading(false); // Stop loading in both success and error cases
-      }
-    } else {
-      toast.warning("Please select an address and ensure products are added");
-      setLoading(false); // Stop loading if validation fails
+      // Update state and sessionStorage synchronously
+      setAdvancePaymentAmount(data.newtotal);
+      sessionStorage.setItem(
+        "otcAdvancePaymentAmount",
+        data.newtotal.toString()
+      );
+    } catch (error) {
+      error.name === "AbortError"
+        ? toast.error("Your internet seems slow. Please try again.")
+        : toast.error("Your internet seems slow. Please try again.");
+    } finally {
+      clearTimeout(timeoutId);
+      setLoading(false);
     }
   };
 
-  // const handlePaymentOptionSelect = async (percentage: number) => {
-  //   setSelectedPaymentOption(percentage);
+  // ✅ Trigger 50% advance payment API call on page load
+  useEffect(() => {
+    const selectedProducts = JSON.parse(
+      sessionStorage.getItem("selectedProducts") || "[]"
+    );
+    const hasProducts = selectedProducts.length > 0;
 
-  //   // Calculate advance payment
-  //   const selectedProducts = JSON.parse(
-  //     sessionStorage.getItem("selectedProducts") || "[]"
-  //   );
-  //   const totalAmount = selectedProducts.reduce(
-  //     (sum, product) => sum + product.qty * product.price,
-  //     0
-  //   );
-
-  //   if (selectedAddress && totalAmount > 0) {
-  //     try {
-  //       const payload = {
-  //         total_ammount: totalAmount,
-  //       };
-
-  //       const response = await axios.post(
-  //         `${ApiBaseUrl.baseUrl}otc/price/percentage?total=${totalAmount}&percentage=${percentage}`,
-  //         payload,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${authtoken}`,
-  //           },
-  //         }
-  //       );
-
-  //       const newTotal = response.data.newtotal;
-  //       setAdvancePaymentAmount(newTotal);
-  //       sessionStorage.setItem("otcAdvancePaymentAmount", newTotal.toString());
-  //     } catch (error) {
-  //       console.error("Error calculating advance payment:", error);
-  //       toast.error("Failed to calculate advance payment");
-  //     }
-  //   } else {
-  //     toast.warning("Please select an address and ensure products are added");
-  //   }
-  // };
+    if (hasProducts && selectedPaymentOption === 50) {
+      handlePaymentOptionSelect(50);
+    }
+  }, []); // Empty dependency array to run only on mount
 
   // Fetch provinces data
   const fetchProvince = async () => {
@@ -873,21 +842,6 @@ export default function CheckoutAddress({
               >
                 Select your advance payment from the options below
               </Typography>
-
-              {/* Display Advance Payment Amount */}
-              {/* {advancePaymentAmount !== null && (
-                <Typography
-                  style={{
-                    marginBottom: "1rem",
-                    fontSize: "16px",
-                    color: "#E94560",
-                    fontWeight: "600",
-                  }}
-                >
-                  Advance Payment Amount: BDT&nbsp;
-                  {advancePaymentAmount.toFixed(2)}
-                </Typography>
-              )} */}
 
               <Grid container spacing={2}>
                 {/* Option 1 - 50% */}
