@@ -591,7 +591,12 @@ export default function CheckoutSummary({ deliveryCharge }) {
   //   const deliveryChargeDisplay = deliveryCharge || 0;
   //   const totalPrice = getTotalPrice();
   //   const totalWithDelivery =
-  //     parseFloat(deliveryChargeDisplay) + (isExpressDelivery ? 10 : 0); // Add 10 if Express Delivery is selected
+  //     parseFloat(deliveryChargeDisplay) + (isExpressDelivery ? 10 : 0);
+
+  //   // Check if all products are abroad
+  //   const hasAbroadProduct = state.cart.every(
+  //     (product: any) => product.productType === "Abroad"
+  //   );
 
   //   // Update state and sessionStorage
   //   setSavedTotalPrice(totalPrice);
@@ -604,12 +609,17 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
   //   // Reset discount and newTotal
   //   setDiscount(0);
-  //   setNewTotal(totalPrice + totalWithDelivery);
-  //   sessionStorage.setItem("discount", "0");
-  //   sessionStorage.setItem(
-  //     "newTotal",
-  //     (totalPrice + totalWithDelivery).toString()
-  //   );
+
+  //   // Set newTotal based on product type
+  //   if (hasAbroadProduct) {
+  //     const advancePayment = otcAdvancePaymentAmount || 0;
+  //     setNewTotal(advancePayment);
+  //     sessionStorage.setItem("newTotal", advancePayment.toString());
+  //   } else {
+  //     const regularTotal = totalPrice + totalWithDelivery;
+  //     setNewTotal(regularTotal);
+  //     sessionStorage.setItem("newTotal", regularTotal.toString());
+  //   }
 
   //   // Clear sessionStorage if cart is empty
   //   if (state.cart.length === 0) {
@@ -624,7 +634,13 @@ export default function CheckoutSummary({ deliveryCharge }) {
   //     sessionStorage.removeItem("promoCode");
   //     setPromoCode("");
   //   }
-  // }, [state.cart, state.selectedProducts, deliveryCharge, isExpressDelivery]);
+  // }, [
+  //   state.cart,
+  //   state.selectedProducts,
+  //   deliveryCharge,
+  //   isExpressDelivery,
+  //   otcAdvancePaymentAmount,
+  // ]);
 
   useEffect(() => {
     const getTotalPrice = () => {
@@ -640,15 +656,18 @@ export default function CheckoutSummary({ deliveryCharge }) {
       }, 0);
     };
 
-    const deliveryChargeDisplay = deliveryCharge || 0;
-    const totalPrice = getTotalPrice();
-    const totalWithDelivery =
-      parseFloat(deliveryChargeDisplay) + (isExpressDelivery ? 10 : 0);
-
     // Check if all products are abroad
     const hasAbroadProduct = state.cart.every(
       (product: any) => product.productType === "Abroad"
     );
+
+    // Set delivery charge to 0 if all products are abroad
+    const deliveryChargeDisplay = hasAbroadProduct ? 0 : deliveryCharge || 0;
+
+    const totalPrice = getTotalPrice();
+    const totalWithDelivery =
+      parseFloat(deliveryChargeDisplay.toString()) +
+      (isExpressDelivery && !hasAbroadProduct ? 10 : 0);
 
     // Update state and sessionStorage
     setSavedTotalPrice(totalPrice);
@@ -692,7 +711,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
     deliveryCharge,
     isExpressDelivery,
     otcAdvancePaymentAmount,
-  ]); // Add otcAdvancePaymentAmount to dependencies
+  ]);
 
   const handlePromoCodeChange = (e) => {
     const newPromoCode = e.target.value;

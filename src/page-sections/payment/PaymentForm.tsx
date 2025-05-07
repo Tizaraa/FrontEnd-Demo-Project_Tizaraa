@@ -322,15 +322,28 @@ export default function PaymentForm() {
   // const total_ammount = total;
   // const isSubtotalZero = total_ammount === 0;
 
-  const totalFromNewTotal = parseFloat(
-    sessionStorage.getItem("newTotal") || "0"
+  // Check if all products are abroad
+  const hasAbroadProduct = state.cart.every(
+    (product) => product.productType === "Abroad"
   );
+
+  // For abroad products, use savedTotalPrice instead of newTotal
+  const totalFromNewTotal = hasAbroadProduct
+    ? parseFloat(sessionStorage.getItem("savedTotalPrice") || "0")
+    : parseFloat(sessionStorage.getItem("newTotal") || "0");
+
+  const savedTotalPrice = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
+
+
+
   const total_ammount = totalFromNewTotal - savedShipping;
   const isSubtotalZero = total_ammount === 0;
 
   // promocode & promocode_price get from session storage
   const promocode = sessionStorage.getItem("promoCode");
   const promocode_price = parseFloat(sessionStorage.getItem("discount"));
+
+  const advance_payment_percent = parseFloat(sessionStorage.getItem("selectedPaymentOption"));
 
   const router = useRouter();
 
@@ -387,6 +400,7 @@ export default function PaymentForm() {
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             currency: "BDT",
             total_amount: total_ammount,
+            advance_payment_percent: advance_payment_percent,
             productType: productType,
             payment_type: "Online Payment",
             payment_method: "Online Payment",
@@ -777,9 +791,9 @@ export default function PaymentForm() {
   const selectedProducts = JSON.parse(
     sessionStorage.getItem("selectedProducts") || "[]"
   );
-  const hasAbroadProduct = selectedProducts.some(
-    (product: any) => product.productType === "Abroad"
-  );
+  // const hasAbroadProduct = selectedProducts.some(
+  //   (product: any) => product.productType === "Abroad"
+  // );
 
   return (
     <Fragment>
