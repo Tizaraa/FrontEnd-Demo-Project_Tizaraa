@@ -818,7 +818,7 @@ export default function PaymentForm() {
             }}
           >
             {/* Cash on Delivery */}
-            {/* {!hasAbroadProduct && ( */}
+            {!hasAbroadProduct && (
             <PaymentCheckBox
               mb="1.5rem"
               color="secondary"
@@ -915,7 +915,7 @@ export default function PaymentForm() {
                 </div>
               }
             />
-            {/* )} */}
+            )}
 
             {/* Online Payment */}
             <PaymentCheckBox
