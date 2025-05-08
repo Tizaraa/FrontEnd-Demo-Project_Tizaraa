@@ -603,18 +603,13 @@ export default function CheckoutAddress({
   //   }
   // };
 
-
-
-
-
-
   const handlePaymentOptionSelect = async (percentage) => {
     // Log the selected percentage
     console.log("Selected payment option:", percentage);
-    
+
     // Store the selected percentage in sessionStorage
     sessionStorage.setItem("selectedPaymentOption", percentage.toString());
-  
+
     const selectedProducts = JSON.parse(
       sessionStorage.getItem("selectedProducts") || "[]"
     );
@@ -624,10 +619,10 @@ export default function CheckoutAddress({
     );
     setSelectedPaymentOption(percentage);
     setLoading(true);
-  
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
-  
+
     try {
       const { data } = await axios.post(
         `${ApiBaseUrl.baseUrl}otc/price/percentage`,
@@ -638,7 +633,7 @@ export default function CheckoutAddress({
           signal: controller.signal,
         }
       );
-  
+
       // Update state and sessionStorage synchronously
       setAdvancePaymentAmount(data.newtotal);
       sessionStorage.setItem(
@@ -654,20 +649,6 @@ export default function CheckoutAddress({
       setLoading(false);
     }
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
 
   // ✅ Trigger 50% advance payment API call on page load
   useEffect(() => {
@@ -934,14 +915,16 @@ export default function CheckoutAddress({
                     {/* Linear progress bar at the top */}
                     {loading && selectedPaymentOption === 50 && (
                       <LinearProgress
-                        color="inherit"
-                        style={{
+                        sx={{
                           position: "absolute",
                           top: 0,
                           left: 0,
                           right: 0,
                           height: "2px",
-                          backgroundColor: "rgba(255,255,255,0.3)",
+                          backgroundColor: "rgba(255, 255, 255, 0.3)",
+                          "& .MuiLinearProgress-bar": {
+                            backgroundColor: "white", // Explicitly set the progress bar to white
+                          },
                         }}
                       />
                     )}
@@ -950,8 +933,8 @@ export default function CheckoutAddress({
                       {loading && selectedPaymentOption === 50 ? (
                         <CircularProgress
                           size={20}
-                          style={{
-                            color: "white",
+                          sx={{
+                            color: "white", // Set CircularProgress to white
                             marginRight: "8px",
                           }}
                         />
@@ -1009,16 +992,18 @@ export default function CheckoutAddress({
                     {/* Linear progress bar at the top */}
                     {loading && selectedPaymentOption === 80 && (
                       <LinearProgress
-                        color="inherit"
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          height: "3px",
-                          backgroundColor: "rgba(255,255,255,0.3)",
-                        }}
-                      />
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: "2px",
+                        backgroundColor: "rgba(255, 255, 255, 0.3)",
+                        "& .MuiLinearProgress-bar": {
+                          backgroundColor: "white", // Explicitly set the progress bar to white
+                        },
+                      }}
+                    />
                     )}
 
                     <FlexBox alignItems="center" justifyContent="center">
@@ -1028,7 +1013,7 @@ export default function CheckoutAddress({
                           thickness={5}
                           style={{
                             color: "white",
-                            marginRight: "12px",
+                            marginRight: "8px",
                           }}
                         />
                       ) : (
@@ -1089,16 +1074,18 @@ export default function CheckoutAddress({
                     {/* Linear progress bar at the top */}
                     {loading && selectedPaymentOption === 100 && (
                       <LinearProgress
-                        color="inherit"
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          height: "3px",
-                          backgroundColor: "rgba(255,255,255,0.3)",
-                        }}
-                      />
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: "2px",
+                        backgroundColor: "rgba(255, 255, 255, 0.3)",
+                        "& .MuiLinearProgress-bar": {
+                          backgroundColor: "white", // Explicitly set the progress bar to white
+                        },
+                      }}
+                    />
                     )}
 
                     <FlexBox alignItems="center" justifyContent="center">
@@ -1108,7 +1095,7 @@ export default function CheckoutAddress({
                           thickness={5}
                           style={{
                             color: "white",
-                            marginRight: "12px",
+                            marginRight: "8px",
                           }}
                         />
                       ) : (
