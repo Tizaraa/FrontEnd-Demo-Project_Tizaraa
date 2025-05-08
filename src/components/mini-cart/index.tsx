@@ -727,6 +727,43 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     }, 0);
   };
   
+  // const handleCheckout = () => {
+  //   // Get selected items from the cart
+  //   const selectedItems = state.cart.filter((item) =>
+  //     state.selectedProducts.includes(item.id)
+  //   );
+  
+  //   // Check if there are no selected items
+  //   if (selectedItems.length === 0) {
+  //     toast.error("Please select products to checkout");
+  //     return;
+  //   }
+  
+  //   // Start the loading process
+  //   setLoading(true);
+  
+  //   // Save selected items to localStorage
+  //   const checkoutData = JSON.stringify(selectedItems);
+  //   sessionStorage.setItem("selectedProducts", checkoutData);
+  
+  //   if (isLoggedIn) {
+  //     // Redirect to checkout if logged in
+  //     setTimeout(() => {
+  //       router.push("/checkout");
+  //       setLoading(false); // Reset loading state after navigation
+  //       toggleSidenav();
+  //     }, 1000); // Adjust delay as needed
+  //   } else {
+  //     // Redirect to login if not logged in
+  //     setTimeout(() => {
+  //       router.push("/login");
+  //       setLoading(false); // Reset loading state after navigation
+  //     }, 1000); // Adjust delay as needed
+  //   }
+  // };
+  
+
+
   const handleCheckout = () => {
     // Get selected items from the cart
     const selectedItems = state.cart.filter((item) =>
@@ -739,7 +776,24 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
       return;
     }
   
-    // Start the loading process
+    // Check for minimum order value for Abroad products
+    const hasAbroadProducts = selectedItems.some(
+      (item) => item.productType === "Abroad"
+    );
+    const totalPrice = getTotalPrice();
+  
+    if (hasAbroadProducts && totalPrice < 1000) {
+      toast.error(
+        <div>
+          Minimum Order value <strong style={{ color: "#E94560" }}>BDT 1000</strong> for international products
+        </div>,
+        {
+          position: "top-center",
+        }
+      );
+      return;
+    }
+  
     setLoading(true);
   
     // Save selected items to localStorage
@@ -747,21 +801,18 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     sessionStorage.setItem("selectedProducts", checkoutData);
   
     if (isLoggedIn) {
-      // Redirect to checkout if logged in
       setTimeout(() => {
         router.push("/checkout");
-        setLoading(false); // Reset loading state after navigation
+        setLoading(false);
         toggleSidenav();
-      }, 1000); // Adjust delay as needed
+      }, 1000);
     } else {
-      // Redirect to login if not logged in
       setTimeout(() => {
         router.push("/login");
-        setLoading(false); // Reset loading state after navigation
-      }, 1000); // Adjust delay as needed
+        setLoading(false);
+      }, 1000);
     }
   };
-  
 
   const handleSelectAll = () => {
     if (selectAll) {

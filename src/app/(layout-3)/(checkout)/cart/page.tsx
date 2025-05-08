@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 // import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
-import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
 import Image from "next/image";
 import NextImage from "@component/NextImage";
 
@@ -30,12 +30,13 @@ export default function Cart() {
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
   const [checkoutError, setCheckoutError] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
-  const [selectedProducts, setSelectedProducts] = useState<(string | number)[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<(string | number)[]>(
+    []
+  );
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
-
 
   useEffect(() => {
     setIsLoggedIn(authService.isAuthenticated());
@@ -44,15 +45,13 @@ export default function Cart() {
   useEffect(() => {
     setSelectAll(
       state.cart.length > 0 &&
-      state.cart.every((item) => state.selectedProducts.includes(item.id))
+        state.cart.every((item) => state.selectedProducts.includes(item.id))
     );
   }, [state.cart, state.selectedProducts]);
-  
+
   if (!state.buyNowItem) {
     return null; // Or some other fallback
   }
-  
-
 
   const handleSelectAll = () => {
     if (selectAll) {
@@ -84,7 +83,6 @@ export default function Cart() {
       sessionStorage.removeItem("savedTotalPrice");
       sessionStorage.removeItem("savedTotalWithDelivery");
 
-
       dispatch({ type: "DESELECT_ALL_PRODUCTS" });
 
       toast.success("Selected items deleted successfully");
@@ -113,53 +111,111 @@ export default function Cart() {
           item.sizeColor?.nosize?.length === 0 && item.discountPrice
             ? item.discountPrice
             : item.price;
-  
+
         return accumulator + price * item.qty;
       }
       return accumulator;
     }, 0);
   };
 
+  // const handleCheckout = async () => {
+  //   setIsLoading(true); // Show loading spinner immediately when the button is clicked
+
+  //   if (!isLoggedIn) {
+  //     // Redirect to login page if not logged in
+  //     await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading delay
+  //     router.push("/login");
+  //     return; // Exit function, no need to reset loading here
+  //   }
+
+  //   const selectedItems = state.cart.filter((item) =>
+  //     state.selectedProducts.includes(item.id)
+  //   );
+
+  //   if (selectedItems.length === 0) {
+  //     toast.error("Please select products to checkout");
+  //     setIsLoading(false); // Reset loading state if no products are selected
+  //     return;
+  //   }
+
+  //   const checkoutData = JSON.stringify(selectedItems);
+  //   sessionStorage.setItem("selectedProducts", checkoutData);
+
+  //   const totalPrice = getTotalPrice();
+
+  //   if (totalPrice === 0) {
+  //     toast.error("Total price is 0. Please add items to your cart.");
+  //     setIsLoading(false); // Reset loading state if total price is 0
+  //     return;
+  //   }
+
+  //   const isError = selectedItems.some(item => item.qty <= 0);
+  //   if (isError) {
+  //     setCheckoutError(true);
+  //     setIsLoading(false); // Reset loading state if there's an error
+  //     return;
+  //   }
+
+  //   await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading delay
+  //   router.push("/checkout"); // Redirect to checkout page
+  // };
+
   const handleCheckout = async () => {
-    setIsLoading(true); // Show loading spinner immediately when the button is clicked
-  
+    setIsLoading(true);
+
     if (!isLoggedIn) {
-      // Redirect to login page if not logged in
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       router.push("/login");
-      return; // Exit function, no need to reset loading here
+      return;
     }
-  
+
     const selectedItems = state.cart.filter((item) =>
       state.selectedProducts.includes(item.id)
     );
-  
+
     if (selectedItems.length === 0) {
       toast.error("Please select products to checkout");
-      setIsLoading(false); // Reset loading state if no products are selected
+      setIsLoading(false);
       return;
     }
-  
-    const checkoutData = JSON.stringify(selectedItems);
-    sessionStorage.setItem("selectedProducts", checkoutData);
-  
+
+    // Check for minimum order value for Abroad products
+    const hasAbroadProducts = selectedItems.some(
+      (item) => item.productType === "Abroad"
+    );
     const totalPrice = getTotalPrice();
-  
+
+    if (hasAbroadProducts && totalPrice < 1000) {
+      toast.error(
+        <div>
+          Minimum Order value <strong style={{ color: "#E94560" }}>BDT 1000</strong> for international products
+        </div>,
+        {
+          position: "top-center",
+        }
+      );
+      setIsLoading(false);
+      return;
+    }
+
     if (totalPrice === 0) {
       toast.error("Total price is 0. Please add items to your cart.");
-      setIsLoading(false); // Reset loading state if total price is 0
+      setIsLoading(false);
       return;
     }
-  
-    const isError = selectedItems.some(item => item.qty <= 0);
+
+    const isError = selectedItems.some((item) => item.qty <= 0);
     if (isError) {
       setCheckoutError(true);
-      setIsLoading(false); // Reset loading state if there's an error
+      setIsLoading(false);
       return;
     }
-  
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading delay
-    router.push("/checkout"); // Redirect to checkout page
+
+    const checkoutData = JSON.stringify(selectedItems);
+    sessionStorage.setItem("selectedProducts", checkoutData);
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    router.push("/checkout");
   };
 
   useEffect(() => {
@@ -180,132 +236,148 @@ export default function Cart() {
 
   return (
     <>
-     {/* Background image */}
-     <NextImage
-  alt="newArrivalBanner"
-  src={tizaraa_watermark}
-  priority
-  style={{
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -25%)",
-    width: "100%", // Set to 100% to ensure full responsiveness
-    height: "auto", // Maintain aspect ratio
-    maxWidth: "1200px", // Optional: Limit the maximum width
-    backgroundSize: "contain", // Adjust the scaling behavior
-    backgroundPosition: "center",
-    opacity: 0.1,
-    zIndex: 0,
-  }}
-/>
+      {/* Background image */}
+      <NextImage
+        alt="newArrivalBanner"
+        src={tizaraa_watermark}
+        priority
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -25%)",
+          width: "100%", // Set to 100% to ensure full responsiveness
+          height: "auto", // Maintain aspect ratio
+          maxWidth: "1200px", // Optional: Limit the maximum width
+          backgroundSize: "contain", // Adjust the scaling behavior
+          backgroundPosition: "center",
+          opacity: 0.1,
+          zIndex: 0,
+        }}
+      />
 
-     <main
-    style={{
-      position: "relative",
-      background: "none",
-    }}
-  >
-    <Fragment>
-      <Grid container spacing={6}>
-        <Grid item lg={8} md={8} xs={12}>
-          <Card1 mb="1.5rem">
-            <FlexBox alignItems="center" justifyContent="space-between">
-              <FlexBox alignItems="center">
-                <CheckBox checked={selectAll} onChange={handleSelectAll} />
-                <Typography ml="0.5rem">Select All</Typography>
-              </FlexBox>
-              <Button
-      size="small"
-      color="primary"
-      variant="outlined"
-      disabled={
-        state.selectedProducts.length === 0 ||
-        state.cart.length === 0 ||
-        totalPrice === 0 ||
-        isDeleting
-      }
-      onClick={handleDeleteSelected}
-      className={`delete-button ${isDeleting ? "deleting" : ""}`}
-    >
-      {isDeleting ? (
-        <BeatLoader size={18} color="#E94560" />
-      ) : (
-        <>
-          <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} /> Remove All
-        </>
-      )}
-    </Button>
-            </FlexBox>
-          </Card1>          
-          {state.cart.map((item) => (
-            <ProductCard7
-              mb="1.5rem"
-              id={item.id}
-              key={item.id}
-              qty={item.qty}
-              slug={item.slug}
-              name={item.name}
-              price={item.price}
-              // imgUrl={item.imgUrl}
-              imgUrl={
-                item.productType === "Abroad"
-                  ? item.imgUrl 
-                  : `${ApiBaseUrl.ImgUrl}${item.imgUrl}` 
-              }
-              productStock={item.productStock}
-              discountPrice={item.discountPrice}
-              productId={item.productId}
-              sellerId={item.sellerId}
-              b2bPricing={item.b2bPricing}
-              total_amount={item.total_amount}
-              sizeColor={item.sizeColor}
-              selectedSize={item.selectedSize}
-              selectedColor={item.selectedColor}
-            />
-          ))}
-        </Grid>
+      <main
+        style={{
+          position: "relative",
+          background: "none",
+        }}
+      >
+        <Fragment>
+          <Grid container spacing={6}>
+            <Grid item lg={8} md={8} xs={12}>
+              <Card1 mb="1.5rem">
+                <FlexBox alignItems="center" justifyContent="space-between">
+                  <FlexBox alignItems="center">
+                    <CheckBox checked={selectAll} onChange={handleSelectAll} />
+                    <Typography ml="0.5rem">Select All</Typography>
+                  </FlexBox>
+                  <Button
+                    size="small"
+                    color="primary"
+                    variant="outlined"
+                    disabled={
+                      state.selectedProducts.length === 0 ||
+                      state.cart.length === 0 ||
+                      totalPrice === 0 ||
+                      isDeleting
+                    }
+                    onClick={handleDeleteSelected}
+                    className={`delete-button ${isDeleting ? "deleting" : ""}`}
+                  >
+                    {isDeleting ? (
+                      <BeatLoader size={18} color="#E94560" />
+                    ) : (
+                      <>
+                        <DeleteIcon
+                          style={{ marginRight: "8px", fontSize: "18px" }}
+                        />{" "}
+                        Remove All
+                      </>
+                    )}
+                  </Button>
+                </FlexBox>
+              </Card1>
+              {state.cart.map((item) => (
+                <ProductCard7
+                  mb="1.5rem"
+                  id={item.id}
+                  key={item.id}
+                  qty={item.qty}
+                  slug={item.slug}
+                  name={item.name}
+                  price={item.price}
+                  // imgUrl={item.imgUrl}
+                  imgUrl={
+                    item.productType === "Abroad"
+                      ? item.imgUrl
+                      : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+                  }
+                  productStock={item.productStock}
+                  discountPrice={item.discountPrice}
+                  productId={item.productId}
+                  sellerId={item.sellerId}
+                  b2bPricing={item.b2bPricing}
+                  total_amount={item.total_amount}
+                  sizeColor={item.sizeColor}
+                  selectedSize={item.selectedSize}
+                  selectedColor={item.selectedColor}
+                />
+              ))}
+            </Grid>
 
-        <Grid item lg={4} md={4} xs={12}>
-          <Card1>
-            <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-              <Typography color="gray.600">Total:</Typography>
-              <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-                {currency(totalPrice)}
-              </Typography>
-            </FlexBox>
+            <Grid item lg={4} md={4} xs={12}>
+              <Card1>
+                <FlexBox
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb="1rem"
+                >
+                  <Typography color="gray.600">Total:</Typography>
+                  <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+                    {currency(totalPrice)}
+                  </Typography>
+                </FlexBox>
 
-            <Divider mb="1rem" />
+                <Divider mb="1rem" />
 
-            {/* <Link href="/checkout" passHref> */}
-              <Button
-                variant="contained"
-                color="primary"
-                fullwidth
-                onClick={handleCheckout}
-                disabled={isLoading || state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0}
-              >
-                {isLoading ? <BeatLoader size={18} color="#E94560" /> : "PROCEED TO CHECKOUT"}
-              </Button>
-            {/* </Link> */}
-          </Card1>
-        </Grid>
-      </Grid>
-      <style jsx>{`
-        .delete-button {
-          transition: all 0.3s ease;
-        }
-        .delete-button.deleting {
-          opacity: 0.5;
-          pointer-events: none;
-        }
-        .delete-button:hover {
-          background-color: #f44336;
-          color: white;
-        }
-      `}</style>
-    </Fragment>
-  </main>
+                {/* <Link href="/checkout" passHref> */}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullwidth
+                  onClick={handleCheckout}
+                  disabled={
+                    isLoading ||
+                    state.selectedProducts.length === 0 ||
+                    state.cart.length === 0 ||
+                    totalPrice === 0
+                  }
+                >
+                  {isLoading ? (
+                    <BeatLoader size={18} color="#E94560" />
+                  ) : (
+                    "PROCEED TO CHECKOUT"
+                  )}
+                </Button>
+                {/* </Link> */}
+              </Card1>
+            </Grid>
+          </Grid>
+          <style jsx>{`
+            .delete-button {
+              transition: all 0.3s ease;
+            }
+            .delete-button.deleting {
+              opacity: 0.5;
+              pointer-events: none;
+            }
+            .delete-button:hover {
+              background-color: #f44336;
+              color: white;
+            }
+          `}</style>
+        </Fragment>
+      </main>
     </>
   );
 }
