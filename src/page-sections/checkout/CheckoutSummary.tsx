@@ -929,6 +929,9 @@ export default function CheckoutSummary({ deliveryCharge }) {
     (product: any) => product.productType === "Abroad"
   );
 
+  // Get selectedPaymentOption from sessionStorage for Pay Now (Advance)
+  const selectedPaymentOption = sessionStorage.getItem("selectedPaymentOption");
+
   return (
     <Card1>
       {state.cart.map((item) => (
@@ -1006,7 +1009,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
       {hasAbroadProduct && (
         <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-          <Typography color="#E94560">Pay Now (Advance):</Typography>
+          <Typography color="#E94560">Pay Now ({selectedPaymentOption}%):</Typography>
           <FlexBox alignItems="flex-end">
             <Typography
               color="#E94560"
