@@ -371,6 +371,7 @@ export default function OrderDetails({ params }: IDParams) {
               justifyContent="space-between"
               alignItems="center"
               mb="0.5rem"
+              fontWeight="bold"
             >
               <Typography fontSize="14px" color="text.hint">
                 Subtotal:
@@ -386,6 +387,7 @@ export default function OrderDetails({ params }: IDParams) {
               color="#16A34A"
               alignItems="center"
               mb="0.5rem"
+              fontWeight="bold"
             >
               <Typography fontSize="14px">
                 Advance Paid ({order?.Order?.amount_percentage}%):
@@ -401,6 +403,7 @@ export default function OrderDetails({ params }: IDParams) {
               alignItems="center"
               mb="0.5rem"
               color="#E94560"
+              fontWeight="bold"
             >
               <Typography fontSize="14px">Due:</Typography>
               <Typography fontSize="14px">
@@ -424,7 +427,7 @@ export default function OrderDetails({ params }: IDParams) {
               justifyContent="space-between"
               alignItems="center"
               mb="1rem"
-              fontWeight="500"
+              fontWeight="bold"
             >
               <Typography variant="h6">Total Paid</Typography>
               <Typography variant="h6">
@@ -433,7 +436,7 @@ export default function OrderDetails({ params }: IDParams) {
               </Typography>
             </FlexBox>
 
-            <FlexBox alignItems="center" mb="1rem">
+            {/* <FlexBox alignItems="center" mb="1rem">
               Payment Method:
               <H6
                 my="0px"
@@ -453,15 +456,165 @@ export default function OrderDetails({ params }: IDParams) {
               <H6
                 my="0px"
                 mx="1rem"
-                backgroundColor="rgba(255,225,230,1)"
+                backgroundColor={
+                  order?.Order?.amount_percentage === 100
+                    ? "rgba(200, 255, 200, 1)" // greenish for Paid
+                    : order?.Order?.amount_percentage > 0
+                    ? "rgba(255, 250, 200, 1)" // yellowish for Partial Paid
+                    : "rgba(255,225,230,1)" // reddish for Unpaid
+                }
                 p="5px"
                 px="10px"
                 borderRadius="1rem"
-                color="rgb(233, 69, 96)"
+                color={
+                  order?.Order?.amount_percentage === 100
+                    ? "green"
+                    : order?.Order?.amount_percentage > 0
+                    ? "orange"
+                    : "rgb(233, 69, 96)"
+                }
               >
-                {order?.Order?.payment_status}
+                {order?.Order?.amount_percentage === 100
+                  ? "Paid"
+                  : order?.Order?.amount_percentage > 0
+                  ? "Partial Paid"
+                  : "Unpaid"}
               </H6>
+            </FlexBox> */}
+
+            <FlexBox
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: "24px",
+                marginBottom: "32px",
+              }}
+            >
+              {/* Payment Method Card */}
+              <Box
+                style={{
+                  flex: 1,
+                  minWidth: "280px",
+                  padding: "28px",
+                  borderRadius: "20px",
+                  backgroundColor: "#FFF5F7",
+                  boxShadow: "0 12px 24px rgba(0, 0, 0, 0.08)",
+                  transition: "all 0.3s ease-in-out",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "12px",
+                }}
+              >
+                <Typography
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: "600",
+                    color: "#E94560",
+                  }}
+                >
+                  Payment Method
+                </Typography>
+                <Typography
+                  style={{
+                    fontSize: "16px",
+                    backgroundColor: "#FECACA",
+                    color: "#B91C1C",
+                    padding: "10px 16px",
+                    borderRadius: "999px",
+                    fontWeight: "bold",
+                    width: "fit-content",
+                  }}
+                >
+                  {order?.Order?.payment_method || "N/A"}
+                </Typography>
+              </Box>
+
+              {/* Payment Status Card */}
+              <Box
+                style={{
+                  flex: 1,
+                  minWidth: "280px",
+                  padding: "28px",
+                  borderRadius: "20px",
+                  backgroundColor:
+                    order?.Order?.amount_percentage === 100
+                      ? "#ECFDF5"
+                      : order?.Order?.amount_percentage > 0
+                      ? "#FFFBEB"
+                      : "#FFF1F2",
+                  boxShadow: "0 12px 24px rgba(0, 0, 0, 0.08)",
+                  transition: "all 0.3s ease-in-out",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "12px",
+                }}
+              >
+                <Typography
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: "600",
+                    color:
+                      order?.Order?.amount_percentage === 100
+                        ? "#047857"
+                        : order?.Order?.amount_percentage > 0
+                        ? "#B45309"
+                        : "#DC2626",
+                  }}
+                >
+                  Payment Status
+                </Typography>
+                <Typography
+                  style={{
+                    fontSize: "16px",
+                    backgroundColor:
+                      order?.Order?.amount_percentage === 100
+                        ? "#BBF7D0"
+                        : order?.Order?.amount_percentage > 0
+                        ? "#FEF3C7"
+                        : "#FECACA",
+                    color:
+                      order?.Order?.amount_percentage === 100
+                        ? "#065F46"
+                        : order?.Order?.amount_percentage > 0
+                        ? "#92400E"
+                        : "#B91C1C",
+                    padding: "10px 16px",
+                    borderRadius: "999px",
+                    fontWeight: "bold",
+                    width: "fit-content",
+                  }}
+                >
+                  {order?.Order?.amount_percentage === 100
+                    ? "Paid"
+                    : order?.Order?.amount_percentage > 0
+                    ? "Partial Paid"
+                    : "Unpaid"}
+                </Typography>
+              </Box>
             </FlexBox>
+
+            <Box
+              backgroundColor="rgba(240, 248, 255, 0.8)"
+              borderLeft="4px solid rgb(233, 69, 96)"
+              borderRight="4px solid rgb(233, 69, 96)"
+              p="10px"
+              borderRadius="0.5rem"
+              fontSize="14px"
+              color="#333"
+              fontWeight="500"
+            >
+              <FlexBox alignItems="flex-start">
+                <Box mr="8px" fontSize="18px" lineHeight="1.5">
+                  📦
+                </Box>
+                <Box flex="1">
+                  Shipping & Courier Charge will be calculated based on actual
+                  weight & dimensions when the product is in-house by{" "}
+                  <strong>Tizaraa</strong>.
+                </Box>
+              </FlexBox>
+            </Box>
           </Box>
         )}
       </Box>
