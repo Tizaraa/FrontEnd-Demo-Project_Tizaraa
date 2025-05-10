@@ -21,7 +21,6 @@
 //   );
 // }
 
-
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -37,16 +36,30 @@ export default function EditProfileButton() {
 
   return (
     <FlexBox style={{ gap: "1rem" }}>
-      <Button color="primary" bg="primary.light" px="2rem" onClick={() => push("/profile/edit")}>
+      {/* Blue Edit Profile Button */}
+      <Button
+        style={{
+          backgroundColor: "#357EE2",
+          color: "#ffffff",
+        }}
+        onClick={() => push("/profile/edit")}
+      >
         Edit Profile
       </Button>
 
-      
+      {/* Orange Change Password Button */}
       {status !== 2 && (
-        <Button color="primary" bg="primary.light" px="2rem" onClick={() => push("/profile/set-password")}>
+        <Button
+        style={{
+          backgroundColor: "#FF7870",
+          color: "#ffffff",
+        }}
+          onClick={() => push("/profile/set-password")}
+        >
           Change Password
         </Button>
       )}
     </FlexBox>
   );
 }
+
