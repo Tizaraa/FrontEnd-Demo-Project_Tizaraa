@@ -568,15 +568,15 @@ export default function OrderDetails({ params }: IDParams) {
                   style={{
                     fontSize: "16px",
                     backgroundColor:
-                      order?.Order?.amount_percentage === 100
+                      order?.Order?.amount_percentage === "100"
                         ? "#BBF7D0"
-                        : order?.Order?.amount_percentage > 0
+                        : order?.Order?.amount_percentage > "0"
                         ? "#FEF3C7"
                         : "#FECACA",
                     color:
-                      order?.Order?.amount_percentage === 100
+                      order?.Order?.amount_percentage === "100"
                         ? "#065F46"
-                        : order?.Order?.amount_percentage > 0
+                        : order?.Order?.amount_percentage > "0"
                         ? "#92400E"
                         : "#B91C1C",
                     padding: "10px 16px",
@@ -585,9 +585,9 @@ export default function OrderDetails({ params }: IDParams) {
                     width: "fit-content",
                   }}
                 >
-                  {order?.Order?.amount_percentage === 100
+                  {order?.Order?.amount_percentage === "100"
                     ? "Paid"
-                    : order?.Order?.amount_percentage > 0
+                    : order?.Order?.amount_percentage > "0"
                     ? "Partial Paid"
                     : "Unpaid"}
                 </Typography>
