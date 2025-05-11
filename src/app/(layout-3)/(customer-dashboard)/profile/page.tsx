@@ -480,11 +480,22 @@ export default function Profile() {
                 style={{ gap: "0.75rem", marginBottom: "1rem" }}
               >
                 <FontAwesomeIcon icon={faEnvelope} size="lg" color="#6b7280" />
-                <Typography color="#4b5563">{profile?.email}</Typography>
+                <a
+                  href={`mailto:${profile?.email}`}
+                  style={{ color: "#4b5563", textDecoration: "none" }}
+                >
+                  <Typography color="#4b5563">{profile?.email}</Typography>
+                </a>
               </FlexBox>
+
               <FlexBox alignItems="center" style={{ gap: "0.75rem" }}>
                 <FontAwesomeIcon icon={faPhone} size="lg" color="#6b7280" />
-                <Typography color="#4b5563">{profile?.phone}</Typography>
+                <a
+                  href={`tel:${profile?.phone}`}
+                  style={{ color: "#4b5563", textDecoration: "none" }}
+                >
+                  <Typography color="#4b5563">{profile?.phone}</Typography>
+                </a>
               </FlexBox>
             </Card>
           </Grid>
