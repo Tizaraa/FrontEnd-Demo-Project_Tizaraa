@@ -1024,19 +1024,25 @@ export default function OtProductsIntro({
     });
   };
 
-  function getItemSize(item: ConfiguredItem, Attributes: Attribute[], selectedSize: string): string {
+  function getItemSize(
+    item: ConfiguredItem,
+    Attributes: Attribute[],
+    selectedSize: string
+  ): string {
     // Try to find a size attribute in the item's configurators
     for (const config of item.Configurators) {
-      const attribute = Attributes.find(attr => attr.Vid === config.Vid);
-      if (attribute && 
-          (attribute.PropertyName.toLowerCase().includes('size') || 
-           attribute.OriginalPropertyName.toLowerCase().includes('size'))) {
+      const attribute = Attributes.find((attr) => attr.Vid === config.Vid);
+      if (
+        attribute &&
+        (attribute.PropertyName.toLowerCase().includes("size") ||
+          attribute.OriginalPropertyName.toLowerCase().includes("size"))
+      ) {
         return attribute.Value;
       }
     }
-    
+
     // If no size attribute found in configurators, return the selectedSize
-    return selectedSize || '';
+    return selectedSize || "";
   }
 
   return (
@@ -1044,7 +1050,7 @@ export default function OtProductsIntro({
       <Grid container justifyContent="center" spacing={16}>
         <Grid item md={6} xs={12} alignItems="center">
           <div>
-            <FlexBox
+            {/* <FlexBox
               mb="50px"
               overflow="hidden"
               borderRadius={16}
@@ -1054,7 +1060,53 @@ export default function OtProductsIntro({
                 width={200}
                 height={200}
                 src={selectedImage || images[0]}
-                style={{ display: "block", width: "70%", height: "auto" }}
+                style={{ display: "block", width: "100%", height: "auto" }}
+              />
+            </FlexBox> */}
+
+            <FlexBox
+              mb="50px"
+              overflow="hidden"
+              borderRadius={16}
+              justifyContent="center"
+              style={{ position: "relative" }}
+            >
+              {/* Branded Badge */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  left: 10,
+                  background: "rgb(233, 69, 96)",
+                  color: "#fff",
+                  padding: "10px 18px",
+                  borderRadius: "999px",
+                  fontSize: "14px",
+                  fontWeight: 700,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  boxShadow:
+                    "0 8px 20px rgba(233, 69, 96, 0.5), 0 0 8px rgba(255, 255, 255, 0.3)",
+                  animation: "pulse 2s infinite",
+                  textShadow: "1px 1px 3px rgba(0, 0, 0, 0.3)",
+                  cursor: "pointer",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                }}
+                title="This item is shipped from abroad. Delivery might take longer than local items."
+              >
+                <span role="img" aria-label="plane">
+                  🛫
+                </span>{" "}
+                Ships from Abroad
+              </div>
+
+              {/* Product Image */}
+              <Image
+                width={200}
+                height={200}
+                src={selectedImage || images[0]}
+                style={{ display: "block", width: "100%", height: "auto" }}
               />
             </FlexBox>
 
@@ -1064,9 +1116,10 @@ export default function OtProductsIntro({
                   key={ind}
                   size={70}
                   bg="white"
+                  marginRight="5px"
                   display="flex"
                   cursor="pointer"
-                  border="1px solid"
+                  border="2px solid"
                   borderRadius="10px"
                   alignItems="center"
                   justifyContent="center"
@@ -1086,14 +1139,37 @@ export default function OtProductsIntro({
           <H3 mb="1rem">{title}</H3>
 
           <FlexBox alignItems="center" mb="1rem">
-            <Box ml="8px" mr="8px">
+            <Box mr="8px">
               {rating > 0 && (
-                <Rating value={rating} outof={5} color="warn" readOnly />
+                <Rating value={rating} outof={5} color="warn" readOnly size="medium" />
               )}
+
+              {/* Ships from Abroad Badge */}
+              <Box
+                mt="0.5rem"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  background: "linear-gradient(135deg, #007bff, #00c6ff)", // smooth blue gradient
+                  color: "#fff",
+                  padding: "6px 14px",
+                  borderRadius: "5px",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  gap: "6px",
+                  animation: "pulse 2s infinite",
+                  textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  cursor: "pointer",
+                }}
+                
+              >
+                🛫 Ships from Abroad
+              </Box>
             </Box>
           </FlexBox>
 
-          <Box mb="24px">
+          <Box mb="5px">
             <FlexBox alignItems="center">
               {!configuredItems.some((item) => item.QuantityRanges?.length) && (
                 <H3 color="primary.main" mb="4px" lineHeight="1">
@@ -1127,7 +1203,7 @@ export default function OtProductsIntro({
                 </Chip>
               )}
             </FlexBox>
-            <SemiSpan color="inherit">
+            {/* <SemiSpan color="inherit">
               {selectedRowId
                 ? getSelectedRowQuantity() > 0
                   ? "Stock Available"
@@ -1135,10 +1211,10 @@ export default function OtProductsIntro({
                 : productStock > 0
                 ? "Stock Available"
                 : "Stock Out"}
-            </SemiSpan>
+            </SemiSpan> */}
           </Box>
 
-          <div style={{ display: "flex", gap: "10px", marginBottom: "5px" }}>
+          <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
             {pricingTiers &&
               pricingTiers.length > 0 &&
               pricingTiers.map((tier, index) => {
@@ -1161,12 +1237,12 @@ export default function OtProductsIntro({
                   <div
                     key={index}
                     style={{
-                      background: isActiveTier ? "#e74c3ca3" : "#f5f5f5",
+                      background: isActiveTier ? "#e74c3ca3" : "#ddd",
                       color: "black",
                       padding: "15px",
                       borderRadius: "8px",
                       textAlign: "center",
-                      width: "120px",
+                      width: "130px",
                       border: isActiveTier ? "2px solid #e74c3c" : "none",
                     }}
                   >
@@ -1174,7 +1250,7 @@ export default function OtProductsIntro({
                       {tier.Price.CurrencySign}
                       {tier.Price.ConvertedPriceWithoutSign}
                     </div>
-                    <div style={{ fontSize: "12px", marginTop: "5px" }}>
+                    <div style={{ fontSize: "14px", marginTop: "5px" }}>
                       {tier.MinQuantity} or More
                     </div>
                   </div>
@@ -1379,7 +1455,11 @@ export default function OtProductsIntro({
                                 sizeColor={sizeColor}
                                 selectedColor={getSelectedColor(item)}
                                 // selectedSize={selectedSize}
-                                selectedSize={getItemSize(item, Attributes, selectedSize)}
+                                selectedSize={getItemSize(
+                                  item,
+                                  Attributes,
+                                  selectedSize
+                                )}
                                 selectedPrice={getDisplayPrice(
                                   item,
                                   currentQuantity
@@ -1389,12 +1469,13 @@ export default function OtProductsIntro({
                               />
                               <span
                                 style={{
-                                  fontSize: "14px",
-                                  fontWeight: "bold",
+                                  fontSize: "12px",
+                                  // fontWeight: "bold",
+                                  color:"#555",
                                   marginTop: "-40px",
                                 }}
                               >
-                                {item.Quantity}
+                                In Stock: <strong>{item.Quantity}</strong>
                               </span>
                             </div>
                           </td>

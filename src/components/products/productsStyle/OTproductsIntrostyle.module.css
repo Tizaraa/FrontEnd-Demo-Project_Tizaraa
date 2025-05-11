@@ -36,7 +36,7 @@
   
   /* When the button is selected */
   .getButtonStyleSelected {
-    border: 1px solid #0ea5e9;
+    border: 2px solid rgb(233, 69, 96);
     color: #0ea5e9;
   }
   
@@ -46,8 +46,8 @@
   
   /* Table styles */
   .tableContainerStyle {
-    max-height: 250px;
-    overflow-y: auto;
+    /* max-height: 250px; */
+    /* overflow-y: auto; */
     margin-bottom: 20px;
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;
@@ -68,9 +68,9 @@
   }
   
   .tableHeaderCellStyle {
-    text-align: left;
+    text-align: center;
     padding: 0.75rem 1rem;
-    font-weight: 500;
+    font-weight: bold;
     color: #374151;
   }
   
@@ -82,6 +82,7 @@
   .tableCellStyle {
     padding: 10px;
     border: 1px solid #ddd;
+    text-align: center;
   }
   
   .priceContainerStyle {
