@@ -179,7 +179,7 @@ export default function WriteReview({
     setShowOrderStatus((prev) => !prev); // Toggle the state
   };
 
-  console.log("item");
+  console.log("item-->", item.productType);
   console.log(item);
 
   // Conditionally Handle Image URL for product image for General and Abroad products
@@ -205,11 +205,33 @@ export default function WriteReview({
         style={{ display: "flex", justifyContent: "space-between" }}
       >
         <div>
-          <Link href={`/product/${item.product_slug}`}>
+          {/* <Link href={`/product/${item.product_slug}`}>
             <FlexBox flex="2 2 260px" m="6px" alignItems="center">
               <Avatar
                 // src={item.product_image}
                 // src={`${ApiBaseUrl.ImgUrl}${item.product_image}`}
+                src={getProductImageUrl(item.product_image)}
+                alt={item.product_image}
+                size={64}
+              />
+              <Box ml="20px">
+                <H6 my="0px">{item.product_name}</H6>
+                <Typography fontSize="14px" color="text.muted">
+                  {currency(item.price)} x {item.quantity}
+                  {item.color && `, Color: ${item.color}`}
+                  {item.size && `, Size: ${item.size}`}
+                </Typography>
+              </Box>
+            </FlexBox>
+          </Link> */}
+
+          <Link
+            href={`/${
+              item.product_image?.startsWith("https") ? "otproducts" : "product"
+            }/${item.product_slug}`}
+          >
+            <FlexBox flex="2 2 260px" m="6px" alignItems="center">
+              <Avatar
                 src={getProductImageUrl(item.product_image)}
                 alt={item.product_image}
                 size={64}
