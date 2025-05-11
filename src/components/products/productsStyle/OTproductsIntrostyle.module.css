@@ -46,8 +46,8 @@
   
   /* Table styles */
   .tableContainerStyle {
-    /* max-height: 250px; */
-    /* overflow-y: auto; */
+    max-height: 250px;
+    overflow-y: auto;
     margin-bottom: 20px;
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;

@@ -394,7 +394,7 @@ export default function OrderDetails({ params }: IDParams) {
               </Typography>
               <Typography fontSize="14px">
                 {/* {currency(order?.Order?.items?.order_items?.[0]?.price || 0)} */}
-                {currency(order?.Order?.amount || 0)}
+                {currency(order?.Order?.amount - order?.Order?.delivery_charge || 0)}
               </Typography>
             </FlexBox>
 
