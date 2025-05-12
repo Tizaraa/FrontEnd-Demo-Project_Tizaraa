@@ -32,6 +32,8 @@ import {
 import { Chip } from "@component/Chip";
 import authService from "services/authService";
 import { useRouter } from "next/navigation";
+import { Tooltip } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 // import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 const LoaderWrapper = styled.div`
@@ -394,22 +396,54 @@ export default function OrderDetails({ params }: IDParams) {
               </Typography>
               <Typography fontSize="14px">
                 {/* {currency(order?.Order?.items?.order_items?.[0]?.price || 0)} */}
-                {currency(order?.Order?.amount - order?.Order?.delivery_charge || 0)}
+                {currency(
+                  order?.Order?.amount - order?.Order?.delivery_charge || 0
+                )}
               </Typography>
             </FlexBox>
+
+            {order?.Order?.amount_percentage !== "100" && (
+              <FlexBox
+                justifyContent="space-between"
+                alignItems="center"
+                mb="0.5rem"
+                color="#E94560"
+                fontWeight="bold"
+              >
+                <Typography fontSize="14px">Due:</Typography>
+                <Typography fontSize="14px">
+                  {currency(order?.Order?.due_amount || 0)}
+                </Typography>
+              </FlexBox>
+            )}
 
             <FlexBox
               justifyContent="space-between"
               alignItems="center"
               mb="0.5rem"
-              color="#E94560"
+              color="#7D879C"
               fontWeight="bold"
             >
-              <Typography fontSize="14px">Due:</Typography>
-              <Typography fontSize="14px">
-                {/* {currency(order?.Order?.items?.order_items?.[0]?.price || 0)} */}
-                {currency(order?.Order?.due_amount || 0)}
-              </Typography>
+              <Typography fontSize="14px">Shipping Fee:</Typography>
+
+              {order?.Order?.delivery_charge === "0" ? (
+                <FlexBox alignItems="center">
+                  <Typography fontSize="14px" mr="0.5rem">
+                    TBD
+                  </Typography>
+                  <Tooltip
+                    title="Shipping & Courier Charge will be calculated based on actual weight & dimensions when the product is in-house by Tizaraa."
+                    arrow
+                    placement="top"
+                  >
+                    <InfoOutlinedIcon fontSize="small" color="action" />
+                  </Tooltip>
+                </FlexBox>
+              ) : (
+                <Typography fontSize="14px">
+                  {currency(order?.Order?.delivery_charge || 0)}
+                </Typography>
+              )}
             </FlexBox>
 
             {/* <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
@@ -586,7 +620,7 @@ export default function OrderDetails({ params }: IDParams) {
                   }}
                 >
                   {order?.Order?.amount_percentage === "100"
-                    ? "Paid"
+                    ? "Paid (Excluding shipping fee)"
                     : order?.Order?.amount_percentage > "0"
                     ? "Partial Paid"
                     : "Unpaid"}
