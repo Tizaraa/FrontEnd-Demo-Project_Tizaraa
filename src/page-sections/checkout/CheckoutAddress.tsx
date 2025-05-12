@@ -557,7 +557,7 @@ export default function CheckoutAddress({
   const [loading, setLoading] = useState(false);
   const [selectedPaymentOption, setSelectedPaymentOption] = useState<
     number | null
-  >(50);
+  >(100);
   const [advancePaymentAmount, setAdvancePaymentAmount] = useState<
     number | null
   >(null);
@@ -657,8 +657,8 @@ export default function CheckoutAddress({
     );
     const hasProducts = selectedProducts.length > 0;
 
-    if (hasProducts && selectedPaymentOption === 50) {
-      handlePaymentOptionSelect(50);
+    if (hasProducts && selectedPaymentOption === 100) {
+      handlePaymentOptionSelect(100);
     }
   }, []); // Empty dependency array to run only on mount
 
@@ -864,7 +864,7 @@ export default function CheckoutAddress({
               backgroundColor="#f7f7f7"
             >
               <FlexBox alignItems="center" style={{ gap: "8px" }}>
-                <Tooltip title="Select your preferred advance payment percentage. The remaining amount will be paid later.">
+                <Tooltip title="100% advance payment is required for abroad products">
                   <InfoIcon
                     style={{
                       color: "#E94560",
@@ -877,7 +877,7 @@ export default function CheckoutAddress({
                   variant="h6"
                   style={{ color: "#E94560", fontWeight: "600" }}
                 >
-                  Advance Payment Options
+                  Advance Payment Details
                 </Typography>
               </FlexBox>
               <Typography
@@ -887,11 +887,13 @@ export default function CheckoutAddress({
                   color: "#333",
                 }}
               >
-                Select your advance payment from the options below
+                100% advance payment is required to proceed with your abroad
+                order.
               </Typography>
 
               <Grid container spacing={2}>
-                {/* Option 1 - 50% */}
+                {/* 
+                // Option 1 - 50%
                 <Grid item xs={12} sm={4}>
                   <FlexBox
                     flexDirection="column"
@@ -901,9 +903,7 @@ export default function CheckoutAddress({
                     }`}
                     borderRadius="8px"
                     backgroundColor={
-                      selectedPaymentOption === 50
-                        ? "rgb(233, 69, 96)"
-                        : "white"
+                      selectedPaymentOption === 50 ? "rgb(233, 69, 96)" : "white"
                     }
                     style={{
                       cursor: "pointer",
@@ -912,7 +912,6 @@ export default function CheckoutAddress({
                     }}
                     onClick={() => handlePaymentOptionSelect(50)}
                   >
-                    {/* Linear progress bar at the top */}
                     {loading && selectedPaymentOption === 50 && (
                       <LinearProgress
                         sx={{
@@ -923,7 +922,7 @@ export default function CheckoutAddress({
                           height: "2px",
                           backgroundColor: "rgba(255, 255, 255, 0.3)",
                           "& .MuiLinearProgress-bar": {
-                            backgroundColor: "white", // Explicitly set the progress bar to white
+                            backgroundColor: "white",
                           },
                         }}
                       />
@@ -933,16 +932,12 @@ export default function CheckoutAddress({
                       {loading && selectedPaymentOption === 50 ? (
                         <CircularProgress
                           size={20}
-                          sx={{
-                            color: "white", // Set CircularProgress to white
-                            marginRight: "8px",
-                          }}
+                          sx={{ color: "white", marginRight: "8px" }}
                         />
                       ) : (
                         <CreditCardIcon
                           style={{
-                            color:
-                              selectedPaymentOption === 50 ? "white" : "#333",
+                            color: selectedPaymentOption === 50 ? "white" : "#333",
                             marginRight: "8px",
                           }}
                         />
@@ -950,8 +945,7 @@ export default function CheckoutAddress({
                       <Typography
                         style={{
                           fontWeight: "600",
-                          color:
-                            selectedPaymentOption === 50 ? "white" : "#333",
+                          color: selectedPaymentOption === 50 ? "white" : "#333",
                         }}
                       >
                         {loading && selectedPaymentOption === 50
@@ -962,7 +956,7 @@ export default function CheckoutAddress({
                   </FlexBox>
                 </Grid>
 
-                {/* Option 2 - 80% */}
+                // Option 2 - 80%
                 <Grid item xs={12} sm={4}>
                   <FlexBox
                     flexDirection="column"
@@ -972,38 +966,32 @@ export default function CheckoutAddress({
                     }`}
                     borderRadius="8px"
                     backgroundColor={
-                      selectedPaymentOption === 80
-                        ? "rgb(233, 69, 96)"
-                        : "white"
+                      selectedPaymentOption === 80 ? "rgb(233, 69, 96)" : "white"
                     }
                     style={{
                       cursor:
-                        loading && selectedPaymentOption === 80
-                          ? "wait"
-                          : "pointer",
+                        loading && selectedPaymentOption === 80 ? "wait" : "pointer",
                       position: "relative",
                       overflow: "hidden",
-                      opacity:
-                        loading && selectedPaymentOption !== 80 ? 0.7 : 1,
+                      opacity: loading && selectedPaymentOption !== 80 ? 0.7 : 1,
                       transition: "all 0.3s ease",
                     }}
                     onClick={() => !loading && handlePaymentOptionSelect(80)}
                   >
-                    {/* Linear progress bar at the top */}
                     {loading && selectedPaymentOption === 80 && (
                       <LinearProgress
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: "2px",
-                        backgroundColor: "rgba(255, 255, 255, 0.3)",
-                        "& .MuiLinearProgress-bar": {
-                          backgroundColor: "white", // Explicitly set the progress bar to white
-                        },
-                      }}
-                    />
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: "2px",
+                          backgroundColor: "rgba(255, 255, 255, 0.3)",
+                          "& .MuiLinearProgress-bar": {
+                            backgroundColor: "white",
+                          },
+                        }}
+                      />
                     )}
 
                     <FlexBox alignItems="center" justifyContent="center">
@@ -1019,8 +1007,7 @@ export default function CheckoutAddress({
                       ) : (
                         <CreditCardIcon
                           style={{
-                            color:
-                              selectedPaymentOption === 80 ? "white" : "#333",
+                            color: selectedPaymentOption === 80 ? "white" : "#333",
                             marginRight: "8px",
                             transition: "color 0.3s ease",
                           }}
@@ -1029,8 +1016,7 @@ export default function CheckoutAddress({
                       <Typography
                         style={{
                           fontWeight: "600",
-                          color:
-                            selectedPaymentOption === 80 ? "white" : "#333",
+                          color: selectedPaymentOption === 80 ? "white" : "#333",
                           transition: "color 0.3s ease",
                         }}
                       >
@@ -1041,9 +1027,10 @@ export default function CheckoutAddress({
                     </FlexBox>
                   </FlexBox>
                 </Grid>
+                */}
 
                 {/* Option 3 - 100% */}
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12}>
                   <FlexBox
                     flexDirection="column"
                     p="1rem"
@@ -1069,23 +1056,22 @@ export default function CheckoutAddress({
                         loading && selectedPaymentOption !== 100 ? 0.7 : 1,
                       transition: "all 0.3s ease",
                     }}
-                    onClick={() => !loading && handlePaymentOptionSelect(100)}
+                    // onClick={() => !loading && handlePaymentOptionSelect(100)}
                   >
-                    {/* Linear progress bar at the top */}
                     {loading && selectedPaymentOption === 100 && (
                       <LinearProgress
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: "2px",
-                        backgroundColor: "rgba(255, 255, 255, 0.3)",
-                        "& .MuiLinearProgress-bar": {
-                          backgroundColor: "white", // Explicitly set the progress bar to white
-                        },
-                      }}
-                    />
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: "2px",
+                          backgroundColor: "rgba(255, 255, 255, 0.3)",
+                          "& .MuiLinearProgress-bar": {
+                            backgroundColor: "white",
+                          },
+                        }}
+                      />
                     )}
 
                     <FlexBox alignItems="center" justifyContent="center">
