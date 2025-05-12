@@ -121,6 +121,7 @@
 
 
 const navbarNavigations = [
+  { title: "International Products", url: "/OtCategory/otc-189", extLink: true },
   { title: "Become A Seller", url: "https://seller.tizaraa.shop", extLink: true },
   { title: "Find Shop", url: "/shops", extLink: false },
   // { title: "Nearby Products", url: "/location", extLink: false },

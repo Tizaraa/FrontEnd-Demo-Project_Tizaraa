@@ -169,12 +169,10 @@ import Typography, { Span } from "../Typography";
 import Categories from "../categories/Categories";
 import StyledNavbar from "./styles";
 import navbarNavigations from "@data/navbarNavigations";
-import { FaUser } from "react-icons/fa";
+import { FaGlobe, FaUser } from "react-icons/fa";
 import { FaLocationPin } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import BeatLoader from "react-spinners/BeatLoader";
-
-
 
 // ==============================================================
 
@@ -187,7 +185,6 @@ interface Nav {
 }
 
 type NavbarProps = { navListOpen?: boolean };
-
 
 // ==============================================================
 
@@ -211,7 +208,7 @@ export default function Navbar({ navListOpen }: NavbarProps) {
       setLoading(false);
     }
   };
-  
+
   const renderNestedNav = (list: Nav[], isRoot = false) => {
     return list?.map((nav: Nav) => {
       if (isRoot) {
@@ -223,7 +220,8 @@ export default function Navbar({ navListOpen }: NavbarProps) {
               key={nav.title}
               target="_blank"
               className="nav-link"
-              rel="noopener noreferrer">
+              rel="noopener noreferrer"
+            >
               {nav.badge ? (
                 <Badge style={{ marginRight: "0px" }} title={nav.badge}>
                   {nav.title}
@@ -242,14 +240,21 @@ export default function Navbar({ navListOpen }: NavbarProps) {
               position="relative"
               flexDirection="column"
               alignItems="center"
-              key={nav.title}>
+              key={nav.title}
+            >
               {nav.badge ? (
                 <Badge title={nav.badge}>{nav.title}</Badge>
               ) : (
                 <Span className="nav-link">{nav.title}</Span>
               )}
               <div className="root-child">
-                <Card borderRadius={8} mt="1.25rem" py="0.5rem" boxShadow="large" minWidth="230px">
+                <Card
+                  borderRadius={8}
+                  mt="1.25rem"
+                  py="0.5rem"
+                  boxShadow="large"
+                  minWidth="230px"
+                >
                   {renderNestedNav(nav.child)}
                 </Card>
               </div>
@@ -290,10 +295,16 @@ export default function Navbar({ navListOpen }: NavbarProps) {
 
         if (nav.child) {
           return (
-            <Box className="parent" position="relative" minWidth="230px" key={nav.title}>
+            <Box
+              className="parent"
+              position="relative"
+              minWidth="230px"
+              key={nav.title}
+            >
               <MenuItem
                 color="gray.700"
-                style={{ display: "flex", justifyContent: "space-between" }}>
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
                 {nav.badge ? (
                   <Badge style={{ marginRight: "0px" }} title={nav.badge}>
                     {nav.title}
@@ -307,7 +318,12 @@ export default function Navbar({ navListOpen }: NavbarProps) {
               </MenuItem>
 
               <Box className="child" pl="0.5rem">
-                <Card py="0.5rem" borderRadius={8} boxShadow="large" minWidth="230px">
+                <Card
+                  py="0.5rem"
+                  borderRadius={8}
+                  boxShadow="large"
+                  minWidth="230px"
+                >
                   {renderNestedNav(nav.child)}
                 </Card>
               </Box>
@@ -320,58 +336,90 @@ export default function Navbar({ navListOpen }: NavbarProps) {
 
   return (
     <StyledNavbar>
-    <Container height="100%" display="flex" alignItems="center" justifyContent="space-between">
-      <FlexBox style={{ gap: "32px", display: "flex", alignItems: "center", flexGrow: 1 }}>
-        {/* Render Categories only if the current page is not '/location' */}
-        {!isLocationPage && (
-          <Categories open={navListOpen}>
-            <Button width="278px" height="40px" bg="body.default" variant="text">
-              <Icon>categories</Icon>
-              <Typography ml="10px" flex="1 1 0" fontWeight="600" textAlign="left" color="text.muted">
-                Categories
-              </Typography>
-              {!isHomePage && (
-                <Icon className="dropdown-icon" variant="small">
-                chevron-right
-              </Icon>
-              )}
-              
-            </Button>
-          </Categories>
-        )}
-      </FlexBox>
-
-      <FlexBox style={{ display: "flex", alignItems: "center" }}>
-        {navbarNavigations.map((navItem) => (
-          <Button
-          key={navItem.title}
-          onClick={() => handleNavigation(navItem.url, navItem.extLink)}
-          disabled={loading}
+      <Container
+        height="100%"
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <FlexBox
           style={{
+            gap: "32px",
             display: "flex",
             alignItems: "center",
-            backgroundColor: "#E94560",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            transition: "background-color 0.3s",
-            color: "white",
-            minWidth: "150px",
-            marginLeft: "15px",
-            opacity: loading ? 0.6 : 1,
-          }}>
-          <div style={{ marginRight: "8px" }}>
-            {navItem.title === "Become A Seller" ? <FaUser /> : <FaLocationPin />}
-          </div>
-          <Typography style={{ fontWeight: "500" }}>{navItem.title}</Typography>
-        </Button>
-        ))}
-        {loading && <BeatLoader size={18} color="#fff" />}
-      </FlexBox>
-    </Container>
-  </StyledNavbar>
+            flexGrow: 1,
+          }}
+        >
+          {/* Render Categories only if the current page is not '/location' */}
+          {!isLocationPage && (
+            <Categories open={navListOpen}>
+              <Button
+                width="278px"
+                height="40px"
+                bg="body.default"
+                variant="text"
+              >
+                <Icon>categories</Icon>
+                <Typography
+                  ml="10px"
+                  flex="1 1 0"
+                  fontWeight="600"
+                  textAlign="left"
+                  color="text.muted"
+                >
+                  Categories
+                </Typography>
+                {!isHomePage && (
+                  <Icon className="dropdown-icon" variant="small">
+                    chevron-right
+                  </Icon>
+                )}
+              </Button>
+            </Categories>
+          )}
+        </FlexBox>
+
+        <FlexBox style={{ display: "flex", alignItems: "center" }}>
+          {navbarNavigations.map((navItem) => (
+            <Button
+  key={navItem.title}
+  onClick={() => handleNavigation(navItem.url, navItem.extLink)}
+  disabled={loading}
+  style={{
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: navItem.title === "International Products" ? "#E94560" : "#E94560",  // Using primary color for both
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    transition: "background-color 0.3s, transform 0.3s",  // Added transform for hover effect
+    color: "white",
+    minWidth: "150px",
+    marginLeft: "15px",
+    opacity: loading ? 0.6 : 1,
+    padding: "10px 15px", // Adding padding for more space
+    boxShadow: navItem.title === "International Products" ? "0 4px 10px rgba(233, 69, 96, 0.5)" : "none",  // Subtle shadow for emphasis
+  }}
+>
+  <div style={{ marginRight: "8px" }}>
+    {navItem.title === "Become A Seller" ? (
+      <FaUser />
+    ) : navItem.title === "International Products" ? (
+      <FaGlobe />
+    ) : (
+      <FaLocationPin />
+    )}
+  </div>
+
+  <Typography style={{ fontWeight: "500" }}>
+    {navItem.title}
+  </Typography>
+</Button>
+
+          ))}
+          {loading && <BeatLoader size={18} color="#fff" />}
+        </FlexBox>
+      </Container>
+    </StyledNavbar>
   );
 }
-
-
-
