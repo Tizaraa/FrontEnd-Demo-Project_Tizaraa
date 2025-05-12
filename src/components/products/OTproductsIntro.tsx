@@ -1150,7 +1150,8 @@ export default function OtProductsIntro({
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  background: "linear-gradient(135deg, #007bff, #00c6ff)", // smooth blue gradient
+                  // background: "linear-gradient(135deg, #007bff, #00c6ff)", // smooth blue gradient
+                  background: "linear-gradient(135deg, rgb(233, 69, 96), rgb(255, 140, 160))",
                   color: "#fff",
                   padding: "6px 14px",
                   borderRadius: "5px",
@@ -1297,9 +1298,9 @@ export default function OtProductsIntro({
                         src={item.ImageUrl}
                         alt={item.Value}
                         style={{
-                          width: "40px",
-                          height: "50px",
-                          marginRight: "5px",
+                          width: "100%",
+                          height: "40px",
+                          // marginRight: "5px",
                         }}
                       />
                     ) : (
