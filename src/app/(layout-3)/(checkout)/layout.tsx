@@ -130,7 +130,6 @@
 //   );
 // }
 
-
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -143,10 +142,11 @@ import authService from "services/authService";
 
 export default function Layout({ children }: PropsWithChildren) {
   const [selectedStep, setSelectedStep] = useState(0);
+  const [hasVisitedPayment, setHasVisitedPayment] = useState(false); // 🔹 new state
   const [stepperList, setStepperList] = useState([
     { title: "Cart", disabled: false },
     { title: "Details", disabled: false },
-    { title: "Payment", disabled: false },
+    { title: "Payment", disabled: true }, // 🔹 start disabled
     { title: "Submit", disabled: true },
   ]);
 
@@ -163,6 +163,14 @@ export default function Layout({ children }: PropsWithChildren) {
     setIsLoggedIn(authService.isAuthenticated());
   }, []);
 
+  // 🔹 Update hasVisitedPayment if pathname is '/payment'
+  useEffect(() => {
+    if (pathname === "/payment") {
+      setHasVisitedPayment(true);
+    }
+  }, [pathname]);
+
+  // 🔹 Set stepper list when isRfq or hasVisitedPayment changes
   useEffect(() => {
     if (isRfq) {
       setStepperList([
@@ -173,11 +181,11 @@ export default function Layout({ children }: PropsWithChildren) {
       setStepperList([
         { title: "Cart", disabled: false },
         { title: "Details", disabled: false },
-        { title: "Payment", disabled: false },
+        { title: "Payment", disabled: !hasVisitedPayment }, // ✅ disabled until visited
         { title: "Submit", disabled: true },
       ]);
     }
-  }, [isRfq]);
+  }, [isRfq, hasVisitedPayment]); // 🔹 added hasVisitedPayment
 
   const handleStepChange = (_step: any, ind: number) => {
     if (isRfq) {
@@ -197,28 +205,25 @@ export default function Layout({ children }: PropsWithChildren) {
           router.push("/cart");
           break;
         case 1:
-          if(isLoggedIn){
+          if (isLoggedIn) {
             router.push("/checkout");
-          }else{
+          } else {
             router.push("/login");
           }
-          //router.push("/checkout");
           break;
         case 2:
-          if(isLoggedIn){
+          if (isLoggedIn) {
             router.push("/payment");
-          }else{
+          } else {
             router.push("/login");
           }
-          //router.push("/payment");
           break;
         case 3:
-          if(isLoggedIn){
+          if (isLoggedIn) {
             router.push("/orders");
-          }else{
+          } else {
             router.push("/login");
           }
-          //router.push("/orders");
           break;
         default:
           break;
@@ -240,9 +245,6 @@ export default function Layout({ children }: PropsWithChildren) {
         case "/payment":
           setSelectedStep(3);
           break;
-        // case "/submit":
-        //   setSelectedStep(3);
-        //   break;
         default:
           break;
       }
