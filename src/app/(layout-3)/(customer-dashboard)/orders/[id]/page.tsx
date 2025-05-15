@@ -627,7 +627,11 @@ export default function OrderDetails({ params }: IDParams) {
                     width: "fit-content",
                   }}
                 >
-                  {order?.Order?.amount_percentage === "100"
+                  {order?.Order?.delivery_charge &&
+                  order.Order.delivery_charge !== "0" &&
+                  order.Order.delivery_charge !== 0
+                    ? "Paid"
+                    : order?.Order?.amount_percentage === "100"
                     ? "Paid (Excluding shipping fee)"
                     : order?.Order?.amount_percentage > "0"
                     ? "Partial Paid"
@@ -636,27 +640,33 @@ export default function OrderDetails({ params }: IDParams) {
               </Box>
             </FlexBox>
 
-            <Box
-              backgroundColor="rgba(240, 248, 255, 0.8)"
-              borderLeft="4px solid rgb(233, 69, 96)"
-              borderRight="4px solid rgb(233, 69, 96)"
-              p="10px"
-              borderRadius="0.5rem"
-              fontSize="14px"
-              color="#333"
-              fontWeight="500"
-            >
-              <FlexBox alignItems="flex-start">
-                <Box mr="8px" fontSize="18px" lineHeight="1.5">
-                  📦
-                </Box>
-                <Box flex="1">
-                  Shipping & Courier Charge will be calculated based on actual
-                  weight & dimensions when the product is in-house by{" "}
-                  <strong>Tizaraa</strong>.
-                </Box>
-              </FlexBox>
-            </Box>
+            {!(
+              order?.Order?.delivery_charge &&
+              order.Order.delivery_charge !== "0" &&
+              order.Order.delivery_charge !== 0
+            ) && (
+              <Box
+                backgroundColor="rgba(240, 248, 255, 0.8)"
+                borderLeft="4px solid rgb(233, 69, 96)"
+                borderRight="4px solid rgb(233, 69, 96)"
+                p="10px"
+                borderRadius="0.5rem"
+                fontSize="14px"
+                color="#333"
+                fontWeight="500"
+              >
+                <FlexBox alignItems="flex-start">
+                  <Box mr="8px" fontSize="18px" lineHeight="1.5">
+                    📦
+                  </Box>
+                  <Box flex="1">
+                    Shipping & Courier Charge will be calculated based on actual
+                    weight & dimensions when the product is in-house by{" "}
+                    <strong>Tizaraa</strong>.
+                  </Box>
+                </FlexBox>
+              </Box>
+            )}
           </Box>
         )}
       </Box>
