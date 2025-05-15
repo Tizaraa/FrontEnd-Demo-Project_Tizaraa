@@ -440,9 +440,17 @@ export default function OrderDetails({ params }: IDParams) {
                   </Tooltip>
                 </FlexBox>
               ) : (
-                <Typography fontSize="14px">
-                  {currency(order?.Order?.delivery_charge || 0)}
-                </Typography>
+                <>
+                  <Box flex="1" textAlign="center">
+                    <Typography fontSize="13px" color="textSecondary">
+                      {order?.Order?.delivery_charge_reason} from{" "}
+                      {currency(order?.Order?.delivery_charge || 0)}
+                    </Typography>
+                  </Box>
+                  <Typography fontSize="14px">
+                    {currency(order?.Order?.delivery_charge || 0)}
+                  </Typography>
+                </>
               )}
             </FlexBox>
 
