@@ -335,23 +335,22 @@
 "use client";
 
 import { useEffect, useState, Fragment } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import styled from "@emotion/styled";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Vortex } from "react-loader-spinner";
 import { DeleteIcon, EditIcon } from "lucide-react";
-import Icon from "@component/icon/Icon";
 import TableRow from "@component/TableRow";
 import Typography from "@component/Typography";
 import { IconButton } from "@component/buttons";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
-import Dialog from "./Dialog";
 import { AddNewAddress } from "@sections/customer-dashboard/address";
 import Address from "@models/address.model";
 import authService from "services/authService";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import { motion } from "framer-motion";
 
 // Styled Components
 const LoaderWrapper = styled.div`
@@ -421,19 +420,49 @@ const StyledIconButton = styled(IconButton)`
   }
 `;
 
-const StatusIndicator = styled.span`
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-right: 8px;
-  background: ${({ active }: { active?: boolean }) =>
-    active ? "#E94560" : "#D1D5DB"};
+const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-interface StatusIndicatorProps {
-  active?: boolean;
-}
+const DialogBox = styled(motion.div)`
+  background: white;
+  padding: 24px 32px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+`;
+
+const ButtonGroup = styled.div`
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  gap: 16px;
+`;
+
+const DialogButton = styled.button<{ danger?: boolean }>`
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: ${({ danger }) => (danger ? "#e94560" : "#219426")};
+  color: white;
+
+  &:hover {
+    opacity: 0.9;
+  }
+`;
 
 // AddressItem Component
 function AddressItem({
@@ -479,29 +508,26 @@ function AddressItem({
   );
 }
 
-// Main AddressList Component
+// Main Component
 export default function AddressList() {
   const [dialog, setDialog] = useState({
     message: "",
     isLoading: false,
-    id: null, // Track the ID to delete
+    id: null,
   });
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const authtoken = authService.getToken(); // Retrieve the auth token
+  const authtoken = authService.getToken();
 
   useEffect(() => {
-    const checkAuth = () => {
-      if (!authService.isAuthenticated()) {
-        router.push("/login");
-      } else {
-        setIsLoggedIn(true);
-      }
-    };
-    checkAuth();
+    if (!authService.isAuthenticated()) {
+      router.push("/login");
+    } else {
+      setIsLoggedIn(true);
+    }
   }, [router]);
 
   useEffect(() => {
@@ -509,49 +535,46 @@ export default function AddressList() {
       try {
         const response = await axios.get(`${ApiBaseUrl.baseUrl}user/address`, {
           headers: {
-            Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
+            Authorization: `Bearer ${authtoken}`,
           },
         });
-        setAddresses(response.data.user); // Assuming the data is structured as shown in the API response
+        setAddresses(response.data.user);
       } catch (error) {
         console.error("Error fetching addresses:", error);
       } finally {
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false);
       }
     };
 
     fetchAddresses();
   }, [authtoken]);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
     setDialog({
-      message: "Are you sure you want to delete?",
+      message: "Are you sure you want to delete this address?",
       isLoading: true,
-      id: id, // Set the ID of the address to delete
+      id,
     });
   };
 
   const areYouSureDelete = async (choose: boolean) => {
-    if (choose) {
+    if (choose && dialog.id) {
       try {
         await axios.get(
           `${ApiBaseUrl.baseUrl}user/address/delete/${dialog.id}`,
           {
             headers: {
-              Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
+              Authorization: `Bearer ${authtoken}`,
             },
           }
         );
-        // Remove the deleted address from the state
-        setAddresses((prevAddresses) =>
-          prevAddresses.filter((address) => address.id !== dialog.id)
-        );
+        setAddresses((prev) => prev.filter((a) => a.id !== dialog.id));
         toast.success("Address Deleted successfully!");
       } catch (error) {
         toast.error("Failed deleting address.");
       }
     }
-    setDialog({ ...dialog, isLoading: false }); // Close the dialog
+    setDialog({ ...dialog, isLoading: false });
   };
 
   return (
@@ -561,6 +584,7 @@ export default function AddressList() {
         iconName="pin_filled"
         button={<AddNewAddress />}
       />
+
       {loading ? (
         <LoaderWrapper>
           <Vortex />
@@ -574,9 +598,25 @@ export default function AddressList() {
           No address found
         </Typography>
       )}
-      {/* Show Dialog only if isLoading is true */}
+
       {dialog.isLoading && (
-        <Dialog message={dialog.message} onDialog={areYouSureDelete} />
+        <Backdrop>
+          <DialogBox
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            <h3>{dialog.message}</h3>
+            <ButtonGroup>
+              <DialogButton danger onClick={() => areYouSureDelete(true)}>
+                Yes, Delete
+              </DialogButton>
+              <DialogButton onClick={() => areYouSureDelete(false)}>
+                Cancel
+              </DialogButton>
+            </ButtonGroup>
+          </DialogBox>
+        </Backdrop>
       )}
     </Fragment>
   );
