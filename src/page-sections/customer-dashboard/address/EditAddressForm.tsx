@@ -185,195 +185,704 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
   }, [initialValues.city, city]);
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleFormSubmit}
-      enableReinitialize
+    <div
+      style={{
+        minHeight: "100vh",
+        fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+      }}
     >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        setFieldValue,
-      }) => (
-        <form onSubmit={handleSubmit}>
-          <Card1 mb="2rem">
-            <Typography fontWeight="600" mb="1rem">
-              Shipping Address
-            </Typography>
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          background: "white",
+          borderRadius: "20px",
+          boxShadow: "0 20px 40px rgba(233, 69, 96, 0.1)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            background: "linear-gradient(135deg, #E94560 0%, #d63851 100%)",
+            padding: "2rem",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          <h1
+            style={{
+              margin: 0,
+              fontSize: "2.5rem",
+              fontWeight: "700",
+              textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+            }}
+          >
+            Shipping Information
+          </h1>
+          <p
+            style={{
+              margin: "0.5rem 0 0 0",
+              fontSize: "1.1rem",
+              opacity: 0.9,
+            }}
+          >
+            Please provide your delivery details
+          </p>
+        </div>
 
-            <Grid container spacing={7}>
-              <Grid item sm={6} xs={12}>
-                <TextField
-                  fullwidth
-                  mb="1rem"
-                  label="Full Name"
-                  name="name"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.name}
-                  errorText={touched.name && errors.name}
-                />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleFormSubmit}
+          enableReinitialize
+        >
+          {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
+            <form onSubmit={handleSubmit} style={{ padding: "1rem" }}>
+              {/* Shipping Address Card */}
+              <div
+                style={{
+                  background: "white",
+                  borderRadius: "16px",
+                  padding: "1rem",
+                  border: "2px solid #f0f0f0",
+                  boxShadow: "0 8px 25px rgba(0,0,0,0.08)",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "2rem",
+                    paddingBottom: "1rem",
+                    borderBottom: "2px solid #f5f5f5",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "4px",
+                      height: "2rem",
+                      background: "linear-gradient(135deg, #E94560, #d63851)",
+                      borderRadius: "2px",
+                      marginRight: "1rem",
+                    }}
+                  ></div>
+                  <h2
+                    style={{
+                      margin: 0,
+                      fontSize: "1.5rem",
+                      fontWeight: "600",
+                      color: "#2c3e50",
+                    }}
+                  >
+                    Shipping Address
+                  </h2>
+                </div>
 
-                <TextField
-                  fullwidth
-                  mb="1rem"
-                  label="Phone Number"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  name="contact"
-                  value={values.contact} 
-                  errorText={touched.contact && errors.contact}
-                />
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                    gap: "2rem",
+                  }}
+                >
+                  {/* Left Column */}
+                  <div>
+                    {/* Full Name */}
+                    <div style={{ marginBottom: "1.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: "600",
+                          color: "#2c3e50",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        onChange={handleChange}
+                        value={values.name}
+                        style={{
+                          width: "100%",
+                          padding: "1rem",
+                          border: `2px solid ${touched.name && errors.name ? "#E94560" : "#e1e8ed"}`,
+                          borderRadius: "12px",
+                          fontSize: "1rem",
+                          transition: "all 0.3s ease",
+                          background: "#fafbfc",
+                          outline: "none",
+                          boxSizing: "border-box",
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = "#E94560"
+                          e.target.style.background = "white"
+                          e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)"
+                        }}
+                        onBlur={(e) => {
+                          handleBlur(e)
+                          e.target.style.borderColor = touched.name && errors.name ? "#E94560" : "#e1e8ed"
+                          e.target.style.background = "#fafbfc"
+                          e.target.style.boxShadow = "none"
+                        }}
+                      />
+                      {touched.name && errors.name && (
+                        <div
+                          style={{
+                            color: "#E94560",
+                            fontSize: "0.8rem",
+                            marginTop: "0.5rem",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {String(errors.name)}
+                        </div>
+                      )}
+                    </div>
 
-                <TextArea
-                  fullwidth
-                  label="Address"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  name="address"
-                  value={values.address}
-                  errorText={touched.address && errors.address}
-                />
+                    {/* Phone Number */}
+                    <div style={{ marginBottom: "1.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: "600",
+                          color: "#2c3e50",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Phone Number *
+                      </label>
+                      <input
+                        type="tel"
+                        name="contact"
+                        onChange={handleChange}
+                        value={values.contact}
+                        style={{
+                          width: "100%",
+                          padding: "1rem",
+                          border: `2px solid ${touched.contact && errors.contact ? "#E94560" : "#e1e8ed"}`,
+                          borderRadius: "12px",
+                          fontSize: "1rem",
+                          transition: "all 0.3s ease",
+                          background: "#fafbfc",
+                          outline: "none",
+                          boxSizing: "border-box",
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = "#E94560"
+                          e.target.style.background = "white"
+                          e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)"
+                        }}
+                        onBlur={(e) => {
+                          handleBlur(e)
+                          e.target.style.borderColor = touched.contact && errors.contact ? "#E94560" : "#e1e8ed"
+                          e.target.style.background = "#fafbfc"
+                          e.target.style.boxShadow = "none"
+                        }}
+                      />
+                      {touched.contact && errors.contact && (
+                        <div
+                          style={{
+                            color: "#E94560",
+                            fontSize: "0.8rem",
+                            marginTop: "0.5rem",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {String(errors.contact)}
+                        </div>
+                      )}
+                    </div>
 
-                <Typography fontWeight="600" mb="0.5rem">
-                  Select a label for effective delivery:
-                </Typography>
-                <Grid container spacing={2} justifyContent="flex-start">
-                  <Grid item>
-                    <Button
-                      type="button"
-                      variant={selectedLandmark === 1 ? "contained" : "outlined"}
-                      color="primary"
-                      onClick={() =>
-                        handleLandmarkSelect(1, setFieldValue)
-                      }
-                    >
-                      Home
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      type="button"
-                      variant={selectedLandmark === 2 ? "contained" : "outlined"}
-                      color="primary"
-                      onClick={() =>
-                        handleLandmarkSelect(2, setFieldValue)
-                      }
-                    >
-                      Office
-                    </Button>
-                  </Grid>
-                </Grid>
+                    {/* Address */}
+                    <div style={{ marginBottom: "1.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: "600",
+                          color: "#2c3e50",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Address *
+                      </label>
+                      <textarea
+                        name="address"
+                        onChange={handleChange}
+                        value={values.address}
+                        rows={4}
+                        style={{
+                          width: "100%",
+                          padding: "1rem",
+                          border: `2px solid ${touched.address && errors.address ? "#E94560" : "#e1e8ed"}`,
+                          borderRadius: "12px",
+                          fontSize: "1rem",
+                          transition: "all 0.3s ease",
+                          background: "#fafbfc",
+                          outline: "none",
+                          resize: "vertical",
+                          fontFamily: "inherit",
+                          boxSizing: "border-box",
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = "#E94560"
+                          e.target.style.background = "white"
+                          e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)"
+                        }}
+                        onBlur={(e) => {
+                          handleBlur(e)
+                          e.target.style.borderColor = touched.address && errors.address ? "#E94560" : "#e1e8ed"
+                          e.target.style.background = "#fafbfc"
+                          e.target.style.boxShadow = "none"
+                        }}
+                      />
+                      {touched.address && errors.address && (
+                        <div
+                          style={{
+                            color: "#E94560",
+                            fontSize: "0.8rem",
+                            marginTop: "0.5rem",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {String(errors.address)}
+                        </div>
+                      )}
+                    </div>
 
-                {/* Display error text for landmark selection */}
-                {touched.selectedLandmark && errors.selectedLandmark && (
-                  <Typography color="error" variant="body2" mt={1}>
-                    {errors.selectedLandmark}
-                  </Typography>
-                )}
-              </Grid>
+                    {/* Landmark Selection */}
+                    <div style={{ marginBottom: "1.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "1rem",
+                          fontWeight: "600",
+                          color: "#2c3e50",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Select a label for effective delivery:
+                      </label>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "1rem",
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => handleLandmarkSelect(1, setFieldValue)}
+                          style={{
+                            padding: "0.8rem 1.5rem",
+                            border: `2px solid ${selectedLandmark === 1 ? "#E94560" : "#e1e8ed"}`,
+                            borderRadius: "25px",
+                            background: selectedLandmark === 1 ? "linear-gradient(135deg, #E94560, #d63851)" : "white",
+                            color: selectedLandmark === 1 ? "white" : "#2c3e50",
+                            fontWeight: "600",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                            outline: "none",
+                            fontSize: "0.9rem",
+                          }}
+                        >
+                          🏠 Home
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleLandmarkSelect(2, setFieldValue)}
+                          style={{
+                            padding: "0.8rem 1.5rem",
+                            border: `2px solid ${selectedLandmark === 2 ? "#E94560" : "#e1e8ed"}`,
+                            borderRadius: "25px",
+                            background: selectedLandmark === 2 ? "linear-gradient(135deg, #E94560, #d63851)" : "white",
+                            color: selectedLandmark === 2 ? "white" : "#2c3e50",
+                            fontWeight: "600",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                            outline: "none",
+                            fontSize: "0.9rem",
+                          }}
+                        >
+                          🏢 Office
+                        </button>
+                      </div>
+                      {touched.selectedLandmark && errors.selectedLandmark && (
+                        <div
+                          style={{
+                            color: "#E94560",
+                            fontSize: "0.8rem",
+                            marginTop: "0.5rem",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {String(errors.selectedLandmark)}
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
-              <Grid item sm={6} xs={12}>
-                {/* Country Selection */}
-                <Select
-                  mb="1rem"
-                  label="Country"
-                  options={[{ value: "BD", label: "Bangladesh" }]}
-                  value={{ value: "BD", label: "Bangladesh" }}
-                  errorText={touched.country && errors.country}
-                  onChange={() =>
-                    setFieldValue("country", {
-                      value: "BD",
-                      label: "Bangladesh",
-                    })
-                  }
-                />
+                  {/* Right Column */}
+                  <div>
+                    {/* Country */}
+                    <div style={{ marginBottom: "1.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: "600",
+                          color: "#2c3e50",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Country *
+                      </label>
+                      <div style={{ position: "relative" }}>
+                        <select
+                          value="BD"
+                          onChange={() =>
+                            setFieldValue("country", {
+                              value: "BD",
+                              label: "Bangladesh",
+                            })
+                          }
+                          style={{
+                            width: "100%",
+                            padding: "1rem",
+                            border: `2px solid ${touched.country && errors.country ? "#E94560" : "#e1e8ed"}`,
+                            borderRadius: "12px",
+                            fontSize: "1rem",
+                            background: "#fafbfc",
+                            outline: "none",
+                            cursor: "pointer",
+                            appearance: "none",
+                            boxSizing: "border-box",
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.borderColor = "#E94560"
+                            e.target.style.background = "white"
+                            e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)"
+                          }}
+                          onBlur={(e) => {
+                            e.target.style.borderColor = touched.country && errors.country ? "#E94560" : "#e1e8ed"
+                            e.target.style.background = "#fafbfc"
+                            e.target.style.boxShadow = "none"
+                          }}
+                        >
+                          <option value="BD">🇧🇩 Bangladesh</option>
+                        </select>
+                        <div
+                          style={{
+                            position: "absolute",
+                            right: "1rem",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            pointerEvents: "none",
+                            color: "#666",
+                          }}
+                        >
+                          ▼
+                        </div>
+                      </div>
+                      {touched.country && errors.country && (
+                        <div
+                          style={{
+                            color: "#E94560",
+                            fontSize: "0.8rem",
+                            marginTop: "0.5rem",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {String(errors.country)}
+                        </div>
+                      )}
+                    </div>
 
-                {/* Province Selection */}
-                <Select
-                  mb="1rem"
-                  label="Province / Region"
-                  options={province.map((prov) => ({
-                    value: prov.id,
-                    label: prov.province,
-                  }))}
-                  value={
-                    values.province
-                      ? {
-                          value: values.province,
-                          label: province.find((prov) => prov.id === values.province)?.province,
-                        }
-                      : null
-                  }
-                  errorText={touched.province && errors.province}
-                  onChange={(e: { value: number; label: string }) =>
-                    handleProvinceChange(e.value, setFieldValue)
-                  }
-                />
+                    {/* Province */}
+                    <div style={{ marginBottom: "1.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: "600",
+                          color: "#2c3e50",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Province / Region *
+                      </label>
+                      <div style={{ position: "relative" }}>
+                        <select
+                          value={values.province || ""}
+                          onChange={(e) => handleProvinceChange(Number.parseInt(e.target.value), setFieldValue)}
+                          style={{
+                            width: "100%",
+                            padding: "1rem",
+                            border: `2px solid ${touched.province && errors.province ? "#E94560" : "#e1e8ed"}`,
+                            borderRadius: "12px",
+                            fontSize: "1rem",
+                            background: "#fafbfc",
+                            outline: "none",
+                            cursor: "pointer",
+                            appearance: "none",
+                            boxSizing: "border-box",
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.borderColor = "#E94560"
+                            e.target.style.background = "white"
+                            e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)"
+                          }}
+                          onBlur={(e) => {
+                            e.target.style.borderColor = touched.province && errors.province ? "#E94560" : "#e1e8ed"
+                            e.target.style.background = "#fafbfc"
+                            e.target.style.boxShadow = "none"
+                          }}
+                        >
+                          <option value="">Select Province</option>
+                          {province?.map((prov) => (
+                            <option key={prov.id} value={prov.id}>
+                              {prov.province}
+                            </option>
+                          ))}
+                        </select>
+                        <div
+                          style={{
+                            position: "absolute",
+                            right: "1rem",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            pointerEvents: "none",
+                            color: "#666",
+                          }}
+                        >
+                          ▼
+                        </div>
+                      </div>
+                      {touched.province && errors.province && (
+                        <div
+                          style={{
+                            color: "#E94560",
+                            fontSize: "0.8rem",
+                            marginTop: "0.5rem",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {String(errors.province)}
+                        </div>
+                      )}
+                    </div>
 
-                {/* City Selection */}
-                <Select
-                  mb="1rem"
-                  label="City"
-                  options={city.map((c: any) => ({
-                    value: c.id,
-                    label: c.city,
-                  }))}
-                  value={
-                    values.city
-                      ? {
-                          value: values.city,
-                          label: city.find((c) => c.id === values.city)?.city,
-                        }
-                      : null
-                  }
-                  errorText={touched.city && errors.city}
-                  onChange={(e: { value: number; label: string }) =>
-                    handleCityChange(e.value, setFieldValue)
-                  }
-                />
+                    {/* City */}
+                    <div style={{ marginBottom: "1.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: "600",
+                          color: "#2c3e50",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        City *
+                      </label>
+                      <div style={{ position: "relative" }}>
+                        <select
+                          value={values.city || ""}
+                          onChange={(e) => handleCityChange(Number.parseInt(e.target.value), setFieldValue)}
+                          style={{
+                            width: "100%",
+                            padding: "1rem",
+                            border: `2px solid ${touched.city && errors.city ? "#E94560" : "#e1e8ed"}`,
+                            borderRadius: "12px",
+                            fontSize: "1rem",
+                            background: "#fafbfc",
+                            outline: "none",
+                            cursor: "pointer",
+                            appearance: "none",
+                            boxSizing: "border-box",
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.borderColor = "#E94560"
+                            e.target.style.background = "white"
+                            e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)"
+                          }}
+                          onBlur={(e) => {
+                            e.target.style.borderColor = touched.city && errors.city ? "#E94560" : "#e1e8ed"
+                            e.target.style.background = "#fafbfc"
+                            e.target.style.boxShadow = "none"
+                          }}
+                        >
+                          <option value="">Select City</option>
+                          {city?.map((c) => (
+                            <option key={c.id} value={c.id}>
+                              {c.city}
+                            </option>
+                          ))}
+                        </select>
+                        <div
+                          style={{
+                            position: "absolute",
+                            right: "1rem",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            pointerEvents: "none",
+                            color: "#666",
+                          }}
+                        >
+                          ▼
+                        </div>
+                      </div>
+                      {touched.city && errors.city && (
+                        <div
+                          style={{
+                            color: "#E94560",
+                            fontSize: "0.8rem",
+                            marginTop: "0.5rem",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {String(errors.city)}
+                        </div>
+                      )}
+                    </div>
 
-                {/* Area Selection */}
-                <Select
-                  mb="1rem"
-                  label="Area"
-                  options={area.map((a: any) => ({
-                    value: a.id,
-                    label: a.area,
-                  }))}
-                  value={
-                    values.area
-                      ? {
-                          value: values.area,
-                          label: area.find((a) => a.id === values.area)?.area,
-                        }
-                      : null
-                  }
-                  errorText={touched.area && errors.area}
-                  onChange={(selectedArea: { value: number; label: string }) =>
-                    setFieldValue("area", selectedArea.value)
-                  }
-                />
-              </Grid>
-            </Grid>
-          </Card1>
+                    {/* Area */}
+                    <div style={{ marginBottom: "1.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          marginBottom: "0.5rem",
+                          fontWeight: "600",
+                          color: "#2c3e50",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Area *
+                      </label>
+                      <div style={{ position: "relative" }}>
+                        <select
+                          value={values.area || ""}
+                          onChange={(e) => setFieldValue("area", Number.parseInt(e.target.value))}
+                          style={{
+                            width: "100%",
+                            padding: "1rem",
+                            border: `2px solid ${touched.area && errors.area ? "#E94560" : "#e1e8ed"}`,
+                            borderRadius: "12px",
+                            fontSize: "1rem",
+                            background: "#fafbfc",
+                            outline: "none",
+                            cursor: "pointer",
+                            appearance: "none",
+                            boxSizing: "border-box",
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.borderColor = "#E94560"
+                            e.target.style.background = "white"
+                            e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)"
+                          }}
+                          onBlur={(e) => {
+                            e.target.style.borderColor = touched.area && errors.area ? "#E94560" : "#e1e8ed"
+                            e.target.style.background = "#fafbfc"
+                            e.target.style.boxShadow = "none"
+                          }}
+                        >
+                          <option value="">Select Area</option>
+                          {area?.map((a) => (
+                            <option key={a.id} value={a.id}>
+                              {a.area}
+                            </option>
+                          ))}
+                        </select>
+                        <div
+                          style={{
+                            position: "absolute",
+                            right: "1rem",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            pointerEvents: "none",
+                            color: "#666",
+                          }}
+                        >
+                          ▼
+                        </div>
+                      </div>
+                      {touched.area && errors.area && (
+                        <div
+                          style={{
+                            color: "#E94560",
+                            fontSize: "0.8rem",
+                            marginTop: "0.5rem",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {String(errors.area)}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-          <Grid container spacing={7}>
-            <Grid item sm={6} xs={12}>
-              <Button type="submit" variant="contained" color="primary">
-                Save Changes
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      )}
-    </Formik>
-  );
+              {/* Submit Button */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  paddingTop: "1rem",
+                }}
+              >
+                <button
+                  type="submit"
+                  style={{
+                    background: "linear-gradient(135deg, #E94560, #d63851)",
+                    color: "white",
+                    border: "none",
+                    padding: "1rem 3rem",
+                    borderRadius: "50px",
+                    fontSize: "1.1rem",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                    outline: "none",
+                    boxShadow: "0 8px 25px rgba(233, 69, 96, 0.3)",
+                    transform: "translateY(0)",
+                    minWidth: "200px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  💾 Save Changes
+                </button>
+              </div>
+            </form>
+          )}
+        </Formik>
+      </div>
+
+      {/* Add keyframes for animations */}
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          
+          @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+          }
+        `}
+      </style>
+    </div>
+  )
 }
 
 const validationSchema = Yup.object({
