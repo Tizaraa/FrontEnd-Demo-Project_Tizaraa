@@ -1141,32 +1141,50 @@ export default function OtProductsIntro({
           <FlexBox alignItems="center" mb="1rem">
             <Box mr="8px">
               {rating > 0 && (
-                <Rating value={rating} outof={5} color="warn" readOnly size="medium" />
+                <Rating
+                  value={rating}
+                  outof={5}
+                  color="warn"
+                  readOnly
+                  size="medium"
+                />
               )}
 
               {/* Ships from Abroad Badge */}
-              <Box
-                mt="0.5rem"
+              <style>
+                {`
+    @keyframes glow {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+  `}
+              </style>
+              <div
                 style={{
+                  marginTop: "0.5rem",
                   display: "inline-flex",
                   alignItems: "center",
-                  // background: "linear-gradient(135deg, #007bff, #00c6ff)", // smooth blue gradient
-                  background: "linear-gradient(135deg, rgb(233, 69, 96), rgb(255, 140, 160))",
+                  background: "linear-gradient(135deg, #e74c3c, #c0392b)",
                   color: "#fff",
                   padding: "6px 14px",
                   borderRadius: "5px",
                   fontSize: "13px",
-                  fontWeight: 600,
+                  fontWeight: 400,
                   gap: "6px",
-                  animation: "pulse 2s infinite",
-                  textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
+                  animation: "glow 2.5s ease-in-out infinite",
+                  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
                   transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                  cursor: "pointer",
                 }}
-                
               >
                 🛫 Ships from Abroad
-              </Box>
+              </div>
             </Box>
           </FlexBox>
 
@@ -1472,7 +1490,7 @@ export default function OtProductsIntro({
                                 style={{
                                   fontSize: "12px",
                                   // fontWeight: "bold",
-                                  color:"#555",
+                                  color: "#555",
                                   marginTop: "-40px",
                                 }}
                               >
