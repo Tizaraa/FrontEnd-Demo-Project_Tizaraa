@@ -1028,6 +1028,7 @@ const ProductPage = () => {
 
         {/* <Component /> */}
         <div style={containerStyle}>
+          
           {/* Tab Section */}
           <div style={descriptionStyle}>
             <div style={tabContainerStyle}>
@@ -1048,46 +1049,285 @@ const ProductPage = () => {
             <div style={tabContentStyle}>{renderTabContent()}</div>
           </div>
 
-          <div style={bengaliTextStyle}>
-            <h2 style={headingStyle}>শর্ত সমুহ:</h2>
-            <p style={paragraphStyle}>
-              সর্বনিম্ন ১০০০ টাকার পণ্য অর্ডার করতে হবে। অর্ডার প্লেসের পরে
-              আপনার সাপ্লায়ার থেকে আমাদের চায়না ওয়্যারহাউস পর্যন্ত প্রডাক্ট
-              পৌছানোর ডেলিভারির চার্জ (চায়না লোকাল ডেলিভারি চার্জ) ধার্য হবে।
-              উল্লেখিত পণ্যের ওজন সম্পূর্ণ সঠিক নয়, আনুমানিক মাত্র। বাংলাদেশে
-              আসার পর পণ্যটির প্রকৃত ওজন মেপে শিপিং চার্জ হিসাব করা হবে। পণ্যের
-              ক্যাটাগরির উপর নির্ভর করে শিপিং চার্জ নির্ধারণ করা হবে প্রতি কেজি
-              ৭৪০/৯৩০ টাকা।
-            </p>
+          <div
+            style={{
+              backgroundColor: "#fff",
+              border: "2px solid #e94560",
+              borderRadius: "15px",
+              padding: "25px",
+              boxShadow: "0 4px 12px rgba(233, 69, 96, 0.15)",
+              width: isMobileOrTablet ? "100%" : "420px",
+              margin: "0 auto",
+              position: "relative",
+              overflow: "hidden",
+              height: 'fit-content'
+            }}
+          >
+            {/* Decorative elements */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "60px",
+                height: "60px",
+                backgroundColor: "rgba(233, 69, 96, 0.1)",
+                borderRadius: "0 15px 0 50px",
+              }}
+            ></div>
 
-            <h2 style={headingStyle}>শিপিং চার্জ:</h2>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: 700,
+                color: "#e94560",
+                marginBottom: "25px",
+                paddingBottom: "10px",
+                borderBottom: "2px dashed #e94560",
+                textAlign: "center",
+                position: "relative",
+              }}
+            >
+              শর্ত সমুহ
+            </h2>
 
-            <h1 style={categoryStyle}>ক্যাটাগরিঃ এ</h1>
-            <h2 style={{ marginBottom: "5px" }}>৭৪০ টাকা প্রতি কেজি</h2>
-            <p style={paragraphStyle}>
-              জুতা, ব্যাগ, জুয়েলারি, যন্ত্রপাতি, স্টিকার, কম্পিউটার এক্সেসরিজ,
-              সিরামিক, ধাতব, চামড়া, রাবার, প্লাস্টিক জাতীয় পণ্য, কসমেটিক্স
-              এক্সেসরিজ, ব্যাটারি ব্যতীত খেলনা / ইলেকট্রনিক্স পণ্য।
-            </p>
+            <div
+              style={{
+                backgroundColor: "rgba(233, 69, 96, 0.05)",
+                padding: "15px",
+                borderRadius: "10px",
+                marginBottom: "20px",
+                borderLeft: "4px solid #e94560",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "0.9rem",
+                  color: "#333",
+                  lineHeight: "1.6",
+                  margin: 0,
+                }}
+              >
+                সর্বনিম্ন ১০০০ টাকার পণ্য অর্ডার করতে হবে। অর্ডার প্লেসের পরে
+                আপনার সাপ্লায়ার থেকে আমাদের চায়না ওয়্যারহাউস পর্যন্ত প্রডাক্ট
+                পৌছানোর ডেলিভারির চার্জ (চায়না লোকাল ডেলিভারি চার্জ) ধার্য হবে।
+                উল্লেখিত পণ্যের ওজন সম্পূর্ণ সঠিক নয়, আনুমানিক মাত্র। বাংলাদেশে
+                আসার পর পণ্যটির প্রকৃত ওজন মেপে শিপিং চার্জ হিসাব করা হবে।
+                পণ্যের ক্যাটাগরির উপর নির্ভর করে শিপিং চার্জ নির্ধারণ করা হবে
+                প্রতি কেজি ৭১০/১০৯০ টাকা ।
+              </p>
+            </div>
 
-            <h1 style={categoryStyle}>ক্যাটাগরিঃ বি</h1>
-            <h2 style={{ marginBottom: "5px" }}>৯৩০ টাকা প্রতি কেজি</h2>
-            <p style={paragraphStyle}>
-              ব্যাটারি জাতীয় যেকোন পণ্য, ডুপ্লিকেট ব্রান্ড বা কপি পণ্য, বীজ,
-              রাসায়নিক দ্রব্য, নেটওয়ার্কিং আইটেম, ম্যাগনেট বা লেজার জাতীয়
-              পণ্য।
-            </p>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: 700,
+                color: "#e94560",
+                margin: "30px 0 20px",
+                textAlign: "center",
+                position: "relative",
+              }}
+            >
+              শিপিং চার্জ
+            </h2>
 
-            <h1 style={categoryStyle}>ক্যাটাগরিঃ সি</h1>
-            <p style={{ ...paragraphStyle, marginBottom: "0" }}>
-              *পোশাক /গার্মেন্টস/হিজাব/ওড়না - ৮৪০ টাকা * শুধু ব্যাটারি/পাওয়ার
-              ব্যাংক – ১২৫০ টাকা * সানগ্লাস - ৩৩০০ টাকা * ট্রিমার – ১৫০০ টাকা *
-              কসমেটিক্স – ১০৮০ টাকা * স্মার্ট ওয়াচ - ১১০০ টাকা * সাধারন ঘড়ি -
-              ১০০০ টাকা * ব্লুটুথ হেডফোন - ১০৫০ টাকা * তরল বা লিকুইড পণ্য - ১০০০
-              টাকা *পারফিউম -১২৫০ টাকা * খাদ্য - ১২৫০ টাকা * পাউডার - ১০৫০ টাকা
-              * জীবন্ত উদ্ভিদ - ১২৫০ টাকা * শিট মাক্স- ১২৫০ টাকা * সিরাম- ১২৫০
-              টাকা
-            </p>
+            {/* Category A */}
+            <div
+              style={{
+                backgroundColor: "#f8f9fa",
+                borderRadius: "10px",
+                padding: "15px",
+                marginBottom: "20px",
+                border: "1px solid #e94560",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: "#e94560",
+                    color: "white",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                    fontWeight: 700,
+                    fontSize: "0.9rem",
+                    marginRight: "10px",
+                  }}
+                >
+                  ক্যাটাগরিঃ এ
+                </div>
+                <span
+                  style={{
+                    fontWeight: 700,
+                    color: "#e94560",
+                    fontSize: "1.1rem",
+                  }}
+                >
+                  ৭১০ টাকা প্রতি কেজি
+                </span>
+              </div>
+              <p
+                style={{
+                  fontSize: "0.85rem",
+                  color: "#555",
+                  margin: 0,
+                  lineHeight: "1.5",
+                }}
+              >
+                জুতা, ব্যাগ, জুয়েলারি, যন্ত্রপাতি, স্টিকার, কম্পিউটার
+                এক্সেসরিজ, সিরামিক, ধাতব, চামড়া, রাবার, প্লাস্টিক জাতীয় পণ্য,
+                কসমেটিক্স এক্সেসরিজ, ব্যাটারি ব্যতীত খেলনা / ইলেকট্রনিক্স পণ্য।
+              </p>
+            </div>
+
+            {/* Category B */}
+            <div
+              style={{
+                backgroundColor: "#f8f9fa",
+                borderRadius: "10px",
+                padding: "15px",
+                marginBottom: "20px",
+                border: "1px solid #e94560",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: "#e94560",
+                    color: "white",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                    fontWeight: 700,
+                    fontSize: "0.9rem",
+                    marginRight: "10px",
+                  }}
+                >
+                  ক্যাটাগরিঃ বি
+                </div>
+                <span
+                  style={{
+                    fontWeight: 700,
+                    color: "#e94560",
+                    fontSize: "1.1rem",
+                  }}
+                >
+                  ১০৯০ টাকা প্রতি কেজি
+                </span>
+              </div>
+              <p
+                style={{
+                  fontSize: "0.85rem",
+                  color: "#555",
+                  margin: 0,
+                  lineHeight: "1.5",
+                }}
+              >
+                ব্যাটারি জাতীয় যেকোন পণ্য, কসমেটিক্স, তরল বা লিকুইড পণ্য,
+                পাউডার, ডুপ্লিকেট ব্রান্ড বা কপি পণ্য, বীজ, রাসায়নিক দ্রব্য,
+                নেটওয়ার্কিং আইটেম, ম্যাগনেট বা লেজার জাতীয় পণ্য।
+              </p>
+            </div>
+
+            {/* Category C */}
+            <div
+              style={{
+                backgroundColor: "#f8f9fa",
+                borderRadius: "10px",
+                padding: "15px",
+                border: "1px solid #e94560",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: "#e94560",
+                    color: "white",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                    fontWeight: 700,
+                    fontSize: "0.9rem",
+                    marginRight: "10px",
+                  }}
+                >
+                  ক্যাটাগরিঃ সি
+                </div>
+              </div>
+              <ul
+                style={{
+                  fontSize: "0.85rem",
+                  color: "#555",
+                  margin: 0,
+                  paddingLeft: "20px",
+                  lineHeight: "1.7",
+                }}
+              >
+                <li>
+                  <strong>পোশাক/গার্মেন্টস/হিজাব/ওড়না:</strong> ৮৪০ টাকা
+                </li>
+                <li>
+                  <strong>শুধু ব্যাটারি/পাওয়ার ব্যাংক:</strong> ১২৫০ টাকা
+                </li>
+                <li>
+                  <strong>সানগ্লাস:</strong> ৩৩০০ টাকা
+                </li>
+                <li>
+                  <strong>ট্রিমার:</strong> ১৫০০ টাকা
+                </li>
+                <li>
+                  <strong>কসমেটিক্স:</strong> ১০৮০ টাকা
+                </li>
+                <li>
+                  <strong>স্মার্ট ওয়াচ:</strong> ১১০০ টাকা
+                </li>
+                <li>
+                  <strong>সাধারন ঘড়ি:</strong> ১০০০ টাকা
+                </li>
+                <li>
+                  <strong>ব্লুটুথ হেডফোন:</strong> ১০৫০ টাকা
+                </li>
+                <li>
+                  <strong>তরল বা লিকুইড পণ্য:</strong> ১০০০ টাকা
+                </li>
+                <li>
+                  <strong>পারফিউম:</strong> ১২৫০ টাকা
+                </li>
+                <li>
+                  <strong>খাদ্য:</strong> ১২৫০ টাকা
+                </li>
+                <li>
+                  <strong>পাউডার:</strong> ১০৫০ টাকা
+                </li>
+                <li>
+                  <strong>জীবন্ত উদ্ভিদ:</strong> ১২৫০ টাকা
+                </li>
+                <li>
+                  <strong>শিট মাক্স:</strong> ১২৫০ টাকা
+                </li>
+                <li>
+                  <strong>সিরাম:</strong> ১২৫০ টাকা
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
