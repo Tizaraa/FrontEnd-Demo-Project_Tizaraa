@@ -1222,6 +1222,9 @@ export default function OtProductsIntro({
                 </Chip>
               )}
             </FlexBox>
+
+
+            
             {/* <SemiSpan color="inherit">
               {selectedRowId
                 ? getSelectedRowQuantity() > 0
@@ -1231,6 +1234,29 @@ export default function OtProductsIntro({
                 ? "Stock Available"
                 : "Stock Out"}
             </SemiSpan> */}
+          </Box>
+
+          <Box style={{paddingTop:'10px'}}>
+          <SemiSpan style={{fontWeight: 'bold', color: '#000', fontSize: '15px'}}>
+                Color: &nbsp;
+              {configuredItems.find(item => 
+                item.Id === selectedRowId || 
+                item.Configurators.some(config => config.Vid === selectedSpec)
+              )?.Configurators.map((config, index) => {
+                const matchingAttribute = Attributes.find(
+                  (attr) => attr.Vid === config.Vid
+                );
+                return (
+                  <Fragment key={index}>
+                    {matchingAttribute ? matchingAttribute.Value : config.Vid}
+                    {index < (configuredItems.find(item => 
+                      item.Id === selectedRowId || 
+                      item.Configurators.some(config => config.Vid === selectedSpec)
+                    )?.Configurators.length || 0) - 1 && ", "}
+                  </Fragment>
+                );
+              })}
+              </SemiSpan>
           </Box>
 
           <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
