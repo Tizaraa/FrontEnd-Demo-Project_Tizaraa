@@ -819,7 +819,7 @@ export default function ProfileEditForm() {
     phone: "",
     birth_date: "",
     gender: "",
-    profile_image: null as File | null,
+    image: null as File | null,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -836,7 +836,7 @@ export default function ProfileEditForm() {
         phone: userProfile.phone || "",
         birth_date: userProfile.birth_date || "",
         gender: userProfile.gender || "",
-        profile_image: null,
+        image: null,
       });
       setLoading(false);
     } catch (err) {
@@ -865,7 +865,7 @@ export default function ProfileEditForm() {
     phone: profile.phone,
     birth_date: profile.birth_date,
     gender: profile.gender,
-    profile_image: null as File | null,
+    image: null as File | null,
   };
 
   const VALIDATION_SCHEMA = yup.object().shape({
@@ -882,8 +882,8 @@ export default function ProfileEditForm() {
     formData.append("phone", values.phone);
     formData.append("birthdate", values.birth_date);
     formData.append("gender", values.gender);
-    if (values.profile_image) {
-      formData.append("profile_image", values.profile_image);
+    if (values.image) {
+      formData.append("image", values.image);
     }
 
     try {
@@ -1021,18 +1021,18 @@ export default function ProfileEditForm() {
 
               <div className="input-wrapper">
                   <input
-                    id="profile_image"
-                    name="profile_image"
+                    id="image"
+                    name="image"
                     type="file"
                     accept="image/jpeg,image/png,image/gif"
                     className="file-input"
                     onChange={(event) => {
                       const file = event.currentTarget.files?.[0] || null;
-                      setFieldValue("profile_image", file);
+                      setFieldValue("image", file);
                     }}
                     onBlur={handleBlur}
                   />
-                  <label htmlFor="profile_image" className="input-label">
+                  <label htmlFor="image" className="input-label">
                     Upload Image
                   </label>
                 </div>

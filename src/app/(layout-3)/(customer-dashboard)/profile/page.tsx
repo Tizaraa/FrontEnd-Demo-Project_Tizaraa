@@ -296,6 +296,7 @@ export default function Profile() {
     phone: "",
     birth_date: "",
     gender: "",
+    image: ""
   });
   const [data, setData] = useState({
     totalOrders: 0,
@@ -324,6 +325,8 @@ export default function Profile() {
     } else {
       authService.getUser().then((userData) => {
         setUser(userData);
+        console.log('userData', userData);
+        
         setLoading(false);
       });
     }
@@ -340,6 +343,10 @@ export default function Profile() {
           }
         );
         setProfile(profileResponse.data.profile);
+        setUser(profileResponse.data.profile); // Also update user state
+
+        console.log('profileResponse', profileResponse.data.profile);
+        
 
         const historyResponse = await axios.get(
           `${ApiBaseUrl.baseUrl}user/profile/history`,
@@ -429,10 +436,10 @@ export default function Profile() {
                 style={{ gap: "1.5rem" }}
               >
                 {/* Conditional rendering for Avatar or FontAwesome icon */}
-                {user?.image ? (
+                {profile?.image ? (
                   <Avatar 
-                    size={90} 
-                    src={user.image} 
+                    size={100} 
+                    src={`${ApiBaseUrl.ImgUrl}${profile.image}`}
                     style={{
                       border: "3px solid #E94560",
                       boxShadow: "0 4px 15px rgba(233, 69, 96, 0.2)",
