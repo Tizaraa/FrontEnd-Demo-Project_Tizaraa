@@ -28,6 +28,7 @@ type AddToCartButtonProps = {
     color?: { color: string; price: string; qty: string }[];
   };
   selectedColor?: string | null;
+  selectedSpecification?: string | null;
   selectedSize?: string | null;
   selectedPrice?: number | any;
   currentQuantity?: number;
@@ -47,6 +48,7 @@ const AddToCartButton = ({
   productType,
   sizeColor,
   selectedColor,
+  selectedSpecification,
   selectedSize,
   selectedPrice,
   currentQuantity,
@@ -119,6 +121,7 @@ const AddToCartButton = ({
         total_amount: finalPrice * amount,
         sizeColor,
         selectedColor,
+        selectedSpecification,
         selectedSize,
       },
     });

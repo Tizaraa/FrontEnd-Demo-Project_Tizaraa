@@ -895,6 +895,7 @@ export default function OtProductsIntro({
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<number | null>(price);
 
+  const [selectedSpecification, setSelectedSpecification] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [currentQuantity, setCurrentQuantity] = useState(1);
@@ -927,6 +928,20 @@ export default function OtProductsIntro({
     );
 
     return colorAttribute ? colorAttribute.Value : null;
+  };
+
+
+  const getSelectedSpecification = (item: ConfiguredItem): string | null => {
+    if (!Attributes) return null;
+
+    // Find color attribute in this item's configurators
+    const specificationAttribute = Attributes.find(
+      (attr) =>
+        item.Configurators.some((config) => config.Vid === attr.Vid) &&
+        attr.PropertyName.toLowerCase() === "specification"
+    );
+
+    return specificationAttribute ? specificationAttribute.Value : null;
   };
 
   const handleVariantSelect = (item) => {
@@ -1514,6 +1529,7 @@ export default function OtProductsIntro({
                                 productType="Abroad"
                                 sizeColor={sizeColor}
                                 selectedColor={getSelectedColor(item)}
+                                selectedSpecification={getSelectedSpecification(item)}
                                 // selectedSize={selectedSize}
                                 selectedSize={getItemSize(
                                   item,
@@ -1558,6 +1574,7 @@ export default function OtProductsIntro({
                     productType="Abroad"
                     sizeColor={sizeColor}
                     selectedColor={selectedColor}
+                    selectedSpecification={selectedSpecification}
                     selectedSize={selectedSize}
                     selectedPrice={selectedPrice}
                     currentQuantity={currentQuantity}
