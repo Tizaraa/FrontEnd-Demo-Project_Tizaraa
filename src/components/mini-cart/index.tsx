@@ -1060,17 +1060,21 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                   )}
                 </Typography>
 
-                {(item.selectedSize || item.selectedColor) && (
+                {(item.selectedSize || item.selectedColor || item.selectedSpecification) && (
                 <Tiny color="text.muted"
                   fontWeight={600}
                   fontSize="12px"
                   mt="4px"
                 >
-                  {item.selectedSize && item.selectedColor
-                    ? `Size: ${item.selectedSize}, Color: ${item.selectedColor}`
+                  {item.selectedSize && item.selectedColor && item.selectedSpecification
+                    ? `Size: ${item.selectedSize}, Color: ${item.selectedColor}, Specification: ${item.selectedSpecification}`
                     : item.selectedSize
                     ? `Size: ${item.selectedSize}`
-                    : `Color: ${item.selectedColor}`}
+                    : item.selectedColor
+                    ? `Color: ${item.selectedColor}`
+                    : item.selectedSpecification
+                    ? `Specification: ${item.selectedSpecification}`
+                    : ''}
                 </Tiny>
               )}
 

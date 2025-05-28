@@ -241,6 +241,7 @@ export default function WriteReview({
                 <Typography fontSize="14px" color="text.muted">
                   {currency(item.price)} x {item.quantity}
                   {item.color && `, Color: ${item.color}`}
+                  {item.attribute && `, Specification: ${item.attribute}`}
                   {item.size && `, Size: ${item.size}`}
                 </Typography>
               </Box>
