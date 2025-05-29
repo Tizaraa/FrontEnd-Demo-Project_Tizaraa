@@ -895,7 +895,9 @@ export default function OtProductsIntro({
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<number | null>(price);
 
-  const [selectedSpecification, setSelectedSpecification] = useState<string | null>(null);
+  const [selectedSpecification, setSelectedSpecification] = useState<
+    string | null
+  >(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [currentQuantity, setCurrentQuantity] = useState(1);
@@ -929,7 +931,6 @@ export default function OtProductsIntro({
 
     return colorAttribute ? colorAttribute.Value : null;
   };
-
 
   const getSelectedSpecification = (item: ConfiguredItem): string | null => {
     if (!Attributes) return null;
@@ -1151,7 +1152,24 @@ export default function OtProductsIntro({
         </Grid>
 
         <Grid item md={6} xs={12} alignItems="center">
-          <H3 mb="1rem">{title}</H3>
+          <H3 mb="1rem">
+            {title}
+            <span
+            title="This product is shipped from abroad"
+              style={{
+                display: 'inline-block',
+                padding: '4px 12px',
+                backgroundColor: '#E94560',
+                color: 'white',
+                borderRadius: '20px',
+                fontSize: '13px',
+                fontWeight: '500',
+                marginLeft: '12px'
+              }}
+            >
+              Abroad Product
+            </span>
+          </H3>
 
           <FlexBox alignItems="center" mb="1rem">
             <Box mr="8px">
@@ -1166,7 +1184,7 @@ export default function OtProductsIntro({
               )}
 
               {/* Ships from Abroad Badge */}
-              <style>
+              {/* <style>
                 {`
     @keyframes glow {
       0% {
@@ -1199,7 +1217,7 @@ export default function OtProductsIntro({
                 }}
               >
                 🛫 Ships from Abroad
-              </div>
+              </div> */}
             </Box>
           </FlexBox>
 
@@ -1529,7 +1547,9 @@ export default function OtProductsIntro({
                                 productType="Abroad"
                                 sizeColor={sizeColor}
                                 selectedColor={getSelectedColor(item)}
-                                selectedSpecification={getSelectedSpecification(item)}
+                                selectedSpecification={getSelectedSpecification(
+                                  item
+                                )}
                                 // selectedSize={selectedSize}
                                 selectedSize={getItemSize(
                                   item,
