@@ -350,6 +350,25 @@ export default function Footer1() {
                     <div>
                       <p style={{margin: '0px'}}>Registration ID : 144381902</p>
                     </div>
+
+
+
+
+
+                    <Typography
+                      style={{
+                        marginTop: "1.25rem",
+                        // lineHeight: "1",
+                        fontSize: "18px",
+                        fontWeight: "600",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Trade License
+                    </Typography>
+                    <div>
+                      <p style={{margin: '0px', marginBottom: '10px'}}>TRAD/DNCC/010245/2024</p>
+                    </div>
                   </Grid>
 
                   {/* Contact Info */}
