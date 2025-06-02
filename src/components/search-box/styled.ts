@@ -2,6 +2,7 @@ import { getTheme } from "@utils/utils";
 import styled from "styled-components";
 
 const StyledSearchBox = styled.div`
+  margin-top: 10px;
   position: relative;
   display: flex;
   align-items: center;
