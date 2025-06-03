@@ -270,12 +270,13 @@ import Address from "@models/address.model"; // Make sure Address model is defin
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import Loader from "@component/loader";
 
-const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
 
 export default function AddressList() {
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -330,12 +331,23 @@ export default function AddressList() {
     }
   };
 
-  if (loading)
+  // if (loading)
+  //   return (
+  //     <LoaderWrapper>
+  //       <Vortex />
+  //     </LoaderWrapper>
+  //   );
+
+
+  if (loading) {
     return (
-      <LoaderWrapper>
-        <Vortex />
-      </LoaderWrapper>
+      <Typography>
+        <Loader />
+      </Typography>
     );
+  }
+
+
   if (error) return <div>{error}</div>;
 
   return (

@@ -38,18 +38,6 @@ import Loader from "@component/loader";
 // import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 
-const LoaderWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #fff // Optional: semi-transparent overlay
-`;
-
 const InvoiceWrapper = styled.div`
   margin-top: 20px;
   height: 80vh; // Use 80% of the viewport height for responsiveness

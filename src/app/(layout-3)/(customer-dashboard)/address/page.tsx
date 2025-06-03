@@ -351,13 +351,14 @@ import Address from "@models/address.model";
 import authService from "services/authService";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { motion } from "framer-motion";
+import Loader from "@component/loader";
 
 // Styled Components
-const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
 
 const StyledTableRow = styled.div`
   display: flex;
@@ -586,9 +587,9 @@ export default function AddressList() {
       />
 
       {loading ? (
-        <LoaderWrapper>
-          <Vortex />
-        </LoaderWrapper>
+        <Typography>
+        <Loader />
+      </Typography>
       ) : addresses.length > 0 ? (
         addresses.map((item) => (
           <AddressItem key={item.id} item={item} onDelete={handleDelete} />

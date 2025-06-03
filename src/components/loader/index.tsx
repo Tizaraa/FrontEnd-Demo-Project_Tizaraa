@@ -11,7 +11,7 @@ const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #fff // Optional: semi-transparent overlay
+  background: #fff
 `;
 
 const PrimaryLoader = `${ApiBaseUrl.ImgUrl}frontend/loader/loader.gif`;
@@ -22,7 +22,6 @@ const Loader = () => {
       <img
         src={PrimaryLoader}
         alt="Loading"
-        style={{ width: '80px', height: '80px', objectFit: 'contain' }}
       />
     </LoaderWrapper>
   );

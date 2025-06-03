@@ -29,14 +29,15 @@ import { faStore, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-ico
 import { Chip } from "@component/Chip";
 import authService from "services/authService";
 import { useRouter } from "next/navigation";
+import Loader from "@component/loader";
 // import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons"; 
 
 
-const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
 
 const InvoiceWrapper = styled.div`
   margin-top: 20px;
@@ -236,15 +237,24 @@ useEffect(() => {
     }
   };
 
+  // if (loading) {
+  //   return (
+  //     <Typography>
+  //       <LoaderWrapper>
+  //         <Vortex />
+  //       </LoaderWrapper>
+  //     </Typography>
+  //   );
+  // }
+
+
   if (loading) {
     return (
       <Typography>
-        <LoaderWrapper>
-          <Vortex />
-        </LoaderWrapper>
+        <Loader />
       </Typography>
     );
-  }
+  }    
 
   if (!order) {
     return <Typography color="red">Failed to fetch order details</Typography>;

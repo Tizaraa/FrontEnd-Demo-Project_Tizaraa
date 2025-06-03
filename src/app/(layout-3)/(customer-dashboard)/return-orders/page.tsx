@@ -140,7 +140,7 @@ import { useRouter } from "next/navigation";
 import api from "@utils/__api__/orders"; // Assuming you have an API utility
 import Hidden from "@component/hidden";
 import TableRow from "@component/TableRow";
-import { H5 } from "@component/Typography";
+import Typography, { H5 } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { OrderRow, OrdersPagination } from "@sections/customer-dashboard/orders"; // Ensure OrderRow is imported correctly
 import authService from "services/authService";
@@ -156,12 +156,13 @@ import Image from "next/image";
 import NextImage from "@component/NextImage";
 import DeliveredOrderRow from "@sections/customer-dashboard/orders/DeliveredOrderRow";
 import ReturnOrderRow from "@sections/customer-dashboard/orders/ReturnOrderRow";
+import Loader from "@component/loader";
 
-const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
 
 export default function OrderList() {
   //const order_List = await api.getOrders();
@@ -249,12 +250,21 @@ export default function OrderList() {
     (currentPage + 1) * ordersPerPage,
   );
 
-  if (loading)
+  // if (loading)
+  //   return (
+  //     <LoaderWrapper>
+  //       <Vortex />
+  //     </LoaderWrapper>
+  //   );
+
+
+  if (loading) {
     return (
-      <LoaderWrapper>
-        <Vortex />
-      </LoaderWrapper>
+      <Typography>
+        <Loader />
+      </Typography>
     );
+  }
 
   return (
     <>

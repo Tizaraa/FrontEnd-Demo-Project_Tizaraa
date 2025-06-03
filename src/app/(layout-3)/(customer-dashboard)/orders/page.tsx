@@ -140,7 +140,7 @@ import { useRouter } from "next/navigation";
 import api from "@utils/__api__/orders"; // Assuming you have an API utility
 import Hidden from "@component/hidden";
 import TableRow from "@component/TableRow";
-import { H5 } from "@component/Typography";
+import Typography, { H5 } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { OrderRow, OrdersPagination } from "@sections/customer-dashboard/orders"; // Ensure OrderRow is imported correctly
 import authService from "services/authService";
@@ -154,12 +154,7 @@ import "react-toastify/dist/ReactToastify.css";
 import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
 import Image from "next/image";
 import NextImage from "@component/NextImage";
-
-const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+import Loader from "@component/loader";
 
 export default function OrderList() {
   //const order_List = await api.getOrders();
@@ -247,12 +242,14 @@ export default function OrderList() {
     (currentPage + 1) * ordersPerPage,
   );
 
-  if (loading)
+  if (loading) {
     return (
-      <LoaderWrapper>
-        <Vortex />
-      </LoaderWrapper>
+      <Typography>
+        <Loader />
+      </Typography>
     );
+  }
+
 
   return (
     <>
