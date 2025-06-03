@@ -34,12 +34,20 @@ import authService from "services/authService";
 import { useRouter } from "next/navigation";
 import { Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import Loader from "@component/loader";
 // import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
+
 const LoaderWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #fff // Optional: semi-transparent overlay
 `;
 
 const InvoiceWrapper = styled.div`
@@ -81,6 +89,10 @@ export default function OrderDetails({ params }: IDParams) {
     [key: string]: boolean;
   }>({});
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+
+  const PrimaryLoader = `${ApiBaseUrl.ImgUrl}frontend/loader/loader.gif`;
+
 
   const getColor = (status: string) => {
     switch (status) {
@@ -237,12 +249,22 @@ export default function OrderDetails({ params }: IDParams) {
     }
   };
 
+  // if (loading) {
+  //   return (
+  //     <Typography>
+  //       <LoaderWrapper>
+  //         {/* <img src={PrimaryLoader} alt="Loading" /> */}
+  //         <img src={PrimaryLoader} alt="Loading" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+  //       </LoaderWrapper>
+  //     </Typography>
+  //   );
+  // }
+
+
   if (loading) {
     return (
       <Typography>
-        <LoaderWrapper>
-          <Vortex />
-        </LoaderWrapper>
+        <Loader />
       </Typography>
     );
   }
