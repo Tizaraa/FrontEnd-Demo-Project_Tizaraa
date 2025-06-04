@@ -348,14 +348,16 @@ export default function ProductCard7(props: ProductCard7Props) {
       <div style={{ padding: "3px" }}>
         <Typography fontSize="14px" color="gray.600">
           {/* <FontAwesomeIcon icon={faShop} style={{ marginRight: "5px" }} /> */}
-          <FontAwesomeIcon 
-      icon={faShop} 
-      style={{ 
-        marginRight: "5px",
-        width: isMobile ? "15px" : "14px",
-        height: isMobile ? "15px" : "14px"
-      }} 
-    />
+          {!isMobile && (
+            <FontAwesomeIcon 
+              icon={faShop} 
+              style={{ 
+                marginRight: "5px",
+                width: "14px",
+                height: "14px"
+              }} 
+            />
+          )}
           {productInfo ? productInfo.shopname : "Loading..."}
         </Typography>
         <hr />
