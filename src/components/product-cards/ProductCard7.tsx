@@ -206,6 +206,7 @@ import Card from "@component/Card";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShop } from '@fortawesome/free-solid-svg-icons';
+import { useMediaQuery } from "@mui/material";
 
 const Wrapper = styled.div.withConfig({
   shouldForwardProp: (prop) => isValidProp(prop)
@@ -340,12 +341,21 @@ export default function ProductCard7(props: ProductCard7Props) {
   };
 
   const currentCartItem = state.cart.find((item) => item.id === id);
+  const isMobile = useMediaQuery('(max-width:700px)');
 
   return (
     <Card>
       <div style={{ padding: "3px" }}>
         <Typography fontSize="14px" color="gray.600">
-          <FontAwesomeIcon icon={faShop} style={{ marginRight: "5px" }} />
+          {/* <FontAwesomeIcon icon={faShop} style={{ marginRight: "5px" }} /> */}
+          <FontAwesomeIcon 
+      icon={faShop} 
+      style={{ 
+        marginRight: "5px",
+        width: isMobile ? "15px" : "14px",
+        height: isMobile ? "15px" : "14px"
+      }} 
+    />
           {productInfo ? productInfo.shopname : "Loading..."}
         </Typography>
         <hr />
