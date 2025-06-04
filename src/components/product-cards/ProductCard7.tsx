@@ -274,27 +274,58 @@ export default function ProductCard7(props: ProductCard7Props) {
 
   const authtoken = authService.getToken();
 
+  const [loading, setLoading] = useState(true);
+const [error, setError] = useState(false);
+
   // Fetch product info from API
+  // useEffect(() => {
+  //   const fetchProductInfo = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${ApiBaseUrl.baseUrl}cart/product/info/${productId}`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
+  //           },
+  //         }
+  //       );
+
+  //       setProductInfo(response.data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch product info:", error);
+  //     }
+  //   };
+
+  //   fetchProductInfo();
+  // }, [productId]);
+
+
   useEffect(() => {
     const fetchProductInfo = async () => {
+      setLoading(true);
+      setError(false);
       try {
         const response = await axios.get(
           `${ApiBaseUrl.baseUrl}cart/product/info/${productId}`,
           {
             headers: {
-              Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
+              Authorization: `Bearer ${authtoken}`,
             },
           }
         );
-
         setProductInfo(response.data);
       } catch (error) {
         console.error("Failed to fetch product info:", error);
+        setError(true);
+      } finally {
+        setLoading(false);
       }
     };
-
+  
     fetchProductInfo();
   }, [productId]);
+
+  
 
   useEffect(() => {
     const itemInCart = state.cart.find((item) => item.id === id);
@@ -346,8 +377,8 @@ export default function ProductCard7(props: ProductCard7Props) {
   return (
     <Card>
       <div style={{ padding: "3px" }}>
-        <Typography fontSize="14px" color="gray.600">
-          {/* <FontAwesomeIcon icon={faShop} style={{ marginRight: "5px" }} /> */}
+        {/* <Typography fontSize="14px" color="gray.600">
+          <FontAwesomeIcon icon={faShop} style={{ marginRight: "5px" }} />
           {!isMobile && (
             <FontAwesomeIcon 
               icon={faShop} 
@@ -359,7 +390,22 @@ export default function ProductCard7(props: ProductCard7Props) {
             />
           )}
           {productInfo ? productInfo.shopname : "Loading..."}
-        </Typography>
+        </Typography> */}
+
+<Typography fontSize="14px" color="gray.600">
+  {!isMobile && (
+    <FontAwesomeIcon 
+      icon={faShop} 
+      style={{ marginRight: "5px", width: "14px", height: "14px" }} 
+    />
+  )}
+  {loading
+    ? "Loading shop info..."
+    : error
+    ? "Shop info unavailable"
+    : productInfo?.shopname || "Shop name not found"}
+</Typography>
+
         <hr />
       </div>
 
