@@ -227,7 +227,6 @@
 // }
 
 // Responsive carousel that loads fresh slides on every load
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -239,12 +238,14 @@ import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import Typography from "@component/Typography";
+import Loader from "@component/loader";
 
-const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
 
 interface Slide {
   slider_image: string;
@@ -392,9 +393,9 @@ export default function CarouselSlider(): JSX.Element {
           }}
         >
           {loading ? (
-            <LoaderWrapper>
-              <Vortex />
-            </LoaderWrapper>
+            <Typography>
+              <Loader />
+            </Typography>
           ) : (
             <div
               className="slider"
