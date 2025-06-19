@@ -62,7 +62,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
 
   const flexBoxStyle: React.CSSProperties = {
     display: "flex",
-    flexDirection: isMobile ? "column" : "row",
+    flexDirection: isMobile ? "row" : "row",
     gap: isMobile ? "1rem" : isTablet ? "10rem" : "30rem",
     alignItems: "center",
     justifyContent: isMobile ? "center" : "space-between",
