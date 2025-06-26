@@ -2,13 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import Card from "@component/Card";
-import Divider from "@component/Divider";
-import CheckBox from "@component/CheckBox";
-import { Accordion, AccordionHeader } from "@component/accordion";
-import { H6, Paragraph, SemiSpan } from "@component/Typography";
+import { H6 } from "@component/Typography";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import axios from 'axios';
 import ApiBaseUrl from 'api/ApiBaseUrl';
-import Link from 'next/link';
 
 type Brand = {
   id: number;
@@ -18,15 +15,12 @@ type Brand = {
 type Category = {
   id: number;
   categorie_name: string;
-  // child?: Category[]; // Ensure child is of type Category[]
-  // categorie_name_slug: string;
 };
 
 type Country = {
   id: number;
   location: string; 
 };
-
 
 type Province = {
   id: number;
@@ -35,11 +29,9 @@ type Province = {
   status: number;
 };
 
-
 type ShopProductFilterCardProps = {
   onBrandChange: (brands: number[]) => void;
-  // onCategoryChange: (categorySlug: string) => void; // Ensure this is a string
-  onCategoryChange: (categories: number[]) => void; // Ensure this is a number
+  onCategoryChange: (categories: number[]) => void;
   onCountryChange: (countryIds: number[]) => void;
   onProvinceChange: (provinces: number[]) => void;
   slug: string;
@@ -53,23 +45,115 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
   onProvinceChange,
   slug,
   pageType = 'shop'
-}) =>  {
+}) => {
   const [brandList, setBrandList] = useState<Brand[]>([]);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [countryList, setCountryList] = useState<Country[]>([]);
   const [provinceList, setProvinceList] = useState<Province[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<number[]>([]);
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
-  const [showAllBrands, setShowAllBrands] = useState(false);
-   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [showAllCategories, setShowAllCategories] = useState(false);
+  const [showAllBrands, setShowAllBrands] = useState(false);
   const [showAllCountries, setShowAllCountries] = useState(false);
   const [showAllProvinces, setShowAllProvinces] = useState(false);
-  const [filteredCategories, setFilteredCategories] = useState(null);
-  const [filteredBrand, setFilteredBrand] = useState(null);
-  const [filteredCountry, setFilteredCountry] = useState(null);
 
+  // Collapse states
+  const [showCategories, setShowCategories] = useState(true);
+  const [showBrands, setShowBrands] = useState(true);
+  const [showCountries, setShowCountries] = useState(true);
+  const [showProvinces, setShowProvinces] = useState(true);
+
+  // Card container style
+  const cardStyle: React.CSSProperties = {
+    padding: "16px",
+    borderRadius: "12px",
+    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.05)",
+    border: "1px solid #f0f0f0",
+    backgroundColor: "#ffffff"
+  };
+
+  // Filter section style
+  const filterSectionStyle: React.CSSProperties = {
+    marginBottom: "18px"
+  };
+
+  // Filter header style
+  const filterHeaderStyle: React.CSSProperties = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    cursor: "pointer",
+    padding: "8px 0",
+    userSelect: "none"
+  };
+
+  // Filter title style
+  const filterTitleStyle: React.CSSProperties = {
+    margin: 0,
+    fontSize: "14px",
+    fontWeight: 600,
+    color: "#333"
+  };
+
+  // Filter content style
+  const filterContentStyle: React.CSSProperties = {
+    marginTop: "8px"
+  };
+
+  // Filter buttons container style
+  const filterButtonsStyle: React.CSSProperties = {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "8px"
+  };
+
+  // Base filter button style
+  const baseFilterButtonStyle: React.CSSProperties = {
+    padding: "6px 12px",
+    borderRadius: "16px",
+    border: "1px solid #e0e0e0",
+    backgroundColor: "#ffffff",
+    color: "#555",
+    cursor: "pointer",
+    fontSize: "13px",
+    transition: "all 0.2s ease",
+    outline: "none"
+  };
+
+  // Active filter button style
+  const activeFilterButtonStyle: React.CSSProperties = {
+    ...baseFilterButtonStyle,
+    borderColor: "#3BB77E",
+    backgroundColor: "#F2FCF7",
+    color: "#3BB77E",
+    fontWeight: 500
+  };
+
+  // Scroll container style
+  const scrollContainerStyle: React.CSSProperties = {
+    maxHeight: "200px",
+    overflowY: "auto",
+    paddingRight: "10px",
+    scrollbarWidth: "thin",
+    scrollbarColor: "#888 transparent"
+  };
+
+  // Show more button style
+  const showMoreButtonStyle: React.CSSProperties = {
+    marginTop: "8px",
+    padding: "4px 8px",
+    backgroundColor: "transparent",
+    border: "none",
+    color: "#3BB77E",
+    cursor: "pointer",
+    fontSize: "12px",
+    display: "flex",
+    alignItems: "center",
+    gap: "4px",
+    transition: "all 0.2s ease"
+  };
 
   useEffect(() => {
     const fetchFilters = async () => {
@@ -77,7 +161,6 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
         let response;
         if (pageType === 'default') {
           response = await axios.get(`${ApiBaseUrl.baseUrl}category-filter/${slug}`);
-          // console.log(response.data)
         } else if (pageType === 'search') {
           response = await axios.get(`${ApiBaseUrl.baseUrl}search-filter/${slug}`);
         } else if (pageType === 'shop') {
@@ -96,33 +179,14 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
     fetchFilters();
   }, [slug, pageType]);
 
+  const handleBrandChange = (brandId: number) => {
+    const updatedSelectedBrands = selectedBrands.includes(brandId)
+      ? selectedBrands.filter((id) => id !== brandId)
+      : [brandId];
+    setSelectedBrands(updatedSelectedBrands);
+    onBrandChange(updatedSelectedBrands);
+  };
 
-  // Render provinces
-  const visibleProvinces = showAllProvinces ? provinceList : provinceList.slice(0, 5);
-  const toggleShowProvinces = () => setShowAllProvinces(!showAllProvinces);
-
-// const handleBrandChange = (brandId: number) => {
-//     const updatedBrands = selectedBrands.includes(brandId)
-//       ? selectedBrands.filter((id) => id !== brandId)
-//       : [...selectedBrands, brandId];
-//     setSelectedBrands(updatedBrands);
-//     onBrandChange(updatedBrands);
-//   };
-
-const handleBrandChange = (brandId: number) => {
-  const updatedSelectedBrands = selectedBrands.includes(brandId)
-    ? selectedBrands.filter((id) => id !== brandId)
-    // : [...selectedBrands, brandId];
-    : [brandId];
-
-  setSelectedBrands(updatedSelectedBrands);
-  onBrandChange(updatedSelectedBrands);
-};
-  
-  // const handleCategoryClick = (categorySlug: string) => {
-  //   onCategoryChange(categorySlug);
-  // };
-  
   const handleCountryChange = (countryId: number) => {
     const updatedCountries = selectedCountry.includes(countryId)
       ? selectedCountry.filter((id) => id !== countryId)
@@ -131,25 +195,14 @@ const handleBrandChange = (brandId: number) => {
     onCountryChange(updatedCountries);
   };
 
-  // const handleCategoryChange = (categoryId: number) => {
-  //   const updatedSelectedCategories = selectedCategories.includes(categoryId)
-  //     ? selectedCategories.filter((id) => id !== categoryId)
-  //     : [...selectedCategories, categoryId];
-  
-  //   setSelectedCategories(updatedSelectedCategories);
-  //   onCategoryChange(updatedSelectedCategories);
-  // };
-
   const handleCategoryChange = (categoryId: number) => {
     const updatedSelectedCategories = selectedCategories.includes(categoryId) 
       ? selectedCategories.filter((id) => id !== categoryId)
-      : [categoryId]; 
-    
+      : [categoryId];
     setSelectedCategories(updatedSelectedCategories);
     onCategoryChange(updatedSelectedCategories);
   };
 
-  
   const handleProvinceChange = (provinceId: number) => {
     const updatedProvinces = selectedProvinces.includes(provinceId)
       ? selectedProvinces.filter((id) => id !== provinceId)
@@ -157,383 +210,176 @@ const handleBrandChange = (brandId: number) => {
     setSelectedProvinces(updatedProvinces);
     onProvinceChange(updatedProvinces);
   };
-  
-  
-  // const renderCategories = (items: Category[]) => 
-  //   items.map((item) => (
-  //     <div key={item.id}>
-  //       <Paragraph
-  //         py="6px"
-  //         pl="22px"
-  //         fontSize="14px"
-  //         color="text.muted"
-  //         className="cursor-pointer"
-  //         onClick={() => handleCategoryClick(item.categorie_name)} // Ensure you're passing the slug
-  //       >
-  //         {item.categorie_name}
-  //       </Paragraph>
-  //       {item.child && item.child.length > 0 && (
-  //         <Accordion key={item.id} expanded>
-  //           <AccordionHeader px="0px" py="6px" color="text.muted">
-  //             <SemiSpan className="cursor-pointer" mr="9px">
-  //               {item.categorie_name}
-  //             </SemiSpan>
-  //           </AccordionHeader>
-  //           {renderCategories(item.child)} {/* Render child categories */}
-  //         </Accordion>
-  //       )}
-  //     </div>
-  //   ));
 
-  const visibleBrands = showAllBrands ? brandList : brandList.slice(0, 5);
-  const visibleCategories = showAllCategories ? categoryList : categoryList.slice(0, 5);
-  const visibleCountries = showAllCountries ? countryList : countryList.slice(0, 5);
+  const FilterButton = ({
+    item,
+    selectedItems,
+    onClick
+  }: {
+    item: { id: number; [key: string]: any };
+    selectedItems: number[];
+    onClick: () => void;
+  }) => {
+    const [hovered, setHovered] = useState(false);
+    const isActive = selectedItems.includes(item.id);
 
-  const toggleShowBrands = () => setShowAllBrands(!showAllBrands);
-  const toggleShowCategories = () => setShowAllCategories(!showAllCategories);
-  const toggleShowCountries = () => setShowAllCountries(!showAllCountries);
+    const buttonStyle: React.CSSProperties = {
+      ...(isActive ? activeFilterButtonStyle : baseFilterButtonStyle),
+      ...(hovered && !isActive ? { borderColor: "#ccc" } : {})
+    };
+
+    return (
+      <button
+        onClick={onClick}
+        style={buttonStyle}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        {item.brand_name || item.categorie_name || item.location || item.province}
+      </button>
+    );
+  };
+
+  const FilterSection = ({
+    title,
+    items,
+    selectedItems,
+    showSection,
+    setShowSection,
+    onClickHandler,
+    callback,
+    showAll,
+    setShowAll
+  }: {
+    title: string;
+    items: any[];
+    selectedItems: number[];
+    showSection: boolean;
+    setShowSection: React.Dispatch<React.SetStateAction<boolean>>;
+    onClickHandler: (id: number) => void;
+    callback: (items: number[]) => void;
+    showAll?: boolean;
+    setShowAll?: React.Dispatch<React.SetStateAction<boolean>>;
+  }) => {
+    const [hovered, setHovered] = useState(false);
+    const itemsToShow = showAll ? items : items.slice(0, 5);
+    const remainingCount = items.length - 5;
+    
+    return (
+      <div style={filterSectionStyle}>
+        <div 
+          style={{
+            ...filterHeaderStyle,
+            ...(hovered ? { color: "#3BB77E" } : {})
+          }}
+          onClick={() => setShowSection(!showSection)}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
+          <H6 style={filterTitleStyle}>{title}</H6>
+          {showSection ? 
+            <FiChevronUp size={16} color={hovered ? "#3BB77E" : "#333"} /> : 
+            <FiChevronDown size={16} color={hovered ? "#3BB77E" : "#333"} />
+          }
+        </div>
+
+        {showSection && (
+          <div style={filterContentStyle}>
+            <div style={scrollContainerStyle}>
+              <div style={filterButtonsStyle}>
+                {itemsToShow.map((item) => (
+                  <FilterButton
+                    key={item.id}
+                    item={item}
+                    selectedItems={selectedItems}
+                    onClick={() => onClickHandler(item.id)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {items.length > 5 && !showAll && (
+              <button
+                onClick={() => setShowAll && setShowAll(true)}
+                style={{
+                  ...showMoreButtonStyle,
+                  ...(hovered ? { color: "#2a9d6e" } : {})
+                }}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+              >
+                {`+${remainingCount} More`}
+              </button>
+            )}
+
+            {showAll && items.length > 5 && (
+              <button
+                onClick={() => setShowAll && setShowAll(false)}
+                style={{
+                  ...showMoreButtonStyle,
+                  ...(hovered ? { color: "#2a9d6e" } : {})
+                }}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+              >
+                Show Less
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
-    <Card p="18px 27px" elevation={5} borderRadius={8}>
-        <H6 mb="10px">Categories</H6>
-      {/* <div
-  style={{
-    maxHeight: "200px",
-    overflowY: "auto",
-    paddingRight: "10px", // Add padding for space between scrollbar and content
-  }}
-  className="custom-scrollbar"
->
-{categoryList.map((item) => (
-        <CheckBox
-          my="10px"
-          key={item.id}
-          name={item.categorie_name}
-          value={item.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
-          onChange={() => handleCategoryChange(item.id)}
-          checked={selectedCategories.includes(item.id)}
-        />
-      ))}
-       </div> */}
-
-<div
-  style={{
-    maxHeight: "200px",
-    overflowY: "auto",
-    paddingRight: "10px", // Add padding for space between scrollbar and content
-  }}
-  className="custom-scrollbar"
->
-  {/* Search input field */}
-  <div style={{ padding: "10px", position: "sticky", top: 0, background: "white", zIndex: 1 }}>
-    <input
-      type="text"
-      placeholder="Search categories..."
-      style={{
-        width: "100%",
-        padding: "8px",
-        borderRadius: "4px",
-        border: "1px solid #ccc",
-      }}
-      onChange={(e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        setFilteredCategories(
-          categoryList.filter(item => 
-            item.categorie_name.toLowerCase().includes(searchTerm)
-          )
-        );
-      }}
-    />
-  </div>
-
-  {/* Filtered category list */}
-  {(filteredCategories || categoryList).map((item) => (
-    <CheckBox
-      my="10px"
-      key={item.id}
-      name={item.categorie_name}
-      value={item.id}
-      color="secondary"
-      label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
-      onChange={() => handleCategoryChange(item.id)}
-      checked={selectedCategories.includes(item.id)}
-    />
-  ))}
-</div>
-
-
-
-
-       {/* {visibleCategories.map((item) => (
-        <CheckBox
-          my="10px"
-          key={item.id}
-          name={item.categorie_name}
-          value={item.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{item.categorie_name}</SemiSpan>}
-          onChange={() => handleCategoryChange(item.id)}
-          checked={selectedCategories.includes(item.id)}
-        />
-      ))}
-      {categoryList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowCategories}
-        >
-          {showAllCategories ? "Show Less" : "Show More"}
-        </Paragraph>
-      )} */}
-
-<Divider my="24px" />
-<H6 mb="16px">Brands</H6>
-      <div
-  style={{
-    maxHeight: "200px",
-    overflowY: "auto",
-    paddingRight: "10px", // Add padding for space between scrollbar and content
-  }}
-  className="custom-scrollbar"
->
-    {/* Search input field */}
-    <div style={{ padding: "10px", position: "sticky", top: 0, background: "white", zIndex: 1 }}>
-    <input
-      type="text"
-      placeholder="Search Brand..."
-      style={{
-        width: "100%",
-        padding: "8px",
-        borderRadius: "4px",
-        border: "1px solid #ccc",
-      }}
-      onChange={(e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        setFilteredBrand(
-          brandList.filter(item => 
-            item.brand_name.toLowerCase().includes(searchTerm)
-          )
-        );
-      }}
-    />
-  </div>
-{(filteredBrand || brandList).map((item) => (
-        <CheckBox
-          my="10px"
-          key={item.id}
-          name={item.brand_name}
-          value={item.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{item.brand_name}</SemiSpan>}
-          onChange={() => handleBrandChange(item.id)}
-          checked={selectedBrands.includes(item.id)}
-        />
-      ))}
-</div>
-
-      {/* {visibleBrands.map((item) => (
-        <CheckBox
-          my="10px"
-          key={item.id}
-          name={item.brand_name}
-          value={item.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{item.brand_name}</SemiSpan>}
-          onChange={() => handleBrandChange(item.id)}
-          checked={selectedBrands.includes(item.id)}
-        />
-      ))}
-
-      {brandList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowBrands}
-        >
-          {showAllBrands ? "Show Less" : "Show More"}
-        </Paragraph>
-      )} */}
-
-    
-
-
-      <Divider mt="18px" mb="24px" />
-      <H6 mb="10px">Country of Origin</H6>
-      <div
-  style={{
-    maxHeight: "200px",
-    overflowY: "auto",
-    paddingRight: "10px", // Add padding for space between scrollbar and content
-  }}
-  className="custom-scrollbar"
->
-
-    {/* Search input field */}
-    <div style={{ padding: "10px", position: "sticky", top: 0, background: "white", zIndex: 1 }}>
-      <input
-        type="text"
-        placeholder="Search country..."
-        style={{
-          width: "100%",
-          padding: "8px",
-          borderRadius: "4px",
-          border: "1px solid #ccc",
-        }}
-        onChange={(e) => {
-          const searchTerm = e.target.value.toLowerCase();
-          setFilteredCountry(
-            countryList.filter(item => 
-              item.location.toLowerCase().includes(searchTerm)
-            )
-          );
-        }}
+    <Card style={cardStyle}>
+      <FilterSection
+        title="Categories"
+        items={categoryList}
+        selectedItems={selectedCategories}
+        showSection={showCategories}
+        setShowSection={setShowCategories}
+        onClickHandler={handleCategoryChange}
+        callback={onCategoryChange}
+        showAll={showAllCategories}
+        setShowAll={setShowAllCategories}
       />
-    </div>
 
-    {(filteredCountry ? filteredCountry : countryList).map((country) => (
-      <CheckBox
-        my="10px"
-        key={country.id}
-        name={country.location}
-        value={country.id}
-        color="secondary"
-        label={<SemiSpan color="inherit">{country.location}</SemiSpan>}
-        onChange={() => handleCountryChange(country.id)}
-        checked={selectedCountry.includes(country.id)}
+      <FilterSection
+        title="Brands"
+        items={brandList}
+        selectedItems={selectedBrands}
+        showSection={showBrands}
+        setShowSection={setShowBrands}
+        onClickHandler={handleBrandChange}
+        callback={onBrandChange}
+        showAll={showAllBrands}
+        setShowAll={setShowAllBrands}
       />
-    ))}
 
+      <FilterSection
+        title="Country of Origin"
+        items={countryList}
+        selectedItems={selectedCountry}
+        showSection={showCountries}
+        setShowSection={setShowCountries}
+        onClickHandler={handleCountryChange}
+        callback={onCountryChange}
+        showAll={showAllCountries}
+        setShowAll={setShowAllCountries}
+      />
 
-</div>
-
-
-      {/* {visibleCountries.map((country) => (
-        <CheckBox
-          my="10px"
-          key={country.id}
-          name={country.location}
-          value={country.id}
-          color="secondary"
-          label={<SemiSpan color="inherit">{country.location}</SemiSpan>}
-          onChange={() => handleCountryChange(country.id)}
-          checked={selectedCountry.includes(country.id)}
-        />
-      ))}
-      
-      {countryList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowCountries}
-        >
-          {showAllCountries ? "Show Less" : "Show More"}
-        </Paragraph>
-      )} */}
-
-
-      {/* Warranty */}
-      {/* <Divider mt="18px" mb="24px" />
-      <H6 mb="10px">Warranty</H6> */}
-      {/* Add warranty options here */}
-
-
-
-      
-      <Divider mt="18px" mb="24px" />
-
-      <H6 mb="10px">Shipped From</H6>
-      <div
-  style={{
-    maxHeight: "200px",
-    overflowY: "auto",
-    paddingRight: "10px", // Add padding for space between scrollbar and content
-  }}
-  className="custom-scrollbar"
->
-{provinceList
- .filter((province) => province.province && province.province.trim() !== "")
- .map((province) => (
-        <CheckBox
-          my="10px"
-          key={province.id}
-          name={province.province}
-          value={province.id}
-          color="secondary"
-          label={
-            <SemiSpan color="inherit">
-              {province.province} 
-            </SemiSpan>
-          }
-          onChange={() => handleProvinceChange(province.id)}
-          checked={selectedProvinces.includes(province.id)}
-        />
-      ))}
-
-</div>
-
-
-      {/* {visibleProvinces.map((province) => (
-        <CheckBox
-          my="10px"
-          key={province.id}
-          name={province.province}
-          value={province.id}
-          color="secondary"
-          label={
-            <SemiSpan color="inherit">
-              {province.province} 
-            </SemiSpan>
-          }
-          onChange={() => handleProvinceChange(province.id)}
-          checked={selectedProvinces.includes(province.id)}
-        />
-      ))}
-      {provinceList.length > 5 && (
-        <Paragraph
-          py="6px"
-          fontSize="14px"
-          className="cursor-pointer"
-          color="primary.main"
-          onClick={toggleShowProvinces}
-        >
-          {showAllProvinces ? "Show Less" : "Show More"}
-        </Paragraph>
-      )}
- */}
-
-
-      {/* scrollbar css  */}
-<style jsx>{`
-  .custom-scrollbar {
-    scrollbar-width: thin; /* Firefox - thin scrollbar */
-    scrollbar-color: #888 transparent; /* Thumb color and no track background for Firefox */
-  }
-
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 2px; /* Thinner scrollbar width */
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #888; /* Thumb color */
-    border-radius: 2px; /* Rounded edges for the thumb */
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Darker thumb color on hover */
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent; /* Remove track background */
-  }
-`}</style>
+      <FilterSection
+        title="Shipped From"
+        items={provinceList.filter(p => p.province && p.province.trim() !== "")}
+        selectedItems={selectedProvinces}
+        showSection={showProvinces}
+        setShowSection={setShowProvinces}
+        onClickHandler={handleProvinceChange}
+        callback={onProvinceChange}
+        showAll={showAllProvinces}
+        setShowAll={setShowAllProvinces}
+      />
     </Card>
   );
 };
