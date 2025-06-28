@@ -167,7 +167,7 @@ export default function ProductGridView({
       <Grid container spacing={6}>
         {products.length > 0 ? (
           products.map((item) => (
-            <Grid item lg={4} sm={6} xs={12} key={item.id}>
+            <Grid item lg={4} sm={6} xs={6} key={item.id}>
               <ProductCard1
                 id={item?.id || ""}
                 slug={item?.slug || ""}
