@@ -155,12 +155,14 @@ import CategoryRelatedProducts from "@sections/market-1/CategoryRelatedProducts"
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import Typography from "@component/Typography";
+import Loader from "@component/loader";
 
-const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
 
 export default function CategoryResult({ categoryid }) {
   const [products, setProducts] = useState([]);
@@ -191,9 +193,9 @@ export default function CategoryResult({ categoryid }) {
 
   if (loading) {
     return (
-      <LoaderWrapper>
-        <Vortex />
-      </LoaderWrapper>
+      <Typography>
+      <Loader />
+    </Typography>
     );
   }
 

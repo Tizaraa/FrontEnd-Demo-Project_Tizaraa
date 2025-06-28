@@ -1,4 +1,3 @@
-
 // "use client";
 // import { useRouter } from "next/navigation";
 // import { useCallback, useEffect, useState } from "react";
@@ -26,7 +25,6 @@
 // import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
 // import Image from "next/image";
 // import NextImage from "@component/NextImage";
-
 
 // const LoaderWrapper = styled.div`
 //   display: flex;
@@ -96,11 +94,11 @@
 //           orderBy: selectedSortOption,
 //         }),
 //       });
-  
+
 //       if (!response.ok) {
 //         throw new Error("Network response was not ok");
 //       }
-  
+
 //       const data = await response.json();
 //       console.log("category data", data)
 //       // Reset products if on the first page
@@ -123,7 +121,7 @@
 //     currentPage,
 //     selectedSortOption,
 //   ]);
-  
+
 //   useEffect(() => {
 //     fetchProducts();
 //   }, [fetchProducts]);
@@ -157,7 +155,6 @@
 //     zIndex: 0,
 //   }}
 // />
-
 
 // <main
 //     style={{
@@ -207,7 +204,6 @@
 //   />
 // </Box>
 
-
 //           <Paragraph color="text.muted" mr="0.5rem">
 //             View:
 //           </Paragraph>
@@ -243,7 +239,7 @@
 //               <ProductFilterCard
 //                 onBrandChange={handleBrandChange}
 //                 onCategoryChange={handleCategoryChange}
-//                 onCountryChange={handleCountryChange} 
+//                 onCountryChange={handleCountryChange}
 //                 onProvinceChange={handleProvinceChange}
 //                 slug={slug}
 //                 pageType="default"
@@ -252,9 +248,6 @@
 //           )}
 //         </FlexBox>
 //       </FlexBox>
-
-
-
 
 //       {/* <OTCProducts></OTCProducts> */}
 //       <OTCcategoryProductView slug={slug}></OTCcategoryProductView>
@@ -301,7 +294,7 @@
 //               {/* {loading && currentPage > 1 && (
 //                 <LoaderWrapper>
 //                 <Vortex />
-//               </LoaderWrapper>        
+//               </LoaderWrapper>
 //               )}{" "} */}
 //               <FlexBox justifyContent="center" alignItems="center" mt="32px">
 //           <Button
@@ -332,7 +325,7 @@
 //                 productsPerPage={productsPerPage}
 //                 onPageChange={handleLoadMore}
 //             />
-          
+
 //           <FlexBox justifyContent="center" alignItems="center" mt="32px">
 //           <Button
 //             onClick={() => {
@@ -351,7 +344,7 @@
 //             {loading ?  <BeatLoader size={18} color="#fff" /> : "Show More"}
 //           </Button>
 //         </FlexBox>
-            
+
 //             </>
 //           )}
 //         </Grid>
@@ -360,16 +353,6 @@
 //     </>
 //   );
 // }
-
-
-
-
-
-
-
-
-
-
 
 // ==================== Code for - If no products available, thn click to show more button for repeated previous produtcs. | Use this code.
 
@@ -647,11 +630,6 @@
 //   );
 // }
 
-
-
-
-
-
 // ==================== Code for - If no products available, show more button hidden from UI. | Use this code.
 "use client";
 import { useRouter } from "next/navigation";
@@ -664,7 +642,7 @@ import Grid from "@component/grid/Grid";
 import FlexBox from "@component/FlexBox";
 import { Button, IconButton } from "@component/buttons";
 import Sidenav from "@component/sidenav/Sidenav";
-import { H5, Paragraph } from "@component/Typography";
+import Typography, { H5, Paragraph } from "@component/Typography";
 
 import ProductGridView from "@component/products/ProductCard1List";
 import ProductListView from "@component/products/ProductCard9List";
@@ -678,12 +656,13 @@ import BeatLoader from "react-spinners/BeatLoader";
 
 import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
 import NextImage from "@component/NextImage";
+import Loader from "@component/loader";
 
-const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
 
 const productsPerPage = 10;
 
@@ -691,7 +670,9 @@ export default function SearchResult({ sortOptions, slug }) {
   const router = useRouter();
   const width = useWindowSize();
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0].value);
+  const [selectedSortOption, setSelectedSortOption] = useState(
+    sortOptions[0].value
+  );
   const [selectedBrand, setSelectedBrand] = useState<number[] | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null);
@@ -793,10 +774,10 @@ export default function SearchResult({ sortOptions, slug }) {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -20%)",
-          width: "100%",
-          height: "auto",
-          maxWidth: "1200px",
-          backgroundSize: "contain",
+          width: "100%", // Set to 100% to ensure full responsiveness
+          height: "auto", // Maintain aspect ratio
+          maxWidth: "1200px", // Optional: Limit the maximum width
+          backgroundSize: "contain", // Adjust the scaling behavior
           backgroundPosition: "center",
           opacity: 0.1,
           zIndex: 0,
@@ -806,8 +787,8 @@ export default function SearchResult({ sortOptions, slug }) {
       <main style={{ position: "relative", background: "none" }}>
         <FlexBox
           as={Card}
-          mb="55px"
-          p="1.25rem"
+          mb={["10px", "15px"]}
+          p={["0.75rem", "1.25rem"]}
           elevation={5}
           flexWrap="wrap"
           borderRadius={8}
@@ -815,20 +796,37 @@ export default function SearchResult({ sortOptions, slug }) {
           justifyContent="space-between"
         >
           <div>
-            <H5>Searching for {decodeURIComponent(slug)}</H5>
-            <Paragraph color="text.muted">{totalProducts} results found</Paragraph>
+            <H5 fontSize={["14px", "16px"]}>
+              Searching for {decodeURIComponent(slug)}
+            </H5>
+            <Paragraph color="text.muted" fontSize={["12px", "14px"]}>
+              {totalProducts} results found
+            </Paragraph>
           </div>
 
-          <FlexBox alignItems="center" flexWrap="wrap">
-            <Paragraph color="text.muted" mr="1rem">
+          <FlexBox
+            alignItems="center"
+            flexWrap="wrap"
+            justifyContent={["flex-start", "flex-end"]}
+            // gap="0.75rem"
+            mt={["0.75rem", "0"]}
+            width={["100%", "auto"]}
+          >
+            <Paragraph
+              color="text.muted"
+              mr={["0.5rem", "1rem"]}
+              fontSize={["12px", "14px"]}
+            >
               Sort by:
             </Paragraph>
 
-            <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
+            <Box flex="1 1 0" mr={["1rem", "1.75rem"]} minWidth="120px">
               <Select
                 placeholder="Sort by"
                 options={sortOptions}
-                defaultValue={sortOptions.find((option) => option.value === selectedSortOption)}
+                defaultValue={sortOptions.find(
+                  (option) => option.value === selectedSortOption
+                )}
                 onChange={handleSortChange}
                 styles={{
                   menu: (provided) => ({
@@ -839,18 +837,28 @@ export default function SearchResult({ sortOptions, slug }) {
               />
             </Box>
 
-            <Paragraph color="text.muted" mr="0.5rem">
+            <Paragraph
+              color="text.muted"
+              mr={["0.25rem", "0.5rem"]}
+              fontSize={["12px", "14px"]}
+            >
               View:
             </Paragraph>
 
             <IconButton onClick={() => setView("grid")}>
-              <Icon variant="small" color={view === "grid" ? "primary" : "inherit"}>
+              <Icon
+                variant="small"
+                color={view === "grid" ? "primary" : "inherit"}
+              >
                 grid
               </Icon>
             </IconButton>
 
             <IconButton onClick={() => setView("list")}>
-              <Icon variant="small" color={view === "list" ? "primary" : "inherit"}>
+              <Icon
+                variant="small"
+                color={view === "list" ? "primary" : "inherit"}
+              >
                 menu
               </Icon>
             </IconButton>
@@ -896,9 +904,9 @@ export default function SearchResult({ sortOptions, slug }) {
 
           <Grid item lg={9} xs={12}>
             {currentPage === 1 && loading ? (
-              <LoaderWrapper>
-                <Vortex />
-              </LoaderWrapper>
+              <Typography>
+                <Loader />
+              </Typography>
             ) : products.length === 0 ? (
               <Paragraph>No products found for this selection.</Paragraph>
             ) : view === "grid" ? (
@@ -928,7 +936,11 @@ export default function SearchResult({ sortOptions, slug }) {
                           : "none",
                     }}
                   >
-                    {loading ? <BeatLoader size={18} color="#fff" /> : "Show More"}
+                    {loading ? (
+                      <BeatLoader size={18} color="#fff" />
+                    ) : (
+                      "Show More"
+                    )}
                   </Button>
                 </FlexBox>
               </>
@@ -959,7 +971,11 @@ export default function SearchResult({ sortOptions, slug }) {
                           : "none",
                     }}
                   >
-                    {loading ? <BeatLoader size={18} color="#fff" /> : "Show More"}
+                    {loading ? (
+                      <BeatLoader size={18} color="#fff" />
+                    ) : (
+                      "Show More"
+                    )}
                   </Button>
                 </FlexBox>
               </>
