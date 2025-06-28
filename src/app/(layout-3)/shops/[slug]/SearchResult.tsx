@@ -10,7 +10,7 @@ import Grid from "@component/grid/Grid";
 import FlexBox from "@component/FlexBox";
 import { Button, IconButton } from "@component/buttons";
 import Sidenav from "@component/sidenav/Sidenav";
-import { H5, Paragraph } from "@component/Typography";
+import Typography, { H5, Paragraph } from "@component/Typography";
 
 import ProductGridView from "@component/products/ProductCard1List";
 import ProductListView from "@component/products/ProductCard9List";
@@ -23,15 +23,16 @@ import ShopProductFilterCard from "@component/products/ShopProductFilterCard";
 import BeatLoader from "react-spinners/BeatLoader";
 
 // import tizaraa_watermark from "../../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
-import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
 import Image from "next/image";
 import NextImage from "@component/NextImage";
+import Loader from "@component/loader";
 
-const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+// const LoaderWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
 
 const productsPerPage = 10;
 
@@ -43,7 +44,9 @@ export default function SearchResult({ sortOptions, slug }) {
     sortOptions[0].value
   );
   const [selectedBrand, setSelectedBrand] = useState<any[] | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<number[] | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number[] | null>(
+    null
+  );
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null); // Track selected country
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [products, setProducts] = useState<any[]>([]);
@@ -73,8 +76,7 @@ export default function SearchResult({ sortOptions, slug }) {
   const handleProvinceChange = (provinces: number[]) => {
     setSelectedProvinces(provinces);
     setCurrentPage(1);
-
-  }
+  };
 
   const handleSortChange = (sortOption: any) => {
     setSelectedSortOption(sortOption.value);
@@ -82,14 +84,16 @@ export default function SearchResult({ sortOptions, slug }) {
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
-  
+
     // Prepare the filter object
     const filters: any = {};
     if (selectedCategory) filters.category = selectedCategory;
     if (selectedBrand && selectedBrand.length) filters.brand = selectedBrand;
-    if (selectedCountry && selectedCountry.length) filters.country = selectedCountry;
-    if (selectedProvinces && selectedProvinces.length) filters.province = selectedProvinces;
-  
+    if (selectedCountry && selectedCountry.length)
+      filters.country = selectedCountry;
+    if (selectedProvinces && selectedProvinces.length)
+      filters.province = selectedProvinces;
+
     try {
       const response = await fetch(
         `${ApiBaseUrl.baseUrl}seller/products/${slug}`,
@@ -105,14 +109,14 @@ export default function SearchResult({ sortOptions, slug }) {
           }),
         }
       );
-  
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-  
+
       const data = await response.json();
       console.log("Shop Details:", data);
-  
+
       // Reset products when fetching the first page
       if (currentPage === 1) {
         setProducts(data.data);
@@ -133,7 +137,7 @@ export default function SearchResult({ sortOptions, slug }) {
     currentPage,
     selectedSortOption,
   ]);
-  
+
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
@@ -148,57 +152,71 @@ export default function SearchResult({ sortOptions, slug }) {
 
   return (
     <>
+      <NextImage
+        alt="newArrivalBanner"
+        src={tizaraa_watermark}
+        priority
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -20%)",
+          width: "100%", // Set to 100% to ensure full responsiveness
+          height: "auto", // Maintain aspect ratio
+          maxWidth: "1200px", // Optional: Limit the maximum width
+          backgroundSize: "contain", // Adjust the scaling behavior
+          backgroundPosition: "center",
+          opacity: 0.1,
+          zIndex: 0,
+        }}
+      />
 
-<NextImage
-  alt="newArrivalBanner"
-  src={tizaraa_watermark}
-  priority
-  style={{
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -20%)",
-    width: "100%", // Set to 100% to ensure full responsiveness
-    height: "auto", // Maintain aspect ratio
-    maxWidth: "1200px", // Optional: Limit the maximum width
-    backgroundSize: "contain", // Adjust the scaling behavior
-    backgroundPosition: "center",
-    opacity: 0.1,
-    zIndex: 0,
-  }}
-/>
-
-     <main
-    style={{
-      position: "relative",
-      background: "none",
-    }}
-  >
-      <FlexBox
-        as={Card}
-        mb="55px"
-        p="1.25rem"
-        elevation={5}
-        flexWrap="wrap"
-        borderRadius={8}
-        alignItems="center"
-        justifyContent="space-between"
+      <main
+        style={{
+          position: "relative",
+          background: "none",
+        }}
       >
-        <div>
-          {/* <H5>Searching for {slug}</H5> */}
-          <H5>Searching for {decodeURIComponent(slug)}</H5>
+        <FlexBox
+          as={Card}
+          mb={["10px", "15px"]}
+          p={["0.75rem", "1.25rem"]}
+          elevation={5}
+          flexWrap="wrap"
+          borderRadius={8}
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <div>
+            <H5 fontSize={["14px", "16px"]}>
+              Searching for {decodeURIComponent(slug)}
+            </H5>
+            <Paragraph
+              color="text.muted"
+              mr={["0.5rem", "1rem"]}
+              fontSize={["12px", "14px"]}
+            >
+              {totalProducts} results found
+            </Paragraph>
+          </div>
 
-          <Paragraph color="text.muted">
-            {totalProducts} results found
-          </Paragraph>
-        </div>
+          <FlexBox
+            alignItems="center"
+            flexWrap="wrap"
+            justifyContent={["flex-start", "flex-end"]}
+            // gap="0.75rem"
+            mt={["0.75rem", "0"]}
+            width={["100%", "auto"]}
+          >
+            <Paragraph
+              color="text.muted"
+              mr={["0.5rem", "1rem"]}
+              fontSize={["12px", "14px"]}
+            >
+              Sort by:
+            </Paragraph>
 
-        <FlexBox alignItems="center" flexWrap="wrap">
-          <Paragraph color="text.muted" mr="1rem">
-            Sort by:
-          </Paragraph>
-
-          {/* <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
+            {/* <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
             <Select
               placeholder="Sort by"
               options={sortOptions}
@@ -208,56 +226,75 @@ export default function SearchResult({ sortOptions, slug }) {
               onChange={handleSortChange}
             />
           </Box> */}
-          <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
-  <Select
-    placeholder="Sort by"
-    options={sortOptions}
-    defaultValue={sortOptions.find(
-      (option) => option.value === selectedSortOption
-    )}
-    onChange={handleSortChange}
-    styles={{
-      menu: (provided) => ({
-        ...provided,
-        zIndex: 1000, 
-      }),
-    }}
-  />
-</Box>
+            <Box flex="1 1 0" mr={["1rem", "1.75rem"]} minWidth="120px">
+              <Select
+                placeholder="Sort by"
+                options={sortOptions}
+                defaultValue={sortOptions.find(
+                  (option) => option.value === selectedSortOption
+                )}
+                onChange={handleSortChange}
+                styles={{
+                  menu: (provided) => ({
+                    ...provided,
+                    zIndex: 1000,
+                  }),
+                }}
+              />
+            </Box>
 
-
-          <Paragraph color="text.muted" mr="0.5rem">
-            View:
-          </Paragraph>
-
-          <IconButton onClick={() => setView("grid")}>
-            <Icon
-              variant="small"
-              color={view === "grid" ? "primary" : "inherit"}
+            <Paragraph
+              color="text.muted"
+              mr={["0.25rem", "0.5rem"]}
+              fontSize={["12px", "14px"]}
             >
-              grid
-            </Icon>
-          </IconButton>
+              View:
+            </Paragraph>
 
-          <IconButton onClick={() => setView("list")}>
-            <Icon
-              variant="small"
-              color={view === "list" ? "primary" : "inherit"}
-            >
-              menu
-            </Icon>
-          </IconButton>
+            <IconButton onClick={() => setView("grid")}>
+              <Icon
+                variant="small"
+                color={view === "grid" ? "primary" : "inherit"}
+              >
+                grid
+              </Icon>
+            </IconButton>
 
-          {isTablet && (
-            <Sidenav
-              position="left"
-              scroll={true}
-              handle={
-                <IconButton>
-                  <Icon>options</Icon>
-                </IconButton>
-              }
-            >
+            <IconButton onClick={() => setView("list")}>
+              <Icon
+                variant="small"
+                color={view === "list" ? "primary" : "inherit"}
+              >
+                menu
+              </Icon>
+            </IconButton>
+
+            {isTablet && (
+              <Sidenav
+                position="left"
+                scroll={true}
+                handle={
+                  <IconButton>
+                    <Icon>options</Icon>
+                  </IconButton>
+                }
+              >
+                <ShopProductFilterCard
+                  onBrandChange={handleBrandChange}
+                  onCategoryChange={handleCategoryChange}
+                  onCountryChange={handleCountryChange} // Pass country handler
+                  onProvinceChange={handleProvinceChange}
+                  slug={slug}
+                  pageType="shop"
+                />
+              </Sidenav>
+            )}
+          </FlexBox>
+        </FlexBox>
+
+        <Grid container spacing={6}>
+          {!isTablet && (
+            <Grid item lg={3} xs={12}>
               <ShopProductFilterCard
                 onBrandChange={handleBrandChange}
                 onCategoryChange={handleCategoryChange}
@@ -266,97 +303,88 @@ export default function SearchResult({ sortOptions, slug }) {
                 slug={slug}
                 pageType="shop"
               />
-            </Sidenav>
+            </Grid>
           )}
-        </FlexBox>
-      </FlexBox>
 
-      <Grid container spacing={6}>
-      {!isTablet && (
-        <Grid item lg={3} xs={12}>
-          <ShopProductFilterCard
-            onBrandChange={handleBrandChange}
-            onCategoryChange={handleCategoryChange}
-            onCountryChange={handleCountryChange} // Pass country handler
-            onProvinceChange={handleProvinceChange}
-            slug={slug}
-            pageType="shop"
-          />
-        </Grid>
-      )}
-
-        <Grid item lg={9} xs={12}>
-          {currentPage === 1 && loading ? ( // Show loading only on initial load
-            <LoaderWrapper>
-              <Vortex />
-            </LoaderWrapper>
-          ) : view === "grid" ? (
-            <>
-              <ProductGridView
-                products={products}
-                totalProducts={totalProducts}
-                currentPage={currentPage}
-                productsPerPage={productsPerPage}
-                onPageChange={handleLoadMore}
-              />
-              {/* {loading && currentPage > 1 && (
+          <Grid item lg={9} xs={12}>
+            {currentPage === 1 && loading ? ( // Show loading only on initial load
+              <Typography>
+              <Loader />
+            </Typography>
+            ) : view === "grid" ? (
+              <>
+                <ProductGridView
+                  products={products}
+                  totalProducts={totalProducts}
+                  currentPage={currentPage}
+                  productsPerPage={productsPerPage}
+                  onPageChange={handleLoadMore}
+                />
+                {/* {loading && currentPage > 1 && (
                 <LoaderWrapper>
                 <Vortex />
               </LoaderWrapper>        
               )}{" "} */}
-              <FlexBox justifyContent="center" alignItems="center" mt="32px">
-              <Button
-                onClick={() => {
-                  if (!loading) handleLoadMore(); // No argument passed
-                }}
-                variant="contained"
-                color="primary"
-                disabled={loading}
-                style={{
-                  display:
-                    currentPage * productsPerPage < totalProducts
-                      ? "block"
-                      : "none", // Show button only if there are more products to load
-                }}
-              >
-                {loading ?  <BeatLoader size={18} color="#fff" /> : "Show More"}
-              </Button>
-            </FlexBox>
-            </>
-          ) : (
-            <>
-            <ProductListView
-              products={products}
-              totalProducts={0}
-              currentPage={0}
-              productsPerPage={0}
-              onPageChange={() => {}}
-            />
+                <FlexBox justifyContent="center" alignItems="center" mt="32px">
+                  <Button
+                    onClick={() => {
+                      if (!loading) handleLoadMore(); // No argument passed
+                    }}
+                    variant="contained"
+                    color="primary"
+                    disabled={loading}
+                    style={{
+                      display:
+                        currentPage * productsPerPage < totalProducts
+                          ? "block"
+                          : "none", // Show button only if there are more products to load
+                    }}
+                  >
+                    {loading ? (
+                      <BeatLoader size={18} color="#fff" />
+                    ) : (
+                      "Show More"
+                    )}
+                  </Button>
+                </FlexBox>
+              </>
+            ) : (
+              <>
+                <ProductListView
+                  products={products}
+                  totalProducts={0}
+                  currentPage={0}
+                  productsPerPage={0}
+                  onPageChange={() => {}}
+                />
 
-           <FlexBox justifyContent="center" alignItems="center" mt="32px">
-              <Button
-                onClick={() => {
-                  if (!loading) handleLoadMore(); // No argument passed
-                }}
-                variant="contained"
-                color="primary"
-                disabled={loading}
-                style={{
-                  display:
-                    currentPage * productsPerPage < totalProducts
-                      ? "block"
-                      : "none", // Show button only if there are more products to load
-                }}
-              >
-                {loading ?  <BeatLoader size={18} color="#fff" /> : "Show More"}
-              </Button>
-            </FlexBox>
-            
-            </>
-          )}
+                <FlexBox justifyContent="center" alignItems="center" mt="32px">
+                  <Button
+                    onClick={() => {
+                      if (!loading) handleLoadMore(); // No argument passed
+                    }}
+                    variant="contained"
+                    color="primary"
+                    disabled={loading}
+                    style={{
+                      display:
+                        currentPage * productsPerPage < totalProducts
+                          ? "block"
+                          : "none", // Show button only if there are more products to load
+                    }}
+                  >
+                    {loading ? (
+                      <BeatLoader size={18} color="#fff" />
+                    ) : (
+                      "Show More"
+                    )}
+                  </Button>
+                </FlexBox>
+              </>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
-    </main>
+      </main>
     </>
   );
 }
