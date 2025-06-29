@@ -674,7 +674,9 @@ export default function SearchResult({ sortOptions, slug }) {
     sortOptions[0].value
   );
   const [selectedBrand, setSelectedBrand] = useState<number[] | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null);
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
   const [products, setProducts] = useState<any[]>([]);
@@ -689,11 +691,19 @@ export default function SearchResult({ sortOptions, slug }) {
     setCurrentPage(1);
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
+  // const handleCategoryChange = (category: string) => {
+  //   setSelectedCategory(category);
+  //   setCurrentPage(1);
+  //   router.push(`/product/search/${category}`);
+  // };
+
+  const handleCategoryChange = (categories: number[]) => {
+    const categoryId = categories[0]; // Use first category for URL
+    setSelectedCategory(categoryId);
     setCurrentPage(1);
-    router.push(`/product/search/${category}`);
+    router.push(`/product/search/${categoryId}`);
   };
+  
 
   const handleCountryChange = (countries: number[]) => {
     setSelectedCountry(countries);
