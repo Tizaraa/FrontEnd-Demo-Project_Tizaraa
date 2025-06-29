@@ -912,85 +912,143 @@ export default function SearchResult({ sortOptions, slug }) {
             </Grid>
           )}
 
-          <Grid item lg={9} xs={12}>
-            {currentPage === 1 && loading ? (
-              <Typography>
-                <Loader />
-              </Typography>
-            ) : products.length === 0 ? (
-              <Paragraph>No products found for this selection.</Paragraph>
-            ) : view === "grid" ? (
-              <>
-                <ProductGridView
-                  products={products}
-                  totalProducts={totalProducts}
-                  currentPage={currentPage}
-                  productsPerPage={productsPerPage}
-                  onPageChange={handleLoadMore}
-                />
-
-                <FlexBox justifyContent="center" alignItems="center" mt="32px">
-                  <Button
-                    onClick={() => {
-                      if (!loading) handleLoadMore();
-                    }}
-                    variant="contained"
-                    color="primary"
-                    disabled={loading}
-                    style={{
-                      display:
-                        products.length > 0 &&
-                        !loading &&
-                        products.length < totalProducts
-                          ? "block"
-                          : "none",
-                    }}
-                  >
-                    {loading ? (
-                      <BeatLoader size={18} color="#fff" />
-                    ) : (
-                      "Show More"
-                    )}
-                  </Button>
-                </FlexBox>
-              </>
-            ) : (
-              <>
-                <ProductListView
-                  products={products}
-                  totalProducts={totalProducts}
-                  currentPage={currentPage}
-                  productsPerPage={productsPerPage}
-                  onPageChange={handleLoadMore}
-                />
-
-                <FlexBox justifyContent="center" alignItems="center" mt="32px">
-                  <Button
-                    onClick={() => {
-                      if (!loading) handleLoadMore();
-                    }}
-                    variant="contained"
-                    color="primary"
-                    disabled={loading}
-                    style={{
-                      display:
-                        products.length > 0 &&
-                        !loading &&
-                        products.length < totalProducts
-                          ? "block"
-                          : "none",
-                    }}
-                  >
-                    {loading ? (
-                      <BeatLoader size={18} color="#fff" />
-                    ) : (
-                      "Show More"
-                    )}
-                  </Button>
-                </FlexBox>
-              </>
-            )}
-          </Grid>
+<Grid item lg={9} xs={12}>
+  {currentPage === 1 && loading ? (
+    <Typography>
+      <Loader />
+    </Typography>
+  ) : products.length === 0 ? (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        padding: '20px',
+        borderRadius: '8px',
+      }}
+    >
+      <span
+        style={{
+          fontSize: '3em',
+          color: '#ff6f61',
+          marginBottom: '16px',
+        }}
+      >
+        🛒
+      </span>
+      <Paragraph
+        style={{
+          fontSize: '1.25em',
+          color: '#333',
+          fontFamily: '"Roboto", "Arial", sans-serif',
+          fontWeight: 500,
+          margin: '0 0 16px 0',
+          lineHeight: '1.5',
+        }}
+      >
+        No products found for this selection.
+      </Paragraph>
+      <p
+        style={{
+          fontSize: '1em',
+          color: '#666',
+          fontFamily: '"Roboto", "Arial", sans-serif',
+          margin: '0 0 20px 0',
+        }}
+      >
+        Try adjusting your filters or explore other categories!
+      </p>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => window.location.href = `/`}
+        style={{
+          padding: '10px 20px',
+          fontSize: '1em',
+          fontWeight: 500,
+          borderRadius: '25px', // Rounded button for modern look
+          backgroundColor: '#ff6f61',
+          color: '#fff',
+          textTransform: 'none',
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+          transition: 'background-color 0.3s ease',
+        }}
+        onMouseOver={(e) => {
+          const target = e.target as HTMLElement;
+          target.style.backgroundColor = '#e65b50';
+        }}
+        onMouseOut={(e) => {
+          const target = e.target as HTMLElement;
+          target.style.backgroundColor = '#ff6f61';
+        }}
+      >
+        Back to Home
+      </Button>
+    </div>
+  ) : view === "grid" ? (
+    <>
+      <ProductGridView
+        products={products}
+        totalProducts={totalProducts}
+        currentPage={currentPage}
+        productsPerPage={productsPerPage}
+        onPageChange={handleLoadMore}
+      />
+      <FlexBox justifyContent="center" alignItems="center" mt="32px">
+        <Button
+          onClick={() => {
+            if (!loading) handleLoadMore();
+          }}
+          variant="contained"
+          color="primary"
+          disabled={loading}
+          style={{
+            display:
+              products.length > 0 &&
+              !loading &&
+              products.length < totalProducts
+                ? "block"
+                : "none",
+          }}
+        >
+          {loading ? <BeatLoader size={18} color="#fff" /> : "Show More"}
+        </Button>
+      </FlexBox>
+    </>
+  ) : (
+    <>
+      <ProductListView
+        products={products}
+        totalProducts={totalProducts}
+        currentPage={currentPage}
+        productsPerPage={productsPerPage}
+        onPageChange={handleLoadMore}
+      />
+      <FlexBox justifyContent="center" alignItems="center" mt="32px">
+        <Button
+          onClick={() => {
+            if (!loading) handleLoadMore();
+          }}
+          variant="contained"
+          color="primary"
+          disabled={loading}
+          style={{
+            display:
+              products.length > 0 &&
+              !loading &&
+              products.length < totalProducts
+                ? "block"
+                : "none",
+          }}
+        >
+          {loading ? <BeatLoader size={18} color="#fff" /> : "Show More"}
+        </Button>
+      </FlexBox>
+    </>
+  )}
+</Grid>
         </Grid>
       </main>
     </>
