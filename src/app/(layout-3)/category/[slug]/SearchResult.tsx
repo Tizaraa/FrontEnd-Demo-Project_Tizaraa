@@ -915,7 +915,7 @@ export default function SearchResult({ sortOptions, slug }) {
 <Grid item lg={9} xs={12}>
   {currentPage === 1 && loading ? (
     <Typography>
-      <Loader />
+      {/* <Loader /> */}
     </Typography>
   ) : products.length === 0 ? (
     <div

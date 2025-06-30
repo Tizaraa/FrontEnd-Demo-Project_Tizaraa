@@ -157,10 +157,10 @@ export default function FlashSale({ sortOptions, slug }: FlashSaleProps) {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -20%)",
-          width: "100%", // Set to 100% to ensure full responsiveness
-          height: "auto", // Maintain aspect ratio
-          maxWidth: "1200px", // Optional: Limit the maximum width
-          backgroundSize: "contain", // Adjust the scaling behavior
+          width: "100%",
+          height: "auto",
+          maxWidth: "1200px",
+          backgroundSize: "contain",
           backgroundPosition: "center",
           opacity: 0.1,
           zIndex: 0,
@@ -299,7 +299,7 @@ export default function FlashSale({ sortOptions, slug }: FlashSaleProps) {
           <Grid item lg={9} xs={12}>
             {currentPage === 1 && loading ? (
               <Typography>
-                <Loader />
+                {/* <Loader /> */}
               </Typography>
             ) : view === "grid" ? (
               <>

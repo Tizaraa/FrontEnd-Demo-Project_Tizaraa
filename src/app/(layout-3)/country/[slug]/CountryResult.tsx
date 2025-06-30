@@ -319,7 +319,7 @@ export default function CountryResult({ sortOptions, slug }) {
           <Grid item lg={9} xs={12}>
             {currentPage === 1 && loading ? ( // Show loading only on initial load
               <Typography>
-                <Loader />
+                {/* <Loader /> */}
               </Typography>
             ) : view === "grid" ? (
               <>
