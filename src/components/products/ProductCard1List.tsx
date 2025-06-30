@@ -161,7 +161,6 @@
 //   // console.log(endProduct);
 //   // console.log(totalProducts);
 //   // console.log(products.length);
-  
 
 //   return (
 //     <div>
@@ -203,13 +202,10 @@
 //           Show More
 //         </Button>
 //       </FlexBox> */}
-      
+
 //     </div>
 //   );
 // }
-
-
-
 
 "use client";
 
@@ -217,7 +213,7 @@ import { useMediaQuery, useTheme } from "@mui/material";
 import FlexBox from "@component/FlexBox";
 import Grid from "@component/grid/Grid";
 import { ProductCard1 } from "@component/product-cards";
-import { SemiSpan } from "@component/Typography";
+import { Paragraph, SemiSpan } from "@component/Typography";
 import Product from "@models/product.model";
 import { Button } from "@component/buttons";
 import ApiBaseUrl from "api/ApiBaseUrl";
@@ -258,7 +254,9 @@ export default function ProductGridView({
                 title={item?.title || "No Title"}
                 off={item?.discount || 0}
                 images={
-                  item?.images?.map((image) => `${ApiBaseUrl.ImgUrl}${image}`) || []
+                  item?.images?.map(
+                    (image) => `${ApiBaseUrl.ImgUrl}${image}`
+                  ) || []
                 }
                 imgUrl={
                   item?.thumbnail ? `${ApiBaseUrl.ImgUrl}${item.thumbnail}` : ""
@@ -269,7 +267,49 @@ export default function ProductGridView({
           ))
         ) : (
           <FlexBox justifyContent="center" alignItems="center" width="100%">
-            <SemiSpan>No products found.</SemiSpan>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                padding: "20px",
+                borderRadius: "8px",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "3em",
+                  color: "#ff6f61",
+                  marginBottom: "16px",
+                }}
+              >
+                🛒
+              </span>
+              <Paragraph
+                style={{
+                  fontSize: "1.25em",
+                  color: "#333",
+                  fontFamily: '"Roboto", "Arial", sans-serif',
+                  fontWeight: 500,
+                  margin: "0 0 16px 0",
+                  lineHeight: "1.5",
+                }}
+              >
+                No products found for this selection.
+              </Paragraph>
+              <p
+                style={{
+                  fontSize: "1em",
+                  color: "#666",
+                  fontFamily: '"Roboto", "Arial", sans-serif',
+                  margin: "0 0 20px 0",
+                }}
+              >
+                Try adjusting your filters or explore other categories!
+              </p>
+            </div>
           </FlexBox>
         )}
       </Grid>
