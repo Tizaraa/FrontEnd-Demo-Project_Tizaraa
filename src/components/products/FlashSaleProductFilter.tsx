@@ -178,6 +178,20 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
     fetchFilters();
   }, [slug, pageType]);
 
+  // const handleFilterClick = (
+  //   id: number,
+  //   selectedItems: number[],
+  //   setSelectedItems: React.Dispatch<React.SetStateAction<number[]>>,
+  //   callback: (items: number[]) => void
+  // ) => {
+  //   const updatedItems = selectedItems.includes(id)
+  //     ? selectedItems.filter(itemId => itemId !== id)
+  //     : [id]; // Changed to single selection like in your original code
+    
+  //   setSelectedItems(updatedItems);
+  //   callback(updatedItems);
+  // };
+
   const handleFilterClick = (
     id: number,
     selectedItems: number[],
@@ -186,11 +200,13 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
   ) => {
     const updatedItems = selectedItems.includes(id)
       ? selectedItems.filter(itemId => itemId !== id)
-      : [id]; // Changed to single selection like in your original code
+      : [...selectedItems, id];
     
     setSelectedItems(updatedItems);
     callback(updatedItems);
   };
+
+
 
   const FilterButton = ({
     item,
