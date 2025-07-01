@@ -37,7 +37,7 @@ export default function SearchResult({ sortOptions, slug }) {
   );
   const [selectedBrand, setSelectedBrand] = useState<any[] | null>(null);
   // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null); // Track selected country
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
@@ -54,18 +54,18 @@ export default function SearchResult({ sortOptions, slug }) {
     setCurrentPage(1); // Reset to first page
   };
 
-  // const handleCategoryChange = (category: string) => {
-  //   setSelectedCategory(category);
-  //   setCurrentPage(1); // Reset to first page
-  //   // router.push(`/product/search/${category}`);
-  // };
-
-  const handleCategoryChange = (categories: number[]) => {
-    const categoryId = categories[0];
-    setSelectedCategory(categoryId);
-    setCurrentPage(1);
-    router.push(`/product/search/${categoryId}`);
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentPage(1); // Reset to first page
+    // router.push(`/product/search/${category}`);
   };
+
+  // const handleCategoryChange = (categories: number[]) => {
+  //   const categoryId = categories[0];
+  //   setSelectedCategory(categoryId);
+  //   setCurrentPage(1);
+  //   router.push(`/product/search/${categoryId}`);
+  // };
   
 
   const handleCountryChange = (countries: number[]) => {

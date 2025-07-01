@@ -1,6 +1,6 @@
 "use client"; // Add this line at the top
 import Box from "@component/Box";
-import SearchResult from "./SearchResult";
+// import SearchResult from "./SearchResult";
 import { useEffect } from "react";
 
 interface Props {
@@ -14,7 +14,7 @@ export default function ProductSearchResult({ params }: Props) {
 
   return (
     <Box pt="20px">
-      <SearchResult sortOptions={sortOptions} slug={slug} />
+      {/* <SearchResult sortOptions={sortOptions} slug={slug} /> */}
     </Box>
   );
 }
