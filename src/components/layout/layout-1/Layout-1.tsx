@@ -8,6 +8,7 @@ import { Header } from "@component/header";
 import { Footer1 } from "@component/footer";
 import MobileNavigationBar from "@component/mobile-navigation";
 import StyledAppLayout from "./styles";
+import CountdownWidget from "@component/countdown-widget";
 
 // ===============================================================================
 type Props = { title?: string; navbar?: ReactElement; children: ReactNode };
@@ -16,6 +17,8 @@ type Props = { title?: string; navbar?: ReactElement; children: ReactNode };
 export default function ShopLayout({ navbar, children }: Props) {
   return (
     <StyledAppLayout>
+        <CountdownWidget />
+
       <Topbar />
 
      <Sticky fixedOn={0} scrollDistance={300}>
