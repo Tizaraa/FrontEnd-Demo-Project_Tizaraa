@@ -479,7 +479,7 @@ export default function Navbar({ navListOpen }: NavbarProps) {
 
   // Countdown logic
   useEffect(() => {
-    const targetDate = new Date('2025-09-05T00:00:00');
+    const targetDate = new Date('2025-10-01T00:00:00');
     
     const calculateTimeLeft = () => {
       const difference = targetDate.getTime() - new Date().getTime();
