@@ -10,7 +10,8 @@ const nextConfig = {
     theme: "DEFAULT",
   },
   images: {
-    domains: ['seller.tizaraa.com', 'ae01.alicdn.com', 'cbu01.alicdn.com'],  // Add the domain here
+    domains: ['seller.tizaraa.com', 'cbu01.alicdn.com'],  // Add the domain here
+
     unoptimized: true,
   },
   experimental: {
