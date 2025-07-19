@@ -1127,21 +1127,20 @@ export default function OtProductsIntro({
               </div>
 
               {/* Product Image */}
-              <Image
+              {/* <Image
                 width={200}
                 height={200}
-                // src={selectedImage || images[0]}
-                src="https://cbu01.alicdn.com/img/ibank/O1CN016wStBp1XPZdLIJeNv_!!2834542916-0-cib.jpg"
+                src={selectedImage || images[0]}
                 style={{ display: "block", width: "100%", height: "auto" }}
-              />
+              /> */}
 
-{/* <div style={{ width: '100%', height: 'auto' }}>
+<div style={{ width: '100%', height: 'auto' }}>
   <img 
     src={selectedImage || images[0]} 
     alt="Product image"
     style={{ width: '100%', height: 'auto' }}
   />
-</div> */}
+</div>
 
 {/* <img
   src={selectedImage || images[0]}
