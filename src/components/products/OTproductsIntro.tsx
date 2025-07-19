@@ -1127,26 +1127,13 @@ export default function OtProductsIntro({
               </div>
 
               {/* Product Image */}
-              {/* <Image
+              <Image
                 width={200}
                 height={200}
                 src={selectedImage || images[0]}
                 style={{ display: "block", width: "100%", height: "auto" }}
-              /> */}
+              />
 
-<div style={{ width: '100%', height: 'auto' }}>
-  <img 
-    src={selectedImage || images[0]} 
-    alt="Product image"
-    style={{ width: '100%', height: 'auto' }}
-  />
-</div>
-
-{/* <img
-  src={selectedImage || images[0]}
-  alt={title || "Product image"}
-  style={{ display: "block", width: "100%", height: "auto" }}
-/> */}
             </FlexBox>
 
             <FlexBox overflow="auto" mb="1rem">
