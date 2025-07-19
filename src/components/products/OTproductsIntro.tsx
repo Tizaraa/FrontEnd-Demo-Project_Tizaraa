@@ -108,7 +108,6 @@ export default function OtProductsIntro({
   const param = useParams();
   const { state, dispatch } = useAppContext();
   const [selectedImage, setSelectedImage] = useState(images[0] || "");
-  const [imageError, setImageError] = useState(false);
   const [selectedSpec, setSelectedSpec] = useState<string | null>(null);
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<number | null>(price);
@@ -165,7 +164,6 @@ export default function OtProductsIntro({
   const handleVariantSelect = (item) => {
     setSelectedSpec(item.Vid);
     setSelectedImage(item.ImageUrl || images[0]);
-    setImageError(false); // Reset error state on image change
     console.log("Selected Image URL:", item.ImageUrl || images[0]);
     setSelectedRowId(null);
 
@@ -311,17 +309,10 @@ export default function OtProductsIntro({
                 width={200}
                 height={200}
                 src={selectedImage || images[0]}
-                style={{ display: imageError ? "none" : "block", width: "100%", height: "auto" }}
+                style={{ display: "block", width: "100%", height: "auto" }}
                 referrerPolicy="no-referrer"
                 crossOrigin="anonymous"
-                onError={() => setImageError(true)}
               />
-              {imageError && (
-                <div style={{ textAlign: "center", color: "#64748b", padding: "2rem" }}>
-                  <div style={{ fontSize: "3rem" }}>🖼️</div>
-                  <div>Image failed to load</div>
-                </div>
-              )}
             </FlexBox>
 
             <FlexBox overflow="auto" mb="1rem">
@@ -342,7 +333,6 @@ export default function OtProductsIntro({
                   }
                   onClick={() => {
                     setSelectedImage(url);
-                    setImageError(false);
                     console.log("Thumbnail Image URL:", url);
                   }}
                 >
@@ -351,11 +341,7 @@ export default function OtProductsIntro({
               ))}
             </FlexBox>
 
-            <div style={{ marginTop: "1rem", padding: "1rem", backgroundColor: "#f8fafc", borderRadius: "8px" }}>
-              <h3 style={{ fontSize: "1.2rem", fontWeight: "600", color: "#1e293b" }}>Debug Information</h3>
-              <p><strong>Selected Image URL:</strong> {selectedImage || "No image selected"}</p>
-              <p><strong>Image Load Status:</strong> {imageError ? "Failed" : "Loading/Success"}</p>
-            </div>
+
           </div>
         </Grid>
 
@@ -555,7 +541,6 @@ export default function OtProductsIntro({
                         }}
                         referrerPolicy="no-referrer"
                         crossOrigin="anonymous"
-                        onError={() => setImageError(true)}
                       />
                     ) : (
                       item.Value
