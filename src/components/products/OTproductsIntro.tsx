@@ -1132,6 +1132,8 @@ export default function OtProductsIntro({
                 height={200}
                 src={selectedImage || images[0]}
                 style={{ display: "block", width: "100%", height: "auto" }}
+                referrerPolicy="no-referrer"
+                crossOrigin="anonymous"
               />
 
             </FlexBox>
