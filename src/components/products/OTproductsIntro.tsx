@@ -948,6 +948,9 @@ export default function OtProductsIntro({
   const handleVariantSelect = (item) => {
     setSelectedSpec(item.Vid);
     setSelectedImage(item.ImageUrl);
+    console.log('item.ImageUrl');
+    console.log(item.ImageUrl);
+    
     setSelectedRowId(null);
 
     // Update size if this is a size attribute
@@ -955,6 +958,12 @@ export default function OtProductsIntro({
       setSelectedSize(item.Value);
     }
   };
+
+
+  console.log('selectedImage');
+  console.log(selectedImage);
+  
+
 
   const getSelectedAttributes = () => {
     if (!selectedSpec || !Attributes) return "";
@@ -1311,7 +1320,7 @@ export default function OtProductsIntro({
               })}
           </div>
 
-          <Box style={{ paddingTop: "8px", paddingBottom: "8px" }}>
+          {/* <Box style={{ paddingTop: "8px", paddingBottom: "8px" }}>
             <SemiSpan
               style={{ fontWeight: "bold", color: "#000", fontSize: "15px" }}
             >
@@ -1348,7 +1357,48 @@ export default function OtProductsIntro({
                   );
                 })}
             </SemiSpan>
-          </Box>
+          </Box> */}
+
+          {selectedSpec && (
+            <Box style={{ paddingTop: "8px", paddingBottom: "8px" }}>
+              <SemiSpan
+                style={{ fontWeight: "bold", color: "#000", fontSize: "15px" }}
+              >
+                {
+                  Attributes?.find((attr) => attr.Vid === selectedSpec)
+                    ?.PropertyName
+                }
+                : &nbsp;
+                {configuredItems
+                  .find(
+                    (item) =>
+                      item.Id === selectedRowId ||
+                      item.Configurators.some(
+                        (config) => config.Vid === selectedSpec
+                      )
+                  )
+                  ?.Configurators.map((config, index) => {
+                    const matchingAttribute = Attributes.find(
+                      (attr) => attr.Vid === config.Vid
+                    );
+                    return (
+                      <Fragment key={index}>
+                        {matchingAttribute ? matchingAttribute.Value : config.Vid}
+                        {index <
+                          (configuredItems.find(
+                            (item) =>
+                              item.Id === selectedRowId ||
+                              item.Configurators.some(
+                                (config) => config.Vid === selectedSpec
+                              )
+                          )?.Configurators.length || 0) -
+                            1 && ", "}
+                      </Fragment>
+                    );
+                  })}
+              </SemiSpan>
+            </Box>
+          )}
 
           <div className={styles.containerStyle}>
             <div className={styles.buttonContainerStyle}>
