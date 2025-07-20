@@ -315,6 +315,33 @@ export default function OtProductsIntro({
               />
             </FlexBox>
 
+            {/* <FlexBox overflow="auto" mb="1rem">
+              {images.map((url, ind) => (
+                <Box
+                  key={ind}
+                  size={70}
+                  bg="white"
+                  marginRight="5px"
+                  display="flex"
+                  cursor="pointer"
+                  border="2px solid"
+                  borderRadius="10px"
+                  alignItems="center"
+                  justifyContent="center"
+                  borderColor={
+                    selectedImage === url ? "primary.main" : "gray.400"
+                  }
+                  onClick={() => {
+                    setSelectedImage(url);
+                    console.log("Thumbnail Image URL:", url);
+                  }}
+                >
+                  <Avatar src={url} borderRadius="10px" size={65}/>
+                </Box>
+              ))}
+            </FlexBox> */}
+
+
             <FlexBox overflow="auto" mb="1rem">
               {images.map((url, ind) => (
                 <Box
@@ -336,7 +363,18 @@ export default function OtProductsIntro({
                     console.log("Thumbnail Image URL:", url);
                   }}
                 >
-                  <Avatar src={url} borderRadius="10px" size={65} referrerPolicy="no-referrer" crossOrigin="anonymous" />
+                  <img
+                    src={url || images[0]}
+                    alt={`Thumbnail ${ind}`}
+                    style={{
+                      width: "65px",
+                      height: "65px",
+                      borderRadius: "10px",
+                      objectFit: "cover",
+                    }}
+                    referrerPolicy="no-referrer"
+                    crossOrigin="anonymous"
+                  />
                 </Box>
               ))}
             </FlexBox>
