@@ -241,6 +241,8 @@ export default function OTSearchResult({ sortOptions, slug }) {
                               height: "150px",
                               objectFit: "cover",
                             }}
+                            referrerPolicy="no-referrer"
+                            crossOrigin="anonymous"
                           />
                           <H5
                             style={{

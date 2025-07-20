@@ -937,57 +937,57 @@ const ProductPage = () => {
         // />
 
         <div
-  className="product-description-content"
-  style={{ fontSize: "14px" }} // Base container font-size
-  dangerouslySetInnerHTML={{
-    __html: product?.Description
-      ? DOMPurify.sanitize(product.Description)
-          // 1. Process <span> tags - only modify existing font-sizes
-          .replace(/<span\b([^>]*)>/gi, (match, attrs) => {
-            const styleAttr = attrs.match(/style=(["'])(.*?)\1/i);
-            if (styleAttr && /font-size\s*:/i.test(styleAttr[2])) {
-              const updated = styleAttr[2].replace(
-                /(font-size\s*:\s*)[^;]+/gi,
-                "$112px"
-              );
-              return `<span${attrs.replace(
-                styleAttr[0],
-                `style="${updated}"`
-              )}>`;
-            }
-            return match;
-          })
+          className="product-description-content"
+          style={{ fontSize: "14px" }} // Base container font-size
+          dangerouslySetInnerHTML={{
+            __html: product?.Description
+              ? DOMPurify.sanitize(product.Description)
+                  // 1. Process <span> tags - only modify existing font-sizes
+                  .replace(/<span\b([^>]*)>/gi, (match, attrs) => {
+                    const styleAttr = attrs.match(/style=(["'])(.*?)\1/i);
+                    if (styleAttr && /font-size\s*:/i.test(styleAttr[2])) {
+                      const updated = styleAttr[2].replace(
+                        /(font-size\s*:\s*)[^;]+/gi,
+                        "$112px"
+                      );
+                      return `<span${attrs.replace(
+                        styleAttr[0],
+                        `style="${updated}"`
+                      )}>`;
+                    }
+                    return match;
+                  })
 
-          // 2. Process <p> tags - your existing requirements
-          .replace(/<p\b([^>]*)>/gi, (match, attrs) => {
-            const styleAttr = attrs.match(/style=(["'])(.*?)\1/i);
-            let styles = styleAttr ? styleAttr[2] : "";
+                  // 2. Process <p> tags - your existing requirements
+                  .replace(/<p\b([^>]*)>/gi, (match, attrs) => {
+                    const styleAttr = attrs.match(/style=(["'])(.*?)\1/i);
+                    let styles = styleAttr ? styleAttr[2] : "";
 
-            // Add your base p-tag styles
-            const baseStyles = "margin-bottom:16px; line-height:1.5;";
-            const mergedStyles = `style="${styles}${
-              styles ? "; " : ""
-            }${baseStyles}"`;
+                    // Add your base p-tag styles
+                    const baseStyles = "margin-bottom:16px; line-height:1.5;";
+                    const mergedStyles = `style="${styles}${
+                      styles ? "; " : ""
+                    }${baseStyles}"`;
 
-            return styleAttr
-              ? `<p${attrs.replace(styleAttr[0], mergedStyles)}>`
-              : `<p ${mergedStyles}${attrs}>`;
-          })
+                    return styleAttr
+                      ? `<p${attrs.replace(styleAttr[0], mergedStyles)}>`
+                      : `<p ${mergedStyles}${attrs}>`;
+                  })
 
-          // 3. Handle unstyled elements
-          .replace(
-            /<p>/g,
-            '<p style="margin-bottom:16px; line-height:1.5;">'
-          )
+                  // 3. Handle unstyled elements
+                  .replace(
+                    /<p>/g,
+                    '<p style="margin-bottom:16px; line-height:1.5;">'
+                  )
 
-          // 4. Image handling with security attributes
-          .replace(
-            /<img\b([^>]*)>/gi,
-            '<img style="max-width:80%; height:auto; margin:12px 0;" referrerPolicy="no-referrer" crossOrigin="anonymous"$1>'
-          )
-      : "",
-  }}
-/>
+                  // 4. Image handling with security attributes
+                  .replace(
+                    /<img\b([^>]*)>/gi,
+                    '<img style="max-width:80%; height:auto; margin:12px 0;" referrerPolicy="no-referrer" crossOrigin="anonymous"$1>'
+                  )
+              : "",
+          }}
+        />
       );
     }
   };
@@ -1043,7 +1043,6 @@ const ProductPage = () => {
 
         {/* <Component /> */}
         <div style={containerStyle}>
-          
           {/* Tab Section */}
           <div style={descriptionStyle}>
             <div style={tabContainerStyle}>
@@ -1075,7 +1074,7 @@ const ProductPage = () => {
               margin: "0 auto",
               position: "relative",
               overflow: "hidden",
-              height: 'fit-content'
+              height: "fit-content",
             }}
           >
             {/* Decorative elements */}

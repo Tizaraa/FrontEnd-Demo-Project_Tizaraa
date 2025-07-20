@@ -211,6 +211,8 @@ const OTCProducts = () => {
                       objectFit="cover" 
                       style={{ borderRadius: "8px" }}
                       className={styles.imgPart}
+                      referrerPolicy="no-referrer"
+                      crossOrigin="anonymous"
                     />
                   </div>
                 </Box>
