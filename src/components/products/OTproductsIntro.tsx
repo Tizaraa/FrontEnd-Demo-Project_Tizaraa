@@ -336,7 +336,7 @@ export default function OtProductsIntro({
                     console.log("Thumbnail Image URL:", url);
                   }}
                 >
-                  <Avatar src={url} borderRadius="10px" size={65} />
+                  <Avatar src={url} borderRadius="10px" size={65} referrerPolicy="no-referrer" crossOrigin="anonymous" />
                 </Box>
               ))}
             </FlexBox>
