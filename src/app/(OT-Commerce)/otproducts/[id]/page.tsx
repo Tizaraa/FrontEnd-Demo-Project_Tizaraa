@@ -1384,6 +1384,8 @@ const ProductPage = () => {
                             borderRadius: "8px",
                             objectFit: "cover",
                           }}
+                          referrerPolicy="no-referrer"
+                          crossOrigin="anonymous"
                         />
                       </Box>
                       <H4
