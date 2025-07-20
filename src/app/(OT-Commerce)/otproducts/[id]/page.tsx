@@ -869,7 +869,6 @@ const ProductPage = () => {
                               />
                             )}
                             {attr.Value}
-                            {/* Add comma except after last item */}
                             {index < attrs.length - 1 && ","}
                           </span>
                         ))}
@@ -884,95 +883,111 @@ const ProductPage = () => {
       );
     } else {
       return (
-        // <div>
-        //   <h2
-        //     style={{
-        //       fontSize: "1.25rem",
-        //       fontWeight: 600,
-        //       marginBottom: "10px",
-        //     }}
-        //   >
-        //     Description:
-        //   </h2>
-        //   <div
-        //     className="product-description-content"
-        //     style={{ fontSize: "14px" }}
-        //     dangerouslySetInnerHTML={{
-        //       __html: product?.Description
-        //         ? DOMPurify.sanitize(product.Description)
-        //             .replace(
-        //               /<img /g,
-        //               `<img style="max-width: 80%; height: auto;" `
-        //             )
-        //             .replace(
-        //               /<table /g,
-        //               `<table style="width:8%; border-collapse: collapse;">`
-        //             )
-        //             .replace(
-        //               /<td /g,
-        //               `<td style="padding: 8px; border: 1px solid #ddd;">`
-        //             )
-        //             .replace(
-        //               /<th /g,
-        //               `<th style="padding: 8px; border: 1px solid #ddd;">`
-        //             )
-        //         : "",
-        //     }}
-        //   />
-        // </div>
+        // <div
+        //   className="product-description-content"
+        //   style={{ fontSize: "14px" }} // Base container font-size
+        //   dangerouslySetInnerHTML={{
+        //     __html: product?.Description
+        //       ? DOMPurify.sanitize(product.Description)
+        //           // 1. Process <span> tags - only modify existing font-sizes
+        //           .replace(/<span\b([^>]*)>/gi, (match, attrs) => {
+        //             const styleAttr = attrs.match(/style=(["'])(.*?)\1/i);
+        //             if (styleAttr && /font-size\s*:/i.test(styleAttr[2])) {
+        //               const updated = styleAttr[2].replace(
+        //                 /(font-size\s*:\s*)[^;]+/gi,
+        //                 "$112px"
+        //               );
+        //               return `<span${attrs.replace(
+        //                 styleAttr[0],
+        //                 `style="${updated}"`
+        //               )}>`;
+        //             }
+        //             return match;
+        //           })
+
+        //           // 2. Process <p> tags - your existing requirements
+        //           .replace(/<p\b([^>]*)>/gi, (match, attrs) => {
+        //             const styleAttr = attrs.match(/style=(["'])(.*?)\1/i);
+        //             let styles = styleAttr ? styleAttr[2] : "";
+
+        //             // Add your base p-tag styles
+        //             const baseStyles = "margin-bottom:16px; line-height:1.5;";
+        //             const mergedStyles = `style="${styles}${
+        //               styles ? "; " : ""
+        //             }${baseStyles}"`;
+
+        //             return styleAttr
+        //               ? `<p${attrs.replace(styleAttr[0], mergedStyles)}>`
+        //               : `<p ${mergedStyles}${attrs}>`;
+        //           })
+
+        //           // 3. Handle unstyled elements
+        //           .replace(
+        //             /<p>/g,
+        //             '<p style="margin-bottom:16px; line-height:1.5;">'
+        //           )
+
+        //           // 4. Image handling
+        //           .replace(
+        //             /<img\b([^>]*)>/gi,
+        //             '<img style="max-width:80%; height:auto; margin:12px 0;"$1>'
+        //           )
+        //       : "",
+        //   }}
+        // />
 
         <div
-          className="product-description-content"
-          style={{ fontSize: "14px" }} // Base container font-size
-          dangerouslySetInnerHTML={{
-            __html: product?.Description
-              ? DOMPurify.sanitize(product.Description)
-                  // 1. Process <span> tags - only modify existing font-sizes
-                  .replace(/<span\b([^>]*)>/gi, (match, attrs) => {
-                    const styleAttr = attrs.match(/style=(["'])(.*?)\1/i);
-                    if (styleAttr && /font-size\s*:/i.test(styleAttr[2])) {
-                      const updated = styleAttr[2].replace(
-                        /(font-size\s*:\s*)[^;]+/gi,
-                        "$112px"
-                      );
-                      return `<span${attrs.replace(
-                        styleAttr[0],
-                        `style="${updated}"`
-                      )}>`;
-                    }
-                    return match;
-                  })
+  className="product-description-content"
+  style={{ fontSize: "14px" }} // Base container font-size
+  dangerouslySetInnerHTML={{
+    __html: product?.Description
+      ? DOMPurify.sanitize(product.Description)
+          // 1. Process <span> tags - only modify existing font-sizes
+          .replace(/<span\b([^>]*)>/gi, (match, attrs) => {
+            const styleAttr = attrs.match(/style=(["'])(.*?)\1/i);
+            if (styleAttr && /font-size\s*:/i.test(styleAttr[2])) {
+              const updated = styleAttr[2].replace(
+                /(font-size\s*:\s*)[^;]+/gi,
+                "$112px"
+              );
+              return `<span${attrs.replace(
+                styleAttr[0],
+                `style="${updated}"`
+              )}>`;
+            }
+            return match;
+          })
 
-                  // 2. Process <p> tags - your existing requirements
-                  .replace(/<p\b([^>]*)>/gi, (match, attrs) => {
-                    const styleAttr = attrs.match(/style=(["'])(.*?)\1/i);
-                    let styles = styleAttr ? styleAttr[2] : "";
+          // 2. Process <p> tags - your existing requirements
+          .replace(/<p\b([^>]*)>/gi, (match, attrs) => {
+            const styleAttr = attrs.match(/style=(["'])(.*?)\1/i);
+            let styles = styleAttr ? styleAttr[2] : "";
 
-                    // Add your base p-tag styles
-                    const baseStyles = "margin-bottom:16px; line-height:1.5;";
-                    const mergedStyles = `style="${styles}${
-                      styles ? "; " : ""
-                    }${baseStyles}"`;
+            // Add your base p-tag styles
+            const baseStyles = "margin-bottom:16px; line-height:1.5;";
+            const mergedStyles = `style="${styles}${
+              styles ? "; " : ""
+            }${baseStyles}"`;
 
-                    return styleAttr
-                      ? `<p${attrs.replace(styleAttr[0], mergedStyles)}>`
-                      : `<p ${mergedStyles}${attrs}>`;
-                  })
+            return styleAttr
+              ? `<p${attrs.replace(styleAttr[0], mergedStyles)}>`
+              : `<p ${mergedStyles}${attrs}>`;
+          })
 
-                  // 3. Handle unstyled elements
-                  .replace(
-                    /<p>/g,
-                    '<p style="margin-bottom:16px; line-height:1.5;">'
-                  )
+          // 3. Handle unstyled elements
+          .replace(
+            /<p>/g,
+            '<p style="margin-bottom:16px; line-height:1.5;">'
+          )
 
-                  // 4. Image handling
-                  .replace(
-                    /<img\b([^>]*)>/gi,
-                    '<img style="max-width:80%; height:auto; margin:12px 0;"$1>'
-                  )
-              : "",
-          }}
-        />
+          // 4. Image handling with security attributes
+          .replace(
+            /<img\b([^>]*)>/gi,
+            '<img style="max-width:80%; height:auto; margin:12px 0;" referrerPolicy="no-referrer" crossOrigin="anonymous"$1>'
+          )
+      : "",
+  }}
+/>
       );
     }
   };
