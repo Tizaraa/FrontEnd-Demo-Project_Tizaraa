@@ -20,7 +20,6 @@ const productsPerPage = 10000;
 //   align-items: center;
 // `;
 
-
 const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -37,24 +36,22 @@ export default function SearchResult({ slug }: { slug: string }) {
   const fetchProducts = async (query: string, page: number) => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `${ApiBaseUrl.baseUrl}otpi/items`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            xmlParameters: `<SearchItemsParameters><ItemTitle>${query}</ItemTitle></SearchItemsParameters>`,
-            framePosition: (page - 1) * productsPerPage,
-            frameSize: productsPerPage,
-          }),
-        }
-      );
+      const response = await fetch(`${ApiBaseUrl.baseUrl}otpi/items`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          xmlParameters: `<SearchItemsParameters><ItemTitle>${query}</ItemTitle></SearchItemsParameters>`,
+          framePosition: (page - 1) * productsPerPage,
+          frameSize: productsPerPage,
+        }),
+      });
       const data = await response.json();
       const results = data?.Result?.Items?.Content || [];
       setProducts((prev) => (page === 1 ? results : [...prev, ...results]));
-  
+
       // Dynamically calculate the total products based on results
-      const currentTotal = page === 1 ? results.length : products.length + results.length;
+      const currentTotal =
+        page === 1 ? results.length : products.length + results.length;
       setTotalProducts(currentTotal);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -64,7 +61,6 @@ export default function SearchResult({ slug }: { slug: string }) {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     if (slug) fetchProducts(decodeURIComponent(slug), currentPage);
@@ -92,83 +88,76 @@ export default function SearchResult({ slug }: { slug: string }) {
         ))}
       </Grid> */}
       <Grid container spacing={6}>
-  {products.map((product: any, index: number) => (
-    <Grid item key={index} lg={3} md={4} sm={6} xs={12}>
-      <Box py="0.25rem" key={product.Id}>
-                                <Card p="1rem" borderRadius={8} style={{ height: "300px" }}>
-                                    <Link href={`/otproducts/${product.Id}`}>
-                                    <Box position="relative">
-    <img
-        src={product.MainPictureUrl}
-        alt={product.Title}
-        style={{
-            width: "100%",
-            height: "190px", 
-            borderRadius: "8px",
-            objectFit: "cover",
-        }}
-        // className={styles.imgPart}
-    />
-</Box>
+        {products.map((product: any, index: number) => (
+          <Grid item key={index} lg={3} md={4} sm={6} xs={12}>
+            <Box py="0.25rem" key={product.Id}>
+              <Card p="1rem" borderRadius={8} style={{ height: "300px" }}>
+                <Link href={`/otproducts/${product.Id}`}>
+                  <Box position="relative">
+                    <img
+                      src={product.MainPictureUrl}
+                      alt={product.Title}
+                      style={{
+                        width: "100%",
+                        height: "190px",
+                        borderRadius: "8px",
+                        objectFit: "cover",
+                      }}
+                      referrerPolicy="no-referrer"
+                      crossOrigin="anonymous"
+                      // className={styles.imgPart}
+                    />
+                  </Box>
 
-                                        <H4
-                                            fontWeight="600"
-                                            fontSize="18px"
-                                            mb="0.25rem"
-                                            style={{
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                            }}
-                                        >
-                                            {product.Title}
-                                        </H4>
+                  <H4
+                    fontWeight="600"
+                    fontSize="18px"
+                    mb="0.25rem"
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {product.Title}
+                  </H4>
 
-                                        <FlexBox flexDirection="column">
-                        {product.Price.DiscountPrice > 0 ? (
-                          <>
-                            <H4
-                              fontWeight="600"
-                              fontSize="14px"
-                              color="text.muted"
-                            >
-                              BDT <del>{product.Price.OriginalPrice}</del>
-                            </H4>
-                            <Box marginTop="4px">
-                              <H4
-                                fontWeight="600"
-                                fontSize="14px"
-                                color="primary.main"
-                              >
-                                {currency(product.Price.DiscountPrice)}
-                              </H4>
-                            </Box>
-                          </>
-                        ) : (
+                  <FlexBox flexDirection="column">
+                    {product.Price.DiscountPrice > 0 ? (
+                      <>
+                        <H4 fontWeight="600" fontSize="14px" color="text.muted">
+                          BDT <del>{product.Price.OriginalPrice}</del>
+                        </H4>
+                        <Box marginTop="4px">
                           <H4
                             fontWeight="600"
                             fontSize="14px"
                             color="primary.main"
                           >
-                            {currency(product.Price.ConvertedPriceWithoutSign)}
+                            {currency(product.Price.DiscountPrice)}
                           </H4>
-                        )}
-                      </FlexBox>
-                                    </Link>
-                                </Card>
-                            </Box>
-    </Grid>
-  ))}
-</Grid>
-
+                        </Box>
+                      </>
+                    ) : (
+                      <H4 fontWeight="600" fontSize="14px" color="primary.main">
+                        {currency(product.Price.ConvertedPriceWithoutSign)}
+                      </H4>
+                    )}
+                  </FlexBox>
+                </Link>
+              </Card>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
 
       {/* {loading && <Paragraph>Loading...</Paragraph>} */}
-      
-                    {loading && (
-                      <LoaderWrapper>
-                        <Vortex />
-                      </LoaderWrapper>
-                    )}
+
+      {loading && (
+        <LoaderWrapper>
+          <Vortex />
+        </LoaderWrapper>
+      )}
 
       {currentPage * productsPerPage < totalProducts && (
         <FlexBox justifyContent="center" mt="20px">
