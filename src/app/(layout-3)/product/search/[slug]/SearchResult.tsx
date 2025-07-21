@@ -363,6 +363,8 @@ export default function SearchResult({ sortOptions, slug }) {
   const [loading, setLoading] = useState(false);
   const [totalProducts, setTotalProducts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [priceMin, setPriceMin] = useState<number | null>(null);
+  const [priceMax, setPriceMax] = useState<number | null>(null);
   let pageType = "search";
 
   const isTablet = width < 1025;
@@ -394,8 +396,13 @@ export default function SearchResult({ sortOptions, slug }) {
   const handleProvinceChange = (provinces: number[]) => {
     setSelectedProvinces(provinces);
     setCurrentPage(1);
-
   }
+
+  const handlePriceChange = (min: number | null, max: number | null) => {
+    setPriceMin(min);
+    setPriceMax(max);
+    setCurrentPage(1);
+  };
 
   const handleSortChange = (sortOption: any) => {
     setSelectedSortOption(sortOption.value);
@@ -577,6 +584,7 @@ export default function SearchResult({ sortOptions, slug }) {
                 onCategoryChange={handleCategoryChange}
                 onCountryChange={handleCountryChange} // Pass country handler
                 onProvinceChange={handleProvinceChange}
+                onPriceChange={handlePriceChange}
                 slug={slug}
                 pageType={pageType}
               />
@@ -593,6 +601,7 @@ export default function SearchResult({ sortOptions, slug }) {
             onCategoryChange={handleCategoryChange}
             onCountryChange={handleCountryChange} // Pass country handler
             onProvinceChange={handleProvinceChange}
+            onPriceChange={handlePriceChange}
             slug={slug}
             pageType={pageType}
           />
