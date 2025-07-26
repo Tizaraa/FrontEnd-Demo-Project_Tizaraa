@@ -884,7 +884,8 @@ export default function SearchResult({ sortOptions, slug }: { sortOptions: any[]
                 <ShoppingBasketIcon style={{ fontSize: 100, color: "#999", marginBottom: "1rem" }} />
                 <H5 color="text.secondary" fontSize="28px">Search No Result</H5>
                 <Paragraph color="text.muted" mt="0.5rem" fontSize="16px">
-                  We're sorry. We cannot find any matches for your search term.
+                  {/* We're sorry. We cannot find any matches for your search term. */}
+                  We cannot find any matches for your search items.
                 </Paragraph>
               </Box>
             ) : view === "grid" ? (
