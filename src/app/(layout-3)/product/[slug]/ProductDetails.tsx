@@ -154,7 +154,7 @@ const ShippingInfo: React.FC<{
           <div style={{ marginBottom: "20px" }}>
             <h2
               style={{
-                fontSize: "12px",
+                fontSize: "14px",
                 fontWeight: "bold",
                 marginBottom: "10px",
                 color: "#333",
@@ -180,14 +180,14 @@ const ShippingInfo: React.FC<{
                   justifyContent: "center",
                   alignItems: "center",
                   color: "white",
-                  fontSize: "12px",
+                  fontSize: "14px",
                 }}
               >
                 🚚
               </span>
               <span
                 style={{
-                  fontSize: "12px",
+                  fontSize: "14px",
                   color: "#555",
                 }}
               >
@@ -276,7 +276,7 @@ const ShippingInfo: React.FC<{
           <div style={{ marginBottom: "20px" }}>
   <h2
     style={{
-      fontSize: "12px",
+      fontSize: "14px",
       fontWeight: "bold",
       marginBottom: "10px",
       color: "#333",
@@ -302,14 +302,14 @@ const ShippingInfo: React.FC<{
         justifyContent: "center",
         alignItems: "center",
         color: "white",
-        fontSize: "12px",
+        fontSize: "14px",
       }}
     >
       🚚
     </span>
     <span
       style={{
-        fontSize: "12px",
+        fontSize: "14px",
         color: "#555",
       }}
     >
@@ -324,7 +324,7 @@ const ShippingInfo: React.FC<{
           <div style={{ marginBottom: "20px" }}>
             <h2
               style={{
-                fontSize: "12px",
+                fontSize: "14px",
                 fontWeight: "bold",
                 marginBottom: "10px",
                 color: "#333",
@@ -350,14 +350,14 @@ const ShippingInfo: React.FC<{
                   justifyContent: "center",
                   alignItems: "center",
                   color: "white",
-                  fontSize: "12px",
+                  fontSize: "14px",
                 }}
               >
                 🎧
               </span>
               <span
                 style={{
-                  fontSize: "12px",
+                  fontSize: "14px",
                   color: "#555",
                 }}
               >
@@ -374,7 +374,7 @@ const ShippingInfo: React.FC<{
           <div style={{ marginBottom: "10px" }}>
             <h2
               style={{
-                fontSize: "12px",
+                fontSize: "14px",
                 fontWeight: "bold",
                 marginBottom: "10px",
                 color: "#333",
@@ -400,7 +400,7 @@ const ShippingInfo: React.FC<{
                   justifyContent: "center",
                   alignItems: "center",
                   color: "white",
-                  fontSize: "12px",
+                  fontSize: "14px",
                   padding: "5px 10px",
                 }}
               >
@@ -408,7 +408,7 @@ const ShippingInfo: React.FC<{
               </span>
               <span
                 style={{
-                  fontSize: "12px",
+                  fontSize: "14px",
                   color: "#555",
                 }}
               >
@@ -427,7 +427,7 @@ const ShippingInfo: React.FC<{
   <div style={{textAlign: "center" }}>
     {/* <h2
       style={{
-        fontSize: "12px",
+        fontSize: "14px",
         fontWeight: "bold",
         marginBottom: "10px",
         color: "#333",
@@ -441,13 +441,16 @@ const ShippingInfo: React.FC<{
       }}
       style={{
         maxWidth: "100%",
-        height: "auto",
+        height: "70px",
         marginBottom: "10px",
+        transform: "scale(2)",
+        transformOrigin: "top left",
+        display: "inline-block",
       }}
     ></div>
     <p
       style={{
-        fontSize: "12px",
+        fontSize: "14px",
         color: "#555",
       }}
     >
@@ -459,14 +462,14 @@ const ShippingInfo: React.FC<{
           <div
             style={{
               backgroundColor: "#fff",
-              // padding: "12px",
+              // padding: "14px",
               borderRadius: "5px",
               // marginTop: "20px",
             }}
           >
             <h3
               style={{
-                fontSize: "12px",
+                fontSize: "14px",
                 fontWeight: "bold",
                 marginBottom: "5px",
                 color: "#333",
@@ -505,7 +508,7 @@ const ShippingInfo: React.FC<{
                     justifyContent: "center",
                     alignItems: "center",
                     color: "white",
-                    fontSize: "12px",
+                    fontSize: "14px",
                     fontWeight: "bold",
                     textAlign: "center",
                   }}
@@ -516,7 +519,7 @@ const ShippingInfo: React.FC<{
 
               <span
                 style={{
-                  fontSize: "12px",
+                  fontSize: "14px",
                   color: "#555",
                   fontWeight: "bold",
                 }}
@@ -546,7 +549,7 @@ const ShippingInfo: React.FC<{
                 marginTop: "10px",
                 padding: "5px 10px",
                 borderRadius: "10px",
-                fontSize: "12px"
+                fontSize: "14px"
               }}
             >
               Visit Profile

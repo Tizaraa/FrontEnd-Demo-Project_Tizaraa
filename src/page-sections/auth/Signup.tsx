@@ -629,7 +629,7 @@ export default function Signup() {
                     borderBottom="1px solid"
                     borderColor="gray.900"
                   >
-                    Terms & Condition
+                    Terms & Conditions
                   </H6>
                 </a>
               </FlexBox>
