@@ -135,7 +135,8 @@ import ProductDescription from "@component/products/ProductDescription";
 
 type Props = {
   description: string;
-  productId: string;  
+  productId: string; 
+  shippingInfo?: React.ReactNode; 
 };
 
 export default function ProductView({ description, productId }: Props) {
