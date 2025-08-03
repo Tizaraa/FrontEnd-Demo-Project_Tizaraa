@@ -232,8 +232,8 @@ const ShippingInfo: React.FC<{
                   color: "#E94560",
                 }}
               >
-                * Delivery charges are calculated based on the total weight
-                of your order.
+                * Delivery charges are calculated based on the total weight of
+                your order.
               </div>
             </div>
           </div>
@@ -523,7 +523,12 @@ const ProductView: React.FC<{
 
   return (
     <>
-      <FlexBox borderBottom="1px solid" borderColor="gray.400" mt="80px" mb="26px">
+      <FlexBox
+        borderBottom="1px solid"
+        borderColor="gray.400"
+        mt="5px"
+        mb="26px"
+      >
         <H5
           mr="25px"
           p="4px 10px"
@@ -531,8 +536,10 @@ const ProductView: React.FC<{
           borderColor="primary.main"
           onClick={handleOptionClick("description")}
           borderBottom={selectedOption === "description" ? "2px solid" : ""}
-          color={selectedOption === "description" ? "primary.main" : "text.muted"}
-          fontSize="13px"
+          color={
+            selectedOption === "description" ? "primary.main" : "text.muted"
+          }
+          fontSize="14px"
         >
           Description
         </H5>
@@ -546,8 +553,10 @@ const ProductView: React.FC<{
             borderColor="primary.main"
             onClick={handleOptionClick("shipping")}
             borderBottom={selectedOption === "shipping" ? "2px solid" : ""}
-            color={selectedOption === "shipping" ? "primary.main" : "text.muted"}
-            fontSize="13px"
+            color={
+              selectedOption === "shipping" ? "primary.main" : "text.muted"
+            }
+            fontSize="14px"
           >
             Shipping & Returns
           </H5>
@@ -560,7 +569,7 @@ const ProductView: React.FC<{
           onClick={handleOptionClick("review")}
           borderBottom={selectedOption === "review" ? "2px solid" : ""}
           color={selectedOption === "review" ? "primary.main" : "text.muted"}
-          fontSize="13px"
+          fontSize="14px"
         >
           Review
         </H5>
@@ -584,9 +593,7 @@ const ProductView: React.FC<{
             />
           </div>
         )}
-        {selectedOption === "review" && (
-          <ProductReview productId={productId} />
-        )}
+        {selectedOption === "review" && <ProductReview productId={productId} />}
       </Box>
     </>
   );
@@ -748,8 +755,8 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
         </div>
 
         {/* ProductView with shipping props passed on mobile */}
-        <ProductView 
-          description={description} 
+        <ProductView
+          description={description}
           productId={product.product_id}
           shippingProps={!isDesktop ? shippingProps : undefined}
           isDesktop={isDesktop}

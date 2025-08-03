@@ -29,7 +29,11 @@ type ProductDetailsProps = {
     size?: { size: string; price: string; qty: string }[];
     color?: { color: string; price: string; qty: string }[];
   };
-  onSelectionChange?: (selectedColor: string | null, selectedSize: string | null, updatedPrice: number) => void;
+  onSelectionChange?: (
+    selectedColor: string | null,
+    selectedSize: string | null,
+    updatedPrice: number
+  ) => void;
 };
 
 const ProductDetails = ({
@@ -53,8 +57,12 @@ const ProductDetails = ({
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
-  const [availableSizes, setAvailableSizes] = useState<{ size: string; price: string; qty: string }[]>([]);
-  const [availableColors, setAvailableColors] = useState<{ color: string; price: string; qty: string }[]>([]);
+  const [availableSizes, setAvailableSizes] = useState<
+    { size: string; price: string; qty: string }[]
+  >([]);
+  const [availableColors, setAvailableColors] = useState<
+    { color: string; price: string; qty: string }[]
+  >([]);
 
   useEffect(() => {
     if (sizeColor?.colorwithsize) {
@@ -79,15 +87,21 @@ const ProductDetails = ({
 
   const selectedProduct =
     selectedColor && selectedSize
-      ? sizeColor?.colorwithsize?.[selectedColor]?.find((item) => item.size === selectedSize)
+      ? sizeColor?.colorwithsize?.[selectedColor]?.find(
+          (item) => item.size === selectedSize
+        )
       : selectedColor
       ? sizeColor?.color?.find((item) => item.color === selectedColor)
       : selectedSize
       ? sizeColor?.size?.find((item) => item.size === selectedSize)
       : null;
 
-  const updatedPrice = selectedProduct ? parseFloat(selectedProduct.price) : displayPrice;
-  const updatedQuantity = selectedProduct ? parseInt(selectedProduct.qty) : productStock;
+  const updatedPrice = selectedProduct
+    ? parseFloat(selectedProduct.price)
+    : displayPrice;
+  const updatedQuantity = selectedProduct
+    ? parseInt(selectedProduct.qty)
+    : productStock;
 
   useEffect(() => {
     if (onSelectionChange) {
@@ -111,19 +125,31 @@ const ProductDetails = ({
     setSelectedSize(size);
   };
 
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+
   return (
     <Box>
-      <H1 mb="1rem">{title}</H1>
+      <H1 mb="2px" fontSize={isDesktop ? "32px" : "16px"}>
+        {title}
+      </H1>
+
       <FlexBox alignItems="center" mb="1rem">
         <Box ml="8px" mr="8px">
-          {rating > 0 && <Rating value={rating} outof={5} color="warn" readOnly />}
+          {rating > 0 && (
+            <Rating value={rating} outof={5} color="warn" readOnly />
+          )}
         </Box>
       </FlexBox>
 
       <Box mb="24px">
         {price !== 0 && (
           <FlexBox alignItems="center">
-            <H5 color="primary.main" mb="4px" lineHeight="1" fontSize="18px">
+            <H5
+              color="primary.main"
+              mb="4px"
+              lineHeight="1"
+              fontSize={isDesktop ? "18px" : "14px"}
+            >
               {selectedColor || selectedSize ? (
                 discountPrice && updatedPrice !== price ? (
                   <>
@@ -134,6 +160,7 @@ const ProductDetails = ({
                         color: "gray",
                         marginRight: "10px",
                         marginLeft: "10px",
+                        fontSize: isDesktop ? "14px" : "12px",
                       }}
                     >
                       {currency(price)}
@@ -144,7 +171,7 @@ const ProductDetails = ({
                 )
               ) : (
                 <>
-                  {currency(discountPrice || price)} 
+                  {currency(discountPrice || price)}
                   {discountPrice && (
                     <span
                       style={{
@@ -152,6 +179,7 @@ const ProductDetails = ({
                         color: "gray",
                         marginRight: "10px",
                         marginLeft: "10px",
+                        fontSize: isDesktop ? "14px" : "12px",
                       }}
                     >
                       {currency(price)}
@@ -168,7 +196,7 @@ const ProductDetails = ({
                 px="6px"
                 py="0.28rem"
                 fontWeight="600"
-                fontSize="12px"
+                fontSize={isDesktop ? "12px" : "10px"}
                 textAlign="center"
               >
                 {Math.floor(((price - discountPrice) / price) * 100)}% off
@@ -177,10 +205,10 @@ const ProductDetails = ({
           </FlexBox>
         )}
 
-        <Typography style={{ fontSize: "16px" }}>
+        <Typography style={{ fontSize: isDesktop ? "16px" : "14px" }}>
           Brand:{" "}
           <a
-            href={"#"}
+            href="#"
             style={{ textDecoration: "none", color: "blue", cursor: "text" }}
           >
             {brandName || "N/A"}
@@ -189,15 +217,21 @@ const ProductDetails = ({
 
         {sizeColor?.colorwithsize && (
           <div>
-            <h3>Available Colors</h3>
+            <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>
+              Available Colors
+            </h3>
             <FlexBox>
               {Object.keys(sizeColor.colorwithsize).map((color) => (
                 <button
                   key={color}
                   style={{
-                    padding: "8px 16px",
+                    padding: isDesktop ? "8px 16px" : "6px 12px",
                     margin: "5px",
-                    border: selectedColor === color ? "2px solid orange" : "1px solid gray",
+                    fontSize: isDesktop ? "14px" : "12px",
+                    border:
+                      selectedColor === color
+                        ? "2px solid orange"
+                        : "1px solid gray",
                     background: "white",
                     cursor: "pointer",
                   }}
@@ -210,15 +244,21 @@ const ProductDetails = ({
 
             {selectedColor && (
               <>
-                <h3>Available Sizes</h3>
+                <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>
+                  Available Sizes
+                </h3>
                 <FlexBox>
                   {sizeColor.colorwithsize[selectedColor].map((item, index) => (
                     <button
                       key={index}
                       style={{
-                        padding: "8px 16px",
+                        padding: isDesktop ? "8px 16px" : "6px 12px",
                         margin: "5px",
-                        border: selectedSize === item.size ? "2px solid orange" : "1px solid gray",
+                        fontSize: isDesktop ? "14px" : "12px",
+                        border:
+                          selectedSize === item.size
+                            ? "2px solid orange"
+                            : "1px solid gray",
                         background: "white",
                         cursor: "pointer",
                       }}
@@ -235,15 +275,21 @@ const ProductDetails = ({
 
         {sizeColor?.color && (
           <div>
-            <h3>Available Colors</h3>
+            <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>
+              Available Colors
+            </h3>
             <FlexBox>
               {sizeColor.color.map((item, index) => (
                 <button
                   key={index}
                   style={{
-                    padding: "8px 16px",
+                    padding: isDesktop ? "8px 16px" : "6px 12px",
                     margin: "5px",
-                    border: selectedColor === item.color ? "2px solid orange" : "1px solid gray",
+                    fontSize: isDesktop ? "14px" : "12px",
+                    border:
+                      selectedColor === item.color
+                        ? "2px solid orange"
+                        : "1px solid gray",
                     background: "white",
                     cursor: "pointer",
                   }}
@@ -258,15 +304,21 @@ const ProductDetails = ({
 
         {sizeColor?.size && (
           <div>
-            <h3>Available Sizes</h3>
+            <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>
+              Available Sizes
+            </h3>
             <FlexBox>
               {sizeColor.size.map((item, index) => (
                 <button
                   key={index}
                   style={{
-                    padding: "8px 16px",
+                    padding: isDesktop ? "8px 16px" : "6px 12px",
                     margin: "5px",
-                    border: selectedSize === item.size ? "2px solid orange" : "1px solid gray",
+                    fontSize: isDesktop ? "14px" : "12px",
+                    border:
+                      selectedSize === item.size
+                        ? "2px solid orange"
+                        : "1px solid gray",
                     background: "white",
                     cursor: "pointer",
                   }}
@@ -279,7 +331,7 @@ const ProductDetails = ({
           </div>
         )}
 
-        <Typography>
+        <Typography style={{ fontSize: isDesktop ? "15px" : "13px" }}>
           <div style={{ marginBottom: "10px", marginTop: "5px" }}>
             Warranty:
             <span
@@ -288,6 +340,8 @@ const ProductDetails = ({
                 color: "white",
                 padding: "4px 10px",
                 borderRadius: "4px",
+                marginLeft: "6px",
+                fontSize: isDesktop ? "14px" : "12px",
               }}
             >
               {warranty || "N/A"}
@@ -302,6 +356,8 @@ const ProductDetails = ({
                 color: "white",
                 padding: "4px 10px",
                 borderRadius: "4px",
+                marginLeft: "6px",
+                fontSize: isDesktop ? "14px" : "12px",
               }}
             >
               {replacewarranty || "N/A"}
@@ -310,7 +366,10 @@ const ProductDetails = ({
         </Typography>
 
         {price !== 0 && (
-          <SemiSpan color="inherit" style={{ fontSize: "16px" }}>
+          <SemiSpan
+            color="inherit"
+            style={{ fontSize: isDesktop ? "16px" : "13px" }}
+          >
             {updatedQuantity > 0
               ? `${updatedQuantity} Products Available`
               : "Stock Out"}
