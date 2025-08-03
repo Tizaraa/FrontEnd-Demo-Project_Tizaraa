@@ -70,10 +70,12 @@ export default function ProductIntro({
 
   return (
     <Box overflow="hidden">
-      <Grid container justifyContent="center" spacing={16}>
+      <Grid container justifyContent="center" spacing={8}>
         <Grid item md={6} xs={12} alignItems="center">
           <ProductImages images={images} />
         </Grid>
+
+    
 
         <Grid item md={6} xs={12} alignItems="center">
           <ProductDetails
