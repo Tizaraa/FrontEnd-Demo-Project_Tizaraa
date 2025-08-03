@@ -4,6 +4,8 @@ import Image from "@component/Image";
 import Avatar from "@component/avatar";
 import Box from "@component/Box";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import ReactImageMagnify from 'react-image-magnify';
+
 
 type ProductImagesProps = {
   images: string[];
@@ -22,16 +24,46 @@ const ProductImages = ({ images }: ProductImagesProps) => {
         borderRadius={16}
         justifyContent="center"
       >
-        <Image
-          width={200}
-          height={200}
-          // src={images[selectedImage]}
-          src={
-            images[selectedImage]
-              ? `${ApiBaseUrl.ImgUrl}${images[selectedImage]}`
-              : ""
-          }
-          style={{ display: "block", width: "100%", height: "auto" }}
+        <ReactImageMagnify
+          {...{
+            smallImage: {
+              alt: "",
+              src: images[selectedImage]
+                ? `${ApiBaseUrl.ImgUrl}${images[selectedImage]}`
+                : "",
+              isFluidWidth: true, // This makes it respect your existing dimensions
+              style: {
+                display: "block",
+                width: "100%",
+                height: "auto",
+                borderRadius: 16,
+              },
+            },
+            largeImage: {
+              src: images[selectedImage]
+                ? `${ApiBaseUrl.ImgUrl}${images[selectedImage]}`
+                : "",
+              width: 1200, // Large image dimensions
+              height: 1200,
+            },
+            enlargedImageContainerDimensions: {
+              width: "150%",
+              height: "150%",
+            },
+            enlargedImageContainerStyle: {
+              zIndex: 9999,
+              backgroundColor: "white",
+              border: "1px solid #eee",
+            },
+            enlargedImagePosition: "over",
+            hoverDelayInMs: 100,
+            isHintEnabled: true,
+            shouldUsePositiveSpaceLens: true,
+            lensStyle: {
+              backgroundColor: "rgba(0,0,0,.1)",
+              cursor: "zoom-in",
+            },
+          }}
         />
       </FlexBox>
 
