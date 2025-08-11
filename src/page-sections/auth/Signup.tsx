@@ -786,7 +786,19 @@ export default function Signup() {
         router.push("/emailValidation");
         toast.success(data.message);
       } else {
-        toast.error("Failed to register user.");
+        if (typeof data.message === "object" && data.message !== null) {
+          // If message is an object with multiple errors, show all
+          Object.values(data.message).forEach((msgArr) => {
+            if (Array.isArray(msgArr)) {
+              msgArr.forEach((msg) => toast.error(msg));
+            } else if (typeof msgArr === "string") {
+              toast.error(msgArr);
+            }
+          });
+        } else {
+          // Single error message
+          toast.error(data.message);
+        }
 
         if (data.message) {
           setApiError({
