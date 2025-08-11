@@ -91,7 +91,7 @@ function ForgotPasswordModal({
   // Start OTP countdown
   const startOtpCountdown = () => {
     setIsResetOtpDisabled(true); // Disable the button
-    let countdown = 180;
+    let countdown = 60;
     setOtpTimer(countdown);
 
     clearTimer(); // Clear any existing timer before starting a new one
@@ -189,7 +189,7 @@ function ForgotPasswordModal({
       return;
     }
     if (otpError) {
-      toast.error("Invalid OTP.");
+      toast.error("You Entered Invalid OTP");
       return;
     }
     setLoading(true);
@@ -209,7 +209,12 @@ function ForgotPasswordModal({
         toast.success(response.data.message); // Show API success message
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Invalid OTP."); // Show API error message
+      const errorMsg = error.response?.data?.message;
+      if (errorMsg === "Invalid OTP.") {
+        toast.error("You Entered Invalid OTP");
+      } else {
+        toast.error(errorMsg || "You Entered Invalid OTP");
+      }
       setIsResetOtpDisabled(false);
     } finally {
       setLoading(false);
@@ -348,7 +353,7 @@ function ForgotPasswordModal({
             type="email"
             mb="1rem"
             name="emailOrPhone"
-            placeholder="Enter your Phone Number or Email"
+            placeholder="Enter your Phone Number"
             value={emailOrPhone}
             onChange={(e) => setEmailOrPhone(e.target.value)}
           />
