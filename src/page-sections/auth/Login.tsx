@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useContext,useRef } from "react";
+import { useState, useContext, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import useVisibility from "./useVisibility";
-import ReactInputVerificationCode from 'react-input-verification-code';
+import ReactInputVerificationCode from "react-input-verification-code";
 import { useAppContext } from "contexts/app-context/AppContext"; // Context for managing user auth state
 import axios from "axios"; // Import axios for API calls
 import Cookies from "js-cookie";
@@ -31,7 +31,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 // Modal Component
-function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+function ForgotPasswordModal({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
   const [emailOrPhone, setEmailOrPhone] = useState(""); // Store email or phone input
   const [otp, setOtp] = useState(""); // Store OTP input
   const [otpError, setOtpError] = useState(""); // Store OTP error
@@ -45,21 +51,20 @@ function ForgotPasswordModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const { passwordVisibility, togglePasswordVisibility } = useVisibility();
   const timerRef = useRef<NodeJS.Timeout | null>(null); // Ref to store timer ID
 
-const [passwordError, setPasswordError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const [loading, setLoading] = useState(false); // Loading state for the form
   const [isHasLoading, setIsHasLoading] = useState(false);
-  
 
-   const {
-      passwordVisibility: passwordVisibility1,
-      togglePasswordVisibility: togglePasswordVisibility1,
-    } = useVisibility();
-    
-    const {
-      passwordVisibility: passwordVisibility2,
-      togglePasswordVisibility: togglePasswordVisibility2,
-    } = useVisibility();
+  const {
+    passwordVisibility: passwordVisibility1,
+    togglePasswordVisibility: togglePasswordVisibility1,
+  } = useVisibility();
+
+  const {
+    passwordVisibility: passwordVisibility2,
+    togglePasswordVisibility: togglePasswordVisibility2,
+  } = useVisibility();
 
   // Reset modal fields
   const resetModal = () => {
@@ -86,7 +91,7 @@ const [passwordError, setPasswordError] = useState("");
   // Start OTP countdown
   const startOtpCountdown = () => {
     setIsResetOtpDisabled(true); // Disable the button
-    let countdown = 180; 
+    let countdown = 180;
     setOtpTimer(countdown);
 
     clearTimer(); // Clear any existing timer before starting a new one
@@ -110,8 +115,8 @@ const [passwordError, setPasswordError] = useState("");
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
-   // Handle OTP validation
-   const validateOtp = (inputOtp: string) => {
+  // Handle OTP validation
+  const validateOtp = (inputOtp: string) => {
     if (!/^[0-9]{6}$/.test(inputOtp)) {
       setOtpError("OTP must be a 6-digit number.");
     } else {
@@ -135,9 +140,12 @@ const [passwordError, setPasswordError] = useState("");
       setOtp("");
       setLoading(false); // Ensure "Confirm" button doesn't show loading
       setIsResetOtpDisabled(true); // Disable the "Reset OTP" button during the process
-      const response = await axios.post(`${ApiBaseUrl.baseUrl}forgot-password`, {
-        email_or_phone: emailOrPhone,
-      });
+      const response = await axios.post(
+        `${ApiBaseUrl.baseUrl}forgot-password`,
+        {
+          email_or_phone: emailOrPhone,
+        }
+      );
       toast.success(response.data.message); // Show API success message
       startOtpCountdown(); // Start the countdown after resetting OTP
     } catch (error) {
@@ -155,9 +163,12 @@ const [passwordError, setPasswordError] = useState("");
     }
     setLoading(true);
     try {
-      const response = await axios.post(`${ApiBaseUrl.baseUrl}forgot-password`, {
-        email_or_phone: emailOrPhone,
-      });
+      const response = await axios.post(
+        `${ApiBaseUrl.baseUrl}forgot-password`,
+        {
+          email_or_phone: emailOrPhone,
+        }
+      );
 
       if (response.status === 200) {
         toast.success(response.data.message); // Show API success message
@@ -191,7 +202,7 @@ const [passwordError, setPasswordError] = useState("");
       if (response.status === 200) {
         clearTimer(); // Stop OTP countdown
         setOtpTimer(null); // Set OTP timer to null
-        setIsResetOtpDisabled(false)
+        setIsResetOtpDisabled(false);
         setResetToken(response.data.reset_token);
         setIsPasswordStage(true);
         setIsOtpStage(false);
@@ -199,7 +210,7 @@ const [passwordError, setPasswordError] = useState("");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Invalid OTP."); // Show API error message
-      setIsResetOtpDisabled(false)
+      setIsResetOtpDisabled(false);
     } finally {
       setLoading(false);
     }
@@ -232,7 +243,7 @@ const [passwordError, setPasswordError] = useState("");
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to reset password."); // Show API error message
       setNewPassword("");
-    setConfirmPassword("");
+      setConfirmPassword("");
       //resetModal();
       // onClose();
     } finally {
@@ -242,69 +253,71 @@ const [passwordError, setPasswordError] = useState("");
 
   if (!isOpen) return null;
 
-  const handleBack = () =>{
-  setIsHasLoading(true)
-  if (isOtpStage) {
-    setIsOtpStage(false);
-    setIsHasLoading(false)
-    clearTimer(); // Stop OTP countdown
-    setOtpTimer(null); // Set OTP timer to null
-    setIsResetOtpDisabled(false)
-  } else if (isPasswordStage) {
-    setIsPasswordStage(false);
-    setIsOtpStage(true);
-    setIsHasLoading(false)
-  }
-  }
-
+  const handleBack = () => {
+    setIsHasLoading(true);
+    if (isOtpStage) {
+      setIsOtpStage(false);
+      setIsHasLoading(false);
+      clearTimer(); // Stop OTP countdown
+      setOtpTimer(null); // Set OTP timer to null
+      setIsResetOtpDisabled(false);
+    } else if (isPasswordStage) {
+      setIsPasswordStage(false);
+      setIsOtpStage(true);
+      setIsHasLoading(false);
+    }
+  };
 
   const validatePassword = (password) => {
     const minLength = /.{9,}/;
     const hasUpperCase = /[A-Z]/;
     const hasLowerCase = /[a-z]/;
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
-  
+
     let errorMessage = "";
-  
+
     if (!minLength.test(password)) errorMessage += "At least 9 characters. ";
     if (!hasUpperCase.test(password)) errorMessage += "1 uppercase letter. ";
     if (!hasLowerCase.test(password)) errorMessage += "1 lowercase letter. ";
     if (!hasSpecialChar.test(password)) errorMessage += "1 special character. ";
-  
+
     return errorMessage;
   };
-  
+
   const handlePasswordChange = (e) => {
     const password = e.target.value;
     setNewPassword(password);
-  
+
     const error = validatePassword(password);
     setPasswordError(error);
   };
-  
 
   return (
-    <div style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      background: "rgba(0, 0, 0, 0.5)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      zIndex: 1000,
-    }}>
-      <div style={{
-        background: "#fff",
-        borderRadius: "8px",
-        padding: "20px",
-        width: "400px",
-        maxWidth: "90%",
-        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.25)",
-        position: "relative",
-      }}>
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        background: "rgba(0, 0, 0, 0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+      }}
+    >
+      <div
+        style={{
+          background: "#fff",
+          borderRadius: "8px",
+          padding: "20px",
+          width: "400px",
+          maxWidth: "90%",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.25)",
+          position: "relative",
+        }}
+      >
         <IconButton
           onClick={() => {
             resetModal();
@@ -322,8 +335,12 @@ const [passwordError, setPasswordError] = useState("");
           <span style={{ fontSize: "16px", fontWeight: "bold" }}>X</span>
         </IconButton>
 
-        <H5 mb="1rem" fontSize="20px">Forgot your password?</H5>
-        <Small mb="1rem" display="block">Change password.</Small>
+        <H5 mb="1rem" fontSize="20px">
+          Forgot your password?
+        </H5>
+        <Small mb="1rem" display="block">
+          Change password.
+        </Small>
 
         {!isOtpStage && !isPasswordStage ? (
           <TextField
@@ -363,79 +380,92 @@ const [passwordError, setPasswordError] = useState("");
               </Button>
             </FlexBox> */}
             <FlexBox justifyContent="space-between" alignItems="center">
-            <Small>OTP expires in: {otpTimer !== null ? formatTime(otpTimer) : "0:00"}</Small>
-            <Button
-              variant="outlined"
-              color="secondary"
-              disabled={isResetOtpDisabled}
-              onClick={handleResetOtp}
-              mt="1rem"
-            >
-              {isResetOtpDisabled ? <BeatLoader size={18} color="#E94560" /> : "Reset OTP"}
-            </Button>
-          </FlexBox>
+              <Small>
+                OTP expires in:{" "}
+                {otpTimer !== null ? formatTime(otpTimer) : "0:00"}
+              </Small>
+              <Button
+                variant="outlined"
+                color="secondary"
+                disabled={isResetOtpDisabled}
+                onClick={handleResetOtp}
+                mt="1rem"
+              >
+                {isResetOtpDisabled ? (
+                  <BeatLoader size={18} color="#E94560" />
+                ) : (
+                  "Reset OTP"
+                )}
+              </Button>
+            </FlexBox>
           </>
         ) : (
           <>
-          <TextField
-      fullwidth
-      mb="1rem"
-      name="newPassword"
-      placeholder="Enter New Password"
-      value={newPassword}
-      onChange={handlePasswordChange}
-      type={passwordVisibility1 ? "text" : "password"}
-      endAdornment={
-        <IconButton
-          p="0.25rem"
-          mr="0.25rem"
-          type="button"
-          onClick={togglePasswordVisibility1}
-          color={passwordVisibility1 ? "gray.700" : "gray.600"}
-        >
-          <Icon variant="small" defaultcolor="currentColor">
-            {passwordVisibility1 ? "eye-alt" : "eye"}
-          </Icon>
-        </IconButton>
-      }
-    />
-    {passwordError && (
-      // <FormHelperText style={{ color: "red", fontSize: "12px" }}>
-      //   {passwordError}
-      // </FormHelperText>
-      <div style={{ display: "flex", alignItems: "center", marginTop: "0.5rem" }}>
-      <FontAwesomeIcon
-        icon={faCircleExclamation}
-        style={{ color: "#e94560", marginRight: "0.5rem" }}
-      />
-      <span style={{ fontSize: "0.875rem", color: "#495057" }}>
-      {passwordError}
-      </span>
-    </div>
-    )}
+            <TextField
+              fullwidth
+              mb="1rem"
+              name="newPassword"
+              placeholder="Enter New Password"
+              value={newPassword}
+              onChange={handlePasswordChange}
+              type={passwordVisibility1 ? "text" : "password"}
+              endAdornment={
+                <IconButton
+                  p="0.25rem"
+                  mr="0.25rem"
+                  type="button"
+                  onClick={togglePasswordVisibility1}
+                  color={passwordVisibility1 ? "gray.700" : "gray.600"}
+                >
+                  <Icon variant="small" defaultcolor="currentColor">
+                    {passwordVisibility1 ? "eye-alt" : "eye"}
+                  </Icon>
+                </IconButton>
+              }
+            />
+            {passwordError && (
+              // <FormHelperText style={{ color: "red", fontSize: "12px" }}>
+              //   {passwordError}
+              // </FormHelperText>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: "0.5rem",
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faCircleExclamation}
+                  style={{ color: "#e94560", marginRight: "0.5rem" }}
+                />
+                <span style={{ fontSize: "0.875rem", color: "#495057" }}>
+                  {passwordError}
+                </span>
+              </div>
+            )}
 
-    <TextField
-      fullwidth
-      mb="1rem"
-      name="confirmPassword"
-      placeholder="Confirm New Password"
-      value={confirmPassword}
-      onChange={(e) => setConfirmPassword(e.target.value)}
-      type={passwordVisibility2 ? "text" : "password"}
-      endAdornment={
-        <IconButton
-          p="0.25rem"
-          mr="0.25rem"
-          type="button"
-          onClick={togglePasswordVisibility2}
-          color={passwordVisibility2 ? "gray.700" : "gray.600"}
-        >
-          <Icon variant="small" defaultcolor="currentColor">
-            {passwordVisibility2 ? "eye-alt" : "eye"}
-          </Icon>
-        </IconButton>
-      }
-    />
+            <TextField
+              fullwidth
+              mb="1rem"
+              name="confirmPassword"
+              placeholder="Confirm New Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              type={passwordVisibility2 ? "text" : "password"}
+              endAdornment={
+                <IconButton
+                  p="0.25rem"
+                  mr="0.25rem"
+                  type="button"
+                  onClick={togglePasswordVisibility2}
+                  color={passwordVisibility2 ? "gray.700" : "gray.600"}
+                >
+                  <Icon variant="small" defaultcolor="currentColor">
+                    {passwordVisibility2 ? "eye-alt" : "eye"}
+                  </Icon>
+                </IconButton>
+              }
+            />
           </>
         )}
 
@@ -453,7 +483,13 @@ const [passwordError, setPasswordError] = useState("");
           <Button
             variant="contained"
             color="primary"
-            onClick={!isOtpStage && !isPasswordStage ? handleEmailOrPhoneSubmit : isOtpStage ? handleOtpSubmit : handlePasswordSubmit}
+            onClick={
+              !isOtpStage && !isPasswordStage
+                ? handleEmailOrPhoneSubmit
+                : isOtpStage
+                ? handleOtpSubmit
+                : handlePasswordSubmit
+            }
           >
             {loading ? <BeatLoader size={18} color="#fff" /> : "Confirm"}
           </Button>
@@ -462,7 +498,6 @@ const [passwordError, setPasswordError] = useState("");
     </div>
   );
 }
-
 
 export default function Login() {
   const { state, dispatch } = useAppContext(); // Accessing app context for auth
@@ -473,7 +508,6 @@ export default function Login() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isHasPayLoading, setIsHasPayLoading] = useState(false);
 
-  
   const searchParams = useSearchParams();
   const fromSignup = searchParams.get("from") === "signup";
 
@@ -481,7 +515,10 @@ export default function Login() {
 
   // Form validation schema
   const formSchema = yup.object().shape({
-    email: yup.string().email("Invalid email").required("Email is required"),
+    email: yup
+      .string()
+      .email("Email format is Invalid")
+      .required("Email is required"),
     password: yup.string().required("Password is required"),
   });
 
@@ -531,7 +568,7 @@ export default function Login() {
 
   // Google login handler (for future integration)
   const handleGoogleLogin = async () => {
-    setIsHasPayLoading(true)
+    setIsHasPayLoading(true);
     // Handle Google login here
     console.log("google");
 
@@ -546,17 +583,17 @@ export default function Login() {
     });
 
   return (
-   <>
-<CommonHeader />
-    <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
-      <form className="content" onSubmit={handleSubmit} autoComplete="off">
-        <H3 textAlign="center" mb="0.5rem">
-          Welcome To Tizaraa
-        </H3>
+    <>
+      <CommonHeader />
+      <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
+        <form className="content" onSubmit={handleSubmit} autoComplete="off">
+          <H3 textAlign="center" mb="0.5rem">
+            Welcome To Tizaraa
+          </H3>
 
           <H5
             fontWeight="600"
-            fontSize="12px"
+            fontSize="13px"
             color="gray.800"
             textAlign="center"
             mb="2.25rem"
@@ -570,13 +607,17 @@ export default function Login() {
             mb="0.75rem"
             name="email"
             type="email"
-            onBlur={handleBlur}
             value={values.email}
-            onChange={handleChange}
+            onChange={(e) => {
+              handleChange(e);
+              // Mark as touched for real-time error display
+              if (!touched.email) touched.email = true;
+            }}
+            onBlur={handleBlur}
             placeholder="Enter Your Email"
             label="Email"
             autoComplete="new-email"
-            errorText={touched.email && errors.email}
+            errorText={errors.email}
           />
 
           {/* Password Field */}
@@ -614,27 +655,26 @@ export default function Login() {
             </Small>
           )}
 
-                {/* Forgot Password */}
-        <FlexBox justifyContent="end" bg="#fff" >
-        <span
-  onClick={() => setModalOpen(true)} // Triggers the modal on click
-  style={{
-    padding: "10px",
-    marginTop: "-1.5rem",
-    minWidth: "auto",
-    marginLeft: "0.5rem",
-    marginRight: "-0.5rem",
-    textDecoration: "none", // Makes it look like a link
-    color: "#e94560", // Primary color for link
-    cursor: "pointer", // Makes it clickable
-    fontSize: "0.8rem", // Optional for text size
-    marginBottom: "10px",
-  }}
->
-  Forgot password?
-</span>
-
-</FlexBox>
+          {/* Forgot Password */}
+          <FlexBox justifyContent="end" bg="#fff">
+            <span
+              onClick={() => setModalOpen(true)} // Triggers the modal on click
+              style={{
+                padding: "10px",
+                marginTop: "-1.5rem",
+                minWidth: "auto",
+                marginLeft: "0.5rem",
+                marginRight: "-0.5rem",
+                textDecoration: "none", // Makes it look like a link
+                color: "#e94560", // Primary color for link
+                cursor: "pointer", // Makes it clickable
+                fontSize: "0.8rem", // Optional for text size
+                marginBottom: "10px",
+              }}
+            >
+              Forgot password?
+            </span>
+          </FlexBox>
 
           {/* Submit Button */}
           <Button
@@ -646,7 +686,6 @@ export default function Login() {
             disabled={loading}
           >
             {loading ? <BeatLoader size={18} color="#e94560" /> : "Login"}
-            
           </Button>
 
           {/* Google login */}
@@ -667,42 +706,48 @@ export default function Login() {
             <Small fontWeight="600">Continue with Facebook</Small>
           </FlexBox> */}
           <FlexBox
-      mb="1.25rem"
-      height="40px"
-      color="white"
-      bg="#4285F4"
-      borderRadius={5}
-      cursor="pointer"
-      alignItems="center"
-      justifyContent="center"
-      onClick={handleGoogleLogin} // Trigger Google login
-    >
-      {isHasPayLoading ? (
-        <BeatLoader size={18} color="#0000FF" />
-      ) : (
-        <>
-          <Icon variant="small" defaultcolor="auto" mr="0.5rem">
-            google-1
-          </Icon>
-          <Small fontWeight="600">Continue with Google</Small>
-        </>
-      )}
-    </FlexBox>
+            mb="1.25rem"
+            height="40px"
+            color="white"
+            bg="#4285F4"
+            borderRadius={5}
+            cursor="pointer"
+            alignItems="center"
+            justifyContent="center"
+            onClick={handleGoogleLogin} // Trigger Google login
+          >
+            {isHasPayLoading ? (
+              <BeatLoader size={18} color="#0000FF" />
+            ) : (
+              <>
+                <Icon variant="small" defaultcolor="auto" mr="0.5rem">
+                  google-1
+                </Icon>
+                <Small fontWeight="600">Continue with Google</Small>
+              </>
+            )}
+          </FlexBox>
 
           {/* Link to Signup */}
           <FlexBox justifyContent="center" mb="">
             <SemiSpan>Don’t have an account?</SemiSpan>
             <Link href="/signup">
-              <H6 ml="0.5rem" mb="1.5rem" borderBottom="1px solid" borderColor="gray.900">
+              <H6
+                ml="0.5rem"
+                mb="1.5rem"
+                borderBottom="1px solid"
+                borderColor="gray.900"
+              >
                 Sign Up
               </H6>
             </Link>
           </FlexBox>
         </form>
-
-  
       </StyledRoot>
-      <ForgotPasswordModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
+      <ForgotPasswordModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </>
   );
 }
