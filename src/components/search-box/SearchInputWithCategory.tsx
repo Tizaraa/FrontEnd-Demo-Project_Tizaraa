@@ -20,22 +20,21 @@
 
 //   // ✅ Extract search term from URL and set as searchValue
 //   useEffect(() => {
-//     const pathParts = pathname.split("/"); 
-  
+//     const pathParts = pathname.split("/");
+
 //     // ✅ Ensure the pathname starts with "/product/search/" before extracting
 //     if (pathname.startsWith("/product/search/")) {
-//       const lastPart = decodeURIComponent(pathParts[pathParts.length - 1]); 
-  
+//       const lastPart = decodeURIComponent(pathParts[pathParts.length - 1]);
+
 //       if (lastPart && lastPart !== "search") {
 //         setSearchValue(lastPart); // ✅ Set input field value from URL
 //       }
 //     } else {
 //       setSearchValue(""); // ✅ Reset input if not in /product/search/
 //     }
-  
+
 //     setResultList([]); // ✅ Hide suggestions on navigation
 //   }, [pathname]);
-  
 
 //   const fetchSearchResults = async (query: string) => {
 //     try {
@@ -118,16 +117,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
 import { useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
 import axios from "axios";
@@ -169,7 +158,10 @@ export default function SearchInputWithCategory() {
   // ✅ Hide dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
         setResultList([]); // Hide suggestions
       }
     };
@@ -182,11 +174,13 @@ export default function SearchInputWithCategory() {
 
   const fetchSearchResults = async (query: string) => {
     try {
-      const response = await axios.get(`${ApiBaseUrl.baseUrl}search/suggestion/${query}`);
-      const results = response.data || [];
-      const uniqueResults = Array.from(new Set(results.map((item) => item.keyword))).map(
-        (keyword) => results.find((item) => item.keyword === keyword)
+      const response = await axios.get(
+        `${ApiBaseUrl.baseUrl}search/suggestion/${query}`
       );
+      const results = response.data || [];
+      const uniqueResults = Array.from(
+        new Set(results.map((item) => item.keyword))
+      ).map((keyword) => results.find((item) => item.keyword === keyword));
 
       setResultList(uniqueResults);
     } catch (error) {
@@ -209,15 +203,14 @@ export default function SearchInputWithCategory() {
   //   search(value);
   // };
 
-
   // Improve search input behavior and placeholder text
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchValue(value);
-  
+
     if (!value.trim()) {
       setResultList([]);
-      router.push("/");  // Navigate to home if input cleared
+      router.push("/"); // Navigate to home if input cleared
     } else {
       search(value);
     }
@@ -247,7 +240,13 @@ export default function SearchInputWithCategory() {
   };
 
   return (
-    <Box ref={wrapperRef} position="relative" flex="1 1 0" maxWidth="670px" mx="auto">
+    <Box
+      ref={wrapperRef}
+      position="relative"
+      flex="1 1 0"
+      maxWidth="670px"
+      mx="auto"
+    >
       <StyledSearchBox>
         <TextField
           fullwidth
@@ -263,10 +262,19 @@ export default function SearchInputWithCategory() {
       </StyledSearchBox>
 
       {!!resultList.length && (
-        <Card position="absolute" top="100%" py="0.5rem" width="100%" boxShadow="large" zIndex={99}>
+        <Card
+          position="absolute"
+          top="100%"
+          py="0.5rem"
+          width="100%"
+          boxShadow="large"
+          zIndex={99}
+        >
           {resultList.map((item: any, index: number) => (
             <MenuItem key={index} onClick={() => handleSuggestionClick(item)}>
-              <Span fontSize="14px">{item.keyword || `Product ${item.product_id}`}</Span>
+              <Span fontSize="14px">
+                {item.keyword || `Product ${item.product_id}`}
+              </Span>
             </MenuItem>
           ))}
         </Card>

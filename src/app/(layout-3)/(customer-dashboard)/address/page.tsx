@@ -350,7 +350,7 @@ import { AddNewAddress } from "@sections/customer-dashboard/address";
 import Address from "@models/address.model";
 import authService from "services/authService";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 import Loader from "@component/loader";
 
 // Styled Components
@@ -434,7 +434,7 @@ const Backdrop = styled.div`
   align-items: center;
 `;
 
-const DialogBox = styled(motion.div)`
+const DialogBox = styled.div`
   background: white;
   padding: 24px 32px;
   border-radius: 12px;
@@ -603,9 +603,9 @@ export default function AddressList() {
       {dialog.isLoading && (
         <Backdrop>
           <DialogBox
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.2 }}
+            // initial={{ opacity: 0, scale: 0.9 }}
+            // animate={{ opacity: 1, scale: 1 }}
+            // transition={{ duration: 0.2 }}
           >
             <h3>{dialog.message}</h3>
             <ButtonGroup>
