@@ -203,10 +203,24 @@ export default function SearchInputWithCategory() {
     }
   }, 300);
 
+  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value;
+  //   setSearchValue(value);
+  //   search(value);
+  // };
+
+
+  // Improve search input behavior and placeholder text
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchValue(value);
-    search(value);
+  
+    if (!value.trim()) {
+      setResultList([]);
+      router.push("/");  // Navigate to home if input cleared
+    } else {
+      search(value);
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -241,7 +255,7 @@ export default function SearchInputWithCategory() {
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
           className="search-field"
-          placeholder="Search by Name and Hit Enter"
+          placeholder="Search by Name and Press Enter"
         />
         <Icon onClick={handleSearchAction} className="search-icon" size="18px">
           search
