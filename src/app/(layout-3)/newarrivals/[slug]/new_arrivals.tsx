@@ -157,6 +157,7 @@ export default function NewArrivals({ sortOptions, slug }) {
       // Reset products when fetching the first page
       if (currentPage === 1) {
         setProducts(data.data);
+        console.log(data.data);
       } else {
         setProducts((prevProducts) => [...prevProducts, ...data.data]);
       }
@@ -338,9 +339,7 @@ export default function NewArrivals({ sortOptions, slug }) {
 
           <Grid item lg={9} xs={12}>
             {currentPage === 1 && loading ? (
-              <Typography>
-                {/* <Loader /> */}
-              </Typography>
+              <Typography>{/* <Loader /> */}</Typography>
             ) : view === "grid" ? (
               <>
                 <ProductGridView

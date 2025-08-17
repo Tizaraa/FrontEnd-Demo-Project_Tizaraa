@@ -22,7 +22,7 @@ import { Footer1, Footer2 } from "@component/footer";
 import StationeryProducts from "@sections/market-1/StationeryProducts";
 import GroceryProducts from "@sections/market-1/GroceryProducts";
 import OTCProducts from "@sections/market-1/OTCProducts";
-import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
+import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
 import Image from "next/image";
 import NextImage from "@component/NextImage";
 
@@ -48,44 +48,44 @@ export default async function Market1() {
 
   return (
     <>
-    {/* Background image */}
-    <NextImage
-  alt="newArrivalBanner"
-  src={tizaraa_watermark}
-  priority
-  style={{
-    position: "fixed",
-    top: "70%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "100%", // Set to 100% to ensure full responsiveness
-    height: "auto", // Maintain aspect ratio
-    maxWidth: "1200px", // Optional: Limit the maximum width
-    backgroundSize: "contain", // Adjust the scaling behavior
-    backgroundPosition: "center",
-    opacity: 0.1,
-    zIndex: 0,
-  }}
-/>
-    
-    <main
-    style={{
-      position: "relative",
-      background: "none",
-    }}
-  >
-    <Section1 />
-    <Section10 />
-    <Section8 />
-    <NewArrivalsProduct />
-    <FlashSaleBanner />
-    <FlashSaleProducts />
-    <OTCProducts />
-    <StationeryProducts />
-    <GroceryProducts />
-    <JustForYouProducts />
-    <Section12 />
-  </main>
+      {/* Background image */}
+      <NextImage
+        alt="newArrivalBanner"
+        src={tizaraa_watermark}
+        priority
+        style={{
+          position: "fixed",
+          top: "70%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "100%", // Set to 100% to ensure full responsiveness
+          height: "auto", // Maintain aspect ratio
+          maxWidth: "1200px", // Optional: Limit the maximum width
+          backgroundSize: "contain", // Adjust the scaling behavior
+          backgroundPosition: "center",
+          opacity: 0.1,
+          zIndex: 0,
+        }}
+      />
+
+      <main
+        style={{
+          position: "relative",
+          background: "none",
+        }}
+      >
+        <Section1 />
+        <Section10 />
+        <Section8 />
+        <NewArrivalsProduct />
+        <FlashSaleBanner />
+        <FlashSaleProducts />
+        <OTCProducts />
+        <StationeryProducts />
+        <GroceryProducts />
+        <JustForYouProducts />
+        <Section12 />
+      </main>
     </>
   );
 }

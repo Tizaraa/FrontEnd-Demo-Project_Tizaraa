@@ -410,6 +410,7 @@ import {
   DiscountPercentage,
 } from "@utils/utils";
 import { deviceSize } from "@utils/constants";
+import Image from "next/image";
 
 // STYLED COMPONENT
 const Wrapper = styled(Card)`
@@ -622,7 +623,8 @@ export default function ProductCard1({
           )}
 
           <Link href={`/product/${slug}`}>
-            <NextImage alt={title} width={277} src={imgUrl} height={270} />
+            {/* <NextImage alt={title} width={277} src={imgUrl} height={270} /> */}
+            <Image alt={title} width={277} src={imgUrl} height={270} />
           </Link>
         </div>
 
