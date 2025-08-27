@@ -513,16 +513,16 @@ const ProductImages = ({ images }: ProductImagesProps) => {
         onMouseLeave={handleMouseLeave}
       >
         <FlexBox
-          mb="20px"
+          mb="15px"
           overflow="hidden"
           borderRadius={16}
           justifyContent="center"
         >
           <Image
-            width={200}
-            height={200}
+            // width={200}
+            // height={200}
             src={currentImageUrl}
-            style={{ display: "block", width: "100%", height: "auto" }}
+            style={{ display: "block", width: "350px", height: "350px" }}
           />
         </FlexBox>
 
