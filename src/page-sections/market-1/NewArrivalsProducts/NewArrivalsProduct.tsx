@@ -269,7 +269,7 @@ export default function NewArrivalsProduct() {
       setCurrentSlide((prev) =>
         prev + 1 >= bigDiscountList.length ? 0 : prev + 1
       );
-    }, 3000); // Slide every 3 seconds
+    }, 2000); // Slide every 3 seconds
 
     return () => clearInterval(interval);
   }, [bigDiscountList.length]);
