@@ -17,6 +17,7 @@ import JustForYouProducts from "@sections/market-1/JustForYouPeoducts/JustForYou
 import NewArrivalsProduct from "@sections/market-1/NewArrivalsProducts/NewArrivalsProduct";
 import JustForYouProduct from "@sections/market-1/Section11";
 import FlashSaleProducts from "@sections/market-1/FlashSaleProducts";
+import CampaignProducts from "@sections/market-1/CampaingProducts";
 import FlashSaleBanner from "@sections/market-1/FlashSaleBanner";
 import { Footer1, Footer2 } from "@component/footer";
 import StationeryProducts from "@sections/market-1/StationeryProducts";
@@ -74,16 +75,64 @@ export default async function Market1() {
           background: "none",
         }}
       >
+        {/* ======================================= */}
+        {/* Hero / Top Banner Section */}
+        {/* ======================================= */}
         <Section1 />
+
+        {/* ======================================= */}
+        {/* Featured / Promotional Section */}
+        {/* ======================================= */}
         <Section10 />
+
+        {/* ======================================= */}
+        {/* Campaign / Special Deals Section */}
+        {/* ======================================= */}
+        <CampaignProducts />
+
+        {/* ======================================= */}
+        {/* Informational / Middle Banner Section */}
+        {/* ======================================= */}
         <Section8 />
+
+        {/* ======================================= */}
+        {/* New Arrivals Section */}
+        {/* ======================================= */}
         <NewArrivalsProduct />
+
+        {/* ======================================= */}
+        {/* Flash Sale Banner */}
+        {/* ======================================= */}
         <FlashSaleBanner />
+
+        {/* ======================================= */}
+        {/* Flash Sale Products */}
+        {/* ======================================= */}
         <FlashSaleProducts />
+
+        {/* ======================================= */}
+        {/* OTC Products */}
+        {/* ======================================= */}
         <OTCProducts />
-        <StationeryProducts />
+
+        {/* ======================================= */}
+        {/* Grocery Products */}
+        {/* ======================================= */}
         <GroceryProducts />
+
+        {/* ======================================= */}
+        {/* Stationery Products */}
+        {/* ======================================= */}
+        <StationeryProducts />
+
+        {/* ======================================= */}
+        {/* Just For You Products */}
+        {/* ======================================= */}
         <JustForYouProducts />
+
+        {/* ======================================= */}
+        {/* Find products by country */}
+        {/* ======================================= */}
         <Section12 />
       </main>
     </>
