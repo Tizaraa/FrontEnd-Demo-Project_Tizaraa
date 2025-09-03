@@ -316,9 +316,13 @@ export default function PaymentForm() {
     }, 0);
   };
   // const total = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
+
   const savedShipping = parseFloat(
     sessionStorage.getItem("savedTotalWithDelivery") || "0"
   );
+
+  const expressDelivery = sessionStorage.getItem("expressDelivery");
+
   // const total_ammount = total;
   // const isSubtotalZero = total_ammount === 0;
 
@@ -520,6 +524,7 @@ export default function PaymentForm() {
             address:
               userShippingdata?.shipping_address1 || userShippingdata?.address,
             delivery_charge: savedShipping || 0,
+            delivery_type: expressDelivery,
             total_ammount: total_ammount,
             payment_type: 1,
             seller_id: cartData[0]?.sellerId,

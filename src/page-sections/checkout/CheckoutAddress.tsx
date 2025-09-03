@@ -523,6 +523,10 @@
 //   );
 // }
 
+
+
+
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -561,47 +565,6 @@ export default function CheckoutAddress({
   const [advancePaymentAmount, setAdvancePaymentAmount] = useState<
     number | null
   >(null);
-
-  // const handlePaymentOptionSelect = async (percentage) => {
-  //   const selectedProducts = JSON.parse(
-  //     sessionStorage.getItem("selectedProducts") || "[]"
-  //   );
-  //   const totalAmount = selectedProducts.reduce(
-  //     (sum, product) => sum + product.qty * product.price,
-  //     0
-  //   );
-  //   setSelectedPaymentOption(percentage);
-  //   setLoading(true);
-
-  //   const controller = new AbortController();
-  //   const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-  //   try {
-  //     const { data } = await axios.post(
-  //       `${ApiBaseUrl.baseUrl}otc/price/percentage`,
-  //       { total_ammount: totalAmount },
-  //       {
-  //         params: { total: totalAmount, percentage },
-  //         headers: { Authorization: `Bearer ${authtoken}` },
-  //         signal: controller.signal,
-  //       }
-  //     );
-
-  //     // Update state and sessionStorage synchronously
-  //     setAdvancePaymentAmount(data.newtotal);
-  //     sessionStorage.setItem(
-  //       "otcAdvancePaymentAmount",
-  //       data.newtotal.toString()
-  //     );
-  //   } catch (error) {
-  //     error.name === "AbortError"
-  //       ? toast.error("Your internet seems slow. Please try again.")
-  //       : toast.error("Your internet seems slow. Please try again.");
-  //   } finally {
-  //     clearTimeout(timeoutId);
-  //     setLoading(false);
-  //   }
-  // };
 
   const handlePaymentOptionSelect = async (percentage) => {
     // Log the selected percentage
@@ -745,7 +708,7 @@ export default function CheckoutAddress({
         );
         if (selectedProvince) {
           const payload = {
-            express_delivery: expressDelivery ? 1 : 0,
+            express_delivery: expressDelivery ? 1 : 2,
             province: selectedAddress.province_id,
             city: selectedAddress.city_id,
             area: selectedAddress.area_id,
@@ -820,6 +783,9 @@ export default function CheckoutAddress({
 
     const isChecked = event.target.checked;
     setExpressDelivery(isChecked);
+
+    // ✅ Store in session as 1 or 2
+    sessionStorage.setItem("expressDelivery", isChecked ? "2" : "1");
   };
 
   // Load stored address and delivery charge on component mount
@@ -892,143 +858,7 @@ export default function CheckoutAddress({
               </Typography>
 
               <Grid container spacing={2}>
-                {/* 
-                // Option 1 - 50%
-                <Grid item xs={12} sm={4}>
-                  <FlexBox
-                    flexDirection="column"
-                    p="1rem"
-                    border={`1px solid ${
-                      selectedPaymentOption === 50 ? "rgb(233, 69, 96)" : "#ddd"
-                    }`}
-                    borderRadius="8px"
-                    backgroundColor={
-                      selectedPaymentOption === 50 ? "rgb(233, 69, 96)" : "white"
-                    }
-                    style={{
-                      cursor: "pointer",
-                      position: "relative",
-                      overflow: "hidden",
-                    }}
-                    onClick={() => handlePaymentOptionSelect(50)}
-                  >
-                    {loading && selectedPaymentOption === 50 && (
-                      <LinearProgress
-                        sx={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          height: "2px",
-                          backgroundColor: "rgba(255, 255, 255, 0.3)",
-                          "& .MuiLinearProgress-bar": {
-                            backgroundColor: "white",
-                          },
-                        }}
-                      />
-                    )}
-
-                    <FlexBox alignItems="center" justifyContent="center">
-                      {loading && selectedPaymentOption === 50 ? (
-                        <CircularProgress
-                          size={20}
-                          sx={{ color: "white", marginRight: "8px" }}
-                        />
-                      ) : (
-                        <CreditCardIcon
-                          style={{
-                            color: selectedPaymentOption === 50 ? "white" : "#333",
-                            marginRight: "8px",
-                          }}
-                        />
-                      )}
-                      <Typography
-                        style={{
-                          fontWeight: "600",
-                          color: selectedPaymentOption === 50 ? "white" : "#333",
-                        }}
-                      >
-                        {loading && selectedPaymentOption === 50
-                          ? "Processing..."
-                          : "Pay Now 50%"}
-                      </Typography>
-                    </FlexBox>
-                  </FlexBox>
-                </Grid>
-
-                // Option 2 - 80%
-                <Grid item xs={12} sm={4}>
-                  <FlexBox
-                    flexDirection="column"
-                    p="1rem"
-                    border={`1px solid ${
-                      selectedPaymentOption === 80 ? "rgb(233, 69, 96)" : "#ddd"
-                    }`}
-                    borderRadius="8px"
-                    backgroundColor={
-                      selectedPaymentOption === 80 ? "rgb(233, 69, 96)" : "white"
-                    }
-                    style={{
-                      cursor:
-                        loading && selectedPaymentOption === 80 ? "wait" : "pointer",
-                      position: "relative",
-                      overflow: "hidden",
-                      opacity: loading && selectedPaymentOption !== 80 ? 0.7 : 1,
-                      transition: "all 0.3s ease",
-                    }}
-                    onClick={() => !loading && handlePaymentOptionSelect(80)}
-                  >
-                    {loading && selectedPaymentOption === 80 && (
-                      <LinearProgress
-                        sx={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          height: "2px",
-                          backgroundColor: "rgba(255, 255, 255, 0.3)",
-                          "& .MuiLinearProgress-bar": {
-                            backgroundColor: "white",
-                          },
-                        }}
-                      />
-                    )}
-
-                    <FlexBox alignItems="center" justifyContent="center">
-                      {loading && selectedPaymentOption === 80 ? (
-                        <CircularProgress
-                          size={20}
-                          thickness={5}
-                          style={{
-                            color: "white",
-                            marginRight: "8px",
-                          }}
-                        />
-                      ) : (
-                        <CreditCardIcon
-                          style={{
-                            color: selectedPaymentOption === 80 ? "white" : "#333",
-                            marginRight: "8px",
-                            transition: "color 0.3s ease",
-                          }}
-                        />
-                      )}
-                      <Typography
-                        style={{
-                          fontWeight: "600",
-                          color: selectedPaymentOption === 80 ? "white" : "#333",
-                          transition: "color 0.3s ease",
-                        }}
-                      >
-                        {loading && selectedPaymentOption === 80
-                          ? "Processing..."
-                          : "Pay Now 80%"}
-                      </Typography>
-                    </FlexBox>
-                  </FlexBox>
-                </Grid>
-                */}
-
+            
                 {/* Option 3 - 100% */}
                 <Grid item xs={12}>
                   <FlexBox

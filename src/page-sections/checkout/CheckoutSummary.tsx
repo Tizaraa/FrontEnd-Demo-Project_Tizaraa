@@ -665,9 +665,13 @@ export default function CheckoutSummary({ deliveryCharge }) {
     const deliveryChargeDisplay = hasAbroadProduct ? 0 : deliveryCharge || 0;
 
     const totalPrice = getTotalPrice();
-    const totalWithDelivery =
-      parseFloat(deliveryChargeDisplay.toString()) +
-      (isExpressDelivery && !hasAbroadProduct ? 10 : 0);
+    
+    // const totalWithDelivery =
+    //   parseFloat(deliveryChargeDisplay.toString()) +
+    //   (isExpressDelivery && !hasAbroadProduct ? 10 : 0);
+
+    const totalWithDelivery = parseFloat(deliveryChargeDisplay.toString());
+
 
     // Update state and sessionStorage
     setSavedTotalPrice(totalPrice);
