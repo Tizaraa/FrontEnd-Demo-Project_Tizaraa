@@ -201,10 +201,217 @@
 
 
 // Also for it
+// "use client";
+
+// import Link from "next/link";
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+
+// import Box from "@component/Box";
+// import Card from "@component/Card";
+// import FlexBox from "@component/FlexBox";
+// import { H4 } from "@component/Typography";
+// import { Carousel } from "@component/carousel";
+// import CategorySectionCreator from "@component/CategorySectionCreator";
+// import { currency } from "@utils/utils";
+// import useWindowSize from "@hook/useWindowSize";
+// import styles from "../market-1/JustForYouPeoducts/JustForYouParoducts.module.css";
+
+// import ApiBaseUrl from "../../api/ApiBaseUrl";
+// import Rating from "@component/rating";
+// import { Chip } from "@component/Chip";
+// import Image from "next/image";
+
+// export default function StationeryProducts() {
+//   const [stationeryProducts, setStationeryProducts] = useState([]);
+//   const [currentSlide, setCurrentSlide] = useState(0); // For auto-slide
+//   const width = useWindowSize();
+//   const [visibleSlides, setVisibleSlides] = useState(5);
+//   const [isLoading, setIsLoading] = useState(false);
+
+//   // Adjust visible slides based on screen width
+//   useEffect(() => {
+//     if (width < 370) setVisibleSlides(1);
+//     else if (width < 650) setVisibleSlides(2);
+//     else if (width < 950) setVisibleSlides(3);
+//     else setVisibleSlides(5);
+//   }, [width]);
+
+//   // Fetch stationery products
+//   useEffect(() => {
+//     const fetchProducts = async () => {
+//       try {
+//         const response = await axios.get(
+//           `${ApiBaseUrl.baseUrl}frontend/category/product/view`
+//         );
+
+//         if (response.data && response.data.stationeryproduct) {
+//           setStationeryProducts(response.data.stationeryproduct);
+//         } else {
+//           console.error("Unexpected response format:", response.data);
+//         }
+//       } catch (error) {
+//         console.error("Error fetching products:", error);
+//       }
+//     };
+
+//     fetchProducts();
+//   }, []);
+
+//   // Auto-slide effect
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setCurrentSlide((prev) =>
+//         prev + 1 >= stationeryProducts.length ? 0 : prev + 1
+//       );
+//     }, 3000); // Auto slide every 3 seconds
+
+//     return () => clearInterval(interval);
+//   }, [stationeryProducts.length]);
+
+//   // Handle product click loading
+//   const handleProductClick = () => {
+//     setIsLoading(true);
+//     setTimeout(() => {
+//       setIsLoading(false);
+//     }, 1000);
+//   };
+
+//   return (
+//     <CategorySectionCreator
+//       title="Stationery & Craft"
+//       seeMoreLink="/category/stationery-&-craft"
+//     >
+//       {isLoading && (
+//         <div className={styles.loadingOverlay}>
+//           <div className={styles.loader}></div>
+//         </div>
+//       )}
+
+//       <Box my="-0.25rem">
+//         <Carousel
+//           totalSlides={stationeryProducts.length}
+//           visibleSlides={visibleSlides}
+//           currentSlide={currentSlide} // Added for auto-slide
+//         >
+//           {stationeryProducts.map((item) => (
+//             <Box py="0.25rem" key={item.product_slug}>
+//               <Card
+//                 p="1rem"
+//                 borderRadius={8}
+//                 style={{ height: "auto", minHeight: "300px" }}
+//               >
+//                 {/* Discount Badge */}
+//                 {!!item.discount_price &&
+//                   item.discount_price < item.seeling_price && (
+//                     <Chip
+//                       top="1rem"
+//                       left="1.2rem"
+//                       p="0.25rem 0.5rem"
+//                       fontSize="12px"
+//                       fontWeight="600"
+//                       bg="primary.main"
+//                       position="absolute"
+//                       color="primary.text"
+//                       zIndex={1}
+//                     >
+//                       {Math.floor(
+//                         ((item.seeling_price - item.discount_price) /
+//                           item.seeling_price) *
+//                           100
+//                       )}
+//                       % off
+//                     </Chip>
+//                   )}
+
+//                 <Link href={`/product/${item.product_slug}`}>
+//                   <Box
+//                     position="relative"
+//                     style={{ padding: "0 0.5rem" }}
+//                     onClick={handleProductClick}
+//                   >
+//                     <div
+//                       style={{
+//                         position: "relative",
+//                         borderRadius: "8px",
+//                         overflow: "hidden",
+//                       }}
+//                     >
+//                       <Image
+//                         src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
+//                         alt={item.product_name}
+//                         layout="responsive"
+//                         width={1}
+//                         height={1}
+//                         objectFit="cover"
+//                         style={{ borderRadius: "8px" }}
+//                         className={styles.imgPart}
+//                       />
+//                     </div>
+//                   </Box>
+
+//                   <H4
+//                     fontWeight="600"
+//                     fontSize="18px"
+//                     mb="0.25rem"
+//                     style={{
+//                       whiteSpace: "nowrap",
+//                       overflow: "hidden",
+//                       textOverflow: "ellipsis",
+//                     }}
+//                   >
+//                     {item.product_name}
+//                   </H4>
+
+//                   {item.rating > 0 && (
+//                     <Rating value={item.rating} outof={5} color="warn" readOnly />
+//                   )}
+
+//                   {item.discount_price == null && (
+//                     <FlexBox>
+//                       <H4
+//                         fontWeight="600"
+//                         fontSize="14px"
+//                         color="primary.main"
+//                       >
+//                         {currency(item.seeling_price)}
+//                       </H4>
+//                     </FlexBox>
+//                   )}
+
+//                   {item.discount_price != null && (
+//                     <FlexBox flexDirection="column" mt="0.25rem">
+//                       <H4 fontWeight="600" fontSize="14px" color="text.muted">
+//                         BDT <del>{item.seeling_price}</del>
+//                       </H4>
+//                       <Box>
+//                         <H4
+//                           fontWeight="600"
+//                           fontSize="14px"
+//                           color="primary.main"
+//                         >
+//                           {currency(item.discount_price)}
+//                         </H4>
+//                       </Box>
+//                     </FlexBox>
+//                   )}
+//                 </Link>
+//               </Card>
+//             </Box>
+//           ))}
+//         </Carousel>
+//       </Box>
+//     </CategorySectionCreator>
+//   );
+// }
+
+
+
+
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 import Box from "@component/Box";
@@ -224,12 +431,17 @@ import Image from "next/image";
 
 export default function StationeryProducts() {
   const [stationeryProducts, setStationeryProducts] = useState([]);
-  const [currentSlide, setCurrentSlide] = useState(0); // For auto-slide
+  const [currentSlide, setCurrentSlide] = useState(0);
   const width = useWindowSize();
   const [visibleSlides, setVisibleSlides] = useState(5);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Adjust visible slides based on screen width
+  // Loop products for smooth infinite scrolling
+  const loopedProducts = [...stationeryProducts, ...stationeryProducts];
+
+  // Responsive slides
   useEffect(() => {
     if (width < 370) setVisibleSlides(1);
     else if (width < 650) setVisibleSlides(2);
@@ -258,23 +470,25 @@ export default function StationeryProducts() {
     fetchProducts();
   }, []);
 
-  // Auto-slide effect
+  // Smooth infinite auto-slide
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) =>
-        prev + 1 >= stationeryProducts.length ? 0 : prev + 1
-      );
-    }, 3000); // Auto slide every 3 seconds
+    if (stationeryProducts.length === 0) return;
 
-    return () => clearInterval(interval);
-  }, [stationeryProducts.length]);
+    if (!isPaused) {
+      intervalRef.current = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % stationeryProducts.length);
+      }, 3000); // Slide every 3s
+    }
 
-  // Handle product click loading
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [stationeryProducts.length, isPaused]);
+
+  // Product click loading
   const handleProductClick = () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    setTimeout(() => setIsLoading(false), 1000);
   };
 
   return (
@@ -288,14 +502,18 @@ export default function StationeryProducts() {
         </div>
       )}
 
-      <Box my="-0.25rem">
+      <Box
+        my="-0.25rem"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
         <Carousel
-          totalSlides={stationeryProducts.length}
+          totalSlides={loopedProducts.length}
           visibleSlides={visibleSlides}
-          currentSlide={currentSlide} // Added for auto-slide
+          currentSlide={currentSlide}
         >
-          {stationeryProducts.map((item) => (
-            <Box py="0.25rem" key={item.product_slug}>
+          {loopedProducts.map((item, index) => (
+            <Box py="0.25rem" key={`${item.product_slug}-${index}`}>
               <Card
                 p="1rem"
                 borderRadius={8}
@@ -369,11 +587,7 @@ export default function StationeryProducts() {
 
                   {item.discount_price == null && (
                     <FlexBox>
-                      <H4
-                        fontWeight="600"
-                        fontSize="14px"
-                        color="primary.main"
-                      >
+                      <H4 fontWeight="600" fontSize="14px" color="primary.main">
                         {currency(item.seeling_price)}
                       </H4>
                     </FlexBox>
@@ -385,11 +599,7 @@ export default function StationeryProducts() {
                         BDT <del>{item.seeling_price}</del>
                       </H4>
                       <Box>
-                        <H4
-                          fontWeight="600"
-                          fontSize="14px"
-                          color="primary.main"
-                        >
+                        <H4 fontWeight="600" fontSize="14px" color="primary.main">
                           {currency(item.discount_price)}
                         </H4>
                       </Box>
