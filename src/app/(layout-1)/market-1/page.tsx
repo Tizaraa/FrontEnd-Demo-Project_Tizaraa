@@ -26,6 +26,7 @@ import OTCProducts from "@sections/market-1/OTCProducts";
 import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
 import Image from "next/image";
 import NextImage from "@component/NextImage";
+import CampaignBanner from "@sections/market-1/CampaignBanner";
 
 export default async function Market1() {
   const carList = await api.getCarList();
@@ -86,12 +87,17 @@ export default async function Market1() {
         <Section10 />
 
         {/* ======================================= */}
+        {/* Campaign Section Banner */}
+        {/* ======================================= */}
+        {/* <CampaignBanner /> */}
+
+        {/* ======================================= */}
         {/* Campaign / Special Deals Section */}
         {/* ======================================= */}
         <CampaignProducts />
 
         {/* ======================================= */}
-        {/* Informational / Middle Banner Section */}
+        {/* New Arrivals Section Banner */}
         {/* ======================================= */}
         <Section8 />
 
