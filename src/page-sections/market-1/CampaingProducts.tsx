@@ -20,16 +20,15 @@ import { Chip } from "@component/Chip";
 import Image from "next/image";
 
 export default function CampaignProducts() {
-  const [flashSale, setFlashSale] = useState([]);
+  const [campaignProducts, setCampaignProducts] = useState([]);
   const [campaignInfo, setCampaignInfo] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const width = useWindowSize();
   const [visibleSlides, setVisibleSlides] = useState(5);
   const [isLoading, setIsLoading] = useState(false);
-  const loopedProducts = [...flashSale, ...flashSale];
-  
+  const loopedProducts = [...campaignProducts, ...campaignProducts];
 
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isPaused, setIsPaused] = useState(false);
 
   // Adjust visible slides by screen width
@@ -40,7 +39,7 @@ export default function CampaignProducts() {
     else setVisibleSlides(5);
   }, [width]);
 
-  // Fetch flash sale products from new API
+  // Fetch campaign products from API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -49,13 +48,13 @@ export default function CampaignProducts() {
         );
 
         if (response.data && response.data.data) {
-          setFlashSale(response.data.data);
+          setCampaignProducts(response.data.data);
           setCampaignInfo(response.data.campaign);
         } else {
           console.error("Unexpected response format:", response.data);
         }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching campaign products:", error);
       }
     };
 
@@ -64,16 +63,18 @@ export default function CampaignProducts() {
 
   // Auto-slide effect with pause/resume
   useEffect(() => {
-    if (flashSale.length === 0) return;
+    if (campaignProducts.length === 0) return;
 
     if (!isPaused) {
       intervalRef.current = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % flashSale.length);
+        setCurrentSlide((prev) => (prev + 1) % campaignProducts.length);
       }, 2000);
     }
 
-    return () => clearInterval(intervalRef.current);
-  }, [flashSale.length, isPaused]);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [campaignProducts.length, isPaused]);
 
   const handleProductClick = () => {
     setIsLoading(true);
@@ -83,7 +84,7 @@ export default function CampaignProducts() {
   return (
     <CategorySectionCreator
       title={campaignInfo?.name}
-      seeMoreLink={`flashsale/flash_sale`}
+      seeMoreLink={`campaign/campaign`}
     >
       {isLoading && (
         <div className={styles.loadingOverlay}>
@@ -109,7 +110,8 @@ export default function CampaignProducts() {
                 style={{ height: "auto", minHeight: "300px" }}
               >
                 {/* Discount Badge */}
-                {parseFloat(item.campaign_price) < parseFloat(item.seeling_price) && (
+                {parseFloat(item.campaign_price) <
+                  parseFloat(item.seeling_price) && (
                   <Chip
                     top="1rem"
                     left="1.2rem"
@@ -170,11 +172,17 @@ export default function CampaignProducts() {
                   </H4>
 
                   {item.rating > 0 && (
-                    <Rating value={item.rating} outof={5} color="warn" readOnly />
+                    <Rating
+                      value={item.rating}
+                      outof={5}
+                      color="warn"
+                      readOnly
+                    />
                   )}
 
                   {/* Price display */}
-                  {parseFloat(item.campaign_price) === parseFloat(item.seeling_price) ? (
+                  {parseFloat(item.campaign_price) ===
+                  parseFloat(item.seeling_price) ? (
                     <FlexBox>
                       <H4 fontWeight="600" fontSize="14px" color="primary.main">
                         {currency(item.seeling_price)}
@@ -186,7 +194,11 @@ export default function CampaignProducts() {
                         BDT <del>{item.seeling_price}</del>
                       </H4>
                       <Box>
-                        <H4 fontWeight="600" fontSize="14px" color="primary.main">
+                        <H4
+                          fontWeight="600"
+                          fontSize="14px"
+                          color="primary.main"
+                        >
                           {currency(item.campaign_price)}
                         </H4>
                       </Box>
