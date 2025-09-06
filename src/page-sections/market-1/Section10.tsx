@@ -160,7 +160,7 @@ export default function Section10() {
   return (
     <Container
       mb={{ xs: "40px", sm: "50px", md: "60px", lg: "70px" }}
-      px={{ xs: "1rem", sm: "1.5rem", md: "2rem" }}
+      // px={{ xs: "1rem", sm: "1.5rem", md: "2rem" }}
     >
       <CategorySectionHeader title="Categories" iconName="categories" />
 
