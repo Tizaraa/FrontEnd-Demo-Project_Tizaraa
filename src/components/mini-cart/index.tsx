@@ -1,5 +1,3 @@
-
-
 // import Link from "next/link";
 // import Image from "next/image";
 // import { Fragment, useEffect, useState } from "react";
@@ -38,7 +36,7 @@
 
 //   const handleCartAmountChange = (amount: number, product: any) => () => {
 //     console.log("p",product.productStock);
-    
+
 //     if (amount > product.productStock) {
 //       toast.error("Out of Stock");
 //       return;
@@ -223,7 +221,7 @@
 //                 </Tiny> */}
 
 //                 {/* newly added  */}
-                
+
 //                 <Tiny color="text.muted">
 //                 {currency(item.discountPrice ? item.discountPrice : item.price, 0)} x {item.qty}
 //                 </Tiny>
@@ -259,8 +257,6 @@
 //           <Button fullwidth color="primary" variant="contained" onClick={handleCheckout}>
 //             <Typography fontWeight={600}>Checkout Now ({currency(getTotalPrice())})</Typography>
 //           </Button>
-          
-          
 
 //           <Link href="/cart">
 //             <Button fullwidth color="primary" variant="outlined" mt="1rem" onClick={toggleSidenav}>
@@ -620,6 +616,527 @@
 //   );
 // }
 
+// "use client";
+
+// import Link from "next/link";
+// import Image from "next/image";
+// import { Fragment, useEffect, useState } from "react";
+// import Avatar from "@component/avatar";
+// import Icon from "@component/icon/Icon";
+// import Divider from "@component/Divider";
+// import FlexBox from "@component/FlexBox";
+// import { Button, IconButton } from "@component/buttons";
+// import Typography, { H5, Paragraph, Tiny } from "@component/Typography";
+// import { useAppContext } from "@context/app-context";
+// import { currency } from "@utils/utils";
+// import { StyledMiniCart } from "./styles";
+// import authService from "services/authService";
+// import { useRouter } from "next/navigation";
+// import toast, { Toaster } from "react-hot-toast";
+// import CheckBox from "@component/CheckBox";
+// import DeleteIcon from "@mui/icons-material/Delete";
+// import BeatLoader from "react-spinners/BeatLoader";
+// import ApiBaseUrl from "api/ApiBaseUrl";
+// import { FaTrashAlt } from "react-icons/fa";
+
+// type MiniCartProps = { toggleSidenav?: () => void };
+
+// export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
+//   const { state, dispatch } = useAppContext();
+//   const [isLoggedIn, setIsLoggedIn] = useState(false);
+//   const [selectAll, setSelectAll] = useState(false);
+//   const [selectedProducts, setSelectedProducts] = useState<(string | number)[]>([]);
+//   const [isDeleting, setIsDeleting] = useState(false);
+//   const [loading, setLoading] = useState(false); // New loading state
+//   const [viewCartLoading, setViewCartLoading] = useState(false);
+//   const router = useRouter();
+//   const [visible, setVisible] = useState(true);
+
+//   useEffect(() => {
+//     setIsLoggedIn(authService.isAuthenticated());
+//   }, []);
+
+//   // useEffect(() => {
+//   //   const allSelected = state.cart.length > 0 && state.cart.every(item => selectedProducts.includes(item.id));
+//   //   setSelectAll(allSelected);
+//   // }, [selectedProducts, state.cart]);
+
+//   useEffect(() => {
+//     setSelectAll(
+//       state.cart.length > 0 &&
+//         state.cart.every((item) => state.selectedProducts.includes(item.id))
+//     );
+//   }, [state.cart, state.selectedProducts]);
+
+//   const handleCartAmountChange = (amount: number, product: any) => () => {
+//     if (amount > product.productStock) {
+//       toast.error("Out of Stock");
+//       return;
+//     }
+//     dispatch({
+//       type: "CHANGE_CART_AMOUNT",
+//       payload: { ...product, qty: amount },
+//     });
+//   };
+
+//   const handleInputChange = (
+//     e: React.ChangeEvent<HTMLInputElement>,
+//     product: any
+//   ) => {
+//     const newQty = Math.min(
+//       product.productStock,
+//       Math.max(1, parseInt(e.target.value))
+//     );
+//     if (newQty > product.productStock) {
+//       toast.error("Out of Stock");
+//       return;
+//     }
+//     dispatch({
+//       type: "CHANGE_CART_AMOUNT",
+//       payload: { ...product, qty: newQty },
+//     });
+//   };
+
+//   // const getTotalPrice = () => {
+//   //   return state.cart.reduce((accumulator, item) => {
+//   //     if (state.selectedProducts.includes(item.id)) {
+//   //       return (
+//   //         accumulator +
+//   //         (item.discountPrice ? item.discountPrice : item.price) * item.qty
+//   //       );
+//   //     }
+//   //     return accumulator;
+//   //   }, 0);
+//   // };
+//   const getTotalPrice = () => {
+//     return state.cart.reduce((accumulator, item) => {
+//       if (state.selectedProducts.includes(item.id)) {
+//         const price =
+//           item.sizeColor?.nosize?.length === 0 && item.discountPrice
+//             ? item.discountPrice
+//             : item.price;
+
+//         return accumulator + price * item.qty;
+//       }
+//       return accumulator;
+//     }, 0);
+//   };
+
+//   // const handleCheckout = () => {
+//   //   // Get selected items from the cart
+//   //   const selectedItems = state.cart.filter((item) =>
+//   //     state.selectedProducts.includes(item.id)
+//   //   );
+
+//   //   // Check if there are no selected items
+//   //   if (selectedItems.length === 0) {
+//   //     toast.error("Please select products to checkout");
+//   //     return;
+//   //   }
+
+//   //   // Start the loading process
+//   //   setLoading(true);
+
+//   //   // Save selected items to localStorage
+//   //   const checkoutData = JSON.stringify(selectedItems);
+//   //   sessionStorage.setItem("selectedProducts", checkoutData);
+
+//   //   if (isLoggedIn) {
+//   //     // Redirect to checkout if logged in
+//   //     setTimeout(() => {
+//   //       router.push("/checkout");
+//   //       setLoading(false); // Reset loading state after navigation
+//   //       toggleSidenav();
+//   //     }, 1000); // Adjust delay as needed
+//   //   } else {
+//   //     // Redirect to login if not logged in
+//   //     setTimeout(() => {
+//   //       router.push("/login");
+//   //       setLoading(false); // Reset loading state after navigation
+//   //     }, 1000); // Adjust delay as needed
+//   //   }
+//   // };
+
+//   const handleCheckout = () => {
+//     // Get selected items from the cart
+//     const selectedItems = state.cart.filter((item) =>
+//       state.selectedProducts.includes(item.id)
+//     );
+
+//     // Check if there are no selected items
+//     if (selectedItems.length === 0) {
+//       toast.error("Please select products to checkout");
+//       return;
+//     }
+
+//     // Check for minimum order value for Abroad products
+//     const hasAbroadProducts = selectedItems.some(
+//       (item) => item.productType === "Abroad"
+//     );
+//     const totalPrice = getTotalPrice();
+
+//     if (hasAbroadProducts && totalPrice < 1000) {
+//       toast.error(
+//         <div>
+//           Minimum Order value <strong style={{ color: "#E94560" }}>BDT 1000</strong> for international products
+//         </div>,
+//         {
+//           position: "top-center",
+//         }
+//       );
+//       return;
+//     }
+
+//     setLoading(true);
+
+//     // Save selected items to localStorage
+//     const checkoutData = JSON.stringify(selectedItems);
+//     sessionStorage.setItem("selectedProducts", checkoutData);
+
+//     if (isLoggedIn) {
+//       setTimeout(() => {
+//         router.push("/checkout");
+//         setLoading(false);
+//         toggleSidenav();
+//       }, 1000);
+//     } else {
+//       setTimeout(() => {
+//         router.push("/login");
+//         setLoading(false);
+//       }, 1000);
+//     }
+//   };
+
+//   const handleSelectAll = () => {
+//     if (selectAll) {
+//       dispatch({ type: "DESELECT_ALL_PRODUCTS" });
+//     } else {
+//       dispatch({ type: "SELECT_ALL_PRODUCTS" });
+//     }
+//   };
+
+//   const handleProductSelect = (productId: string | number) => {
+//     if (state.selectedProducts.includes(productId)) {
+//       dispatch({ type: "DESELECT_PRODUCT", payload: productId });
+//       const updatedProducts = state.selectedProducts.filter(id => id !== productId);
+//       const selectedItems = state.cart.filter((item) => updatedProducts.includes(item.id));
+//       sessionStorage.setItem('selectedProducts', JSON.stringify(selectedItems));
+//     } else {
+//       dispatch({ type: "SELECT_PRODUCT", payload: productId });
+//       const updatedProducts = [...state.selectedProducts, productId];
+//       const selectedItems = state.cart.filter((item) => updatedProducts.includes(item.id));
+//       sessionStorage.setItem('selectedProducts', JSON.stringify(selectedItems));
+//     }
+//   };
+//   const handleDeleteSelected = async () => {
+//     setIsDeleting(true);
+
+//     try {
+//       // Simulate async operation (e.g., API call) with setTimeout
+//       await new Promise((resolve) => setTimeout(resolve, 1000));
+
+//       state.selectedProducts.forEach((productId) => {
+//         dispatch({
+//           type: "CHANGE_CART_AMOUNT",
+//           payload: { id: productId, qty: 0 },
+//         });
+//       });
+
+//       localStorage.removeItem("orderId");
+//       sessionStorage.removeItem("selectedProducts");
+//       sessionStorage.removeItem("cartItems");
+//       localStorage.removeItem("cart");
+//       sessionStorage.removeItem("paymentMethod");
+//       sessionStorage.removeItem("savedTotalPrice");
+//       sessionStorage.removeItem("savedTotalWithDelivery");
+
+//       dispatch({ type: "DESELECT_ALL_PRODUCTS" });
+
+//       // toast.success("Selected items deleted successfully");
+//       toast.success(
+//         <div style={{ display: 'flex', alignItems: 'center' }}>
+//           <FaTrashAlt style={{ marginRight: '10px', color:'red' }} />
+//           Selected items deleted successfully
+//         </div>
+//       );
+//     } catch (error) {
+//       toast.error("Failed to delete selected items");
+//     } finally {
+//       setIsDeleting(false);
+//     }
+//   };
+
+//   const totalPrice = getTotalPrice();
+
+//   const handleViewCart = () => {
+//     setViewCartLoading(true); // Show the loading state
+
+//     // Delay the navigation to the cart page
+//     setTimeout(() => {
+//       router.push("/cart"); // Navigate to the cart page
+//       setViewCartLoading(false); // Optional: reset loading state after navigation
+//       toggleSidenav();// Adjust the delay time as needed (e.g., 1000ms = 1 second)
+//     }, 1000);
+//   };
+//   return (
+//     <StyledMiniCart>
+//       <div className={`cart-list ${state.cart.length === 0 ? "no-scroll" : ""}`}>
+//         <FlexBox alignItems="center" m="0px 20px" height="74px">
+//           <Icon size="1.75rem">bag</Icon>
+//           <Typography fontWeight={600} fontSize="16px" ml="0.5rem">
+//             {state.cart.length} item{state.cart.length !== 1 ? "s" : ""}
+//           </Typography>
+//         </FlexBox>
+
+//         <Divider />
+
+//         <FlexBox alignItems="center" justifyContent="space-between" m="0px 16px" height="50px">
+//           <FlexBox alignItems="center">
+//             <CheckBox
+//               checked={selectAll}
+//               onChange={handleSelectAll}
+//             />
+//             <Typography ml="0.5rem">Select All</Typography>
+//           </FlexBox>
+//           <Button
+//       size="small"
+//       color="primary"
+//       variant="outlined"
+//       disabled={
+//         state.selectedProducts.length === 0 ||
+//         state.cart.length === 0 ||
+//         totalPrice === 0 ||
+//         isDeleting
+//       }
+//       onClick={handleDeleteSelected}
+//       className={`delete-button ${isDeleting ? "deleting" : ""}`}
+//     >
+//       {isDeleting ? (
+//         <BeatLoader size={18} color="#E94560" />
+//       ) : (
+//         <>
+//           <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} /> Remove All
+//         </>
+//       )}
+//     </Button>
+//         </FlexBox>
+
+//         {state.cart.length === 0 && (
+//           <FlexBox
+//             alignItems="center"
+//             flexDirection="column"
+//             justifyContent="center"
+//             height="calc(100% - 80px)"
+//           >
+//             <Image
+//               src="/assets/images/logos/shopping-bag.svg"
+//               width={90}
+//               height={90}
+//               alt="empty cart"
+//             />
+//             <Paragraph
+//               mt="1rem"
+//               color="text.muted"
+//               textAlign="center"
+//               maxWidth="200px"
+//             >
+//               No Product Found
+//             </Paragraph>
+//           </FlexBox>
+//         )}
+
+//         {state.cart.map((item) => (
+//           <Fragment key={item.id}>
+//             <div className="cart-item">
+//             <CheckBox
+//               checked={state.selectedProducts.includes(item.id)}
+//               onChange={() => handleProductSelect(item.id)}
+//             />
+//               <FlexBox
+//                 style={{
+//                   display: "flex",
+//                   flexDirection: "column",
+//                   gap: "10px",
+//                 }}
+//                 alignItems="center"
+//                 flexDirection="column"
+//               >
+//                 <Button
+//                   size="none"
+//                   padding="5px"
+//                   color="primary"
+//                   variant="outlined"
+//                   borderRadius="300px"
+//                   borderColor="primary.light"
+//                   onClick={handleCartAmountChange(item.qty + 1, item)}
+//                 >
+//                   <Icon variant="small">plus</Icon>
+//                 </Button>
+
+//                 <input
+//                   className="no-spin-button"
+//                   type="number"
+//                   value={item.qty}
+//                   min={1}
+//                   onChange={(e) => handleInputChange(e, item)}
+//                   style={{
+//                     textDecoration: "none",
+//                     borderRadius: "30px",
+//                     scrollBehavior: "unset",
+//                     border: "1px solid #E94560",
+//                     padding: "8px",
+//                     width: "50px",
+//                     textAlign: "center",
+//                   }}
+//                 />
+
+//                 <Button
+//                   size="none"
+//                   padding="5px"
+//                   color="primary"
+//                   variant="outlined"
+//                   borderRadius="300px"
+//                   borderColor="primary.light"
+//                   onClick={handleCartAmountChange(item.qty - 1, item)}
+//                   disabled={item.qty === 1}
+//                 >
+//                   <Icon variant="small">minus</Icon>
+//                 </Button>
+//               </FlexBox>
+
+//               <Link href={`/product/${item.slug}`}>
+//               <Image
+//               width={76}
+//               height={76}
+//               style={{ marginInline: "1rem" }}
+//               alt={item.name}
+//               src={
+//                 item.productType === "Abroad"
+//                   ? item.imgUrl
+//                   : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+//               }
+//             />
+//             </Link>
+
+//               <div className="product-details">
+//                 <Link href={`/product/${item.slug}`}>
+//                   <H5 className="title" fontSize="14px">
+//                     {item.name}
+//                   </H5>
+//                 </Link>
+
+//                 <Tiny color="text.muted">
+//                {currency(
+//   item.sizeColor?.nosize?.length === 0
+//     ? item.discountPrice ?? item.price
+//     : item.price,
+//   0
+// )} {" "}
+//                   x {item.qty}
+//                 </Tiny>
+
+//                 <Typography
+//                   fontWeight={600}
+//                   fontSize="14px"
+//                   color="primary.main"
+//                   mt="4px"
+//                 >
+//                   {currency(
+//                     item.qty *
+//                       ( item.sizeColor?.nosize?.length === 0
+//                         ? item.discountPrice ?? item.price
+//                         : item.price)
+//                   )}
+//                 </Typography>
+
+//                 {(item.selectedSize || item.selectedColor || item.selectedSpecification) && (
+//                 <Tiny color="text.muted"
+//                   fontWeight={600}
+//                   fontSize="12px"
+//                   mt="4px"
+//                 >
+//                   {item.selectedSize && item.selectedColor && item.selectedSpecification
+//                     ? `Size: ${item.selectedSize}, Color: ${item.selectedColor}, Specification: ${item.selectedSpecification}`
+//                     : item.selectedSize
+//                     ? `Size: ${item.selectedSize}`
+//                     : item.selectedColor
+//                     ? `Color: ${item.selectedColor}`
+//                     : item.selectedSpecification
+//                     ? `Specification: ${item.selectedSpecification}`
+//                     : ''}
+//                 </Tiny>
+//               )}
+
+//               </div>
+
+//               <Button
+//                 size="none"
+//                 padding="5px"
+//                 color="primary"
+//                 variant="outlined"
+//                 borderRadius="300px"
+//                 borderColor="primary.light"
+//                 onClick={handleCartAmountChange(0, item)}
+//               >
+//                 <Icon variant="small">close</Icon>
+//               </Button>
+//             </div>
+//             <Divider />
+//           </Fragment>
+//         ))}
+//       </div>
+
+//       {state.cart.length > 0 && (
+//         <div className="actions">
+//           <Button
+//             fullwidth
+//             color="primary"
+//             variant="contained"
+//             onClick={handleCheckout}
+//             disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0 || loading}
+//           >
+//             {loading ? (
+//           <BeatLoader size={18} color="#E94560" />
+//         ) : (
+//           <Typography fontWeight={600}>
+//             PROCEED TO CHECKOUT ({currency(getTotalPrice())})
+//           </Typography>
+//         )}
+//           </Button>
+
+//             <Button
+//               fullwidth
+//               color="primary"
+//               variant="outlined"
+//               mt="1rem"
+//               onClick={handleViewCart}
+//               disabled={viewCartLoading}
+//             >
+//               {viewCartLoading ? (
+//                 <BeatLoader size={18} color="#E94560" />
+//               ) : (
+//                 <Typography fontWeight={600}>View Cart</Typography>
+//               )}
+//             </Button>
+//         </div>
+//       )}
+//       <style jsx>{`
+//         .delete-button {
+//           transition: all 0.3s ease;
+//         }
+//         .delete-button.deleting {
+//           opacity: 0.5;
+//           pointer-events: none;
+//         }
+//         .delete-button:hover {
+//           background-color: #f44336;
+//           color: white;
+//         }
+//       `}</style>
+//     </StyledMiniCart>
+//   );
+// }
+
 "use client";
 
 import Link from "next/link";
@@ -649,13 +1166,14 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
   const { state, dispatch } = useAppContext();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
-  const [selectedProducts, setSelectedProducts] = useState<(string | number)[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<(string | number)[]>(
+    []
+  );
   const [isDeleting, setIsDeleting] = useState(false);
   const [loading, setLoading] = useState(false); // New loading state
   const [viewCartLoading, setViewCartLoading] = useState(false);
   const router = useRouter();
   const [visible, setVisible] = useState(true);
-  
 
   useEffect(() => {
     setIsLoggedIn(authService.isAuthenticated());
@@ -720,32 +1238,32 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
           item.sizeColor?.nosize?.length === 0 && item.discountPrice
             ? item.discountPrice
             : item.price;
-  
+
         return accumulator + price * item.qty;
       }
       return accumulator;
     }, 0);
   };
-  
+
   // const handleCheckout = () => {
   //   // Get selected items from the cart
   //   const selectedItems = state.cart.filter((item) =>
   //     state.selectedProducts.includes(item.id)
   //   );
-  
+
   //   // Check if there are no selected items
   //   if (selectedItems.length === 0) {
   //     toast.error("Please select products to checkout");
   //     return;
   //   }
-  
+
   //   // Start the loading process
   //   setLoading(true);
-  
+
   //   // Save selected items to localStorage
   //   const checkoutData = JSON.stringify(selectedItems);
   //   sessionStorage.setItem("selectedProducts", checkoutData);
-  
+
   //   if (isLoggedIn) {
   //     // Redirect to checkout if logged in
   //     setTimeout(() => {
@@ -761,56 +1279,83 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
   //     }, 1000); // Adjust delay as needed
   //   }
   // };
-  
 
-
-  const handleCheckout = () => {
-    // Get selected items from the cart
+  const handleCheckout = async () => {
     const selectedItems = state.cart.filter((item) =>
       state.selectedProducts.includes(item.id)
     );
-  
-    // Check if there are no selected items
+
     if (selectedItems.length === 0) {
       toast.error("Please select products to checkout");
       return;
     }
-  
-    // Check for minimum order value for Abroad products
-    const hasAbroadProducts = selectedItems.some(
-      (item) => item.productType === "Abroad"
-    );
-    const totalPrice = getTotalPrice();
-  
-    if (hasAbroadProducts && totalPrice < 1000) {
-      toast.error(
-        <div>
-          Minimum Order value <strong style={{ color: "#E94560" }}>BDT 1000</strong> for international products
-        </div>,
+
+    setLoading(true);
+
+    try {
+      // Price Check API
+      const response = await fetch(
+        "https://frontend.tizaraa.shop/api/checkout/check/pricing",
         {
-          position: "top-center",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authService.getToken()}`,
+          },
+          body: JSON.stringify({ orders: state.cart }), // full cart
         }
       );
-      return;
-    }
-  
-    setLoading(true);
-  
-    // Save selected items to localStorage
-    const checkoutData = JSON.stringify(selectedItems);
-    sessionStorage.setItem("selectedProducts", checkoutData);
-  
-    if (isLoggedIn) {
-      setTimeout(() => {
-        router.push("/checkout");
-        setLoading(false);
-        toggleSidenav();
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        router.push("/login");
-        setLoading(false);
-      }, 1000);
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Price check failed: ${text}`);
+      }
+
+      const data = await response.json();
+
+      // Update cart prices
+      const updatedCart = state.cart.map((item) => {
+        const updatedItem = data.find(
+          (d: any) => d.product_id === item.productId
+        );
+        if (updatedItem) {
+          const newPrice = parseFloat(updatedItem.price);
+          // if (item.price !== newPrice) {
+          //   toast(`Price updated for "${item.name}" to BDT ${newPrice}`);
+          // }
+          return {
+            ...item,
+            price: newPrice,
+            discountPrice: item.discountPrice ? newPrice : null,
+          };
+        }
+        return item;
+      });
+
+      // Save updated cart & selected items
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
+      sessionStorage.setItem("selectedProducts", JSON.stringify(selectedItems));
+
+      // Update app state
+      dispatch({ type: "SET_CART", payload: updatedCart });
+
+      // Navigate
+      if (!isLoggedIn) {
+        setTimeout(() => {
+          router.push("/login");
+        }, 500);
+      } else {
+        setTimeout(() => {
+          router.push("/checkout");
+          toggleSidenav(); // optional: close mini cart
+        }, 500);
+      }
+    } catch (error: any) {
+      console.error("Price check failed:", error);
+      toast.error("Price check failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -822,18 +1367,23 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     }
   };
 
-
   const handleProductSelect = (productId: string | number) => {
     if (state.selectedProducts.includes(productId)) {
       dispatch({ type: "DESELECT_PRODUCT", payload: productId });
-      const updatedProducts = state.selectedProducts.filter(id => id !== productId);
-      const selectedItems = state.cart.filter((item) => updatedProducts.includes(item.id));
-      sessionStorage.setItem('selectedProducts', JSON.stringify(selectedItems));
+      const updatedProducts = state.selectedProducts.filter(
+        (id) => id !== productId
+      );
+      const selectedItems = state.cart.filter((item) =>
+        updatedProducts.includes(item.id)
+      );
+      sessionStorage.setItem("selectedProducts", JSON.stringify(selectedItems));
     } else {
       dispatch({ type: "SELECT_PRODUCT", payload: productId });
       const updatedProducts = [...state.selectedProducts, productId];
-      const selectedItems = state.cart.filter((item) => updatedProducts.includes(item.id));
-      sessionStorage.setItem('selectedProducts', JSON.stringify(selectedItems));
+      const selectedItems = state.cart.filter((item) =>
+        updatedProducts.includes(item.id)
+      );
+      sessionStorage.setItem("selectedProducts", JSON.stringify(selectedItems));
     }
   };
   const handleDeleteSelected = async () => {
@@ -862,8 +1412,8 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
 
       // toast.success("Selected items deleted successfully");
       toast.success(
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <FaTrashAlt style={{ marginRight: '10px', color:'red' }} />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <FaTrashAlt style={{ marginRight: "10px", color: "red" }} />
           Selected items deleted successfully
         </div>
       );
@@ -874,23 +1424,23 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     }
   };
 
-
   const totalPrice = getTotalPrice();
-
 
   const handleViewCart = () => {
     setViewCartLoading(true); // Show the loading state
-  
+
     // Delay the navigation to the cart page
     setTimeout(() => {
       router.push("/cart"); // Navigate to the cart page
       setViewCartLoading(false); // Optional: reset loading state after navigation
-      toggleSidenav();// Adjust the delay time as needed (e.g., 1000ms = 1 second)
-    }, 1000); 
+      toggleSidenav(); // Adjust the delay time as needed (e.g., 1000ms = 1 second)
+    }, 1000);
   };
   return (
     <StyledMiniCart>
-      <div className={`cart-list ${state.cart.length === 0 ? "no-scroll" : ""}`}>
+      <div
+        className={`cart-list ${state.cart.length === 0 ? "no-scroll" : ""}`}
+      >
         <FlexBox alignItems="center" m="0px 20px" height="74px">
           <Icon size="1.75rem">bag</Icon>
           <Typography fontWeight={600} fontSize="16px" ml="0.5rem">
@@ -900,35 +1450,38 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
 
         <Divider />
 
-        <FlexBox alignItems="center" justifyContent="space-between" m="0px 16px" height="50px">
+        <FlexBox
+          alignItems="center"
+          justifyContent="space-between"
+          m="0px 16px"
+          height="50px"
+        >
           <FlexBox alignItems="center">
-            <CheckBox
-              checked={selectAll}
-              onChange={handleSelectAll}
-            />
+            <CheckBox checked={selectAll} onChange={handleSelectAll} />
             <Typography ml="0.5rem">Select All</Typography>
           </FlexBox>
           <Button
-      size="small"
-      color="primary"
-      variant="outlined"
-      disabled={
-        state.selectedProducts.length === 0 ||
-        state.cart.length === 0 ||
-        totalPrice === 0 ||
-        isDeleting
-      }
-      onClick={handleDeleteSelected}
-      className={`delete-button ${isDeleting ? "deleting" : ""}`}
-    >
-      {isDeleting ? (
-        <BeatLoader size={18} color="#E94560" />
-      ) : (
-        <>
-          <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} /> Remove All
-        </>
-      )}
-    </Button>
+            size="small"
+            color="primary"
+            variant="outlined"
+            disabled={
+              state.selectedProducts.length === 0 ||
+              state.cart.length === 0 ||
+              totalPrice === 0 ||
+              isDeleting
+            }
+            onClick={handleDeleteSelected}
+            className={`delete-button ${isDeleting ? "deleting" : ""}`}
+          >
+            {isDeleting ? (
+              <BeatLoader size={18} color="#E94560" />
+            ) : (
+              <>
+                <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} />{" "}
+                Remove All
+              </>
+            )}
+          </Button>
         </FlexBox>
 
         {state.cart.length === 0 && (
@@ -958,10 +1511,10 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
         {state.cart.map((item) => (
           <Fragment key={item.id}>
             <div className="cart-item">
-            <CheckBox
-              checked={state.selectedProducts.includes(item.id)}
-              onChange={() => handleProductSelect(item.id)}
-            />
+              <CheckBox
+                checked={state.selectedProducts.includes(item.id)}
+                onChange={() => handleProductSelect(item.id)}
+              />
               <FlexBox
                 style={{
                   display: "flex",
@@ -1015,19 +1568,18 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
               </FlexBox>
 
               <Link href={`/product/${item.slug}`}>
-              <Image
-              width={76}
-              height={76} 
-              style={{ marginInline: "1rem" }} 
-              alt={item.name} 
-              src={
-                item.productType === "Abroad"
-                  ? item.imgUrl
-                  : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
-              }
-            />
-            </Link>
-
+                <Image
+                  width={76}
+                  height={76}
+                  style={{ marginInline: "1rem" }}
+                  alt={item.name}
+                  src={
+                    item.productType === "Abroad"
+                      ? item.imgUrl
+                      : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+                  }
+                />
+              </Link>
 
               <div className="product-details">
                 <Link href={`/product/${item.slug}`}>
@@ -1037,12 +1589,12 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                 </Link>
 
                 <Tiny color="text.muted">
-               {currency(
-  item.sizeColor?.nosize?.length === 0
-    ? item.discountPrice ?? item.price 
-    : item.price, 
-  0
-)} {" "}
+                  {currency(
+                    item.sizeColor?.nosize?.length === 0
+                      ? item.discountPrice ?? item.price
+                      : item.price,
+                    0
+                  )}{" "}
                   x {item.qty}
                 </Tiny>
 
@@ -1054,30 +1606,34 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
                 >
                   {currency(
                     item.qty *
-                      ( item.sizeColor?.nosize?.length === 0
-                        ? item.discountPrice ?? item.price 
+                      (item.sizeColor?.nosize?.length === 0
+                        ? item.discountPrice ?? item.price
                         : item.price)
                   )}
                 </Typography>
 
-                {(item.selectedSize || item.selectedColor || item.selectedSpecification) && (
-                <Tiny color="text.muted"
-                  fontWeight={600}
-                  fontSize="12px"
-                  mt="4px"
-                >
-                  {item.selectedSize && item.selectedColor && item.selectedSpecification
-                    ? `Size: ${item.selectedSize}, Color: ${item.selectedColor}, Specification: ${item.selectedSpecification}`
-                    : item.selectedSize
-                    ? `Size: ${item.selectedSize}`
-                    : item.selectedColor
-                    ? `Color: ${item.selectedColor}`
-                    : item.selectedSpecification
-                    ? `Specification: ${item.selectedSpecification}`
-                    : ''}
-                </Tiny>
-              )}
-
+                {(item.selectedSize ||
+                  item.selectedColor ||
+                  item.selectedSpecification) && (
+                  <Tiny
+                    color="text.muted"
+                    fontWeight={600}
+                    fontSize="12px"
+                    mt="4px"
+                  >
+                    {item.selectedSize &&
+                    item.selectedColor &&
+                    item.selectedSpecification
+                      ? `Size: ${item.selectedSize}, Color: ${item.selectedColor}, Specification: ${item.selectedSpecification}`
+                      : item.selectedSize
+                      ? `Size: ${item.selectedSize}`
+                      : item.selectedColor
+                      ? `Color: ${item.selectedColor}`
+                      : item.selectedSpecification
+                      ? `Specification: ${item.selectedSpecification}`
+                      : ""}
+                  </Tiny>
+                )}
               </div>
 
               <Button
@@ -1104,32 +1660,36 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
             color="primary"
             variant="contained"
             onClick={handleCheckout}
-            disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0 || loading}
+            disabled={
+              state.selectedProducts.length === 0 ||
+              state.cart.length === 0 ||
+              totalPrice === 0 ||
+              loading
+            }
           >
             {loading ? (
-          <BeatLoader size={18} color="#E94560" />
-        ) : (
-          <Typography fontWeight={600}>
-            PROCEED TO CHECKOUT ({currency(getTotalPrice())})
-          </Typography>
-        )}
+              <BeatLoader size={18} color="#E94560" />
+            ) : (
+              <Typography fontWeight={600}>
+                PROCEED TO CHECKOUT ({currency(getTotalPrice())})
+              </Typography>
+            )}
           </Button>
 
-          
-            <Button
-              fullwidth
-              color="primary"
-              variant="outlined"
-              mt="1rem"
-              onClick={handleViewCart}
-              disabled={viewCartLoading}
-            >
-              {viewCartLoading ? (
-                <BeatLoader size={18} color="#E94560" />
-              ) : (
-                <Typography fontWeight={600}>View Cart</Typography>
-              )}
-            </Button>
+          <Button
+            fullwidth
+            color="primary"
+            variant="outlined"
+            mt="1rem"
+            onClick={handleViewCart}
+            disabled={viewCartLoading}
+          >
+            {viewCartLoading ? (
+              <BeatLoader size={18} color="#E94560" />
+            ) : (
+              <Typography fontWeight={600}>View Cart</Typography>
+            )}
+          </Button>
         </div>
       )}
       <style jsx>{`
