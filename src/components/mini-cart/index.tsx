@@ -1245,41 +1245,6 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     }, 0);
   };
 
-  // const handleCheckout = () => {
-  //   // Get selected items from the cart
-  //   const selectedItems = state.cart.filter((item) =>
-  //     state.selectedProducts.includes(item.id)
-  //   );
-
-  //   // Check if there are no selected items
-  //   if (selectedItems.length === 0) {
-  //     toast.error("Please select products to checkout");
-  //     return;
-  //   }
-
-  //   // Start the loading process
-  //   setLoading(true);
-
-  //   // Save selected items to localStorage
-  //   const checkoutData = JSON.stringify(selectedItems);
-  //   sessionStorage.setItem("selectedProducts", checkoutData);
-
-  //   if (isLoggedIn) {
-  //     // Redirect to checkout if logged in
-  //     setTimeout(() => {
-  //       router.push("/checkout");
-  //       setLoading(false); // Reset loading state after navigation
-  //       toggleSidenav();
-  //     }, 1000); // Adjust delay as needed
-  //   } else {
-  //     // Redirect to login if not logged in
-  //     setTimeout(() => {
-  //       router.push("/login");
-  //       setLoading(false); // Reset loading state after navigation
-  //     }, 1000); // Adjust delay as needed
-  //   }
-  // };
-
   const handleCheckout = async () => {
     const selectedItems = state.cart.filter((item) =>
       state.selectedProducts.includes(item.id)
