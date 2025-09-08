@@ -50,6 +50,12 @@ export default function CampaignProducts() {
         if (response.data && response.data.data) {
           setCampaignProducts(response.data.data);
           setCampaignInfo(response.data.campaign);
+
+          console.log("campaignProducts");
+          console.log(campaignProducts);
+
+          console.log("campaignInfo");
+          console.log(campaignInfo);
         } else {
           console.error("Unexpected response format:", response.data);
         }
@@ -97,118 +103,124 @@ export default function CampaignProducts() {
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        <Carousel
-          totalSlides={loopedProducts.length}
-          visibleSlides={visibleSlides}
-          currentSlide={currentSlide}
-        >
-          {loopedProducts.map((item, index) => (
-            <Box py="0.25rem" key={`${item.product_slug}-${index}`}>
-              <Card
-                p="1rem"
-                borderRadius={8}
-                style={{ height: "auto", minHeight: "300px" }}
-              >
-                {/* Discount Badge */}
-                {parseFloat(item.campaign_price) <
-                  parseFloat(item.seeling_price) && (
-                  <Chip
-                    top="1rem"
-                    left="1.2rem"
-                    p="0.25rem 0.5rem"
-                    fontSize="12px"
-                    fontWeight="600"
-                    bg="primary.main"
-                    position="absolute"
-                    color="primary.text"
-                    zIndex={1}
-                  >
-                    {Math.floor(
-                      ((item.seeling_price - item.campaign_price) /
-                        item.seeling_price) *
-                        100
-                    )}
-                    % off
-                  </Chip>
-                )}
-
-                <Link href={`/product/${item.product_slug}`}>
-                  <Box
-                    position="relative"
-                    style={{ padding: "0 0.5rem" }}
-                    onClick={handleProductClick}
-                  >
-                    <div
-                      style={{
-                        position: "relative",
-                        borderRadius: "8px",
-                        overflow: "hidden",
-                      }}
+        {loopedProducts.length > 0 && (
+          <Carousel
+            totalSlides={loopedProducts.length}
+            visibleSlides={visibleSlides}
+            currentSlide={currentSlide}
+          >
+            {loopedProducts.map((item, index) => (
+              <Box py="0.25rem" key={`${item.product_slug}-${index}`}>
+                <Card
+                  p="1rem"
+                  borderRadius={8}
+                  style={{ height: "auto", minHeight: "300px" }}
+                >
+                  {/* Discount Badge */}
+                  {parseFloat(item.campaign_price) <
+                    parseFloat(item.seeling_price) && (
+                    <Chip
+                      top="1rem"
+                      left="1.2rem"
+                      p="0.25rem 0.5rem"
+                      fontSize="12px"
+                      fontWeight="600"
+                      bg="primary.main"
+                      position="absolute"
+                      color="primary.text"
+                      zIndex={1}
                     >
-                      <Image
-                        src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
-                        alt={item.product_name}
-                        layout="responsive"
-                        width={1}
-                        height={1}
-                        objectFit="cover"
-                        style={{ borderRadius: "8px" }}
-                        className={styles.imgPart}
-                      />
-                    </div>
-                  </Box>
-
-                  <H4
-                    fontWeight="600"
-                    fontSize="18px"
-                    mb="0.25rem"
-                    style={{
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {item.product_name}
-                  </H4>
-
-                  {item.rating > 0 && (
-                    <Rating
-                      value={item.rating}
-                      outof={5}
-                      color="warn"
-                      readOnly
-                    />
+                      {Math.floor(
+                        ((item.seeling_price - item.campaign_price) /
+                          item.seeling_price) *
+                          100
+                      )}
+                      % off
+                    </Chip>
                   )}
 
-                  {/* Price display */}
-                  {parseFloat(item.campaign_price) ===
-                  parseFloat(item.seeling_price) ? (
-                    <FlexBox>
-                      <H4 fontWeight="600" fontSize="14px" color="primary.main">
-                        {currency(item.seeling_price)}
-                      </H4>
-                    </FlexBox>
-                  ) : (
-                    <FlexBox flexDirection="column" mt="0.25rem">
-                      <H4 fontWeight="600" fontSize="14px" color="text.muted">
-                        BDT <del>{item.seeling_price}</del>
-                      </H4>
-                      <Box>
+                  <Link href={`/product/${item.product_slug}`}>
+                    <Box
+                      position="relative"
+                      style={{ padding: "0 0.5rem" }}
+                      onClick={handleProductClick}
+                    >
+                      <div
+                        style={{
+                          position: "relative",
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                        }}
+                      >
+                        <Image
+                          src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
+                          alt={item.product_name}
+                          layout="responsive"
+                          width={1}
+                          height={1}
+                          objectFit="cover"
+                          style={{ borderRadius: "8px" }}
+                          className={styles.imgPart}
+                        />
+                      </div>
+                    </Box>
+
+                    <H4
+                      fontWeight="600"
+                      fontSize="18px"
+                      mb="0.25rem"
+                      style={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {item.product_name}
+                    </H4>
+
+                    {item.rating > 0 && (
+                      <Rating
+                        value={item.rating}
+                        outof={5}
+                        color="warn"
+                        readOnly
+                      />
+                    )}
+
+                    {/* Price display */}
+                    {parseFloat(item.campaign_price) ===
+                    parseFloat(item.seeling_price) ? (
+                      <FlexBox>
                         <H4
                           fontWeight="600"
                           fontSize="14px"
                           color="primary.main"
                         >
-                          {currency(item.campaign_price)}
+                          {currency(item.seeling_price)}
                         </H4>
-                      </Box>
-                    </FlexBox>
-                  )}
-                </Link>
-              </Card>
-            </Box>
-          ))}
-        </Carousel>
+                      </FlexBox>
+                    ) : (
+                      <FlexBox flexDirection="column" mt="0.25rem">
+                        <H4 fontWeight="600" fontSize="14px" color="text.muted">
+                          BDT <del>{item.seeling_price}</del>
+                        </H4>
+                        <Box>
+                          <H4
+                            fontWeight="600"
+                            fontSize="14px"
+                            color="primary.main"
+                          >
+                            {currency(item.campaign_price)}
+                          </H4>
+                        </Box>
+                      </FlexBox>
+                    )}
+                  </Link>
+                </Card>
+              </Box>
+            ))}
+          </Carousel>
+        )}
       </Box>
     </CategorySectionCreator>
   );
