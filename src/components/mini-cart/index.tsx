@@ -1797,7 +1797,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     try {
       // Price Check API
       const response = await fetch(
-        "https://frontend.tizaraa.shop/api/checkout/check/pricing",
+        `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
         {
           method: "POST",
           headers: {
