@@ -6,11 +6,11 @@ import NextImage from "@component/NextImage";
 // IMAGES
 import banner1 from "../../../public/assets/images/banners/banner-1.png";
 import banner2 from "../../../public/assets/images/banners/banner-2.png";
-import NewArrivalsProducts from "../../../public/assets/images/banners/New-arrival_01.jpg"
+import CampaignProducts from "../../../public/assets/images/banners/99.png"
 
 export default function CampaignBanner() {
   return (
-    <Container mb="70px">
+    <Container mb="50px">
       {/* <Grid container >
         <Grid item xs={12} md={4}>
           <Link href="/">
@@ -24,10 +24,10 @@ export default function CampaignBanner() {
           </Link>
         </Grid>
       </Grid> */}
-      <Link href="/newarrivals/new_arrivals">
+      <Link href="/campaign/campaign">
             <NextImage
-             alt="newArrivalBanner" 
-             src={NewArrivalsProducts}
+             alt="CampaignProductsBanner" 
+             src={CampaignProducts}
              priority />
            
 
