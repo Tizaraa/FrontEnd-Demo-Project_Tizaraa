@@ -148,9 +148,77 @@ const CampaignProductFilter: React.FC<CampaignProductFilterProps> = ({
     transition: "all 0.2s ease",
   };
 
+  // useEffect(() => {
+  //   const fetchFilters = async () => {
+  //     try {
+  //       let response;
+  //       if (pageType === "default") {
+  //         response = await axios.get(
+  //           `${ApiBaseUrl.baseUrl}category-filter/${slug}`
+  //         );
+  //       } else if (pageType === "search") {
+  //         response = await axios.get(
+  //           `${ApiBaseUrl.baseUrl}search-filter/${slug}`
+  //         );
+  //       } else if (pageType === "shop") {
+  //         response = await axios.get(
+  //           `${ApiBaseUrl.baseUrl}shop-filter/${slug}`
+  //         );
+  //       } else if (pageType === "country") {
+  //         response = await axios.get(
+  //           `${ApiBaseUrl.baseUrl}country/product-filter/${slug}`
+  //         );
+  //       } else if (pageType === "newArrival") {
+  //         response = await axios.get(
+  //           `${ApiBaseUrl.baseUrl}remark/product-filter/new_arrivals`
+  //         );
+  //       } else if (pageType === "flashSale") {
+  //         response = await axios.get(
+  //           `${ApiBaseUrl.baseUrl}remark/product-filter/flash_sale`
+  //         );
+  //       } else if (pageType === "campaign") {
+  //         response = await axios.get(
+  //           "https://frontend.tizaraa.shop/api/campaigns/product/filter/1"
+  //         );
+  //       }
+
+  //       setBrandList(response.data.brand_filter || []);
+  //       setCategoryList(response.data.category_filter || []);
+  //       setCountryList(response.data.location_filter || []);
+  //       setProvinceList(response.data.province_filter || []);
+  //     } catch (error) {
+  //       console.error("Error fetching filters:", error);
+  //     }
+  //   };
+
+  //   fetchFilters();
+  // }, [slug, pageType]);
+
+  // const handleFilterClick = (
+  //   id: number,
+  //   selectedItems: number[],
+  //   setSelectedItems: React.Dispatch<React.SetStateAction<number[]>>,
+  //   callback: (items: number[]) => void
+  // ) => {
+  //   const updatedItems = selectedItems.includes(id)
+  //     ? selectedItems.filter(itemId => itemId !== id)
+  //     : [id]; // Changed to single selection like in your original code
+
+  //   setSelectedItems(updatedItems);
+  //   callback(updatedItems);
+  // };
+
   useEffect(() => {
     const fetchFilters = async () => {
       try {
+        let activeCampaignId = 1;
+
+        // Fetch active campaign
+        const activeRes = await axios.get(
+          "https://frontend.tizaraa.shop/api/campaigns/active"
+        );
+        activeCampaignId = activeRes.data?.campaign?.id || 1;
+
         let response;
         if (pageType === "default") {
           response = await axios.get(
@@ -178,7 +246,7 @@ const CampaignProductFilter: React.FC<CampaignProductFilterProps> = ({
           );
         } else if (pageType === "campaign") {
           response = await axios.get(
-            "https://frontend.tizaraa.shop/api/campaigns/product/filter/1"
+            `https://frontend.tizaraa.shop/api/campaigns/product/filter/${activeCampaignId}`
           );
         }
 
@@ -193,20 +261,6 @@ const CampaignProductFilter: React.FC<CampaignProductFilterProps> = ({
 
     fetchFilters();
   }, [slug, pageType]);
-
-  // const handleFilterClick = (
-  //   id: number,
-  //   selectedItems: number[],
-  //   setSelectedItems: React.Dispatch<React.SetStateAction<number[]>>,
-  //   callback: (items: number[]) => void
-  // ) => {
-  //   const updatedItems = selectedItems.includes(id)
-  //     ? selectedItems.filter(itemId => itemId !== id)
-  //     : [id]; // Changed to single selection like in your original code
-
-  //   setSelectedItems(updatedItems);
-  //   callback(updatedItems);
-  // };
 
   const handleFilterClick = (
     id: number,
