@@ -44,7 +44,7 @@ export default function CampaignProducts() {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          "https://frontend.tizaraa.shop/api/campaigns/active"
+          `${ApiBaseUrl.baseUrl}campaigns/active`
         );
 
         if (response.data && response.data.data) {

@@ -215,7 +215,7 @@ const CampaignProductFilter: React.FC<CampaignProductFilterProps> = ({
 
         // Fetch active campaign
         const activeRes = await axios.get(
-          "https://frontend.tizaraa.shop/api/campaigns/active"
+          `${ApiBaseUrl.baseUrl}campaigns/active`
         );
         activeCampaignId = activeRes.data?.campaign?.id || 1;
 
@@ -246,7 +246,7 @@ const CampaignProductFilter: React.FC<CampaignProductFilterProps> = ({
           );
         } else if (pageType === "campaign") {
           response = await axios.get(
-            `https://frontend.tizaraa.shop/api/campaigns/product/filter/${activeCampaignId}`
+            `${ApiBaseUrl.baseUrl}campaigns/product/filter/${activeCampaignId}`
           );
         }
 
