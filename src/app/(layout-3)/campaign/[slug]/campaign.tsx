@@ -11,20 +11,12 @@
 // import Sidenav from "@component/sidenav/Sidenav";
 // import ProductGridView from "@component/products/ProductCard1List";
 // import ProductListView from "@component/products/ProductCard9List";
-// import ProductFilterCard from "@component/products/ProductFilterCard";
+// import CampaignProductFilter from "@component/products/CampaignProductFilter";
 // import useWindowSize from "@hook/useWindowSize";
 // import Typography, { H5, Paragraph } from "@component/Typography";
-// import ApiBaseUrl from "api/ApiBaseUrl";
-// import styled from "@emotion/styled";
-// import { Vortex } from "react-loader-spinner";
 // import BeatLoader from "react-spinners/BeatLoader";
-
-// import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
-// import Image from "next/image";
 // import NextImage from "@component/NextImage";
-// import Loader from "@component/loader";
-// import FlashSaleProductFilter from "@component/products/FlashSaleProductFilter";
-// import CampaignProductFilter from "@component/products/CampaignProductFilter";
+// import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
 
 // const productsPerPage = 10;
 
@@ -36,6 +28,8 @@
 // export default function Campaign({ sortOptions, slug }: CampaignProps) {
 //   const router = useRouter();
 //   const width = useWindowSize();
+//   const isTablet = width < 1025;
+
 //   const [view, setView] = useState<"grid" | "list">("grid");
 //   const [selectedSortOption, setSelectedSortOption] = useState(
 //     sortOptions[0].value
@@ -45,59 +39,36 @@
 //     null
 //   );
 //   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null);
-
-//   const [activeCampaign, setActiveCampaign] = useState();
-
 //   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
+
+//   const [activeCampaign, setActiveCampaign] = useState<number | null>(null);
 //   const [products, setProducts] = useState<any[]>([]);
 //   const [loading, setLoading] = useState(false);
 //   const [totalProducts, setTotalProducts] = useState(0);
 //   const [currentPage, setCurrentPage] = useState(1);
-//   const isTablet = width < 1025;
 
-//   const handleBrandChange = (brands: number[]) => {
-//     setSelectedBrand(brands);
-//     setCurrentPage(1);
-//   };
+//   // ===== Fetch Active Campaign ID =====
+//   useEffect(() => {
+//     const fetchActiveCampaign = async () => {
+//       try {
+//         const res = await fetch(
+//           "https://frontend.tizaraa.shop/api/campaigns/active"
+//         );
+//         const data = await res.json();
+//         setActiveCampaign(data?.campaign?.id || null);
+//         console.log("Active campaign ID from API:", data?.campaign?.id);
+//         console.log(activeCampaign);
+//       } catch (err) {
+//         console.error("Error fetching active campaign:", err);
+//       }
+//     };
+//     fetchActiveCampaign();
+//   }, []);
 
-//   const handleCategoryChange = (categories: number[]) => {
-//     setSelectedCategory(categories);
-//     setCurrentPage(1);
-//   };
-
-//   const handleCountryChange = (countries: number[]) => {
-//     setSelectedCountry(countries);
-//     setCurrentPage(1);
-//   };
-
-//   const handleProvinceChange = (provinces: number[]) => {
-//     setSelectedProvinces(provinces);
-//     setCurrentPage(1);
-//   };
-
-//   const handleSortChange = (sortOption: any) => {
-//     setSelectedSortOption(sortOption.value);
-//   };
-
-// useEffect(() => {
-//   const fetchActiveCampaign = async () => {
-//     try {
-//       const res = await fetch("https://frontend.tizaraa.shop/api/campaigns/active");
-//       const data = await res.json();
-//       setActiveCampaign(data?.campaign?.id);
-//       console.log('Campaign Active Id:');
-//       console.log(data.campaign.id);
-//       console.log(activeCampaign);
-
-//     } catch (err) {
-//       console.error("Error fetching active campaign:", err);
-//     }
-//   };
-
-//   fetchActiveCampaign();
-// }, []);
-
+//   // ===== Fetch Products =====
 //   const fetchProducts = useCallback(async () => {
+//     if (!activeCampaign) return;
+
 //     setLoading(true);
 
 //     const filters: any = {};
@@ -109,22 +80,6 @@
 //       filters.province = selectedProvinces;
 
 //     try {
-
-//       // const response = await fetch(
-//       //   `https://frontend.tizaraa.shop/api/campaigns/product/${activeCampaign?.id}`,
-//       //   {
-//       //     method: "POST",
-//       //     headers: {
-//       //       "Content-Type": "application/json",
-//       //     },
-//       //     body: JSON.stringify({
-//       //       ...filters,
-//       //       page: currentPage,
-//       //       orderBy: selectedSortOption,
-//       //     }),
-//       //   }
-//       // );
-
 //       const response = await fetch(
 //         `https://frontend.tizaraa.shop/api/campaigns/product/${activeCampaign}`,
 //         {
@@ -138,24 +93,21 @@
 //         }
 //       );
 
-//       if (!response.ok) {
-//         throw new Error("Network response was not ok");
-//       }
+//       if (!response.ok) throw new Error("Network response was not ok");
 
 //       const data = await response.json();
 
-//       if (currentPage === 1) {
-//         setProducts(data.data);
-//       } else {
-//         setProducts((prevProducts) => [...prevProducts, ...data.data]);
-//       }
+//       if (currentPage === 1) setProducts(data.data);
+//       else setProducts((prev) => [...prev, ...data.data]);
+
 //       setTotalProducts(data.total);
-//     } catch (error) {
-//       console.error("Error fetching campaign products:", error);
+//     } catch (err) {
+//       console.error("Error fetching campaign products:", err);
 //     } finally {
 //       setLoading(false);
 //     }
 //   }, [
+//     activeCampaign,
 //     selectedBrand,
 //     selectedCategory,
 //     selectedCountry,
@@ -164,23 +116,36 @@
 //     selectedSortOption,
 //   ]);
 
-//   // useEffect(() => {
-//   //   fetchProducts();
-//   // }, [fetchProducts]);
-
+//   // Fetch products whenever activeCampaign or filters/page/sort change
 //   useEffect(() => {
-//     if (activeCampaign) fetchProducts();
-//   }, [activeCampaign, fetchProducts]);
+//     fetchProducts();
+//   }, [fetchProducts]);
 
-//   const handleLoadMore = () => {
-//     setCurrentPage((prevPage) => prevPage + 1);
+//   // ===== Handlers =====
+//   const handleLoadMore = () => setCurrentPage((prev) => prev + 1);
+//   const handleBrandChange = (brands: number[]) => {
+//     setSelectedBrand(brands);
+//     setCurrentPage(1);
 //   };
+//   const handleCategoryChange = (categories: number[]) => {
+//     setSelectedCategory(categories);
+//     setCurrentPage(1);
+//   };
+//   const handleCountryChange = (countries: number[]) => {
+//     setSelectedCountry(countries);
+//     setCurrentPage(1);
+//   };
+//   const handleProvinceChange = (provinces: number[]) => {
+//     setSelectedProvinces(provinces);
+//     setCurrentPage(1);
+//   };
+//   const handleSortChange = (option: any) => setSelectedSortOption(option.value);
 
+//   // ===== Render =====
 //   return (
 //     <>
-//       {/* Background watermark */}
 //       <NextImage
-//         alt="newArrivalBanner"
+//         alt="watermark"
 //         src={tizaraa_watermark}
 //         priority
 //         style={{
@@ -191,8 +156,6 @@
 //           width: "100%",
 //           height: "auto",
 //           maxWidth: "1200px",
-//           backgroundSize: "contain",
-//           backgroundPosition: "center",
 //           opacity: 0.1,
 //           zIndex: 0,
 //         }}
@@ -232,21 +195,15 @@
 //             >
 //               Sort by:
 //             </Paragraph>
-
 //             <Box flex="1 1 0" mr={["1rem", "1.75rem"]} minWidth="120px">
 //               <Select
 //                 placeholder="Sort by"
 //                 options={sortOptions}
 //                 defaultValue={sortOptions.find(
-//                   (option) => option.value === selectedSortOption
+//                   (opt) => opt.value === selectedSortOption
 //                 )}
 //                 onChange={handleSortChange}
-//                 styles={{
-//                   menu: (provided) => ({
-//                     ...provided,
-//                     zIndex: 1000,
-//                   }),
-//                 }}
+//                 styles={{ menu: (provided) => ({ ...provided, zIndex: 1000 }) }}
 //               />
 //             </Box>
 
@@ -277,7 +234,7 @@
 //             {isTablet && (
 //               <Sidenav
 //                 position="left"
-//                 scroll={true}
+//                 scroll
 //                 handle={
 //                   <IconButton>
 //                     <Icon>options</Icon>
@@ -290,7 +247,7 @@
 //                   onCountryChange={handleCountryChange}
 //                   onProvinceChange={handleProvinceChange}
 //                   slug={slug}
-//                   pageType="campaign" // ✅ renamed
+//                   pageType="campaign"
 //                 />
 //               </Sidenav>
 //             )}
@@ -306,7 +263,7 @@
 //                 onCountryChange={handleCountryChange}
 //                 onProvinceChange={handleProvinceChange}
 //                 slug={slug}
-//                 pageType="campaign" // ✅ renamed
+//                 pageType="campaign"
 //               />
 //             </Grid>
 //           )}
@@ -323,12 +280,9 @@
 //                   productsPerPage={productsPerPage}
 //                   onPageChange={handleLoadMore}
 //                 />
-
 //                 <FlexBox justifyContent="center" alignItems="center" mt="32px">
 //                   <Button
-//                     onClick={() => {
-//                       if (!loading) handleLoadMore();
-//                     }}
+//                     onClick={handleLoadMore}
 //                     variant="contained"
 //                     color="primary"
 //                     disabled={loading}
@@ -356,12 +310,9 @@
 //                   productsPerPage={productsPerPage}
 //                   onPageChange={handleLoadMore}
 //                 />
-
 //                 <FlexBox justifyContent="center" alignItems="center" mt="32px">
 //                   <Button
-//                     onClick={() => {
-//                       if (!loading) handleLoadMore();
-//                     }}
+//                     onClick={handleLoadMore}
 //                     variant="contained"
 //                     color="primary"
 //                     disabled={loading}
@@ -390,7 +341,7 @@
 
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Box from "@component/Box";
 import Card from "@component/Card";
 import Grid from "@component/grid/Grid";
@@ -407,18 +358,38 @@ import Typography, { H5, Paragraph } from "@component/Typography";
 import BeatLoader from "react-spinners/BeatLoader";
 import NextImage from "@component/NextImage";
 import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 const productsPerPage = 10;
+
+const PrimaryLoader = `${ApiBaseUrl.ImgUrl}frontend/loader/loader.gif`;
 
 interface CampaignProps {
   sortOptions: { label: string; value: string }[];
   slug: string;
 }
 
+interface CampaignData {
+  id: number;
+  name: string;
+  type: string;
+  description: string;
+  banner_image: string | null;
+  start_date: string;
+  end_date: string;
+  status: string;
+  min_purchase_amount: string;
+  max_discount_amount: string;
+}
+
 export default function Campaign({ sortOptions, slug }: CampaignProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const width = useWindowSize();
   const isTablet = width < 1025;
+
+  // Get campaign type from URL query parameter
+  const campaignTypeFromUrl = searchParams.get("type") || "flash_sale";
 
   const [view, setView] = useState<"grid" | "list">("grid");
   const [selectedSortOption, setSelectedSortOption] = useState(
@@ -431,33 +402,51 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
   const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null);
   const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
 
-  const [activeCampaign, setActiveCampaign] = useState<number | null>(null);
+  const [activeCampaign, setActiveCampaign] = useState<CampaignData | null>(
+    null
+  );
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [campaignLoading, setCampaignLoading] = useState(true);
   const [totalProducts, setTotalProducts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // ===== Fetch Active Campaign ID =====
+  // ===== Fetch Active Campaign =====
   useEffect(() => {
     const fetchActiveCampaign = async () => {
       try {
-        const res = await fetch(
-          "https://frontend.tizaraa.shop/api/campaigns/active"
-        );
+        setCampaignLoading(true);
+        const res = await fetch(`${ApiBaseUrl.baseUrl}campaigns/active`);
         const data = await res.json();
-        setActiveCampaign(data?.campaign?.id || null);
-        console.log("Active campaign ID from API:", data?.campaign?.id);
-        console.log(activeCampaign);
+
+        if (data?.campaign) {
+          // Check if the campaign type matches the URL parameter
+          if (data.campaign.type === campaignTypeFromUrl) {
+            setActiveCampaign(data.campaign);
+            console.log("Active campaign loaded:", data.campaign);
+          } else {
+            console.warn(
+              `Campaign type mismatch. URL expects: ${campaignTypeFromUrl}, but got: ${data.campaign.type}`
+            );
+            setActiveCampaign(data.campaign); // Still load the campaign but show warning
+          }
+        } else {
+          setActiveCampaign(null);
+        }
       } catch (err) {
         console.error("Error fetching active campaign:", err);
+        setActiveCampaign(null);
+      } finally {
+        setCampaignLoading(false);
       }
     };
+
     fetchActiveCampaign();
-  }, []);
+  }, [campaignTypeFromUrl]);
 
   // ===== Fetch Products =====
   const fetchProducts = useCallback(async () => {
-    if (!activeCampaign) return;
+    if (!activeCampaign?.id) return;
 
     setLoading(true);
 
@@ -471,7 +460,7 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
 
     try {
       const response = await fetch(
-        `https://frontend.tizaraa.shop/api/campaigns/product/${activeCampaign}`,
+        `${ApiBaseUrl.baseUrl}campaigns/product/${activeCampaign.id}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -497,7 +486,7 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
       setLoading(false);
     }
   }, [
-    activeCampaign,
+    activeCampaign?.id,
     selectedBrand,
     selectedCategory,
     selectedCountry,
@@ -508,28 +497,80 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
 
   // Fetch products whenever activeCampaign or filters/page/sort change
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    if (activeCampaign) {
+      fetchProducts();
+    }
+  }, [fetchProducts, activeCampaign]);
+
+  // Reset page when filters change
+  const resetPageAndFetch = useCallback(() => {
+    setCurrentPage(1);
+    setProducts([]);
+  }, []);
 
   // ===== Handlers =====
   const handleLoadMore = () => setCurrentPage((prev) => prev + 1);
+
   const handleBrandChange = (brands: number[]) => {
     setSelectedBrand(brands);
-    setCurrentPage(1);
+    resetPageAndFetch();
   };
+
   const handleCategoryChange = (categories: number[]) => {
     setSelectedCategory(categories);
-    setCurrentPage(1);
+    resetPageAndFetch();
   };
+
   const handleCountryChange = (countries: number[]) => {
     setSelectedCountry(countries);
-    setCurrentPage(1);
+    resetPageAndFetch();
   };
+
   const handleProvinceChange = (provinces: number[]) => {
     setSelectedProvinces(provinces);
-    setCurrentPage(1);
+    resetPageAndFetch();
   };
-  const handleSortChange = (option: any) => setSelectedSortOption(option.value);
+
+  const handleSortChange = (option: any) => {
+    setSelectedSortOption(option.value);
+    resetPageAndFetch();
+  };
+
+  // Display campaign name based on type
+  const getCampaignDisplayName = () => {
+    if (activeCampaign) {
+      return activeCampaign.name;
+    }
+    return campaignTypeFromUrl
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (l) => l.toUpperCase());
+  };
+
+  // Show loading state while fetching campaign
+  if (campaignLoading) {
+    return (
+      <main style={{ position: "relative", background: "none" }}>
+        <FlexBox justifyContent="center" alignItems="center" minHeight="400px">
+          <BeatLoader size={18} color="#e94560" />
+          <Paragraph ml="1rem">Loading campaign...</Paragraph>
+        </FlexBox>
+      </main>
+    );
+  }
+
+  // Show message if no active campaign found
+  if (!activeCampaign) {
+    return (
+      <main style={{ position: "relative", background: "none" }}>
+        <Card p="2rem" textAlign="center">
+          <H5 mb="1rem">No Active Campaign</H5>
+          <Paragraph color="text.muted">
+            No active campaign found for type: {campaignTypeFromUrl}
+          </Paragraph>
+        </Card>
+      </main>
+    );
+  }
 
   // ===== Render =====
   return (
@@ -552,6 +593,8 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
       />
 
       <main style={{ position: "relative", background: "none" }}>
+        {/* Campaign Banner/Info */}
+
         <FlexBox
           as={Card}
           mb={["10px", "15px"]}
@@ -564,7 +607,7 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
         >
           <div>
             <H5 fontSize={["14px", "16px"]}>
-              Searching for {decodeURIComponent(slug)}
+              {getCampaignDisplayName()} Products
             </H5>
             <Paragraph color="text.muted" fontSize={["12px", "14px"]}>
               {totalProducts} results found
@@ -636,7 +679,7 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
                   onCategoryChange={handleCategoryChange}
                   onCountryChange={handleCountryChange}
                   onProvinceChange={handleProvinceChange}
-                  slug={slug}
+                  slug={activeCampaign.type}
                   pageType="campaign"
                 />
               </Sidenav>
@@ -652,7 +695,7 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
                 onCategoryChange={handleCategoryChange}
                 onCountryChange={handleCountryChange}
                 onProvinceChange={handleProvinceChange}
-                slug={slug}
+                slug={activeCampaign.type}
                 pageType="campaign"
               />
             </Grid>
@@ -660,7 +703,24 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
 
           <Grid item lg={9} xs={12}>
             {currentPage === 1 && loading ? (
-              <Typography>{/* <Loader /> */}</Typography>
+              <FlexBox
+                justifyContent="center"
+                alignItems="center"
+                minHeight="400px"
+              >
+                {/* <BeatLoader size={18} color="#e94560" /> */}
+                <img
+                  src={PrimaryLoader}
+                  alt="Loading"
+                  style={{ width: 60, height: 60 }}
+                />
+              </FlexBox>
+            ) : products.length === 0 ? (
+              <Card p="2rem" textAlign="center">
+                <Paragraph color="text.muted">
+                  No products found for this campaign.
+                </Paragraph>
+              </Card>
             ) : view === "grid" ? (
               <>
                 <ProductGridView
@@ -714,7 +774,7 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
                     }}
                   >
                     {loading ? (
-                      <BeatLoader size={18} color="#fff" />
+                      <BeatLoader size={18} color="#e94560" />
                     ) : (
                       "Show More"
                     )}
