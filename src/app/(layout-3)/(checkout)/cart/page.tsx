@@ -799,7 +799,7 @@ export default function Cart() {
     // ===== PRICE CHECK API =====
     try {
       const response = await fetch(
-        "https://frontend.tizaraa.shop/api/checkout/check/pricing",
+        `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
         {
           method: "POST",
           headers: {

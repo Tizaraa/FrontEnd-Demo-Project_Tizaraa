@@ -164,6 +164,7 @@ import { useState, useEffect } from "react";
 import authService from "services/authService";
 import NextImage from "@component/NextImage";
 import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function Checkout() {
   const { state, dispatch } = useAppContext();
@@ -188,7 +189,7 @@ export default function Checkout() {
         if (!localCart.length) return;
 
         const response = await fetch(
-          "https://frontend.tizaraa.shop/api/checkout/check/pricing",
+          `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
