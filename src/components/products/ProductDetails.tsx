@@ -366,12 +366,21 @@ const ProductDetails = ({
         </Typography>
 
         {price !== 0 && (
+          // <SemiSpan
+          //   color="inherit"
+          //   style={{ fontSize: isDesktop ? "16px" : "13px" }}
+          // >
+          //   {updatedQuantity > 0
+          //     ? `${updatedQuantity} Products Available`
+          //     : "Stock Out"}
+          // </SemiSpan>
+
           <SemiSpan
             color="inherit"
             style={{ fontSize: isDesktop ? "16px" : "13px" }}
           >
-            {updatedQuantity > 0
-              ? `${updatedQuantity} Products Available`
+            {productStock > 0
+              ? `${productStock} Products Available`
               : "Stock Out"}
           </SemiSpan>
         )}
