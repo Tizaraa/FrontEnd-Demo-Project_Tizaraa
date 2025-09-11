@@ -37,7 +37,7 @@ export default function CampaignBanner() {
 
   return (
     <Container mb="50px">
-      <Link href={`/campaign/campaign?type=${slug}`}>
+      <Link href={`/campaign/campaign?type=${slug}`} target="_blank">
         <NextImage
           alt="Campaign Banner"
           src={banner}

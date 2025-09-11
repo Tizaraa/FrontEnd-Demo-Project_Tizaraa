@@ -19,13 +19,18 @@ export default function CampaignSectionCreator({
   iconName,
   children,
   seeMoreLink,
-  endTime
+  endTime,
 }: CampaignSectionCreatorProps) {
   return (
     <Box mb="3.75rem">
       <Container pb="1rem">
         {title && (
-          <CampaignSectionHeader title={title} iconName={iconName} seeMoreLink={seeMoreLink} endTime={endTime} />
+          <CampaignSectionHeader
+            title={title}
+            iconName={iconName}
+            seeMoreLink={seeMoreLink}
+            endTime={endTime}
+          />
         )}
 
         {children}
