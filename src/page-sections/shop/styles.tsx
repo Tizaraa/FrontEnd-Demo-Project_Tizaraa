@@ -14,6 +14,7 @@ export const ShopIntroWrapper = styled(Card)`
   .description-holder {
     flex: 1 1 0;
     min-width: 250px;
+    z-index: 9;
 
     @media only screen and (max-width: 500px) {
       margin-left: 0px;
@@ -31,12 +32,14 @@ export const ShopCard1Wrapper = styled(Card)<ShopWrapperProps>`
         rgba(${convertHexToRGB(colors.gray[900])}, 0.8),
         rgba(${convertHexToRGB(colors.gray[900])}, 0.8)
       ),
-      url(${(props) => props.coverImgUrl || "https://static.vecteezy.com/system/resources/previews/011/059/783/non_2x/best-seller-text-button-speech-bubble-best-seller-colorful-web-banner-template-illustration-vector.jpg"});
-      height: 18em;
+      url(${(props) =>
+        props.coverImgUrl ||
+        "https://static.vecteezy.com/system/resources/previews/011/059/783/non_2x/best-seller-text-button-speech-bubble-best-seller-colorful-web-banner-template-illustration-vector.jpg"});
+    height: 18em;
     background-size: cover;
     background-position: center;
     color: white;
     padding: 17px 30px 56px;
-    background-color: rgba(43,52,69,0.98)
+    background-color: rgba(43, 52, 69, 0.98);
   }
 `;

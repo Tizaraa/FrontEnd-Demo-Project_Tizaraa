@@ -169,32 +169,31 @@ export default function CampaignSectionHeader({
             color: "#6b7280",
             transition: "color 0.3s ease",
           }}
-          onMouseEnter={(e: React.MouseEvent) =>
-            (e.currentTarget.style.color = "#ff4d6d")
-          }
-          onMouseLeave={(e: React.MouseEvent) =>
-            (e.currentTarget.style.color = "#6b7280")
-          }
+          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = "#ff4d6d")}
+          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = "#6b7280")}
+          
         >
           <SemiSpan style={{ marginRight: "8px", fontSize: "14px", fontWeight: 500 }}>
             View all
           </SemiSpan>
-          <Icon
-            style={{
-              transform: "translateX(0)",
-              transition: "transform 0.3s ease",
-            }}
-            onMouseEnter={(e: React.MouseEvent) =>
-              (e.currentTarget.style.transform = "translateX(4px)")
-            }
-            onMouseLeave={(e: React.MouseEvent) =>
-              (e.currentTarget.style.transform = "translateX(0)")
-            }
-            size="12px"
-            defaultcolor="currentColor"
-          >
-            right-arrow
-          </Icon>
+          <span
+  style={{
+    display: "inline-block", // needed for transform to work properly
+    transform: "translateX(0)",
+    transition: "transform 0.3s ease",
+  }}
+  onMouseEnter={(e) =>
+    (e.currentTarget as HTMLElement).style.transform = "translateX(4px)"
+  }
+  onMouseLeave={(e) =>
+    (e.currentTarget as HTMLElement).style.transform = "translateX(0)"
+  }
+>
+  <Icon size="12px" defaultcolor="currentColor">
+    right-arrow
+  </Icon>
+</span>
+
         </FlexBox>
       </Link>
     )}
