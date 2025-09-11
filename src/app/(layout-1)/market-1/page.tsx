@@ -89,7 +89,7 @@ export default async function Market1() {
         {/* ======================================= */}
         {/* Campaign Section Banner */}
         {/* ======================================= */}
-        {/* <CampaignBanner /> */}
+        <CampaignBanner />
 
         {/* ======================================= */}
         {/* Campaign / Special Deals Section */}
