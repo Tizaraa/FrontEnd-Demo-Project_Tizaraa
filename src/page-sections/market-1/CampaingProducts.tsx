@@ -236,7 +236,7 @@ import Card from "@component/Card";
 import FlexBox from "@component/FlexBox";
 import { H4 } from "@component/Typography";
 import { Carousel } from "@component/carousel";
-import CategorySectionCreator from "@component/CategorySectionCreator";
+import CampaignSectionCreator from "@component/CampaignSectionCreator";
 import { currency } from "@utils/utils";
 import useWindowSize from "@hook/useWindowSize";
 
@@ -353,8 +353,9 @@ export default function CampaignProducts({
   }
 
   return (
-    <CategorySectionCreator
+    <CampaignSectionCreator
       title={campaignInfo?.name || "Campaign Products"}
+      endTime={campaignInfo.end_date}
       seeMoreLink={getSeeMoreLink()}
     >
       {isLoading && (
@@ -487,6 +488,6 @@ export default function CampaignProducts({
           </Carousel>
         )}
       </Box>
-    </CategorySectionCreator>
+    </CampaignSectionCreator>
   );
 }
