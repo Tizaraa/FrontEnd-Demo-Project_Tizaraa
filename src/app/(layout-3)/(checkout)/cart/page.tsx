@@ -764,11 +764,110 @@ export default function Cart() {
     }, 0);
 
   // ===== CHECKOUT =====
+  // const handleCheckout = async () => {
+  //   setIsLoading(true);
+
+  //   if (!isLoggedIn) {
+  //     await new Promise((resolve) => setTimeout(resolve, 500));
+  //     router.push("/login");
+  //     return;
+  //   }
+
+  //   const selectedItems = state.cart.filter((item) =>
+  //     state.selectedProducts.includes(item.id)
+  //   );
+
+  //   if (!selectedItems.length) {
+  //     toast.error("Please select products to checkout");
+  //     setIsLoading(false);
+  //     return;
+  //   }
+
+  //   const totalPrice = getTotalPrice();
+  //   if (totalPrice === 0) {
+  //     toast.error("Total price is 0. Please add items to your cart.");
+  //     setIsLoading(false);
+  //     return;
+  //   }
+
+  //   const isError = selectedItems.some((item) => item.qty <= 0);
+  //   if (isError) {
+  //     setIsLoading(false);
+  //     return;
+  //   }
+
+  //   // ===== PRICE CHECK API =====
+  //   try {
+  //     const response = await fetch(
+  //       `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${authService.getToken()}`,
+  //         },
+  //         body: JSON.stringify({ orders: state.cart }), // full cart
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       const text = await response.text();
+  //       throw new Error(`Price check failed: ${text}`);
+  //     }
+
+  //     const data = await response.json();
+
+  //     // Update full cart prices
+  //     const updatedCart = state.cart.map((item) => {
+  //       const updatedItem = data.find(
+  //         (d: any) => d.product_id === item.productId
+  //       );
+  //       if (updatedItem) {
+  //         const newPrice = parseFloat(updatedItem.price);
+  //         if (item.price !== newPrice) {
+  //           toast(`Price updated for "${item.name}" to BDT ${newPrice}`);
+  //         }
+  //         return {
+  //           ...item,
+  //           price: newPrice,
+  //           discountPrice: item.discountPrice ? newPrice : null,
+  //         };
+  //       }
+  //       return item;
+  //     });
+
+  //     // Update app state first
+  //     dispatch({ type: "SET_CART", payload: updatedCart });
+
+  //     // Get selected items with updated prices
+  //     const updatedSelectedItems = updatedCart.filter((item) =>
+  //       state.selectedProducts.includes(item.id)
+  //     );
+
+  //     // Save to localStorage & sessionStorage with updated prices
+  //     localStorage.setItem("cart", JSON.stringify(updatedCart));
+  //     sessionStorage.setItem("cartItems", JSON.stringify(updatedCart)); // This now has updated prices
+  //     sessionStorage.setItem(
+  //       "selectedProducts",
+  //       JSON.stringify(updatedSelectedItems)
+  //     ); // This also has updated prices
+  //   } catch (error: any) {
+  //     console.error("Price check failed:", error);
+  //     toast.error("Price check failed. Please try again.");
+  //     setIsLoading(false);
+  //     return;
+  //   }
+
+  //   router.push("/checkout");
+  // };
+
   const handleCheckout = async () => {
     setIsLoading(true);
 
     if (!isLoggedIn) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // ✅ Fix: stop loading first, then redirect
+      setIsLoading(false);
+      await new Promise((resolve) => setTimeout(resolve, 300));
       router.push("/login");
       return;
     }
@@ -836,21 +935,18 @@ export default function Cart() {
         return item;
       });
 
-      // Update app state first
       dispatch({ type: "SET_CART", payload: updatedCart });
 
-      // Get selected items with updated prices
       const updatedSelectedItems = updatedCart.filter((item) =>
         state.selectedProducts.includes(item.id)
       );
 
-      // Save to localStorage & sessionStorage with updated prices
       localStorage.setItem("cart", JSON.stringify(updatedCart));
-      sessionStorage.setItem("cartItems", JSON.stringify(updatedCart)); // This now has updated prices
+      sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
       sessionStorage.setItem(
         "selectedProducts",
         JSON.stringify(updatedSelectedItems)
-      ); // This also has updated prices
+      );
     } catch (error: any) {
       console.error("Price check failed:", error);
       toast.error("Price check failed. Please try again.");
@@ -858,6 +954,7 @@ export default function Cart() {
       return;
     }
 
+    setIsLoading(false);
     router.push("/checkout");
   };
 

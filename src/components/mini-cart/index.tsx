@@ -1782,6 +1782,93 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
     }, 0);
   };
 
+  // const handleCheckout = async () => {
+  //   const selectedItems = state.cart.filter((item) =>
+  //     state.selectedProducts.includes(item.id)
+  //   );
+
+  //   if (selectedItems.length === 0) {
+  //     toast.error("Please select products to checkout");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   try {
+  //     // Price Check API
+  //     const response = await fetch(
+  //       `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${authService.getToken()}`,
+  //         },
+  //         body: JSON.stringify({ orders: state.cart }), // full cart
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       const text = await response.text();
+  //       throw new Error(`Price check failed: ${text}`);
+  //     }
+
+  //     const data = await response.json();
+
+  //     // Update cart prices
+  //     const updatedCart = state.cart.map((item) => {
+  //       const updatedItem = data.find(
+  //         (d: any) => d.product_id === item.productId
+  //       );
+  //       if (updatedItem) {
+  //         const newPrice = parseFloat(updatedItem.price);
+  //         // if (item.price !== newPrice) {
+  //         //   toast(`Price updated for "${item.name}" to BDT ${newPrice}`);
+  //         // }
+  //         return {
+  //           ...item,
+  //           price: newPrice,
+  //           discountPrice: item.discountPrice ? newPrice : null,
+  //         };
+  //       }
+  //       return item;
+  //     });
+
+  //     // Update app state first
+  //     dispatch({ type: "SET_CART", payload: updatedCart });
+
+  //     // Get selected items with updated prices
+  //     const updatedSelectedItems = updatedCart.filter((item) =>
+  //       state.selectedProducts.includes(item.id)
+  //     );
+
+  //     // Save updated cart & selected items with updated prices
+  //     localStorage.setItem("cart", JSON.stringify(updatedCart));
+  //     sessionStorage.setItem("cartItems", JSON.stringify(updatedCart)); // Updated cart with new prices
+  //     sessionStorage.setItem(
+  //       "selectedProducts",
+  //       JSON.stringify(updatedSelectedItems)
+  //     ); // Updated selected items with new prices
+
+  //     // Navigate
+  //     if (!isLoggedIn) {
+  //       setTimeout(() => {
+  //         router.push("/login");
+  //       }, 500);
+  //     } else {
+  //       setTimeout(() => {
+  //         router.push("/checkout");
+  //         toggleSidenav(); // optional: close mini cart
+  //       }, 500);
+  //     }
+  //   } catch (error: any) {
+  //     console.error("Price check failed:", error);
+  //     toast.error("Price check failed. Please try again.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleCheckout = async () => {
     const selectedItems = state.cart.filter((item) =>
       state.selectedProducts.includes(item.id)
@@ -1792,10 +1879,16 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
       return;
     }
 
+    // ✅ Check login first — no toast, no delay
+    if (!isLoggedIn) {
+      router.push("/login");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      // Price Check API
+      // ✅ Price Check API only if logged in
       const response = await fetch(
         `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
         {
@@ -1804,7 +1897,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authService.getToken()}`,
           },
-          body: JSON.stringify({ orders: state.cart }), // full cart
+          body: JSON.stringify({ orders: state.cart }),
         }
       );
 
@@ -1822,9 +1915,6 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
         );
         if (updatedItem) {
           const newPrice = parseFloat(updatedItem.price);
-          // if (item.price !== newPrice) {
-          //   toast(`Price updated for "${item.name}" to BDT ${newPrice}`);
-          // }
           return {
             ...item,
             price: newPrice,
@@ -1844,23 +1934,17 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
 
       // Save updated cart & selected items with updated prices
       localStorage.setItem("cart", JSON.stringify(updatedCart));
-      sessionStorage.setItem("cartItems", JSON.stringify(updatedCart)); // Updated cart with new prices
+      sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
       sessionStorage.setItem(
         "selectedProducts",
         JSON.stringify(updatedSelectedItems)
-      ); // Updated selected items with new prices
+      );
 
-      // Navigate
-      if (!isLoggedIn) {
-        setTimeout(() => {
-          router.push("/login");
-        }, 500);
-      } else {
-        setTimeout(() => {
-          router.push("/checkout");
-          toggleSidenav(); // optional: close mini cart
-        }, 500);
-      }
+      // Navigate to checkout
+      setTimeout(() => {
+        router.push("/checkout");
+        toggleSidenav();
+      }, 500);
     } catch (error: any) {
       console.error("Price check failed:", error);
       toast.error("Price check failed. Please try again.");
