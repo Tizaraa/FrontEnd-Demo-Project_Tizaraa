@@ -81,22 +81,47 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   }, []);
 
   // Handle payment button click
+  // const handlePayment = () => {
+  //   setIsHasPayLoading(true)
+  //   const addressData = sessionStorage.getItem("address");
+  //   if (addressData) {
+  //     // console.log("Payment:", JSON.parse(addressData));
+  //     toast.success("Proceed to Payment.");
+  //     if(isLoggedIn){
+  //       router.push("/payment");
+  //     }else{
+  //       router.push("/login");
+  //     }
+  //   } else {
+  //     toast.error("No address data found. Please add an address.");
+  //     setIsHasPayLoading(false)
+  //   }
+  // };
+
   const handlePayment = () => {
-    setIsHasPayLoading(true)
     const addressData = sessionStorage.getItem("address");
-    if (addressData) {
-      // console.log("Payment:", JSON.parse(addressData));
-      toast.success("Proceed to Payment.");
-      if(isLoggedIn){
-        router.push("/payment");
-      }else{
-        router.push("/login");
-      }
+  
+    if (!addressData) {
+      // Stop loading first
+      setIsHasPayLoading(false);
+  
+      toast.error("Please select or add an address before proceeding to pay", { autoClose: 2000 });
+  
+      return; // Stop further execution
+    }
+  
+    // Address exists, proceed
+    setIsHasPayLoading(true);
+    toast.success("Proceeding to payment...", { autoClose: 2000 });
+  
+    if (isLoggedIn) {
+      router.push("/payment");
     } else {
-      toast.error("No address data found. Please add an address.");
-      setIsHasPayLoading(false)
+      router.push("/login");
     }
   };
+  
+  
 
   // Handle back to cart button click
   const handleBackToCart = () => {
@@ -170,11 +195,13 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
             style={{
               color: "#ffe1e6",
               backgroundColor: "#e94560",
+              cursor: "pointer"
             }}
             type="button"
             fullwidth
             onClick={handlePayment}
-            disabled={!hasAddress || !isAddressChecked || totalPrice === 0}
+            // disabled={!hasAddress || !isAddressChecked || totalPrice === 0}
+            disabled={totalPrice === 0}
           >
             {/* Proceed to Pay
             const [isHasPayLoading, setIsHasPayLoading] = useState(false); */}
