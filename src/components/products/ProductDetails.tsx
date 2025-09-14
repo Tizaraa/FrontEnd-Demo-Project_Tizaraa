@@ -8,6 +8,7 @@ import { Chip } from "@component/Chip";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import { useRouter } from "next/navigation";
 
 type ProductDetailsProps = {
   title: string;
@@ -31,6 +32,7 @@ type ProductDetailsProps = {
     color?: { color: string; price: string; qty: string }[];
   };
   campaignBannerImage?: string;
+  campaignSlug?: string;
   onSelectionChange?: (
     selectedColor: string | null,
     selectedSize: string | null,
@@ -54,6 +56,7 @@ const ProductDetails = ({
   replacewarranty,
   sizeColor,
   campaignBannerImage,
+  campaignSlug,
   onSelectionChange,
 }: ProductDetailsProps) => {
   const displayPrice = isDirectAdd ? discountPrice || price : price;
@@ -66,6 +69,8 @@ const ProductDetails = ({
   const [availableColors, setAvailableColors] = useState<
     { color: string; price: string; qty: string }[]
   >([]);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (sizeColor?.colorwithsize) {
@@ -209,7 +214,17 @@ const ProductDetails = ({
         )}
 
         {campaignBannerImage && (
-          <Box mb="5px" mt="5px" textAlign="center">
+          <Box
+            mb="5px"
+            mt="5px"
+            cursor="pointer"
+            // onClick={() => {
+            //   window.location.href = `/campaign/campaign?type=${campaignSlug}`;
+            // }}
+            onClick={() => {
+              router.push(`/campaign/campaign?type=${campaignSlug}`);
+            }}
+          >
             <img
               src={`${ApiBaseUrl.ImgUrl}/${campaignBannerImage}`}
               alt="Campaign Banner"

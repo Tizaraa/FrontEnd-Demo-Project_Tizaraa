@@ -678,8 +678,8 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   const replacewarranty = productData.replacement_warranty;
   const express_deliverey = product.express_deliverey;
   const sizeColor = productData.productsingledetails.SizeColor;
-  const campaignBannerImage =
-    productData.productsingledetails?.campaign?.banner_image;
+  const campaignBannerImage = productData.productsingledetails?.campaign?.banner_image;
+  const campaignSlug = productData.productsingledetails?.campaign?.slug;
 
   console.log(sizeColor);
 
@@ -744,6 +744,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
               replacewarranty={replacewarranty}
               sizeColor={sizeColor}
               campaignBannerImage={campaignBannerImage}
+              campaignSlug={campaignSlug}
             />
           </div>
           {isDesktop && (

@@ -33,6 +33,7 @@ type ProductIntroProps = {
     };
   };
   campaignBannerImage?: string;
+  campaignSlug?: string;
 };
 
 export default function ProductIntro({
@@ -55,6 +56,7 @@ export default function ProductIntro({
   sellerId,
   sizeColor,
   campaignBannerImage,
+  campaignSlug,
 }: ProductIntroProps) {
   const param = useParams();
   const { state } = useAppContext();
@@ -98,6 +100,7 @@ export default function ProductIntro({
             sizeColor={sizeColor}
             onSelectionChange={handleSelectionChange}
             campaignBannerImage={campaignBannerImage}
+            campaignSlug={campaignSlug}
           />
 
           {/* <AddToCartButton
