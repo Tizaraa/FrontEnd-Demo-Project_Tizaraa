@@ -32,7 +32,7 @@ async function fetchProductData(slug: string) {
     const response = await axios.get(
       `${ApiBaseUrl.baseUrl}product/details/${slug}`
     );
-    console.log("product details:", response.data);
+    console.log("product details from shipping component:-:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching product data:", error);
@@ -678,6 +678,8 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
   const replacewarranty = productData.replacement_warranty;
   const express_deliverey = product.express_deliverey;
   const sizeColor = productData.productsingledetails.SizeColor;
+  const campaignBannerImage =
+    productData.productsingledetails?.campaign?.banner_image;
 
   console.log(sizeColor);
 
@@ -741,6 +743,7 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
               warrantyType={warrantyType}
               replacewarranty={replacewarranty}
               sizeColor={sizeColor}
+              campaignBannerImage={campaignBannerImage}
             />
           </div>
           {isDesktop && (

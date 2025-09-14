@@ -7,6 +7,7 @@ import { currency } from "@utils/utils";
 import { Chip } from "@component/Chip";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 type ProductDetailsProps = {
   title: string;
@@ -29,6 +30,7 @@ type ProductDetailsProps = {
     size?: { size: string; price: string; qty: string }[];
     color?: { color: string; price: string; qty: string }[];
   };
+  campaignBannerImage?: string;
   onSelectionChange?: (
     selectedColor: string | null,
     selectedSize: string | null,
@@ -51,6 +53,7 @@ const ProductDetails = ({
   warrantyType,
   replacewarranty,
   sizeColor,
+  campaignBannerImage,
   onSelectionChange,
 }: ProductDetailsProps) => {
   const displayPrice = isDirectAdd ? discountPrice || price : price;
@@ -203,6 +206,21 @@ const ProductDetails = ({
               </Chip>
             )}
           </FlexBox>
+        )}
+
+        {campaignBannerImage && (
+          <Box mb="5px" mt="5px" textAlign="center">
+            <img
+              src={`${ApiBaseUrl.ImgUrl}/${campaignBannerImage}`}
+              alt="Campaign Banner"
+              style={{
+                width: "100%",
+                maxHeight: "250px",
+                objectFit: "cover",
+                borderRadius: "10px",
+              }}
+            />
+          </Box>
         )}
 
         <Typography style={{ fontSize: isDesktop ? "16px" : "14px" }}>
