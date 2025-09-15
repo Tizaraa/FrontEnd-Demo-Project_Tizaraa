@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useParams } from "next/navigation";
 import Box from "@component/Box";
 import Grid from "@component/grid/Grid";
@@ -11,8 +11,8 @@ import Link from "next/link";
 
 type ProductIntroProps = {
   price: number;
-  discountPrice?: number; 
-  totalDiscount?: number; 
+  discountPrice?: number;
+  totalDiscount?: number;
   title: string;
   images: string[];
   id: string | number;
@@ -20,8 +20,8 @@ type ProductIntroProps = {
   sellerShopLogo: string;
   brandName: string;
   warranty: string;
-  warrantyType: string,
-  replacewarranty: string,
+  warrantyType: string;
+  replacewarranty: string;
   rating: number;
   productStock: number;
   slug?: string;
@@ -32,6 +32,8 @@ type ProductIntroProps = {
       [color: string]: { size: string; price: string; qty: string }[];
     };
   };
+  campaignBannerImage?: string;
+  campaignSlug?: string;
 };
 
 export default function ProductIntro({
@@ -53,6 +55,8 @@ export default function ProductIntro({
   productId,
   sellerId,
   sizeColor,
+  campaignBannerImage,
+  campaignSlug,
 }: ProductIntroProps) {
   const param = useParams();
   const { state } = useAppContext();
@@ -62,7 +66,11 @@ export default function ProductIntro({
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<number>(price);
 
-  const handleSelectionChange = (color: string | null, size: string | null, updatedPrice: number) => {
+  const handleSelectionChange = (
+    color: string | null,
+    size: string | null,
+    updatedPrice: number
+  ) => {
     setSelectedColor(color);
     setSelectedSize(size);
     setSelectedPrice(updatedPrice);
@@ -74,8 +82,6 @@ export default function ProductIntro({
         <Grid item md={6} xs={12} alignItems="center">
           <ProductImages images={images} />
         </Grid>
-
-    
 
         <Grid item md={6} xs={12} alignItems="center">
           <ProductDetails
@@ -93,8 +99,10 @@ export default function ProductIntro({
             replacewarranty={replacewarranty}
             sizeColor={sizeColor}
             onSelectionChange={handleSelectionChange}
+            campaignBannerImage={campaignBannerImage}
+            campaignSlug={campaignSlug}
           />
-         
+
           {/* <AddToCartButton
             productId={productId}
             sellerId={sellerId}
@@ -110,44 +118,42 @@ export default function ProductIntro({
             selectedSize={selectedSize}
             selectedPrice={selectedPrice}
           /> */}
-       
-            {selectedPrice === 0 ? (
-             <Box mt="1rem">
-               <Link href="/rfq">
-                 <button
-                   style={{
-                     padding: "10px 20px",
-                     backgroundColor: "#E94560",
-                     color: "white",
-                     borderRadius: "5px",
-                     border: "none",
-                     cursor: "pointer"
-                   }}
-                 >
-                   Request for Quote
-                 </button>
-               </Link>
-             </Box>
-           ) : (
-             <AddToCartButton
-             productId={productId}
-             variantId={""}
-             sellerId={sellerId}
-             images={images}
-             title={title}
-             discountPrice={discountPrice}
-             slug={slug}
-             productStock={productStock}
-             price={price} 
-             productType="General"
-             sizeColor={sizeColor}
-             selectedColor={selectedColor}
-             selectedSize={selectedSize}
-             selectedPrice={selectedPrice}
- 
-           />
-           )}
- 
+
+          {selectedPrice === 0 ? (
+            <Box mt="1rem">
+              <Link href="/rfq">
+                <button
+                  style={{
+                    padding: "10px 20px",
+                    backgroundColor: "#E94560",
+                    color: "white",
+                    borderRadius: "5px",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  Request for Quote
+                </button>
+              </Link>
+            </Box>
+          ) : (
+            <AddToCartButton
+              productId={productId}
+              variantId={""}
+              sellerId={sellerId}
+              images={images}
+              title={title}
+              discountPrice={discountPrice}
+              slug={slug}
+              productStock={productStock}
+              price={price}
+              productType="General"
+              sizeColor={sizeColor}
+              selectedColor={selectedColor}
+              selectedSize={selectedSize}
+              selectedPrice={selectedPrice}
+            />
+          )}
         </Grid>
       </Grid>
     </Box>

@@ -7,6 +7,8 @@ import { currency } from "@utils/utils";
 import { Chip } from "@component/Chip";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import ApiBaseUrl from "api/ApiBaseUrl";
+import { useRouter } from "next/navigation";
 
 type ProductDetailsProps = {
   title: string;
@@ -29,6 +31,8 @@ type ProductDetailsProps = {
     size?: { size: string; price: string; qty: string }[];
     color?: { color: string; price: string; qty: string }[];
   };
+  campaignBannerImage?: string;
+  campaignSlug?: string;
   onSelectionChange?: (
     selectedColor: string | null,
     selectedSize: string | null,
@@ -51,6 +55,8 @@ const ProductDetails = ({
   warrantyType,
   replacewarranty,
   sizeColor,
+  campaignBannerImage,
+  campaignSlug,
   onSelectionChange,
 }: ProductDetailsProps) => {
   const displayPrice = isDirectAdd ? discountPrice || price : price;
@@ -63,6 +69,8 @@ const ProductDetails = ({
   const [availableColors, setAvailableColors] = useState<
     { color: string; price: string; qty: string }[]
   >([]);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (sizeColor?.colorwithsize) {
@@ -203,6 +211,31 @@ const ProductDetails = ({
               </Chip>
             )}
           </FlexBox>
+        )}
+
+        {campaignBannerImage && (
+          <Box
+            mb="5px"
+            mt="5px"
+            cursor="pointer"
+            // onClick={() => {
+            //   window.location.href = `/campaign/campaign?type=${campaignSlug}`;
+            // }}
+            onClick={() => {
+              router.push(`/campaign/campaign?type=${campaignSlug}`);
+            }}
+          >
+            <img
+              src={`${ApiBaseUrl.ImgUrl}/${campaignBannerImage}`}
+              alt="Campaign Banner"
+              style={{
+                width: "100%",
+                maxHeight: "250px",
+                objectFit: "cover",
+                borderRadius: "10px",
+              }}
+            />
+          </Box>
         )}
 
         <Typography style={{ fontSize: isDesktop ? "16px" : "14px" }}>
