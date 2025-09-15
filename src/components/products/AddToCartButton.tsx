@@ -19,7 +19,7 @@
 //   price?: any;
 //   productStock: number;
 //   slug?: string;
-//   productType: string; 
+//   productType: string;
 //   sizeColor?: {
 //     colorwithsize?: {
 //       [color: string]: { size: string; price: string; qty: string }[];
@@ -127,8 +127,6 @@
 //     });
 //   };
 
-
-
 //   const handleInputChange = (
 //     e: React.ChangeEvent<HTMLInputElement>,
 //     product: any
@@ -157,17 +155,17 @@
 //   //   }, 1000); // Simulate API call delay
 //   // };
 
-//   // newly added 
+//   // newly added
 //   const handleAddToCart = () => {
 //     const existingProductType = state.cart.length > 0 ? state.cart[0].productType : null;
-  
+
 //     if (existingProductType && existingProductType !== productType) {
 //       toast.error(`You cannot add ${productType} products to the cart with ${existingProductType} products.`);
 //       return;
 //     }
-  
+
 //     setIsLoading(true);
-  
+
 //     setTimeout(() => {
 //       handleCartAmountChange(1);
 //       setIsLoading(false);
@@ -214,7 +212,6 @@
 //             {(cartItem.qty ?? 1).toString().padStart(2, "0")}
 //           </H3> */}
 
-
 //           <input
 //                   className="no-spin-button"
 //                   type="number"
@@ -231,7 +228,6 @@
 //                     textAlign: "center",
 //                   }}
 //                 />
-
 
 //           <Button
 //             p="9px"
@@ -250,10 +246,6 @@
 
 // export default AddToCartButton;
 
-
-
-
-
 import { Button } from "@component/buttons";
 import FlexBox from "@component/FlexBox";
 import Icon from "@component/icon/Icon";
@@ -261,9 +253,11 @@ import { H3 } from "@component/Typography";
 import { useAppContext } from "@context/app-context";
 import { useState, useEffect } from "react";
 import { Styledbutton } from "./style";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import BeatLoader from "react-spinners/BeatLoader";
 import { FaShoppingCart } from "react-icons/fa";
+import authService from "services/authService";
+import { useRouter } from "next/navigation";
 
 type AddToCartButtonProps = {
   productId: string | number;
@@ -275,7 +269,7 @@ type AddToCartButtonProps = {
   price?: any;
   productStock: number;
   slug?: string;
-  productType: string; 
+  productType: string;
   sizeColor?: {
     colorwithsize?: {
       [color: string]: { size: string; price: string; qty: string }[];
@@ -315,9 +309,13 @@ const AddToCartButton = ({
   const [isLoading, setIsLoading] = useState(false);
 
   // Generate a unique key for the product variant
-  const uniqueKey = `${productId}-${variantId || "default"}-${selectedColor || "default"}-${selectedSize || "default"}`;
+  const uniqueKey = `${productId}-${variantId || "default"}-${
+    selectedColor || "default"
+  }-${selectedSize || "default"}`;
 
-  const cartItem = state.cart.find(item => item.id === uniqueKey);
+  const cartItem = state.cart.find((item) => item.id === uniqueKey);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (cartItem) {
@@ -331,7 +329,9 @@ const AddToCartButton = ({
       const selectedProduct = sizeColor.colorwithsize[selectedColor]?.find(
         (item) => item.size === selectedSize
       );
-      return selectedProduct ? parseFloat(selectedProduct.price) : selectedPrice || discountPrice || price || 0;
+      return selectedProduct
+        ? parseFloat(selectedProduct.price)
+        : selectedPrice || discountPrice || price || 0;
     }
     return selectedPrice || discountPrice || price || 0;
   };
@@ -348,15 +348,15 @@ const AddToCartButton = ({
       toast.error("Out of Stock");
       return false; // indicate failure
     }
-  
+
     if (setCurrentQuantity) {
       setCurrentQuantity(amount);
     }
-  
+
     setQuantity(amount);
-  
+
     const finalPrice = calculateFinalPrice();
-  
+
     dispatch({
       type: "CHANGE_CART_AMOUNT",
       payload: {
@@ -379,12 +379,9 @@ const AddToCartButton = ({
         selectedSize,
       },
     });
-  
+
     return true; // indicate success
   };
-  
-
-
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -414,32 +411,68 @@ const AddToCartButton = ({
   //   }, 1000); // Simulate API call delay
   // };
 
-  // newly added 
+  // newly added
+  // const handleAddToCart = () => {
+  //   const existingProductType = state.cart.length > 0 ? state.cart[0].productType : null;
+
+  //   if (existingProductType && existingProductType !== productType) {
+  //     toast.error(`You cannot add ${productType} products to the cart with ${existingProductType} products.`);
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+
+  //   setTimeout(() => {
+  //     const success = handleCartAmountChange(1); // returns false if out of stock
+  //     setIsLoading(false);
+
+  //     if (success) {
+  //       toast.success(
+  //         <div style={{ display: 'flex', alignItems: 'center' }}>
+  //           <FaShoppingCart style={{ marginRight: '10px' }} />
+  //           Added to cart successfully!
+  //         </div>
+  //       );
+  //     }
+  //   }, 1000);
+  // };
+
   const handleAddToCart = () => {
-    const existingProductType = state.cart.length > 0 ? state.cart[0].productType : null;
-  
-    if (existingProductType && existingProductType !== productType) {
-      toast.error(`You cannot add ${productType} products to the cart with ${existingProductType} products.`);
+    // 1. Check if user is logged in
+    const isLoggedIn = authService.isAuthenticated(); // or state.user
+    if (!isLoggedIn) {
+      sessionStorage.setItem("redirectAfterLogin", window.location.pathname);
+      toast.error("Login required to add to cart.");
+      router.push("/login");
       return;
     }
-  
+
+    // 2. Prevent mixing product types in cart
+    const existingProductType =
+      state.cart.length > 0 ? state.cart[0].productType : null;
+    if (existingProductType && existingProductType !== productType) {
+      toast.error(
+        `You cannot add ${productType} products with ${existingProductType} products in the cart.`
+      );
+      return;
+    }
+
+    // 3. Add product to cart
     setIsLoading(true);
-  
     setTimeout(() => {
-      const success = handleCartAmountChange(1); // returns false if out of stock
+      const success = handleCartAmountChange(1);
       setIsLoading(false);
-  
+
       if (success) {
         toast.success(
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <FaShoppingCart style={{ marginRight: '10px' }} />
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <FaShoppingCart style={{ marginRight: "10px" }} />
             Added to cart successfully!
           </div>
         );
       }
     }, 1000);
   };
-  
 
   return (
     <Styledbutton>
@@ -452,7 +485,7 @@ const AddToCartButton = ({
           onClick={handleAddToCart}
           disabled={isLoading}
         >
-          {isLoading ? <BeatLoader size={18} color="#fff" /> : 'Add to Cart'}
+          {isLoading ? <BeatLoader size={18} color="#fff" /> : "Add to Cart"}
         </Button>
       ) : (
         <FlexBox alignItems="center" mb="36px" style={{ gap: "10px" }}>
@@ -474,24 +507,22 @@ const AddToCartButton = ({
             {(cartItem.qty ?? 1).toString().padStart(2, "0")}
           </H3> */}
 
-
           <input
-                  className="no-spin-button"
-                  type="number"
-                  value={cartItem.qty}
-                  min={1}
-                  onChange={(e) => handleInputChange(e, cartItem)}
-                  style={{
-                    textDecoration: "none",
-                    borderRadius: "30px",
-                    scrollBehavior: "unset",
-                    border: "1px solid #E94560",
-                    padding: "8px",
-                    width: "60px",
-                    textAlign: "center",
-                  }}
-                />
-
+            className="no-spin-button"
+            type="number"
+            value={cartItem.qty}
+            min={1}
+            onChange={(e) => handleInputChange(e, cartItem)}
+            style={{
+              textDecoration: "none",
+              borderRadius: "30px",
+              scrollBehavior: "unset",
+              border: "1px solid #E94560",
+              padding: "8px",
+              width: "60px",
+              textAlign: "center",
+            }}
+          />
 
           <Button
             p="9px"

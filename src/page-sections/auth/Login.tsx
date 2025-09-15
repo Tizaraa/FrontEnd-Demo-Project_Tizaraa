@@ -528,12 +528,53 @@ export default function Login() {
   });
 
   // Handle form submission
+  // const handleFormSubmit = async (values: any) => {
+  //   setLoading(true); // Start loader
+  //   setApiError(null); // Clear any previous errors
+
+  //   try {
+  //     // Making API request using axios
+  //     const response = await axios.post(`${ApiBaseUrl.baseUrl}login`, {
+  //       email: values.email,
+  //       password: values.password,
+  //     });
+
+  //     const data = response.data;
+
+  //     // Check if login was successful
+  //     if (data.token && response.status === 200) {
+  //       // Store token in cookies for both client-side and server-side access
+  //       Cookies.set("token", data.token, { expires: 7 });
+  //       localStorage.setItem("token", data.token);
+  //       localStorage.setItem("userInfo", JSON.stringify(data.user));
+
+  //       // Dispatch login action with auth token and user info
+  //       dispatch({
+  //         type: "LOGIN",
+  //         payload: { authToken: data.token, userInfo: data.user },
+  //       });
+
+  //       // Redirect to profile page
+  //       router.push("/");
+  //       toast.success("User Login successfully!");
+  //     } else {
+  //       // Handle errors (e.g., incorrect password, email not found, etc.)
+  //       //setApiError("Invalid credentials. Please check your email or password.");
+  //       toast.error("Failed Login. Please check your email or password.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Login error:", error);
+  //     //setApiError("Failed to login. Please try again later.");
+  //     toast.error("Failed to login. Please try again later.");
+  //   } finally {
+  //     setLoading(false); // Stop loader
+  //   }
+  // };
   const handleFormSubmit = async (values: any) => {
-    setLoading(true); // Start loader
-    setApiError(null); // Clear any previous errors
+    setLoading(true);
+    setApiError(null);
 
     try {
-      // Making API request using axios
       const response = await axios.post(`${ApiBaseUrl.baseUrl}login`, {
         email: values.email,
         password: values.password,
@@ -541,33 +582,34 @@ export default function Login() {
 
       const data = response.data;
 
-      // Check if login was successful
       if (data.token && response.status === 200) {
-        // Store token in cookies for both client-side and server-side access
         Cookies.set("token", data.token, { expires: 7 });
         localStorage.setItem("token", data.token);
         localStorage.setItem("userInfo", JSON.stringify(data.user));
 
-        // Dispatch login action with auth token and user info
         dispatch({
           type: "LOGIN",
           payload: { authToken: data.token, userInfo: data.user },
         });
 
-        // Redirect to profile page
-        router.push("/");
-        toast.success("User Login successfully!");
+        toast.success("User logged in successfully!");
+
+        // ✅ Check for redirect URL
+        const redirectPath = sessionStorage.getItem("redirectAfterLogin");
+        if (redirectPath) {
+          sessionStorage.removeItem("redirectAfterLogin");
+          router.push(redirectPath); // Redirect back to the product page
+        } else {
+          router.push("/"); // Default home page
+        }
       } else {
-        // Handle errors (e.g., incorrect password, email not found, etc.)
-        //setApiError("Invalid credentials. Please check your email or password.");
-        toast.error("Failed Login. Please check your email or password.");
+        toast.error("Failed login. Please check your email or password.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      //setApiError("Failed to login. Please try again later.");
       toast.error("Failed to login. Please try again later.");
     } finally {
-      setLoading(false); // Stop loader
+      setLoading(false);
     }
   };
 
