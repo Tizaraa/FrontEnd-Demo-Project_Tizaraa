@@ -2,6 +2,7 @@ import Box from "@component/Box";
 
 import Market1 from "./(layout-1)/market-1/page";
 import Layout1 from "@component/layout/layout-1";
+import Market3 from "./(layout-1)/market-3/page";
 // PAGE SECTION COMPONENTS
 
 
@@ -30,6 +31,7 @@ export default function Home() {
   
 <Layout1>
 <Market1></Market1>
+{/* <Market3></Market3> */}
 </Layout1>
 
 
