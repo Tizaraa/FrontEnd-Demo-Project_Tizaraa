@@ -37,7 +37,6 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Loader from "@component/loader";
 // import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
-
 const InvoiceWrapper = styled.div`
   margin-top: 20px;
   height: 80vh; // Use 80% of the viewport height for responsiveness
@@ -78,9 +77,7 @@ export default function OrderDetails({ params }: IDParams) {
   }>({});
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-
   const PrimaryLoader = `${ApiBaseUrl.ImgUrl}frontend/loader/loader.gif`;
-
 
   const getColor = (status: string) => {
     switch (status) {
@@ -247,7 +244,6 @@ export default function OrderDetails({ params }: IDParams) {
   //     </Typography>
   //   );
   // }
-
 
   if (loading) {
     return (
@@ -1023,40 +1019,48 @@ export default function OrderDetails({ params }: IDParams) {
             </Paragraph>
           </Card> */}
 
-<Card p="15px 20px" borderRadius={8}>
-  <H5 mt="0px" mb="10px" fontSize="16px">
-    Shipping Address
-  </H5>
+          <Card p="15px 20px" borderRadius={8}>
+            <H5 mt="0px" mb="10px" fontSize="16px">
+              Shipping Address
+            </H5>
 
-  {/* Main Address */}
-  <Paragraph fontSize="14px" my="4px" color="black">
-    {order.Order.address}
-  </Paragraph>
+            {/* Main Address */}
+            <Paragraph fontSize="14px" my="4px" color="black">
+              {order.Order.address}
+            </Paragraph>
 
-  {/* Flex Layout for Details */}
-  <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginTop: "8px" }}>
-    <div style={{ display: "flex", gap: "4px" }}>
-      <span style={{ color: "#555", fontWeight: 500 }}>Area:</span>
-      <span style={{ color: "#000" }}>{order.Order.area_id}</span>
-    </div>
+            {/* Flex Layout for Details */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "10px",
+                marginTop: "8px",
+              }}
+            >
+              <div style={{ display: "flex", gap: "4px" }}>
+                <span style={{ color: "#555", fontWeight: 500 }}>Area:</span>
+                <span style={{ color: "#000" }}>{order.Order.area_id}</span>
+              </div>
 
-    <div style={{ display: "flex", gap: "4px" }}>
-      <span style={{ color: "#555", fontWeight: 500 }}>City:</span>
-      <span style={{ color: "#000" }}>{order.Order.city_id}</span>
-    </div>
+              <div style={{ display: "flex", gap: "4px" }}>
+                <span style={{ color: "#555", fontWeight: 500 }}>City:</span>
+                <span style={{ color: "#000" }}>{order.Order.city_id}</span>
+              </div>
 
-    <div style={{ display: "flex", gap: "4px" }}>
-      <span style={{ color: "#555", fontWeight: 500 }}>Province:</span>
-      <span style={{ color: "#000" }}>{order.Order.province_id}</span>
-    </div>
+              <div style={{ display: "flex", gap: "4px" }}>
+                <span style={{ color: "#555", fontWeight: 500 }}>
+                  Province:
+                </span>
+                <span style={{ color: "#000" }}>{order.Order.province_id}</span>
+              </div>
 
-    <div style={{ display: "flex", gap: "4px" }}>
-      <span style={{ color: "#555", fontWeight: 500 }}>Phone:</span>
-      <span style={{ color: "#000" }}>{order.Order.phone}</span>
-    </div>
-  </div>
-</Card>
-
+              <div style={{ display: "flex", gap: "4px" }}>
+                <span style={{ color: "#555", fontWeight: 500 }}>Phone:</span>
+                <span style={{ color: "#000" }}>{order.Order.phone}</span>
+              </div>
+            </div>
+          </Card>
 
           <div style={{ display: "flex", gap: "20px" }}>
             {/* <Button
