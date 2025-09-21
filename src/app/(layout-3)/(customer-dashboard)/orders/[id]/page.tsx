@@ -1014,14 +1014,49 @@ export default function OrderDetails({ params }: IDParams) {
 
       <Grid container spacing={6}>
         <Grid item lg={6} md={6} xs={12}>
-          <Card p="20px 30px" borderRadius={8}>
+          {/* <Card p="20px 30px" borderRadius={8}>
             <H5 mt="0px" mb="14px">
               Shipping Address
             </H5>
             <Paragraph fontSize="14px" my="0px">
               {order.Order.address}
             </Paragraph>
-          </Card>
+          </Card> */}
+
+<Card p="15px 20px" borderRadius={8}>
+  <H5 mt="0px" mb="10px" fontSize="16px">
+    Shipping Address
+  </H5>
+
+  {/* Main Address */}
+  <Paragraph fontSize="14px" my="4px" color="black">
+    {order.Order.address}
+  </Paragraph>
+
+  {/* Flex Layout for Details */}
+  <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginTop: "8px" }}>
+    <div style={{ display: "flex", gap: "4px" }}>
+      <span style={{ color: "#555", fontWeight: 500 }}>Area:</span>
+      <span style={{ color: "#000" }}>{order.Order.area_id}</span>
+    </div>
+
+    <div style={{ display: "flex", gap: "4px" }}>
+      <span style={{ color: "#555", fontWeight: 500 }}>City:</span>
+      <span style={{ color: "#000" }}>{order.Order.city_id}</span>
+    </div>
+
+    <div style={{ display: "flex", gap: "4px" }}>
+      <span style={{ color: "#555", fontWeight: 500 }}>Province:</span>
+      <span style={{ color: "#000" }}>{order.Order.province_id}</span>
+    </div>
+
+    <div style={{ display: "flex", gap: "4px" }}>
+      <span style={{ color: "#555", fontWeight: 500 }}>Phone:</span>
+      <span style={{ color: "#000" }}>{order.Order.phone}</span>
+    </div>
+  </div>
+</Card>
+
 
           <div style={{ display: "flex", gap: "20px" }}>
             {/* <Button
