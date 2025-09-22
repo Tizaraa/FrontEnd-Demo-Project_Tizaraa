@@ -518,7 +518,7 @@ const LoaderWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 15rem;
+  margin-top: 5rem;
 `;
 
 const LoadingProductsPlaceholder = styled.div`
