@@ -1,6 +1,6 @@
-import ApiBaseUrl from 'api/ApiBaseUrl';
-import React from 'react';
-import styled from 'styled-components';
+import ApiBaseUrl from "api/ApiBaseUrl";
+import React from "react";
+import styled from "styled-components";
 
 const LoaderWrapper = styled.div`
   position: fixed;
@@ -11,7 +11,7 @@ const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #fff
+  background: #fff;
 `;
 
 const PrimaryLoader = `${ApiBaseUrl.ImgUrl}frontend/loader/loader.gif`;
@@ -19,10 +19,7 @@ const PrimaryLoader = `${ApiBaseUrl.ImgUrl}frontend/loader/loader.gif`;
 const Loader = () => {
   return (
     <LoaderWrapper>
-      <img
-        src={PrimaryLoader}
-        alt="Loading"
-      />
+      <img src={PrimaryLoader} alt="Loading" />
     </LoaderWrapper>
   );
 };
