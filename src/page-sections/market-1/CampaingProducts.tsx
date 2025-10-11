@@ -270,7 +270,13 @@ export default function CampaignProducts({
     ? campaignProducts.slice(0, maxProducts)
     : campaignProducts;
 
-  const loopedProducts = [...displayProducts, ...displayProducts];
+  // const loopedProducts = [...displayProducts, ...displayProducts];
+
+  const loopedProducts =
+  displayProducts.length > visibleSlides
+    ? [...displayProducts, ...displayProducts]
+    : displayProducts;
+
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isPaused, setIsPaused] = useState(false);
