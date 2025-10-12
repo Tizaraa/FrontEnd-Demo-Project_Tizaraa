@@ -716,7 +716,7 @@ const ProductDetails = ({
               )}
             </H5>
 
-            {!!discountPrice && price !== discountPrice && (
+            {/* {!!discountPrice && price !== discountPrice && (
               <Chip
                 bg="primary.main"
                 color="white"
@@ -728,7 +728,22 @@ const ProductDetails = ({
               >
                 {Math.floor(((price - discountPrice) / price) * 100)}% off
               </Chip>
-            )}
+            )} */}
+
+{!!discountPrice && discountPrice < price && (
+  <Chip
+    bg="primary.main"
+    color="white"
+    px="6px"
+    py="0.28rem"
+    fontWeight="600"
+    fontSize={isDesktop ? "12px" : "10px"}
+    textAlign="center"
+  >
+    {Math.floor(((price - discountPrice) / price) * 100)}% off
+  </Chip>
+)}
+
           </FlexBox>
         )}
 
