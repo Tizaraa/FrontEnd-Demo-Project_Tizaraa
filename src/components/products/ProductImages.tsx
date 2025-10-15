@@ -522,7 +522,7 @@ const ProductImages = ({ images }: ProductImagesProps) => {
             // width={200}
             // height={200}
             src={currentImageUrl}
-            style={{ display: "block", width: "350px", height: "350px" }}
+            style={{ display: "block", height: "350px" }}
           />
         </FlexBox>
 
