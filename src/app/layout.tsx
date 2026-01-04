@@ -22,7 +22,7 @@
 
 // export default function RootLayout({ children }: { children: React.ReactNode }) {
 //   //console.log(navigation);
-  
+
 //   return (
 //     <html lang="en">
 //       <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
@@ -169,10 +169,10 @@ import { Open_Sans } from "next/font/google";
 import StyledComponentsRegistry from "@lib/registry";
 import { AppProvider } from "@context/app-context";
 import StyledContext from "@context/StyledContext";
-import { ToastContainer } from 'react-toastify';
-import toast, { Toaster } from 'react-hot-toast';
+import { ToastContainer } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
 
 // Load font
@@ -181,10 +181,17 @@ const openSans = Open_Sans({ subsets: ["latin"] });
 // Default metadata
 const defaultMetadata = {
   title: "Tizaraa - The Best React eCommerce Template",
-  description: "Tizaraa is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
-  authors: [{ name: "UI-LIB", url: "https://ui-lib.com" }],
-  keywords: ["e-commerce", "e-commerce template", "next.js", "react", "tizaraa"],
-  siteFavIcon: "/default-favicon.ico"  // default favicon path
+  description:
+    "Tizaraa is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
+  authors: [{ name: "Tizaraa", url: "https://www.tizaraa.com" }],
+  keywords: [
+    "e-commerce",
+    "e-commerce template",
+    "next.js",
+    "react",
+    "tizaraa",
+  ],
+  siteFavIcon: "/default-favicon.ico", // default favicon path
 };
 
 // Async function to fetch global SEO data from the API
@@ -220,13 +227,20 @@ export async function generateMetadata() {
 }
 
 // Root layout
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   // Await metadata asynchronously before rendering
   const metadata = await generateMetadata();
 
   return (
     <html lang="en">
-      <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+      <meta
+        httpEquiv="Content-Security-Policy"
+        content="upgrade-insecure-requests"
+      />
       {/* <link rel="icon" href={metadata.favicon} type="image/x-icon" /> */}
       <Head>
         <link rel="icon" href={metadata.favicon} type="image/x-icon" />
@@ -244,5 +258,3 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     </html>
   );
 }
-
-
