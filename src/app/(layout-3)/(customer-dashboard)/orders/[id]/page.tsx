@@ -870,10 +870,12 @@ export default function OrderDetails({ params }: IDParams) {
                         ))}
                         {/* <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} /> */}
 
+                        <Box mt="10px" p="10px" border="1px solid #e94560" borderRadius="8px">
                         <OrderStatus
                           orderStatus={details.status}
                           deliveredAt={details.delivered_at}
                         />
+                        </Box>
 
                         {openSummaries[shopName] && (
                           <Box p="20px" borderRadius={8} mt="1rem">
