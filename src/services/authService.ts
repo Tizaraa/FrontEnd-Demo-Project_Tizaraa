@@ -1,98 +1,101 @@
+"use client";
 // import User from "models/user.model";
-import ApiBaseUrl from 'api/ApiBaseUrl';
+import ApiBaseUrl from "api/ApiBaseUrl";
 import Cookies from "js-cookie"; // Adjust the path as needed
 
 interface LoginResponse {
-    token: string;
-    user: UserInfo;
-  }
+  token: string;
+  user: UserInfo;
+}
 
-  interface UserInfo {
-    id: number;
-    name: string;
-    email: string;
-    image: string | null; // Image can be null
-    phone: string;
-    status: number;
-    email_verified_at: string | null; // Can be null
-    created_at: string; // ISO date string
-    updated_at: string | null; // Can be null
-    user_vercode: string | null; // Can be null, add if applicable
-  }
-  
-  
-  interface RegisterResponse {
-    message: string;
-  }
-  
-  const authService = {
-    login: async (values:any): Promise<LoginResponse> => {
-      try {
-        const response = await fetch(`${ApiBaseUrl.baseUrl}login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
-        });
-  
-        if (!response.ok) throw new Error("Login failed");
-  
-        const data: LoginResponse = await response.json();
-        localStorage.setItem("token",  data.token);
-        localStorage.setItem("userInfo", JSON.stringify(data.user)); // Storing userInfo as a JSON string
-        return data;
-      } catch (error) {
-        console.error("Error in login:", error);
-        throw error;
-      }
-    },
+interface UserInfo {
+  id: number;
+  name: string;
+  email: string;
+  image: string | null; // Image can be null
+  phone: string;
+  status: number;
+  email_verified_at: string | null; // Can be null
+  created_at: string; // ISO date string
+  updated_at: string | null; // Can be null
+  user_vercode: string | null; // Can be null, add if applicable
+}
 
-    googleLogin: (): void => {
-        // Redirect to the Laravel Google login route
-        window.location.href = `${ApiBaseUrl.baseUrl}login/google`;
-    },
+interface RegisterResponse {
+  message: string;
+}
 
-    isAuthenticated: (): boolean => {
-      // const token = Cookies.get('token') || localStorage.getItem('token');
-      const token = authService.getToken() || localStorage.getItem('token');
-      return !!token; // Check if token exists
-    },
-  
-    logout: (): void => {
-      Cookies.remove("token");
-      localStorage.removeItem("token");
-      localStorage.removeItem("userInfo");
-    },
-  
-    register: async (email: string, password: string): Promise<RegisterResponse> => {
-      try {
-        const response = await fetch("/api/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
-  
-        if (!response.ok) throw new Error("Registration failed");
-  
-        const data: RegisterResponse = await response.json();
-        return data;
-      } catch (error) {
-        console.error("Error in registration:", error);
-        throw error;
-      }
-    },
-  
-    getToken: (): string | null => {
-      return localStorage.getItem("token");
-    },
+const authService = {
+  login: async (values: any): Promise<LoginResponse> => {
+    try {
+      const response = await fetch(`${ApiBaseUrl.baseUrl}login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
 
-    getUser: async (): Promise<UserInfo | null> => {
-        const userInfoString = localStorage.getItem("userInfo");
-        if (userInfoString) {
-            const userInfo: UserInfo = JSON.parse(userInfoString);
-            return userInfo;
-        }
-        
-        // Optionally fetch from API if userInfo is not found in localStorage
+      if (!response.ok) throw new Error("Login failed");
+
+      const data: LoginResponse = await response.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userInfo", JSON.stringify(data.user)); // Storing userInfo as a JSON string
+      return data;
+    } catch (error) {
+      console.error("Error in login:", error);
+      throw error;
+    }
+  },
+
+  googleLogin: (): void => {
+    // Redirect to the Laravel Google login route
+    window.location.href = `${ApiBaseUrl.baseUrl}login/google`;
+  },
+
+  isAuthenticated: (): boolean => {
+    // const token = Cookies.get('token') || localStorage.getItem('token');
+    const token = authService.getToken() || localStorage.getItem("token");
+    return !!token; // Check if token exists
+  },
+
+  logout: (): void => {
+    Cookies.remove("token");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo");
+  },
+
+  register: async (
+    email: string,
+    password: string
+  ): Promise<RegisterResponse> => {
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) throw new Error("Registration failed");
+
+      const data: RegisterResponse = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in registration:", error);
+      throw error;
+    }
+  },
+
+  getToken: (): string | null => {
+    return localStorage.getItem("token");
+  },
+
+  getUser: async (): Promise<UserInfo | null> => {
+    const userInfoString = localStorage.getItem("userInfo");
+    if (userInfoString) {
+      const userInfo: UserInfo = JSON.parse(userInfoString);
+      return userInfo;
+    }
+
+    // Optionally fetch from API if userInfo is not found in localStorage
     //     try {
     //         const response = await fetch("https://frontend.tizaraa.com/api/user", {
     //             method: "GET",
@@ -112,8 +115,7 @@ interface LoginResponse {
     //         return null;
     //     }
     // },
-    }
-  };
-  
-  export default authService;
-  
+  },
+};
+
+export default authService;

@@ -1,6 +1,7 @@
+"use client";
 // @/hooks/useFetcher.ts
 
-import axios from "@lib/axios";
+import axios from "@lib/axiosClient";
 import authService from "services/authService";
 import useSWR from "swr";
 
