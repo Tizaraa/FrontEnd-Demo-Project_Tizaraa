@@ -5,7 +5,7 @@ import authService from "services/authService";
 
 // Create a dedicated Axios instance
 const axios = Axios.create({
-  baseURL: ApiBaseUrl.ApiBaseUrl,
+  baseURL: ApiBaseUrl.baseUrl,
   headers: {
     "Content-Type": "application/json",
   },
