@@ -348,9 +348,10 @@ export default function Signup() {
             rules={{ required: "You must accept the terms" }}
             render={({ field }) => (
               <CheckBox
-                {...field}
-                checked={field.value}
+                name={field.name}
+                checked={!!field.value}
                 onChange={(e) => field.onChange(e.target.checked)}
+                onBlur={field.onBlur}
                 mb="1.25rem"
                 color="secondary"
                 label={
