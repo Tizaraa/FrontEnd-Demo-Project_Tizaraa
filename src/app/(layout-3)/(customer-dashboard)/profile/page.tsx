@@ -270,7 +270,17 @@ import authService from "services/authService";
 import Link from "next/link";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faMars, faGenderless, faVenus, faPhone, faUser, faCalendar, faFemale } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faMars,
+  faGenderless,
+  faVenus,
+  faPhone,
+  faUser,
+  faCalendar,
+  faFemale,
+} from "@fortawesome/free-solid-svg-icons";
+import { marginBottom } from "styled-system";
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -296,7 +306,7 @@ export default function Profile() {
     phone: "",
     birth_date: "",
     gender: "",
-    image: ""
+    image: "",
   });
   const [data, setData] = useState({
     totalOrders: 0,
@@ -325,8 +335,8 @@ export default function Profile() {
     } else {
       authService.getUser().then((userData) => {
         setUser(userData);
-        console.log('userData', userData);
-        
+        console.log("userData", userData);
+
         setLoading(false);
       });
     }
@@ -345,8 +355,7 @@ export default function Profile() {
         setProfile(profileResponse.data.profile);
         setUser(profileResponse.data.profile); // Also update user state
 
-        console.log('profileResponse', profileResponse.data.profile);
-        
+        console.log("profileResponse", profileResponse.data.profile);
 
         const historyResponse = await axios.get(
           `${ApiBaseUrl.baseUrl}user/profile/history`,
@@ -437,8 +446,8 @@ export default function Profile() {
               >
                 {/* Conditional rendering for Avatar or FontAwesome icon */}
                 {profile?.image ? (
-                  <Avatar 
-                    size={100} 
+                  <Avatar
+                    size={100}
                     src={`${ApiBaseUrl.ImgUrl}${profile.image}`}
                     style={{
                       border: "3px solid #E94560",
@@ -446,47 +455,69 @@ export default function Profile() {
                     }}
                   />
                 ) : (
-                  <div style={{
-                    width: "90px",
-                    height: "90px",
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, #f5f7fa, #e4e8f0)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 4px 15px rgba(107, 114, 128, 0.2)",
-                    border: "3px solid #6b7280",
-                  }}>
+                  <div
+                    style={{
+                      width: "90px",
+                      height: "90px",
+                      borderRadius: "50%",
+                      background: "linear-gradient(135deg, #f5f7fa, #e4e8f0)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 4px 15px rgba(107, 114, 128, 0.2)",
+                      border: "3px solid #6b7280",
+                    }}
+                  >
                     {profile?.gender === "male" ? (
-                      <FontAwesomeIcon icon={faUser} size="3x" color="#1e3a8a" />
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        size="3x"
+                        color="#1e3a8a"
+                      />
                     ) : profile?.gender === "female" ? (
-                      <FontAwesomeIcon icon={faFemale} size="3x" color="#E94560" />
+                      <FontAwesomeIcon
+                        icon={faFemale}
+                        size="3x"
+                        color="#E94560"
+                      />
                     ) : (
-                      <FontAwesomeIcon icon={faUser} size="3x" color="#6b7280" />
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        size="3x"
+                        color="#6b7280"
+                      />
                     )}
                   </div>
                 )}
                 <div>
-                  <H5 style={{ 
-                    fontSize: "1.5rem", 
-                    margin: 0,
-                    background: "linear-gradient(90deg, #1e3a8a, #E94560)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    fontWeight: "700",
-                  }}>
-                    {profile?.name || "No Name"}
+                  <H5
+                    style={{
+                      fontSize: "1.5rem",
+                      margin: 0,
+                      background: "linear-gradient(90deg, #1e3a8a, #E94560)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      fontWeight: "700",
+                    }}
+                  >
+                    {profile?.name || "No Name"} (Corporate)
                   </H5>
 
                   {/* Birth Date */}
-                  <p style={{ 
-                    margin: "0.5rem 0", 
-                    color: "#6b7280",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem"
-                  }}>
-                    <FontAwesomeIcon icon={faCalendar} size="sm" color="#6b7280" />
+                  <p
+                    style={{
+                      margin: "0.5rem 0",
+                      color: "#6b7280",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faCalendar}
+                      size="sm"
+                      color="#6b7280"
+                    />
                     <strong>Birthday:</strong>
                     {profile?.birth_date
                       ? new Date(profile.birth_date)
@@ -500,19 +531,33 @@ export default function Profile() {
                   </p>
 
                   {/* Gender */}
-                  <p style={{ 
-                    margin: "0.5rem 0", 
-                    color: "#6b7280",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem"
-                  }}>
+                  <p
+                    style={{
+                      margin: "0.5rem 0",
+                      color: "#6b7280",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
                     {profile?.gender === "male" ? (
-                      <FontAwesomeIcon icon={faMars} size="sm" color="#1e3a8a" />
+                      <FontAwesomeIcon
+                        icon={faMars}
+                        size="sm"
+                        color="#1e3a8a"
+                      />
                     ) : profile?.gender === "female" ? (
-                      <FontAwesomeIcon icon={faVenus} size="sm" color="#E94560" />
+                      <FontAwesomeIcon
+                        icon={faVenus}
+                        size="sm"
+                        color="#E94560"
+                      />
                     ) : (
-                      <FontAwesomeIcon icon={faGenderless} size="sm" color="#6b7280" />
+                      <FontAwesomeIcon
+                        icon={faGenderless}
+                        size="sm"
+                        color="#6b7280"
+                      />
                     )}
                     <strong>Gender:</strong>{" "}
                     {profile?.gender === "male"
@@ -520,6 +565,56 @@ export default function Profile() {
                       : profile?.gender === "female"
                       ? "Female"
                       : "N/A"}
+                  </p>
+
+                  {/* Company name */}
+                  <p
+                    style={{
+                      margin: "0.5rem 0",
+                      color: "#6b7280",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <strong>Company name:</strong> Company name
+                  </p>
+
+                  {/* Company ID */}
+                  <p
+                    style={{
+                      margin: "0.5rem 0",
+                      color: "#6b7280",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <strong>Company ID:</strong> ASD21
+                  </p>
+
+                  {/* designation */}
+                  <p
+                    style={{
+                      margin: "0.5rem 0",
+                      color: "#6b7280",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <strong>Designation:</strong> Machine Operator
+                  </p>
+                  <p
+                    style={{
+                      margin: "0.5rem 0",
+                      color: "#6b7280",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <strong>Credit Balance:</strong> 300
                   </p>
                 </div>
               </FlexBox>
@@ -541,9 +636,9 @@ export default function Profile() {
                 flexDirection: "column",
               }}
             >
-              <Typography 
-                variant="h5" 
-                mb="1.5rem" 
+              <Typography
+                variant="h5"
+                mb="1.5rem"
                 fontWeight={"bold"}
                 style={{
                   background: "linear-gradient(90deg, #1e3a8a, #E94560)",
@@ -556,8 +651,8 @@ export default function Profile() {
               </Typography>
               <FlexBox
                 alignItems="center"
-                style={{ 
-                  gap: "0.75rem", 
+                style={{
+                  gap: "0.75rem",
                   marginBottom: "1.5rem",
                   padding: "0.75rem 1rem",
                   borderRadius: "8px",
@@ -565,21 +660,27 @@ export default function Profile() {
                   transition: "transform 0.2s ease",
                 }}
               >
-                <div style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #1e3a8a, #3b82f6)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}>
-                  <FontAwesomeIcon icon={faEnvelope} size="lg" color="#ffffff" />
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #1e3a8a, #3b82f6)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faEnvelope}
+                    size="lg"
+                    color="#ffffff"
+                  />
                 </div>
                 <a
                   href={`mailto:${profile?.email}`}
-                  style={{ 
-                    color: "#4b5563", 
+                  style={{
+                    color: "#4b5563",
                     textDecoration: "none",
                     fontWeight: "500",
                     fontSize: "1rem",
@@ -589,9 +690,9 @@ export default function Profile() {
                 </a>
               </FlexBox>
 
-              <FlexBox 
-                alignItems="center" 
-                style={{ 
+              <FlexBox
+                alignItems="center"
+                style={{
                   gap: "0.75rem",
                   padding: "0.75rem 1rem",
                   borderRadius: "8px",
@@ -599,21 +700,23 @@ export default function Profile() {
                   transition: "transform 0.2s ease",
                 }}
               >
-                <div style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #E94560, #f87171)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}>
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #E94560, #f87171)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   <FontAwesomeIcon icon={faPhone} size="lg" color="#ffffff" />
                 </div>
                 <a
                   href={`tel:${profile?.phone}`}
-                  style={{ 
-                    color: "#4b5563", 
+                  style={{
+                    color: "#4b5563",
                     textDecoration: "none",
                     fontWeight: "500",
                     fontSize: "1rem",
