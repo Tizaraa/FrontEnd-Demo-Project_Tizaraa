@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Signup from "@sections/auth/Signup-new";
+import EmployeeSignup from "@sections/auth/EmployeeSignup";
 
 export const metadata: Metadata = {
   title: "Register - The Best React eCommerce Template",
@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function SignUpPage() {
-  return <Signup />;
+  return <EmployeeSignup />;
 }

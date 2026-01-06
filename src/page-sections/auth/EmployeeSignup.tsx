@@ -38,7 +38,7 @@ interface FormValues {
   agreement: boolean;
 }
 
-export default function Signup() {
+export default function EmployeeSignup() {
   const { data } = useFetcher(`v1/corporate-shop`);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
