@@ -40,6 +40,7 @@ interface FormValues {
 
 export default function EmployeeSignup() {
   const { data } = useFetcher(`v1/corporate-shop`);
+  const options = data?.data || [];
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -73,20 +74,22 @@ export default function EmployeeSignup() {
       const response = await axios.post(`v1/employee/registration`, data);
       const result = response.data;
 
-      if (response.status === 200) {
+      if (result.success) {
         sessionStorage.setItem("userId", result.id);
         router.push("/emailValidation");
         toast.success(result.message || "Account created successfully!");
       } else {
         toast.error(result.message || "Registration failed");
       }
-    } catch {
-      toast.error("Something went wrong. Please try again.");
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
-  const options = data?.data || [];
 
   return (
     <>
