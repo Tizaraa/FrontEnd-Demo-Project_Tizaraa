@@ -84,7 +84,23 @@ const CorporateCard = ({ profile }) => {
           {/* Name - truncated with ellipsis if too long */}
           <H5
             style={{
-              fontSize: "1.25rem",
+              fontSize: "24px",
+              background: "linear-gradient(90deg, #1e3a8a, #E94560)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              fontWeight: "700",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              lineHeight: "1.3",
+            }}
+            title={profile?.name ? `${profile.name}` : ""} // tooltip shows full name on hover
+          >
+            {profile?.name || "No Name"}{" "}
+          </H5>
+          <H5
+            style={{
+              fontSize: "0.8rem",
               margin: "0 0 0.6rem 0",
               background: "linear-gradient(90deg, #1e3a8a, #E94560)",
               WebkitBackgroundClip: "text",
@@ -95,11 +111,8 @@ const CorporateCard = ({ profile }) => {
               textOverflow: "ellipsis",
               lineHeight: "1.3",
             }}
-            title={
-              profile?.name ? `${profile.name} (${profile?.type || ""})` : ""
-            } // tooltip shows full name on hover
+            title={` (${profile?.type || ""})`}
           >
-            {profile?.name || "No Name"}{" "}
             {profile?.type ? `(${profile.type})` : ""}
           </H5>
 
