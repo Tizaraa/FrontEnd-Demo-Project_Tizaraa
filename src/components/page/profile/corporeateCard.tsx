@@ -1,6 +1,5 @@
 import Card from "@component/Card";
 import Avatar from "@component/avatar";
-
 import FlexBox from "@component/FlexBox";
 import { H5 } from "@component/Typography";
 
@@ -30,8 +29,15 @@ const CorporateCard = ({ profile }) => {
         flexDirection: "column",
       }}
     >
-      <FlexBox alignItems="center" mb="1.5rem" style={{ gap: "1.5rem" }}>
-        {/* Conditional rendering for Avatar or FontAwesome icon */}
+      <FlexBox
+        alignItems="flex-start" // Changed to flex-start so long content doesn't stretch vertically
+        mb="1.5rem"
+        style={{
+          gap: "1.5rem",
+          width: "100%",
+        }}
+      >
+        {/* Avatar / Placeholder */}
         {profile?.image ? (
           <Avatar
             size={100}
@@ -39,13 +45,14 @@ const CorporateCard = ({ profile }) => {
             style={{
               border: "3px solid #E94560",
               boxShadow: "0 4px 15px rgba(233, 69, 96, 0.2)",
+              flexShrink: 0, // Prevents avatar from shrinking
             }}
           />
         ) : (
           <div
             style={{
-              width: "90px",
-              height: "90px",
+              width: "100px",
+              height: "100px",
               borderRadius: "50%",
               background: "linear-gradient(135deg, #f5f7fa, #e4e8f0)",
               display: "flex",
@@ -53,6 +60,7 @@ const CorporateCard = ({ profile }) => {
               justifyContent: "center",
               boxShadow: "0 4px 15px rgba(107, 114, 128, 0.2)",
               border: "3px solid #6b7280",
+              flexShrink: 0,
             }}
           >
             {profile?.gender === "male" ? (
@@ -64,121 +72,115 @@ const CorporateCard = ({ profile }) => {
             )}
           </div>
         )}
-        <div>
+
+        {/* Right side - Info */}
+        <div
+          style={{
+            flex: 1,
+            minWidth: 0, // ← Critical: prevents overflow
+            overflow: "hidden",
+          }}
+        >
+          {/* Name - truncated with ellipsis if too long */}
           <H5
             style={{
-              fontSize: "1.5rem",
-              margin: 0,
+              fontSize: "1.25rem",
+              margin: "0 0 0.6rem 0",
               background: "linear-gradient(90deg, #1e3a8a, #E94560)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               fontWeight: "700",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              lineHeight: "1.3",
             }}
+            title={
+              profile?.name ? `${profile.name} (${profile?.type || ""})` : ""
+            } // tooltip shows full name on hover
           >
-            {profile?.name || "No Name"} ({profile?.type})
+            {profile?.name || "No Name"}{" "}
+            {profile?.type ? `(${profile.type})` : ""}
           </H5>
 
-          {/* Birth Date */}
-          <p
-            style={{
-              margin: "0.5rem 0",
-              color: "#6b7280",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
+          {/* Info rows */}
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
           >
-            <FontAwesomeIcon icon={faCalendar} size="sm" color="#6b7280" />
-            <strong>Birthday:</strong>
-            {profile?.birth_date
-              ? new Date(profile.birth_date)
-                  .toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })
-                  .replace(/(\d{2} \w{3}) (\d{4})/, "$1, $2") // Add comma after month
-              : "N/A"}
-          </p>
+            {/* Birth Date */}
+            <p style={infoStyle}>
+              <FontAwesomeIcon icon={faCalendar} size="sm" color="#6b7280" />
+              <strong>Birthday:</strong>{" "}
+              {profile?.birth_date
+                ? new Date(profile.birth_date)
+                    .toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })
+                    .replace(/(\d{2} \w{3}) (\d{4})/, "$1, $2")
+                : "N/A"}
+            </p>
 
-          {/* Gender */}
-          <p
-            style={{
-              margin: "0.5rem 0",
-              color: "#6b7280",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            {profile?.gender === "male" ? (
-              <FontAwesomeIcon icon={faMars} size="sm" color="#1e3a8a" />
-            ) : profile?.gender === "female" ? (
-              <FontAwesomeIcon icon={faVenus} size="sm" color="#E94560" />
-            ) : (
-              <FontAwesomeIcon icon={faGenderless} size="sm" color="#6b7280" />
-            )}
-            <strong>Gender:</strong>{" "}
-            {profile?.gender === "male"
-              ? "Male"
-              : profile?.gender === "female"
-              ? "Female"
-              : "N/A"}
-          </p>
+            {/* Gender */}
+            <p style={infoStyle}>
+              {profile?.gender === "male" ? (
+                <FontAwesomeIcon icon={faMars} size="sm" color="#1e3a8a" />
+              ) : profile?.gender === "female" ? (
+                <FontAwesomeIcon icon={faVenus} size="sm" color="#E94560" />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faGenderless}
+                  size="sm"
+                  color="#6b7280"
+                />
+              )}
+              <strong>Gender:</strong>{" "}
+              {profile?.gender === "male"
+                ? "Male"
+                : profile?.gender === "female"
+                ? "Female"
+                : "N/A"}
+            </p>
 
-          {/* Company name */}
-          <p
-            style={{
-              margin: "0.5rem 0",
-              color: "#6b7280",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <strong>Company name:</strong> {profile?.company_name}
-          </p>
+            {/* Company */}
+            <p style={infoStyle}>
+              <strong>Company:</strong> {profile?.company_name || "N/A"}
+            </p>
 
-          {/* Company ID */}
-          <p
-            style={{
-              margin: "0.5rem 0",
-              color: "#6b7280",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <strong>Employee ID:</strong> {profile?.employee_id}
-          </p>
+            {/* Employee ID */}
+            <p style={infoStyle}>
+              <strong>Employee ID:</strong> {profile?.employee_id || "N/A"}
+            </p>
 
-          {/* designation */}
-          <p
-            style={{
-              margin: "0.5rem 0",
-              color: "#6b7280",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <strong>Designation:</strong> {profile?.designation}
-          </p>
-          <p
-            style={{
-              margin: "0.5rem 0",
-              color: "#6b7280",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <strong>Credit Balance:</strong> {profile?.credit_balance}
-          </p>
+            {/* Designation */}
+            <p style={infoStyle}>
+              <strong>Designation:</strong>{" "}
+              <span style={{ wordBreak: "break-word" }}>
+                {profile?.designation || "N/A"}
+              </span>
+            </p>
+
+            {/* Credit Balance */}
+            <p style={infoStyle}>
+              <strong>Credit Balance:</strong> {profile?.credit_balance ?? 0}
+            </p>
+          </div>
         </div>
       </FlexBox>
     </Card>
   );
+};
+
+// Reusable style for info rows
+const infoStyle = {
+  margin: 0,
+  color: "#6b7280",
+  display: "flex",
+  alignItems: "center",
+  gap: "0.6rem",
+  fontSize: "0.95rem",
+  lineHeight: "1.4",
 };
 
 export default CorporateCard;

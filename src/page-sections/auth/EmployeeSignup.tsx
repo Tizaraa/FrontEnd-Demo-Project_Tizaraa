@@ -31,6 +31,7 @@ interface FormValues {
   email: string;
   phone: string;
   employee_id: string;
+  designation: string;
   nid: string;
   corporate_shop_id: string;
   password: string;
@@ -185,6 +186,30 @@ export default function EmployeeSignup() {
             control={control}
             rules={{
               required: "Employee ID is required",
+            }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullwidth
+                mb="1rem"
+                type="text"
+                label={
+                  <>
+                    Employee ID <span style={{ color: "#e94560" }}>*</span>
+                  </>
+                }
+                placeholder="Enter Your Employee ID"
+                errorText={errors.employee_id?.message}
+              />
+            )}
+          />
+
+          {/* Designation */}
+          <Controller
+            name="designation"
+            control={control}
+            rules={{
+              required: "Designation is required",
             }}
             render={({ field }) => (
               <TextField
