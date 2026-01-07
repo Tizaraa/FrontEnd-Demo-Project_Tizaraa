@@ -296,6 +296,25 @@ function LoadingFallback() {
     </LoaderWrapper>
   );
 }
+type profileType = {
+  id: number;
+  name: string;
+  email: string;
+  phone: any;
+  gender: any;
+  birth_date: any;
+  status: number;
+  image: any;
+  type: string;
+  credit_balance?: string;
+  employee_id?: any;
+  nid?: any;
+  designation?: any;
+  employee_status?: any;
+  company_name?: any;
+  created_at?: string;
+  updated_at?: string;
+};
 
 export default function Profile() {
   const router = useRouter();
@@ -352,7 +371,7 @@ export default function Profile() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setProfile(profileResponse.data.profile);
+        setProfile(profileResponse.data.profile as profileType);
         setUser(profileResponse.data.profile); // Also update user state
 
         console.log("profileResponse", profileResponse.data.profile);
@@ -500,7 +519,7 @@ export default function Profile() {
                       fontWeight: "700",
                     }}
                   >
-                    {profile?.name || "No Name"} (Corporate)
+                    {profile?.name || "No Name"}
                   </H5>
 
                   {/* Birth Date */}
@@ -565,56 +584,6 @@ export default function Profile() {
                       : profile?.gender === "female"
                       ? "Female"
                       : "N/A"}
-                  </p>
-
-                  {/* Company name */}
-                  <p
-                    style={{
-                      margin: "0.5rem 0",
-                      color: "#6b7280",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <strong>Company name:</strong> Company name
-                  </p>
-
-                  {/* Company ID */}
-                  <p
-                    style={{
-                      margin: "0.5rem 0",
-                      color: "#6b7280",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <strong>Company ID:</strong> ASD21
-                  </p>
-
-                  {/* designation */}
-                  <p
-                    style={{
-                      margin: "0.5rem 0",
-                      color: "#6b7280",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <strong>Designation:</strong> Machine Operator
-                  </p>
-                  <p
-                    style={{
-                      margin: "0.5rem 0",
-                      color: "#6b7280",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <strong>Credit Balance:</strong> 300
                   </p>
                 </div>
               </FlexBox>
