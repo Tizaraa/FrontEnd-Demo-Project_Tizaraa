@@ -3,25 +3,25 @@ type Image = { href: string; imgUrl: string };
 type SubCategory = { href: string; title: string };
 
 type Category = {
-  title: string;
-  href?: string;
-  subCategories: SubCategory[];
+ title: string;
+ href?: string;
+ subCategories: SubCategory[];
 };
 
 type MegaMenu1 = {
-  rightImage?: Image;
-  bottomImage?: Image;
-  categories: Category[];
+ rightImage?: Image;
+ bottomImage?: Image;
+ categories: Category[];
 };
 
-export type MegaMenu1Props = { data: MegaMenu1; minWidth?: string; };
+export type MegaMenu1Props = { data: MegaMenu1; minWidth?: string };
 
 type MegaMenu2 = {
-  icon: string;
-  href: string;
-  title: string;
-  menuData?: any;
-  subCategories?: any;
+ icon: string;
+ href: string;
+ title: string;
+ menuData?: any;
+ subCategories?: any;
 };
 
 export type MegaMenu2Props = { data: MegaMenu2[] };

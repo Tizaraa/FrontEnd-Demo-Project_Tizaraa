@@ -18,162 +18,226 @@ import CheckBox from "@component/CheckBox";
 import toast from "react-hot-toast";
 
 const Wrapper = styled.div.withConfig({
-  shouldForwardProp: (prop) => isValidProp(prop)
+ shouldForwardProp: (prop) => isValidProp(prop),
 })`
-  display: flex;
+ display: flex;
+ overflow: hidden;
+ position: relative;
+ border-radius: 10px;
+ box-shadow: ${getTheme("shadows.4")};
+ background-color: ${getTheme("colors.body.paper")};
+ .product-details {
+  padding: 20px;
+ }
+ .title {
   overflow: hidden;
-  position: relative;
-  border-radius: 10px;
-  box-shadow: ${getTheme("shadows.4")};
-  background-color: ${getTheme("colors.body.paper")};
-  .product-details { padding: 20px; }
-  .title { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-  @media only screen and (max-width: 425px) {
-    flex-wrap: wrap;
-    img { height: auto; min-width: 100%; }
+  white-space: nowrap;
+  text-overflow: ellipsis;
+ }
+ @media only screen and (max-width: 425px) {
+  flex-wrap: wrap;
+  img {
+   height: auto;
+   min-width: 100%;
   }
-  ${space}
+ }
+ ${space}
 `;
 
 interface ProductCard21Props extends SpaceProps {
-  qty: number;
-  name: string;
-  slug?: string;
-  price: number;
-  imgUrl?: string;
-  productStock: number;
-  id: string | number;
-  discountPrice: number;
-  productId: string | number;
-  sellerId: string | number;
-  b2bPricing: any;
+ qty: number;
+ name: string;
+ slug?: string;
+ price: number;
+ imgUrl?: string;
+ productStock: number;
+ id: string | number;
+ discountPrice: number;
+ productId: string | number;
+ sellerId: string | number;
+ b2bPricing: any;
 }
 
 export default function ProductCard21(props: ProductCard21Props) {
-  const { id, name, qty, price, imgUrl, productStock, slug, discountPrice, productId, sellerId, b2bPricing, ...others } = props;
-  const { state, dispatch } = useAppContext();
-  const [quantity, setQuantity] = useState(qty);
+ const {
+  id,
+  name,
+  qty,
+  price,
+  imgUrl,
+  productStock,
+  slug,
+  discountPrice,
+  productId,
+  sellerId,
+  b2bPricing,
+  ...others
+ } = props;
+ const { state, dispatch } = useAppContext();
+ const [quantity, setQuantity] = useState(qty);
 
-  useEffect(() => {
-    const buyNowItems = Array.isArray(state.buyNowItem) ? state.buyNowItem : [];
-    const itemInCart = buyNowItems.find(item => item.id === id);
-    if (itemInCart) {
-      setQuantity(itemInCart.qty);
-    }
-  }, [state.buyNowItem, id]);
-  
-  const handleCartAmountChange = (amount: number) => {
-    if (amount > productStock) {
-      toast.error("Out of Stock");
-      return;
-    }
-    setQuantity(amount);
-    dispatch({
-      type: "SET_BUY_NOW_ITEM",
-      payload: { qty: amount, name, price, imgUrl, productStock, id, discountPrice, productId, sellerId, b2bPricing }
-    });
-  };
+ useEffect(() => {
+  const buyNowItems = Array.isArray(state.buyNowItem) ? state.buyNowItem : [];
+  const itemInCart = buyNowItems.find((item) => item.id === id);
+  if (itemInCart) {
+   setQuantity(itemInCart.qty);
+  }
+ }, [state.buyNowItem, id]);
 
-  useEffect(() => {
-    if (qty === 0) {
-      dispatch({ type: "DESELECT_PRODUCT", payload: id });
-    }
-  }, [qty, id, dispatch]);
+ const handleCartAmountChange = (amount: number) => {
+  if (amount > productStock) {
+   toast.error("Out of Stock");
+   return;
+  }
+  setQuantity(amount);
+  dispatch({
+   type: "SET_BUY_NOW_ITEM",
+   payload: {
+    qty: amount,
+    name,
+    price,
+    imgUrl,
+    productStock,
+    id,
+    discountPrice,
+    productId,
+    sellerId,
+    b2bPricing,
+   },
+  });
+ };
 
-  const handleProductSelect = () => {
-    if (state.selectedProducts.includes(id)) {
-      dispatch({ type: "DESELECT_PRODUCT", payload: id });
-    } else {
-      dispatch({ type: "SELECT_PRODUCT", payload: id });
-    }
-  };
+ useEffect(() => {
+  if (qty === 0) {
+   dispatch({ type: "DESELECT_PRODUCT", payload: id });
+  }
+ }, [qty, id, dispatch]);
 
-  return (
-    <>
-      <Wrapper {...others}>
-        <div style={{ display: "flex", flexDirection: "row", gap: "5px", marginLeft: "16px", alignItems: "center" }}>
-          <CheckBox
-            checked={state.selectedProducts.includes(id)}
-            onChange={handleProductSelect}
-          />
-          <LazyImage
-            alt={name}
-            width={140}
-            height={140}
-            src={imgUrl || "/assets/images/products/iphone-xi.png"}
-          />
-        </div>
-        <FlexBox
-          width="100%"
-          minWidth="0px"
-          flexDirection="column"
-          className="product-details"
-          justifyContent="space-between">
-          <Link href={`/product/${slug}`}>
-            <Typography className="title" fontWeight="600" fontSize="18px" mb="0.5rem">
-              {name}
-            </Typography>
-          </Link>
-          <Box position="absolute" right="1rem" top="1rem">
-            <IconButton padding="4px" ml="12px" onClick={() => handleCartAmountChange(0)}>
-              <Icon size="1.25rem">close</Icon>
-            </IconButton>
-          </Box>
-          <FlexBox justifyContent="space-between" alignItems="flex-end">
-            <FlexBox flexWrap="wrap" alignItems="center">
-              {discountPrice ? (
-                <>
-                  <Typography color="gray.600" mr="0.5rem">
-                    {currency(discountPrice, 0)} x {quantity}
-                  </Typography>
-                </>
-              ) : (
-                <Typography fontWeight={600} color="primary.main" mr="1rem">
-                  {currency(price, 0)} x {quantity}
-                </Typography>
-              )}
-            </FlexBox>
-            <FlexBox alignItems="center">
-              <Button
-                size="none"
-                padding="5px"
-                color="primary"
-                variant="outlined"
-                disabled={quantity <= 1}
-                borderColor="primary.light"
-                onClick={() => handleCartAmountChange(quantity - 1)}>
-                <Icon variant="small">minus</Icon>
-              </Button>
-              <Styledbutton>
-                <input
-                  type="number"
-                  value={quantity}
-                  className="no-spin-button"
-                  onChange={(e) => handleCartAmountChange(Math.min(productStock, Math.max(1, parseInt(e.target.value))))}
-                  style={{ width: "50px", textAlign: "center", margin: "0 10px", borderRadius: "4px", padding: "5px", border: "1px solid #E94560" }}
-                  min="1"
-                />
-              </Styledbutton>
-              <Button
-                size="none"
-                padding="5px"
-                color="primary"
-                variant="outlined"
-                borderColor="primary.light"
-                onClick={() => handleCartAmountChange(quantity + 1)}>
-                <Icon variant="small">plus</Icon>
-              </Button>
-            </FlexBox>
-          </FlexBox>
-        </FlexBox>
-      </Wrapper>
-      <style jsx>{`
-        input.no-spin-button::-webkit-inner-spin-button,
-        input.no-spin-button::-webkit-outer-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-      `}</style>
-    </>
-  );
+ const handleProductSelect = () => {
+  if (state.selectedProducts.includes(id)) {
+   dispatch({ type: "DESELECT_PRODUCT", payload: id });
+  } else {
+   dispatch({ type: "SELECT_PRODUCT", payload: id });
+  }
+ };
+
+ return (
+  <>
+   <Wrapper {...others}>
+    <div
+     style={{
+      display: "flex",
+      flexDirection: "row",
+      gap: "5px",
+      marginLeft: "16px",
+      alignItems: "center",
+     }}
+    >
+     <CheckBox
+      checked={state.selectedProducts.includes(id)}
+      onChange={handleProductSelect}
+     />
+     <LazyImage
+      alt={name}
+      width={140}
+      height={140}
+      src={imgUrl || "/assets/images/products/iphone-xi.png"}
+     />
+    </div>
+    <FlexBox
+     width="100%"
+     minWidth="0px"
+     flexDirection="column"
+     className="product-details"
+     justifyContent="space-between"
+    >
+     <Link href={`/product/${slug}`}>
+      <Typography
+       className="title"
+       fontWeight="600"
+       fontSize="18px"
+       mb="0.5rem"
+      >
+       {name}
+      </Typography>
+     </Link>
+     <Box position="absolute" right="1rem" top="1rem">
+      <IconButton
+       padding="4px"
+       ml="12px"
+       onClick={() => handleCartAmountChange(0)}
+      >
+       <Icon size="1.25rem">close</Icon>
+      </IconButton>
+     </Box>
+     <FlexBox justifyContent="space-between" alignItems="flex-end">
+      <FlexBox flexWrap="wrap" alignItems="center">
+       {discountPrice ? (
+        <>
+         <Typography color="gray.600" mr="0.5rem">
+          {currency(discountPrice, 0)} x {quantity}
+         </Typography>
+        </>
+       ) : (
+        <Typography fontWeight={600} color="primary.main" mr="1rem">
+         {currency(price, 0)} x {quantity}
+        </Typography>
+       )}
+      </FlexBox>
+      <FlexBox alignItems="center">
+       <Button
+        size="none"
+        padding="5px"
+        color="primary"
+        variant="outlined"
+        disabled={quantity <= 1}
+        borderColor="primary.light"
+        onClick={() => handleCartAmountChange(quantity - 1)}
+       >
+        <Icon variant="small">minus</Icon>
+       </Button>
+       <Styledbutton>
+        <input
+         type="number"
+         value={quantity}
+         className="no-spin-button"
+         onChange={(e) =>
+          handleCartAmountChange(
+           Math.min(productStock, Math.max(1, parseInt(e.target.value)))
+          )
+         }
+         style={{
+          width: "50px",
+          textAlign: "center",
+          margin: "0 10px",
+          borderRadius: "4px",
+          padding: "5px",
+          border: "1px solid #E94560",
+         }}
+         min="1"
+        />
+       </Styledbutton>
+       <Button
+        size="none"
+        padding="5px"
+        color="primary"
+        variant="outlined"
+        borderColor="primary.light"
+        onClick={() => handleCartAmountChange(quantity + 1)}
+       >
+        <Icon variant="small">plus</Icon>
+       </Button>
+      </FlexBox>
+     </FlexBox>
+    </FlexBox>
+   </Wrapper>
+   <style jsx>{`
+    input.no-spin-button::-webkit-inner-spin-button,
+    input.no-spin-button::-webkit-outer-spin-button {
+     -webkit-appearance: none;
+     margin: 0;
+    }
+   `}</style>
+  </>
+ );
 }

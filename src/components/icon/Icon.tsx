@@ -9,47 +9,46 @@ import { StyledSvgWrapper } from "./styles";
 
 // ==============================================================
 interface IconProps {
-  size?: string;
-  transform?: string;
-  className?: string;
-  children: ReactNode;
-  color?: colorOptions;
-  variant?: "small" | "medium" | "large";
-  defaultcolor?: "currentColor" | "auto";
-  onClick?: MouseEventHandler<HTMLDivElement>;
+ size?: string;
+ transform?: string;
+ className?: string;
+ children: ReactNode;
+ color?: colorOptions;
+ variant?: "small" | "medium" | "large";
+ defaultcolor?: "currentColor" | "auto";
+ onClick?: MouseEventHandler<HTMLDivElement>;
 }
 
 type ComponentProps = IconProps & SpaceProps;
 // ==============================================================
 
 const Icon = forwardRef<HTMLDivElement, ComponentProps>((props, ref) => {
-  const {
-    children,
-    onClick,
-    variant = "medium",
-    defaultcolor = "currentColor",
-    ...others
-  } = props || {};
+ const {
+  children,
+  onClick,
+  variant = "medium",
+  defaultcolor = "currentColor",
+  ...others
+ } = props || {};
 
-  if (typeof children !== "string") return null;
+ if (typeof children !== "string") return null;
 
-  // return (
-  //   <StyledSvgWrapper ref={ref} variant={variant} defaultcolor={defaultcolor} {...others}>
-  //     <ReactSVG src={`/assets/images/icons/${children}.svg`} />
-  //   </StyledSvgWrapper>
-  // );
-  return (
-    <StyledSvgWrapper
-      ref={ref}
-      variant={variant}
-      defaultcolor={defaultcolor}
-      onClick={onClick} // Attach the onClick handler here
-      {...others}
-    >
-      <ReactSVG src={`/assets/images/icons/${children}.svg`} />
-    </StyledSvgWrapper>
-  );
-  
+ // return (
+ //   <StyledSvgWrapper ref={ref} variant={variant} defaultcolor={defaultcolor} {...others}>
+ //     <ReactSVG src={`/assets/images/icons/${children}.svg`} />
+ //   </StyledSvgWrapper>
+ // );
+ return (
+  <StyledSvgWrapper
+   ref={ref}
+   variant={variant}
+   defaultcolor={defaultcolor}
+   onClick={onClick} // Attach the onClick handler here
+   {...others}
+  >
+   <ReactSVG src={`/assets/images/icons/${children}.svg`} />
+  </StyledSvgWrapper>
+ );
 });
 
 export default Icon;

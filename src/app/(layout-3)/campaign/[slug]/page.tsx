@@ -33,30 +33,30 @@ import { Suspense } from "react";
 import Campaign from "./campaign";
 
 interface Props {
-  params: { slug: string };
+ params: { slug: string };
 }
 
 // Wrapper component to handle Suspense for useSearchParams
 function CampaignContent({ params }: Props) {
-  const { slug } = params;
+ const { slug } = params;
 
-  return (
-    <Box pt="20px">
-      <Campaign sortOptions={sortOptions} slug={slug} />
-    </Box>
-  );
+ return (
+  <Box pt="20px">
+   <Campaign sortOptions={sortOptions} slug={slug} />
+  </Box>
+ );
 }
 
 export default function ProductSearchResult({ params }: Props) {
-  return (
-    <Suspense fallback={<Box pt="20px">Loading campaign...</Box>}>
-      <CampaignContent params={params} />
-    </Suspense>
-  );
+ return (
+  <Suspense fallback={<Box pt="20px">Loading campaign...</Box>}>
+   <CampaignContent params={params} />
+  </Suspense>
+ );
 }
 
 const sortOptions = [
-  { label: "Latest", value: "Latest" },
-  { label: "Price Low to High", value: "1" },
-  { label: "Price High to Low", value: "2" },
+ { label: "Latest", value: "Latest" },
+ { label: "Price Low to High", value: "1" },
+ { label: "Price High to Low", value: "2" },
 ];

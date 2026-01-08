@@ -167,120 +167,118 @@ import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_water
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function Checkout() {
-  const { state, dispatch } = useAppContext();
-  const searchParams = useSearchParams();
-  const responseId = searchParams.get("response_id");
-  const [deliveryCharge, setDeliveryCharge] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
+ const { state, dispatch } = useAppContext();
+ const searchParams = useSearchParams();
+ const responseId = searchParams.get("response_id");
+ const [deliveryCharge, setDeliveryCharge] = useState("");
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
+ const [loading, setLoading] = useState(true);
+ const router = useRouter();
 
-  useEffect(() => {
-    if (!authService.isAuthenticated()) {
-      router.push("/login");
-    } else setIsLoggedIn(true);
-  }, [router]);
+ useEffect(() => {
+  if (!authService.isAuthenticated()) {
+   router.push("/login");
+  } else setIsLoggedIn(true);
+ }, [router]);
 
-  // ====== SYNC CART WITH BACKEND ======
-  useEffect(() => {
-    const syncCart = async () => {
-      try {
-        const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
-        if (!localCart.length) return;
+ // ====== SYNC CART WITH BACKEND ======
+ useEffect(() => {
+  const syncCart = async () => {
+   try {
+    const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (!localCart.length) return;
 
-        const response = await fetch(
-          `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ orders: localCart }),
-          }
-        );
-
-        if (!response.ok) {
-          const text = await response.text();
-          console.error("Price check failed:", text);
-          return;
-        }
-
-        const data = await response.json();
-
-        const updatedCart = localCart.map((item: any) => {
-          const updatedItem = data.find(
-            (d: any) => d.product_id === item.productId
-          );
-          if (updatedItem) {
-            const newPrice = parseFloat(updatedItem.price);
-            return {
-              ...item,
-              price: newPrice,
-              discountPrice: item.discountPrice ? newPrice : null,
-            };
-          }
-          return item;
-        });
-
-        // Save updated cart
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
-        sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
-        dispatch({ type: "SET_CART", payload: updatedCart });
-      } catch (error) {
-        console.error("Cart sync failed:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (isLoggedIn) syncCart();
-  }, [isLoggedIn, dispatch]);
-
-  if (!isLoggedIn || loading) return null;
-
-  const getTotalPrice = () =>
-    state.cart.reduce(
-      (acc, item) => acc + (item.discountPrice ?? item.price) * item.qty,
-      0
+    const response = await fetch(
+     `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
+     {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orders: localCart }),
+     }
     );
 
-  return (
-    <>
-      <NextImage
-        alt="watermark"
-        src={tizaraa_watermark}
-        priority
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -25%)",
-          width: "100%",
-          height: "auto",
-          maxWidth: "1200px",
-          opacity: 0.1,
-          zIndex: 0,
-        }}
-      />
-      <main style={{ position: "relative", background: "none" }}>
-        <Grid container flexWrap="wrap-reverse" spacing={6}>
-          <Grid item lg={8} md={8} xs={12}>
-            {responseId ? (
-              <RfqCheckoutForm responseId={Number(responseId)} />
-            ) : (
-              <CheckoutForm
-                setDeliveryCharge={setDeliveryCharge}
-                totalPrice={getTotalPrice()}
-              />
-            )}
-          </Grid>
-          <Grid item lg={4} md={4} xs={12}>
-            {responseId ? (
-              <RfqCheckoutSummary responseId={Number(responseId)} />
-            ) : (
-              <CheckoutSummary deliveryCharge={deliveryCharge} />
-            )}
-          </Grid>
-        </Grid>
-      </main>
-    </>
+    if (!response.ok) {
+     const text = await response.text();
+     console.error("Price check failed:", text);
+     return;
+    }
+
+    const data = await response.json();
+
+    const updatedCart = localCart.map((item: any) => {
+     const updatedItem = data.find((d: any) => d.product_id === item.productId);
+     if (updatedItem) {
+      const newPrice = parseFloat(updatedItem.price);
+      return {
+       ...item,
+       price: newPrice,
+       discountPrice: item.discountPrice ? newPrice : null,
+      };
+     }
+     return item;
+    });
+
+    // Save updated cart
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
+    dispatch({ type: "SET_CART", payload: updatedCart });
+   } catch (error) {
+    console.error("Cart sync failed:", error);
+   } finally {
+    setLoading(false);
+   }
+  };
+
+  if (isLoggedIn) syncCart();
+ }, [isLoggedIn, dispatch]);
+
+ if (!isLoggedIn || loading) return null;
+
+ const getTotalPrice = () =>
+  state.cart.reduce(
+   (acc, item) => acc + (item.discountPrice ?? item.price) * item.qty,
+   0
   );
+
+ return (
+  <>
+   <NextImage
+    alt="watermark"
+    src={tizaraa_watermark}
+    priority
+    style={{
+     position: "fixed",
+     top: "50%",
+     left: "50%",
+     transform: "translate(-50%, -25%)",
+     width: "100%",
+     height: "auto",
+     maxWidth: "1200px",
+     opacity: 0.1,
+     zIndex: 0,
+    }}
+   />
+   <main style={{ position: "relative", background: "none" }}>
+    <Grid container flexWrap="wrap-reverse" spacing={6}>
+     <Grid item lg={8} md={8} xs={12}>
+      {responseId ? (
+       <RfqCheckoutForm responseId={Number(responseId)} />
+      ) : (
+       <CheckoutForm
+        setDeliveryCharge={setDeliveryCharge}
+        totalPrice={getTotalPrice()}
+       />
+      )}
+     </Grid>
+     <Grid item lg={4} md={4} xs={12}>
+      {responseId ? (
+       <RfqCheckoutSummary responseId={Number(responseId)} />
+      ) : (
+       <CheckoutSummary deliveryCharge={deliveryCharge} />
+      )}
+     </Grid>
+    </Grid>
+   </main>
+  </>
+ );
 }

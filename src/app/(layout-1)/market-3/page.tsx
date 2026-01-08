@@ -34,84 +34,84 @@ import NextImage from "@component/NextImage";
 import CampaignBanner from "@sections/market-1/CampaignBanner";
 
 export default async function Market3() {
-  const brands = await api.getBrands();
-  const products = await api.getProducts();
-  const serviceList = await api.getServices();
-  const categories = await api.getCategories();
-  const mainCarouselData = await api.getMainCarouselData();
-  const menFashionProducts = await api.getMenFashionProducts();
-  const electronicsProducts = await api.getElectronicsProducts();
-  const womenFashionProducts = await api.getWomenFashionProducts();
+ const brands = await api.getBrands();
+ const products = await api.getProducts();
+ const serviceList = await api.getServices();
+ const categories = await api.getCategories();
+ const mainCarouselData = await api.getMainCarouselData();
+ const menFashionProducts = await api.getMenFashionProducts();
+ const electronicsProducts = await api.getElectronicsProducts();
+ const womenFashionProducts = await api.getWomenFashionProducts();
 
-  return (
-    <Fragment>
-      {/* NAVBAR AREA */}
-      <Navbar />
+ return (
+  <Fragment>
+   {/* NAVBAR AREA */}
+   <Navbar />
 
-      <Box bg="#F6F6F6">
-        {/* HERO CAROUSEL AREA */}
-        <Section1 carouselData={mainCarouselData} />
+   <Box bg="#F6F6F6">
+    {/* HERO CAROUSEL AREA */}
+    <Section1 carouselData={mainCarouselData} />
 
-        {/* ======================================= */}
-        {/* Category Section */}
-        {/* ======================================= */}
-        <Section10 />
+    {/* ======================================= */}
+    {/* Category Section */}
+    {/* ======================================= */}
+    <Section10 />
 
-        {/* ======================================= */}
-        {/* Campaign Section Banner */}
-        {/* ======================================= */}
-        <CampaignBanner />
+    {/* ======================================= */}
+    {/* Campaign Section Banner */}
+    {/* ======================================= */}
+    <CampaignBanner />
 
-        {/* ======================================= */}
-        {/* Campaign / Special Deals Section */}
-        {/* ======================================= */}
-        <CampaignProducts />
+    {/* ======================================= */}
+    {/* Campaign / Special Deals Section */}
+    {/* ======================================= */}
+    <CampaignProducts />
 
-        {/* ======================================= */}
-        {/* New Arrivals Section Banner */}
-        {/* ======================================= */}
-        <Section8 />
+    {/* ======================================= */}
+    {/* New Arrivals Section Banner */}
+    {/* ======================================= */}
+    <Section8 />
 
-        {/* ======================================= */}
-        {/* New Arrivals Section */}
-        {/* ======================================= */}
-        <NewArrivalsProduct />
+    {/* ======================================= */}
+    {/* New Arrivals Section */}
+    {/* ======================================= */}
+    <NewArrivalsProduct />
 
-        {/* ======================================= */}
-        {/* Flash Sale Banner */}
-        {/* ======================================= */}
-        <FlashSaleBanner />
+    {/* ======================================= */}
+    {/* Flash Sale Banner */}
+    {/* ======================================= */}
+    <FlashSaleBanner />
 
-        {/* ======================================= */}
-        {/* Flash Sale Products */}
-        {/* ======================================= */}
-        <FlashSaleProducts />
+    {/* ======================================= */}
+    {/* Flash Sale Products */}
+    {/* ======================================= */}
+    <FlashSaleProducts />
 
-        {/* ======================================= */}
-        {/* OTC Products */}
-        {/* ======================================= */}
-        <OTCProducts />
+    {/* ======================================= */}
+    {/* OTC Products */}
+    {/* ======================================= */}
+    <OTCProducts />
 
-        {/* ======================================= */}
-        {/* Grocery Products */}
-        {/* ======================================= */}
-        <GroceryProducts />
+    {/* ======================================= */}
+    {/* Grocery Products */}
+    {/* ======================================= */}
+    <GroceryProducts />
 
-        {/* ======================================= */}
-        {/* Stationery Products */}
-        {/* ======================================= */}
-        <StationeryProducts />
+    {/* ======================================= */}
+    {/* Stationery Products */}
+    {/* ======================================= */}
+    <StationeryProducts />
 
-        {/* ======================================= */}
-        {/* Just For You Products */}
-        {/* ======================================= */}
-        <JustForYouProducts />
+    {/* ======================================= */}
+    {/* Just For You Products */}
+    {/* ======================================= */}
+    <JustForYouProducts />
 
-        {/* ======================================= */}
-        {/* Find products by country */}
-        {/* ======================================= */}
-        <Section12 />
-      </Box>
-    </Fragment>
-  );
+    {/* ======================================= */}
+    {/* Find products by country */}
+    {/* ======================================= */}
+    <Section12 />
+   </Box>
+  </Fragment>
+ );
 }

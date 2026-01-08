@@ -9,38 +9,39 @@ import StyledNavLink from "./styles";
 
 // ==============================================================
 interface NavLinkProps extends SpaceProps, ColorProps {
-  as?: string;
-  href: string;
-  className?: string;
-  children: ReactNode;
-  style?: CSSProperties;
+ as?: string;
+ href: string;
+ className?: string;
+ children: ReactNode;
+ style?: CSSProperties;
 }
 // ==============================================================
 
 export default function NavLink({
-  as,
-  href,
-  style,
-  children,
-  className,
-  ...props
+ as,
+ href,
+ style,
+ children,
+ className,
+ ...props
 }: NavLinkProps & AnchorHTMLAttributes<HTMLAnchorElement>) {
-  let pathname = usePathname();
+ let pathname = usePathname();
 
-  const checkRouteMatch = () => {
-    if (href === "/") return pathname === href;
-    return pathname?.includes(href);
-  };
+ const checkRouteMatch = () => {
+  if (href === "/") return pathname === href;
+  return pathname?.includes(href);
+ };
 
-  return (
-    <Link href={href}>
-      <StyledNavLink
-        style={style}
-        className={className}
-        isCurrentRoute={checkRouteMatch()}
-        {...props}>
-        {children}
-      </StyledNavLink>
-    </Link>
-  );
+ return (
+  <Link href={href}>
+   <StyledNavLink
+    style={style}
+    className={className}
+    isCurrentRoute={checkRouteMatch()}
+    {...props}
+   >
+    {children}
+   </StyledNavLink>
+  </Link>
+ );
 }

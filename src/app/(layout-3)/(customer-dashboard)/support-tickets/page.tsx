@@ -16,49 +16,49 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { SupportPagination } from "@sections/customer-dashboard/support-ticket";
 
 export default async function TicketList() {
-  const ticketList = await api.getTicketList();
+ const ticketList = await api.getTicketList();
 
-  return (
-    <Fragment>
-      <DashboardPageHeader title="Support Ticket" iconName="support" />
+ return (
+  <Fragment>
+   <DashboardPageHeader title="Support Ticket" iconName="support" />
 
-      {ticketList.map((item) => (
-        <Link href={`/support-tickets/${item.slug}`} key={item.id}>
-          <TableRow my="1rem" padding="15px 24px">
-            <div>
-              <span>{item.title}</span>
+   {ticketList.map((item) => (
+    <Link href={`/support-tickets/${item.slug}`} key={item.id}>
+     <TableRow my="1rem" padding="15px 24px">
+      <div>
+       <span>{item.title}</span>
 
-              <FlexBox alignItems="center" flexWrap="wrap" pt="0.5rem" m="-6px">
-                <Chip p="0.25rem 1rem" bg="primary.light" m="6px">
-                  <Small color="primary.main">{item.type}</Small>
-                </Chip>
+       <FlexBox alignItems="center" flexWrap="wrap" pt="0.5rem" m="-6px">
+        <Chip p="0.25rem 1rem" bg="primary.light" m="6px">
+         <Small color="primary.main">{item.type}</Small>
+        </Chip>
 
-                <Chip p="0.25rem 1rem" bg="success.light" m="6px">
-                  <Small color="success.main">{item.status}</Small>
-                </Chip>
+        <Chip p="0.25rem 1rem" bg="success.light" m="6px">
+         <Small color="success.main">{item.status}</Small>
+        </Chip>
 
-                <SemiSpan className="pre" m="6px">
-                  {format(new Date(item.date), "MMM dd, yyyy")}
-                </SemiSpan>
+        <SemiSpan className="pre" m="6px">
+         {format(new Date(item.date), "MMM dd, yyyy")}
+        </SemiSpan>
 
-                <SemiSpan m="6px">{item.category}</SemiSpan>
-              </FlexBox>
-            </div>
+        <SemiSpan m="6px">{item.category}</SemiSpan>
+       </FlexBox>
+      </div>
 
-            <Hidden flex="0 0 0 !important" down={769}>
-              <Typography textAlign="center" color="text.muted">
-                <IconButton>
-                  <Icon variant="small" defaultcolor="currentColor">
-                    arrow-right
-                  </Icon>
-                </IconButton>
-              </Typography>
-            </Hidden>
-          </TableRow>
-        </Link>
-      ))}
+      <Hidden flex="0 0 0 !important" down={769}>
+       <Typography textAlign="center" color="text.muted">
+        <IconButton>
+         <Icon variant="small" defaultcolor="currentColor">
+          arrow-right
+         </Icon>
+        </IconButton>
+       </Typography>
+      </Hidden>
+     </TableRow>
+    </Link>
+   ))}
 
-      <SupportPagination ticketList={ticketList} />
-    </Fragment>
-  );
+   <SupportPagination ticketList={ticketList} />
+  </Fragment>
+ );
 }

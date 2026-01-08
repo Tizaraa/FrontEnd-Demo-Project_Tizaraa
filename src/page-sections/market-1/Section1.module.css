@@ -1,27 +1,26 @@
 /* Section1.module.css */
 .carouselContainer {
-    position: relative;
-    width: 100%;
-    max-width: 1200px; /* Adjust as needed */
-    margin: 0 auto;
-  }
-  
-  .carouselImage {
-    width: 100%;
-    height: auto; /* Maintain aspect ratio */
-    object-fit: cover; /* Ensure image covers the area without distortion */
-  }
-  
-  .carouselCard {
-    padding: 1rem; /* Adjust spacing within carousel cards */
-  }
-  
-  .carouselTitle {
-    font-size: 1.5rem; /* Adjust title size */
-    margin: 0.5rem 0; /* Adjust margin for spacing */
-  }
-  
-  .carouselDescription {
-    font-size: 1rem; /* Adjust description size */
-  }
-  
+ position: relative;
+ width: 100%;
+ max-width: 1200px; /* Adjust as needed */
+ margin: 0 auto;
+}
+
+.carouselImage {
+ width: 100%;
+ height: auto; /* Maintain aspect ratio */
+ object-fit: cover; /* Ensure image covers the area without distortion */
+}
+
+.carouselCard {
+ padding: 1rem; /* Adjust spacing within carousel cards */
+}
+
+.carouselTitle {
+ font-size: 1.5rem; /* Adjust title size */
+ margin: 0.5rem 0; /* Adjust margin for spacing */
+}
+
+.carouselDescription {
+ font-size: 1rem; /* Adjust description size */
+}

@@ -15,42 +15,42 @@ import Section7 from "@sections/fashion-3/section-7";
 import Section8 from "@sections/fashion-3/section-8";
 
 export default async function FashionThree() {
-  const blogs = await api.getBlogs();
-  const products = await api.getProducts();
-  const services = await api.getServices();
-  const featureProducts = await api.getFeatureProducts();
-  const mainCarouselData = await api.getMainCarouselData();
+ const blogs = await api.getBlogs();
+ const products = await api.getProducts();
+ const services = await api.getServices();
+ const featureProducts = await api.getFeatureProducts();
+ const mainCarouselData = await api.getMainCarouselData();
 
-  return (
-    <Fragment>
-      {/* NAVBAR AREA */}
-      <Navbar />
+ return (
+  <Fragment>
+   {/* NAVBAR AREA */}
+   <Navbar />
 
-      <Box bg="white" pb="4rem">
-        {/* HERO CAROUSEL AREA */}
-        <Section1 carouselData={mainCarouselData} />
-        
-        {/* MEN AND WOMEN OFFERS AREA */}
-        <Section2 />
-        
-        {/* BEST SELLING PRODUCTS AREA */}
-        <Section3 products={products} />
+   <Box bg="white" pb="4rem">
+    {/* HERO CAROUSEL AREA */}
+    <Section1 carouselData={mainCarouselData} />
 
-        {/* TOP CATEGORIES AREA */}
-        <Section4 />
+    {/* MEN AND WOMEN OFFERS AREA */}
+    <Section2 />
 
-        {/* SALE OFFER BANNERS AREA */}
-        <Section5 />
+    {/* BEST SELLING PRODUCTS AREA */}
+    <Section3 products={products} />
 
-        {/* FEATURED PRODUCTS AREA */}
-        <Section6 products={featureProducts} />
+    {/* TOP CATEGORIES AREA */}
+    <Section4 />
 
-        {/* SERVICE LIST AREA */}
-        <Section7 services={services} />
+    {/* SALE OFFER BANNERS AREA */}
+    <Section5 />
 
-        {/* BLOG LIST AREA */}
-        <Section8 blogs={blogs} />
-      </Box>
-    </Fragment>
-  );
+    {/* FEATURED PRODUCTS AREA */}
+    <Section6 products={featureProducts} />
+
+    {/* SERVICE LIST AREA */}
+    <Section7 services={services} />
+
+    {/* BLOG LIST AREA */}
+    <Section8 blogs={blogs} />
+   </Box>
+  </Fragment>
+ );
 }

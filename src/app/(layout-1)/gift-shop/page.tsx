@@ -16,43 +16,43 @@ import ContentBox from "@sections/gift-shop/content-box";
 import Category from "@models/category.model";
 
 export default async function GiftShop() {
-  const allProducts = await api.getAllProducts();
-  const serviceList = await api.getServiceList();
-  const topCategories = await api.getTopCategories();
-  const carouselData = await api.getMainCarouselData();
-  const popularProducts = await api.getPopularProducts();
-  const topSailedProducts = await api.getTopSailedProducts();
-  const categoryNavigation = await api.getCategoryNavigation();
+ const allProducts = await api.getAllProducts();
+ const serviceList = await api.getServiceList();
+ const topCategories = await api.getTopCategories();
+ const carouselData = await api.getMainCarouselData();
+ const popularProducts = await api.getPopularProducts();
+ const topSailedProducts = await api.getTopSailedProducts();
+ const categoryNavigation = await api.getCategoryNavigation();
 
-  return (
-    <Fragment>
-      {/* NAVBAR AREA */}
-      <Navbar />
+ return (
+  <Fragment>
+   {/* NAVBAR AREA */}
+   <Navbar />
 
-      {/* HERO CAROUSEL AREA */}
-      <Section1 carouselData={carouselData} />
+   {/* HERO CAROUSEL AREA */}
+   <Section1 carouselData={carouselData} />
 
-      <Container>
-        <ContentBox categoryNavigation={categoryNavigation}>
-          {/* SERVICES AREA */}
-          <Section2 services={serviceList} />
+   <Container>
+    <ContentBox categoryNavigation={categoryNavigation}>
+     {/* SERVICES AREA */}
+     <Section2 services={serviceList} />
 
-          {/* DISCOUNT BANNER AREA */}
-          <Section3 />
+     {/* DISCOUNT BANNER AREA */}
+     <Section3 />
 
-          {/* TOP CATEGORIES AREA */}
-          <Section4 categoryList={topCategories as Category[]} />
-        </ContentBox>
+     {/* TOP CATEGORIES AREA */}
+     <Section4 categoryList={topCategories as Category[]} />
+    </ContentBox>
 
-        {/* POPULAR PRODUCTS AREA */}
-        <Section5 products={popularProducts} title="Popular Items" />
+    {/* POPULAR PRODUCTS AREA */}
+    <Section5 products={popularProducts} title="Popular Items" />
 
-        {/* TOP SALE PRODUCTS AREA */}
-        <Section5 products={topSailedProducts} title="Top Sale Items" />
+    {/* TOP SALE PRODUCTS AREA */}
+    <Section5 products={topSailedProducts} title="Top Sale Items" />
 
-        {/* ALL PRODUCTS AREA */}
-        <Section6 products={allProducts} />
-      </Container>
-    </Fragment>
-  );
+    {/* ALL PRODUCTS AREA */}
+    <Section6 products={allProducts} />
+   </Container>
+  </Fragment>
+ );
 }

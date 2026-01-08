@@ -23,158 +23,166 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 // ==============================================================
 // Define the structure of Suggestion and Category
 interface Suggestion {
-  href: string;
-  title: string;
-  imgUrl: string;
+ href: string;
+ title: string;
+ imgUrl: string;
 }
 
 interface Category {
-  title: string;
-  href: string;
-  icon?: string;
-  menuComponent?: string;
-  menuData?: {
-    categories?: any[];
-  };
+ title: string;
+ href: string;
+ icon?: string;
+ menuComponent?: string;
+ menuData?: {
+  categories?: any[];
+ };
 }
 // ==============================================================
 
 export default function MobileCategoryNav() {
-  const width = useWindowSize();
-  const [navigations, setNavigations] = useState<Category[]>([]);
-  const [category, setCategory] = useState<Category | null>(null);
-  const [subCategoryList, setSubCategoryList] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+ const width = useWindowSize();
+ const [navigations, setNavigations] = useState<Category[]>([]);
+ const [category, setCategory] = useState<Category | null>(null);
+ const [subCategoryList, setSubCategoryList] = useState<any[]>([]);
+ const [loading, setLoading] = useState(true);
+ const [error, setError] = useState<string | null>(null);
 
-  const handleCategoryClick = (cat: any) => () => {
-    let menuData = cat.menuData;
+ const handleCategoryClick = (cat: any) => () => {
+  let menuData = cat.menuData;
 
-    // Check if menuData has a 'categories' field
-    if (Array.isArray(menuData?.categories)) {
-      setSubCategoryList(menuData.categories);
-    }
-    // Check if menuData is an array itself
-    else if (Array.isArray(menuData)) {
-      setSubCategoryList(menuData);
-    }
-    // Set an empty array if no valid data is found
-    else {
-      setSubCategoryList([]);
+  // Check if menuData has a 'categories' field
+  if (Array.isArray(menuData?.categories)) {
+   setSubCategoryList(menuData.categories);
+  }
+  // Check if menuData is an array itself
+  else if (Array.isArray(menuData)) {
+   setSubCategoryList(menuData);
+  }
+  // Set an empty array if no valid data is found
+  else {
+   setSubCategoryList([]);
+  }
+
+  setCategory(cat);
+ };
+
+ useEffect(() => {
+  const fetchNavigations = async () => {
+   try {
+    // Check localStorage for cached data
+    const cachedData = localStorage.getItem("navigations");
+    if (cachedData) {
+     const parsedData = JSON.parse(cachedData);
+     setNavigations(parsedData);
+     setCategory(parsedData[0]);
+     setSubCategoryList(parsedData[0]?.menuData?.categories || []);
+     setLoading(false);
+     return;
     }
 
-    setCategory(cat);
+    // Fetch from API if no cached data
+    const response = await fetch(`${ApiBaseUrl.baseUrl}categories`);
+    if (!response.ok) {
+     throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    setNavigations(data);
+
+    // Cache data in localStorage
+    localStorage.setItem("navigations", JSON.stringify(data));
+
+    // Automatically select the first category if available
+    if (data.length > 0) {
+     setCategory(data[0]);
+     setSubCategoryList(data[0]?.menuData?.categories || []);
+    }
+   } catch (error: any) {
+    setError(error.message);
+   } finally {
+    setLoading(false);
+   }
   };
 
-  useEffect(() => {
-    const fetchNavigations = async () => {
-      try {
-        // Check localStorage for cached data
-        const cachedData = localStorage.getItem("navigations");
-        if (cachedData) {
-          const parsedData = JSON.parse(cachedData);
-          setNavigations(parsedData);
-          setCategory(parsedData[0]);
-          setSubCategoryList(parsedData[0]?.menuData?.categories || []);
-          setLoading(false);
-          return;
-        }
+  fetchNavigations();
+ }, []);
 
-        // Fetch from API if no cached data
-        const response = await fetch(`${ApiBaseUrl.baseUrl}categories`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setNavigations(data);
+ // HIDDEN IN LARGE DEVICE
+ if (width > 900) return null;
 
-        // Cache data in localStorage
-        localStorage.setItem("navigations", JSON.stringify(data));
+ return (
+  <MobileCategoryNavStyle>
+   <Header className="header" />
 
-        // Automatically select the first category if available
-        if (data.length > 0) {
-          setCategory(data[0]);
-          setSubCategoryList(data[0]?.menuData?.categories || []);
-        }
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+   <div className="main-category-holder">
+    <Scrollbar>
+     {navigations.map((item) => (
+      <div
+       key={item.title}
+       className={clsx({
+        "main-category-box": true,
+        active: category?.href === item.href,
+       })}
+       onClick={handleCategoryClick(item)}
+      >
+       <Icon size="28px" mb="0.5rem">
+        {item.icon}
+       </Icon>
 
-    fetchNavigations();
-  }, []);
+       <Typography
+        className="ellipsis"
+        textAlign="center"
+        fontSize="11px"
+        lineHeight="1"
+       >
+        {item.title}
+       </Typography>
+      </div>
+     ))}
+    </Scrollbar>
+   </div>
 
-  // HIDDEN IN LARGE DEVICE
-  if (width > 900) return null;
+   <div className="container">
+    {category?.menuComponent === "MegaMenu1" ? (
+     subCategoryList.map((item, ind) => (
+      <Fragment key={ind}>
+       <Divider />
+       <Accordion>
+        <AccordionHeader px="0px" py="10px">
+         <Typography fontWeight="600" fontSize="15px">
+          {item.title}
+         </Typography>
+        </AccordionHeader>
 
-  return (
-    <MobileCategoryNavStyle>
-      <Header className="header" />
-
-      <div className="main-category-holder">
-        <Scrollbar>
-          {navigations.map((item) => (
-            <div
-              key={item.title}
-              className={clsx({ "main-category-box": true, active: category?.href === item.href })}
-              onClick={handleCategoryClick(item)}
-            >
-              <Icon size="28px" mb="0.5rem">
-                {item.icon}
-              </Icon>
-
-              <Typography className="ellipsis" textAlign="center" fontSize="11px" lineHeight="1">
-                {item.title}
-              </Typography>
-            </div>
+        <Box mb="2rem" mt="0.5rem">
+         <Grid container spacing={3}>
+          {item.subCategories?.map((subItem: any, ind: number) => (
+           <Grid item lg={1} md={2} sm={3} xs={4} key={ind}>
+            <Link href={`/category/${subItem.href}`}>
+             <MobileCategoryImageBox {...subItem} />
+            </Link>
+           </Grid>
           ))}
-        </Scrollbar>
-      </div>
+         </Grid>
+        </Box>
+       </Accordion>
+      </Fragment>
+     ))
+    ) : (
+     <Box mb="2rem">
+      <Grid container spacing={3}>
+       {subCategoryList.map((item, ind) => (
+        <Grid item lg={1} md={2} sm={3} xs={4} key={ind}>
+         <Link href={`/category/${item.href}`}>
+          <MobileCategoryImageBox {...item} />
+         </Link>
+        </Grid>
+       ))}
+      </Grid>
+     </Box>
+    )}
+   </div>
 
-      <div className="container">
-        {category?.menuComponent === "MegaMenu1" ? (
-          subCategoryList.map((item, ind) => (
-            <Fragment key={ind}>
-              <Divider />
-              <Accordion>
-                <AccordionHeader px="0px" py="10px">
-                  <Typography fontWeight="600" fontSize="15px">
-                    {item.title}
-                  </Typography>
-                </AccordionHeader>
-
-                <Box mb="2rem" mt="0.5rem">
-                  <Grid container spacing={3}>
-                    {item.subCategories?.map((subItem: any, ind: number) => (
-                      <Grid item lg={1} md={2} sm={3} xs={4} key={ind}>
-                        <Link href={`/category/${subItem.href}`}>
-                          <MobileCategoryImageBox {...subItem} />
-                        </Link>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Box>
-              </Accordion>
-            </Fragment>
-          ))
-        ) : (
-          <Box mb="2rem">
-            <Grid container spacing={3}>
-              {subCategoryList.map((item, ind) => (
-                <Grid item lg={1} md={2} sm={3} xs={4} key={ind}>
-                  <Link href={`/category/${item.href}`}>
-                    <MobileCategoryImageBox {...item} />
-                  </Link>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        )}
-      </div>
-
-      <MobileNavigationBar />
-    </MobileCategoryNavStyle>
-  );
+   <MobileNavigationBar />
+  </MobileCategoryNavStyle>
+ );
 }

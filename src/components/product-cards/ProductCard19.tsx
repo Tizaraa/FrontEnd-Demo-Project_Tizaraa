@@ -19,131 +19,160 @@ import { theme } from "@utils/theme";
 
 // styled components
 const CardBox = styled(Box)({
-  borderRadius: "3px",
-  transition: "all 0.3s",
-  backgroundColor: "white",
-  border: `1px solid ${theme.colors.gray[100]}`,
-  "&:hover": {
-    border: "1px solid #000",
-    "& .product-actions": { right: 5 },
-    "& .product-img": { transform: "scale(1.1)" }
-  }
+ borderRadius: "3px",
+ transition: "all 0.3s",
+ backgroundColor: "white",
+ border: `1px solid ${theme.colors.gray[100]}`,
+ "&:hover": {
+  border: "1px solid #000",
+  "& .product-actions": { right: 5 },
+  "& .product-img": { transform: "scale(1.1)" },
+ },
 });
 
 const CardMedia = styled(Box)({
-  width: "100%",
-  maxHeight: 300,
-  cursor: "pointer",
-  overflow: "hidden",
-  position: "relative",
-  "& .product-img": { transition: "0.3s" }
+ width: "100%",
+ maxHeight: 300,
+ cursor: "pointer",
+ overflow: "hidden",
+ position: "relative",
+ "& .product-img": { transition: "0.3s" },
 });
 
 const AddToCartButton = styled(IconButton)({
-  top: 10,
-  right: -40,
-  position: "absolute",
-  transition: "right 0.3s .1s",
-  background: "transparent"
+ top: 10,
+ right: -40,
+ position: "absolute",
+ transition: "right 0.3s .1s",
+ background: "transparent",
 });
 
 const FavoriteButton = styled(IconButton)({
-  top: 45,
-  right: -40,
-  position: "absolute",
-  background: "transparent",
-  transition: "right 0.3s .2s"
+ top: 45,
+ right: -40,
+ position: "absolute",
+ background: "transparent",
+ transition: "right 0.3s .2s",
 });
 
 // ==============================================================
 type ProductCard19Props = {
-  img: string;
-  name: string;
-  slug: string;
-  price: number;
-  productStock: number;
-  reviews: number;
-  images: string[];
-  id: string | number;
-  productId: string | number;
-  sellerId: string | number;
+ img: string;
+ name: string;
+ slug: string;
+ price: number;
+ productStock: number;
+ reviews: number;
+ images: string[];
+ id: string | number;
+ productId: string | number;
+ sellerId: string | number;
 };
 // ==============================================================
 
 export default function ProductCard19(props: ProductCard19Props) {
-  const { img, name, price, productStock, reviews, id, slug, images, productId, sellerId } = props;
+ const {
+  img,
+  name,
+  price,
+  productStock,
+  reviews,
+  id,
+  slug,
+  images,
+  productId,
+  sellerId,
+ } = props;
 
-  const { state, dispatch } = useAppContext();
-  const [openDialog, setOpenDialog] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+ const { state, dispatch } = useAppContext();
+ const [openDialog, setOpenDialog] = useState(false);
+ const [isFavorite, setIsFavorite] = useState(false);
 
-  const cartItem = state.cart.find((item) => item.slug === slug);
+ const cartItem = state.cart.find((item) => item.slug === slug);
 
-  // handle favorite
-  const handleFavorite = () => setIsFavorite((fav) => !fav);
+ // handle favorite
+ const handleFavorite = () => setIsFavorite((fav) => !fav);
 
-  //   handle modal
-  const toggleDialog = () => setOpenDialog((state) => !state);
+ //   handle modal
+ const toggleDialog = () => setOpenDialog((state) => !state);
 
-  // handle add to cart
-  const handleAddToCart = () => {
-    const payload = {
-      id,
-      slug,
-      name,
-      price,
-      productStock,
-      imgUrl: img,
-      qty: (cartItem?.qty || 0) + 1,
-      productId, 
-      sellerId
-    };
-
-    dispatch({ type: "CHANGE_CART_AMOUNT", payload });
+ // handle add to cart
+ const handleAddToCart = () => {
+  const payload = {
+   id,
+   slug,
+   name,
+   price,
+   productStock,
+   imgUrl: img,
+   qty: (cartItem?.qty || 0) + 1,
+   productId,
+   sellerId,
   };
 
-  return (
-    <Fragment>
-      <CardBox height="100%">
-        <CardMedia>
-          <Link href={`/product/${slug}`}>
-            <NextImage src={img} width={300} height={300} alt="category" className="product-img" />
-          </Link>
+  dispatch({ type: "CHANGE_CART_AMOUNT", payload });
+ };
 
-          <AddToCartButton className="product-actions" onClick={() => setOpenDialog(true)}>
-            <Icon size="18px">eye</Icon>
-          </AddToCartButton>
+ return (
+  <Fragment>
+   <CardBox height="100%">
+    <CardMedia>
+     <Link href={`/product/${slug}`}>
+      <NextImage
+       src={img}
+       width={300}
+       height={300}
+       alt="category"
+       className="product-img"
+      />
+     </Link>
 
-          <FavoriteButton className="product-actions" onClick={handleFavorite}>
-            {isFavorite ? <Icon size="18px">heart-filled</Icon> : <Icon size="18px">heart</Icon>}
-          </FavoriteButton>
-        </CardMedia>
+     <AddToCartButton
+      className="product-actions"
+      onClick={() => setOpenDialog(true)}
+     >
+      <Icon size="18px">eye</Icon>
+     </AddToCartButton>
 
-        <Box p={2} textAlign="center">
-          <Paragraph>{name}</Paragraph>
-          <H4 fontWeight={700} py=".5rem">
-            {currency(price)}
-          </H4>
+     <FavoriteButton className="product-actions" onClick={handleFavorite}>
+      {isFavorite ? (
+       <Icon size="18px">heart-filled</Icon>
+      ) : (
+       <Icon size="18px">heart</Icon>
+      )}
+     </FavoriteButton>
+    </CardMedia>
 
-          <FlexBox justifyContent="center" alignItems="center" mb="1rem">
-            <Rating value={4} color="warn" size="small" />
-            <Small fontWeight={600} color="gray.500" ml=".3rem">
-              ({reviews})
-            </Small>
-          </FlexBox>
+    <Box p={2} textAlign="center">
+     <Paragraph>{name}</Paragraph>
+     <H4 fontWeight={700} py=".5rem">
+      {currency(price)}
+     </H4>
 
-          <Button fullwidth color="dark" variant="outlined" onClick={handleAddToCart}>
-            Add To Cart
-          </Button>
-        </Box>
-      </CardBox>
+     <FlexBox justifyContent="center" alignItems="center" mb="1rem">
+      <Rating value={4} color="warn" size="small" />
+      <Small fontWeight={600} color="gray.500" ml=".3rem">
+       ({reviews})
+      </Small>
+     </FlexBox>
 
-      {/* QUICK VIEW MODAL */}
-      {/* <ProductQuickView
+     <Button
+      fullwidth
+      color="dark"
+      variant="outlined"
+      onClick={handleAddToCart}
+     >
+      Add To Cart
+     </Button>
+    </Box>
+   </CardBox>
+
+   {/* QUICK VIEW MODAL */}
+   {/* <ProductQuickView
         open={openDialog}
         onClose={toggleDialog}
         product={{ id, imgUrl, price, slug, title: name }}
       /> */}
-    </Fragment>
-  );
+  </Fragment>
+ );
 }

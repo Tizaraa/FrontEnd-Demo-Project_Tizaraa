@@ -67,67 +67,71 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 import Image from "next/image";
 
 interface SubCategoryMenuProps {
-  subCategories: Array<{
-    title: string;
-    href: string;
-    imgUrl: string;  // Added imgUrl to each subcategory
-    subSubCategories?: Array<{ title: string; href: string }>;
-  }>;
+ subCategories: Array<{
+  title: string;
+  href: string;
+  imgUrl: string; // Added imgUrl to each subcategory
+  subSubCategories?: Array<{ title: string; href: string }>;
+ }>;
 }
 
-export default function SubCategoryMenu({ subCategories }: SubCategoryMenuProps) {
-  const [hoveredSubCategory, setHoveredSubCategory] = useState<string | null>(null);
+export default function SubCategoryMenu({
+ subCategories,
+}: SubCategoryMenuProps) {
+ const [hoveredSubCategory, setHoveredSubCategory] = useState<string | null>(
+  null
+ );
 
-  return (
-    <>
-      <Box
-        style={{
-          position: "absolute",  
-          left: "100%",  
-          top: 0,  
-          backgroundColor: "white",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          padding: "8px",
-          minWidth: "645px",  
-          zIndex: 9999,  
-          height: "450px",
-        //  display: "grid",  
-        //  gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", 
-        //  overflowY: "auto",
-        //  gap: "16px"
-        }}
+ return (
+  <>
+   <Box
+    style={{
+     position: "absolute",
+     left: "100%",
+     top: 0,
+     backgroundColor: "white",
+     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+     padding: "8px",
+     minWidth: "645px",
+     zIndex: 9999,
+     height: "450px",
+     //  display: "grid",
+     //  gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
+     //  overflowY: "auto",
+     //  gap: "16px"
+    }}
+   >
+    <div
+     style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
+      gridAutoRows: "min-content",
+      overflowY: "auto",
+      height: "400px",
+      gap: "16px",
+      justifyItems: "center",
+      alignContent: "start",
+     }}
+    >
+     {subCategories.map((sub, subIndex) => (
+      <div
+       key={subIndex}
+       onMouseEnter={() => setHoveredSubCategory(sub.title)}
+       onMouseLeave={() => setHoveredSubCategory(null)}
+       style={{ position: "relative" }}
       >
-       <div style={{
-         display: "grid",  
-         gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", 
-         gridAutoRows: "min-content",
-         overflowY: "auto",
-         height: "400px",
-         gap: "16px" ,
-         justifyItems: "center",
-         alignContent: "start",
-       }}>
-
-       {subCategories.map((sub, subIndex) => (
-          <div
-            key={subIndex}
-            onMouseEnter={() => setHoveredSubCategory(sub.title)}
-            onMouseLeave={() => setHoveredSubCategory(null)}
-            style={{ position: "relative"}}
-          >
-            <Link href={`/category/${sub.href}`}>
-              <span
-                style={{
-                  display: "flex",
-                  flexDirection: "column",  
-                  alignItems: "center", 
-                  textAlign: "center",    
-                  color: "black",
-                  textDecoration: "none",
-                }}
-              >
-
-                {/* <img 
+       <Link href={`/category/${sub.href}`}>
+        <span
+         style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          color: "black",
+          textDecoration: "none",
+         }}
+        >
+         {/* <img 
                   src={`${ApiBaseUrl.ImgUrl}${sub.imgUrl}`} 
                   alt={sub.title} 
                   style={{
@@ -138,31 +142,28 @@ export default function SubCategoryMenu({ subCategories }: SubCategoryMenuProps)
                   }} 
                 /> */}
 
-                 {/* image cache  */}
-                 <Image
-                  src={`${ApiBaseUrl.ImgUrl}${sub.imgUrl}`}
-                  alt={sub.title}
-                  width={200}
-                  height={200}
-                  objectFit="cover"
-                  style={{
-                    width: "50px",
-                    height: "50px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                />
+         {/* image cache  */}
+         <Image
+          src={`${ApiBaseUrl.ImgUrl}${sub.imgUrl}`}
+          alt={sub.title}
+          width={200}
+          height={200}
+          objectFit="cover"
+          style={{
+           width: "50px",
+           height: "50px",
+           borderRadius: "50%",
+           objectFit: "cover",
+          }}
+         />
 
-
-
-
-                <span>{sub.title}</span>
-              </span>
-            </Link>
-          </div>
-        ))}
-       </div>
-      </Box>
-    </>
-  );
+         <span>{sub.title}</span>
+        </span>
+       </Link>
+      </div>
+     ))}
+    </div>
+   </Box>
+  </>
+ );
 }

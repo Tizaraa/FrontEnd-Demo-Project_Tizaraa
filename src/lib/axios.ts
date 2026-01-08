@@ -4,8 +4,8 @@ import { MockEndPoints } from "__server__";
 
 // Axios instance
 const axiosInstance = axios.create({
-  // baseURL: "http://localhost:3000",
-  // Axios configuration options here
+ // baseURL: "http://localhost:3000",
+ // Axios configuration options here
 });
 
 // Remove following 2 lines if you don't want to use MockAdapter

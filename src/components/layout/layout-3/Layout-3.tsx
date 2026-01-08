@@ -7,9 +7,9 @@ import Container from "@component/Container";
 import Navbar from "@component/navbar/Navbar";
 
 export default function ShopLayout({ children }: PropsWithChildren) {
-  return (
-    <AppLayout navbar={<Navbar />}>
-      <Container my="2rem">{children}</Container>
-    </AppLayout>
-  );
+ return (
+  <AppLayout navbar={<Navbar />}>
+   <Container my="2rem">{children}</Container>
+  </AppLayout>
+ );
 }

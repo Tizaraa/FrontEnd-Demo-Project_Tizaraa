@@ -13,7 +13,6 @@
 //     height: 400px; // Fixed height for the image
 //     overflow: hidden; // Hide any overflowed part of the image
 
-
 //     img {
 //       width: 100%; // Ensure the image width matches the container
 //       height: 100%; // Ensure the image height matches the container
@@ -110,30 +109,30 @@ const StyledCarouselCard1 = styled.div`
 
 // ===============================================
 interface Props {
-  // title: string;
-  image: string;
-  // buttonText: string;
-  // description: string;
+ // title: string;
+ image: string;
+ // buttonText: string;
+ // description: string;
 }
 // ===============================================
 
 export default function CarouselCard1({ image }: Props) {
-  return (
-    <StyledCarouselCard1>
-      <div>
-        {/* <h1 className="title">{title}</h1> */}
-        {/* <Typography color="secondary.main" mb="1.35rem">
+ return (
+  <StyledCarouselCard1>
+   <div>
+    {/* <h1 className="title">{title}</h1> */}
+    {/* <Typography color="secondary.main" mb="1.35rem">
           {description}
         </Typography> */}
 
-        {/* <Button className="button-link" variant="contained" color="primary" p="1rem 1.5rem">
+    {/* <Button className="button-link" variant="contained" color="primary" p="1rem 1.5rem">
           {buttonText}
         </Button> */}
-      </div>
+   </div>
 
-      <div className="image-holder">
-        <img src={image} alt="apple-watch-1" />
-      </div>
-    </StyledCarouselCard1>
-  );
+   <div className="image-holder">
+    <img src={image} alt="apple-watch-1" />
+   </div>
+  </StyledCarouselCard1>
+ );
 }

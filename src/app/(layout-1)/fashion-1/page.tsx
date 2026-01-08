@@ -17,48 +17,48 @@ import Section8 from "@sections/fashion-1/Section8";
 import Section9 from "@sections/fashion-1/Section9";
 
 export default async function FashionOne() {
-  const hotDealList = await api.getHotDealList();
-  const serviceList = await api.getServiceList();
-  const flashDealsData = await api.getFlashDeals();
-  const trendingItems = await api.getTrendingItems();
-  const newArrivalsData = await api.getNewArrivals();
-  const dealOfTheWeek = await api.getDealOfTheWeekList();
+ const hotDealList = await api.getHotDealList();
+ const serviceList = await api.getServiceList();
+ const flashDealsData = await api.getFlashDeals();
+ const trendingItems = await api.getTrendingItems();
+ const newArrivalsData = await api.getNewArrivals();
+ const dealOfTheWeek = await api.getDealOfTheWeekList();
 
-  return (
-    <Fragment>
-      {/* NAVBAR AREA */}
-      <Navbar />
+ return (
+  <Fragment>
+   {/* NAVBAR AREA */}
+   <Navbar />
 
-      <Container my="2rem">
-        {/* DISCOUNT BANNER AREA */}
-        <Section1 />
+   <Container my="2rem">
+    {/* DISCOUNT BANNER AREA */}
+    <Section1 />
 
-        {/* SERVICES AND SPECIAL OFFER AREA */}
-        <Box mb="3.75rem">
-          <Section2 />
-        </Box>
+    {/* SERVICES AND SPECIAL OFFER AREA */}
+    <Box mb="3.75rem">
+     <Section2 />
+    </Box>
 
-        {/* FLASH DEAL PRODUCTS AREA */}
-        <Section3 products={flashDealsData} />
+    {/* FLASH DEAL PRODUCTS AREA */}
+    <Section3 products={flashDealsData} />
 
-        {/* NEW ARRIVAL PRODUCTS AREA */}
-        <Section4 products={newArrivalsData} />
+    {/* NEW ARRIVAL PRODUCTS AREA */}
+    <Section4 products={newArrivalsData} />
 
-        {/* DEALS OF WEEK PRODUCTS AREA */}
-        <Section5 list={dealOfTheWeek} />
+    {/* DEALS OF WEEK PRODUCTS AREA */}
+    <Section5 list={dealOfTheWeek} />
 
-        {/* DEAL OF THE DAY CAROUSEL AREA */}
-        <Section6 list={hotDealList} />
+    {/* DEAL OF THE DAY CAROUSEL AREA */}
+    <Section6 list={hotDealList} />
 
-        {/* TRENDING PRODUCTS AREA */}
-        <Section7 products={trendingItems} />
+    {/* TRENDING PRODUCTS AREA */}
+    <Section7 products={trendingItems} />
 
-        {/* SERVICES AREA */}
-        <Section8 serviceList={serviceList} />
+    {/* SERVICES AREA */}
+    <Section8 serviceList={serviceList} />
 
-        {/* NEWSLETTER AREA */}
-        <Section9 />
-      </Container>
-    </Fragment>
-  );
+    {/* NEWSLETTER AREA */}
+    <Section9 />
+   </Container>
+  </Fragment>
+ );
 }

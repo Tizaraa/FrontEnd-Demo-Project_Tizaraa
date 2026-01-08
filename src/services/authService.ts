@@ -4,118 +4,118 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 import Cookies from "js-cookie"; // Adjust the path as needed
 
 interface LoginResponse {
-  token: string;
-  user: UserInfo;
+ token: string;
+ user: UserInfo;
 }
 
 interface UserInfo {
-  id: number;
-  name: string;
-  email: string;
-  image: string | null; // Image can be null
-  phone: string;
-  status: number;
-  email_verified_at: string | null; // Can be null
-  created_at: string; // ISO date string
-  updated_at: string | null; // Can be null
-  user_vercode: string | null; // Can be null, add if applicable
+ id: number;
+ name: string;
+ email: string;
+ image: string | null; // Image can be null
+ phone: string;
+ status: number;
+ email_verified_at: string | null; // Can be null
+ created_at: string; // ISO date string
+ updated_at: string | null; // Can be null
+ user_vercode: string | null; // Can be null, add if applicable
 }
 
 interface RegisterResponse {
-  message: string;
+ message: string;
 }
 
 const authService = {
-  login: async (values: any): Promise<LoginResponse> => {
-    try {
-      const response = await fetch(`${ApiBaseUrl.baseUrl}login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+ login: async (values: any): Promise<LoginResponse> => {
+  try {
+   const response = await fetch(`${ApiBaseUrl.baseUrl}login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(values),
+   });
 
-      if (!response.ok) throw new Error("Login failed");
+   if (!response.ok) throw new Error("Login failed");
 
-      const data: LoginResponse = await response.json();
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("userInfo", JSON.stringify(data.user)); // Storing userInfo as a JSON string
-      return data;
-    } catch (error) {
-      console.error("Error in login:", error);
-      throw error;
-    }
-  },
+   const data: LoginResponse = await response.json();
+   localStorage.setItem("token", data.token);
+   localStorage.setItem("userInfo", JSON.stringify(data.user)); // Storing userInfo as a JSON string
+   return data;
+  } catch (error) {
+   console.error("Error in login:", error);
+   throw error;
+  }
+ },
 
-  googleLogin: (): void => {
-    // Redirect to the Laravel Google login route
-    window.location.href = `${ApiBaseUrl.baseUrl}login/google`;
-  },
+ googleLogin: (): void => {
+  // Redirect to the Laravel Google login route
+  window.location.href = `${ApiBaseUrl.baseUrl}login/google`;
+ },
 
-  isAuthenticated: (): boolean => {
-    // const token = Cookies.get('token') || localStorage.getItem('token');
-    const token = authService.getToken() || localStorage.getItem("token");
-    return !!token; // Check if token exists
-  },
+ isAuthenticated: (): boolean => {
+  // const token = Cookies.get('token') || localStorage.getItem('token');
+  const token = authService.getToken() || localStorage.getItem("token");
+  return !!token; // Check if token exists
+ },
 
-  logout: (): void => {
-    Cookies.remove("token");
-    localStorage.removeItem("token");
-    localStorage.removeItem("userInfo");
-  },
+ logout: (): void => {
+  Cookies.remove("token");
+  localStorage.removeItem("token");
+  localStorage.removeItem("userInfo");
+ },
 
-  register: async (
-    email: string,
-    password: string
-  ): Promise<RegisterResponse> => {
-    try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+ register: async (
+  email: string,
+  password: string
+ ): Promise<RegisterResponse> => {
+  try {
+   const response = await fetch("/api/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+   });
 
-      if (!response.ok) throw new Error("Registration failed");
+   if (!response.ok) throw new Error("Registration failed");
 
-      const data: RegisterResponse = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error in registration:", error);
-      throw error;
-    }
-  },
+   const data: RegisterResponse = await response.json();
+   return data;
+  } catch (error) {
+   console.error("Error in registration:", error);
+   throw error;
+  }
+ },
 
-  getToken: (): string | null => {
-    return localStorage.getItem("token");
-  },
+ getToken: (): string | null => {
+  return localStorage.getItem("token");
+ },
 
-  getUser: async (): Promise<UserInfo | null> => {
-    const userInfoString = localStorage.getItem("userInfo");
-    if (userInfoString) {
-      const userInfo: UserInfo = JSON.parse(userInfoString);
-      return userInfo;
-    }
+ getUser: async (): Promise<UserInfo | null> => {
+  const userInfoString = localStorage.getItem("userInfo");
+  if (userInfoString) {
+   const userInfo: UserInfo = JSON.parse(userInfoString);
+   return userInfo;
+  }
 
-    // Optionally fetch from API if userInfo is not found in localStorage
-    //     try {
-    //         const response = await fetch("https://frontend.tizaraa.com/api/user", {
-    //             method: "GET",
-    //             headers: {
-    //                 "Authorization": `Bearer ${this.getToken()}`, // Use the stored token
-    //                 "Content-Type": "application/json"
-    //             },
-    //         });
+  // Optionally fetch from API if userInfo is not found in localStorage
+  //     try {
+  //         const response = await fetch("https://frontend.tizaraa.com/api/user", {
+  //             method: "GET",
+  //             headers: {
+  //                 "Authorization": `Bearer ${this.getToken()}`, // Use the stored token
+  //                 "Content-Type": "application/json"
+  //             },
+  //         });
 
-    //         if (!response.ok) throw new Error("Failed to fetch user data");
+  //         if (!response.ok) throw new Error("Failed to fetch user data");
 
-    //         const data: UserInfo = await response.json();
-    //         localStorage.setItem("userInfo", JSON.stringify(data)); // Update localStorage with fetched user info
-    //         return data;
-    //     } catch (error) {
-    //         console.error("Error fetching user info:", error);
-    //         return null;
-    //     }
-    // },
-  },
+  //         const data: UserInfo = await response.json();
+  //         localStorage.setItem("userInfo", JSON.stringify(data)); // Update localStorage with fetched user info
+  //         return data;
+  //     } catch (error) {
+  //         console.error("Error fetching user info:", error);
+  //         return null;
+  //     }
+  // },
+ },
 };
 
 export default authService;

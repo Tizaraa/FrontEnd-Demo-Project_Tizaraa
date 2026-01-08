@@ -56,12 +56,9 @@
 //         {selectedOption === "review" && <ProductReview />}
 //       </Box>
 
-      
 //     </>
 //   );
 // }
-
-
 
 // "use client"
 // import { useState } from "react";
@@ -123,8 +120,6 @@
 //   );
 // }
 
-
-
 "use client";
 import { useState } from "react";
 import Box from "@component/Box";
@@ -134,51 +129,48 @@ import ProductReview from "@component/products/ProductReview";
 import ProductDescription from "@component/products/ProductDescription";
 
 type Props = {
-  description: string;
-  productId: string; 
-  shippingInfo?: React.ReactNode; 
+ description: string;
+ productId: string;
+ shippingInfo?: React.ReactNode;
 };
 
 export default function ProductView({ description, productId }: Props) {
-  const [selectedOption, setSelectedOption] = useState("description");
-  const handleOptionClick = (opt: any) => () => setSelectedOption(opt);
+ const [selectedOption, setSelectedOption] = useState("description");
+ const handleOptionClick = (opt: any) => () => setSelectedOption(opt);
 
-  return (
-    <>
-      <FlexBox borderBottom="1px solid" borderColor="gray.400" mt="80px" mb="26px">
-        <H5
-          mr="25px"
-          p="4px 10px"
-          className="cursor-pointer"
-          borderColor="primary.main"
-          onClick={handleOptionClick("description")}
-          borderBottom={selectedOption === "description" ? "2px solid" : ""}
-          color={selectedOption === "description" ? "primary.main" : "text.muted"}
-        >
-          Description
-        </H5>
+ return (
+  <>
+   <FlexBox borderBottom="1px solid" borderColor="gray.400" mt="80px" mb="26px">
+    <H5
+     mr="25px"
+     p="4px 10px"
+     className="cursor-pointer"
+     borderColor="primary.main"
+     onClick={handleOptionClick("description")}
+     borderBottom={selectedOption === "description" ? "2px solid" : ""}
+     color={selectedOption === "description" ? "primary.main" : "text.muted"}
+    >
+     Description
+    </H5>
 
-        <H5
-          p="4px 10px"
-          className="cursor-pointer"
-          borderColor="primary.main"
-          onClick={handleOptionClick("review")}
-          borderBottom={selectedOption === "review" ? "2px solid" : ""}
-          color={selectedOption === "review" ? "primary.main" : "text.muted"}
-        >
-          Review
-        </H5>
-      </FlexBox>
+    <H5
+     p="4px 10px"
+     className="cursor-pointer"
+     borderColor="primary.main"
+     onClick={handleOptionClick("review")}
+     borderBottom={selectedOption === "review" ? "2px solid" : ""}
+     color={selectedOption === "review" ? "primary.main" : "text.muted"}
+    >
+     Review
+    </H5>
+   </FlexBox>
 
-   
-      <Box mb="50px">
-        {selectedOption === "description" && (
-          <ProductDescription description={description} />
-        )}
-        {selectedOption === "review" && (
-          <ProductReview productId={productId} /> 
-        )}
-      </Box>
-    </>
-  );
+   <Box mb="50px">
+    {selectedOption === "description" && (
+     <ProductDescription description={description} />
+    )}
+    {selectedOption === "review" && <ProductReview productId={productId} />}
+   </Box>
+  </>
+ );
 }

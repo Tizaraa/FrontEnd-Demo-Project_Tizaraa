@@ -12,35 +12,35 @@ import { products as grocery3 } from "../grocery-3/data";
 import { products as furniture } from "../furniture/data";
 import { products as healthBeauty } from "../health-beauty/data";
 import {
-  relatedProducts,
-  frequentlyBoughtData,
+ relatedProducts,
+ frequentlyBoughtData,
 } from "../related-products/data";
 
 // all used products in the bazaar template
 const productList = [
-  ...fashion1,
-  ...fashion2,
-  ...fashion3,
-  ...furniture,
-  ...gadget,
-  ...gift,
-  ...grocery1,
-  ...grocery2,
-  ...grocery3,
-  ...healthBeauty,
-  ...market1,
-  ...market2,
-  ...relatedProducts,
-  ...frequentlyBoughtData,
-  ...dbProducts,
+ ...fashion1,
+ ...fashion2,
+ ...fashion3,
+ ...furniture,
+ ...gadget,
+ ...gift,
+ ...grocery1,
+ ...grocery2,
+ ...grocery3,
+ ...healthBeauty,
+ ...market1,
+ ...market2,
+ ...relatedProducts,
+ ...frequentlyBoughtData,
+ ...dbProducts,
 ];
 
 // get unique products from prouct list
 const uniqueProductMap = new Map();
 productList.forEach((product) => {
-  if (!uniqueProductMap.has(product.slug)) {
-    uniqueProductMap.set(product.slug, product);
-  }
+ if (!uniqueProductMap.has(product.slug)) {
+  uniqueProductMap.set(product.slug, product);
+ }
 });
 const uniqueProudcts = Array.from(uniqueProductMap.values());
 

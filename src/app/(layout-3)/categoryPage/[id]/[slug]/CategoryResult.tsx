@@ -165,53 +165,53 @@ import Loader from "@component/loader";
 // `;
 
 export default function CategoryResult({ categoryid }) {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+ const [products, setProducts] = useState([]);
+ const [loading, setLoading] = useState(true);
+ const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const categoryProductLoad = async () => {
-      try {
-        const response = await axios.post(
-          `${ApiBaseUrl.baseUrl}category/product/${categoryid}`
-        );
-
-        // Console log the result before setting state
-        // console.log("Category Products Data:", response.data.products);
-
-        setProducts(response.data.products);
-        setLoading(false);
-      } catch (error) {
-        setError("Error fetching category products");
-        console.error("Error fetching category products:", error);
-        setLoading(false);
-      }
-    };
-
-    categoryProductLoad();
-  }, [categoryid]);
-
-  if (loading) {
-    return (
-      <Typography>
-      <Loader />
-    </Typography>
+ useEffect(() => {
+  const categoryProductLoad = async () => {
+   try {
+    const response = await axios.post(
+     `${ApiBaseUrl.baseUrl}category/product/${categoryid}`
     );
-  }
 
-  if (error) {
-    return <p>{error}</p>;
-  }
+    // Console log the result before setting state
+    // console.log("Category Products Data:", response.data.products);
 
+    setProducts(response.data.products);
+    setLoading(false);
+   } catch (error) {
+    setError("Error fetching category products");
+    console.error("Error fetching category products:", error);
+    setLoading(false);
+   }
+  };
+
+  categoryProductLoad();
+ }, [categoryid]);
+
+ if (loading) {
   return (
-    <Grid container spacing={6}>
-      {/* <Grid item lg={3} xs={12}>
+   <Typography>
+    <Loader />
+   </Typography>
+  );
+ }
+
+ if (error) {
+  return <p>{error}</p>;
+ }
+
+ return (
+  <Grid container spacing={6}>
+   {/* <Grid item lg={3} xs={12}>
         <ProductFilterCard />
       </Grid> */}
 
-      <Grid item lg={9} xs={12}>
-        <CategoryRelatedProducts products={products} />
-      </Grid>
-    </Grid>
-  );
+   <Grid item lg={9} xs={12}>
+    <CategoryRelatedProducts products={products} />
+   </Grid>
+  </Grid>
+ );
 }

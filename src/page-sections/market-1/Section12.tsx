@@ -64,52 +64,62 @@ import Link from "next/link";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 type Service = {
-  id: number;
-  location: string;
-  image: string; // Image URL
-  location_slug: string; // Added to use in URL
+ id: number;
+ location: string;
+ image: string; // Image URL
+ location_slug: string; // Added to use in URL
 };
 
 export default function Section12() {
-  const [serviceList, setServiceList] = useState<Service[]>([]);
+ const [serviceList, setServiceList] = useState<Service[]>([]);
 
-  // Fetch data from the API
-  useEffect(() => {
-    fetch(`${ApiBaseUrl.baseUrl}product/country/flag`)
-      .then((response) => response.json())
-      .then((data) => {
-        
-        setServiceList(data.country); 
-        // console.log(data.country);
-      })
-      .catch((error) => {
-        console.error("Error fetching service list:", error);
-      });
-  }, []);
+ // Fetch data from the API
+ useEffect(() => {
+  fetch(`${ApiBaseUrl.baseUrl}product/country/flag`)
+   .then((response) => response.json())
+   .then((data) => {
+    setServiceList(data.country);
+    // console.log(data.country);
+   })
+   .catch((error) => {
+    console.error("Error fetching service list:", error);
+   });
+ }, []);
 
-  return (
-    <div style={{ marginTop: '70px' }}>
-      {/* <CategorySectionCreator title="Find products by country or region" seeMoreLink={`countryList/CountryList`}> */}
-      <CategorySectionCreator title="Find products by country" seeMoreLink={`countryList/CountryList`}>
-        <Grid container spacing={0}>
-          {serviceList.length > 0 ? (
-            serviceList.map((item) => (
-              <Grid item lg={2} md={2} sm={4} xs={6} key={item.id} style={{ textAlign: 'center' }}>
-                <Link href={`/country/${encodeURIComponent(item.location_slug)}`}>
-                  <Image src={item.image} alt={item.location} width={100} height={64} />
-                  <H4 mt="10px" mb="5px" textAlign="center">
-                    {item.location}
-                  </H4>
-                </Link>
-              </Grid>
-            ))
-          ) : (
-            <div style={{ textAlign: 'center', width: '100%', padding: '20px' }}>
-              <p>No services available.</p>
-            </div>
-          )}
-        </Grid>
-      </CategorySectionCreator>
-    </div>
-  );
+ return (
+  <div style={{ marginTop: "70px" }}>
+   {/* <CategorySectionCreator title="Find products by country or region" seeMoreLink={`countryList/CountryList`}> */}
+   <CategorySectionCreator
+    title="Find products by country"
+    seeMoreLink={`countryList/CountryList`}
+   >
+    <Grid container spacing={0}>
+     {serviceList.length > 0 ? (
+      serviceList.map((item) => (
+       <Grid
+        item
+        lg={2}
+        md={2}
+        sm={4}
+        xs={6}
+        key={item.id}
+        style={{ textAlign: "center" }}
+       >
+        <Link href={`/country/${encodeURIComponent(item.location_slug)}`}>
+         <Image src={item.image} alt={item.location} width={100} height={64} />
+         <H4 mt="10px" mb="5px" textAlign="center">
+          {item.location}
+         </H4>
+        </Link>
+       </Grid>
+      ))
+     ) : (
+      <div style={{ textAlign: "center", width: "100%", padding: "20px" }}>
+       <p>No services available.</p>
+      </div>
+     )}
+    </Grid>
+   </CategorySectionCreator>
+  </div>
+ );
 }

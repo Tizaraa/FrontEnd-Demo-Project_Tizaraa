@@ -11,39 +11,39 @@ import SaleProducts from "@sections/sale-page-1/SaleProducts";
 import { SearchParams } from "interfaces";
 
 export default async function SalePage({ searchParams }: SearchParams) {
-  const PAGE_SIZE = 28;
-  const PAGE = searchParams?.page ? Number(searchParams.page) : 1;
+ const PAGE_SIZE = 28;
+ const PAGE = searchParams?.page ? Number(searchParams.page) : 1;
 
-  const { data } = await axios.get("/api/products", {
-    params: { page: PAGE, pageSize: PAGE_SIZE }
-  });
+ const { data } = await axios.get("/api/products", {
+  params: { page: PAGE, pageSize: PAGE_SIZE },
+ });
 
-  const saleCategoryList = [
-    { icon: "women-dress", title: "Women" },
-    { icon: "beauty-products", title: "Cosmetics" },
-    { icon: "camera", title: "Electronics" },
-    { icon: "sofa", title: "Furniture" }
-  ];
+ const saleCategoryList = [
+  { icon: "women-dress", title: "Women" },
+  { icon: "beauty-products", title: "Cosmetics" },
+  { icon: "camera", title: "Electronics" },
+  { icon: "sofa", title: "Furniture" },
+ ];
 
-  return (
-    <Container mt="2rem">
-      <SaleNavbar saleCategoryList={saleCategoryList} />
+ return (
+  <Container mt="2rem">
+   <SaleNavbar saleCategoryList={saleCategoryList} />
 
-      <div>
-        <FlexBox mb="2rem" flexWrap="wrap">
-          <H1 color="primary.main" mr="0.5rem" lineHeight="1">
-            Flash Deals,
-          </H1>
+   <div>
+    <FlexBox mb="2rem" flexWrap="wrap">
+     <H1 color="primary.main" mr="0.5rem" lineHeight="1">
+      Flash Deals,
+     </H1>
 
-          <H1 color="text.muted" lineHeight="1">
-            Enjoy Upto 80% discounts
-          </H1>
-        </FlexBox>
+     <H1 color="text.muted" lineHeight="1">
+      Enjoy Upto 80% discounts
+     </H1>
+    </FlexBox>
 
-        <SaleCategory saleCategoryList={saleCategoryList} />
-      </div>
+    <SaleCategory saleCategoryList={saleCategoryList} />
+   </div>
 
-      <SaleProducts products={data.result} meta={data.meta} />
-    </Container>
-  );
+   <SaleProducts products={data.result} meta={data.meta} />
+  </Container>
+ );
 }

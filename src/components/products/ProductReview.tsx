@@ -13,35 +13,33 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 import ReviewCard from "@component/product-cards/review-card";
 
 export default function ProductReview({ productId }: { productId: string }) {
-  const [reviews, setReviews] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+ const [reviews, setReviews] = useState<any[]>([]);
+ const [loading, setLoading] = useState(true);
+ const [error, setError] = useState("");
 
-  // Retrieve token from sessionStorage
-  const token = sessionStorage.getItem("token");
-  const headers = {
-    Authorization: `Bearer ${token}`, // Attach token as Authorization header
-  };
+ // Retrieve token from sessionStorage
+ const token = sessionStorage.getItem("token");
+ const headers = {
+  Authorization: `Bearer ${token}`, // Attach token as Authorization header
+ };
 
-  // Fetch reviews from the API
+ // Fetch reviews from the API
 
+ // Formik setup for the review form
+ const initialValues = {
+  rating: "",
+  comment: "",
+  date: new Date().toISOString(),
+ };
 
-  // Formik setup for the review form
-  const initialValues = {
-    rating: "",
-    comment: "",
-    date: new Date().toISOString(),
-  };
+ const validationSchema = yup.object().shape({
+  rating: yup.number().required("Rating is required"),
+  comment: yup.string().required("Review is required"),
+ });
 
-  const validationSchema = yup.object().shape({
-    rating: yup.number().required("Rating is required"),
-    comment: yup.string().required("Review is required"),
-  });
-
-
-  return (
-    <div>
-      <ReviewCard productId={productId} />
-    </div>
-  );
+ return (
+  <div>
+   <ReviewCard productId={productId} />
+  </div>
+ );
 }

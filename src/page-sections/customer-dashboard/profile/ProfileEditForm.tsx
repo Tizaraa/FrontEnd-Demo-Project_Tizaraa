@@ -363,9 +363,6 @@
 //   );
 // }
 
-
-
-
 // "use client";
 // import * as yup from "yup";
 // import { Formik } from "formik";
@@ -418,7 +415,6 @@
 
 //       const userProfile = response.data.profile;
 //       //console.log(response.data);
-      
 
 //       // Update state with the fetched user profile data
 //       setProfile({
@@ -597,16 +593,6 @@
 //     </Formik>
 //   );
 // }
-
-
-
-
-
-
-
-
-
-
 
 "use client";
 import * as yup from "yup";
@@ -813,252 +799,242 @@ const API_URL = `${ApiBaseUrl.baseUrl}user/profile`;
 const UPDATE_API_URL = `${ApiBaseUrl.baseUrl}user/profile/update`;
 
 export default function ProfileEditForm() {
-  const router = useRouter();
-  const [profile, setProfile] = useState({
-    name: "",
-    phone: "",
-    birth_date: "",
-    gender: "",
-    image: null as File | null,
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+ const router = useRouter();
+ const [profile, setProfile] = useState({
+  name: "",
+  phone: "",
+  birth_date: "",
+  gender: "",
+  image: null as File | null,
+ });
+ const [loading, setLoading] = useState(true);
+ const [error, setError] = useState("");
 
-  const fetchUserProfile = async () => {
-    const authtoken = localStorage.getItem("token");
-    try {
-      const response = await axios.get(API_URL, {
-        headers: { Authorization: `Bearer ${authtoken}` },
-      });
-      const userProfile = response.data.profile;
-      setProfile({
-        name: userProfile.name || "",
-        phone: userProfile.phone || "",
-        birth_date: userProfile.birth_date || "",
-        gender: userProfile.gender || "",
-        image: null,
-      });
-      setLoading(false);
-    } catch (err) {
-      setError("Failed to load user profile");
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="loader-wrapper">
-        <div className="loader"></div>
-      </div>
-    );
+ const fetchUserProfile = async () => {
+  const authtoken = localStorage.getItem("token");
+  try {
+   const response = await axios.get(API_URL, {
+    headers: { Authorization: `Bearer ${authtoken}` },
+   });
+   const userProfile = response.data.profile;
+   setProfile({
+    name: userProfile.name || "",
+    phone: userProfile.phone || "",
+    birth_date: userProfile.birth_date || "",
+    gender: userProfile.gender || "",
+    image: null,
+   });
+   setLoading(false);
+  } catch (err) {
+   setError("Failed to load user profile");
+   setLoading(false);
   }
-  if (error) {
-    return <p className="text-red-600 text-center font-semibold">{error}</p>;
-  }
+ };
 
-  const INITIAL_VALUES = {
-    name: profile.name,
-    phone: profile.phone,
-    birth_date: profile.birth_date,
-    gender: profile.gender,
-    image: null as File | null,
-  };
+ useEffect(() => {
+  fetchUserProfile();
+ }, []);
 
-  const VALIDATION_SCHEMA = yup.object().shape({
-    name: yup.string().required("Name is required"),
-    phone: yup.string().required("Phone is required"),
-    birth_date: yup.date().required("Birthdate is required"),
-    gender: yup.string().required("Gender is required"),
-  });
-
-  const handleFormSubmit = async (values: typeof INITIAL_VALUES) => {
-    const authtoken = localStorage.getItem("token");
-    const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("phone", values.phone);
-    formData.append("birthdate", values.birth_date);
-    formData.append("gender", values.gender);
-    if (values.image) {
-      formData.append("image", values.image);
-    }
-
-    try {
-      await axios.post(UPDATE_API_URL, formData, {
-        headers: {
-          Authorization: `Bearer ${authtoken}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      toast.success("Profile updated successfully!", {
-        position: "top-center",
-      });
-      router.back();
-    } catch (err) {
-      toast.error("Failed to update profile.", {
-        position: "top-center",
-      });
-    }
-  };
-
-  const handleGender = (gender: string, setFieldValue: any) => {
-    setFieldValue("gender", gender);
-  };
-
-  const handleCancel = () => {
-    router.back();
-  };
-
+ if (loading) {
   return (
-    <>
-      <style>{styles}</style>
-      <Toaster />
-      <div className="form-container">
-        <h2 className="form-title">Edit Profile</h2>
-        <Formik
-          onSubmit={handleFormSubmit}
-          initialValues={INITIAL_VALUES}
-          validationSchema={VALIDATION_SCHEMA}
-          enableReinitialize={true}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            setFieldValue,
-            isSubmitting,
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <div className="grid-container">
-                <div className="input-wrapper">
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    className="input-field"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.name}
-                    placeholder=" "
-                  />
-                  <label htmlFor="name" className="input-label">
-                    Name
-                  </label>
-                  {touched.name && errors.name && (
-                    <p className="error-text">{errors.name}</p>
-                  )}
-                </div>
-
-                <div className="input-wrapper">
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="text"
-                    className="input-field"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.phone}
-                    placeholder=" "
-                  />
-                  <label htmlFor="phone" className="input-label">
-                    Phone
-                  </label>
-                  {touched.phone && errors.phone && (
-                    <p className="error-text">{errors.phone}</p>
-                  )}
-                </div>
-
-                <div className="input-wrapper">
-                  <input
-                    id="birth_date"
-                    name="birth_date"
-                    type="date"
-                    className="input-field"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.birth_date}
-                    max={format(new Date(), "yyyy-MM-dd")}
-                    placeholder=" "
-                  />
-                  <label htmlFor="birth_date" className="input-label">
-                    Birth Date
-                  </label>
-                  {touched.birth_date && errors.birth_date && (
-                    <p className="error-text">{errors.birth_date}</p>
-                  )}
-                </div>
-
-                <div className="input-wrapper">
-                  <select
-                    id="gender"
-                    name="gender"
-                    className="select-field"
-                    onChange={(e) => handleGender(e.target.value, setFieldValue)}
-                    onBlur={handleBlur}
-                    value={values.gender}
-                  >
-                    <option value="" disabled>
-                      Select Gender
-                    </option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
-                  <label htmlFor="gender" className="input-label">
-                    Gender
-                  </label>
-                  {touched.gender && errors.gender && (
-                    <p className="error-text">{errors.gender}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="input-wrapper">
-                  <input
-                    id="image"
-                    name="image"
-                    type="file"
-                    accept="image/jpeg,image/png,image/gif"
-                    className="file-input"
-                    onChange={(event) => {
-                      const file = event.currentTarget.files?.[0] || null;
-                      setFieldValue("image", file);
-                    }}
-                    onBlur={handleBlur}
-                  />
-                  <label htmlFor="image" className="input-label">
-                    Upload Image
-                  </label>
-                </div>
-
-              <div className="button-grid">
-                <button
-                  type="button"
-                  className="cancel-button"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="submit-button"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Saving..." : "Save Changes"}
-                </button>
-              </div>
-            </form>
-          )}
-        </Formik>
-      </div>
-    </>
+   <div className="loader-wrapper">
+    <div className="loader"></div>
+   </div>
   );
+ }
+ if (error) {
+  return <p className="text-red-600 text-center font-semibold">{error}</p>;
+ }
+
+ const INITIAL_VALUES = {
+  name: profile.name,
+  phone: profile.phone,
+  birth_date: profile.birth_date,
+  gender: profile.gender,
+  image: null as File | null,
+ };
+
+ const VALIDATION_SCHEMA = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  phone: yup.string().required("Phone is required"),
+  birth_date: yup.date().required("Birthdate is required"),
+  gender: yup.string().required("Gender is required"),
+ });
+
+ const handleFormSubmit = async (values: typeof INITIAL_VALUES) => {
+  const authtoken = localStorage.getItem("token");
+  const formData = new FormData();
+  formData.append("name", values.name);
+  formData.append("phone", values.phone);
+  formData.append("birthdate", values.birth_date);
+  formData.append("gender", values.gender);
+  if (values.image) {
+   formData.append("image", values.image);
+  }
+
+  try {
+   await axios.post(UPDATE_API_URL, formData, {
+    headers: {
+     Authorization: `Bearer ${authtoken}`,
+     "Content-Type": "multipart/form-data",
+    },
+   });
+   toast.success("Profile updated successfully!", {
+    position: "top-center",
+   });
+   router.back();
+  } catch (err) {
+   toast.error("Failed to update profile.", {
+    position: "top-center",
+   });
+  }
+ };
+
+ const handleGender = (gender: string, setFieldValue: any) => {
+  setFieldValue("gender", gender);
+ };
+
+ const handleCancel = () => {
+  router.back();
+ };
+
+ return (
+  <>
+   <style>{styles}</style>
+   <Toaster />
+   <div className="form-container">
+    <h2 className="form-title">Edit Profile</h2>
+    <Formik
+     onSubmit={handleFormSubmit}
+     initialValues={INITIAL_VALUES}
+     validationSchema={VALIDATION_SCHEMA}
+     enableReinitialize={true}
+    >
+     {({
+      values,
+      errors,
+      touched,
+      handleChange,
+      handleBlur,
+      handleSubmit,
+      setFieldValue,
+      isSubmitting,
+     }) => (
+      <form onSubmit={handleSubmit}>
+       <div className="grid-container">
+        <div className="input-wrapper">
+         <input
+          id="name"
+          name="name"
+          type="text"
+          className="input-field"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={values.name}
+          placeholder=" "
+         />
+         <label htmlFor="name" className="input-label">
+          Name
+         </label>
+         {touched.name && errors.name && (
+          <p className="error-text">{errors.name}</p>
+         )}
+        </div>
+
+        <div className="input-wrapper">
+         <input
+          id="phone"
+          name="phone"
+          type="text"
+          className="input-field"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={values.phone}
+          placeholder=" "
+         />
+         <label htmlFor="phone" className="input-label">
+          Phone
+         </label>
+         {touched.phone && errors.phone && (
+          <p className="error-text">{errors.phone}</p>
+         )}
+        </div>
+
+        <div className="input-wrapper">
+         <input
+          id="birth_date"
+          name="birth_date"
+          type="date"
+          className="input-field"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={values.birth_date}
+          max={format(new Date(), "yyyy-MM-dd")}
+          placeholder=" "
+         />
+         <label htmlFor="birth_date" className="input-label">
+          Birth Date
+         </label>
+         {touched.birth_date && errors.birth_date && (
+          <p className="error-text">{errors.birth_date}</p>
+         )}
+        </div>
+
+        <div className="input-wrapper">
+         <select
+          id="gender"
+          name="gender"
+          className="select-field"
+          onChange={(e) => handleGender(e.target.value, setFieldValue)}
+          onBlur={handleBlur}
+          value={values.gender}
+         >
+          <option value="" disabled>
+           Select Gender
+          </option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+         </select>
+         <label htmlFor="gender" className="input-label">
+          Gender
+         </label>
+         {touched.gender && errors.gender && (
+          <p className="error-text">{errors.gender}</p>
+         )}
+        </div>
+       </div>
+
+       <div className="input-wrapper">
+        <input
+         id="image"
+         name="image"
+         type="file"
+         accept="image/jpeg,image/png,image/gif"
+         className="file-input"
+         onChange={(event) => {
+          const file = event.currentTarget.files?.[0] || null;
+          setFieldValue("image", file);
+         }}
+         onBlur={handleBlur}
+        />
+        <label htmlFor="image" className="input-label">
+         Upload Image
+        </label>
+       </div>
+
+       <div className="button-grid">
+        <button type="button" className="cancel-button" onClick={handleCancel}>
+         Cancel
+        </button>
+        <button type="submit" className="submit-button" disabled={isSubmitting}>
+         {isSubmitting ? "Saving..." : "Save Changes"}
+        </button>
+       </div>
+      </form>
+     )}
+    </Formik>
+   </div>
+  </>
+ );
 }
-
-

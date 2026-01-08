@@ -46,8 +46,6 @@
 //     libraries: ["marker"],
 //   });
 
-
-
 //   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
 //   const [filteredVendors, setFilteredVendors] = useState<Vendor[]>([]);
 //   const mapRef = useRef<HTMLDivElement | null>(null);
@@ -100,7 +98,7 @@
 //   if (!isLoaded) return null;
 
 //   return (
-//     <div style={{lineHeight: "0", marginLeft: "10px", marginTop: "-10px"}} className="ml-0"> 
+//     <div style={{lineHeight: "0", marginLeft: "10px", marginTop: "-10px"}} className="ml-0">
 //       <h1 className="text-xl font-bold mb-4">Tizaraa Authorized Seller</h1>
 //       <div ref={mapRef} style={mapContainerStyle} />
 
@@ -123,9 +121,6 @@
 // };
 
 // export default VendorMapPage;
-
-
-
 
 // "use client";
 // import { useEffect, useRef } from "react";
@@ -289,7 +284,6 @@
 //   }
 // }, [isLoaded, vendors]);
 
-
 //   if (!isLoaded) return <div>Loading Google Maps...</div>;
 
 //   return (
@@ -302,12 +296,6 @@
 
 // export default VendorMapPage;
 
-
-
-
-
-
-
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useLoadScript } from "@react-google-maps/api";
@@ -315,130 +303,131 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 
 // Define the Vendor interface to match the API response (sellerDetails)
 interface Vendor {
-  id: number;
-  shop_name: string;
-  lat: string | null;
-  lon: string | null;
-  seller_address: string;
-  seller_logo: string;
-  shop_name_slug: string;
-  province_name?: string;
-  city_name?: string;
-  area_name?: string;
-  rating?: number;
+ id: number;
+ shop_name: string;
+ lat: string | null;
+ lon: string | null;
+ seller_address: string;
+ seller_logo: string;
+ shop_name_slug: string;
+ province_name?: string;
+ city_name?: string;
+ area_name?: string;
+ rating?: number;
 }
 
 interface VendorMapPageProps {
-  selectedProvince: string;
-  selectedCity: string;
-  selectedArea: string;
-  vendors: Vendor[];
+ selectedProvince: string;
+ selectedCity: string;
+ selectedArea: string;
+ vendors: Vendor[];
 }
 
 const mapContainerStyle = {
-  width: "100%",
-  height: "600px",
-  borderRadius: "10px",
-  marginBottom: "10px",
-  marginTop: "10px",
-  position: "relative" as const, // For overlay positioning
+ width: "100%",
+ height: "600px",
+ borderRadius: "10px",
+ marginBottom: "10px",
+ marginTop: "10px",
+ position: "relative" as const, // For overlay positioning
 };
 
 const defaultCenter = {
-  lat: 23.8103, // Default location: Dhaka
-  lng: 90.4125,
+ lat: 23.8103, // Default location: Dhaka
+ lng: 90.4125,
 };
 
 const VendorMapPage: React.FC<VendorMapPageProps> = ({
-  selectedProvince,
-  selectedCity,
-  selectedArea,
-  vendors,
+ selectedProvince,
+ selectedCity,
+ selectedArea,
+ vendors,
 }) => {
-  const [showOverlay, setShowOverlay] = useState(true); // State to toggle overlay visibility
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-    libraries: ["places", "marker"],
+ const [showOverlay, setShowOverlay] = useState(true); // State to toggle overlay visibility
+ const { isLoaded } = useLoadScript({
+  googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+  libraries: ["places", "marker"],
+ });
+
+ const mapRef = useRef<HTMLDivElement | null>(null);
+ const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+ const mapInstanceRef = useRef<google.maps.Map | null>(null);
+ const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
+
+ // Initialize the map and markers when the map is loaded or vendors change
+ useEffect(() => {
+  if (!isLoaded || !mapRef.current || !window.google) return;
+
+  const { AdvancedMarkerElement } = google.maps.marker;
+
+  // Calculate the center dynamically based on vendors with valid lat/lon
+  let center = defaultCenter;
+  const validVendors = vendors.filter((vendor) => vendor.lat && vendor.lon);
+  if (validVendors.length > 0) {
+   const avgLat =
+    validVendors.reduce((sum, vendor) => sum + parseFloat(vendor.lat!), 0) /
+    validVendors.length;
+   const avgLon =
+    validVendors.reduce((sum, vendor) => sum + parseFloat(vendor.lon!), 0) /
+    validVendors.length;
+   center = { lat: avgLat, lng: avgLon };
+  }
+
+  // Initialize the map
+  const map = new google.maps.Map(mapRef.current, {
+   center: center,
+   zoom: 15,
+   mapId: "e1ef4c90f9cab1e5",
+   mapTypeId: "roadmap", // Default to roadmap view
+   streetViewControl: true, // Enable Street View
+   mapTypeControl: true, // Enable map type control (satellite/roadmap toggle via default Google Maps UI)
+   zoomControl: true, // Enable zoom control
+   fullscreenControl: true, // Enable fullscreen control
+   draggable: true, // Enable dragging by default
+   scrollwheel: true, // Enable scroll zooming
   });
+  mapInstanceRef.current = map;
 
-  const mapRef = useRef<HTMLDivElement | null>(null);
-  const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
-  const mapInstanceRef = useRef<google.maps.Map | null>(null);
-  const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
+  // Initialize InfoWindow
+  infoWindowRef.current = new google.maps.InfoWindow();
 
-  // Initialize the map and markers when the map is loaded or vendors change
-  useEffect(() => {
-    if (!isLoaded || !mapRef.current || !window.google) return;
+  // Clear existing markers
+  markersRef.current.forEach((marker) => (marker.map = null));
+  markersRef.current = [];
 
-    const { AdvancedMarkerElement } = google.maps.marker;
+  // Add new markers for vendors with valid lat/lon
+  vendors.forEach((vendor) => {
+   if (!vendor.lat || !vendor.lon) return;
 
-    // Calculate the center dynamically based on vendors with valid lat/lon
-    let center = defaultCenter;
-    const validVendors = vendors.filter((vendor) => vendor.lat && vendor.lon);
-    if (validVendors.length > 0) {
-      const avgLat =
-        validVendors.reduce((sum, vendor) => sum + parseFloat(vendor.lat!), 0) /
-        validVendors.length;
-      const avgLon =
-        validVendors.reduce((sum, vendor) => sum + parseFloat(vendor.lon!), 0) /
-        validVendors.length;
-      center = { lat: avgLat, lng: avgLon };
-    }
+   const lat = parseFloat(vendor.lat);
+   const lon = parseFloat(vendor.lon);
 
-    // Initialize the map
-    const map = new google.maps.Map(mapRef.current, {
-      center: center,
-      zoom: 15,
-      mapId: "e1ef4c90f9cab1e5",
-      mapTypeId: "roadmap", // Default to roadmap view
-      streetViewControl: true, // Enable Street View
-      mapTypeControl: true, // Enable map type control (satellite/roadmap toggle via default Google Maps UI)
-      zoomControl: true, // Enable zoom control
-      fullscreenControl: true, // Enable fullscreen control
-      draggable: true, // Enable dragging by default
-      scrollwheel: true, // Enable scroll zooming
-    });
-    mapInstanceRef.current = map;
+   if (isNaN(lat) || isNaN(lon)) return;
 
-    // Initialize InfoWindow
-    infoWindowRef.current = new google.maps.InfoWindow();
+   const marker = new AdvancedMarkerElement({
+    position: { lat, lng: lon },
+    map,
+    title: vendor.shop_name,
+   });
 
-    // Clear existing markers
-    markersRef.current.forEach((marker) => (marker.map = null));
-    markersRef.current = [];
+   // Add click listener to show InfoWindow
+   marker.addListener("click", () => {
+    const shopNameSlug =
+     vendor.shop_name_slug ||
+     vendor.shop_name.toLowerCase().replace(/\s+/g, "-");
 
-    // Add new markers for vendors with valid lat/lon
-    vendors.forEach((vendor) => {
-      if (!vendor.lat || !vendor.lon) return;
-
-      const lat = parseFloat(vendor.lat);
-      const lon = parseFloat(vendor.lon);
-
-      if (isNaN(lat) || isNaN(lon)) return;
-
-      const marker = new AdvancedMarkerElement({
-        position: { lat, lng: lon },
-        map,
-        title: vendor.shop_name,
-      });
-
-      // Add click listener to show InfoWindow
-      marker.addListener("click", () => {
-        const shopNameSlug =
-          vendor.shop_name_slug || vendor.shop_name.toLowerCase().replace(/\s+/g, "-");
-
-        const contentString = `
+    const contentString = `
           <a href="/shops/${shopNameSlug}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
             <div style="padding: 10px; max-width: 200px; cursor: pointer;">
               ${
-                vendor.seller_logo
-                  ? `<img
+               vendor.seller_logo
+                ? `<img
                        src="${ApiBaseUrl.ImgUrl}${vendor.seller_logo}"
                        alt="Seller Logo"
                        style="width: 64px; height: 64px; margin-bottom: 8px; object-fit: contain;"
                        onerror="this.style.display='none';"
                      />`
-                  : `<div style="width: 64px; height: 64px; margin-bottom: 8px; background-color: #e5e7eb; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+                : `<div style="width: 64px; height: 64px; margin-bottom: 8px; background-color: #e5e7eb; display: flex; align-items: center; justify-content: center; color: #6b7280;">
                        No Logo
                      </div>`
               }
@@ -448,230 +437,225 @@ const VendorMapPage: React.FC<VendorMapPageProps> = ({
             </div>
           </a>
         `;
-        infoWindowRef.current!.setContent(contentString);
-        infoWindowRef.current!.open(map, marker);
-      });
+    infoWindowRef.current!.setContent(contentString);
+    infoWindowRef.current!.open(map, marker);
+   });
 
-      markersRef.current.push(marker);
+   markersRef.current.push(marker);
+  });
+
+  // Adjust map bounds to fit all markers
+  if (validVendors.length > 0) {
+   const bounds = new google.maps.LatLngBounds();
+   validVendors.forEach((vendor) => {
+    if (vendor.lat && vendor.lon) {
+     bounds.extend({
+      lat: parseFloat(vendor.lat),
+      lng: parseFloat(vendor.lon),
+     });
+    }
+   });
+
+   map.fitBounds(bounds);
+
+   // Slightly zoom out to level 15 after the bounds are applied
+   google.maps.event.addListenerOnce(map, "bounds_changed", () => {
+    if (map.getZoom() > 15) {
+     map.setZoom(15);
+    }
+   });
+  }
+ }, [isLoaded, vendors]); // Re-run when vendors change
+
+ // Enable map interactions when overlay is removed
+ useEffect(() => {
+  if (mapInstanceRef.current) {
+   if (showOverlay) {
+    mapInstanceRef.current.setOptions({
+     draggable: false, // Disable dragging when overlay is shown
+     scrollwheel: false, // Disable scroll zooming when overlay is shown
+     zoomControl: false, // Disable zoom control when overlay is shown
     });
+   } else {
+    mapInstanceRef.current.setOptions({
+     draggable: true, // Re-enable dragging
+     scrollwheel: true, // Re-enable scroll zooming
+     zoomControl: true, // Re-enable zoom control
+    });
+   }
+  }
+ }, [showOverlay]);
 
-    // Adjust map bounds to fit all markers
-    if (validVendors.length > 0) {
-      const bounds = new google.maps.LatLngBounds();
-      validVendors.forEach((vendor) => {
-        if (vendor.lat && vendor.lon) {
-          bounds.extend({
-            lat: parseFloat(vendor.lat),
-            lng: parseFloat(vendor.lon),
-          });
-        }
-      });
+ if (!isLoaded) return <div>Loading Google Maps...</div>;
 
-      map.fitBounds(bounds);
+ return (
+  // <div style={{ lineHeight: "0", marginLeft: "10px", marginTop: "-10px" }} className="ml-0">
+  //   <h1 className="text-xl font-bold mb-4">Tizaraa Authorized Seller</h1>
+  //   <div style={mapContainerStyle}>
+  //     {/* Map Container */}
+  //     <div
+  //       ref={mapRef}
+  //       style={{
+  //         ...mapContainerStyle,
+  //       }}
+  //     />
+  //     {/* Overlay with Button */}
+  //     {showOverlay && (
+  //       <div
+  //         style={{
+  //           position: "absolute",
+  //           top: 0,
+  //           left: 0,
+  //           width: "100%",
+  //           height: "100%",
+  //           display: "flex",
+  //           flexDirection: "column",
+  //           justifyContent: "center",
+  //           alignItems: "center",
+  //           backgroundColor: "rgba(0, 0, 0, 0.7)", // Semi-transparent dark overlay
+  //           borderRadius: "10px",
+  //           zIndex: 1,
+  //         }}
+  //       >
+  // <h2
+  //   style={{
+  //     color: "white",
+  //     fontSize: "24px",
+  //     fontWeight: "bold",
+  //     marginBottom: "20px",
+  //     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)", // Optional shadow for better readability
+  //   }}
+  // >
+  //   Seller Locations
+  // </h2>
+  //         <button
+  //           onClick={() => setShowOverlay(false)}
+  //           style={{
+  //             padding: "10px 20px",
+  //             fontSize: "16px",
+  //             fontWeight: "bold",
+  //             backgroundColor: "#E94560",
+  //             color: "white",
+  //             border: "none",
+  //             borderRadius: "5px",
+  //             cursor: "pointer",
+  //             zIndex: 2,
+  //             display: "flex",
+  //             alignItems: "center",
+  //             justifyContent: "center",
+  //             gap: "8px",
+  //             minWidth: "150px",
+  //           }}
+  //         >
+  //           {/* Location Icon (SVG) */}
+  //           <svg
+  //             xmlns="http://www.w3.org/2000/svg"
+  //             width="16"
+  //             height="16"
+  //             fill="currentColor"
+  //             viewBox="0 0 16 16"
+  //           >
+  //             <path
+  //               fillRule="evenodd"
+  //               d="M8 0a5.5 5.5 0 0 1 5.5 5.5c0 3.038-5.5 10.5-5.5 10.5S2.5 8.538 2.5 5.5A5.5 5.5 0 0 1 8 0zm0 2a3.5 3.5 0 0 0-3.5 3.5c0 2.038 3.5 7.5 3.5 7.5s3.5-5.462 3.5-7.5A3.5 3.5 0 0 0 8 2zM8 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"
+  //             />
+  //           </svg>
+  //           <span>Show on Map</span>
+  //         </button>
+  //       </div>
+  //     )}
+  //   </div>
+  // </div>
 
-      // Slightly zoom out to level 15 after the bounds are applied
-      google.maps.event.addListenerOnce(map, "bounds_changed", () => {
-        if (map.getZoom() > 15) {
-          map.setZoom(15);
-        }
-      });
-    }
-  }, [isLoaded, vendors]); // Re-run when vendors change
-
-  // Enable map interactions when overlay is removed
-  useEffect(() => {
-    if (mapInstanceRef.current) {
-      if (showOverlay) {
-        mapInstanceRef.current.setOptions({
-          draggable: false, // Disable dragging when overlay is shown
-          scrollwheel: false, // Disable scroll zooming when overlay is shown
-          zoomControl: false, // Disable zoom control when overlay is shown
-        });
-      } else {
-        mapInstanceRef.current.setOptions({
-          draggable: true, // Re-enable dragging
-          scrollwheel: true, // Re-enable scroll zooming
-          zoomControl: true, // Re-enable zoom control
-        });
-      }
-    }
-  }, [showOverlay]);
-
-  if (!isLoaded) return <div>Loading Google Maps...</div>;
-
-  return (
-    // <div style={{ lineHeight: "0", marginLeft: "10px", marginTop: "-10px" }} className="ml-0">
-    //   <h1 className="text-xl font-bold mb-4">Tizaraa Authorized Seller</h1>
-    //   <div style={mapContainerStyle}>
-    //     {/* Map Container */}
-    //     <div
-    //       ref={mapRef}
-    //       style={{
-    //         ...mapContainerStyle,
-    //       }}
-    //     />
-    //     {/* Overlay with Button */}
-    //     {showOverlay && (
-    //       <div
-    //         style={{
-    //           position: "absolute",
-    //           top: 0,
-    //           left: 0,
-    //           width: "100%",
-    //           height: "100%",
-    //           display: "flex",
-    //           flexDirection: "column",
-    //           justifyContent: "center",
-    //           alignItems: "center",
-    //           backgroundColor: "rgba(0, 0, 0, 0.7)", // Semi-transparent dark overlay
-    //           borderRadius: "10px",
-    //           zIndex: 1,
-    //         }}
-    //       >
-            // <h2
-            //   style={{
-            //     color: "white",
-            //     fontSize: "24px",
-            //     fontWeight: "bold",
-            //     marginBottom: "20px",
-            //     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)", // Optional shadow for better readability
-            //   }}
-            // >
-            //   Seller Locations
-            // </h2>
-    //         <button
-    //           onClick={() => setShowOverlay(false)}
-    //           style={{
-    //             padding: "10px 20px",
-    //             fontSize: "16px",
-    //             fontWeight: "bold",
-    //             backgroundColor: "#E94560",
-    //             color: "white",
-    //             border: "none",
-    //             borderRadius: "5px",
-    //             cursor: "pointer",
-    //             zIndex: 2,
-    //             display: "flex",
-    //             alignItems: "center",
-    //             justifyContent: "center",
-    //             gap: "8px",
-    //             minWidth: "150px",
-    //           }}
-    //         >
-    //           {/* Location Icon (SVG) */}
-    //           <svg
-    //             xmlns="http://www.w3.org/2000/svg"
-    //             width="16"
-    //             height="16"
-    //             fill="currentColor"
-    //             viewBox="0 0 16 16"
-    //           >
-    //             <path
-    //               fillRule="evenodd"
-    //               d="M8 0a5.5 5.5 0 0 1 5.5 5.5c0 3.038-5.5 10.5-5.5 10.5S2.5 8.538 2.5 5.5A5.5 5.5 0 0 1 8 0zm0 2a3.5 3.5 0 0 0-3.5 3.5c0 2.038 3.5 7.5 3.5 7.5s3.5-5.462 3.5-7.5A3.5 3.5 0 0 0 8 2zM8 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"
-    //             />
-    //           </svg>
-    //           <span>Show on Map</span>
-    //         </button>
-    //       </div>
-    //     )}
-    //   </div>
-    // </div>
-
-
-  <div style={{ lineHeight: "0", marginLeft: "10px", marginTop: "-10px" }} className="ml-0">
-  {/* <h1 className="text-xl font-bold mb-4">Tizaraa Authorized Seller</h1> */}
-  <div style={mapContainerStyle}>
+  <div
+   style={{ lineHeight: "0", marginLeft: "10px", marginTop: "-10px" }}
+   className="ml-0"
+  >
+   {/* <h1 className="text-xl font-bold mb-4">Tizaraa Authorized Seller</h1> */}
+   <div style={mapContainerStyle}>
     {/* Map Container */}
     <div
-      ref={mapRef}
-      style={{
-        ...mapContainerStyle,
-      }}
+     ref={mapRef}
+     style={{
+      ...mapContainerStyle,
+     }}
     />
     {/* Image with Button and Overlay */}
     {showOverlay && (
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: "10px",
-          zIndex: 1,
-          backgroundImage: `url('https://minio.tizaraa.shop/tizaraa/frontend/map.png')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          // Overlay effect
-          backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent dark overlay
-          backgroundBlendMode: "darken",
-        }}
+     <div
+      style={{
+       position: "absolute",
+       top: 0,
+       left: 0,
+       width: "100%",
+       height: "100%",
+       display: "flex",
+       flexDirection: "column",
+       justifyContent: "center",
+       alignItems: "center",
+       borderRadius: "10px",
+       zIndex: 1,
+       backgroundImage: `url('https://minio.tizaraa.shop/tizaraa/frontend/map.png')`,
+       backgroundSize: "cover",
+       backgroundPosition: "center",
+       // Overlay effect
+       backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent dark overlay
+       backgroundBlendMode: "darken",
+      }}
+     >
+      <h2
+       style={{
+        color: "white",
+        fontSize: "24px",
+        fontWeight: "bold",
+        marginBottom: "20px",
+        textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)", // Optional shadow for better readability
+       }}
       >
-        <h2
-          style={{
-          color: "white",
-          fontSize: "24px",
-          fontWeight: "bold",
-          marginBottom: "20px",
-          textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)", // Optional shadow for better readability
-          }}
-          >
-          Seller Locations
-        </h2>
-        <button
-          onClick={() => setShowOverlay(false)}
-          style={{
-            padding: "10px 20px",
-            fontSize: "16px",
-            fontWeight: "bold",
-            backgroundColor: "#E94560",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            zIndex: 2,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "8px",
-            minWidth: "150px",
-          }}
-        >
-          {/* Location Icon (SVG) */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fillRule="evenodd"
-              d="M8 0a5.5 5.5 0 0 1 5.5 5.5c0 3.038-5.5 10.5-5.5 10.5S2.5 8.538 2.5 5.5A5.5 5.5 0 0 1 8 0zm0 2a3.5 3.5 0 0 0-3.5 3.5c0 2.038 3.5 7.5 3.5 7.5s3.5-5.462 3.5-7.5A3.5 3.5 0 0 0 8 2zM8 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"
-            />
-          </svg>
-          <span>Show on Map</span>
-        </button>
-      </div>
+       Seller Locations
+      </h2>
+      <button
+       onClick={() => setShowOverlay(false)}
+       style={{
+        padding: "10px 20px",
+        fontSize: "16px",
+        fontWeight: "bold",
+        backgroundColor: "#E94560",
+        color: "white",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+        zIndex: 2,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        minWidth: "150px",
+       }}
+      >
+       {/* Location Icon (SVG) */}
+       <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+       >
+        <path
+         fillRule="evenodd"
+         d="M8 0a5.5 5.5 0 0 1 5.5 5.5c0 3.038-5.5 10.5-5.5 10.5S2.5 8.538 2.5 5.5A5.5 5.5 0 0 1 8 0zm0 2a3.5 3.5 0 0 0-3.5 3.5c0 2.038 3.5 7.5 3.5 7.5s3.5-5.462 3.5-7.5A3.5 3.5 0 0 0 8 2zM8 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"
+        />
+       </svg>
+       <span>Show on Map</span>
+      </button>
+     </div>
     )}
+   </div>
   </div>
-</div>
-
-
-  );
+ );
 };
 
 export default VendorMapPage;
-
-
-
-
-
 
 // If any error in shop page - use this code
 // "use client";
@@ -797,7 +781,7 @@ export default VendorMapPage;
 //       // Add click listener
 //       marker.addListener("click", () => {
 //         const shopNameSlug = vendor.shop_name_slug || vendor.shop_name.toLowerCase().replace(/\s+/g, "-");
-        
+
 //         const contentString = `
 //           <a href="/shops/${shopNameSlug}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
 //             <div style="padding: 10px; max-width: 200px; cursor: pointer;">

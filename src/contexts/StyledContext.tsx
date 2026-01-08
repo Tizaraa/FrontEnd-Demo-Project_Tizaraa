@@ -8,10 +8,10 @@ import theme from "theme";
 import GlobalStyles from "theme/global-styles/globalStyles";
 
 export default function StyledContext({ children }: PropsWithChildren) {
-  return (
-    <ThemeProvider theme={theme()}>
-      <GlobalStyles />
-      {children}
-    </ThemeProvider>
-  );
+ return (
+  <ThemeProvider theme={theme()}>
+   <GlobalStyles />
+   {children}
+  </ThemeProvider>
+ );
 }

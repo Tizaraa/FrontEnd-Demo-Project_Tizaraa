@@ -15,49 +15,49 @@ import { useRouter } from "next/navigation";
 import authService from "services/authService";
 
 export default function WishList() {
-  const router = useRouter();
-  // const token = Cookies.get("token");
-  const token = authService.getToken();
-  if (!token) {
-    // Redirect to login if no token is found
-    router.push("/login");
-  }
-  return (
-    <Fragment>
-      {/* PAGE TITLE AREA */}
-      <DashboardPageHeader
-        title="My Wish List"
-        iconName="heart_filled"
-        button={
-          <Button color="primary" bg="primary.light" px="2rem">
-            Add All to Cart
-          </Button>
-        }
+ const router = useRouter();
+ // const token = Cookies.get("token");
+ const token = authService.getToken();
+ if (!token) {
+  // Redirect to login if no token is found
+  router.push("/login");
+ }
+ return (
+  <Fragment>
+   {/* PAGE TITLE AREA */}
+   <DashboardPageHeader
+    title="My Wish List"
+    iconName="heart_filled"
+    button={
+     <Button color="primary" bg="primary.light" px="2rem">
+      Add All to Cart
+     </Button>
+    }
+   />
+
+   {/* PRODUCT LIST AREA */}
+   <Grid container spacing={6}>
+    {db.slice(53, 59).map((item) => (
+     <Grid item lg={4} sm={6} xs={12} key={item.id}>
+      <ProductCard1
+       id={item.id}
+       slug={item.slug}
+       price={item.price}
+       title={item.title}
+       productStock={item.product_stock}
+       off={item.discount}
+       images={item.images}
+       imgUrl={item.thumbnail}
+       rating={item.rating || 4}
       />
+     </Grid>
+    ))}
+   </Grid>
 
-      {/* PRODUCT LIST AREA */}
-      <Grid container spacing={6}>
-        {db.slice(53, 59).map((item) => (
-          <Grid item lg={4} sm={6} xs={12} key={item.id}>
-            <ProductCard1
-              id={item.id}
-              slug={item.slug}
-              price={item.price}
-              title={item.title}
-              productStock={item.product_stock}
-              off={item.discount}
-              images={item.images}
-              imgUrl={item.thumbnail}
-              rating={item.rating || 4}
-            />
-          </Grid>
-        ))}
-      </Grid>
-
-      {/* PAGINATION AREA */}
-      {/* <FlexBox justifyContent="center" mt="2.5rem">
+   {/* PAGINATION AREA */}
+   {/* <FlexBox justifyContent="center" mt="2.5rem">
         <Pagination pageCount={5} onChange={(data) => console.log(data)} />
       </FlexBox> */}
-    </Fragment>
-  );
+  </Fragment>
+ );
 }

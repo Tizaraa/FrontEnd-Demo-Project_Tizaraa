@@ -9,23 +9,27 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { ProductForm } from "@sections/vendor-dashboard/products";
 
 const categoryOptions = [
-  { label: "Fashion", value: "fashion" },
-  { label: "Gadget", value: "gadget" }
+ { label: "Fashion", value: "fashion" },
+ { label: "Gadget", value: "gadget" },
 ];
 
 export default function AddProduct() {
-  const HEADER_LINK = (
-    <Link href="/vendor/products">
-      <Button color="primary" bg="primary.light" px="2rem">
-        Back to Product List
-      </Button>
-    </Link>
-  );
+ const HEADER_LINK = (
+  <Link href="/vendor/products">
+   <Button color="primary" bg="primary.light" px="2rem">
+    Back to Product List
+   </Button>
+  </Link>
+ );
 
-  return (
-    <Fragment>
-      <DashboardPageHeader title="Add Product" iconName="delivery-box" button={HEADER_LINK} />
-      <ProductForm categoryOptions={categoryOptions} />
-    </Fragment>
-  );
+ return (
+  <Fragment>
+   <DashboardPageHeader
+    title="Add Product"
+    iconName="delivery-box"
+    button={HEADER_LINK}
+   />
+   <ProductForm categoryOptions={categoryOptions} />
+  </Fragment>
+ );
 }

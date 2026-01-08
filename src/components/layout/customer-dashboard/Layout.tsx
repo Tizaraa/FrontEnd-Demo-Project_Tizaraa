@@ -5,16 +5,18 @@ import DashboardNavigation from "../DashboardNavigation";
 // STYLED COMPONENT
 import { StyledGrid } from "../styles";
 
-export default function CustomerDashboardLayout({ children }: PropsWithChildren) {
-  return (
-    <Grid container spacing={6}>
-      <StyledGrid item lg={3} xs={12}>
-        <DashboardNavigation />
-      </StyledGrid>
+export default function CustomerDashboardLayout({
+ children,
+}: PropsWithChildren) {
+ return (
+  <Grid container spacing={6}>
+   <StyledGrid item lg={3} xs={12}>
+    <DashboardNavigation />
+   </StyledGrid>
 
-       <Grid item lg={9} xs={12}>
-        {children}
-      </Grid>  
-    </Grid>
-  );
+   <Grid item lg={9} xs={12}>
+    {children}
+   </Grid>
+  </Grid>
+ );
 }

@@ -58,8 +58,8 @@ export const GlobalStyles = createGlobalStyle`
   display: block;
   position: absolute;
   box-shadow: 0 0 10px ${({ theme }: any) => theme.colors.primary.main}, 0 0 5px ${({
-  theme
-}: any) => theme.colors.primary.main};
+   theme,
+  }: any) => theme.colors.primary.main};
   opacity: 1.0;
 
   -webkit-transform: rotate(3deg) translate(0px, -4px);

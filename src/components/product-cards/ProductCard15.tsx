@@ -18,137 +18,149 @@ import { useAppContext } from "@context/app-context";
 
 // STYLED COMPONENTS
 const StyledCard = styled("div")({
-  height: "100%",
-  margin: "auto",
-  borderRadius: 0,
-  overflow: "hidden",
-  position: "relative",
-  transition: "all 250ms ease-in-out",
-  "&:hover": {
-    boxShadow: theme.shadows[6],
-    "& .controlBox": { display: "flex", bottom: 0 }
-  }
+ height: "100%",
+ margin: "auto",
+ borderRadius: 0,
+ overflow: "hidden",
+ position: "relative",
+ transition: "all 250ms ease-in-out",
+ "&:hover": {
+  boxShadow: theme.shadows[6],
+  "& .controlBox": { display: "flex", bottom: 0 },
+ },
 });
 
 const ImgBox = styled("div")(({ theme }) => ({
-  height: "200px",
-  overflow: "hidden",
-  position: "relative",
-  padding: "0 40px 20px 40px",
-  background: theme.colors.marron[100],
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center"
+ height: "200px",
+ overflow: "hidden",
+ position: "relative",
+ padding: "0 40px 20px 40px",
+ background: theme.colors.marron[100],
+ display: "flex",
+ alignItems: "center",
+ justifyContent: "center",
 }));
 
 const ItemController = styled("div")(({ theme }) => ({
-  width: 35,
-  right: 15,
-  height: 120,
-  bottom: -120,
+ width: 35,
+ right: 15,
+ height: 120,
+ bottom: -120,
+ display: "flex",
+ overflow: "hidden",
+ background: "#fff",
+ position: "absolute",
+ flexDirection: "column",
+ transition: "bottom 0.3s ease-in-out",
+ "& svg": { fontSize: 18, color: theme.colors.gray[600] },
+ "& span": {
+  width: "100%",
+  height: "100%",
   display: "flex",
-  overflow: "hidden",
-  background: "#fff",
-  position: "absolute",
-  flexDirection: "column",
-  transition: "bottom 0.3s ease-in-out",
-  "& svg": { fontSize: 18, color: theme.colors.gray[600] },
-  "& span": {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    padding: "8px 10px",
-    alignItems: "center",
-    justifyContent: "center",
-    "&:hover": {
-      cursor: "pointer",
-      background: theme.colors.marron.main,
-      "& svg": { color: "#fff" }
-    }
-  }
+  padding: "8px 10px",
+  alignItems: "center",
+  justifyContent: "center",
+  "&:hover": {
+   cursor: "pointer",
+   background: theme.colors.marron.main,
+   "& svg": { color: "#fff" },
+  },
+ },
 }));
 
 const ContentWrapper = styled("div")({
-  padding: "1rem",
-  "& .title, & .categories": {
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis"
-  }
+ padding: "1rem",
+ "& .title, & .categories": {
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+  textOverflow: "ellipsis",
+ },
 });
 
 const StyledChip = styled(Chip)(({ theme }) => ({
-  zIndex: 11,
-  top: "16px",
-  left: "0px",
-  color: "white",
-  borderRadius: 0,
-  fontWeight: 600,
-  fontSize: "10px",
-  padding: "3px 7px",
-  position: "absolute",
-  background: theme.colors.marron.main
+ zIndex: 11,
+ top: "16px",
+ left: "0px",
+ color: "white",
+ borderRadius: 0,
+ fontWeight: 600,
+ fontSize: "10px",
+ padding: "3px 7px",
+ position: "absolute",
+ background: theme.colors.marron.main,
 }));
 
 // ============================================================
 type Props = {
-  off: number;
-  slug: string;
-  title: string;
-  price: number;
-  imgUrl: string;
-  productStock: number;
-  rating?: number;
-  images: string[];
-  id: string | number;
-  productId: string | number;
-  sellerId: string | number;
+ off: number;
+ slug: string;
+ title: string;
+ price: number;
+ imgUrl: string;
+ productStock: number;
+ rating?: number;
+ images: string[];
+ id: string | number;
+ productId: string | number;
+ sellerId: string | number;
 };
 // ============================================================
 
 export default function ProductCard15(props: Props) {
-  const { off, id, title, price, imgUrl, productStock, rating, slug, images, productId, sellerId } = props;
+ const {
+  off,
+  id,
+  title,
+  price,
+  imgUrl,
+  productStock,
+  rating,
+  slug,
+  images,
+  productId,
+  sellerId,
+ } = props;
 
-  const [open, setOpen] = useState(false);
-  const { state, dispatch } = useAppContext();
+ const [open, setOpen] = useState(false);
+ const { state, dispatch } = useAppContext();
 
-  const cartItem = state.cart.find((item) => item.slug === slug);
+ const cartItem = state.cart.find((item) => item.slug === slug);
 
-  const toggleDialog = useCallback(() => setOpen((open) => !open), []);
+ const toggleDialog = useCallback(() => setOpen((open) => !open), []);
 
-  // handle add to cart
-  const handleAddToCart = () => {
-    const payload = {
-      id,
-      slug,
-      price,
-      imgUrl,
-      productStock,
-      name: title,
-      qty: (cartItem?.qty || 0) + 1,
-      productId,
-      sellerId
-    };
-
-    dispatch({ type: "CHANGE_CART_AMOUNT", payload });
+ // handle add to cart
+ const handleAddToCart = () => {
+  const payload = {
+   id,
+   slug,
+   price,
+   imgUrl,
+   productStock,
+   name: title,
+   qty: (cartItem?.qty || 0) + 1,
+   productId,
+   sellerId,
   };
 
-  return (
-    <StyledCard>
-      <ImgBox id="imgBox">
-        {off !== 0 && <StyledChip color="primary">{off}% off</StyledChip>}
+  dispatch({ type: "CHANGE_CART_AMOUNT", payload });
+ };
 
-        <Link href={`/product/${slug}`}>
-          <LazyImage
-            src={imgUrl}
-            width={200}
-            height={200}
-            alt="bonik"
-            style={{ height: "auto", width: "100%", objectFit: "contain" }}
-          />
-        </Link>
+ return (
+  <StyledCard>
+   <ImgBox id="imgBox">
+    {off !== 0 && <StyledChip color="primary">{off}% off</StyledChip>}
 
-        {/* <ItemController className="controlBox">
+    <Link href={`/product/${slug}`}>
+     <LazyImage
+      src={imgUrl}
+      width={200}
+      height={200}
+      alt="bonik"
+      style={{ height: "auto", width: "100%", objectFit: "contain" }}
+     />
+    </Link>
+
+    {/* <ItemController className="controlBox">
           <Span onClick={toggleDialog}>
             <Icon variant="small">eye-alt</Icon>
           </Span>
@@ -161,47 +173,48 @@ export default function ProductCard15(props: Props) {
             <Icon variant="small">shopping-cart</Icon>
           </Span>
         </ItemController> */}
-      </ImgBox>
+   </ImgBox>
 
-      <ProductQuickView
-        open={open}
-        onClose={toggleDialog}
-        product={{ id, slug, imgUrl, price, title }}
-      />
+   <ProductQuickView
+    open={open}
+    onClose={toggleDialog}
+    product={{ id, slug, imgUrl, price, title }}
+   />
 
-      <ContentWrapper>
-        <FlexBox justifyContent="center">
-          <Paragraph pr={2} fontWeight="500" color="marron.main">
-            {calculateDiscount(price, off)}
-          </Paragraph>
+   <ContentWrapper>
+    <FlexBox justifyContent="center">
+     <Paragraph pr={2} fontWeight="500" color="marron.main">
+      {calculateDiscount(price, off)}
+     </Paragraph>
 
-          {off !== 0 && (
-            <Paragraph color="gray.600" fontWeight="500">
-              <del>{currency(price)}</del>
-            </Paragraph>
-          )}
-        </FlexBox>
+     {off !== 0 && (
+      <Paragraph color="gray.600" fontWeight="500">
+       <del>{currency(price)}</del>
+      </Paragraph>
+     )}
+    </FlexBox>
 
-        <Link href={`/product/${slug}`}>
-          <H3
-            my="6px"
-            title={title}
-            fontSize="15px"
-            fontWeight="600"
-            className="title"
-            textAlign="center"
-            color="text.secondary">
-            {title}
-          </H3>
-        </Link>
+    <Link href={`/product/${slug}`}>
+     <H3
+      my="6px"
+      title={title}
+      fontSize="15px"
+      fontWeight="600"
+      className="title"
+      textAlign="center"
+      color="text.secondary"
+     >
+      {title}
+     </H3>
+    </Link>
 
-        {rating && (
-          <FlexBox alignItems="center" justifyContent="center">
-            <Rating value={rating || 0} color="warn" />{" "}
-            <Span ml={1} color={theme.colors.gray[600]}>{`(${rating}.0)`}</Span>
-          </FlexBox>
-        )}
-      </ContentWrapper>
-    </StyledCard>
-  );
+    {rating && (
+     <FlexBox alignItems="center" justifyContent="center">
+      <Rating value={rating || 0} color="warn" />{" "}
+      <Span ml={1} color={theme.colors.gray[600]}>{`(${rating}.0)`}</Span>
+     </FlexBox>
+    )}
+   </ContentWrapper>
+  </StyledCard>
+ );
 }

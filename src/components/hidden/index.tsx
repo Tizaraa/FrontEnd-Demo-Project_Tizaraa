@@ -9,32 +9,39 @@ import { isValidProp } from "@utils/utils";
 
 // ==============================================================
 export interface HiddenProps extends SpaceProps {
-  down?: number | deviceOptions;
-  up?: number | deviceOptions;
-  [key: string]: unknown;
-  children: ReactElement;
+ down?: number | deviceOptions;
+ up?: number | deviceOptions;
+ [key: string]: unknown;
+ children: ReactElement;
 }
 // ==============================================================
 
 const StyledHidden = styled.div.withConfig({
-  shouldForwardProp: (prop: string) => isValidProp(prop)
-})<HiddenProps & SpaceProps>(({ up, down }) => {
+ shouldForwardProp: (prop: string) => isValidProp(prop),
+})<HiddenProps & SpaceProps>(
+ ({ up, down }) => {
   const upDeviceSize = deviceSize[up] || up;
   const downDeviceSize = deviceSize[down] || down;
 
   if (up) {
-    return {
-      [`@media only screen and (min-width: ${upDeviceSize + 1}px)`]: { display: "none" }
-    };
+   return {
+    [`@media only screen and (min-width: ${upDeviceSize + 1}px)`]: {
+     display: "none",
+    },
+   };
   } else if (down) {
-    return {
-      [`@media only screen and (max-width: ${downDeviceSize}px)`]: { display: "none" }
-    };
+   return {
+    [`@media only screen and (max-width: ${downDeviceSize}px)`]: {
+     display: "none",
+    },
+   };
   } else {
-    return { display: "none" };
+   return { display: "none" };
   }
-}, compose(space, flex));
+ },
+ compose(space, flex)
+);
 
 export default function Hidden({ children, ...props }: HiddenProps) {
-  return <StyledHidden {...props}>{children}</StyledHidden>;
+ return <StyledHidden {...props}>{children}</StyledHidden>;
 }

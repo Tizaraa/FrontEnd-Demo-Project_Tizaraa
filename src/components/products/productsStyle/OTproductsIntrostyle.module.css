@@ -1,125 +1,124 @@
 /* Fix the formatting for CSS */
 .containerStyle {
-    width: 100%;
-  }
-  
-  .headerContainerStyle {
-    margin-bottom: 1rem;
-  }
-  
-  .titleStyle {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 0.75rem;
-  }
-  
-  .buttonContainerStyle {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-bottom: 1rem;
-  }
-  
-  /* For the dynamic button styles (hover and selected) */
-  .getButtonStyle {
-    /* padding: 0.5rem 1rem; */
-    border-radius: 0.25rem;
-    background-color: white;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 2px solid #ccc;
-  }
-  
-  .getButtonStyle:hover {
-    background-color: #f9fafb;
-  }
-  
-  /* When the button is selected */
-  .getButtonStyleSelected {
-    border: 2px solid rgb(233, 69, 96);
-    color: #0ea5e9;
-  }
-  
-  .getButtonStyleSelected:hover {
-    background-color: white;
-  }
-  
-  /* Table styles */
-  .tableContainerStyle {
-    max-height: 250px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f1f1f1;
-    border: none;
-  }
-  
-  .tableStyle {
-    width: 100%;
-    border-collapse: collapse;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-  }
-  
-  .tableHeaderStyle {
-    background-color: #f9fafb;
-    border-top: 1px solid #e5e7eb;
-    border-bottom: 1px solid #e5e7eb;
-  }
-  
-  .tableHeaderCellStyle {
-    text-align: center;
-    padding: 0.75rem 1rem;
-    font-weight: bold;
-    color: #374151;
-  }
-  
-  .tableRowStyle {
-    border-bottom: 1px solid #e5e7eb;
-    cursor: pointer;
-  }
-  
-  .tableCellStyle {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-  }
-  
-  .priceContainerStyle {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .currentPriceStyle {
-    color: #0ea5e9;
-    font-weight: 500;
-  }
-  
-  .originalPriceStyle {
-    color: #9ca3af;
-    font-size: 0.875rem;
-    text-decoration: line-through;
-  }
-  
-  .quantityCellStyle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .addButtonStyle {
-    background-color: #e94560;
-    color: white;
-    padding: 0.375rem 1.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.875rem;
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.2s;
-  }
-  
-  .addButtonStyle:hover {
-    background-color: #0284c7;
-  }
-  
+ width: 100%;
+}
+
+.headerContainerStyle {
+ margin-bottom: 1rem;
+}
+
+.titleStyle {
+ font-size: 1.25rem;
+ font-weight: bold;
+ margin-bottom: 0.75rem;
+}
+
+.buttonContainerStyle {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 5px;
+ margin-bottom: 1rem;
+}
+
+/* For the dynamic button styles (hover and selected) */
+.getButtonStyle {
+ /* padding: 0.5rem 1rem; */
+ border-radius: 0.25rem;
+ background-color: white;
+ font-size: 0.875rem;
+ cursor: pointer;
+ transition: all 0.2s;
+ border: 2px solid #ccc;
+}
+
+.getButtonStyle:hover {
+ background-color: #f9fafb;
+}
+
+/* When the button is selected */
+.getButtonStyleSelected {
+ border: 2px solid rgb(233, 69, 96);
+ color: #0ea5e9;
+}
+
+.getButtonStyleSelected:hover {
+ background-color: white;
+}
+
+/* Table styles */
+.tableContainerStyle {
+ max-height: 250px;
+ overflow-y: auto;
+ margin-bottom: 20px;
+ scrollbar-width: thin;
+ scrollbar-color: #888 #f1f1f1;
+ border: none;
+}
+
+.tableStyle {
+ width: 100%;
+ border-collapse: collapse;
+ border-left: 1px solid #ccc;
+ border-right: 1px solid #ccc;
+}
+
+.tableHeaderStyle {
+ background-color: #f9fafb;
+ border-top: 1px solid #e5e7eb;
+ border-bottom: 1px solid #e5e7eb;
+}
+
+.tableHeaderCellStyle {
+ text-align: center;
+ padding: 0.75rem 1rem;
+ font-weight: bold;
+ color: #374151;
+}
+
+.tableRowStyle {
+ border-bottom: 1px solid #e5e7eb;
+ cursor: pointer;
+}
+
+.tableCellStyle {
+ padding: 10px;
+ border: 1px solid #ddd;
+ text-align: center;
+}
+
+.priceContainerStyle {
+ display: flex;
+ flex-direction: column;
+}
+
+.currentPriceStyle {
+ color: #0ea5e9;
+ font-weight: 500;
+}
+
+.originalPriceStyle {
+ color: #9ca3af;
+ font-size: 0.875rem;
+ text-decoration: line-through;
+}
+
+.quantityCellStyle {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+}
+
+.addButtonStyle {
+ background-color: #e94560;
+ color: white;
+ padding: 0.375rem 1.5rem;
+ border-radius: 0.25rem;
+ font-size: 0.875rem;
+ cursor: pointer;
+ border: none;
+ transition: background-color 0.2s;
+}
+
+.addButtonStyle:hover {
+ background-color: #0284c7;
+}

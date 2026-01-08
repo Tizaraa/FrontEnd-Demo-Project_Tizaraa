@@ -6,17 +6,17 @@ type Props = { handle: ReactElement; children: ReactElement };
 // ============================================================
 
 export default function LoginDialog({ handle, children }: Props) {
-  const [open, setOpen] = useState(false);
+ const [open, setOpen] = useState(false);
 
-  const toggleDialog = () => setOpen(!open);
+ const toggleDialog = () => setOpen(!open);
 
-  return (
-    <Fragment>
-      {cloneElement(handle, { onClick: toggleDialog })}
+ return (
+  <Fragment>
+   {cloneElement(handle, { onClick: toggleDialog })}
 
-      <Modal open={open} onClose={toggleDialog}>
-        {children}
-      </Modal>
-    </Fragment>
-  );
+   <Modal open={open} onClose={toggleDialog}>
+    {children}
+   </Modal>
+  </Fragment>
+ );
 }

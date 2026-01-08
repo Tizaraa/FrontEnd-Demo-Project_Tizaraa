@@ -3,5 +3,5 @@ import { PropsWithChildren } from "react";
 import VendorDashboardLayout from "@component/layout/vendor-dashboard";
 
 export default function Layout({ children }: PropsWithChildren) {
-  return <VendorDashboardLayout>{children}</VendorDashboardLayout>;
+ return <VendorDashboardLayout>{children}</VendorDashboardLayout>;
 }

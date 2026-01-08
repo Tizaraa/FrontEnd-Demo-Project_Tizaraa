@@ -7,14 +7,18 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import DashboardContent from "@sections/vendor-dashboard/dashboard";
 
 export default async function VendorDashboard() {
-  const sales = await api.getSales();
-  const summeryCards = await api.getSummeryCards();
-  const countrySales = await api.getCountryBasedSales();
+ const sales = await api.getSales();
+ const summeryCards = await api.getSummeryCards();
+ const countrySales = await api.getCountryBasedSales();
 
-  return (
-    <Fragment>
-      <DashboardPageHeader title="Dashboard" iconName="bag_filled" />
-      <DashboardContent sales={sales} summeryCards={summeryCards} countrySales={countrySales} />
-    </Fragment>
-  );
+ return (
+  <Fragment>
+   <DashboardPageHeader title="Dashboard" iconName="bag_filled" />
+   <DashboardContent
+    sales={sales}
+    summeryCards={summeryCards}
+    countrySales={countrySales}
+   />
+  </Fragment>
+ );
 }

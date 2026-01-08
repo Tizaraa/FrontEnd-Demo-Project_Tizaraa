@@ -14,24 +14,24 @@ type Props = { title?: string; showNavbar?: boolean; children: ReactNode };
 // =========================================================================
 
 export default function ShopLayout({ children, showNavbar = true }: Props) {
-  return (
-    <StyledRoot>
-      {/* HEADER AREA */}
-      <Sticky fixedOn={0}>
-        <HeaderTwo />
-      </Sticky>
+ return (
+  <StyledRoot>
+   {/* HEADER AREA */}
+   <Sticky fixedOn={0}>
+    <HeaderTwo />
+   </Sticky>
 
-      {/* CONDITIONALLY RENDER NAVBAR AREA */}
-      {showNavbar && (
-        <div className="section-after-sticky">
-          <Navbar2 />
-        </div>
-      )}
+   {/* CONDITIONALLY RENDER NAVBAR AREA */}
+   {showNavbar && (
+    <div className="section-after-sticky">
+     <Navbar2 />
+    </div>
+   )}
 
-      {children}
+   {children}
 
-      {/* SMALLER DEVICE NAVIGATION AREA */}
-      <MobileNavigationBar />
-    </StyledRoot>
-  );
+   {/* SMALLER DEVICE NAVIGATION AREA */}
+   <MobileNavigationBar />
+  </StyledRoot>
+ );
 }

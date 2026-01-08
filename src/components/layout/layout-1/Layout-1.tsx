@@ -15,23 +15,23 @@ type Props = { title?: string; navbar?: ReactElement; children: ReactNode };
 // ===============================================================================
 
 export default function ShopLayout({ navbar, children }: Props) {
-  return (
-    <StyledAppLayout>
-        <CountdownWidget />
+ return (
+  <StyledAppLayout>
+   <CountdownWidget />
 
-      <Topbar />
+   <Topbar />
 
-     <Sticky fixedOn={0} scrollDistance={300}>
-        <Header />
-      </Sticky>
+   <Sticky fixedOn={0} scrollDistance={300}>
+    <Header />
+   </Sticky>
 
-      {navbar ? <div className="section-after-sticky">{navbar}</div> : null}
+   {navbar ? <div className="section-after-sticky">{navbar}</div> : null}
 
-      {!navbar ? <div className="section-after-sticky">{children}</div> : children}
+   {!navbar ? <div className="section-after-sticky">{children}</div> : children}
 
-      <MobileNavigationBar /> 
+   <MobileNavigationBar />
 
-      <Footer1 />
-    </StyledAppLayout>
-  );
+   <Footer1 />
+  </StyledAppLayout>
+ );
 }

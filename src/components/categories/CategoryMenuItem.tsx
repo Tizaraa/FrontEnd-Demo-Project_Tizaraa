@@ -4,33 +4,31 @@ import { StyledCategoryMenuItem } from "./styles";
 
 // ===============================================================
 type CategoryMenuItemProps = {
-  href: string;
-  icon?: string;
-  title: string;
-  caret?: boolean;
-  children: any;
+ href: string;
+ icon?: string;
+ title: string;
+ caret?: boolean;
+ children: any;
 };
 // ===============================================================
 
 export default function CategoryMenuItem(props: CategoryMenuItemProps) {
-  const { href, icon, title, caret = true, children } = props;
+ const { href, icon, title, caret = true, children } = props;
 
-  return (
-    <StyledCategoryMenuItem>
-      <Link href={`/category/${href}`}>
-        <div className="category-dropdown-link">
-          {/* {icon && <Icon variant="small">{icon}</Icon>} */}
-          <span className="title">{title}</span>
-          {caret && <Icon variant="small">chevron-right</Icon>}
-        </div>
-      </Link>
+ return (
+  <StyledCategoryMenuItem>
+   <Link href={`/category/${href}`}>
+    <div className="category-dropdown-link">
+     {/* {icon && <Icon variant="small">{icon}</Icon>} */}
+     <span className="title">{title}</span>
+     {caret && <Icon variant="small">chevron-right</Icon>}
+    </div>
+   </Link>
 
-      {children}
-    </StyledCategoryMenuItem>
-  );
+   {children}
+  </StyledCategoryMenuItem>
+ );
 }
-
-
 
 // import Link from "next/link";
 // import Icon from "@component/icon/Icon";
@@ -48,7 +46,6 @@ export default function CategoryMenuItem(props: CategoryMenuItemProps) {
 //   children: any;
 // };
 // // ===============================================================
-
 
 // export default function CategoryMenuItem(props: CategoryMenuItemProps) {
 //   const { href, icon, title, caret = true, children } = props;
@@ -88,7 +85,7 @@ export default function CategoryMenuItem(props: CategoryMenuItemProps) {
 //       {children}
 
 //         </Link>
-        
+
 //       ) : (
 //         <div className="category-dropdown-link non-clickable" onClick={handleClick}>
 //           <span className="title">{title}</span>
@@ -97,7 +94,7 @@ export default function CategoryMenuItem(props: CategoryMenuItemProps) {
 //       )}
 
 //       {isClickable && children}
-      
+
 //     </StyledCategoryMenuItem>
 //   );
 // }

@@ -22,162 +22,180 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { IDParams } from "interfaces";
 
 export default function OrderDetails({ params }: IDParams) {
-  return (
-    <Fragment>
-      <DashboardPageHeader
-        title="Order Details"
-        iconName="bag_filled"
-        button={
-          <Link href="/vendor/orders">
-            <Button color="primary" bg="primary.light" px="2rem">
-              Back to Order List
-            </Button>
-          </Link>
-        }
-      />
+ return (
+  <Fragment>
+   <DashboardPageHeader
+    title="Order Details"
+    iconName="bag_filled"
+    button={
+     <Link href="/vendor/orders">
+      <Button color="primary" bg="primary.light" px="2rem">
+       Back to Order List
+      </Button>
+     </Link>
+    }
+   />
 
-      <Card p="0px" mb="30px" overflow="hidden">
-        <TableRow bg="gray.200" p="12px" boxShadow="none" borderRadius={0}>
-          <FlexBox className="pre" flex="0 0 0 !important" m="6px" alignItems="center">
-            <Typography fontSize="14px" color="text.muted" mr="4px">
-              Order ID:
-            </Typography>
+   <Card p="0px" mb="30px" overflow="hidden">
+    <TableRow bg="gray.200" p="12px" boxShadow="none" borderRadius={0}>
+     <FlexBox
+      className="pre"
+      flex="0 0 0 !important"
+      m="6px"
+      alignItems="center"
+     >
+      <Typography fontSize="14px" color="text.muted" mr="4px">
+       Order ID:
+      </Typography>
 
-            <Typography fontSize="14px">{params.id}</Typography>
-          </FlexBox>
+      <Typography fontSize="14px">{params.id}</Typography>
+     </FlexBox>
 
-          <FlexBox className="pre" m="6px" alignItems="center">
-            <Typography fontSize="14px" color="text.muted" mr="4px">
-              Placed on:
-            </Typography>
-            <Typography fontSize="14px">{format(new Date(), "dd MMM, yyyy")}</Typography>
-          </FlexBox>
+     <FlexBox className="pre" m="6px" alignItems="center">
+      <Typography fontSize="14px" color="text.muted" mr="4px">
+       Placed on:
+      </Typography>
+      <Typography fontSize="14px">
+       {format(new Date(), "dd MMM, yyyy")}
+      </Typography>
+     </FlexBox>
 
-          <Box maxWidth="160px">
-            <Select placeholder="Order Status" options={orderStatusList} />
+     <Box maxWidth="160px">
+      <Select placeholder="Order Status" options={orderStatusList} />
+     </Box>
+    </TableRow>
+
+    <Box p="1rem 1.5rem 10px">
+     <TextField label="Add Product" fullwidth />
+    </Box>
+
+    <Box py="0.5rem">
+     {[1, 2, 3, 4].map((item) => (
+      <FlexBox
+       px="1rem"
+       py="0.5rem"
+       flexWrap="wrap"
+       alignItems="center"
+       key={item}
+      >
+       <FlexBox flex="2 2 260px" m="6px" alignItems="center">
+        <Avatar src="/assets/images/products/imagetree.png" size={64} />
+
+        <Box ml="20px">
+         <H6 my="0px">Nike React Phantom Run Flyknit 2</H6>
+         <FlexBox alignItems="center">
+          <Typography fontSize="14px" color="text.muted">
+           $145 x
+          </Typography>
+
+          <Box maxWidth="60px" ml="8px" mt="0.25rem">
+           <TextField defaultValue={3} type="number" fullwidth />
           </Box>
-        </TableRow>
-
-        <Box p="1rem 1.5rem 10px">
-          <TextField label="Add Product" fullwidth />
+         </FlexBox>
         </Box>
+       </FlexBox>
 
-        <Box py="0.5rem">
-          {[1, 2, 3, 4].map((item) => (
-            <FlexBox px="1rem" py="0.5rem" flexWrap="wrap" alignItems="center" key={item}>
-              <FlexBox flex="2 2 260px" m="6px" alignItems="center">
-                <Avatar src="/assets/images/products/imagetree.png" size={64} />
+       <FlexBox flex="1 1 260px" m="6px" alignItems="center">
+        <Typography fontSize="14px" color="text.muted">
+         Product properties: Black, L
+        </Typography>
+       </FlexBox>
 
-                <Box ml="20px">
-                  <H6 my="0px">Nike React Phantom Run Flyknit 2</H6>
-                  <FlexBox alignItems="center">
-                    <Typography fontSize="14px" color="text.muted">
-                      $145 x
-                    </Typography>
+       <FlexBox flex="0 0 0 !important" m="6px" alignItems="center">
+        <IconButton>
+         <Icon variant="small">delete</Icon>
+        </IconButton>
+       </FlexBox>
+      </FlexBox>
+     ))}
+    </Box>
+   </Card>
 
-                    <Box maxWidth="60px" ml="8px" mt="0.25rem">
-                      <TextField defaultValue={3} type="number" fullwidth />
-                    </Box>
-                  </FlexBox>
-                </Box>
-              </FlexBox>
+   <Grid container spacing={6}>
+    <Grid item lg={6} md={6} xs={12}>
+     <Card p="20px 30px" mb="1.5rem">
+      <H5 mt="0px" mb="14px">
+       Shipping Address
+      </H5>
 
-              <FlexBox flex="1 1 260px" m="6px" alignItems="center">
-                <Typography fontSize="14px" color="text.muted">
-                  Product properties: Black, L
-                </Typography>
-              </FlexBox>
+      <TextArea
+       rows={5}
+       fullwidth
+       borderRadius={10}
+       defaultValue="Kelly Williams 777 Brockton Avenue, Abington MA 2351"
+      />
+     </Card>
 
-              <FlexBox flex="0 0 0 !important" m="6px" alignItems="center">
-                <IconButton>
-                  <Icon variant="small">delete</Icon>
-                </IconButton>
-              </FlexBox>
-            </FlexBox>
-          ))}
-        </Box>
-      </Card>
+     <Card p="20px 30px">
+      <H5 mt="0px" mb="14px">
+       Customer's Note
+      </H5>
+      <TextArea
+       defaultValue="Please deliver ASAP."
+       rows={5}
+       borderRadius={10}
+       fullwidth
+      />
+     </Card>
+    </Grid>
 
-      <Grid container spacing={6}>
-        <Grid item lg={6} md={6} xs={12}>
-          <Card p="20px 30px" mb="1.5rem">
-            <H5 mt="0px" mb="14px">
-              Shipping Address
-            </H5>
+    <Grid item lg={6} md={6} xs={12}>
+     <Card p="20px 30px" mb="1.5rem">
+      <H5 mt="0px" mb="14px">
+       Total Summary
+      </H5>
 
-            <TextArea
-              rows={5}
-              fullwidth
-              borderRadius={10}
-              defaultValue="Kelly Williams 777 Brockton Avenue, Abington MA 2351"
-            />
-          </Card>
+      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+       <Typography fontSize="14px" color="text.hint">
+        Subtotal:
+       </Typography>
+       <H6 my="0px">$335</H6>
+      </FlexBox>
 
-          <Card p="20px 30px">
-            <H5 mt="0px" mb="14px">
-              Customer's Note
-            </H5>
-            <TextArea defaultValue="Please deliver ASAP." rows={5} borderRadius={10} fullwidth />
-          </Card>
-        </Grid>
+      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+       <Typography fontSize="14px" color="text.hint">
+        Shipping fee:
+       </Typography>
 
-        <Grid item lg={6} md={6} xs={12}>
-          <Card p="20px 30px" mb="1.5rem">
-            <H5 mt="0px" mb="14px">
-              Total Summary
-            </H5>
+       <FlexBox alignItems="center" maxWidth="100px" ml="8px" mt="0.25rem">
+        <Typography mr="0.5rem">$</Typography>
+        <TextField defaultValue={10} type="number" fullwidth />
+       </FlexBox>
+      </FlexBox>
 
-            <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-              <Typography fontSize="14px" color="text.hint">
-                Subtotal:
-              </Typography>
-              <H6 my="0px">$335</H6>
-            </FlexBox>
+      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+       <Typography fontSize="14px" color="text.hint">
+        Discount:
+       </Typography>
 
-            <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-              <Typography fontSize="14px" color="text.hint">
-                Shipping fee:
-              </Typography>
+       <FlexBox alignItems="center" maxWidth="100px" ml="8px" mt="0.25rem">
+        <Typography mr="0.5rem">-$</Typography>
+        <TextField defaultValue={30} type="number" fullwidth />
+       </FlexBox>
+      </FlexBox>
 
-              <FlexBox alignItems="center" maxWidth="100px" ml="8px" mt="0.25rem">
-                <Typography mr="0.5rem">$</Typography>
-                <TextField defaultValue={10} type="number" fullwidth />
-              </FlexBox>
-            </FlexBox>
+      <Divider mb="0.5rem" />
 
-            <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-              <Typography fontSize="14px" color="text.hint">
-                Discount:
-              </Typography>
+      <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
+       <H6 my="0px">Total</H6>
+       <H6 my="0px">$315</H6>
+      </FlexBox>
 
-              <FlexBox alignItems="center" maxWidth="100px" ml="8px" mt="0.25rem">
-                <Typography mr="0.5rem">-$</Typography>
-                <TextField defaultValue={30} type="number" fullwidth />
-              </FlexBox>
-            </FlexBox>
+      <Typography fontSize="14px">Paid by Credit/Debit Card</Typography>
+     </Card>
 
-            <Divider mb="0.5rem" />
-
-            <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-              <H6 my="0px">Total</H6>
-              <H6 my="0px">$315</H6>
-            </FlexBox>
-
-            <Typography fontSize="14px">Paid by Credit/Debit Card</Typography>
-          </Card>
-
-          <Button variant="contained" color="primary" ml="auto">
-            Save Changes
-          </Button>
-        </Grid>
-      </Grid>
-    </Fragment>
-  );
+     <Button variant="contained" color="primary" ml="auto">
+      Save Changes
+     </Button>
+    </Grid>
+   </Grid>
+  </Fragment>
+ );
 }
 
 const orderStatusList = [
-  { label: "Processing", value: "Processing" },
-  { label: "Pending", value: "Pending" },
-  { label: "Delivered", value: "Delivered" },
-  { label: "Cancelled", value: "Cancelled" }
+ { label: "Processing", value: "Processing" },
+ { label: "Pending", value: "Pending" },
+ { label: "Delivered", value: "Delivered" },
+ { label: "Cancelled", value: "Cancelled" },
 ];

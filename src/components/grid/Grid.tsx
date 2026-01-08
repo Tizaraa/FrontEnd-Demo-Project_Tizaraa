@@ -39,10 +39,6 @@
 //   );
 // }
 
-
-
-
-
 "use client";
 
 import { Children, cloneElement, isValidElement } from "react";
@@ -55,37 +51,37 @@ import StyledGrid from "./styles";
 import { GridProps } from "./types";
 
 export default function Grid({
-  children,
-  spacing = 0,
-  vertical_spacing,
-  horizontal_spacing,
-  containerHeight = "unset",
-  ...props
+ children,
+ spacing = 0,
+ vertical_spacing,
+ horizontal_spacing,
+ containerHeight = "unset",
+ ...props
 }: GridProps & FlexboxProps) {
-  let childList = children;
+ let childList = children;
 
-  if (props.container) {
-    childList = Children.map(children, (child) => {
-      if (isValidElement(child) && typeof child.type !== "string") {
-        return cloneElement(child as React.ReactElement<any>, {
-          spacing,
-          vertical_spacing,
-          horizontal_spacing,
-        });
-      }
-      return child;
+ if (props.container) {
+  childList = Children.map(children, (child) => {
+   if (isValidElement(child) && typeof child.type !== "string") {
+    return cloneElement(child as React.ReactElement<any>, {
+     spacing,
+     vertical_spacing,
+     horizontal_spacing,
     });
-  }
+   }
+   return child;
+  });
+ }
 
-  return (
-    <StyledGrid
-      spacing={spacing}
-      containerHeight={containerHeight}
-      vertical_spacing={vertical_spacing}
-      horizontal_spacing={horizontal_spacing}
-      {...props}
-    >
-      {childList}
-    </StyledGrid>
-  );
+ return (
+  <StyledGrid
+   spacing={spacing}
+   containerHeight={containerHeight}
+   vertical_spacing={vertical_spacing}
+   horizontal_spacing={horizontal_spacing}
+   {...props}
+  >
+   {childList}
+  </StyledGrid>
+ );
 }

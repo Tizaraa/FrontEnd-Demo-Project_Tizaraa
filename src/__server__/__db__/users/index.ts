@@ -6,31 +6,31 @@ import type MockAdapter from "axios-mock-adapter";
 import { users } from "./data";
 
 export const adminApiEndpoints = (Mock: MockAdapter) => {
-  Mock.onGet("/api/user-list").reply(() => {
-    try {
-      return [200, users];
-    } catch (err) {
-      console.error(err);
-      return [500, { message: "Internal server error" }];
-    }
-  });
+ Mock.onGet("/api/user-list").reply(() => {
+  try {
+   return [200, users];
+  } catch (err) {
+   console.error(err);
+   return [500, { message: "Internal server error" }];
+  }
+ });
 
-  Mock.onGet("/api/user-list/1").reply(() => {
-    try {
-      return [200, users[0]];
-    } catch (err) {
-      console.error(err);
-      return [500, { message: "Internal server error" }];
-    }
-  });
+ Mock.onGet("/api/user-list/1").reply(() => {
+  try {
+   return [200, users[0]];
+  } catch (err) {
+   console.error(err);
+   return [500, { message: "Internal server error" }];
+  }
+ });
 
-  Mock.onGet("/api/user-list/id-list").reply(() => {
-    try {
-      const idList = users.map((item) => ({ params: { id: item.id } }));
-      return [200, idList];
-    } catch (err) {
-      console.error(err);
-      return [500, { message: "Internal server error" }];
-    }
-  });
+ Mock.onGet("/api/user-list/id-list").reply(() => {
+  try {
+   const idList = users.map((item) => ({ params: { id: item.id } }));
+   return [200, idList];
+  } catch (err) {
+   console.error(err);
+   return [500, { message: "Internal server error" }];
+  }
+ });
 };

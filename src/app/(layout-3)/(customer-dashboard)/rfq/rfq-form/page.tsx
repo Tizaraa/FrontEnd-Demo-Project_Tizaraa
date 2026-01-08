@@ -1,13 +1,13 @@
-import React from 'react'
-import RfqProductForm from './RfqProductForm'
+import React from "react";
+import RfqProductForm from "./RfqProductForm";
 //import RfqProductList from './RfqProductList'
 
 const page = () => {
-  return (
-    <>
-    <RfqProductForm />
-    </>
-  )
-}
+ return (
+  <>
+   <RfqProductForm />
+  </>
+ );
+};
 
-export default page
+export default page;

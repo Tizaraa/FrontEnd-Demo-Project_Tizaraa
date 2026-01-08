@@ -1,57 +1,57 @@
 .otp-container {
-  --ReactInputVerificationCode-itemWidth: 46.5px;
-  --ReactInputVerificationCode-itemHeight: 46.5px;
-  margin-bottom: 1rem;
-  gap: 8px; /* Add spacing between OTP inputs */
-  font-size: 1rem;
+ --ReactInputVerificationCode-itemWidth: 46.5px;
+ --ReactInputVerificationCode-itemHeight: 46.5px;
+ margin-bottom: 1rem;
+ gap: 8px; /* Add spacing between OTP inputs */
+ font-size: 1rem;
 }
 
 /* Mobile (small screens, 320px width and below) */
 @media (max-width: 320px) {
-  .otp-container {
-    --ReactInputVerificationCode-itemWidth: 28px;
-    --ReactInputVerificationCode-itemHeight: 28px;
-    gap: 4px; /* Adjust gap for very small screens */
-    font-size: 0.5rem;
-  }
+ .otp-container {
+  --ReactInputVerificationCode-itemWidth: 28px;
+  --ReactInputVerificationCode-itemHeight: 28px;
+  gap: 4px; /* Adjust gap for very small screens */
+  font-size: 0.5rem;
+ }
 }
 
 /* Mobile (small screens, 321px to 576px) */
 @media (min-width: 321px) and (max-width: 576px) {
-  .otp-container {
-    --ReactInputVerificationCode-itemWidth: 34px;
-    --ReactInputVerificationCode-itemHeight: 34px;
-    gap: 5px; /* Adjust gap for smaller screens */
-    font-size: 0.5rem;
-  }
+ .otp-container {
+  --ReactInputVerificationCode-itemWidth: 34px;
+  --ReactInputVerificationCode-itemHeight: 34px;
+  gap: 5px; /* Adjust gap for smaller screens */
+  font-size: 0.5rem;
+ }
 }
 
 /* Tablet (medium screens) */
 @media (min-width: 577px) and (max-width: 768px) {
-  .otp-container {
-    --ReactInputVerificationCode-itemWidth: 46.5px;
-    --ReactInputVerificationCode-itemHeight: 46.5px;
-    gap: 6px; /* Adjust gap for medium screens */
-    font-size: 0.9rem;
-  }
+ .otp-container {
+  --ReactInputVerificationCode-itemWidth: 46.5px;
+  --ReactInputVerificationCode-itemHeight: 46.5px;
+  gap: 6px; /* Adjust gap for medium screens */
+  font-size: 0.9rem;
+ }
 }
 
 /* Laptop (large screens) */
 @media (min-width: 769px) and (max-width: 1200px) {
-  .otp-container {
-    --ReactInputVerificationCode-itemWidth: 46.5px;
-    --ReactInputVerificationCode-itemHeight: 46.5px;
-    gap: 7px; /* Adjust gap for large screens */
-    font-size: 1rem;
-  }
+ .otp-container {
+  --ReactInputVerificationCode-itemWidth: 46.5px;
+  --ReactInputVerificationCode-itemHeight: 46.5px;
+  gap: 7px; /* Adjust gap for large screens */
+  font-size: 1rem;
+ }
 }
 
 /* Desktop (extra large screens) */
 @media (min-width: 1201px) {
-  .otp-container {
-    --ReactInputVerificationCode-itemWidth: 46.5px;
-    --ReactInputVerificationCode-itemHeight: 46.5px;
-    gap: 8px; /* Maintain gap for extra-large screens */
-    font-size: 1rem;
-  }
+ .otp-container {
+  --ReactInputVerificationCode-itemWidth: 46.5px;
+  --ReactInputVerificationCode-itemHeight: 46.5px;
+  gap: 8px; /* Maintain gap for extra-large screens */
+  font-size: 1rem;
+ }
 }

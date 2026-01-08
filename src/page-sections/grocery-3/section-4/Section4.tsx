@@ -15,38 +15,38 @@ type Props = { products: Product[] };
 // =====================================================
 
 export default function Section4({ products }: Props) {
-  return (
-    <Box mb={6}>
-      <TitleBox>
-        <H1>Our All Products</H1>
-        <div />
-      </TitleBox>
+ return (
+  <Box mb={6}>
+   <TitleBox>
+    <H1>Our All Products</H1>
+    <div />
+   </TitleBox>
 
-      <Grid container spacing={6}>
-        {products.map((item) => (
-          <Grid key={item.id} item md={4} sm={6} xs={12}>
-            <ProductCard12
-              id={item.id}
-              slug={item.slug}
-              title={item.title}
-              price={item.price}
-              productStock={item.product_stock}
-              off={item.discount}
-              rating={item.rating}
-              images={item.images}
-              imgUrl={item.thumbnail}
-              productId={item.id}
-              sellerId={item.id}
-            />
-          </Grid>
-        ))}
-      </Grid>
+   <Grid container spacing={6}>
+    {products.map((item) => (
+     <Grid key={item.id} item md={4} sm={6} xs={12}>
+      <ProductCard12
+       id={item.id}
+       slug={item.slug}
+       title={item.title}
+       price={item.price}
+       productStock={item.product_stock}
+       off={item.discount}
+       rating={item.rating}
+       images={item.images}
+       imgUrl={item.thumbnail}
+       productId={item.id}
+       sellerId={item.id}
+      />
+     </Grid>
+    ))}
+   </Grid>
 
-      <FlexBox alignItems="center" justifyContent="center" mt={36}>
-        <Button color="primary" variant="contained">
-          Load More...
-        </Button>
-      </FlexBox>
-    </Box>
-  );
+   <FlexBox alignItems="center" justifyContent="center" mt={36}>
+    <Button color="primary" variant="contained">
+     Load More...
+    </Button>
+   </FlexBox>
+  </Box>
+ );
 }

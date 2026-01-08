@@ -630,19 +630,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ==================== Code for - If no products available, show more button hidden from UI. | Use this code.
 // "use client";
 // import { useRouter } from "next/navigation";
@@ -716,7 +703,6 @@
 //     setCurrentPage(1);
 //     router.push(`/product/search/${categoryId}`);
 //   };
-  
 
 //   const handleCountryChange = (countries: number[]) => {
 //     setSelectedCountry(countries);

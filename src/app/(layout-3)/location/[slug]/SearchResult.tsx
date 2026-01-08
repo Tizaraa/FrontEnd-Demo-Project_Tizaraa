@@ -21,163 +21,158 @@ import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+ display: flex;
+ justify-content: center;
+ align-items: center;
 `;
 
 const productsPerPage = 10;
 
 export default function SearchResult({ sortOptions, slug }) {
-  const router = useRouter();
-  const width = useWindowSize();
-  const [view, setView] = useState<"grid" | "list">("grid");
-  const [selectedSortOption, setSelectedSortOption] = useState(
-    sortOptions[0].value
-  );
-  const [selectedBrand, setSelectedBrand] = useState<any[] | null>(null);
-  // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+ const router = useRouter();
+ const width = useWindowSize();
+ const [view, setView] = useState<"grid" | "list">("grid");
+ const [selectedSortOption, setSelectedSortOption] = useState(
+  sortOptions[0].value
+ );
+ const [selectedBrand, setSelectedBrand] = useState<any[] | null>(null);
+ // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+ const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null); // Track selected country
-  const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [priceMin, setPriceMin] = useState<number | null>(null);
-  const [priceMax, setPriceMax] = useState<number | null>(null);
-  
-  let pageType = "shop";
+ const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null); // Track selected country
+ const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
+ const [products, setProducts] = useState<any[]>([]);
+ const [loading, setLoading] = useState(false);
+ const [totalProducts, setTotalProducts] = useState(0);
+ const [currentPage, setCurrentPage] = useState(1);
+ const [priceMin, setPriceMin] = useState<number | null>(null);
+ const [priceMax, setPriceMax] = useState<number | null>(null);
 
-  const isTablet = width < 1025;
+ let pageType = "shop";
 
-  const handleBrandChange = (brand: any[]) => {
-    setSelectedBrand(brand);
-    setCurrentPage(1); // Reset to first page
-  };
+ const isTablet = width < 1025;
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(1); // Reset to first page
-    // router.push(`/product/search/${category}`);
-  };
+ const handleBrandChange = (brand: any[]) => {
+  setSelectedBrand(brand);
+  setCurrentPage(1); // Reset to first page
+ };
 
-  // const handleCategoryChange = (categories: number[]) => {
-  //   const categoryId = categories[0];
-  //   setSelectedCategory(categoryId);
-  //   setCurrentPage(1);
-  //   router.push(`/product/search/${categoryId}`);
-  // };
-  
+ const handleCategoryChange = (category: string) => {
+  setSelectedCategory(category);
+  setCurrentPage(1); // Reset to first page
+  // router.push(`/product/search/${category}`);
+ };
 
-  const handleCountryChange = (countries: number[]) => {
-    setSelectedCountry(countries); // Update selected countries
-    setCurrentPage(1); // Reset to first page
-  };
+ // const handleCategoryChange = (categories: number[]) => {
+ //   const categoryId = categories[0];
+ //   setSelectedCategory(categoryId);
+ //   setCurrentPage(1);
+ //   router.push(`/product/search/${categoryId}`);
+ // };
 
-  const handleProvinceChange = (provinces: number[]) => {
-    setSelectedProvinces(provinces);
-    setCurrentPage(1);
-  }
+ const handleCountryChange = (countries: number[]) => {
+  setSelectedCountry(countries); // Update selected countries
+  setCurrentPage(1); // Reset to first page
+ };
 
+ const handleProvinceChange = (provinces: number[]) => {
+  setSelectedProvinces(provinces);
+  setCurrentPage(1);
+ };
 
-  const handlePriceChange = (min: number | null, max: number | null) => {
-    setPriceMin(min);
-    setPriceMax(max);
-    setCurrentPage(1);
-  };
+ const handlePriceChange = (min: number | null, max: number | null) => {
+  setPriceMin(min);
+  setPriceMax(max);
+  setCurrentPage(1);
+ };
 
+ const handleSortChange = (sortOption: any) => {
+  setSelectedSortOption(sortOption.value);
+ };
 
-  const handleSortChange = (sortOption: any) => {
-    setSelectedSortOption(sortOption.value);
-  };
-
-  const fetchProducts = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `${ApiBaseUrl.baseUrl}seller/products/${slug}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            category: selectedCategory || "all",
-            brand: selectedBrand || null,
-            country: selectedCountry || null, // Add country filter here
-            province: selectedProvinces || null,
-            page: currentPage,
-            orderBy: selectedSortOption,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-      // Reset products when fetching the first page
-      if (currentPage === 1) {
-        setProducts(data.data);
-      } else {
-        setProducts((prevProducts) => [...prevProducts, ...data.data]);
-      }
-      setTotalProducts(data.total);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setLoading(false);
+ const fetchProducts = useCallback(async () => {
+  setLoading(true);
+  try {
+   const response = await fetch(
+    `${ApiBaseUrl.baseUrl}seller/products/${slug}`,
+    {
+     method: "POST",
+     headers: {
+      "Content-Type": "application/json",
+     },
+     body: JSON.stringify({
+      category: selectedCategory || "all",
+      brand: selectedBrand || null,
+      country: selectedCountry || null, // Add country filter here
+      province: selectedProvinces || null,
+      page: currentPage,
+      orderBy: selectedSortOption,
+     }),
     }
-  }, [
-    selectedBrand,
-    selectedCategory,
-    selectedCountry,
-    currentPage,
-    selectedSortOption,
-  ]);
+   );
 
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+   if (!response.ok) {
+    throw new Error("Network response was not ok");
+   }
 
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+   const data = await response.json();
+   // Reset products when fetching the first page
+   if (currentPage === 1) {
+    setProducts(data.data);
+   } else {
+    setProducts((prevProducts) => [...prevProducts, ...data.data]);
+   }
+   setTotalProducts(data.total);
+  } catch (error) {
+   console.error("Error fetching products:", error);
+  } finally {
+   setLoading(false);
+  }
+ }, [
+  selectedBrand,
+  selectedCategory,
+  selectedCountry,
+  currentPage,
+  selectedSortOption,
+ ]);
 
-  const handleLoadMore = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
+ useEffect(() => {
+  fetchProducts();
+ }, [fetchProducts]);
 
-  return (
-    <>
-      <FlexBox
-        as={Card}
-        mb="55px"
-        p="1.25rem"
-        elevation={5}
-        flexWrap="wrap"
-        borderRadius={8}
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <div>
-          {/* <H5>Searching for {slug}</H5> */}
-          <H5>Searching for {decodeURIComponent(slug)}</H5>
+ useEffect(() => {
+  fetchProducts();
+ }, [fetchProducts]);
 
-          <Paragraph color="text.muted">
-            {totalProducts} results found
-          </Paragraph>
-        </div>
+ const handleLoadMore = () => {
+  setCurrentPage((prevPage) => prevPage + 1);
+ };
 
-        <FlexBox alignItems="center" flexWrap="wrap">
-          <Paragraph color="text.muted" mr="1rem">
-            Sort by:
-          </Paragraph>
+ return (
+  <>
+   <FlexBox
+    as={Card}
+    mb="55px"
+    p="1.25rem"
+    elevation={5}
+    flexWrap="wrap"
+    borderRadius={8}
+    alignItems="center"
+    justifyContent="space-between"
+   >
+    <div>
+     {/* <H5>Searching for {slug}</H5> */}
+     <H5>Searching for {decodeURIComponent(slug)}</H5>
 
-          {/* <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
+     <Paragraph color="text.muted">{totalProducts} results found</Paragraph>
+    </div>
+
+    <FlexBox alignItems="center" flexWrap="wrap">
+     <Paragraph color="text.muted" mr="1rem">
+      Sort by:
+     </Paragraph>
+
+     {/* <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
             <Select
               placeholder="Sort by"
               options={sortOptions}
@@ -187,72 +182,65 @@ export default function SearchResult({ sortOptions, slug }) {
               onChange={handleSortChange}
             />
           </Box> */}
-          <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
-  <Select
-    placeholder="Sort by"
-    options={sortOptions}
-    defaultValue={sortOptions.find(
-      (option) => option.value === selectedSortOption
-    )}
-    onChange={handleSortChange}
-    styles={{
-      menu: (provided) => ({
-        ...provided,
-        zIndex: 1000, 
-      }),
-    }}
-  />
-</Box>
+     <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
+      <Select
+       placeholder="Sort by"
+       options={sortOptions}
+       defaultValue={sortOptions.find(
+        (option) => option.value === selectedSortOption
+       )}
+       onChange={handleSortChange}
+       styles={{
+        menu: (provided) => ({
+         ...provided,
+         zIndex: 1000,
+        }),
+       }}
+      />
+     </Box>
 
+     <Paragraph color="text.muted" mr="0.5rem">
+      View:
+     </Paragraph>
 
-          <Paragraph color="text.muted" mr="0.5rem">
-            View:
-          </Paragraph>
+     <IconButton onClick={() => setView("grid")}>
+      <Icon variant="small" color={view === "grid" ? "primary" : "inherit"}>
+       grid
+      </Icon>
+     </IconButton>
 
-          <IconButton onClick={() => setView("grid")}>
-            <Icon
-              variant="small"
-              color={view === "grid" ? "primary" : "inherit"}
-            >
-              grid
-            </Icon>
-          </IconButton>
+     <IconButton onClick={() => setView("list")}>
+      <Icon variant="small" color={view === "list" ? "primary" : "inherit"}>
+       menu
+      </Icon>
+     </IconButton>
 
-          <IconButton onClick={() => setView("list")}>
-            <Icon
-              variant="small"
-              color={view === "list" ? "primary" : "inherit"}
-            >
-              menu
-            </Icon>
-          </IconButton>
+     {isTablet && (
+      <Sidenav
+       position="left"
+       scroll={true}
+       handle={
+        <IconButton>
+         <Icon>options</Icon>
+        </IconButton>
+       }
+      >
+       <ProductFilterCard
+        onBrandChange={handleBrandChange}
+        onCategoryChange={handleCategoryChange}
+        onCountryChange={handleCountryChange} // Pass country handler
+        onProvinceChange={handleProvinceChange}
+        onPriceChange={handlePriceChange}
+        slug={slug}
+        pageType={pageType}
+       />
+      </Sidenav>
+     )}
+    </FlexBox>
+   </FlexBox>
 
-          {isTablet && (
-            <Sidenav
-              position="left"
-              scroll={true}
-              handle={
-                <IconButton>
-                  <Icon>options</Icon>
-                </IconButton>
-              }
-            >
-              <ProductFilterCard
-                onBrandChange={handleBrandChange}
-                onCategoryChange={handleCategoryChange}
-                onCountryChange={handleCountryChange} // Pass country handler
-                onProvinceChange={handleProvinceChange}
-                onPriceChange={handlePriceChange}
-                slug={slug}
-                pageType={pageType}
-              />
-            </Sidenav>
-          )}
-        </FlexBox>
-      </FlexBox>
-
-      <Grid container spacing={6}>
-        {/* <Grid item lg={3} xs={12}>
+   <Grid container spacing={6}>
+    {/* <Grid item lg={3} xs={12}>
           <ProductFilterCard
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
@@ -263,52 +251,52 @@ export default function SearchResult({ sortOptions, slug }) {
           />
         </Grid> */}
 
-        {!isTablet && (
-          <Grid item lg={3} xs={12}>
-            <ProductFilterCard
-            onBrandChange={handleBrandChange}
-            onCategoryChange={handleCategoryChange}
-            onCountryChange={handleCountryChange} // Pass country handler
-            onProvinceChange={handleProvinceChange}
-            onPriceChange={handlePriceChange}
-            slug={slug}
-            pageType={pageType}
-            />
-          </Grid>
-        )}
+    {!isTablet && (
+     <Grid item lg={3} xs={12}>
+      <ProductFilterCard
+       onBrandChange={handleBrandChange}
+       onCategoryChange={handleCategoryChange}
+       onCountryChange={handleCountryChange} // Pass country handler
+       onProvinceChange={handleProvinceChange}
+       onPriceChange={handlePriceChange}
+       slug={slug}
+       pageType={pageType}
+      />
+     </Grid>
+    )}
 
-        <Grid item lg={9} xs={12}>
-          {currentPage === 1 && loading ? ( // Show loading only on initial load
-            <LoaderWrapper>
-              <Vortex />
-            </LoaderWrapper>
-          ) : view === "grid" ? (
-            <>
-              <ProductGridView
-                products={products}
-                totalProducts={totalProducts}
-                currentPage={currentPage}
-                productsPerPage={productsPerPage}
-                onPageChange={handleLoadMore}
-              />
-              {loading && currentPage > 1 && (
-                <LoaderWrapper>
-                <Vortex />
-              </LoaderWrapper>        
-              )}{" "}
-              {/* Optional: loading indicator for more products */}
-            </>
-          ) : (
-            <ProductListView
-              products={products}
-              totalProducts={0}
-              currentPage={0}
-              productsPerPage={0}
-              onPageChange={() => {}}
-            />
-          )}
-        </Grid>
-      </Grid>
-    </>
-  );
+    <Grid item lg={9} xs={12}>
+     {currentPage === 1 && loading ? ( // Show loading only on initial load
+      <LoaderWrapper>
+       <Vortex />
+      </LoaderWrapper>
+     ) : view === "grid" ? (
+      <>
+       <ProductGridView
+        products={products}
+        totalProducts={totalProducts}
+        currentPage={currentPage}
+        productsPerPage={productsPerPage}
+        onPageChange={handleLoadMore}
+       />
+       {loading && currentPage > 1 && (
+        <LoaderWrapper>
+         <Vortex />
+        </LoaderWrapper>
+       )}{" "}
+       {/* Optional: loading indicator for more products */}
+      </>
+     ) : (
+      <ProductListView
+       products={products}
+       totalProducts={0}
+       currentPage={0}
+       productsPerPage={0}
+       onPageChange={() => {}}
+      />
+     )}
+    </Grid>
+   </Grid>
+  </>
+ );
 }

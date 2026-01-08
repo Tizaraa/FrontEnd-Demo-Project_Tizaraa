@@ -11,32 +11,32 @@ import Section4 from "@sections/furniture-shop/section-4";
 import ContentBox from "@sections/furniture-shop/ContentBox";
 
 export default async function FurnitureShop() {
-  const topNewProducts = await api.getTopNewProducts();
-  const mainCarouselData = await api.getMainCarouselData();
-  const furnitureProducts = await api.getFurnitureProducts();
-  const sidebarNavList = await api.getFurnitureShopNavList();
-  const topSellingProducts = await api.getTopSellingProducts();
+ const topNewProducts = await api.getTopNewProducts();
+ const mainCarouselData = await api.getMainCarouselData();
+ const furnitureProducts = await api.getFurnitureProducts();
+ const sidebarNavList = await api.getFurnitureShopNavList();
+ const topSellingProducts = await api.getTopSellingProducts();
 
-  return (
-    <Fragment>
-      {/* NAVBAR AREA */}
-      <Navbar />
+ return (
+  <Fragment>
+   {/* NAVBAR AREA */}
+   <Navbar />
 
-      {/* HERO CAROUSEL AREA */}
-      <Section1 mainCarouselData={mainCarouselData} />
+   {/* HERO CAROUSEL AREA */}
+   <Section1 mainCarouselData={mainCarouselData} />
 
-      <Container>
-        <ContentBox sidebarNavList={sidebarNavList} />
+   <Container>
+    <ContentBox sidebarNavList={sidebarNavList} />
 
-        {/* TOP NEW PRODUCTS AREA */}
-        <Section3 products={topNewProducts} title="Top New Product" />
+    {/* TOP NEW PRODUCTS AREA */}
+    <Section3 products={topNewProducts} title="Top New Product" />
 
-        {/* TOP SELLING PRODUCTS AREA */}
-        <Section3 products={topSellingProducts} title="Top Selling Product" />
+    {/* TOP SELLING PRODUCTS AREA */}
+    <Section3 products={topSellingProducts} title="Top Selling Product" />
 
-        {/* ALL PRODUCTS AREA  */}
-        <Section4 products={furnitureProducts} />
-      </Container>
-    </Fragment>
-  );
+    {/* ALL PRODUCTS AREA  */}
+    <Section4 products={furnitureProducts} />
+   </Container>
+  </Fragment>
+ );
 }

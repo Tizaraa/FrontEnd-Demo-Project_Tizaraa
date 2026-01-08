@@ -17,57 +17,57 @@ import Section9 from "@sections/market-2/section-9";
 import Section10 from "@sections/market-2/section-10";
 
 export default async function MarketTwo() {
-  const brands = await api.getBrands();
-  const products = await api.getProducts();
-  const serviceList = await api.getServices();
-  const categories = await api.getCategories();
-  const mainCarouselData = await api.getMainCarouselData();
-  const menFashionProducts = await api.getMenFashionProducts();
-  const electronicsProducts = await api.getElectronicsProducts();
-  const womenFashionProducts = await api.getWomenFashionProducts();
+ const brands = await api.getBrands();
+ const products = await api.getProducts();
+ const serviceList = await api.getServices();
+ const categories = await api.getCategories();
+ const mainCarouselData = await api.getMainCarouselData();
+ const menFashionProducts = await api.getMenFashionProducts();
+ const electronicsProducts = await api.getElectronicsProducts();
+ const womenFashionProducts = await api.getWomenFashionProducts();
 
-  return (
-    <Fragment>
-      {/* NAVBAR AREA */}
-      <Navbar />
+ return (
+  <Fragment>
+   {/* NAVBAR AREA */}
+   <Navbar />
 
-      <Box bg="#F6F6F6">
-        {/* HERO CAROUSEL AREA */}
-        <Section1 carouselData={mainCarouselData} />
+   <Box bg="#F6F6F6">
+    {/* HERO CAROUSEL AREA */}
+    <Section1 carouselData={mainCarouselData} />
 
-        {/* SERVICE LIST AREA */}
-        <Section2 serviceList={serviceList} />
+    {/* SERVICE LIST AREA */}
+    <Section2 serviceList={serviceList} />
 
-        {/* TOP CATEGORIES AREA */}
-        <Section3 categories={categories} />
+    {/* TOP CATEGORIES AREA */}
+    <Section3 categories={categories} />
 
-        {/* DEAL OF THE DAY PRODUCTS AREA */}
-        <Section4 products={products} />
+    {/* DEAL OF THE DAY PRODUCTS AREA */}
+    <Section4 products={products} />
 
-        {/* NEW ARRIVALS AND BEST SELLER OFFER BANNER AREA */}
-        <Section5 />
+    {/* NEW ARRIVALS AND BEST SELLER OFFER BANNER AREA */}
+    <Section5 />
 
-        {/* ELECTRONICS CATEGORY BASED PRODUCTS AREA */}
-        <Section6 data={electronicsProducts} />
+    {/* ELECTRONICS CATEGORY BASED PRODUCTS AREA */}
+    <Section6 data={electronicsProducts} />
 
-        {/* SALES OFFER BANNERS AREA */}
-        <Section7 />
+    {/* SALES OFFER BANNERS AREA */}
+    <Section7 />
 
-        {/* MEN'S CATEGORY BASED PRODUCTS AREA */}
-        <Section6 data={menFashionProducts} />
+    {/* MEN'S CATEGORY BASED PRODUCTS AREA */}
+    <Section6 data={menFashionProducts} />
 
-        {/* DISCOUNT OFFER BANNER AREA */}
-        <Section8 />
+    {/* DISCOUNT OFFER BANNER AREA */}
+    <Section8 />
 
-        {/* WOMEN'S CATEGORY BASED PRODUCTS AREA */}
-        <Section6 data={womenFashionProducts} />
+    {/* WOMEN'S CATEGORY BASED PRODUCTS AREA */}
+    <Section6 data={womenFashionProducts} />
 
-        {/* FEATURES BRAND LIST AREA */}
-        <Section9 brands={brands as any} />
+    {/* FEATURES BRAND LIST AREA */}
+    <Section9 brands={brands as any} />
 
-        {/* SELECTED PRODUCTS AREA */}
-        <Section10 products={products} />
-      </Box>
-    </Fragment>
-  );
+    {/* SELECTED PRODUCTS AREA */}
+    <Section10 products={products} />
+   </Box>
+  </Fragment>
+ );
 }

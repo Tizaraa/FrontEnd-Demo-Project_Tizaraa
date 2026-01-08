@@ -14,43 +14,43 @@ type Section6Props = { products: Product[] };
 // ======================================================================
 
 export default function Section6({ products }: Section6Props) {
-  const width = useWindowSize();
-  const [visibleSlides, setVisibleSlides] = useState(4);
+ const width = useWindowSize();
+ const [visibleSlides, setVisibleSlides] = useState(4);
 
-  useEffect(() => {
-    if (width < 426) setVisibleSlides(1);
-    else if (width < 650) setVisibleSlides(2);
-    else if (width < 1024) setVisibleSlides(3);
-    else if (width < 1200) setVisibleSlides(4);
-    else setVisibleSlides(5);
-  }, [width]);
+ useEffect(() => {
+  if (width < 426) setVisibleSlides(1);
+  else if (width < 650) setVisibleSlides(2);
+  else if (width < 1024) setVisibleSlides(3);
+  else if (width < 1200) setVisibleSlides(4);
+  else setVisibleSlides(5);
+ }, [width]);
 
-  return (
-    <Container mt="4rem">
-      <H2 textAlign="center" mb={4}>
-        Featured Products
-      </H2>
+ return (
+  <Container mt="4rem">
+   <H2 textAlign="center" mb={4}>
+    Featured Products
+   </H2>
 
-      <CarouselWrapper>
-        <Carousel totalSlides={products.length} visibleSlides={visibleSlides}>
-          {products.map((product) => (
-            <ProductCard17
-              id={product.id}
-              key={product.id}
-              slug={product.slug}
-              title={product.title}
-              price={product.price}
-              productStock={product.product_stock}
-              images={product.images}
-              imgUrl={product.thumbnail}
-              category={product.categories[0]}
-              reviews={product.reviews?.length || 21}
-              productId={product.id}
-              sellerId={product.id}
-            />
-          ))}
-        </Carousel>
-      </CarouselWrapper>
-    </Container>
-  );
+   <CarouselWrapper>
+    <Carousel totalSlides={products.length} visibleSlides={visibleSlides}>
+     {products.map((product) => (
+      <ProductCard17
+       id={product.id}
+       key={product.id}
+       slug={product.slug}
+       title={product.title}
+       price={product.price}
+       productStock={product.product_stock}
+       images={product.images}
+       imgUrl={product.thumbnail}
+       category={product.categories[0]}
+       reviews={product.reviews?.length || 21}
+       productId={product.id}
+       sellerId={product.id}
+      />
+     ))}
+    </Carousel>
+   </CarouselWrapper>
+  </Container>
+ );
 }

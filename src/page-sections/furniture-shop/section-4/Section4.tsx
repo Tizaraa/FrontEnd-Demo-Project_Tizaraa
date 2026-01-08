@@ -10,37 +10,43 @@ type Props = { products: Product[] };
 // =====================================================
 
 export default function Section4({ products }: Props) {
-  return (
-    <Box my={5}>
-      <Box mb={4}>
-        <H1 mb="4px">All Products</H1>
-        <Paragraph color="grey.600">Tall blind but were, been folks not the expand</Paragraph>
-      </Box>
+ return (
+  <Box my={5}>
+   <Box mb={4}>
+    <H1 mb="4px">All Products</H1>
+    <Paragraph color="grey.600">
+     Tall blind but were, been folks not the expand
+    </Paragraph>
+   </Box>
 
-      <Grid container spacing={6}>
-        {products.map((item, ind) => (
-          <Grid key={ind} item md={4} sm={6} xs={12}>
-            <ProductCard13
-              id={item.id}
-              slug={item.slug}
-              title={item.title}
-              price={item.price}
-              productStock={item.product_stock}
-              off={item.discount}
-              status={item.status}
-              rating={item.rating}
-              imgUrl={item.thumbnail}
-              productColors={item.colors}
-              productId={item.id}
-              sellerId={item.id}
-            />
-          </Grid>
-        ))}
-      </Grid>
+   <Grid container spacing={6}>
+    {products.map((item, ind) => (
+     <Grid key={ind} item md={4} sm={6} xs={12}>
+      <ProductCard13
+       id={item.id}
+       slug={item.slug}
+       title={item.title}
+       price={item.price}
+       productStock={item.product_stock}
+       off={item.discount}
+       status={item.status}
+       rating={item.rating}
+       imgUrl={item.thumbnail}
+       productColors={item.colors}
+       productId={item.id}
+       sellerId={item.id}
+      />
+     </Grid>
+    ))}
+   </Grid>
 
-      <Button color="primary" variant="contained" style={{ margin: "auto", marginTop: "3rem" }}>
-        Load More...
-      </Button>
-    </Box>
-  );
+   <Button
+    color="primary"
+    variant="contained"
+    style={{ margin: "auto", marginTop: "3rem" }}
+   >
+    Load More...
+   </Button>
+  </Box>
+ );
 }

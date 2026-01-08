@@ -279,140 +279,135 @@ import Loader from "@component/loader";
 // `;
 
 export default function AddressList() {
-  const [addresses, setAddresses] = useState<Address[]>([]);
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState<string | null>(null); // Error state
-  const authtoken =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null; // Retrieve the auth token safely
+ const [addresses, setAddresses] = useState<Address[]>([]);
+ const [loading, setLoading] = useState(true); // Loading state
+ const [error, setError] = useState<string | null>(null); // Error state
+ const authtoken =
+  typeof window !== "undefined" ? localStorage.getItem("token") : null; // Retrieve the auth token safely
 
-  useEffect(() => {
-    if (!authtoken) {
-      setError("User is not authenticated.");
-      setLoading(false);
-      return;
-    }
-
-    const fetchAddresses = async () => {
-      try {
-        const response = await axios.get(
-          `${ApiBaseUrl.baseUrl}user/address`,
-          {
-            headers: {
-              Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
-            },
-          }
-        );
-        setAddresses(response.data.addresses || []); // Adjusted based on possible API structure
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching addresses:", error);
-        setError("Failed to load addresses.");
-        setLoading(false);
-      }
-    };
-
-    fetchAddresses();
-  }, [authtoken]);
-
-  const handleDelete = async (id: string) => {
-    try {
-      await axios.delete(`${ApiBaseUrl.baseUrl}user/address/delete/${id}`, {
-        headers: {
-          Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
-        },
-      });
-      // Remove the deleted address from the state
-      setAddresses((prevAddresses) =>
-        prevAddresses.filter((address) => address.id !== id)
-      );
-    } catch (error) {
-      console.error("Error deleting address:", error);
-      setError("Failed to delete address.");
-    }
-  };
-
-  // if (loading)
-  //   return (
-  //     <LoaderWrapper>
-  //       <Vortex />
-  //     </LoaderWrapper>
-  //   );
-
-
-  if (loading) {
-    return (
-      <Typography>
-        <Loader />
-      </Typography>
-    );
+ useEffect(() => {
+  if (!authtoken) {
+   setError("User is not authenticated.");
+   setLoading(false);
+   return;
   }
 
+  const fetchAddresses = async () => {
+   try {
+    const response = await axios.get(`${ApiBaseUrl.baseUrl}user/address`, {
+     headers: {
+      Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
+     },
+    });
+    setAddresses(response.data.addresses || []); // Adjusted based on possible API structure
+    setLoading(false);
+   } catch (error) {
+    console.error("Error fetching addresses:", error);
+    setError("Failed to load addresses.");
+    setLoading(false);
+   }
+  };
 
-  if (error) return <div>{error}</div>;
+  fetchAddresses();
+ }, [authtoken]);
 
+ const handleDelete = async (id: string) => {
+  try {
+   await axios.delete(`${ApiBaseUrl.baseUrl}user/address/delete/${id}`, {
+    headers: {
+     Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
+    },
+   });
+   // Remove the deleted address from the state
+   setAddresses((prevAddresses) =>
+    prevAddresses.filter((address) => address.id !== id)
+   );
+  } catch (error) {
+   console.error("Error deleting address:", error);
+   setError("Failed to delete address.");
+  }
+ };
+
+ // if (loading)
+ //   return (
+ //     <LoaderWrapper>
+ //       <Vortex />
+ //     </LoaderWrapper>
+ //   );
+
+ if (loading) {
   return (
-    <div>
-      {addresses.length > 0 ? (
-        addresses.map((item) => (
-          <AddressItem key={item.id} item={item} onDelete={handleDelete} />
-        ))
-      ) : (
-        <div>No addresses found</div>
-      )}
-    </div>
+   <Typography>
+    <Loader />
+   </Typography>
   );
+ }
+
+ if (error) return <div>{error}</div>;
+
+ return (
+  <div>
+   {addresses.length > 0 ? (
+    addresses.map((item) => (
+     <AddressItem key={item.id} item={item} onDelete={handleDelete} />
+    ))
+   ) : (
+    <div>No addresses found</div>
+   )}
+  </div>
+ );
 }
 
 function AddressItem({
-  item,
-  onDelete,
+ item,
+ onDelete,
 }: {
-  item: Address;
-  onDelete: (id: string) => void;
+ item: Address;
+ onDelete: (id: string) => void;
 }) {
-  return (
-    <TableRow my="1rem" padding="6px 18px">
-      <Typography className="pre" m="6px" textAlign="left">
-        {item.name || "No Name"} {/* Display name or fallback */}
-      </Typography>
+ return (
+  <TableRow my="1rem" padding="6px 18px">
+   <Typography className="pre" m="6px" textAlign="left">
+    {item.name || "No Name"} {/* Display name or fallback */}
+   </Typography>
 
-      <Typography
-        flex="1 1 260px !important"
-        m="6px"
-        textAlign="left"
-        style={{
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {item.address}
-      </Typography>
+   <Typography
+    flex="1 1 260px !important"
+    m="6px"
+    textAlign="left"
+    style={{
+     overflow: "hidden",
+     textOverflow: "ellipsis",
+     whiteSpace: "nowrap",
+    }}
+   >
+    {item.address}
+   </Typography>
 
-      <Typography className="pre" m="6px" textAlign="left">
-        {item.phone}
-      </Typography>
+   <Typography className="pre" m="6px" textAlign="left">
+    {item.phone}
+   </Typography>
 
-      <Typography className="pre" textAlign="center" color="text.muted">
-        <Link href={`/address/${item.id}`}>
-          <IconButton>
-            <Icon variant="small" defaultcolor="currentColor">
-              edit
-            </Icon>
-          </IconButton>
-        </Link>
+   <Typography className="pre" textAlign="center" color="text.muted">
+    <Link href={`/address/${item.id}`}>
+     <IconButton>
+      <Icon variant="small" defaultcolor="currentColor">
+       edit
+      </Icon>
+     </IconButton>
+    </Link>
 
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(item.id); // Call the onDelete handler
-          }}
-        >
-          <Icon variant="small" defaultcolor="currentColor">
-            delete
-          </Icon>
-        </IconButton>
-      </Typography>
-    </TableRow>
-  );
+    <IconButton
+     onClick={(e) => {
+      e.stopPropagation();
+      onDelete(item.id); // Call the onDelete handler
+     }}
+    >
+     <Icon variant="small" defaultcolor="currentColor">
+      delete
+     </Icon>
+    </IconButton>
+   </Typography>
+  </TableRow>
+ );
 }

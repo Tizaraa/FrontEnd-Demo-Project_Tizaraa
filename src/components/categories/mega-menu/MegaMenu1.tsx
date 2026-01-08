@@ -12,30 +12,36 @@ import { StyledCategoryMenuItem } from "../styles";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function MegaMenu1({
-  data: { categories, rightImage, bottomImage },
-  minWidth = "278px",
+ data: { categories, rightImage, bottomImage },
+ minWidth = "278px",
 }: MegaMenu1Props) {
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
-  const [subCategoryData, setSubCategoryData] = useState<any | null>(null);
+ const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+ const [subCategoryData, setSubCategoryData] = useState<any | null>(null);
 
-  // Function to set SubCategory data
-  const handleCategoryHover = (category: any) => {
-    setHoveredCategory(category.title);
-    setSubCategoryData(category.subCategories);
-  };
+ // Function to set SubCategory data
+ const handleCategoryHover = (category: any) => {
+  setHoveredCategory(category.title);
+  setSubCategoryData(category.subCategories);
+ };
 
-  return categories ? (
-    <StyledMegaMenu1 className="mega-menu">
-      <Card ml="1rem" minWidth={minWidth} boxShadow="regular" overflow="hidden" borderRadius={8}>
-        <Box style={{ position: "relative", height: "450px" }}>
-          {categories.map((item, ind) => (
-            <Grid item md={3} key={ind}>
-              <div
-                style={{ position: "relative" }}
-                onMouseEnter={() => handleCategoryHover(item)}  // Set hover state and subcategory data
-                onMouseLeave={() => setHoveredCategory(null)}  // Clear hover state
-              >
-                {/* <div className="category-dropdown-link">
+ return categories ? (
+  <StyledMegaMenu1 className="mega-menu">
+   <Card
+    ml="1rem"
+    minWidth={minWidth}
+    boxShadow="regular"
+    overflow="hidden"
+    borderRadius={8}
+   >
+    <Box style={{ position: "relative", height: "450px" }}>
+     {categories.map((item, ind) => (
+      <Grid item md={3} key={ind}>
+       <div
+        style={{ position: "relative" }}
+        onMouseEnter={() => handleCategoryHover(item)} // Set hover state and subcategory data
+        onMouseLeave={() => setHoveredCategory(null)} // Clear hover state
+       >
+        {/* <div className="category-dropdown-link">
                   <Link href={`/category/${item.href}`}>
                     <div style={{ display: 'flex',  alignItems: 'center', padding: '8px 0', textDecoration: 'none' }}>
                       <span>{item.title}</span>
@@ -44,38 +50,48 @@ export default function MegaMenu1({
                   </Link>
                 </div> */}
 
-<StyledCategoryMenuItem>
-      <Link href={`/category/${item.href}`}>
-        <div className="category-dropdown-link">
-          {/* {icon && <Icon variant="small">{icon}</Icon>} */}
-          <span className="title">{item.title}</span>
-          <Icon variant="small">chevron-right</Icon>
-        </div>
-      </Link>
-    </StyledCategoryMenuItem>
-              </div>
-            </Grid>
-          ))}
-        </Box>
+        <StyledCategoryMenuItem>
+         <Link href={`/category/${item.href}`}>
+          <div className="category-dropdown-link">
+           {/* {icon && <Icon variant="small">{icon}</Icon>} */}
+           <span className="title">{item.title}</span>
+           <Icon variant="small">chevron-right</Icon>
+          </div>
+         </Link>
+        </StyledCategoryMenuItem>
+       </div>
+      </Grid>
+     ))}
+    </Box>
 
-        {rightImage && (
-          <Link href={rightImage.href}>
-            <Box position="relative" width="153px" height="100%">
-              <NextImage src={`${ApiBaseUrl.ImgUrl}${rightImage.imgUrl}`} width={137} height={318} alt="offer" />
-            </Box>
-          </Link>
-        )}
-        {bottomImage && (
-          <Link href={bottomImage.href}>
-            <Box position="relative" height="100%">
-              <NextImage src={`${ApiBaseUrl.ImgUrl}${bottomImage.imgUrl}`} width={711} height={162} alt="offer" />
-            </Box>
-          </Link>
-        )}
-      </Card>
+    {rightImage && (
+     <Link href={rightImage.href}>
+      <Box position="relative" width="153px" height="100%">
+       <NextImage
+        src={`${ApiBaseUrl.ImgUrl}${rightImage.imgUrl}`}
+        width={137}
+        height={318}
+        alt="offer"
+       />
+      </Box>
+     </Link>
+    )}
+    {bottomImage && (
+     <Link href={bottomImage.href}>
+      <Box position="relative" height="100%">
+       <NextImage
+        src={`${ApiBaseUrl.ImgUrl}${bottomImage.imgUrl}`}
+        width={711}
+        height={162}
+        alt="offer"
+       />
+      </Box>
+     </Link>
+    )}
+   </Card>
 
-      {/* Render the SubCategoryMenu only when there is subCategoryData */}
-      {subCategoryData && <SubCategoryMenu subCategories={subCategoryData} />}
-    </StyledMegaMenu1>
-  ) : null;
+   {/* Render the SubCategoryMenu only when there is subCategoryData */}
+   {subCategoryData && <SubCategoryMenu subCategories={subCategoryData} />}
+  </StyledMegaMenu1>
+ ) : null;
 }

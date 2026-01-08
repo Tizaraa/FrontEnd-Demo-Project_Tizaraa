@@ -2,326 +2,328 @@
 /* MAIN CONTAINER STYLES */
 /* ==================== */
 .terms-container {
-    min-height: 100vh;
-    background: linear-gradient(to bottom, #f9fafb, #ffffff);
-    padding: 2rem;
-    text-align: justify;
-  }
-  
-  .terms-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    padding: 5px;
-  }
-  
-  /* ================ */
-  /* HEADER SECTION */
-  /* ================ */
-  .terms-header {
-    text-align: center;
-    padding: 3rem 0;
-    background: linear-gradient(to right, #E94560, #cc364f);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
-  
-  .terms-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 1rem;
-  }
-  
-  .terms-divider {
-    width: 5rem;
-    height: 0.25rem;
-    background: #fff;
-    margin: 0 auto 1.5rem;
-  }
-  
-  .terms-last-updated {
-    font-size: 1.125rem;
-    color: #fff;
-  }
-  
-  /* ================== */
-  /* NAVIGATION SECTION */
-  /* ================== */
-  .terms-navigation {
-    background: #f3f4f6;
-    padding: 1rem;
-    border-bottom: 1px solid #e5e7eb;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  
-  .nav-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 0.5rem;
-  }
-  
-  .nav-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  
-  .nav-link {
-    background: #E94560;
-    color: #fff;
-    padding: 0.375rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    text-decoration: none;
-  }
-  
-  /* ================ */
-  /* MAIN CONTENT */
-  /* ================ */
-  .terms-body,
-  .terms-body-bangla {
-    background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 5px;
-    border: 1px solid #eee;
-  }
-  
-  .section {
-    margin-bottom: 3rem;
-  }
-  
-  .section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-  }
-  
-  .section-number {
-    font-size: 14px;
-    background: #E94560;
-    color: #fff;
-    border-radius: 9999px;
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 0.75rem;
-  }
-  
-  .section-content {
-    color: #4b5563;
-    line-height: 1.75;
-  }
-  
-  .section-content p {
-    margin-bottom: 1.5rem;
-  }
-  
-  .section-content ol {
-    list-style-type: decimal;
-    padding-left: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .section-content li {
-    margin-bottom: 0.5rem;
-  }
-  
-  .section-content a {
-    color: #E94560;
-    text-decoration: none;
-  }
-  
-  /* ================= */
-  /* SUBSECTION STYLES */
-  /* ================= */
-  .subsection-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin: 1.5rem 0 1rem 0;
-    border-left: 3px solid #E94560;
-    padding-left: 0.75rem;
-  }
-  
-  /* ================= */
-  /* SPECIAL BOXES */
-  /* ================= */
-  .disclaimer-box {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    margin-bottom: 3rem;
-  }
-  
-  .contact-box {
-    background: #eef2ff;
-    padding: 2rem;
-    border-radius: 0.5rem;
-    text-align: center;
-    margin-top: 3rem;
-  }
-  
-  .contact-button {
-    display: inline-flex;
-    align-items: center;
-    background: #ddd;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.375rem;
-    font-weight: 700;
-    text-decoration: none;
-    margin-top: 1rem;
-  }
-  
-  .external-link-icon {
-    margin-left: 0.25rem;
-  }
-  
-  /* ================= */
-  /* LANGUAGE TOGGLE */
-  /* ================= */
-  .btn-header {
-    display: flex;
-    width: 100%;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    overflow: hidden;
-    margin: 10px 0px;
-  }
-  
-  .tab-button {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-align: center;
-    transition: background-color 0.2s, color 0.2s;
-    cursor: pointer;
-    border: 0px;
-  }
-  
-  .tab-button.active {
-    background-color: #E94560;
-    color: white;
-  }
-  
-  .tab-button:not(.active) {
-    background-color: white;
-    color: #4b5563;
-  }
-  
-  .tab-button:not(.active):hover {
-    background-color: #f9fafb;
-  }
-
-
-  .section-title[lang="bn"],
-.section-content[lang="bn"] {
-  font-family: 'SolaimanLipi', 'Nikosh', 'Bangla', sans-serif;
-  text-align: right;
+ min-height: 100vh;
+ background: linear-gradient(to bottom, #f9fafb, #ffffff);
+ padding: 2rem;
+ text-align: justify;
 }
 
+.terms-content {
+ max-width: 1200px;
+ margin: 0 auto;
+ background: white;
+ border-radius: 0.5rem;
+ box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+ overflow: hidden;
+ padding: 5px;
+}
+
+/* ================ */
+/* HEADER SECTION */
+/* ================ */
+.terms-header {
+ text-align: center;
+ padding: 3rem 0;
+ background: linear-gradient(to right, #e94560, #cc364f);
+ border-radius: 0.5rem;
+ padding: 1.5rem;
+ box-shadow:
+  0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.terms-title {
+ font-size: 2.5rem;
+ font-weight: 700;
+ color: #fff;
+ margin-bottom: 1rem;
+}
+
+.terms-divider {
+ width: 5rem;
+ height: 0.25rem;
+ background: #fff;
+ margin: 0 auto 1.5rem;
+}
+
+.terms-last-updated {
+ font-size: 1.125rem;
+ color: #fff;
+}
+
+/* ================== */
+/* NAVIGATION SECTION */
+/* ================== */
+.terms-navigation {
+ background: #f3f4f6;
+ padding: 1rem;
+ border-bottom: 1px solid #e5e7eb;
+ position: sticky;
+ top: 0;
+ z-index: 10;
+}
+
+.nav-title {
+ font-size: 1.125rem;
+ font-weight: 600;
+ color: #1f2937;
+ margin-bottom: 0.5rem;
+}
+
+.nav-links {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 0.5rem;
+}
+
+.nav-link {
+ background: #e94560;
+ color: #fff;
+ padding: 0.375rem 0.75rem;
+ border-radius: 9999px;
+ font-size: 0.875rem;
+ text-decoration: none;
+}
+
+/* ================ */
+/* MAIN CONTENT */
+/* ================ */
+.terms-body,
+.terms-body-bangla {
+ background-color: #f9f9f9;
+ padding: 15px;
+ border-radius: 5px;
+ border: 1px solid #eee;
+}
+
+.section {
+ margin-bottom: 3rem;
+}
+
+.section-title {
+ font-size: 1.5rem;
+ font-weight: 700;
+ color: #1f2937;
+ margin-bottom: 1.5rem;
+ display: flex;
+ align-items: center;
+}
+
+.section-number {
+ font-size: 14px;
+ background: #e94560;
+ color: #fff;
+ border-radius: 9999px;
+ width: 2rem;
+ height: 2rem;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ margin-right: 0.75rem;
+}
+
+.section-content {
+ color: #4b5563;
+ line-height: 1.75;
+}
+
+.section-content p {
+ margin-bottom: 1.5rem;
+}
+
+.section-content ol {
+ list-style-type: decimal;
+ padding-left: 1.5rem;
+ margin-bottom: 1.5rem;
+}
+
+.section-content li {
+ margin-bottom: 0.5rem;
+}
+
+.section-content a {
+ color: #e94560;
+ text-decoration: none;
+}
+
+/* ================= */
+/* SUBSECTION STYLES */
+/* ================= */
+.subsection-title {
+ font-size: 1.25rem;
+ font-weight: 600;
+ color: #1f2937;
+ margin: 1.5rem 0 1rem 0;
+ border-left: 3px solid #e94560;
+ padding-left: 0.75rem;
+}
+
+/* ================= */
+/* SPECIAL BOXES */
+/* ================= */
+.disclaimer-box {
+ background: #fef2f2;
+ border: 1px solid #fecaca;
+ padding: 1.5rem;
+ border-radius: 0.5rem;
+ margin-bottom: 3rem;
+}
+
+.contact-box {
+ background: #eef2ff;
+ padding: 2rem;
+ border-radius: 0.5rem;
+ text-align: center;
+ margin-top: 3rem;
+}
+
+.contact-button {
+ display: inline-flex;
+ align-items: center;
+ background: #ddd;
+ padding: 0.75rem 1.5rem;
+ border-radius: 0.375rem;
+ font-weight: 700;
+ text-decoration: none;
+ margin-top: 1rem;
+}
+
+.external-link-icon {
+ margin-left: 0.25rem;
+}
+
+/* ================= */
+/* LANGUAGE TOGGLE */
+/* ================= */
+.btn-header {
+ display: flex;
+ width: 100%;
+ border: 1px solid #e5e7eb;
+ border-radius: 6px;
+ overflow: hidden;
+ margin: 10px 0px;
+}
+
+.tab-button {
+ flex: 1;
+ padding: 0.75rem 1rem;
+ font-size: 0.875rem;
+ font-weight: 500;
+ text-align: center;
+ transition:
+  background-color 0.2s,
+  color 0.2s;
+ cursor: pointer;
+ border: 0px;
+}
+
+.tab-button.active {
+ background-color: #e94560;
+ color: white;
+}
+
+.tab-button:not(.active) {
+ background-color: white;
+ color: #4b5563;
+}
+
+.tab-button:not(.active):hover {
+ background-color: #f9fafb;
+}
+
+.section-title[lang="bn"],
+.section-content[lang="bn"] {
+ font-family: "SolaimanLipi", "Nikosh", "Bangla", sans-serif;
+ text-align: right;
+}
 
 /* Refund Table Styling */
 .refund-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin: 20px 0;
-    font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
-    overflow: hidden;
-    background: #ffffff;
-  }
-  
-  .refund-table thead {
-    /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
-    background: linear-gradient(135deg, #E94560 0%, #f02d4d 100%);
+ width: 100%;
+ border-collapse: separate;
+ border-spacing: 0;
+ margin: 20px 0;
+ font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+ border-radius: 12px;
+ overflow: hidden;
+ background: #ffffff;
+}
 
-    color: white;
-    font-size: 0.95rem;
-  }
-  
-  .refund-table th {
-    padding: 16px 20px;
-    text-align: left;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    position: relative;
-  }
-  
-  .refund-table th:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    right: 0;
-    top: 20%;
-    height: 60%;
-    width: 1px;
-    background: rgba(255, 255, 255, 0.3);
-  }
-  
-  .refund-table tbody tr {
-    transition: all 0.25s ease;
-  }
-  
-  .refund-table tbody tr:hover {
-    background-color: #f8f9ff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .refund-table td {
-    padding: 14px 20px;
-    border-bottom: 1px solid #f0f0f0;
-    color: #4a4a4a;
-    font-size: 0.9rem;
-  }
-  
-  .refund-table tbody tr:last-child td {
-    border-bottom: none;
-  }
-  
-  /* Alternate row coloring */
-  .refund-table tbody tr:nth-child(even) {
-    background-color: #f9f9ff;
-  }
-  
-  /* Status indicator for refund time */
-  .refund-table td:nth-child(3) {
-    color: #667eea;
-    font-weight: 500;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .refund-table th, 
-    .refund-table td {
-      padding: 12px 15px;
-    }
-    
-    .refund-table {
-      font-size: 0.85rem;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .refund-table {
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-  }
+.refund-table thead {
+ /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+ background: linear-gradient(135deg, #e94560 0%, #f02d4d 100%);
+
+ color: white;
+ font-size: 0.95rem;
+}
+
+.refund-table th {
+ padding: 16px 20px;
+ text-align: left;
+ font-weight: 600;
+ letter-spacing: 0.3px;
+ position: relative;
+}
+
+.refund-table th:not(:last-child)::after {
+ content: "";
+ position: absolute;
+ right: 0;
+ top: 20%;
+ height: 60%;
+ width: 1px;
+ background: rgba(255, 255, 255, 0.3);
+}
+
+.refund-table tbody tr {
+ transition: all 0.25s ease;
+}
+
+.refund-table tbody tr:hover {
+ background-color: #f8f9ff;
+ transform: translateY(-1px);
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.refund-table td {
+ padding: 14px 20px;
+ border-bottom: 1px solid #f0f0f0;
+ color: #4a4a4a;
+ font-size: 0.9rem;
+}
+
+.refund-table tbody tr:last-child td {
+ border-bottom: none;
+}
+
+/* Alternate row coloring */
+.refund-table tbody tr:nth-child(even) {
+ background-color: #f9f9ff;
+}
+
+/* Status indicator for refund time */
+.refund-table td:nth-child(3) {
+ color: #667eea;
+ font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+ .refund-table th,
+ .refund-table td {
+  padding: 12px 15px;
+ }
+
+ .refund-table {
+  font-size: 0.85rem;
+ }
+}
+
+@media (max-width: 480px) {
+ .refund-table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+ }
+}

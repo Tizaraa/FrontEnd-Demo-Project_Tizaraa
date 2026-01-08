@@ -1,376 +1,403 @@
 /* 1.1 Main Container */
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  /* 1.2 Tracking Section */
-  .tracking-section {
-    padding: 40px 20px;
-    background-color: #f9f9f9;
-  }
-  
-  /* 1.3 Tracking Card */
-  .tracking-card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-    text-align: center;
-    background-color: #fff;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-  
-  .tracking-title {
-    color: #E94560;
-    font-size: 28px;
-    margin-bottom: 10px;
-  }
+ max-width: 1200px;
+ margin: 0 auto;
+}
 
-  /* 2.1 Input Field */
+/* 1.2 Tracking Section */
+.tracking-section {
+ padding: 40px 20px;
+ background-color: #f9f9f9;
+}
+
+/* 1.3 Tracking Card */
+.tracking-card {
+ border: 1px solid #ddd;
+ border-radius: 5px;
+ overflow: hidden;
+ text-align: center;
+ background-color: #fff;
+ padding: 20px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ max-width: 500px;
+ margin: 0 auto;
+}
+
+.tracking-title {
+ color: #e94560;
+ font-size: 28px;
+ margin-bottom: 10px;
+}
+
+/* 2.1 Input Field */
 .tracking-input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  
-  .input-focus {
-    border-color: #E94560;
-  }
-  
-  /* 2.2 Track Button */
-  .track-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #E94560;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .track-button:hover {
-    background-color: #d13e55;
-  }
+ width: 100%;
+ padding: 12px;
+ margin: 10px 0;
+ border: 1px solid #ddd;
+ border-radius: 5px;
+ font-size: 16px;
+ outline: none;
+ transition: border-color 0.2s;
+}
 
+.input-focus {
+ border-color: #e94560;
+}
 
-  /* 3.1 Modal Overlay */
+/* 2.2 Track Button */
+.track-button {
+ width: 100%;
+ padding: 12px;
+ background-color: #e94560;
+ color: #fff;
+ font-size: 16px;
+ font-weight: bold;
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+ transition: background-color 0.2s;
+}
+
+.track-button:hover {
+ background-color: #d13e55;
+}
+
+/* 3.1 Modal Overlay */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-  }
-  
-  .modal-overlay.open {
-    opacity: 1;
-    visibility: visible;
-  }
-  
-  .modal-overlay.closing {
-    opacity: 0;
-  }
-  
-  /* 3.2 Modal Content */
-  .modal-content {
-    background-color: white;
-    padding: 30px;
-    border-radius: 8px;
-    max-width: 800px;
-    width: 90%;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    position: relative;
-    transform: scale(0.9);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  
-  .modal-content.open {
-    transform: scale(1);
-    opacity: 1;
-  }
-  
-  .modal-content.closing {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  
-  /* 3.3 Modal Elements */
-  .modal-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    cursor: pointer;
-    font-size: 20px;
-    color: #666;
-    transition: transform 0.2s;
-  }
-  
-  .modal-close:hover {
-    transform: scale(1.2);
-  }
-  
-  .modal-title {
-    color: #E94560;
-    margin-bottom: 20px;
-    font-size: 24px;
-  }
+ position: fixed;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-color: rgba(0, 0, 0, 0.5);
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ z-index: 1000;
+ opacity: 0;
+ visibility: hidden;
+ transition: all 0.3s ease;
+}
 
+.modal-overlay.open {
+ opacity: 1;
+ visibility: visible;
+}
 
-  /* 4.1 Main Tracking Container */
+.modal-overlay.closing {
+ opacity: 0;
+}
+
+/* 3.2 Modal Content */
+.modal-content {
+ background-color: white;
+ padding: 30px;
+ border-radius: 8px;
+ max-width: 800px;
+ width: 90%;
+ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+ position: relative;
+ transform: scale(0.9);
+ opacity: 0;
+ transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+ max-height: 90vh;
+ overflow-y: auto;
+}
+
+.modal-content.open {
+ transform: scale(1);
+ opacity: 1;
+}
+
+.modal-content.closing {
+ transform: scale(0.9);
+ opacity: 0;
+}
+
+/* 3.3 Modal Elements */
+.modal-close {
+ position: absolute;
+ top: 15px;
+ right: 15px;
+ cursor: pointer;
+ font-size: 20px;
+ color: #666;
+ transition: transform 0.2s;
+}
+
+.modal-close:hover {
+ transform: scale(1.2);
+}
+
+.modal-title {
+ color: #e94560;
+ margin-bottom: 20px;
+ font-size: 24px;
+}
+
+/* 4.1 Main Tracking Container */
 .tracking-details {
-    display: grid;
-    gap: 20px;
-  }
-  
-  /* 4.2 Order Header Card */
-  .order-header-card {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
-    border-radius: 12px;
-    padding: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    border: 1px solid rgba(0,0,0,0.05);
-  }
-  
-  .order-badge {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 1.1rem;
-  }
-  
-  .order-icon {
-    width: 24px;
-    height: 24px;
-    fill: #e94560;
-  }
-  
-  /* 4.3 Meta Information Grid */
-  .order-meta-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-  }
-  
-  .meta-item {
-    background: white;
-    padding: 12px 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-  }
-  
-  .meta-label {
-    display: block;
-    font-size: 0.8rem;
-    color: #7f8c8d;
-    margin-bottom: 4px;
-  }
-  
-  .meta-value {
-    font-weight: 500;
-    color: #2c3e50;
-  }
-  
-  .highlight {
-    color: #e94560;
-    font-weight: 600;
-  }
-  
-  /* 4.4 Address Card */
-  .address-card {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
-  
-  .card-header {
-    background: #2c3e50;
-    color: white;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .location-icon {
-    width: 20px;
-    height: 20px;
-    fill: white;
-  }
-  
-  .address-content {
-    padding: 10px;
-    line-height: 1.6;
-  }
+ display: grid;
+ gap: 20px;
+}
 
-  /* 5.1 Seller Information */
+/* 4.2 Order Header Card */
+.order-header-card {
+ background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+ border-radius: 12px;
+ padding: 10px;
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+ border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.order-badge {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ margin-bottom: 20px;
+ font-weight: 600;
+ color: #2c3e50;
+ font-size: 1.1rem;
+}
+
+.order-icon {
+ width: 24px;
+ height: 24px;
+ fill: #e94560;
+}
+
+/* 4.3 Meta Information Grid */
+.order-meta-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+ gap: 15px;
+}
+
+.meta-item {
+ background: white;
+ padding: 12px 15px;
+ border-radius: 8px;
+ box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.meta-label {
+ display: block;
+ font-size: 0.8rem;
+ color: #7f8c8d;
+ margin-bottom: 4px;
+}
+
+.meta-value {
+ font-weight: 500;
+ color: #2c3e50;
+}
+
+.highlight {
+ color: #e94560;
+ font-weight: 600;
+}
+
+/* 4.4 Address Card */
+.address-card {
+ background: white;
+ border-radius: 12px;
+ overflow: hidden;
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+ background: #2c3e50;
+ color: white;
+ padding: 10px;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+}
+
+.location-icon {
+ width: 20px;
+ height: 20px;
+ fill: white;
+}
+
+.address-content {
+ padding: 10px;
+ line-height: 1.6;
+}
+
+/* 5.1 Seller Information */
 .orderStatusHeading {
-    background: #E94560;
-    color: #fff;
-    padding: 5px;
-    border-radius: 8px;
-    font-size: 15px;
-    margin: 0;
+ background: #e94560;
+ color: #fff;
+ padding: 5px;
+ border-radius: 8px;
+ font-size: 15px;
+ margin: 0;
 }
 .seller-info {
-    border: 1px solid #e0e0e0;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    background: #fafafa;
-    transition: all 0.3s ease;
-  }
-  
-  .seller-info:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-  
-  .seller-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  .seller-header strong {
-    font-size: 1.1rem;
-    color: #E94560;
-  }
-  
-  /* 5.2 Status Badges */
-  .status-badge {
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .status-0 { background-color: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
-  .status-1 { background-color: #e1f5fe; color: #0277bd; border: 1px solid #81d4fa; }
-  .status-2 { background-color: #fff9c4; color: #f57f17; border: 1px solid #fff176; }
-  .status-3 { background-color: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
-  .status-4 { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
-  .status-5 { background-color: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
-  .status-6 { background-color: #e0f7fa; color: #00838f; border: 1px solid #80deea; }
-  
-  /* 5.3 Items List */
-  .items-list {
-    margin-top: 15px;
-    border-top: 1px solid #f0f0f0;
-    padding-top: 15px;
-  }
-  
-  .items-list ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: grid;
-    gap: 10px;
-  }
-  
-  .items-list li {
-    background: white;
-    border-radius: 8px;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
-    border-left: 4px solid #E94560;
-  }
-  
-  .items-list li:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-  }
-  
-  .item-name {
-    font-weight: 500;
-    color: #333;
-    flex: 1;
-  }
-  
-  .item-details {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-  }
-  
-  .item-quantity {
-    background: #f5f5f5;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-  }
-  
-  .price {
-    font-weight: bold;
-    color: #E94560;
-    font-size: 1.05rem;
-    min-width: 80px;
-    text-align: right;
-  }
+ border: 1px solid #e0e0e0;
+ padding: 20px;
+ margin-bottom: 20px;
+ border-radius: 8px;
+ background: #fafafa;
+ transition: all 0.3s ease;
+}
 
+.seller-info:hover {
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.seller-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 12px;
+ flex-wrap: wrap;
+ gap: 10px;
+}
+
+.seller-header strong {
+ font-size: 1.1rem;
+ color: #e94560;
+}
+
+/* 5.2 Status Badges */
+.status-badge {
+ padding: 4px 12px;
+ border-radius: 16px;
+ font-size: 0.8rem;
+ font-weight: bold;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+}
+
+.status-0 {
+ background-color: #fff3e0;
+ color: #e65100;
+ border: 1px solid #ffcc80;
+}
+.status-1 {
+ background-color: #e1f5fe;
+ color: #0277bd;
+ border: 1px solid #81d4fa;
+}
+.status-2 {
+ background-color: #fff9c4;
+ color: #f57f17;
+ border: 1px solid #fff176;
+}
+.status-3 {
+ background-color: #f3e5f5;
+ color: #6a1b9a;
+ border: 1px solid #ce93d8;
+}
+.status-4 {
+ background-color: #e8f5e9;
+ color: #2e7d32;
+ border: 1px solid #a5d6a7;
+}
+.status-5 {
+ background-color: #ffebee;
+ color: #c62828;
+ border: 1px solid #ef9a9a;
+}
+.status-6 {
+ background-color: #e0f7fa;
+ color: #00838f;
+ border: 1px solid #80deea;
+}
+
+/* 5.3 Items List */
+.items-list {
+ margin-top: 15px;
+ border-top: 1px solid #f0f0f0;
+ padding-top: 15px;
+}
+
+.items-list ul {
+ margin: 0;
+ padding: 0;
+ list-style: none;
+ display: grid;
+ gap: 10px;
+}
+
+.items-list li {
+ background: white;
+ border-radius: 8px;
+ padding: 15px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+ transition:
+  transform 0.2s,
+  box-shadow 0.2s;
+ border-left: 4px solid #e94560;
+}
+
+.items-list li:hover {
+ transform: translateY(-2px);
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.item-name {
+ font-weight: 500;
+ color: #333;
+ flex: 1;
+}
+
+.item-details {
+ display: flex;
+ gap: 15px;
+ align-items: center;
+}
+
+.item-quantity {
+ background: #f5f5f5;
+ padding: 4px 10px;
+ border-radius: 12px;
+ font-size: 0.85rem;
+}
+
+.price {
+ font-weight: bold;
+ color: #e94560;
+ font-size: 1.05rem;
+ min-width: 80px;
+ text-align: right;
+}
 
 /* 6.1 Utility Classes */
 .loading-spinner {
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .error-message {
-    color: #ff4444;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .not-available {
-    color: #888;
-    font-style: italic;
-  }
-  
-  /* 6.2 Responsive Adjustments */
-  @media (max-width: 768px) {
-    .items-list li {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-    
-    .item-details {
-      width: 100%;
-      justify-content: space-between;
-    }
-  }
+ text-align: center;
+ padding: 20px;
+}
+
+.error-message {
+ color: #ff4444;
+ padding: 20px;
+ text-align: center;
+}
+
+.not-available {
+ color: #888;
+ font-style: italic;
+}
+
+/* 6.2 Responsive Adjustments */
+@media (max-width: 768px) {
+ .items-list li {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+ }
+
+ .item-details {
+  width: 100%;
+  justify-content: space-between;
+ }
+}

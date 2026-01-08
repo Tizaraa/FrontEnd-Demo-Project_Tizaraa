@@ -1,277 +1,278 @@
 /* Base Styles */
 :root {
-    --primary: #6C63FF;
-    --secondary: #4D44DB;
-    --accent: #E94560;
-    --light: #F8F9FA;
-    --dark: #2B2D42;
-    --text: #4A4A4A;
-    --text-light: #6C757D;
-  }
-  
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #FAFAFA;
-    color: var(--text);
-    line-height: 1.6;
-  }
+ --primary: #6c63ff;
+ --secondary: #4d44db;
+ --accent: #e94560;
+ --light: #f8f9fa;
+ --dark: #2b2d42;
+ --text: #4a4a4a;
+ --text-light: #6c757d;
+}
 
-  p{
-    text-align: justify;
-  }
-  
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-  
-  /* Hero Section */
-  .hero {
-    text-align: center;
-    padding: 5rem 0;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent) 50%);
-    color: white;
-    margin-bottom: 3rem;
-    border-radius: 0 0 20px 20px;
-    box-shadow: 0 10px 30px rgba(108, 99, 255, 0.2);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
-    opacity: 0.1;
-  }
-  
-  .mainTitle {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    position: relative;
-    animation: fadeInDown 1s ease;
-  }
-  
-  /* Sections */
-  .section {
-    padding: 3rem 0;
-    position: relative;
-  }
-  
-  .section:nth-child(even) {
-    background-color: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    margin: 2rem 0;
-    padding: 3rem;
-  }
-  
-  .sectionTitle {
-    font-size: 2.2rem;
-    color: var(--dark);
-    margin-bottom: 2rem;
-    position: relative;
-    display: inline-block;
-  }
-  
-  .sectionTitle::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 0;
-    width: 50px;
-    height: 4px;
-    background: var(--accent);
-    border-radius: 2px;
-  }
-  
-  .sectionText {
-    font-size: 1.1rem;
-    color: var(--text-light);
-    margin-bottom: 1.5rem;
-    text-align: justify;
-    /* max-width: 800px; */
-  }
-  
-  /* Feature Grid */
-  .featureGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-  
-  .featureCard {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-    border-top: 3px solid var(--accent);
-  }
-  
-  .featureCard:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-  }
-  
-  .featureTitle {
-    font-size: 1.4rem;
-    color: var(--dark);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-  }
-  
-  .featureTitle::before {
-    content: '';
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    background: var(--accent);
-    margin-right: 10px;
-    border-radius: 50%;
-  }
-  
-  /* Commitment Grid */
-  .commitmentGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-  
-  .commitmentCard {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-    border-left: 4px solid var(--accent);
-  }
-  
-  .commitmentCard:hover {
-    transform: scale(1.02);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  }
-  
-  /* Shipping List */
-  .shippingList {
-    list-style: none;
-    margin-top: 1.5rem;
-  }
-  
-  .shippingList li {
-    padding: 0.8rem 1rem;
-    margin-bottom: 0.5rem;
-    background: rgba(108, 99, 255, 0.1);
-    border-radius: 8px;
-    position: relative;
-    padding-left: 2.5rem;
-    font-weight: 500;
-  }
-  
-  .shippingList li::before {
-    content: '✓';
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--accent);
-    font-weight: bold;
-  }
-  
-  /* Animations */
-  @keyframes fadeInDown {
-    from {
-      opacity: 0;
-      transform: translateY(-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .mainTitle {
-      font-size: 2.5rem;
-    }
-    
-    .section {
-      padding: 2rem 0;
-    }
-    
-    .section:nth-child(even) {
-      padding: 2rem;
-    }
-    
-    .sectionTitle {
-      font-size: 1.8rem;
-    }
-    
-    .featureGrid, .commitmentGrid {
-      grid-template-columns: 1fr;
-    }
-  }
-  
-  /* Add some decorative elements */
-  .section:nth-child(odd)::before {
-    content: '';
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
-    background: var(--accent);
-    border-radius: 2px;
-  }
-  
-  /* Highlight important text */
-  strong {
-    color: var(--accent);
-    font-weight: 600;
-  }
+* {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+}
 
+body {
+ font-family: "Poppins", sans-serif;
+ background-color: #fafafa;
+ color: var(--text);
+ line-height: 1.6;
+}
 
-  /* Bangla Section Styles */
+p {
+ text-align: justify;
+}
+
+.container {
+ max-width: 1200px;
+ margin: 0 auto;
+ padding: 0 20px;
+}
+
+/* Hero Section */
+.hero {
+ text-align: center;
+ padding: 5rem 0;
+ background: linear-gradient(135deg, var(--accent) 0%, var(--accent) 50%);
+ color: white;
+ margin-bottom: 3rem;
+ border-radius: 0 0 20px 20px;
+ box-shadow: 0 10px 30px rgba(108, 99, 255, 0.2);
+ position: relative;
+ overflow: hidden;
+}
+
+.hero::before {
+ content: "";
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background: url("https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80")
+  center/cover;
+ opacity: 0.1;
+}
+
+.mainTitle {
+ font-size: 3.5rem;
+ font-weight: 700;
+ margin-bottom: 1.5rem;
+ position: relative;
+ animation: fadeInDown 1s ease;
+}
+
+/* Sections */
+.section {
+ padding: 3rem 0;
+ position: relative;
+}
+
+.section:nth-child(even) {
+ background-color: white;
+ border-radius: 15px;
+ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+ margin: 2rem 0;
+ padding: 3rem;
+}
+
+.sectionTitle {
+ font-size: 2.2rem;
+ color: var(--dark);
+ margin-bottom: 2rem;
+ position: relative;
+ display: inline-block;
+}
+
+.sectionTitle::after {
+ content: "";
+ position: absolute;
+ bottom: -10px;
+ left: 0;
+ width: 50px;
+ height: 4px;
+ background: var(--accent);
+ border-radius: 2px;
+}
+
+.sectionText {
+ font-size: 1.1rem;
+ color: var(--text-light);
+ margin-bottom: 1.5rem;
+ text-align: justify;
+ /* max-width: 800px; */
+}
+
+/* Feature Grid */
+.featureGrid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+ gap: 2rem;
+ margin-top: 2rem;
+}
+
+.featureCard {
+ background: white;
+ padding: 2rem;
+ border-radius: 12px;
+ box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+ transition: all 0.3s ease;
+ border-top: 3px solid var(--accent);
+}
+
+.featureCard:hover {
+ transform: translateY(-10px);
+ box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.featureTitle {
+ font-size: 1.4rem;
+ color: var(--dark);
+ margin-bottom: 1rem;
+ display: flex;
+ align-items: center;
+}
+
+.featureTitle::before {
+ content: "";
+ display: inline-block;
+ width: 8px;
+ height: 8px;
+ background: var(--accent);
+ margin-right: 10px;
+ border-radius: 50%;
+}
+
+/* Commitment Grid */
+.commitmentGrid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+ gap: 2rem;
+ margin-top: 2rem;
+}
+
+.commitmentCard {
+ background: white;
+ padding: 2rem;
+ border-radius: 12px;
+ box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+ transition: all 0.3s ease;
+ border-left: 4px solid var(--accent);
+}
+
+.commitmentCard:hover {
+ transform: scale(1.02);
+ box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Shipping List */
+.shippingList {
+ list-style: none;
+ margin-top: 1.5rem;
+}
+
+.shippingList li {
+ padding: 0.8rem 1rem;
+ margin-bottom: 0.5rem;
+ background: rgba(108, 99, 255, 0.1);
+ border-radius: 8px;
+ position: relative;
+ padding-left: 2.5rem;
+ font-weight: 500;
+}
+
+.shippingList li::before {
+ content: "✓";
+ position: absolute;
+ left: 1rem;
+ top: 50%;
+ transform: translateY(-50%);
+ color: var(--accent);
+ font-weight: bold;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+ from {
+  opacity: 0;
+  transform: translateY(-30px);
+ }
+ to {
+  opacity: 1;
+  transform: translateY(0);
+ }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+ .mainTitle {
+  font-size: 2.5rem;
+ }
+
+ .section {
+  padding: 2rem 0;
+ }
+
+ .section:nth-child(even) {
+  padding: 2rem;
+ }
+
+ .sectionTitle {
+  font-size: 1.8rem;
+ }
+
+ .featureGrid,
+ .commitmentGrid {
+  grid-template-columns: 1fr;
+ }
+}
+
+/* Add some decorative elements */
+.section:nth-child(odd)::before {
+ content: "";
+ position: absolute;
+ top: -20px;
+ left: 50%;
+ transform: translateX(-50%);
+ width: 100px;
+ height: 4px;
+ background: var(--accent);
+ border-radius: 2px;
+}
+
+/* Highlight important text */
+strong {
+ color: var(--accent);
+ font-weight: 600;
+}
+
+/* Bangla Section Styles */
 .bangla-section {
-    margin-top: 3rem;
-    padding-top: 3rem;
-    border-top: 1px dashed rgba(108, 99, 255, 0.3);
-  }
-  
-  .bangla-section .sectionTitle {
-    color: #E94560;
-  }
-  
-  .bangla-section .featureCard,
-  .bangla-section .commitmentCard {
-    border-color: #E94560;
-  }
-  
-  .bangla-section .featureTitle::before {
-    background: #E94560;
-  }
-  
-  .bangla-section .shippingList li {
-    background: rgba(77, 68, 219, 0.1);
-  }
-  
-  .bangla-section .shippingList li::before {
-    color: #E94560;
-  }
+ margin-top: 3rem;
+ padding-top: 3rem;
+ border-top: 1px dashed rgba(108, 99, 255, 0.3);
+}
+
+.bangla-section .sectionTitle {
+ color: #e94560;
+}
+
+.bangla-section .featureCard,
+.bangla-section .commitmentCard {
+ border-color: #e94560;
+}
+
+.bangla-section .featureTitle::before {
+ background: #e94560;
+}
+
+.bangla-section .shippingList li {
+ background: rgba(77, 68, 219, 0.1);
+}
+
+.bangla-section .shippingList li::before {
+ color: #e94560;
+}

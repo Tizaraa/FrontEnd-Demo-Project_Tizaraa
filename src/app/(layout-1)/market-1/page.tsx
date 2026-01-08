@@ -29,118 +29,118 @@ import NextImage from "@component/NextImage";
 import CampaignBanner from "@sections/market-1/CampaignBanner";
 
 export default async function Market1() {
-  const carList = await api.getCarList();
-  const carBrands = await api.getCarBrands();
-  const moreItems = await api.getMoreItems();
-  const mobileList = await api.getMobileList();
-  const opticsList = await api.getOpticsList();
-  const mobileShops = await api.getMobileShops();
-  const opticsShops = await api.getOpticsShops();
-  const serviceList = await api.getServiceList();
-  const mobileBrands = await api.getMobileBrands();
-  const flashDealsData = await api.getFlashDeals();
-  const opticsBrands = await api.getOpticsBrands();
-  const bottomCategories = await api.getCategories();
-  const topCategories = await api.getTopCategories();
-  const topRatedBrands = await api.getTopRatedBrand();
-  const mainCarouselData = await api.getMainCarousel();
-  const newArrivalsList = await api.getNewArrivalList();
-  const bigDiscountList = await api.getBigDiscountList();
-  const topRatedProducts = await api.getTopRatedProduct();
+ const carList = await api.getCarList();
+ const carBrands = await api.getCarBrands();
+ const moreItems = await api.getMoreItems();
+ const mobileList = await api.getMobileList();
+ const opticsList = await api.getOpticsList();
+ const mobileShops = await api.getMobileShops();
+ const opticsShops = await api.getOpticsShops();
+ const serviceList = await api.getServiceList();
+ const mobileBrands = await api.getMobileBrands();
+ const flashDealsData = await api.getFlashDeals();
+ const opticsBrands = await api.getOpticsBrands();
+ const bottomCategories = await api.getCategories();
+ const topCategories = await api.getTopCategories();
+ const topRatedBrands = await api.getTopRatedBrand();
+ const mainCarouselData = await api.getMainCarousel();
+ const newArrivalsList = await api.getNewArrivalList();
+ const bigDiscountList = await api.getBigDiscountList();
+ const topRatedProducts = await api.getTopRatedProduct();
 
-  return (
-    <>
-      {/* Background image */}
-      <NextImage
-        alt="newArrivalBanner"
-        src={tizaraa_watermark}
-        priority
-        style={{
-          position: "fixed",
-          top: "70%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "100%", // Set to 100% to ensure full responsiveness
-          height: "auto", // Maintain aspect ratio
-          maxWidth: "1200px", // Optional: Limit the maximum width
-          backgroundSize: "contain", // Adjust the scaling behavior
-          backgroundPosition: "center",
-          opacity: 0.1,
-          zIndex: 0,
-        }}
-      />
+ return (
+  <>
+   {/* Background image */}
+   <NextImage
+    alt="newArrivalBanner"
+    src={tizaraa_watermark}
+    priority
+    style={{
+     position: "fixed",
+     top: "70%",
+     left: "50%",
+     transform: "translate(-50%, -50%)",
+     width: "100%", // Set to 100% to ensure full responsiveness
+     height: "auto", // Maintain aspect ratio
+     maxWidth: "1200px", // Optional: Limit the maximum width
+     backgroundSize: "contain", // Adjust the scaling behavior
+     backgroundPosition: "center",
+     opacity: 0.1,
+     zIndex: 0,
+    }}
+   />
 
-      <main
-        style={{
-          position: "relative",
-          background: "none",
-        }}
-      >
-        {/* ======================================= */}
-        {/* Hero / Top Banner Section */}
-        {/* ======================================= */}
-        <Section1 />
+   <main
+    style={{
+     position: "relative",
+     background: "none",
+    }}
+   >
+    {/* ======================================= */}
+    {/* Hero / Top Banner Section */}
+    {/* ======================================= */}
+    <Section1 />
 
-        {/* ======================================= */}
-        {/* Featured / Promotional Section */}
-        {/* ======================================= */}
-        <Section10 />
+    {/* ======================================= */}
+    {/* Featured / Promotional Section */}
+    {/* ======================================= */}
+    <Section10 />
 
-        {/* ======================================= */}
-        {/* Campaign Section Banner */}
-        {/* ======================================= */}
-        <CampaignBanner />
+    {/* ======================================= */}
+    {/* Campaign Section Banner */}
+    {/* ======================================= */}
+    <CampaignBanner />
 
-        {/* ======================================= */}
-        {/* Campaign / Special Deals Section */}
-        {/* ======================================= */}
-        <CampaignProducts />
+    {/* ======================================= */}
+    {/* Campaign / Special Deals Section */}
+    {/* ======================================= */}
+    <CampaignProducts />
 
-        {/* ======================================= */}
-        {/* New Arrivals Section Banner */}
-        {/* ======================================= */}
-        <Section8 />
+    {/* ======================================= */}
+    {/* New Arrivals Section Banner */}
+    {/* ======================================= */}
+    <Section8 />
 
-        {/* ======================================= */}
-        {/* New Arrivals Section */}
-        {/* ======================================= */}
-        <NewArrivalsProduct />
+    {/* ======================================= */}
+    {/* New Arrivals Section */}
+    {/* ======================================= */}
+    <NewArrivalsProduct />
 
-        {/* ======================================= */}
-        {/* Flash Sale Banner */}
-        {/* ======================================= */}
-        <FlashSaleBanner />
+    {/* ======================================= */}
+    {/* Flash Sale Banner */}
+    {/* ======================================= */}
+    <FlashSaleBanner />
 
-        {/* ======================================= */}
-        {/* Flash Sale Products */}
-        {/* ======================================= */}
-        <FlashSaleProducts />
+    {/* ======================================= */}
+    {/* Flash Sale Products */}
+    {/* ======================================= */}
+    <FlashSaleProducts />
 
-        {/* ======================================= */}
-        {/* OTC Products */}
-        {/* ======================================= */}
-        <OTCProducts />
+    {/* ======================================= */}
+    {/* OTC Products */}
+    {/* ======================================= */}
+    <OTCProducts />
 
-        {/* ======================================= */}
-        {/* Grocery Products */}
-        {/* ======================================= */}
-        <GroceryProducts />
+    {/* ======================================= */}
+    {/* Grocery Products */}
+    {/* ======================================= */}
+    <GroceryProducts />
 
-        {/* ======================================= */}
-        {/* Stationery Products */}
-        {/* ======================================= */}
-        <StationeryProducts />
+    {/* ======================================= */}
+    {/* Stationery Products */}
+    {/* ======================================= */}
+    <StationeryProducts />
 
-        {/* ======================================= */}
-        {/* Just For You Products */}
-        {/* ======================================= */}
-        <JustForYouProducts />
+    {/* ======================================= */}
+    {/* Just For You Products */}
+    {/* ======================================= */}
+    <JustForYouProducts />
 
-        {/* ======================================= */}
-        {/* Find products by country */}
-        {/* ======================================= */}
-        <Section12 />
-      </main>
-    </>
-  );
+    {/* ======================================= */}
+    {/* Find products by country */}
+    {/* ======================================= */}
+    <Section12 />
+   </main>
+  </>
+ );
 }

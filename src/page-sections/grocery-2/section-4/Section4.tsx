@@ -12,42 +12,43 @@ type Props = { title: string; products: Product[] };
 // =======================================================
 
 export default function Section4({ title, products }: Props) {
-  const { visibleSlides } = useVisibleSlide();
+ const { visibleSlides } = useVisibleSlide();
 
-  return (
-    <div>
-      <H3 fontSize="25px" mb="2rem">
-        {title}
-      </H3>
+ return (
+  <div>
+   <H3 fontSize="25px" mb="2rem">
+    {title}
+   </H3>
 
-      <Box my="-0.25rem">
-        <Carousel
-          showDots
-          step={3}
-          showArrowOnHover={true}
-          arrowButtonColor="inherit"
-          totalSlides={products.length}
-          visibleSlides={visibleSlides}>
-          {products.map((item) => (
-            <Box py="0.25rem" key={item.id}>
-              <ProductCard10
-                id={item.id}
-                slug={item.slug}
-                unit={item.unit}
-                title={item.title}
-                price={item.price}
-                productStock={item.product_stock}
-                off={item.discount}
-                rating={item.rating}
-                images={item.images}
-                imgUrl={item.thumbnail}
-                productId={item.id}
-                sellerId={item.id}
-              />
-            </Box>
-          ))}
-        </Carousel>
+   <Box my="-0.25rem">
+    <Carousel
+     showDots
+     step={3}
+     showArrowOnHover={true}
+     arrowButtonColor="inherit"
+     totalSlides={products.length}
+     visibleSlides={visibleSlides}
+    >
+     {products.map((item) => (
+      <Box py="0.25rem" key={item.id}>
+       <ProductCard10
+        id={item.id}
+        slug={item.slug}
+        unit={item.unit}
+        title={item.title}
+        price={item.price}
+        productStock={item.product_stock}
+        off={item.discount}
+        rating={item.rating}
+        images={item.images}
+        imgUrl={item.thumbnail}
+        productId={item.id}
+        sellerId={item.id}
+       />
       </Box>
-    </div>
-  );
+     ))}
+    </Carousel>
+   </Box>
+  </div>
+ );
 }

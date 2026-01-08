@@ -1700,606 +1700,592 @@ import { FaTrashAlt } from "react-icons/fa";
 type MiniCartProps = { toggleSidenav?: () => void };
 
 export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
-  const { state, dispatch } = useAppContext();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [selectAll, setSelectAll] = useState(false);
-  const [selectedProducts, setSelectedProducts] = useState<(string | number)[]>(
-    []
+ const { state, dispatch } = useAppContext();
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
+ const [selectAll, setSelectAll] = useState(false);
+ const [selectedProducts, setSelectedProducts] = useState<(string | number)[]>(
+  []
+ );
+ const [isDeleting, setIsDeleting] = useState(false);
+ const [loading, setLoading] = useState(false); // New loading state
+ const [viewCartLoading, setViewCartLoading] = useState(false);
+ const router = useRouter();
+ const [visible, setVisible] = useState(true);
+
+ useEffect(() => {
+  setIsLoggedIn(authService.isAuthenticated());
+ }, []);
+
+ // useEffect(() => {
+ //   const allSelected = state.cart.length > 0 && state.cart.every(item => selectedProducts.includes(item.id));
+ //   setSelectAll(allSelected);
+ // }, [selectedProducts, state.cart]);
+
+ useEffect(() => {
+  setSelectAll(
+   state.cart.length > 0 &&
+    state.cart.every((item) => state.selectedProducts.includes(item.id))
   );
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [loading, setLoading] = useState(false); // New loading state
-  const [viewCartLoading, setViewCartLoading] = useState(false);
-  const router = useRouter();
-  const [visible, setVisible] = useState(true);
+ }, [state.cart, state.selectedProducts]);
 
-  useEffect(() => {
-    setIsLoggedIn(authService.isAuthenticated());
-  }, []);
+ const handleCartAmountChange = (amount: number, product: any) => () => {
+  if (amount > product.productStock) {
+   toast.error("Out of Stock");
+   return;
+  }
+  dispatch({
+   type: "CHANGE_CART_AMOUNT",
+   payload: { ...product, qty: amount },
+  });
+ };
 
-  // useEffect(() => {
-  //   const allSelected = state.cart.length > 0 && state.cart.every(item => selectedProducts.includes(item.id));
-  //   setSelectAll(allSelected);
-  // }, [selectedProducts, state.cart]);
+ const handleInputChange = (
+  e: React.ChangeEvent<HTMLInputElement>,
+  product: any
+ ) => {
+  const newQty = Math.min(
+   product.productStock,
+   Math.max(1, parseInt(e.target.value))
+  );
+  if (newQty > product.productStock) {
+   toast.error("Out of Stock");
+   return;
+  }
+  dispatch({
+   type: "CHANGE_CART_AMOUNT",
+   payload: { ...product, qty: newQty },
+  });
+ };
 
-  useEffect(() => {
-    setSelectAll(
-      state.cart.length > 0 &&
-        state.cart.every((item) => state.selectedProducts.includes(item.id))
-    );
-  }, [state.cart, state.selectedProducts]);
+ // const getTotalPrice = () => {
+ //   return state.cart.reduce((accumulator, item) => {
+ //     if (state.selectedProducts.includes(item.id)) {
+ //       return (
+ //         accumulator +
+ //         (item.discountPrice ? item.discountPrice : item.price) * item.qty
+ //       );
+ //     }
+ //     return accumulator;
+ //   }, 0);
+ // };
+ const getTotalPrice = () => {
+  return state.cart.reduce((accumulator, item) => {
+   if (state.selectedProducts.includes(item.id)) {
+    const price =
+     item.sizeColor?.nosize?.length === 0 && item.discountPrice
+      ? item.discountPrice
+      : item.price;
 
-  const handleCartAmountChange = (amount: number, product: any) => () => {
-    if (amount > product.productStock) {
-      toast.error("Out of Stock");
-      return;
+    return accumulator + price * item.qty;
+   }
+   return accumulator;
+  }, 0);
+ };
+
+ // const handleCheckout = async () => {
+ //   const selectedItems = state.cart.filter((item) =>
+ //     state.selectedProducts.includes(item.id)
+ //   );
+
+ //   if (selectedItems.length === 0) {
+ //     toast.error("Please select products to checkout");
+ //     return;
+ //   }
+
+ //   setLoading(true);
+
+ //   try {
+ //     // Price Check API
+ //     const response = await fetch(
+ //       `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
+ //       {
+ //         method: "POST",
+ //         headers: {
+ //           "Content-Type": "application/json",
+ //           Authorization: `Bearer ${authService.getToken()}`,
+ //         },
+ //         body: JSON.stringify({ orders: state.cart }), // full cart
+ //       }
+ //     );
+
+ //     if (!response.ok) {
+ //       const text = await response.text();
+ //       throw new Error(`Price check failed: ${text}`);
+ //     }
+
+ //     const data = await response.json();
+
+ //     // Update cart prices
+ //     const updatedCart = state.cart.map((item) => {
+ //       const updatedItem = data.find(
+ //         (d: any) => d.product_id === item.productId
+ //       );
+ //       if (updatedItem) {
+ //         const newPrice = parseFloat(updatedItem.price);
+ //         // if (item.price !== newPrice) {
+ //         //   toast(`Price updated for "${item.name}" to BDT ${newPrice}`);
+ //         // }
+ //         return {
+ //           ...item,
+ //           price: newPrice,
+ //           discountPrice: item.discountPrice ? newPrice : null,
+ //         };
+ //       }
+ //       return item;
+ //     });
+
+ //     // Update app state first
+ //     dispatch({ type: "SET_CART", payload: updatedCart });
+
+ //     // Get selected items with updated prices
+ //     const updatedSelectedItems = updatedCart.filter((item) =>
+ //       state.selectedProducts.includes(item.id)
+ //     );
+
+ //     // Save updated cart & selected items with updated prices
+ //     localStorage.setItem("cart", JSON.stringify(updatedCart));
+ //     sessionStorage.setItem("cartItems", JSON.stringify(updatedCart)); // Updated cart with new prices
+ //     sessionStorage.setItem(
+ //       "selectedProducts",
+ //       JSON.stringify(updatedSelectedItems)
+ //     ); // Updated selected items with new prices
+
+ //     // Navigate
+ //     if (!isLoggedIn) {
+ //       setTimeout(() => {
+ //         router.push("/login");
+ //       }, 500);
+ //     } else {
+ //       setTimeout(() => {
+ //         router.push("/checkout");
+ //         toggleSidenav(); // optional: close mini cart
+ //       }, 500);
+ //     }
+ //   } catch (error: any) {
+ //     console.error("Price check failed:", error);
+ //     toast.error("Price check failed. Please try again.");
+ //   } finally {
+ //     setLoading(false);
+ //   }
+ // };
+
+ const handleCheckout = async () => {
+  const selectedItems = state.cart.filter((item) =>
+   state.selectedProducts.includes(item.id)
+  );
+
+  if (selectedItems.length === 0) {
+   toast.error("Please select products to checkout");
+   return;
+  }
+
+  // ✅ Check login first — no toast, no delay
+  if (!isLoggedIn) {
+   router.push("/login");
+   return;
+  }
+
+  setLoading(true);
+
+  try {
+   // ✅ Price Check API only if logged in
+   const response = await fetch(`${ApiBaseUrl.baseUrl}checkout/check/pricing`, {
+    method: "POST",
+    headers: {
+     "Content-Type": "application/json",
+     Authorization: `Bearer ${authService.getToken()}`,
+    },
+    body: JSON.stringify({ orders: state.cart }),
+   });
+
+   if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Price check failed: ${text}`);
+   }
+
+   const data = await response.json();
+
+   // Update cart prices
+   const updatedCart = state.cart.map((item) => {
+    const updatedItem = data.find((d: any) => d.product_id === item.productId);
+    if (updatedItem) {
+     const newPrice = parseFloat(updatedItem.price);
+     return {
+      ...item,
+      price: newPrice,
+      discountPrice: item.discountPrice ? newPrice : null,
+     };
     }
+    return item;
+   });
+
+   // Update app state first
+   dispatch({ type: "SET_CART", payload: updatedCart });
+
+   // Get selected items with updated prices
+   const updatedSelectedItems = updatedCart.filter((item) =>
+    state.selectedProducts.includes(item.id)
+   );
+
+   // Save updated cart & selected items with updated prices
+   localStorage.setItem("cart", JSON.stringify(updatedCart));
+   sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
+   sessionStorage.setItem(
+    "selectedProducts",
+    JSON.stringify(updatedSelectedItems)
+   );
+
+   // Navigate to checkout
+   setTimeout(() => {
+    router.push("/checkout");
+    toggleSidenav();
+   }, 500);
+  } catch (error: any) {
+   console.error("Price check failed:", error);
+   toast.error("Price check failed. Please try again.");
+  } finally {
+   setLoading(false);
+  }
+ };
+
+ const handleSelectAll = () => {
+  if (selectAll) {
+   dispatch({ type: "DESELECT_ALL_PRODUCTS" });
+  } else {
+   dispatch({ type: "SELECT_ALL_PRODUCTS" });
+  }
+ };
+
+ const handleProductSelect = (productId: string | number) => {
+  if (state.selectedProducts.includes(productId)) {
+   dispatch({ type: "DESELECT_PRODUCT", payload: productId });
+   const updatedProducts = state.selectedProducts.filter(
+    (id) => id !== productId
+   );
+   const selectedItems = state.cart.filter((item) =>
+    updatedProducts.includes(item.id)
+   );
+   sessionStorage.setItem("selectedProducts", JSON.stringify(selectedItems));
+  } else {
+   dispatch({ type: "SELECT_PRODUCT", payload: productId });
+   const updatedProducts = [...state.selectedProducts, productId];
+   const selectedItems = state.cart.filter((item) =>
+    updatedProducts.includes(item.id)
+   );
+   sessionStorage.setItem("selectedProducts", JSON.stringify(selectedItems));
+  }
+ };
+
+ const handleDeleteSelected = async () => {
+  setIsDeleting(true);
+
+  try {
+   // Simulate async operation (e.g., API call) with setTimeout
+   await new Promise((resolve) => setTimeout(resolve, 1000));
+
+   state.selectedProducts.forEach((productId) => {
     dispatch({
-      type: "CHANGE_CART_AMOUNT",
-      payload: { ...product, qty: amount },
+     type: "CHANGE_CART_AMOUNT",
+     payload: { id: productId, qty: 0 },
     });
-  };
+   });
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    product: any
-  ) => {
-    const newQty = Math.min(
-      product.productStock,
-      Math.max(1, parseInt(e.target.value))
-    );
-    if (newQty > product.productStock) {
-      toast.error("Out of Stock");
-      return;
-    }
-    dispatch({
-      type: "CHANGE_CART_AMOUNT",
-      payload: { ...product, qty: newQty },
-    });
-  };
+   localStorage.removeItem("orderId");
+   sessionStorage.removeItem("selectedProducts");
+   sessionStorage.removeItem("cartItems");
+   localStorage.removeItem("cart");
+   sessionStorage.removeItem("paymentMethod");
+   sessionStorage.removeItem("savedTotalPrice");
+   sessionStorage.removeItem("savedTotalWithDelivery");
 
-  // const getTotalPrice = () => {
-  //   return state.cart.reduce((accumulator, item) => {
-  //     if (state.selectedProducts.includes(item.id)) {
-  //       return (
-  //         accumulator +
-  //         (item.discountPrice ? item.discountPrice : item.price) * item.qty
-  //       );
-  //     }
-  //     return accumulator;
-  //   }, 0);
-  // };
-  const getTotalPrice = () => {
-    return state.cart.reduce((accumulator, item) => {
-      if (state.selectedProducts.includes(item.id)) {
-        const price =
-          item.sizeColor?.nosize?.length === 0 && item.discountPrice
-            ? item.discountPrice
-            : item.price;
+   dispatch({ type: "DESELECT_ALL_PRODUCTS" });
 
-        return accumulator + price * item.qty;
+   // toast.success("Selected items deleted successfully");
+   toast.success(
+    <div style={{ display: "flex", alignItems: "center" }}>
+     <FaTrashAlt style={{ marginRight: "10px", color: "red" }} />
+     Selected items deleted successfully
+    </div>
+   );
+  } catch (error) {
+   toast.error("Failed to delete selected items");
+  } finally {
+   setIsDeleting(false);
+  }
+ };
+
+ const totalPrice = getTotalPrice();
+
+ const handleViewCart = () => {
+  setViewCartLoading(true); // Show the loading state
+
+  // Delay the navigation to the cart page
+  setTimeout(() => {
+   router.push("/cart"); // Navigate to the cart page
+   setViewCartLoading(false); // Optional: reset loading state after navigation
+   toggleSidenav(); // Adjust the delay time as needed (e.g., 1000ms = 1 second)
+  }, 1000);
+ };
+ return (
+  <StyledMiniCart>
+   <div className={`cart-list ${state.cart.length === 0 ? "no-scroll" : ""}`}>
+    <FlexBox alignItems="center" m="0px 20px" height="74px">
+     <Icon size="1.75rem">bag</Icon>
+     <Typography fontWeight={600} fontSize="16px" ml="0.5rem">
+      {state.cart.length} item{state.cart.length !== 1 ? "s" : ""}
+     </Typography>
+    </FlexBox>
+
+    <Divider />
+
+    <FlexBox
+     alignItems="center"
+     justifyContent="space-between"
+     m="0px 16px"
+     height="50px"
+    >
+     <FlexBox alignItems="center">
+      <CheckBox checked={selectAll} onChange={handleSelectAll} />
+      <Typography ml="0.5rem">Select All</Typography>
+     </FlexBox>
+     <Button
+      size="small"
+      color="primary"
+      variant="outlined"
+      disabled={
+       state.selectedProducts.length === 0 ||
+       state.cart.length === 0 ||
+       totalPrice === 0 ||
+       isDeleting
       }
-      return accumulator;
-    }, 0);
-  };
-
-  // const handleCheckout = async () => {
-  //   const selectedItems = state.cart.filter((item) =>
-  //     state.selectedProducts.includes(item.id)
-  //   );
-
-  //   if (selectedItems.length === 0) {
-  //     toast.error("Please select products to checkout");
-  //     return;
-  //   }
-
-  //   setLoading(true);
-
-  //   try {
-  //     // Price Check API
-  //     const response = await fetch(
-  //       `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${authService.getToken()}`,
-  //         },
-  //         body: JSON.stringify({ orders: state.cart }), // full cart
-  //       }
-  //     );
-
-  //     if (!response.ok) {
-  //       const text = await response.text();
-  //       throw new Error(`Price check failed: ${text}`);
-  //     }
-
-  //     const data = await response.json();
-
-  //     // Update cart prices
-  //     const updatedCart = state.cart.map((item) => {
-  //       const updatedItem = data.find(
-  //         (d: any) => d.product_id === item.productId
-  //       );
-  //       if (updatedItem) {
-  //         const newPrice = parseFloat(updatedItem.price);
-  //         // if (item.price !== newPrice) {
-  //         //   toast(`Price updated for "${item.name}" to BDT ${newPrice}`);
-  //         // }
-  //         return {
-  //           ...item,
-  //           price: newPrice,
-  //           discountPrice: item.discountPrice ? newPrice : null,
-  //         };
-  //       }
-  //       return item;
-  //     });
-
-  //     // Update app state first
-  //     dispatch({ type: "SET_CART", payload: updatedCart });
-
-  //     // Get selected items with updated prices
-  //     const updatedSelectedItems = updatedCart.filter((item) =>
-  //       state.selectedProducts.includes(item.id)
-  //     );
-
-  //     // Save updated cart & selected items with updated prices
-  //     localStorage.setItem("cart", JSON.stringify(updatedCart));
-  //     sessionStorage.setItem("cartItems", JSON.stringify(updatedCart)); // Updated cart with new prices
-  //     sessionStorage.setItem(
-  //       "selectedProducts",
-  //       JSON.stringify(updatedSelectedItems)
-  //     ); // Updated selected items with new prices
-
-  //     // Navigate
-  //     if (!isLoggedIn) {
-  //       setTimeout(() => {
-  //         router.push("/login");
-  //       }, 500);
-  //     } else {
-  //       setTimeout(() => {
-  //         router.push("/checkout");
-  //         toggleSidenav(); // optional: close mini cart
-  //       }, 500);
-  //     }
-  //   } catch (error: any) {
-  //     console.error("Price check failed:", error);
-  //     toast.error("Price check failed. Please try again.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  const handleCheckout = async () => {
-    const selectedItems = state.cart.filter((item) =>
-      state.selectedProducts.includes(item.id)
-    );
-
-    if (selectedItems.length === 0) {
-      toast.error("Please select products to checkout");
-      return;
-    }
-
-    // ✅ Check login first — no toast, no delay
-    if (!isLoggedIn) {
-      router.push("/login");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      // ✅ Price Check API only if logged in
-      const response = await fetch(
-        `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-          body: JSON.stringify({ orders: state.cart }),
-        }
-      );
-
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Price check failed: ${text}`);
-      }
-
-      const data = await response.json();
-
-      // Update cart prices
-      const updatedCart = state.cart.map((item) => {
-        const updatedItem = data.find(
-          (d: any) => d.product_id === item.productId
-        );
-        if (updatedItem) {
-          const newPrice = parseFloat(updatedItem.price);
-          return {
-            ...item,
-            price: newPrice,
-            discountPrice: item.discountPrice ? newPrice : null,
-          };
-        }
-        return item;
-      });
-
-      // Update app state first
-      dispatch({ type: "SET_CART", payload: updatedCart });
-
-      // Get selected items with updated prices
-      const updatedSelectedItems = updatedCart.filter((item) =>
-        state.selectedProducts.includes(item.id)
-      );
-
-      // Save updated cart & selected items with updated prices
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
-      sessionStorage.setItem(
-        "selectedProducts",
-        JSON.stringify(updatedSelectedItems)
-      );
-
-      // Navigate to checkout
-      setTimeout(() => {
-        router.push("/checkout");
-        toggleSidenav();
-      }, 500);
-    } catch (error: any) {
-      console.error("Price check failed:", error);
-      toast.error("Price check failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSelectAll = () => {
-    if (selectAll) {
-      dispatch({ type: "DESELECT_ALL_PRODUCTS" });
-    } else {
-      dispatch({ type: "SELECT_ALL_PRODUCTS" });
-    }
-  };
-
-  const handleProductSelect = (productId: string | number) => {
-    if (state.selectedProducts.includes(productId)) {
-      dispatch({ type: "DESELECT_PRODUCT", payload: productId });
-      const updatedProducts = state.selectedProducts.filter(
-        (id) => id !== productId
-      );
-      const selectedItems = state.cart.filter((item) =>
-        updatedProducts.includes(item.id)
-      );
-      sessionStorage.setItem("selectedProducts", JSON.stringify(selectedItems));
-    } else {
-      dispatch({ type: "SELECT_PRODUCT", payload: productId });
-      const updatedProducts = [...state.selectedProducts, productId];
-      const selectedItems = state.cart.filter((item) =>
-        updatedProducts.includes(item.id)
-      );
-      sessionStorage.setItem("selectedProducts", JSON.stringify(selectedItems));
-    }
-  };
-
-  const handleDeleteSelected = async () => {
-    setIsDeleting(true);
-
-    try {
-      // Simulate async operation (e.g., API call) with setTimeout
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      state.selectedProducts.forEach((productId) => {
-        dispatch({
-          type: "CHANGE_CART_AMOUNT",
-          payload: { id: productId, qty: 0 },
-        });
-      });
-
-      localStorage.removeItem("orderId");
-      sessionStorage.removeItem("selectedProducts");
-      sessionStorage.removeItem("cartItems");
-      localStorage.removeItem("cart");
-      sessionStorage.removeItem("paymentMethod");
-      sessionStorage.removeItem("savedTotalPrice");
-      sessionStorage.removeItem("savedTotalWithDelivery");
-
-      dispatch({ type: "DESELECT_ALL_PRODUCTS" });
-
-      // toast.success("Selected items deleted successfully");
-      toast.success(
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <FaTrashAlt style={{ marginRight: "10px", color: "red" }} />
-          Selected items deleted successfully
-        </div>
-      );
-    } catch (error) {
-      toast.error("Failed to delete selected items");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  const totalPrice = getTotalPrice();
-
-  const handleViewCart = () => {
-    setViewCartLoading(true); // Show the loading state
-
-    // Delay the navigation to the cart page
-    setTimeout(() => {
-      router.push("/cart"); // Navigate to the cart page
-      setViewCartLoading(false); // Optional: reset loading state after navigation
-      toggleSidenav(); // Adjust the delay time as needed (e.g., 1000ms = 1 second)
-    }, 1000);
-  };
-  return (
-    <StyledMiniCart>
-      <div
-        className={`cart-list ${state.cart.length === 0 ? "no-scroll" : ""}`}
-      >
-        <FlexBox alignItems="center" m="0px 20px" height="74px">
-          <Icon size="1.75rem">bag</Icon>
-          <Typography fontWeight={600} fontSize="16px" ml="0.5rem">
-            {state.cart.length} item{state.cart.length !== 1 ? "s" : ""}
-          </Typography>
-        </FlexBox>
-
-        <Divider />
-
-        <FlexBox
-          alignItems="center"
-          justifyContent="space-between"
-          m="0px 16px"
-          height="50px"
-        >
-          <FlexBox alignItems="center">
-            <CheckBox checked={selectAll} onChange={handleSelectAll} />
-            <Typography ml="0.5rem">Select All</Typography>
-          </FlexBox>
-          <Button
-            size="small"
-            color="primary"
-            variant="outlined"
-            disabled={
-              state.selectedProducts.length === 0 ||
-              state.cart.length === 0 ||
-              totalPrice === 0 ||
-              isDeleting
-            }
-            onClick={handleDeleteSelected}
-            className={`delete-button ${isDeleting ? "deleting" : ""}`}
-          >
-            {isDeleting ? (
-              <BeatLoader size={18} color="#E94560" />
-            ) : (
-              <>
-                <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} />{" "}
-                Remove All
-              </>
-            )}
-          </Button>
-        </FlexBox>
-
-        {state.cart.length === 0 && (
-          <FlexBox
-            alignItems="center"
-            flexDirection="column"
-            justifyContent="center"
-            height="calc(100% - 80px)"
-          >
-            <Image
-              src="/assets/images/logos/shopping-bag.svg"
-              width={90}
-              height={90}
-              alt="empty cart"
-            />
-            <Paragraph
-              mt="1rem"
-              color="text.muted"
-              textAlign="center"
-              maxWidth="200px"
-            >
-              No Product Found
-            </Paragraph>
-          </FlexBox>
-        )}
-
-        {state.cart.map((item) => (
-          <Fragment key={item.id}>
-            <div className="cart-item">
-              <CheckBox
-                checked={state.selectedProducts.includes(item.id)}
-                onChange={() => handleProductSelect(item.id)}
-              />
-              <FlexBox
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-                alignItems="center"
-                flexDirection="column"
-              >
-                <Button
-                  size="none"
-                  padding="5px"
-                  color="primary"
-                  variant="outlined"
-                  borderRadius="300px"
-                  borderColor="primary.light"
-                  onClick={handleCartAmountChange(item.qty + 1, item)}
-                >
-                  <Icon variant="small">plus</Icon>
-                </Button>
-
-                <input
-                  className="no-spin-button"
-                  type="number"
-                  value={item.qty}
-                  min={1}
-                  onChange={(e) => handleInputChange(e, item)}
-                  style={{
-                    textDecoration: "none",
-                    borderRadius: "30px",
-                    scrollBehavior: "unset",
-                    border: "1px solid #E94560",
-                    padding: "8px",
-                    width: "50px",
-                    textAlign: "center",
-                  }}
-                />
-
-                <Button
-                  size="none"
-                  padding="5px"
-                  color="primary"
-                  variant="outlined"
-                  borderRadius="300px"
-                  borderColor="primary.light"
-                  onClick={handleCartAmountChange(item.qty - 1, item)}
-                  disabled={item.qty === 1}
-                >
-                  <Icon variant="small">minus</Icon>
-                </Button>
-              </FlexBox>
-
-              <Link href={`/product/${item.slug}`}>
-                <Image
-                  width={76}
-                  height={76}
-                  style={{ marginInline: "1rem" }}
-                  alt={item.name}
-                  src={
-                    item.productType === "Abroad"
-                      ? item.imgUrl
-                      : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
-                  }
-                />
-              </Link>
-
-              <div className="product-details">
-                <Link href={`/product/${item.slug}`}>
-                  <H5 className="title" fontSize="14px">
-                    {item.name}
-                  </H5>
-                </Link>
-
-                <Tiny color="text.muted">
-                  {currency(
-                    item.sizeColor?.nosize?.length === 0
-                      ? item.discountPrice ?? item.price
-                      : item.price,
-                    0
-                  )}{" "}
-                  x {item.qty}
-                </Tiny>
-
-                <Typography
-                  fontWeight={600}
-                  fontSize="14px"
-                  color="primary.main"
-                  mt="4px"
-                >
-                  {currency(
-                    item.qty *
-                      (item.sizeColor?.nosize?.length === 0
-                        ? item.discountPrice ?? item.price
-                        : item.price)
-                  )}
-                </Typography>
-
-                {(item.selectedSize ||
-                  item.selectedColor ||
-                  item.selectedSpecification) && (
-                  <Tiny
-                    color="text.muted"
-                    fontWeight={600}
-                    fontSize="12px"
-                    mt="4px"
-                  >
-                    {item.selectedSize &&
-                    item.selectedColor &&
-                    item.selectedSpecification
-                      ? `Size: ${item.selectedSize}, Color: ${item.selectedColor}, Specification: ${item.selectedSpecification}`
-                      : item.selectedSize
-                      ? `Size: ${item.selectedSize}`
-                      : item.selectedColor
-                      ? `Color: ${item.selectedColor}`
-                      : item.selectedSpecification
-                      ? `Specification: ${item.selectedSpecification}`
-                      : ""}
-                  </Tiny>
-                )}
-              </div>
-
-              <Button
-                size="none"
-                padding="5px"
-                color="primary"
-                variant="outlined"
-                borderRadius="300px"
-                borderColor="primary.light"
-                onClick={handleCartAmountChange(0, item)}
-              >
-                <Icon variant="small">close</Icon>
-              </Button>
-            </div>
-            <Divider />
-          </Fragment>
-        ))}
-      </div>
-
-      {state.cart.length > 0 && (
-        <div className="actions">
-          <Button
-            fullwidth
-            color="primary"
-            variant="contained"
-            onClick={handleCheckout}
-            disabled={
-              state.selectedProducts.length === 0 ||
-              state.cart.length === 0 ||
-              totalPrice === 0 ||
-              loading
-            }
-          >
-            {loading ? (
-              <BeatLoader size={18} color="#E94560" />
-            ) : (
-              <Typography fontWeight={600}>
-                PROCEED TO CHECKOUT ({currency(getTotalPrice())})
-              </Typography>
-            )}
-          </Button>
-
-          <Button
-            fullwidth
-            color="primary"
-            variant="outlined"
-            mt="1rem"
-            onClick={handleViewCart}
-            disabled={viewCartLoading}
-          >
-            {viewCartLoading ? (
-              <BeatLoader size={18} color="#E94560" />
-            ) : (
-              <Typography fontWeight={600}>View Cart</Typography>
-            )}
-          </Button>
-        </div>
+      onClick={handleDeleteSelected}
+      className={`delete-button ${isDeleting ? "deleting" : ""}`}
+     >
+      {isDeleting ? (
+       <BeatLoader size={18} color="#E94560" />
+      ) : (
+       <>
+        <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} /> Remove
+        All
+       </>
       )}
-      <style jsx>{`
-        .delete-button {
-          transition: all 0.3s ease;
-        }
-        .delete-button.deleting {
-          opacity: 0.5;
-          pointer-events: none;
-        }
-        .delete-button:hover {
-          background-color: #f44336;
-          color: white;
-        }
-      `}</style>
-    </StyledMiniCart>
-  );
+     </Button>
+    </FlexBox>
+
+    {state.cart.length === 0 && (
+     <FlexBox
+      alignItems="center"
+      flexDirection="column"
+      justifyContent="center"
+      height="calc(100% - 80px)"
+     >
+      <Image
+       src="/assets/images/logos/shopping-bag.svg"
+       width={90}
+       height={90}
+       alt="empty cart"
+      />
+      <Paragraph
+       mt="1rem"
+       color="text.muted"
+       textAlign="center"
+       maxWidth="200px"
+      >
+       No Product Found
+      </Paragraph>
+     </FlexBox>
+    )}
+
+    {state.cart.map((item) => (
+     <Fragment key={item.id}>
+      <div className="cart-item">
+       <CheckBox
+        checked={state.selectedProducts.includes(item.id)}
+        onChange={() => handleProductSelect(item.id)}
+       />
+       <FlexBox
+        style={{
+         display: "flex",
+         flexDirection: "column",
+         gap: "10px",
+        }}
+        alignItems="center"
+        flexDirection="column"
+       >
+        <Button
+         size="none"
+         padding="5px"
+         color="primary"
+         variant="outlined"
+         borderRadius="300px"
+         borderColor="primary.light"
+         onClick={handleCartAmountChange(item.qty + 1, item)}
+        >
+         <Icon variant="small">plus</Icon>
+        </Button>
+
+        <input
+         className="no-spin-button"
+         type="number"
+         value={item.qty}
+         min={1}
+         onChange={(e) => handleInputChange(e, item)}
+         style={{
+          textDecoration: "none",
+          borderRadius: "30px",
+          scrollBehavior: "unset",
+          border: "1px solid #E94560",
+          padding: "8px",
+          width: "50px",
+          textAlign: "center",
+         }}
+        />
+
+        <Button
+         size="none"
+         padding="5px"
+         color="primary"
+         variant="outlined"
+         borderRadius="300px"
+         borderColor="primary.light"
+         onClick={handleCartAmountChange(item.qty - 1, item)}
+         disabled={item.qty === 1}
+        >
+         <Icon variant="small">minus</Icon>
+        </Button>
+       </FlexBox>
+
+       <Link href={`/product/${item.slug}`}>
+        <Image
+         width={76}
+         height={76}
+         style={{ marginInline: "1rem" }}
+         alt={item.name}
+         src={
+          item.productType === "Abroad"
+           ? item.imgUrl
+           : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+         }
+        />
+       </Link>
+
+       <div className="product-details">
+        <Link href={`/product/${item.slug}`}>
+         <H5 className="title" fontSize="14px">
+          {item.name}
+         </H5>
+        </Link>
+
+        <Tiny color="text.muted">
+         {currency(
+          item.sizeColor?.nosize?.length === 0
+           ? (item.discountPrice ?? item.price)
+           : item.price,
+          0
+         )}{" "}
+         x {item.qty}
+        </Tiny>
+
+        <Typography
+         fontWeight={600}
+         fontSize="14px"
+         color="primary.main"
+         mt="4px"
+        >
+         {currency(
+          item.qty *
+           (item.sizeColor?.nosize?.length === 0
+            ? (item.discountPrice ?? item.price)
+            : item.price)
+         )}
+        </Typography>
+
+        {(item.selectedSize ||
+         item.selectedColor ||
+         item.selectedSpecification) && (
+         <Tiny color="text.muted" fontWeight={600} fontSize="12px" mt="4px">
+          {item.selectedSize && item.selectedColor && item.selectedSpecification
+           ? `Size: ${item.selectedSize}, Color: ${item.selectedColor}, Specification: ${item.selectedSpecification}`
+           : item.selectedSize
+             ? `Size: ${item.selectedSize}`
+             : item.selectedColor
+               ? `Color: ${item.selectedColor}`
+               : item.selectedSpecification
+                 ? `Specification: ${item.selectedSpecification}`
+                 : ""}
+         </Tiny>
+        )}
+       </div>
+
+       <Button
+        size="none"
+        padding="5px"
+        color="primary"
+        variant="outlined"
+        borderRadius="300px"
+        borderColor="primary.light"
+        onClick={handleCartAmountChange(0, item)}
+       >
+        <Icon variant="small">close</Icon>
+       </Button>
+      </div>
+      <Divider />
+     </Fragment>
+    ))}
+   </div>
+
+   {state.cart.length > 0 && (
+    <div className="actions">
+     <Button
+      fullwidth
+      color="primary"
+      variant="contained"
+      onClick={handleCheckout}
+      disabled={
+       state.selectedProducts.length === 0 ||
+       state.cart.length === 0 ||
+       totalPrice === 0 ||
+       loading
+      }
+     >
+      {loading ? (
+       <BeatLoader size={18} color="#E94560" />
+      ) : (
+       <Typography fontWeight={600}>
+        PROCEED TO CHECKOUT ({currency(getTotalPrice())})
+       </Typography>
+      )}
+     </Button>
+
+     <Button
+      fullwidth
+      color="primary"
+      variant="outlined"
+      mt="1rem"
+      onClick={handleViewCart}
+      disabled={viewCartLoading}
+     >
+      {viewCartLoading ? (
+       <BeatLoader size={18} color="#E94560" />
+      ) : (
+       <Typography fontWeight={600}>View Cart</Typography>
+      )}
+     </Button>
+    </div>
+   )}
+   <style jsx>{`
+    .delete-button {
+     transition: all 0.3s ease;
+    }
+    .delete-button.deleting {
+     opacity: 0.5;
+     pointer-events: none;
+    }
+    .delete-button:hover {
+     background-color: #f44336;
+     color: white;
+    }
+   `}</style>
+  </StyledMiniCart>
+ );
 }

@@ -15,13 +15,12 @@ type Props = { shop: Shop };
 // ==============================================================
 
 export default function ProductDetails({ shop }: Props) {
-  const width = useWindowSize();
-  const isTablet = width < 1025;
+ const width = useWindowSize();
+ const isTablet = width < 1025;
 
-  return (
-    <Fragment>
-     
-      {/* {isTablet && (
+ return (
+  <Fragment>
+   {/* {isTablet && (
         <Sidenav
           scroll={true}
           position="left"
@@ -34,7 +33,7 @@ export default function ProductDetails({ shop }: Props) {
         </Sidenav>
       )} */}
 
-      {/* <ProductGridView products={shop.products?.slice(0, 9) as Product[]} /> */}
-    </Fragment>
-  );
+   {/* <ProductGridView products={shop.products?.slice(0, 9) as Product[]} /> */}
+  </Fragment>
+ );
 }

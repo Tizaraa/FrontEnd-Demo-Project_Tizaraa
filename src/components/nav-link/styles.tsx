@@ -5,31 +5,31 @@ import { isValidProp } from "@utils/utils";
 
 // ==============================================================
 interface StyledNavLinkProps {
-  className?: string;
-  isCurrentRoute?: boolean;
-  [key: string]: unknown;
+ className?: string;
+ isCurrentRoute?: boolean;
+ [key: string]: unknown;
 }
 // ==============================================================
 
 const StyledNavLink = styled.span.withConfig({
-  shouldForwardProp: (prop: string) => isValidProp(prop)
+ shouldForwardProp: (prop: string) => isValidProp(prop),
 })<StyledNavLinkProps & SpaceProps & ColorProps>(
-  ({ isCurrentRoute, theme }) =>
-    systemCss({
-      position: "relative",
-      transition: "all 150ms ease-in-out",
-      color: isCurrentRoute ? theme.colors.primary.m : "auto",
-      "&:hover": {
-        color: `${theme.colors.primary.m} !important`
-      },
-      "& svg path": {
-        fill: isCurrentRoute ? theme.colors.primary.m : "auto"
-      },
-      "& svg polyline, svg polygon": {
-        color: isCurrentRoute ? theme.colors.primary.m : "auto"
-      }
-    }),
-  compose(space, color)
+ ({ isCurrentRoute, theme }) =>
+  systemCss({
+   position: "relative",
+   transition: "all 150ms ease-in-out",
+   color: isCurrentRoute ? theme.colors.primary.m : "auto",
+   "&:hover": {
+    color: `${theme.colors.primary.m} !important`,
+   },
+   "& svg path": {
+    fill: isCurrentRoute ? theme.colors.primary.m : "auto",
+   },
+   "& svg polyline, svg polygon": {
+    color: isCurrentRoute ? theme.colors.primary.m : "auto",
+   },
+  }),
+ compose(space, color)
 );
 
 export default StyledNavLink;

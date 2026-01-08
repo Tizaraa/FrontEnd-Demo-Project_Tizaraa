@@ -5,38 +5,31 @@ import Layout1 from "@component/layout/layout-1";
 import Market3 from "./(layout-1)/market-3/page";
 // PAGE SECTION COMPONENTS
 
-
 export default function Home() {
-  return (
-    // <Box id="top" overflow="hidden" bg="gray.white">
-    //   {/* HEADER & BANNER SECTION */}
-    //   <Section1 />
+ return (
+  // <Box id="top" overflow="hidden" bg="gray.white">
+  //   {/* HEADER & BANNER SECTION */}
+  //   <Section1 />
 
-    //   {/* FEATURES SECTION */}
-    //   <Section2 />
+  //   {/* FEATURES SECTION */}
+  //   <Section2 />
 
-    //   {/* PRODUCT MODEL & REST API SECTION */}
-    //   <Section5 />
+  //   {/* PRODUCT MODEL & REST API SECTION */}
+  //   <Section5 />
 
-    //   {/* DEMOS & PAGES SECTION */}
-    //   <Section3 />
+  //   {/* DEMOS & PAGES SECTION */}
+  //   <Section3 />
 
-    //   {/* TECHNOLOGY USED SECTION */}
-    //   <Section4 />
+  //   {/* TECHNOLOGY USED SECTION */}
+  //   <Section4 />
 
-    //   {/* FOOTER SECTION */}
-    //   <Footer />
-    // </Box>
+  //   {/* FOOTER SECTION */}
+  //   <Footer />
+  // </Box>
 
-  
-<Layout1>
-<Market1></Market1>
-{/* <Market3></Market3> */}
-</Layout1>
-
-
-   
-
-  
-  );
+  <Layout1>
+   <Market1></Market1>
+   {/* <Market3></Market3> */}
+  </Layout1>
+ );
 }

@@ -15,19 +15,27 @@ type Props = { categoryList: Category[] };
 // ===============================================
 
 export default function Section4({ categoryList }: Props) {
-  const { visibleSlides } = useVisibleSlide();
+ const { visibleSlides } = useVisibleSlide();
 
-  return (
-    <Wrapper className="categories">
-      <H1 mb={3}>Top Categories</H1>
+ return (
+  <Wrapper className="categories">
+   <H1 mb={3}>Top Categories</H1>
 
-      <Carousel infinite={true} visibleSlides={visibleSlides} totalSlides={categoryList.length}>
-        {categoryList.map((item) => (
-          <Link href="#" key={item.id}>
-            <ProductCard14 title={item.name} imgUrl={item.image} available={item.description} />
-          </Link>
-        ))}
-      </Carousel>
-    </Wrapper>
-  );
+   <Carousel
+    infinite={true}
+    visibleSlides={visibleSlides}
+    totalSlides={categoryList.length}
+   >
+    {categoryList.map((item) => (
+     <Link href="#" key={item.id}>
+      <ProductCard14
+       title={item.name}
+       imgUrl={item.image}
+       available={item.description}
+      />
+     </Link>
+    ))}
+   </Carousel>
+  </Wrapper>
+ );
 }

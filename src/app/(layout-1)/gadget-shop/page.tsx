@@ -14,41 +14,41 @@ import Section6 from "@sections/gadget-shop/section-6";
 import Section7 from "@sections/gadget-shop/section-7";
 
 export default async function GadgetShop() {
-  const twoBanner = await api.getTwoBanner();
-  const blogLists = await api.getBlogLists();
-  const topPickList = await api.getTopPicksList();
-  const newArrivalsData = await api.getNewArrival();
-  const mostViewedList = await api.getMostViewedList();
-  const mainCarouselData = await api.getMainCarousel();
-  const featuredCategories = await api.getFeaturedCategories();
+ const twoBanner = await api.getTwoBanner();
+ const blogLists = await api.getBlogLists();
+ const topPickList = await api.getTopPicksList();
+ const newArrivalsData = await api.getNewArrival();
+ const mostViewedList = await api.getMostViewedList();
+ const mainCarouselData = await api.getMainCarousel();
+ const featuredCategories = await api.getFeaturedCategories();
 
-  return (
-    <Fragment>
-      {/* NAVIGATION BAR AREA */}
-      <Navbar />
+ return (
+  <Fragment>
+   {/* NAVIGATION BAR AREA */}
+   <Navbar />
 
-      <Box my="2rem">
-        {/* TOP PICKS AND NEW WINTER PRODUCTS CAROUSEL AREA */}
-        <Section1 mainCarousel={mainCarouselData} topPickList={topPickList} />
+   <Box my="2rem">
+    {/* TOP PICKS AND NEW WINTER PRODUCTS CAROUSEL AREA */}
+    <Section1 mainCarousel={mainCarouselData} topPickList={topPickList} />
 
-        {/* FEATURED CATEGORIES AREA */}
-        <Section2 categories={featuredCategories} />
+    {/* FEATURED CATEGORIES AREA */}
+    <Section2 categories={featuredCategories} />
 
-        {/* DISCOUNT BANNERS AREA */}
-        <Section3 bannerData={twoBanner} />
+    {/* DISCOUNT BANNERS AREA */}
+    <Section3 bannerData={twoBanner} />
 
-        {/* MOST VIEW PRODUCTS CAROUSEL AREA */}
-        <Section4 products={mostViewedList} />
+    {/* MOST VIEW PRODUCTS CAROUSEL AREA */}
+    <Section4 products={mostViewedList} />
 
-        {/* NEW ARRIVAL PRODUCTS CAROUSEL AREA */}
-        <Section5 products={newArrivalsData} />
+    {/* NEW ARRIVAL PRODUCTS CAROUSEL AREA */}
+    <Section5 products={newArrivalsData} />
 
-        {/* OFFER BANNER AREA */}
-        <Section6 />
+    {/* OFFER BANNER AREA */}
+    <Section6 />
 
-        {/* BLOGS AREA */}
-        <Section7 blogs={blogLists} />
-      </Box>
-    </Fragment>
-  );
+    {/* BLOGS AREA */}
+    <Section7 blogs={blogLists} />
+   </Box>
+  </Fragment>
+ );
 }

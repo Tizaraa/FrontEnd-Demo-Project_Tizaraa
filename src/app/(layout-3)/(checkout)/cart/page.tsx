@@ -704,376 +704,365 @@ import NextImage from "@component/NextImage";
 import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
 
 export default function Cart() {
-  const { state, dispatch } = useAppContext();
-  const [selectAll, setSelectAll] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const router = useRouter();
+ const { state, dispatch } = useAppContext();
+ const [selectAll, setSelectAll] = useState(false);
+ const [isDeleting, setIsDeleting] = useState(false);
+ const [isLoading, setIsLoading] = useState(false);
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
+ const router = useRouter();
 
-  useEffect(() => setIsLoggedIn(authService.isAuthenticated()), []);
+ useEffect(() => setIsLoggedIn(authService.isAuthenticated()), []);
 
-  useEffect(() => {
-    setSelectAll(
-      state.cart.length > 0 &&
-        state.cart.every((item) => state.selectedProducts.includes(item.id))
-    );
-  }, [state.cart, state.selectedProducts]);
+ useEffect(() => {
+  setSelectAll(
+   state.cart.length > 0 &&
+    state.cart.every((item) => state.selectedProducts.includes(item.id))
+  );
+ }, [state.cart, state.selectedProducts]);
 
-  // ===== SELECT / DESELECT ALL =====
-  const handleSelectAll = () => {
-    if (selectAll) dispatch({ type: "DESELECT_ALL_PRODUCTS" });
-    else dispatch({ type: "SELECT_ALL_PRODUCTS" });
-  };
+ // ===== SELECT / DESELECT ALL =====
+ const handleSelectAll = () => {
+  if (selectAll) dispatch({ type: "DESELECT_ALL_PRODUCTS" });
+  else dispatch({ type: "SELECT_ALL_PRODUCTS" });
+ };
 
-  // ===== DELETE SELECTED =====
-  const handleDeleteSelected = async () => {
-    setIsDeleting(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+ // ===== DELETE SELECTED =====
+ const handleDeleteSelected = async () => {
+  setIsDeleting(true);
+  try {
+   await new Promise((resolve) => setTimeout(resolve, 500));
 
-      state.selectedProducts.forEach((id) => {
-        dispatch({ type: "CHANGE_CART_AMOUNT", payload: { id, qty: 0 } });
-      });
+   state.selectedProducts.forEach((id) => {
+    dispatch({ type: "CHANGE_CART_AMOUNT", payload: { id, qty: 0 } });
+   });
 
-      localStorage.removeItem("orderId");
-      sessionStorage.removeItem("selectedProducts");
-      sessionStorage.removeItem("cartItems");
-      localStorage.removeItem("cart");
-      sessionStorage.removeItem("paymentMethod");
-      sessionStorage.removeItem("savedTotalPrice");
-      sessionStorage.removeItem("savedTotalWithDelivery");
+   localStorage.removeItem("orderId");
+   sessionStorage.removeItem("selectedProducts");
+   sessionStorage.removeItem("cartItems");
+   localStorage.removeItem("cart");
+   sessionStorage.removeItem("paymentMethod");
+   sessionStorage.removeItem("savedTotalPrice");
+   sessionStorage.removeItem("savedTotalWithDelivery");
 
-      dispatch({ type: "DESELECT_ALL_PRODUCTS" });
-      toast.success("Selected items deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete selected items");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+   dispatch({ type: "DESELECT_ALL_PRODUCTS" });
+   toast.success("Selected items deleted successfully");
+  } catch (error) {
+   toast.error("Failed to delete selected items");
+  } finally {
+   setIsDeleting(false);
+  }
+ };
 
-  // ===== TOTAL PRICE =====
-  const getTotalPrice = () =>
-    state.cart.reduce((acc, item) => {
-      if (state.selectedProducts.includes(item.id)) {
-        const price = item.discountPrice ?? item.price;
-        return acc + price * item.qty;
-      }
-      return acc;
-    }, 0);
+ // ===== TOTAL PRICE =====
+ const getTotalPrice = () =>
+  state.cart.reduce((acc, item) => {
+   if (state.selectedProducts.includes(item.id)) {
+    const price = item.discountPrice ?? item.price;
+    return acc + price * item.qty;
+   }
+   return acc;
+  }, 0);
 
-  // ===== CHECKOUT =====
-  // const handleCheckout = async () => {
-  //   setIsLoading(true);
+ // ===== CHECKOUT =====
+ // const handleCheckout = async () => {
+ //   setIsLoading(true);
 
-  //   if (!isLoggedIn) {
-  //     await new Promise((resolve) => setTimeout(resolve, 500));
-  //     router.push("/login");
-  //     return;
-  //   }
+ //   if (!isLoggedIn) {
+ //     await new Promise((resolve) => setTimeout(resolve, 500));
+ //     router.push("/login");
+ //     return;
+ //   }
 
-  //   const selectedItems = state.cart.filter((item) =>
-  //     state.selectedProducts.includes(item.id)
-  //   );
+ //   const selectedItems = state.cart.filter((item) =>
+ //     state.selectedProducts.includes(item.id)
+ //   );
 
-  //   if (!selectedItems.length) {
-  //     toast.error("Please select products to checkout");
-  //     setIsLoading(false);
-  //     return;
-  //   }
+ //   if (!selectedItems.length) {
+ //     toast.error("Please select products to checkout");
+ //     setIsLoading(false);
+ //     return;
+ //   }
 
-  //   const totalPrice = getTotalPrice();
-  //   if (totalPrice === 0) {
-  //     toast.error("Total price is 0. Please add items to your cart.");
-  //     setIsLoading(false);
-  //     return;
-  //   }
+ //   const totalPrice = getTotalPrice();
+ //   if (totalPrice === 0) {
+ //     toast.error("Total price is 0. Please add items to your cart.");
+ //     setIsLoading(false);
+ //     return;
+ //   }
 
-  //   const isError = selectedItems.some((item) => item.qty <= 0);
-  //   if (isError) {
-  //     setIsLoading(false);
-  //     return;
-  //   }
+ //   const isError = selectedItems.some((item) => item.qty <= 0);
+ //   if (isError) {
+ //     setIsLoading(false);
+ //     return;
+ //   }
 
-  //   // ===== PRICE CHECK API =====
-  //   try {
-  //     const response = await fetch(
-  //       `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${authService.getToken()}`,
-  //         },
-  //         body: JSON.stringify({ orders: state.cart }), // full cart
-  //       }
-  //     );
+ //   // ===== PRICE CHECK API =====
+ //   try {
+ //     const response = await fetch(
+ //       `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
+ //       {
+ //         method: "POST",
+ //         headers: {
+ //           "Content-Type": "application/json",
+ //           Authorization: `Bearer ${authService.getToken()}`,
+ //         },
+ //         body: JSON.stringify({ orders: state.cart }), // full cart
+ //       }
+ //     );
 
-  //     if (!response.ok) {
-  //       const text = await response.text();
-  //       throw new Error(`Price check failed: ${text}`);
-  //     }
+ //     if (!response.ok) {
+ //       const text = await response.text();
+ //       throw new Error(`Price check failed: ${text}`);
+ //     }
 
-  //     const data = await response.json();
+ //     const data = await response.json();
 
-  //     // Update full cart prices
-  //     const updatedCart = state.cart.map((item) => {
-  //       const updatedItem = data.find(
-  //         (d: any) => d.product_id === item.productId
-  //       );
-  //       if (updatedItem) {
-  //         const newPrice = parseFloat(updatedItem.price);
-  //         if (item.price !== newPrice) {
-  //           toast(`Price updated for "${item.name}" to BDT ${newPrice}`);
-  //         }
-  //         return {
-  //           ...item,
-  //           price: newPrice,
-  //           discountPrice: item.discountPrice ? newPrice : null,
-  //         };
-  //       }
-  //       return item;
-  //     });
+ //     // Update full cart prices
+ //     const updatedCart = state.cart.map((item) => {
+ //       const updatedItem = data.find(
+ //         (d: any) => d.product_id === item.productId
+ //       );
+ //       if (updatedItem) {
+ //         const newPrice = parseFloat(updatedItem.price);
+ //         if (item.price !== newPrice) {
+ //           toast(`Price updated for "${item.name}" to BDT ${newPrice}`);
+ //         }
+ //         return {
+ //           ...item,
+ //           price: newPrice,
+ //           discountPrice: item.discountPrice ? newPrice : null,
+ //         };
+ //       }
+ //       return item;
+ //     });
 
-  //     // Update app state first
-  //     dispatch({ type: "SET_CART", payload: updatedCart });
+ //     // Update app state first
+ //     dispatch({ type: "SET_CART", payload: updatedCart });
 
-  //     // Get selected items with updated prices
-  //     const updatedSelectedItems = updatedCart.filter((item) =>
-  //       state.selectedProducts.includes(item.id)
-  //     );
+ //     // Get selected items with updated prices
+ //     const updatedSelectedItems = updatedCart.filter((item) =>
+ //       state.selectedProducts.includes(item.id)
+ //     );
 
-  //     // Save to localStorage & sessionStorage with updated prices
-  //     localStorage.setItem("cart", JSON.stringify(updatedCart));
-  //     sessionStorage.setItem("cartItems", JSON.stringify(updatedCart)); // This now has updated prices
-  //     sessionStorage.setItem(
-  //       "selectedProducts",
-  //       JSON.stringify(updatedSelectedItems)
-  //     ); // This also has updated prices
-  //   } catch (error: any) {
-  //     console.error("Price check failed:", error);
-  //     toast.error("Price check failed. Please try again.");
-  //     setIsLoading(false);
-  //     return;
-  //   }
+ //     // Save to localStorage & sessionStorage with updated prices
+ //     localStorage.setItem("cart", JSON.stringify(updatedCart));
+ //     sessionStorage.setItem("cartItems", JSON.stringify(updatedCart)); // This now has updated prices
+ //     sessionStorage.setItem(
+ //       "selectedProducts",
+ //       JSON.stringify(updatedSelectedItems)
+ //     ); // This also has updated prices
+ //   } catch (error: any) {
+ //     console.error("Price check failed:", error);
+ //     toast.error("Price check failed. Please try again.");
+ //     setIsLoading(false);
+ //     return;
+ //   }
 
-  //   router.push("/checkout");
-  // };
+ //   router.push("/checkout");
+ // };
 
-  const handleCheckout = async () => {
-    setIsLoading(true);
+ const handleCheckout = async () => {
+  setIsLoading(true);
 
-    if (!isLoggedIn) {
-      // ✅ Fix: stop loading first, then redirect
-      setIsLoading(false);
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      router.push("/login");
-      return;
-    }
+  if (!isLoggedIn) {
+   // ✅ Fix: stop loading first, then redirect
+   setIsLoading(false);
+   await new Promise((resolve) => setTimeout(resolve, 300));
+   router.push("/login");
+   return;
+  }
 
-    const selectedItems = state.cart.filter((item) =>
-      state.selectedProducts.includes(item.id)
-    );
+  const selectedItems = state.cart.filter((item) =>
+   state.selectedProducts.includes(item.id)
+  );
 
-    if (!selectedItems.length) {
-      toast.error("Please select products to checkout");
-      setIsLoading(false);
-      return;
-    }
-
-    const totalPrice = getTotalPrice();
-    if (totalPrice === 0) {
-      toast.error("Total price is 0. Please add items to your cart.");
-      setIsLoading(false);
-      return;
-    }
-
-    const isError = selectedItems.some((item) => item.qty <= 0);
-    if (isError) {
-      setIsLoading(false);
-      return;
-    }
-
-    // ===== PRICE CHECK API =====
-    try {
-      const response = await fetch(
-        `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-          body: JSON.stringify({ orders: state.cart }), // full cart
-        }
-      );
-
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Price check failed: ${text}`);
-      }
-
-      const data = await response.json();
-
-      // Update full cart prices
-      const updatedCart = state.cart.map((item) => {
-        const updatedItem = data.find(
-          (d: any) => d.product_id === item.productId
-        );
-        if (updatedItem) {
-          const newPrice = parseFloat(updatedItem.price);
-          if (item.price !== newPrice) {
-            toast(`Price updated for "${item.name}" to BDT ${newPrice}`);
-          }
-          return {
-            ...item,
-            price: newPrice,
-            discountPrice: item.discountPrice ? newPrice : null,
-          };
-        }
-        return item;
-      });
-
-      dispatch({ type: "SET_CART", payload: updatedCart });
-
-      const updatedSelectedItems = updatedCart.filter((item) =>
-        state.selectedProducts.includes(item.id)
-      );
-
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
-      sessionStorage.setItem(
-        "selectedProducts",
-        JSON.stringify(updatedSelectedItems)
-      );
-    } catch (error: any) {
-      console.error("Price check failed:", error);
-      toast.error("Price check failed. Please try again.");
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(false);
-    router.push("/checkout");
-  };
+  if (!selectedItems.length) {
+   toast.error("Please select products to checkout");
+   setIsLoading(false);
+   return;
+  }
 
   const totalPrice = getTotalPrice();
+  if (totalPrice === 0) {
+   toast.error("Total price is 0. Please add items to your cart.");
+   setIsLoading(false);
+   return;
+  }
 
-  return (
-    <>
-      <NextImage
-        alt="watermark"
-        src={tizaraa_watermark}
-        priority
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -25%)",
-          width: "100%",
-          height: "auto",
-          maxWidth: "1200px",
-          opacity: 0.1,
-          zIndex: 0,
-        }}
-      />
-      <main style={{ position: "relative", background: "none" }}>
-        <Grid container spacing={6}>
-          <Grid item lg={8} md={8} xs={12}>
-            <Card1 mb="1.5rem">
-              <FlexBox alignItems="center" justifyContent="space-between">
-                <FlexBox alignItems="center">
-                  <CheckBox checked={selectAll} onChange={handleSelectAll} />
-                  <Typography ml="0.5rem">Select All</Typography>
-                </FlexBox>
-                <Button
-                  size="small"
-                  color="primary"
-                  variant="outlined"
-                  disabled={
-                    state.selectedProducts.length === 0 ||
-                    state.cart.length === 0 ||
-                    totalPrice === 0 ||
-                    isDeleting
-                  }
-                  onClick={handleDeleteSelected}
-                >
-                  {isDeleting ? (
-                    <BeatLoader size={18} color="#E94560" />
-                  ) : (
-                    <>
-                      <DeleteIcon
-                        style={{ marginRight: "8px", fontSize: "18px" }}
-                      />
-                      Remove All
-                    </>
-                  )}
-                </Button>
-              </FlexBox>
-            </Card1>
+  const isError = selectedItems.some((item) => item.qty <= 0);
+  if (isError) {
+   setIsLoading(false);
+   return;
+  }
 
-            {state.cart.map((item) => (
-              <ProductCard7
-                key={item.id}
-                id={item.id}
-                qty={item.qty}
-                slug={item.slug}
-                name={item.name}
-                price={item.price}
-                imgUrl={
-                  item.productType === "Abroad"
-                    ? item.imgUrl
-                    : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
-                }
-                productStock={item.productStock}
-                discountPrice={item.discountPrice}
-                productId={item.productId}
-                sellerId={item.sellerId}
-                b2bPricing={item.b2bPricing}
-                total_amount={item.total_amount}
-                sizeColor={item.sizeColor}
-                selectedSize={item.selectedSize}
-                selectedColor={item.selectedColor}
-              />
-            ))}
-          </Grid>
+  // ===== PRICE CHECK API =====
+  try {
+   const response = await fetch(`${ApiBaseUrl.baseUrl}checkout/check/pricing`, {
+    method: "POST",
+    headers: {
+     "Content-Type": "application/json",
+     Authorization: `Bearer ${authService.getToken()}`,
+    },
+    body: JSON.stringify({ orders: state.cart }), // full cart
+   });
 
-          <Grid item lg={4} md={4} xs={12}>
-            <Card1>
-              <FlexBox
-                justifyContent="space-between"
-                alignItems="center"
-                mb="1rem"
-              >
-                <Typography color="gray.600">Total:</Typography>
-                <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-                  {currency(totalPrice)}
-                </Typography>
-              </FlexBox>
-              <Divider mb="1rem" />
-              <Button
-                variant="contained"
-                color="primary"
-                fullwidth
-                onClick={handleCheckout}
-                disabled={
-                  isLoading ||
-                  state.selectedProducts.length === 0 ||
-                  state.cart.length === 0 ||
-                  totalPrice === 0
-                }
-              >
-                {isLoading ? (
-                  <BeatLoader size={18} color="#E94560" />
-                ) : (
-                  "PROCEED TO CHECKOUT"
-                )}
-              </Button>
-            </Card1>
-          </Grid>
-        </Grid>
-      </main>
-    </>
-  );
+   if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Price check failed: ${text}`);
+   }
+
+   const data = await response.json();
+
+   // Update full cart prices
+   const updatedCart = state.cart.map((item) => {
+    const updatedItem = data.find((d: any) => d.product_id === item.productId);
+    if (updatedItem) {
+     const newPrice = parseFloat(updatedItem.price);
+     if (item.price !== newPrice) {
+      toast(`Price updated for "${item.name}" to BDT ${newPrice}`);
+     }
+     return {
+      ...item,
+      price: newPrice,
+      discountPrice: item.discountPrice ? newPrice : null,
+     };
+    }
+    return item;
+   });
+
+   dispatch({ type: "SET_CART", payload: updatedCart });
+
+   const updatedSelectedItems = updatedCart.filter((item) =>
+    state.selectedProducts.includes(item.id)
+   );
+
+   localStorage.setItem("cart", JSON.stringify(updatedCart));
+   sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
+   sessionStorage.setItem(
+    "selectedProducts",
+    JSON.stringify(updatedSelectedItems)
+   );
+  } catch (error: any) {
+   console.error("Price check failed:", error);
+   toast.error("Price check failed. Please try again.");
+   setIsLoading(false);
+   return;
+  }
+
+  setIsLoading(false);
+  router.push("/checkout");
+ };
+
+ const totalPrice = getTotalPrice();
+
+ return (
+  <>
+   <NextImage
+    alt="watermark"
+    src={tizaraa_watermark}
+    priority
+    style={{
+     position: "fixed",
+     top: "50%",
+     left: "50%",
+     transform: "translate(-50%, -25%)",
+     width: "100%",
+     height: "auto",
+     maxWidth: "1200px",
+     opacity: 0.1,
+     zIndex: 0,
+    }}
+   />
+   <main style={{ position: "relative", background: "none" }}>
+    <Grid container spacing={6}>
+     <Grid item lg={8} md={8} xs={12}>
+      <Card1 mb="1.5rem">
+       <FlexBox alignItems="center" justifyContent="space-between">
+        <FlexBox alignItems="center">
+         <CheckBox checked={selectAll} onChange={handleSelectAll} />
+         <Typography ml="0.5rem">Select All</Typography>
+        </FlexBox>
+        <Button
+         size="small"
+         color="primary"
+         variant="outlined"
+         disabled={
+          state.selectedProducts.length === 0 ||
+          state.cart.length === 0 ||
+          totalPrice === 0 ||
+          isDeleting
+         }
+         onClick={handleDeleteSelected}
+        >
+         {isDeleting ? (
+          <BeatLoader size={18} color="#E94560" />
+         ) : (
+          <>
+           <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} />
+           Remove All
+          </>
+         )}
+        </Button>
+       </FlexBox>
+      </Card1>
+
+      {state.cart.map((item) => (
+       <ProductCard7
+        key={item.id}
+        id={item.id}
+        qty={item.qty}
+        slug={item.slug}
+        name={item.name}
+        price={item.price}
+        imgUrl={
+         item.productType === "Abroad"
+          ? item.imgUrl
+          : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+        }
+        productStock={item.productStock}
+        discountPrice={item.discountPrice}
+        productId={item.productId}
+        sellerId={item.sellerId}
+        b2bPricing={item.b2bPricing}
+        total_amount={item.total_amount}
+        sizeColor={item.sizeColor}
+        selectedSize={item.selectedSize}
+        selectedColor={item.selectedColor}
+       />
+      ))}
+     </Grid>
+
+     <Grid item lg={4} md={4} xs={12}>
+      <Card1>
+       <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
+        <Typography color="gray.600">Total:</Typography>
+        <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+         {currency(totalPrice)}
+        </Typography>
+       </FlexBox>
+       <Divider mb="1rem" />
+       <Button
+        variant="contained"
+        color="primary"
+        fullwidth
+        onClick={handleCheckout}
+        disabled={
+         isLoading ||
+         state.selectedProducts.length === 0 ||
+         state.cart.length === 0 ||
+         totalPrice === 0
+        }
+       >
+        {isLoading ? (
+         <BeatLoader size={18} color="#E94560" />
+        ) : (
+         "PROCEED TO CHECKOUT"
+        )}
+       </Button>
+      </Card1>
+     </Grid>
+    </Grid>
+   </main>
+  </>
+ );
 }

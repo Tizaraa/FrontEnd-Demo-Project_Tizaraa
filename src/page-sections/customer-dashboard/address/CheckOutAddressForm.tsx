@@ -143,7 +143,7 @@
 //     const userInfo = localStorage.getItem("userInfo"); // Assume you store user_id in localStorage
 //     const userId = JSON.parse(userInfo)
 //     //console.log(userId);
-    
+
 //     const addressData = {
 //       user_id: userId.id,
 //       name: values.name,
@@ -171,7 +171,7 @@
 //         // Handle successful response, e.g., redirect or show a success message
 //         sessionStorage.setItem("address", JSON.stringify(values));
 //         console.log(response.data)
-        
+
 //         router.push("/checkout");
 //       }
 //     } catch (error) {
@@ -218,7 +218,7 @@
 //       setArea([]); // Reset area
 
 //       setFieldValue("deliveryCharge", selectedProvince.delivery_charge); // Set the delivery charge in Formik state
-      
+
 //     }
 //   };
 
@@ -463,12 +463,6 @@
 //   selectedLandmark: yup.number().required("Please select a landmark"),
 // });
 
-
-
-
-
-
-
 "use client";
 
 import { FC, useState, useEffect } from "react";
@@ -489,350 +483,343 @@ import toast, { Toaster } from "react-hot-toast";
 import authService from "services/authService";
 
 export default function CheckOutAddressForm() {
-  const router = useRouter();
-  const [selectedLandmark, setSelectedLandmark] = useState<number | null>(null);
-  const [province, setProvince] = useState([]);
-  const [city, setCity] = useState([]);
-  const [area, setArea] = useState([]);
-  const [loading, setLoading] = useState(false);
+ const router = useRouter();
+ const [selectedLandmark, setSelectedLandmark] = useState<number | null>(null);
+ const [province, setProvince] = useState([]);
+ const [city, setCity] = useState([]);
+ const [area, setArea] = useState([]);
+ const [loading, setLoading] = useState(false);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    setIsLoggedIn(authService.isAuthenticated());
-  }, []);
+ useEffect(() => {
+  setIsLoggedIn(authService.isAuthenticated());
+ }, []);
 
-  const handleFormSubmit = async (values: any,{ setErrors }: any) => {
-    setLoading(true);
-    const authtoken = localStorage.getItem("token");
-    const userInfo = localStorage.getItem("userInfo");
-    const userId = JSON.parse(userInfo);
+ const handleFormSubmit = async (values: any, { setErrors }: any) => {
+  setLoading(true);
+  const authtoken = localStorage.getItem("token");
+  const userInfo = localStorage.getItem("userInfo");
+  const userId = JSON.parse(userInfo);
 
-    const addressData = {
-      user_id: userId.id,
-      name: values.name,
-      phone: values.contact,
-      province: values.province,
-      city: values.city,
-      area: values.area,
-      country: "BD",
-      address: values.address,
-      landmark: selectedLandmark,
-      delivery_charge: values.deliveryCharge,
-    };
-
-    try {
-      const response = await axios.post(
-        `${ApiBaseUrl.baseUrl}user/address/store`,
-        addressData,
-        {
-          headers: {
-            Authorization: `Bearer ${authtoken}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        sessionStorage.setItem("address", JSON.stringify(values));
-        if(isLoggedIn){
-          router.push("/checkout");
-        toast.success("Address Added successfully!");
-        }else{
-          router.push("/login");
-        }
-        // router.push("/checkout");
-        // toast.success("Address Added successfully!");
-      }
-    } catch (error) {
-      console.error("Failed submitting address data:", error);
-    
-      if (error.response && error.response.data.message) {
-        const { phone, address } = error.response.data.message;
-    
-        if (phone) {
-          setErrors({ contact: phone[0] }); 
-        }
-    
-        if (address) {
-          setErrors({ address: address[0] }); 
-        }
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
-    
-      setLoading(false);
-    }    
+  const addressData = {
+   user_id: userId.id,
+   name: values.name,
+   phone: values.contact,
+   province: values.province,
+   city: values.city,
+   area: values.area,
+   country: "BD",
+   address: values.address,
+   landmark: selectedLandmark,
+   delivery_charge: values.deliveryCharge,
   };
 
-  const fetchProvince = async () => {
-    const authtoken = localStorage.getItem("token");
-    try {
-      const response = await axios.get(
-        `${ApiBaseUrl.baseUrl}checkout/address`,
-        {
-          headers: {
-            Authorization: `Bearer ${authtoken}`,
-          },
-        }
-      );
-
-      if (Array.isArray(response.data)) {
-        setProvince(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching provinces:", error);
+  try {
+   const response = await axios.post(
+    `${ApiBaseUrl.baseUrl}user/address/store`,
+    addressData,
+    {
+     headers: {
+      Authorization: `Bearer ${authtoken}`,
+     },
     }
-  };
+   );
 
-  useEffect(() => {
-    fetchProvince();
-  }, []);
-
-  const handleProvinceChange = (provinceId: number, setFieldValue: any) => {
-    const selectedProvince = province.find((prov: any) => prov.id === provinceId);
-
-    if (selectedProvince) {
-      setFieldValue("province", provinceId);
-      setCity(selectedProvince.city);
-      setFieldValue("city", "");
-      setFieldValue("area", "");
-      setArea([]);
-      setFieldValue("deliveryCharge", selectedProvince.delivery_charge);
-    }
-  };
-
-  const handleCityChange = (cityId: number, setFieldValue: any) => {
-    setFieldValue("city", cityId);
-
-    const selectedCity = city.find((c: any) => c.id === cityId);
-
-    if (selectedCity) {
-      setArea(selectedCity.areas);
-      setFieldValue("area", "");
+   if (response.status === 200) {
+    sessionStorage.setItem("address", JSON.stringify(values));
+    if (isLoggedIn) {
+     router.push("/checkout");
+     toast.success("Address Added successfully!");
     } else {
-      setArea([]);
+     router.push("/login");
     }
-  };
+    // router.push("/checkout");
+    // toast.success("Address Added successfully!");
+   }
+  } catch (error) {
+   console.error("Failed submitting address data:", error);
 
-  const handleLandmarkSelect = (landmark: string, setFieldValue: any) => {
-    let landmarkValue: number;
+   if (error.response && error.response.data.message) {
+    const { phone, address } = error.response.data.message;
 
-    if (landmark === "Home") {
-      landmarkValue = 1;
-    } else if (landmark === "Office") {
-      landmarkValue = 2;
-    } else {
-      landmarkValue = 0;
+    if (phone) {
+     setErrors({ contact: phone[0] });
     }
 
-    setSelectedLandmark(landmarkValue);
-    setFieldValue("selectedLandmark", landmarkValue);
-  };
+    if (address) {
+     setErrors({ address: address[0] });
+    }
+   } else {
+    toast.error("Something went wrong. Please try again.");
+   }
 
-  return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={checkoutSchema}
-      onSubmit={handleFormSubmit}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        setFieldValue,
-      }) => (
-        <form onSubmit={handleSubmit}>
-          <Card1 mb="2rem">
-            <Typography fontWeight="600" mb="1rem">
-              Shipping Address
-            </Typography>
+   setLoading(false);
+  }
+ };
 
-            <Grid container spacing={7}>
-              <Grid item sm={6} xs={12}>
-                <TextField
-                  fullwidth
-                  mb="1rem"
-                  label="Full Name"
-                  name="name"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.name}
-                  errorText={touched.name && errors.name}
-                />
+ const fetchProvince = async () => {
+  const authtoken = localStorage.getItem("token");
+  try {
+   const response = await axios.get(`${ApiBaseUrl.baseUrl}checkout/address`, {
+    headers: {
+     Authorization: `Bearer ${authtoken}`,
+    },
+   });
 
-                <TextField
-                  fullwidth
-                  mb="1rem"
-                  label="Phone Number"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  name="contact"
-                  value={values.phone}
-                  errorText={touched.contact && errors.contact}
-                />
+   if (Array.isArray(response.data)) {
+    setProvince(response.data);
+   }
+  } catch (error) {
+   console.error("Error fetching provinces:", error);
+  }
+ };
 
-                <TextArea
-                  fullwidth
-                  label="Address"
-                  onBlur={handleBlur} // Marks the field as touched
-                  onChange={handleChange} // Updates the field value
-                  name="address"
-                  value={values.address} // Field value
-                  errorText={touched.address && errors.address ? errors.address : ""} // Show error if touched and has error
-                />
+ useEffect(() => {
+  fetchProvince();
+ }, []);
 
+ const handleProvinceChange = (provinceId: number, setFieldValue: any) => {
+  const selectedProvince = province.find((prov: any) => prov.id === provinceId);
 
-                <Typography fontWeight="600" mb="0.5rem">
-                  Select a label for effective delivery:
-                </Typography>
-                <Grid container spacing={2} justifyContent="flex-start">
-                  <Grid item>
-                    <Button
-                      type="button"
-                      variant={selectedLandmark === 1 ? "contained" : "outlined"}
-                      color="primary"
-                      onClick={() =>
-                        handleLandmarkSelect("Home", setFieldValue)
-                      }
-                    >
-                      Home
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      type="button"
-                      variant={selectedLandmark === 2 ? "contained" : "outlined"}
-                      color="primary"
-                      onClick={() =>
-                        handleLandmarkSelect("Office", setFieldValue)
-                      }
-                    >
-                      Office
-                    </Button>
-                  </Grid>
-                </Grid>
+  if (selectedProvince) {
+   setFieldValue("province", provinceId);
+   setCity(selectedProvince.city);
+   setFieldValue("city", "");
+   setFieldValue("area", "");
+   setArea([]);
+   setFieldValue("deliveryCharge", selectedProvince.delivery_charge);
+  }
+ };
 
-                {touched.selectedLandmark && errors.selectedLandmark && (
-                  <Typography color="#ff3333" variant="body2" mt={1}>
-                    {errors.selectedLandmark}
-                  </Typography>
-                )}
-              </Grid>
+ const handleCityChange = (cityId: number, setFieldValue: any) => {
+  setFieldValue("city", cityId);
 
-              <Grid item sm={6} xs={12}>
-                <Select
-                  mb="1rem"
-                  label="Country"
-                  options={[{ value: "BD", label: "Bangladesh" }]}
-                  value={{ value: "BD", label: "Bangladesh" }}
-                  errorText={touched.country && errors.country}
-                  onChange={() =>
-                    setFieldValue("country", {
-                      value: "BD",
-                      label: "Bangladesh",
-                    })
-                  }
-                />
+  const selectedCity = city.find((c: any) => c.id === cityId);
 
-                <Select
-                  mb="1rem"
-                  label="Province / Region"
-                  options={province.map((prov) => ({
-                    value: prov.id,
-                    label: prov.province,
-                  }))}
-                  value={
-                    values.province
-                      ? {
-                          value: values.province,
-                          label: province.find((prov) => prov.id === values.province)?.province,
-                        }
-                      : null
-                  }
-                  errorText={touched.province && errors.province}
-                  onChange={(e: { value: number; label: string }) =>
-                    handleProvinceChange(e.value, setFieldValue)
-                  }
-                />
+  if (selectedCity) {
+   setArea(selectedCity.areas);
+   setFieldValue("area", "");
+  } else {
+   setArea([]);
+  }
+ };
 
-                <Select
-                  mb="1rem"
-                  label="City"
-                  options={city.map((c: any) => ({
-                    value: c.id,
-                    label: c.city,
-                  }))}
-                  value={
-                    values.city
-                      ? {
-                          value: values.city,
-                          label: city.find((c) => c.id === values.city)?.city,
-                        }
-                      : null
-                  }
-                  errorText={touched.city && errors.city}
-                  onChange={(e: { value: number; label: string }) =>
-                    handleCityChange(e.value, setFieldValue)
-                  }
-                />
+ const handleLandmarkSelect = (landmark: string, setFieldValue: any) => {
+  let landmarkValue: number;
 
-                <Select
-                  mb="1rem"
-                  label="Area"
-                  options={area.map((a: any) => ({
-                    value: a.id,
-                    label: a.area,
-                  }))}
-                  value={
-                    values.area
-                      ? {
-                          value: values.area,
-                          label: area.find((a) => a.id === values.area)?.area,
-                        }
-                      : null
-                  }
-                  errorText={touched.area && errors.area}
-                  onChange={(selectedArea: { value: number; label: string }) =>
-                    setFieldValue("area", selectedArea.value)
-                  }
-                />
-              </Grid>
-            </Grid>
-          </Card1>
+  if (landmark === "Home") {
+   landmarkValue = 1;
+  } else if (landmark === "Office") {
+   landmarkValue = 2;
+  } else {
+   landmarkValue = 0;
+  }
 
-          <Grid container spacing={7}>
-            <Grid item sm={6} xs={12}>
-              <Button type="submit" variant="contained" color="primary">
-              {loading ? <BeatLoader size={18} color="#fff" /> : "Save"}
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      )}
-    </Formik>
-  );
+  setSelectedLandmark(landmarkValue);
+  setFieldValue("selectedLandmark", landmarkValue);
+ };
+
+ return (
+  <Formik
+   initialValues={initialValues}
+   validationSchema={checkoutSchema}
+   onSubmit={handleFormSubmit}
+  >
+   {({
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setFieldValue,
+   }) => (
+    <form onSubmit={handleSubmit}>
+     <Card1 mb="2rem">
+      <Typography fontWeight="600" mb="1rem">
+       Shipping Address
+      </Typography>
+
+      <Grid container spacing={7}>
+       <Grid item sm={6} xs={12}>
+        <TextField
+         fullwidth
+         mb="1rem"
+         label="Full Name"
+         name="name"
+         onBlur={handleBlur}
+         onChange={handleChange}
+         value={values.name}
+         errorText={touched.name && errors.name}
+        />
+
+        <TextField
+         fullwidth
+         mb="1rem"
+         label="Phone Number"
+         onBlur={handleBlur}
+         onChange={handleChange}
+         name="contact"
+         value={values.phone}
+         errorText={touched.contact && errors.contact}
+        />
+
+        <TextArea
+         fullwidth
+         label="Address"
+         onBlur={handleBlur} // Marks the field as touched
+         onChange={handleChange} // Updates the field value
+         name="address"
+         value={values.address} // Field value
+         errorText={touched.address && errors.address ? errors.address : ""} // Show error if touched and has error
+        />
+
+        <Typography fontWeight="600" mb="0.5rem">
+         Select a label for effective delivery:
+        </Typography>
+        <Grid container spacing={2} justifyContent="flex-start">
+         <Grid item>
+          <Button
+           type="button"
+           variant={selectedLandmark === 1 ? "contained" : "outlined"}
+           color="primary"
+           onClick={() => handleLandmarkSelect("Home", setFieldValue)}
+          >
+           Home
+          </Button>
+         </Grid>
+         <Grid item>
+          <Button
+           type="button"
+           variant={selectedLandmark === 2 ? "contained" : "outlined"}
+           color="primary"
+           onClick={() => handleLandmarkSelect("Office", setFieldValue)}
+          >
+           Office
+          </Button>
+         </Grid>
+        </Grid>
+
+        {touched.selectedLandmark && errors.selectedLandmark && (
+         <Typography color="#ff3333" variant="body2" mt={1}>
+          {errors.selectedLandmark}
+         </Typography>
+        )}
+       </Grid>
+
+       <Grid item sm={6} xs={12}>
+        <Select
+         mb="1rem"
+         label="Country"
+         options={[{ value: "BD", label: "Bangladesh" }]}
+         value={{ value: "BD", label: "Bangladesh" }}
+         errorText={touched.country && errors.country}
+         onChange={() =>
+          setFieldValue("country", {
+           value: "BD",
+           label: "Bangladesh",
+          })
+         }
+        />
+
+        <Select
+         mb="1rem"
+         label="Province / Region"
+         options={province.map((prov) => ({
+          value: prov.id,
+          label: prov.province,
+         }))}
+         value={
+          values.province
+           ? {
+              value: values.province,
+              label: province.find((prov) => prov.id === values.province)
+               ?.province,
+             }
+           : null
+         }
+         errorText={touched.province && errors.province}
+         onChange={(e: { value: number; label: string }) =>
+          handleProvinceChange(e.value, setFieldValue)
+         }
+        />
+
+        <Select
+         mb="1rem"
+         label="City"
+         options={city.map((c: any) => ({
+          value: c.id,
+          label: c.city,
+         }))}
+         value={
+          values.city
+           ? {
+              value: values.city,
+              label: city.find((c) => c.id === values.city)?.city,
+             }
+           : null
+         }
+         errorText={touched.city && errors.city}
+         onChange={(e: { value: number; label: string }) =>
+          handleCityChange(e.value, setFieldValue)
+         }
+        />
+
+        <Select
+         mb="1rem"
+         label="Area"
+         options={area.map((a: any) => ({
+          value: a.id,
+          label: a.area,
+         }))}
+         value={
+          values.area
+           ? {
+              value: values.area,
+              label: area.find((a) => a.id === values.area)?.area,
+             }
+           : null
+         }
+         errorText={touched.area && errors.area}
+         onChange={(selectedArea: { value: number; label: string }) =>
+          setFieldValue("area", selectedArea.value)
+         }
+        />
+       </Grid>
+      </Grid>
+     </Card1>
+
+     <Grid container spacing={7}>
+      <Grid item sm={6} xs={12}>
+       <Button type="submit" variant="contained" color="primary">
+        {loading ? <BeatLoader size={18} color="#fff" /> : "Save"}
+       </Button>
+      </Grid>
+     </Grid>
+    </form>
+   )}
+  </Formik>
+ );
 }
 
 const initialValues = {
-  deliveryCharge: "",
-  name: "",
-  contact: "",
-  address: "",
-  province: "",
-  city: "",
-  area: "",
-  selectedLandmark: null,
+ deliveryCharge: "",
+ name: "",
+ contact: "",
+ address: "",
+ province: "",
+ city: "",
+ area: "",
+ selectedLandmark: null,
 };
 
 const checkoutSchema = yup.object().shape({
-  name: yup.string().required("Name is required"),
-  contact: yup.string().required("Contact is required"),
-  address: yup.string().required("Address is required"),
-  province: yup.string().required("Province is required"),
-  city: yup.string().required("City is required"),
-  area: yup.string().required("Area is required"),
-  selectedLandmark: yup.number().nullable().required("Landmark is required"),
+ name: yup.string().required("Name is required"),
+ contact: yup.string().required("Contact is required"),
+ address: yup.string().required("Address is required"),
+ province: yup.string().required("Province is required"),
+ city: yup.string().required("City is required"),
+ area: yup.string().required("Area is required"),
+ selectedLandmark: yup.number().nullable().required("Landmark is required"),
 });

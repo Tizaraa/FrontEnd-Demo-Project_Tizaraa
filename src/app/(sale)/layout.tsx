@@ -8,16 +8,16 @@ import Navbar from "@component/navbar/Navbar";
 import MobileNavigationBar from "@component/mobile-navigation";
 
 export default function SaleLayout1({ children }: PropsWithChildren) {
-  return (
-    <Fragment>
-      <Topbar />
-      <Header />
-      <Navbar />
+ return (
+  <Fragment>
+   <Topbar />
+   <Header />
+   <Navbar />
 
-      {children}
+   {children}
 
-      <MobileNavigationBar />
-      <Footer1 />
-    </Fragment>
-  );
+   <MobileNavigationBar />
+   <Footer1 />
+  </Fragment>
+ );
 }

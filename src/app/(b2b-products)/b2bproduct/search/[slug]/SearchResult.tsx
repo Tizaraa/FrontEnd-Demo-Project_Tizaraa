@@ -310,20 +310,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // "use client";
 // import React from "react";
 // import { useRouter } from "next/navigation";
@@ -397,7 +383,6 @@
 //     setCurrentPage(1);
 //     router.push(`/product/search/${categoryId}`);
 //   };
-  
 
 //   const handleCountryChange = (countries: number[]) => {
 //     setSelectedCountry(countries); // Update selected countries
@@ -502,7 +487,6 @@
 //     }}
 //   >
 
-
 //       <FlexBox
 //         as={Card}
 //         mb="55px"
@@ -548,12 +532,11 @@
 //     styles={{
 //       menu: (provided) => ({
 //         ...provided,
-//         zIndex: 1000, 
+//         zIndex: 1000,
 //       }),
 //     }}
 //   />
 // </Box>
-
 
 //           <Paragraph color="text.muted" mr="0.5rem">
 //             View:
@@ -684,7 +667,7 @@
 //                 {loading ?  <BeatLoader size={18} color="#fff" /> : "Show More"}
 //               </Button>
 //             </FlexBox>
-            
+
 //             </>
 //           )}
 //         </Grid>

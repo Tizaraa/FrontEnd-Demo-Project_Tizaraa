@@ -10,61 +10,62 @@ import SingleCategory from "./SingleCategory";
 import { ButtonWrapper, ContentBox } from "./styles";
 
 export default function Section4() {
-  return (
-    <Container mt="4rem">
-      <H2 textAlign="center" mb={4}>
-        Top Categories
-      </H2>
+ return (
+  <Container mt="4rem">
+   <H2 textAlign="center" mb={4}>
+    Top Categories
+   </H2>
 
-      <Grid container spacing={5}>
-        <Grid item md={6} xs={12}>
-          <Box style={{ width: "100%", height: "100%", position: "relative" }}>
-            <NextImage
-              width={580}
-              height={580}
-              alt="category"
-              src="/assets/images/categories/1.jpg"
-            />
+   <Grid container spacing={5}>
+    <Grid item md={6} xs={12}>
+     <Box style={{ width: "100%", height: "100%", position: "relative" }}>
+      <NextImage
+       width={580}
+       height={580}
+       alt="category"
+       src="/assets/images/categories/1.jpg"
+      />
 
-            <ContentBox>
-              <H2 fontSize={24}>PADDED CLOTHES</H2>
-              <H3 fontSize={22} fontWeight={400}>
-                Collection
-              </H3>
-            </ContentBox>
+      <ContentBox>
+       <H2 fontSize={24}>PADDED CLOTHES</H2>
+       <H3 fontSize={22} fontWeight={400}>
+        Collection
+       </H3>
+      </ContentBox>
 
-            <ButtonWrapper>
-              <Button variant="contained" color="primary">
-                Women&#39;s
-              </Button>
+      <ButtonWrapper>
+       <Button variant="contained" color="primary">
+        Women&#39;s
+       </Button>
 
-              <Button variant="contained" color="primary">
-                Men&#39;s
-              </Button>
-            </ButtonWrapper>
-          </Box>
-        </Grid>
+       <Button variant="contained" color="primary">
+        Men&#39;s
+       </Button>
+      </ButtonWrapper>
+     </Box>
+    </Grid>
 
-        <Grid item md={6} xs={12}>
-          <FlexBox
-            height="100%"
-            alignItems="center"
-            flexDirection="column"
-            justifyContent="space-between">
-            <SingleCategory
-              url="#"
-              buttonText="Women's T-Shirt"
-              img="/assets/images/categories/2.jpg"
-            />
+    <Grid item md={6} xs={12}>
+     <FlexBox
+      height="100%"
+      alignItems="center"
+      flexDirection="column"
+      justifyContent="space-between"
+     >
+      <SingleCategory
+       url="#"
+       buttonText="Women's T-Shirt"
+       img="/assets/images/categories/2.jpg"
+      />
 
-            <SingleCategory
-              url="#"
-              buttonText="Men's T-Shirt"
-              img="/assets/images/categories/3.jpg"
-            />
-          </FlexBox>
-        </Grid>
-      </Grid>
-    </Container>
-  );
+      <SingleCategory
+       url="#"
+       buttonText="Men's T-Shirt"
+       img="/assets/images/categories/3.jpg"
+      />
+     </FlexBox>
+    </Grid>
+   </Grid>
+  </Container>
+ );
 }

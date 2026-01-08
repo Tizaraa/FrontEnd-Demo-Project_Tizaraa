@@ -15,34 +15,34 @@ type Section4Props = { products: Product[] };
 // ======================================================================
 
 export default function Section4({ products }: Section4Props) {
-  const { visibleSlides } = useVisibleSlide();
+ const { visibleSlides } = useVisibleSlide();
 
-  return (
-    <Container pt="4rem">
-      <FlexBox alignItems="center" justifyContent="space-between" mb="1.5rem">
-        <H2 fontSize={20}>Deals Of The Day</H2>
-        <NavLink href="#">More Products</NavLink>
-      </FlexBox>
+ return (
+  <Container pt="4rem">
+   <FlexBox alignItems="center" justifyContent="space-between" mb="1.5rem">
+    <H2 fontSize={20}>Deals Of The Day</H2>
+    <NavLink href="#">More Products</NavLink>
+   </FlexBox>
 
-      <CarouselWrapper color="dark">
-        <Carousel totalSlides={products.length} visibleSlides={visibleSlides}>
-          {products.map((product) => (
-            <ProductCard19
-              key={product.id}
-              id={product.id}
-              slug={product.slug}
-              name={product.title}
-              price={product.price}
-              productStock={product.product_stock}
-              img={product.thumbnail}
-              images={product.images as string[]}
-              reviews={product.reviews?.length || 11}
-              productId={product.id}
-              sellerId={product.id}
-            />
-          ))}
-        </Carousel>
-      </CarouselWrapper>
-    </Container>
-  );
+   <CarouselWrapper color="dark">
+    <Carousel totalSlides={products.length} visibleSlides={visibleSlides}>
+     {products.map((product) => (
+      <ProductCard19
+       key={product.id}
+       id={product.id}
+       slug={product.slug}
+       name={product.title}
+       price={product.price}
+       productStock={product.product_stock}
+       img={product.thumbnail}
+       images={product.images as string[]}
+       reviews={product.reviews?.length || 11}
+       productId={product.id}
+       sellerId={product.id}
+      />
+     ))}
+    </Carousel>
+   </CarouselWrapper>
+  </Container>
+ );
 }

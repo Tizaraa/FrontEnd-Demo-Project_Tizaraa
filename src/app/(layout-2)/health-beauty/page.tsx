@@ -14,39 +14,40 @@ import Section4 from "@sections/health-beauty/section-4";
 import Section5 from "@sections/health-beauty/section-5";
 
 export default async function HealthBeautyShop() {
-  const FIXED_ID = "banner-area";
-  const serviceList = await api.getServices();
-  const allProducts = await api.getProducts();
-  const navigationList = await api.getNavigation();
-  const topNewProducts = await api.getTopNewProducts();
-  const mainCarouselData = await api.getMainCarousel();
+ const FIXED_ID = "banner-area";
+ const serviceList = await api.getServices();
+ const allProducts = await api.getProducts();
+ const navigationList = await api.getNavigation();
+ const topNewProducts = await api.getTopNewProducts();
+ const mainCarouselData = await api.getMainCarousel();
 
-  return (
-    <Fragment>
-      {/* HERO CAROUSEL AREA */}
-      <Section1 id={FIXED_ID} carouselData={mainCarouselData} />
+ return (
+  <Fragment>
+   {/* HERO CAROUSEL AREA */}
+   <Section1 id={FIXED_ID} carouselData={mainCarouselData} />
 
-      {/* SIDEBAR WITH MAIN CONTENT AREA */}
-      <SidenavContainer
-        navFixedComponentID={FIXED_ID}
-        SideNav={<SideNavbar2 navList={navigationList} />}>
-        {/* BANNER AREA */}
-        <Box mb="4rem">
-          <Section2 />
-        </Box>
+   {/* SIDEBAR WITH MAIN CONTENT AREA */}
+   <SidenavContainer
+    navFixedComponentID={FIXED_ID}
+    SideNav={<SideNavbar2 navList={navigationList} />}
+   >
+    {/* BANNER AREA */}
+    <Box mb="4rem">
+     <Section2 />
+    </Box>
 
-        {/* TOP NEW PRODUCTS AREA */}
-        <Section3 title="Top New Products" products={topNewProducts} />
+    {/* TOP NEW PRODUCTS AREA */}
+    <Section3 title="Top New Products" products={topNewProducts} />
 
-        {/* ALL PRODUCTS AREA */}
-        <Section4 products={allProducts} />
+    {/* ALL PRODUCTS AREA */}
+    <Section4 products={allProducts} />
 
-        {/* SERVICES AREA */}
-        <Section5 services={serviceList as any} />
+    {/* SERVICES AREA */}
+    <Section5 services={serviceList as any} />
 
-        {/* FOOTER AREA */}
-        <Footer2 />
-      </SidenavContainer>
-    </Fragment>
-  );
+    {/* FOOTER AREA */}
+    <Footer2 />
+   </SidenavContainer>
+  </Fragment>
+ );
 }

@@ -19,141 +19,160 @@ import { theme } from "@utils/theme";
 
 // styled components
 const Wrapper = styled(Box)({
-  "&:hover": {
-    "& .product-actions": { right: 10 },
-    "& img": { transform: "scale(1.1)" },
-    "& .product-view-action": { opacity: 1 }
-  }
+ "&:hover": {
+  "& .product-actions": { right: 10 },
+  "& img": { transform: "scale(1.1)" },
+  "& .product-view-action": { opacity: 1 },
+ },
 });
 
 const CardMedia = styled(Box)({
-  maxHeight: 300,
-  cursor: "pointer",
-  overflow: "hidden",
-  position: "relative",
-  backgroundColor: theme.colors.gray[300],
-  "& img": { transition: "0.3s" }
+ maxHeight: 300,
+ cursor: "pointer",
+ overflow: "hidden",
+ position: "relative",
+ backgroundColor: theme.colors.gray[300],
+ "& img": { transition: "0.3s" },
 });
 
 const AddToCartButton = styled(IconButton)({
-  top: 10,
-  right: -40,
-  position: "absolute",
-  transition: "right 0.3s .1s",
-  backgroundColor: "transparent"
+ top: 10,
+ right: -40,
+ position: "absolute",
+ transition: "right 0.3s .1s",
+ backgroundColor: "transparent",
 });
 
 const FavoriteButton = styled(IconButton)({
-  top: 45,
-  right: -40,
-  position: "absolute",
-  transition: "right 0.3s .2s",
-  backgroundColor: "transparent"
+ top: 45,
+ right: -40,
+ position: "absolute",
+ transition: "right 0.3s .2s",
+ backgroundColor: "transparent",
 });
 
 const QuickViewButton = styled(Button)({
-  left: 0,
-  bottom: 0,
-  opacity: 0,
-  width: "100%",
-  color: "white",
-  borderRadius: 0,
-  position: "absolute",
-  transition: "all 0.3s",
-  backgroundColor: theme.colors.secondary.main
+ left: 0,
+ bottom: 0,
+ opacity: 0,
+ width: "100%",
+ color: "white",
+ borderRadius: 0,
+ position: "absolute",
+ transition: "all 0.3s",
+ backgroundColor: theme.colors.secondary.main,
 });
 
 // ==============================================================
 type ProductCard17Props = {
-  slug: string;
-  title: string;
-  price: number;
-  imgUrl: string;
-  productStock: number;
-  rating?: number;
-  reviews: number;
-  category: string;
-  images: string[];
-  id: string | number;
-  productId: string | number;
-  sellerId: string | number;
+ slug: string;
+ title: string;
+ price: number;
+ imgUrl: string;
+ productStock: number;
+ rating?: number;
+ reviews: number;
+ category: string;
+ images: string[];
+ id: string | number;
+ productId: string | number;
+ sellerId: string | number;
 };
 
 // ==============================================================
 
 export default function ProductCard17(props: ProductCard17Props) {
-  const { id, title, price, imgUrl, productStock, category, reviews, slug, images, productId, sellerId } = props;
+ const {
+  id,
+  title,
+  price,
+  imgUrl,
+  productStock,
+  category,
+  reviews,
+  slug,
+  images,
+  productId,
+  sellerId,
+ } = props;
 
-  const { state, dispatch } = useAppContext();
-  const [openDialog, setOpenDialog] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+ const { state, dispatch } = useAppContext();
+ const [openDialog, setOpenDialog] = useState(false);
+ const [isFavorite, setIsFavorite] = useState(false);
 
-  const cartItem = state.cart.find((item) => item.slug === slug);
+ const cartItem = state.cart.find((item) => item.slug === slug);
 
-  const handleFavorite = () => setIsFavorite((fav) => !fav);
-  const toggleDialog = useCallback(() => setOpenDialog((open) => !open), []);
+ const handleFavorite = () => setIsFavorite((fav) => !fav);
+ const toggleDialog = useCallback(() => setOpenDialog((open) => !open), []);
 
-  // handle add to cart
-  const handleAddToCart = () => {
-    const payload = {
-      id,
-      slug,
-      price,
-      imgUrl,
-      productStock,
-      name: title,
-      qty: (cartItem?.qty || 0) + 1,
-      productId, 
-      sellerId
-    };
-
-    dispatch({ type: "CHANGE_CART_AMOUNT", payload });
+ // handle add to cart
+ const handleAddToCart = () => {
+  const payload = {
+   id,
+   slug,
+   price,
+   imgUrl,
+   productStock,
+   name: title,
+   qty: (cartItem?.qty || 0) + 1,
+   productId,
+   sellerId,
   };
 
-  return (
-    <Wrapper>
-      <CardMedia>
-        <Link href={`/product/${slug}`}>
-          <NextImage width={300} height={300} src={imgUrl} alt="category" className="product-img" />
-        </Link>
+  dispatch({ type: "CHANGE_CART_AMOUNT", payload });
+ };
 
-        <AddToCartButton className="product-actions" onClick={handleAddToCart}>
-          <Icon size="18px">shopping-cart</Icon>
-        </AddToCartButton>
+ return (
+  <Wrapper>
+   <CardMedia>
+    <Link href={`/product/${slug}`}>
+     <NextImage
+      width={300}
+      height={300}
+      src={imgUrl}
+      alt="category"
+      className="product-img"
+     />
+    </Link>
 
-        <FavoriteButton className="product-actions" onClick={handleFavorite}>
-          <Icon size="18px">{isFavorite ? "heart-filled" : "heart"}</Icon>
-        </FavoriteButton>
+    <AddToCartButton className="product-actions" onClick={handleAddToCart}>
+     <Icon size="18px">shopping-cart</Icon>
+    </AddToCartButton>
 
-        <QuickViewButton
-          size="large"
-          variant="contained"
-          className="product-view-action"
-          onClick={() => setOpenDialog(true)}>
-          Quick View
-        </QuickViewButton>
-      </CardMedia>
+    <FavoriteButton className="product-actions" onClick={handleFavorite}>
+     <Icon size="18px">{isFavorite ? "heart-filled" : "heart"}</Icon>
+    </FavoriteButton>
 
-      <ProductQuickView
-        open={openDialog}
-        onClose={toggleDialog}
-        product={{ id, imgUrl, slug, price, title }}
-      />
+    <QuickViewButton
+     size="large"
+     variant="contained"
+     className="product-view-action"
+     onClick={() => setOpenDialog(true)}
+    >
+     Quick View
+    </QuickViewButton>
+   </CardMedia>
 
-      <Box p={1} textAlign="center">
-        <Small color="gray.500">{category}</Small>
-        <Paragraph fontWeight="bold">{title}</Paragraph>
-        <H4 fontWeight={700} py={0.5}>
-          {currency(price)}
-        </H4>
+   <ProductQuickView
+    open={openDialog}
+    onClose={toggleDialog}
+    product={{ id, imgUrl, slug, price, title }}
+   />
 
-        <FlexBox alignItems="center" justifyContent="center">
-          <Rating value={4} color="warn" />
-          <Small fontWeight={600} color="gray.500" ml=".5rem">
-            ({reviews} Reviews)
-          </Small>
-        </FlexBox>
-      </Box>
-    </Wrapper>
-  );
+   <Box p={1} textAlign="center">
+    <Small color="gray.500">{category}</Small>
+    <Paragraph fontWeight="bold">{title}</Paragraph>
+    <H4 fontWeight={700} py={0.5}>
+     {currency(price)}
+    </H4>
+
+    <FlexBox alignItems="center" justifyContent="center">
+     <Rating value={4} color="warn" />
+     <Small fontWeight={600} color="gray.500" ml=".5rem">
+      ({reviews} Reviews)
+     </Small>
+    </FlexBox>
+   </Box>
+  </Wrapper>
+ );
 }

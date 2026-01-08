@@ -2,9 +2,6 @@
 // import CategoryResult from "./CategoryResult";
 // import layout3 from "@component/layout/layout-3";
 
-
-
-
 // export default function ProductSearchResult({ params })
 // {
 
@@ -15,7 +12,7 @@
 //       <CategoryResult categoryid={params.id}/>
 //     </div>
 //   );
-  
+
 // }
 
 // const sortOptions = [
@@ -25,15 +22,12 @@
 //   { label: "Price High to Low", value: "Price High to Low" }
 // ];
 
-
-
-
 import CategoryResult from "./CategoryResult";
 
 export default function ProductSearchResult({ params }) {
-  return (
-    <div>
-      <CategoryResult categoryid={params.id} />
-    </div>
-  );
+ return (
+  <div>
+   <CategoryResult categoryid={params.id} />
+  </div>
+ );
 }

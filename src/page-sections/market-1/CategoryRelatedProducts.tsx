@@ -12,104 +12,108 @@ import { currency } from "@utils/utils";
 import { Chip } from "@component/Chip";
 
 const CategoryRelatedProducts = ({ products }) => {
-  const [visibleProducts, setVisibleProducts] = useState(20); // Initially show 20 products
+ const [visibleProducts, setVisibleProducts] = useState(20); // Initially show 20 products
 
-  // Handle loading more products
-  const loadMoreProducts = () => {
-    setVisibleProducts((prevCount) => prevCount + 20); // Load 20 more products
-  };
+ // Handle loading more products
+ const loadMoreProducts = () => {
+  setVisibleProducts((prevCount) => prevCount + 20); // Load 20 more products
+ };
 
-  return (
-    <Box my="-0.25rem">
-      <FlexBox
-        flexWrap="wrap"
-        justifyContent="space-between"
-        className={styles.flexContainer}
+ return (
+  <Box my="-0.25rem">
+   <FlexBox
+    flexWrap="wrap"
+    justifyContent="space-between"
+    className={styles.flexContainer}
+   >
+    {products.length > 0 ? (
+     products.slice(0, visibleProducts).map((item) => (
+      <Box
+       py="0.25rem"
+       key={item.product_slug}
+       className={styles.productCard}
+       style={{ flex: "0 1 23%", marginBottom: "1rem" }} // Ensures consistent box size
       >
-        {products.length > 0 ? (
-          products.slice(0, visibleProducts).map((item) => (
-            <Box
-              py="0.25rem"
-              key={item.product_slug}
-              className={styles.productCard}
-              style={{ flex: "0 1 23%", marginBottom: "1rem" }} // Ensures consistent box size
+       <Card p="1rem" borderRadius={8} style={{ height: "100%" }}>
+        <Link href={`/product/${item.product_slug}`}>
+         <Box position="relative">
+          <img
+           src={item.product_thumbnail}
+           alt={item.product_name}
+           style={{
+            width: "100%",
+            height: "200px", // Consistent image height
+            borderRadius: "8px",
+            objectFit: "cover",
+           }}
+          />
+          {!!item.discount_price &&
+           item.discount_price < item.seeling_price && (
+            <Chip
+             top="1rem"
+             left="1.2rem"
+             p="0.25rem 0.5rem"
+             fontSize="12px"
+             fontWeight="600"
+             bg="primary.main"
+             position="absolute"
+             color="primary.text"
+             zIndex={1}
             >
-              <Card p="1rem" borderRadius={8} style={{ height: "100%" }}>
-                <Link href={`/product/${item.product_slug}`}>
-                  <Box position="relative">
-                    <img
-                      src={item.product_thumbnail}
-                      alt={item.product_name}
-                      style={{
-                        width: "100%",
-                        height: "200px", // Consistent image height
-                        borderRadius: "8px",
-                        objectFit: "cover",
-                      }}
-                    />
-                   {!!item.discount_price && item.discount_price < item.seeling_price && (
-  <Chip
-    top="1rem"
-    left="1.2rem"
-    p="0.25rem 0.5rem"
-    fontSize="12px"
-    fontWeight="600"
-    bg="primary.main"
-    position="absolute"
-    color="primary.text"
-    zIndex={1}
-   
-    
-  >
-    {Math.floor(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}% off
-  </Chip>
-)}
-                  </Box>
-                  <H4
-                    fontWeight="600"
-                    fontSize="18px"
-                    mb="0.25rem"
-                    style={{
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {item.product_name}
-                  </H4>
-                  {item.rating > 0 && <Rating value={item.rating} outof={5} readOnly />}
-                  {item.discount_price == null ? (
-                    <H4 fontWeight="600" fontSize="14px" color="primary.main">
-                      {currency(item.seeling_price)}
-                    </H4>
-                  ) : (
-                    <FlexBox flexDirection="column">
-                      <H4 fontWeight="600" fontSize="14px" color="text.muted">
-                        BDT <del>{currency(item.seeling_price)}</del>
-                      </H4>
-                      <H4 fontWeight="600" fontSize="14px" color="primary.main">
-                        {currency(item.discount_price)}
-                      </H4>
-                    </FlexBox>
-                  )}
-                </Link>
-              </Card>
-            </Box>
-          ))
-        ) : (
-          <p>No products available</p>
-        )}
-      </FlexBox>
+             {Math.floor(
+              ((item.seeling_price - item.discount_price) /
+               item.seeling_price) *
+               100
+             )}
+             % off
+            </Chip>
+           )}
+         </Box>
+         <H4
+          fontWeight="600"
+          fontSize="18px"
+          mb="0.25rem"
+          style={{
+           whiteSpace: "nowrap",
+           overflow: "hidden",
+           textOverflow: "ellipsis",
+          }}
+         >
+          {item.product_name}
+         </H4>
+         {item.rating > 0 && <Rating value={item.rating} outof={5} readOnly />}
+         {item.discount_price == null ? (
+          <H4 fontWeight="600" fontSize="14px" color="primary.main">
+           {currency(item.seeling_price)}
+          </H4>
+         ) : (
+          <FlexBox flexDirection="column">
+           <H4 fontWeight="600" fontSize="14px" color="text.muted">
+            BDT <del>{currency(item.seeling_price)}</del>
+           </H4>
+           <H4 fontWeight="600" fontSize="14px" color="primary.main">
+            {currency(item.discount_price)}
+           </H4>
+          </FlexBox>
+         )}
+        </Link>
+       </Card>
+      </Box>
+     ))
+    ) : (
+     <p>No products available</p>
+    )}
+   </FlexBox>
 
-      {visibleProducts < products.length && (
-        <FlexBox justifyContent="center" mt="2rem">
-          <button onClick={loadMoreProducts} className={styles.loadMore}>
-            Load More
-          </button>
-        </FlexBox>
-      )}
-    </Box>
-  );
+   {visibleProducts < products.length && (
+    <FlexBox justifyContent="center" mt="2rem">
+     <button onClick={loadMoreProducts} className={styles.loadMore}>
+      Load More
+     </button>
+    </FlexBox>
+   )}
+  </Box>
+ );
 };
 
 export default CategoryRelatedProducts;

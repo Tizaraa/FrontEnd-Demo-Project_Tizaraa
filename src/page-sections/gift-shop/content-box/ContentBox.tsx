@@ -9,35 +9,35 @@ import { StyledContainer } from "./styles";
 
 // ==============================================================
 interface Props extends PropsWithChildren {
-  categoryNavigation: CategoryNavList[];
+ categoryNavigation: CategoryNavList[];
 }
 // ==============================================================
 
 export default function ContentBox({ categoryNavigation, children }: Props) {
-  const pageContentRef = useRef<HTMLDivElement | null>(null);
-  const [sidebarHeight, setSidebarHeight] = useState(0);
+ const pageContentRef = useRef<HTMLDivElement | null>(null);
+ const [sidebarHeight, setSidebarHeight] = useState(0);
 
-  useEffect(() => {
-    if (pageContentRef.current) {
-      setSidebarHeight(pageContentRef.current.offsetHeight);
-    }
-  }, []);
+ useEffect(() => {
+  if (pageContentRef.current) {
+   setSidebarHeight(pageContentRef.current.offsetHeight);
+  }
+ }, []);
 
-  return (
-    <StyledContainer>
-      {/* SIDEBAR NAVIGATION AREA */}
-      <div className="sidenav">
-        <SideNavbar
-          lineStyle="dash"
-          sidebarStyle="style2"
-          navList={categoryNavigation}
-          sidebarHeight={sidebarHeight || "85vh"}
-        />
-      </div>
+ return (
+  <StyledContainer>
+   {/* SIDEBAR NAVIGATION AREA */}
+   <div className="sidenav">
+    <SideNavbar
+     lineStyle="dash"
+     sidebarStyle="style2"
+     navList={categoryNavigation}
+     sidebarHeight={sidebarHeight || "85vh"}
+    />
+   </div>
 
-      <div className="pageContent" ref={pageContentRef}>
-        {children}
-      </div>
-    </StyledContainer>
-  );
+   <div className="pageContent" ref={pageContentRef}>
+    {children}
+   </div>
+  </StyledContainer>
+ );
 }

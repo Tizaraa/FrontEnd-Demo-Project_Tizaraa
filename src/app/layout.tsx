@@ -180,81 +180,75 @@ const openSans = Open_Sans({ subsets: ["latin"] });
 
 // Default metadata
 const defaultMetadata = {
-  title: "Tizaraa - The Best React eCommerce Template",
-  description:
-    "Tizaraa is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
-  authors: [{ name: "Tizaraa", url: "https://www.tizaraa.com" }],
-  keywords: [
-    "e-commerce",
-    "e-commerce template",
-    "next.js",
-    "react",
-    "tizaraa",
-  ],
-  siteFavIcon: "/default-favicon.ico", // default favicon path
+ title: "Tizaraa - The Best React eCommerce Template",
+ description:
+  "Tizaraa is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
+ authors: [{ name: "Tizaraa", url: "https://www.tizaraa.com" }],
+ keywords: ["e-commerce", "e-commerce template", "next.js", "react", "tizaraa"],
+ siteFavIcon: "/default-favicon.ico", // default favicon path
 };
 
 // Async function to fetch global SEO data from the API
 async function fetchGlobalSEOData() {
-  try {
-    const response = await fetch(`${ApiBaseUrl.baseUrl}frontend/parent/seo`, {
-      next: { revalidate: 60 }, // Revalidate every 60 seconds
-    });
-    const data = await response.json();
-    return data?.seo || null;
-  } catch (error) {
-    console.error("Failed to fetch SEO data", error);
-    return null;
-  }
+ try {
+  const response = await fetch(`${ApiBaseUrl.baseUrl}frontend/parent/seo`, {
+   next: { revalidate: 60 }, // Revalidate every 60 seconds
+  });
+  const data = await response.json();
+  return data?.seo || null;
+ } catch (error) {
+  console.error("Failed to fetch SEO data", error);
+  return null;
+ }
 }
 
 // Generate metadata asynchronously
 export async function generateMetadata() {
-  const seo = await fetchGlobalSEOData();
+ const seo = await fetchGlobalSEOData();
 
-  return {
-    title: seo?.title || defaultMetadata.title,
-    description: seo?.description || defaultMetadata.description,
-    keywords: seo?.keywords || defaultMetadata.keywords,
-    openGraph: {
-      title: seo?.title || defaultMetadata.title,
-      description: seo?.description || defaultMetadata.description,
-      url: seo?.url || defaultMetadata.authors[0].url,
-      images: seo?.image || "/default-image.jpg",
-    },
-    favicon: seo?.site_fav_icon || defaultMetadata.siteFavIcon,
-  };
+ return {
+  title: seo?.title || defaultMetadata.title,
+  description: seo?.description || defaultMetadata.description,
+  keywords: seo?.keywords || defaultMetadata.keywords,
+  openGraph: {
+   title: seo?.title || defaultMetadata.title,
+   description: seo?.description || defaultMetadata.description,
+   url: seo?.url || defaultMetadata.authors[0].url,
+   images: seo?.image || "/default-image.jpg",
+  },
+  favicon: seo?.site_fav_icon || defaultMetadata.siteFavIcon,
+ };
 }
 
 // Root layout
 export default async function RootLayout({
-  children,
+ children,
 }: {
-  children: React.ReactNode;
+ children: React.ReactNode;
 }) {
-  // Await metadata asynchronously before rendering
-  const metadata = await generateMetadata();
+ // Await metadata asynchronously before rendering
+ const metadata = await generateMetadata();
 
-  return (
-    <html lang="en">
-      <meta
-        httpEquiv="Content-Security-Policy"
-        content="upgrade-insecure-requests"
-      />
-      {/* <link rel="icon" href={metadata.favicon} type="image/x-icon" /> */}
-      <Head>
-        <link rel="icon" href={metadata.favicon} type="image/x-icon" />
-        {/* <link rel="preload" href={metadata.favicon} /> */}
-      </Head>
-      <body className={openSans.className}>
-        <StyledComponentsRegistry>
-          <AppProvider>
-            <StyledContext>{children}</StyledContext>
-            <ToastContainer />
-            <Toaster position="top-right" />
-          </AppProvider>
-        </StyledComponentsRegistry>
-      </body>
-    </html>
-  );
+ return (
+  <html lang="en">
+   <meta
+    httpEquiv="Content-Security-Policy"
+    content="upgrade-insecure-requests"
+   />
+   {/* <link rel="icon" href={metadata.favicon} type="image/x-icon" /> */}
+   <Head>
+    <link rel="icon" href={metadata.favicon} type="image/x-icon" />
+    {/* <link rel="preload" href={metadata.favicon} /> */}
+   </Head>
+   <body className={openSans.className}>
+    <StyledComponentsRegistry>
+     <AppProvider>
+      <StyledContext>{children}</StyledContext>
+      <ToastContainer />
+      <Toaster position="top-right" />
+     </AppProvider>
+    </StyledComponentsRegistry>
+   </body>
+  </html>
+ );
 }

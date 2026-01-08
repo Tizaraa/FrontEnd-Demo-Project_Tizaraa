@@ -526,604 +526,588 @@ import { Box, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export default function CheckoutSummary({ deliveryCharge }) {
-  const { state } = useAppContext();
-  const authtoken = authService.getToken();
+ const { state } = useAppContext();
+ const authtoken = authService.getToken();
 
-  const [savedTotalPrice, setSavedTotalPrice] = useState(0);
-  const [savedTotalWithDelivery, setSavedTotalWithDelivery] = useState(0);
-  const [promoCode, setPromoCode] = useState("");
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+ const [savedTotalPrice, setSavedTotalPrice] = useState(0);
+ const [savedTotalWithDelivery, setSavedTotalWithDelivery] = useState(0);
+ const [promoCode, setPromoCode] = useState("");
+ const [error, setError] = useState("");
+ const [message, setMessage] = useState("");
 
-  const [discount, setDiscount] = useState(0);
-  const [newTotal, setNewTotal] = useState(0);
+ const [discount, setDiscount] = useState(0);
+ const [newTotal, setNewTotal] = useState(0);
 
-  // newly added
-  const [isExpressDelivery, setIsExpressDelivery] = useState(false);
+ // newly added
+ const [isExpressDelivery, setIsExpressDelivery] = useState(false);
 
-  // State for otcAdvancePaymentAmount
-  const [otcAdvancePaymentAmount, setOtcAdvancePaymentAmount] = useState<
-    number | null
-  >(null);
+ // State for otcAdvancePaymentAmount
+ const [otcAdvancePaymentAmount, setOtcAdvancePaymentAmount] = useState<
+  number | null
+ >(null);
 
-  // Load otcAdvancePaymentAmount from sessionStorage on mount and poll for updates
-  useEffect(() => {
-    // Initial load
-    const storedAdvancePayment = sessionStorage.getItem(
-      "otcAdvancePaymentAmount"
-    );
-    if (storedAdvancePayment) {
-      setOtcAdvancePaymentAmount(parseFloat(storedAdvancePayment));
+ // Load otcAdvancePaymentAmount from sessionStorage on mount and poll for updates
+ useEffect(() => {
+  // Initial load
+  const storedAdvancePayment = sessionStorage.getItem(
+   "otcAdvancePaymentAmount"
+  );
+  if (storedAdvancePayment) {
+   setOtcAdvancePaymentAmount(parseFloat(storedAdvancePayment));
+  }
+
+  // Poll sessionStorage every 500ms
+  const intervalId = setInterval(() => {
+   const updatedAdvancePayment = sessionStorage.getItem(
+    "otcAdvancePaymentAmount"
+   );
+   if (updatedAdvancePayment) {
+    setOtcAdvancePaymentAmount(parseFloat(updatedAdvancePayment));
+   } else {
+    setOtcAdvancePaymentAmount(null);
+   }
+  }, 200);
+
+  // Cleanup interval on unmount
+  return () => {
+   clearInterval(intervalId);
+  };
+ }, []);
+
+ // useEffect(() => {
+ //   const getTotalPrice = () => {
+ //     return state.cart.reduce((accumulator, item) => {
+ //       if (state.selectedProducts.includes(item.id)) {
+ //         const price =
+ //           item.sizeColor?.nosize?.length === 0 && item.discountPrice
+ //             ? item.discountPrice
+ //             : item.price;
+ //         return accumulator + price * item.qty;
+ //       }
+ //       return accumulator;
+ //     }, 0);
+ //   };
+
+ //   const deliveryChargeDisplay = deliveryCharge || 0;
+ //   const totalPrice = getTotalPrice();
+ //   const totalWithDelivery =
+ //     parseFloat(deliveryChargeDisplay) + (isExpressDelivery ? 10 : 0);
+
+ //   // Check if all products are abroad
+ //   const hasAbroadProduct = state.cart.every(
+ //     (product: any) => product.productType === "Abroad"
+ //   );
+
+ //   // Update state and sessionStorage
+ //   setSavedTotalPrice(totalPrice);
+ //   setSavedTotalWithDelivery(totalWithDelivery);
+ //   sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
+ //   sessionStorage.setItem(
+ //     "savedTotalWithDelivery",
+ //     totalWithDelivery.toString()
+ //   );
+
+ //   // Reset discount and newTotal
+ //   setDiscount(0);
+
+ //   // Set newTotal based on product type
+ //   if (hasAbroadProduct) {
+ //     const advancePayment = otcAdvancePaymentAmount || 0;
+ //     setNewTotal(advancePayment);
+ //     sessionStorage.setItem("newTotal", advancePayment.toString());
+ //   } else {
+ //     const regularTotal = totalPrice + totalWithDelivery;
+ //     setNewTotal(regularTotal);
+ //     sessionStorage.setItem("newTotal", regularTotal.toString());
+ //   }
+
+ //   // Clear sessionStorage if cart is empty
+ //   if (state.cart.length === 0) {
+ //     setSavedTotalPrice(0);
+ //     setSavedTotalWithDelivery(0);
+ //     setDiscount(0);
+ //     setNewTotal(0);
+ //     sessionStorage.removeItem("savedTotalPrice");
+ //     sessionStorage.removeItem("savedTotalWithDelivery");
+ //     sessionStorage.removeItem("discount");
+ //     sessionStorage.removeItem("newTotal");
+ //     sessionStorage.removeItem("promoCode");
+ //     setPromoCode("");
+ //   }
+ // }, [
+ //   state.cart,
+ //   state.selectedProducts,
+ //   deliveryCharge,
+ //   isExpressDelivery,
+ //   otcAdvancePaymentAmount,
+ // ]);
+
+ useEffect(() => {
+  const getTotalPrice = () => {
+   return state.cart.reduce((accumulator, item) => {
+    if (state.selectedProducts.includes(item.id)) {
+     const price =
+      item.sizeColor?.nosize?.length === 0 && item.discountPrice
+       ? item.discountPrice
+       : item.price;
+     return accumulator + price * item.qty;
     }
-
-    // Poll sessionStorage every 500ms
-    const intervalId = setInterval(() => {
-      const updatedAdvancePayment = sessionStorage.getItem(
-        "otcAdvancePaymentAmount"
-      );
-      if (updatedAdvancePayment) {
-        setOtcAdvancePaymentAmount(parseFloat(updatedAdvancePayment));
-      } else {
-        setOtcAdvancePaymentAmount(null);
-      }
-    }, 200);
-
-    // Cleanup interval on unmount
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
-
-  // useEffect(() => {
-  //   const getTotalPrice = () => {
-  //     return state.cart.reduce((accumulator, item) => {
-  //       if (state.selectedProducts.includes(item.id)) {
-  //         const price =
-  //           item.sizeColor?.nosize?.length === 0 && item.discountPrice
-  //             ? item.discountPrice
-  //             : item.price;
-  //         return accumulator + price * item.qty;
-  //       }
-  //       return accumulator;
-  //     }, 0);
-  //   };
-
-  //   const deliveryChargeDisplay = deliveryCharge || 0;
-  //   const totalPrice = getTotalPrice();
-  //   const totalWithDelivery =
-  //     parseFloat(deliveryChargeDisplay) + (isExpressDelivery ? 10 : 0);
-
-  //   // Check if all products are abroad
-  //   const hasAbroadProduct = state.cart.every(
-  //     (product: any) => product.productType === "Abroad"
-  //   );
-
-  //   // Update state and sessionStorage
-  //   setSavedTotalPrice(totalPrice);
-  //   setSavedTotalWithDelivery(totalWithDelivery);
-  //   sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
-  //   sessionStorage.setItem(
-  //     "savedTotalWithDelivery",
-  //     totalWithDelivery.toString()
-  //   );
-
-  //   // Reset discount and newTotal
-  //   setDiscount(0);
-
-  //   // Set newTotal based on product type
-  //   if (hasAbroadProduct) {
-  //     const advancePayment = otcAdvancePaymentAmount || 0;
-  //     setNewTotal(advancePayment);
-  //     sessionStorage.setItem("newTotal", advancePayment.toString());
-  //   } else {
-  //     const regularTotal = totalPrice + totalWithDelivery;
-  //     setNewTotal(regularTotal);
-  //     sessionStorage.setItem("newTotal", regularTotal.toString());
-  //   }
-
-  //   // Clear sessionStorage if cart is empty
-  //   if (state.cart.length === 0) {
-  //     setSavedTotalPrice(0);
-  //     setSavedTotalWithDelivery(0);
-  //     setDiscount(0);
-  //     setNewTotal(0);
-  //     sessionStorage.removeItem("savedTotalPrice");
-  //     sessionStorage.removeItem("savedTotalWithDelivery");
-  //     sessionStorage.removeItem("discount");
-  //     sessionStorage.removeItem("newTotal");
-  //     sessionStorage.removeItem("promoCode");
-  //     setPromoCode("");
-  //   }
-  // }, [
-  //   state.cart,
-  //   state.selectedProducts,
-  //   deliveryCharge,
-  //   isExpressDelivery,
-  //   otcAdvancePaymentAmount,
-  // ]);
-
-  useEffect(() => {
-    const getTotalPrice = () => {
-      return state.cart.reduce((accumulator, item) => {
-        if (state.selectedProducts.includes(item.id)) {
-          const price =
-            item.sizeColor?.nosize?.length === 0 && item.discountPrice
-              ? item.discountPrice
-              : item.price;
-          return accumulator + price * item.qty;
-        }
-        return accumulator;
-      }, 0);
-    };
-
-    // Check if all products are abroad
-    const hasAbroadProduct = state.cart.every(
-      (product: any) => product.productType === "Abroad"
-    );
-
-    // Set delivery charge to 0 if all products are abroad
-    const deliveryChargeDisplay = hasAbroadProduct ? 0 : deliveryCharge || 0;
-
-    const totalPrice = getTotalPrice();
-    
-    // const totalWithDelivery =
-    //   parseFloat(deliveryChargeDisplay.toString()) +
-    //   (isExpressDelivery && !hasAbroadProduct ? 10 : 0);
-
-    const totalWithDelivery = parseFloat(deliveryChargeDisplay.toString());
-
-
-    // Update state and sessionStorage
-    setSavedTotalPrice(totalPrice);
-    setSavedTotalWithDelivery(totalWithDelivery);
-    sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
-    sessionStorage.setItem(
-      "savedTotalWithDelivery",
-      totalWithDelivery.toString()
-    );
-
-    // Reset discount and newTotal
-    setDiscount(0);
-
-    // Set newTotal based on product type
-    if (hasAbroadProduct) {
-      const advancePayment = otcAdvancePaymentAmount || 0;
-      setNewTotal(advancePayment);
-      sessionStorage.setItem("newTotal", advancePayment.toString());
-    } else {
-      const regularTotal = totalPrice + totalWithDelivery;
-      setNewTotal(regularTotal);
-      sessionStorage.setItem("newTotal", regularTotal.toString());
-    }
-
-    // Clear sessionStorage if cart is empty
-    if (state.cart.length === 0) {
-      setSavedTotalPrice(0);
-      setSavedTotalWithDelivery(0);
-      setDiscount(0);
-      setNewTotal(0);
-      sessionStorage.removeItem("savedTotalPrice");
-      sessionStorage.removeItem("savedTotalWithDelivery");
-      sessionStorage.removeItem("discount");
-      sessionStorage.removeItem("newTotal");
-      sessionStorage.removeItem("promoCode");
-      setPromoCode("");
-    }
-  }, [
-    state.cart,
-    state.selectedProducts,
-    deliveryCharge,
-    isExpressDelivery,
-    otcAdvancePaymentAmount,
-  ]);
-
-  const handlePromoCodeChange = (e) => {
-    const newPromoCode = e.target.value;
-    setPromoCode(newPromoCode);
-    sessionStorage.setItem("promoCode", newPromoCode);
-    setError("");
-    setMessage("");
+    return accumulator;
+   }, 0);
   };
 
-  const applyPromoCode = async () => {
-    const storedAddress = JSON.parse(sessionStorage.getItem("address"));
-
-    if (!storedAddress) {
-      toast.warning("Please select an address first!", {
-        position: "top-right",
-        autoClose: 3000,
-        style: {
-          background: "rgb(245, 124, 0)",
-          color: "#000",
-          fontSize: "16px",
-          border: "2px solid #fff",
-          boxShadow: "0 0 10px rgba(255, 152, 0, 0.7)",
-        },
-        icon: (
-          <FaExclamationTriangle style={{ color: "#000", fontSize: "20px" }} />
-        ), // Custom icon
-        progressStyle: {
-          background: "#fff",
-        },
-      });
-      return;
-    }
-
-    // Check if all products are abroad
-    const hasAbroadProduct = state.cart.every(
-      (product: any) => product.productType === "Abroad"
-    );
-
-    if (hasAbroadProduct) {
-      toast.warning("Promo codes cannot be applied to abroad products");
-      return;
-    }
-
-    if (!promoCode) {
-      toast.warning("Please Enter a Promo Code !");
-      return;
-    }
-
-    // Filter cart items to include only those that are in selectedProducts
-    const selectedItems = state.cart.filter((item) =>
-      state.selectedProducts.includes(item.id)
-    );
-
-    // Prepare the request body for only selected items
-    const requestBody = {
-      code: promoCode,
-      products: selectedItems.map((item) => {
-        let price = item.discountPrice ? item.discountPrice : item.price;
-
-        if (item.sizeColor && item.selectedSize) {
-          const selectedSize = item.sizeColor.size?.find(
-            (sizeOption) => sizeOption.size === item.selectedSize
-          );
-
-          if (selectedSize && selectedSize.price) {
-            price = selectedSize.price;
-          } else {
-            price = item.price;
-          }
-        }
-
-        if (item.selectedColor) {
-          const selectedColor = item.sizeColor?.color?.find(
-            (colorOption) => colorOption.color === item.selectedColor
-          );
-
-          if (selectedColor && selectedColor.price) {
-            price = parseFloat(selectedColor.price);
-          } else {
-            price = item.price;
-          }
-        }
-
-        if (item.discountPrice && (!item.selectedColor || !item.selectedSize)) {
-          price = item.discountPrice;
-        }
-
-        const totalAmount = price * item.qty;
-
-        return {
-          price: price,
-          qty: item.qty,
-          total_amount: totalAmount,
-          name: item.name,
-          imgUrl: item.imgUrl,
-          productStock: item.productStock,
-          id: item.id,
-          discountPrice: item.discountPrice,
-          slug: item.slug,
-          productId: item.productId,
-          sellerId: item.sellerId,
-          productType: item.productType || "General",
-          sizeColor: item.sizeColor || { colorwithsize: {} },
-          selectedColor: item.selectedColor || null,
-          selectedSize: item.selectedSize || null,
-        };
-      }),
-    };
-
-    try {
-      const response = await fetch(
-        "https://frontend.tizaraa.shop/api/promo/apply",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${authtoken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
-
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        const text = await response.text();
-        console.error("Unexpected response:", text);
-        throw new Error(
-          "The server returned an invalid response. Please try again later."
-        );
-      }
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success(data.message);
-        const discountValue = parseFloat(data.discount);
-        setDiscount(discountValue);
-
-        // Skip discount calculation for abroad products start
-        if (hasAbroadProduct) {
-          const advancePayment = otcAdvancePaymentAmount || 0;
-          setNewTotal(advancePayment);
-          sessionStorage.setItem("newTotal", advancePayment.toString());
-        } else {
-          const totalPrice = savedTotalPrice;
-          const shippingCharge = savedTotalWithDelivery;
-          const finalPrice = totalPrice + shippingCharge - discountValue;
-
-          setNewTotal(finalPrice);
-          sessionStorage.setItem("newTotal", finalPrice.toString());
-        }
-        // Skip discount calculation for abroad products end
-
-        const totalPrice = savedTotalPrice;
-        const shippingCharge = savedTotalWithDelivery;
-        const finalPrice = totalPrice + shippingCharge - discountValue;
-
-        setNewTotal(finalPrice);
-
-        // Save discount and newTotal to sessionStorage
-        sessionStorage.setItem("discount", discountValue.toString());
-        sessionStorage.setItem("newTotal", finalPrice.toString());
-
-        // Handle promoCode in session based on discount
-        if (discountValue === 0) {
-          sessionStorage.removeItem("promoCode");
-          setPromoCode("");
-        } else {
-          sessionStorage.setItem("promoCode", promoCode);
-        }
-
-        // ✅ After success, reset promo code in storage and UI
-        // sessionStorage.removeItem("promoCode");
-        // setPromoCode("");
-      } else {
-        const errorMsg =
-          data.message || data.error || "An error occurred. Please try again.";
-        toast.error(errorMsg);
-        console.error("Error:", data.error);
-
-        setDiscount(0);
-        setNewTotal(savedTotalPrice + savedTotalWithDelivery);
-        sessionStorage.setItem("discount", "0");
-        sessionStorage.setItem(
-          "newTotal",
-          (savedTotalPrice + savedTotalWithDelivery).toString()
-        );
-
-        // If there's an error, set promoCode to empty string in session
-        sessionStorage.setItem("promoCode", "");
-        setPromoCode(""); // Also clear the input field
-      }
-    } catch (error) {
-      console.error("API Error:", error.message);
-      if (error.message === "Failed to fetch") {
-        toast.error("Wrong Promo !");
-      } else {
-        setError(error.message || "Wrong Promo");
-      }
-      setDiscount(0);
-      setNewTotal(savedTotalPrice + savedTotalWithDelivery);
-      sessionStorage.setItem("discount", "0");
-      sessionStorage.setItem(
-        "newTotal",
-        (savedTotalPrice + savedTotalWithDelivery).toString()
-      );
-
-      // If there's an error, set promoCode to empty string in session
-      sessionStorage.setItem("promoCode", "");
-      setPromoCode(""); // Also clear the input field
-    }
-  };
-
+  // Check if all products are abroad
   const hasAbroadProduct = state.cart.every(
-    (product: any) => product.productType === "Abroad"
+   (product: any) => product.productType === "Abroad"
   );
 
-  // Get selectedPaymentOption from sessionStorage for Pay Now (Advance)
-  const selectedPaymentOption = sessionStorage.getItem("selectedPaymentOption");
+  // Set delivery charge to 0 if all products are abroad
+  const deliveryChargeDisplay = hasAbroadProduct ? 0 : deliveryCharge || 0;
 
-  return (
-    <Card1>
-      {state.cart.map((item) => (
-        <ProductCard20
-          margin={0}
-          mb="1.5rem"
-          id={item.id}
-          key={item.id}
-          qty={item.qty}
-          slug={item.slug}
-          productStock={item.productStock}
-          name={item.name}
-          price={item.price}
-          imgUrl={item.imgUrl}
-          discountPrice={item.discountPrice}
-          productId={item.productId}
-          sellerId={item.sellerId}
-        />
-      ))}
+  const totalPrice = getTotalPrice();
 
-      <FlexBox flexDirection="column">
-        <Typography fontWeight="600" mb="0.5rem">
-          Promotion
-        </Typography>
-        <FlexBox justifyContent="space-between" alignItems="center">
-          <input
-            type="text"
-            placeholder="Enter Store/Tizaraa Code"
-            value={promoCode}
-            onChange={handlePromoCodeChange}
-            style={{
-              flex: 1,
-              padding: "0.5rem",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              marginRight: "0.5rem",
-              fontSize: "14px",
-            }}
-          />
-          <button
-            onClick={applyPromoCode}
-            style={{
-              backgroundColor: "#E94560",
-              color: "#fff",
-              padding: "0.5rem 1rem",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "14px",
-            }}
-          >
-            APPLY
-          </button>
-        </FlexBox>
+  // const totalWithDelivery =
+  //   parseFloat(deliveryChargeDisplay.toString()) +
+  //   (isExpressDelivery && !hasAbroadProduct ? 10 : 0);
 
-        {/* Display error or message */}
-        <Typography
-          color={error ? "red" : message ? "green" : "inherit"}
-          mt="1rem"
-        >
-          {error || message}{" "}
-          {/* Display error if it exists, otherwise display message */}
-        </Typography>
-      </FlexBox>
+  const totalWithDelivery = parseFloat(deliveryChargeDisplay.toString());
 
-      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-        <Typography color="text.hint">Subtotal:</Typography>
-        <FlexBox alignItems="flex-end">
-          <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-            {currency(savedTotalPrice)}
-            {/* {currency(Math.ceil(savedTotalPrice))} */}
-          </Typography>
-        </FlexBox>
-      </FlexBox>
+  // Update state and sessionStorage
+  setSavedTotalPrice(totalPrice);
+  setSavedTotalWithDelivery(totalWithDelivery);
+  sessionStorage.setItem("savedTotalPrice", totalPrice.toString());
+  sessionStorage.setItem(
+   "savedTotalWithDelivery",
+   totalWithDelivery.toString()
+  );
 
-      {hasAbroadProduct && (
-        <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-          <Typography color="#E94560">Pay Now ({selectedPaymentOption}%):</Typography>
-          <FlexBox alignItems="flex-end">
-            <Typography
-              color="#E94560"
-              fontSize="18px"
-              fontWeight="600"
-              lineHeight="1"
-            >
-              {otcAdvancePaymentAmount !== null
-                ? currency(otcAdvancePaymentAmount)
-                : "BDT 0.00"}
-            </Typography>
-          </FlexBox>
-        </FlexBox>
-      )}
+  // Reset discount and newTotal
+  setDiscount(0);
 
-      {!hasAbroadProduct && (
-        <>
-          <FlexBox
-            justifyContent="space-between"
-            alignItems="center"
-            mb="0.5rem"
-          >
-            <Typography color="text.hint">Shipping:</Typography>
-            <FlexBox alignItems="flex-end">
-              <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-                {currency(savedTotalWithDelivery)}
-              </Typography>
-            </FlexBox>
-          </FlexBox>
+  // Set newTotal based on product type
+  if (hasAbroadProduct) {
+   const advancePayment = otcAdvancePaymentAmount || 0;
+   setNewTotal(advancePayment);
+   sessionStorage.setItem("newTotal", advancePayment.toString());
+  } else {
+   const regularTotal = totalPrice + totalWithDelivery;
+   setNewTotal(regularTotal);
+   sessionStorage.setItem("newTotal", regularTotal.toString());
+  }
 
-          <FlexBox
-            justifyContent="space-between"
-            alignItems="center"
-            mb="0.5rem"
-          >
-            <Typography color="text.hint">VAT:</Typography>
-            <FlexBox alignItems="flex-end">
-              <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-                BDT 0.00
-              </Typography>
-            </FlexBox>
-          </FlexBox>
+  // Clear sessionStorage if cart is empty
+  if (state.cart.length === 0) {
+   setSavedTotalPrice(0);
+   setSavedTotalWithDelivery(0);
+   setDiscount(0);
+   setNewTotal(0);
+   sessionStorage.removeItem("savedTotalPrice");
+   sessionStorage.removeItem("savedTotalWithDelivery");
+   sessionStorage.removeItem("discount");
+   sessionStorage.removeItem("newTotal");
+   sessionStorage.removeItem("promoCode");
+   setPromoCode("");
+  }
+ }, [
+  state.cart,
+  state.selectedProducts,
+  deliveryCharge,
+  isExpressDelivery,
+  otcAdvancePaymentAmount,
+ ]);
 
-          <FlexBox
-            justifyContent="space-between"
-            alignItems="center"
-            mb="1.5rem"
-          >
-            <Typography color="text.hint">Discount:</Typography>
-            <Typography fontWeight="700">{currency(discount)}</Typography>
-          </FlexBox>
-        </>
-      )}
+ const handlePromoCodeChange = (e) => {
+  const newPromoCode = e.target.value;
+  setPromoCode(newPromoCode);
+  sessionStorage.setItem("promoCode", newPromoCode);
+  setError("");
+  setMessage("");
+ };
 
-      <Divider mb="1rem" />
+ const applyPromoCode = async () => {
+  const storedAddress = JSON.parse(sessionStorage.getItem("address"));
 
+  if (!storedAddress) {
+   toast.warning("Please select an address first!", {
+    position: "top-right",
+    autoClose: 3000,
+    style: {
+     background: "rgb(245, 124, 0)",
+     color: "#000",
+     fontSize: "16px",
+     border: "2px solid #fff",
+     boxShadow: "0 0 10px rgba(255, 152, 0, 0.7)",
+    },
+    icon: <FaExclamationTriangle style={{ color: "#000", fontSize: "20px" }} />, // Custom icon
+    progressStyle: {
+     background: "#fff",
+    },
+   });
+   return;
+  }
+
+  // Check if all products are abroad
+  const hasAbroadProduct = state.cart.every(
+   (product: any) => product.productType === "Abroad"
+  );
+
+  if (hasAbroadProduct) {
+   toast.warning("Promo codes cannot be applied to abroad products");
+   return;
+  }
+
+  if (!promoCode) {
+   toast.warning("Please Enter a Promo Code !");
+   return;
+  }
+
+  // Filter cart items to include only those that are in selectedProducts
+  const selectedItems = state.cart.filter((item) =>
+   state.selectedProducts.includes(item.id)
+  );
+
+  // Prepare the request body for only selected items
+  const requestBody = {
+   code: promoCode,
+   products: selectedItems.map((item) => {
+    let price = item.discountPrice ? item.discountPrice : item.price;
+
+    if (item.sizeColor && item.selectedSize) {
+     const selectedSize = item.sizeColor.size?.find(
+      (sizeOption) => sizeOption.size === item.selectedSize
+     );
+
+     if (selectedSize && selectedSize.price) {
+      price = selectedSize.price;
+     } else {
+      price = item.price;
+     }
+    }
+
+    if (item.selectedColor) {
+     const selectedColor = item.sizeColor?.color?.find(
+      (colorOption) => colorOption.color === item.selectedColor
+     );
+
+     if (selectedColor && selectedColor.price) {
+      price = parseFloat(selectedColor.price);
+     } else {
+      price = item.price;
+     }
+    }
+
+    if (item.discountPrice && (!item.selectedColor || !item.selectedSize)) {
+     price = item.discountPrice;
+    }
+
+    const totalAmount = price * item.qty;
+
+    return {
+     price: price,
+     qty: item.qty,
+     total_amount: totalAmount,
+     name: item.name,
+     imgUrl: item.imgUrl,
+     productStock: item.productStock,
+     id: item.id,
+     discountPrice: item.discountPrice,
+     slug: item.slug,
+     productId: item.productId,
+     sellerId: item.sellerId,
+     productType: item.productType || "General",
+     sizeColor: item.sizeColor || { colorwithsize: {} },
+     selectedColor: item.selectedColor || null,
+     selectedSize: item.selectedSize || null,
+    };
+   }),
+  };
+
+  try {
+   const response = await fetch(
+    "https://frontend.tizaraa.shop/api/promo/apply",
+    {
+     method: "POST",
+     headers: {
+      Authorization: `Bearer ${authtoken}`,
+      "Content-Type": "application/json",
+     },
+     body: JSON.stringify(requestBody),
+    }
+   );
+
+   const contentType = response.headers.get("content-type");
+   if (!contentType || !contentType.includes("application/json")) {
+    const text = await response.text();
+    console.error("Unexpected response:", text);
+    throw new Error(
+     "The server returned an invalid response. Please try again later."
+    );
+   }
+
+   const data = await response.json();
+
+   if (response.ok) {
+    toast.success(data.message);
+    const discountValue = parseFloat(data.discount);
+    setDiscount(discountValue);
+
+    // Skip discount calculation for abroad products start
+    if (hasAbroadProduct) {
+     const advancePayment = otcAdvancePaymentAmount || 0;
+     setNewTotal(advancePayment);
+     sessionStorage.setItem("newTotal", advancePayment.toString());
+    } else {
+     const totalPrice = savedTotalPrice;
+     const shippingCharge = savedTotalWithDelivery;
+     const finalPrice = totalPrice + shippingCharge - discountValue;
+
+     setNewTotal(finalPrice);
+     sessionStorage.setItem("newTotal", finalPrice.toString());
+    }
+    // Skip discount calculation for abroad products end
+
+    const totalPrice = savedTotalPrice;
+    const shippingCharge = savedTotalWithDelivery;
+    const finalPrice = totalPrice + shippingCharge - discountValue;
+
+    setNewTotal(finalPrice);
+
+    // Save discount and newTotal to sessionStorage
+    sessionStorage.setItem("discount", discountValue.toString());
+    sessionStorage.setItem("newTotal", finalPrice.toString());
+
+    // Handle promoCode in session based on discount
+    if (discountValue === 0) {
+     sessionStorage.removeItem("promoCode");
+     setPromoCode("");
+    } else {
+     sessionStorage.setItem("promoCode", promoCode);
+    }
+
+    // ✅ After success, reset promo code in storage and UI
+    // sessionStorage.removeItem("promoCode");
+    // setPromoCode("");
+   } else {
+    const errorMsg =
+     data.message || data.error || "An error occurred. Please try again.";
+    toast.error(errorMsg);
+    console.error("Error:", data.error);
+
+    setDiscount(0);
+    setNewTotal(savedTotalPrice + savedTotalWithDelivery);
+    sessionStorage.setItem("discount", "0");
+    sessionStorage.setItem(
+     "newTotal",
+     (savedTotalPrice + savedTotalWithDelivery).toString()
+    );
+
+    // If there's an error, set promoCode to empty string in session
+    sessionStorage.setItem("promoCode", "");
+    setPromoCode(""); // Also clear the input field
+   }
+  } catch (error) {
+   console.error("API Error:", error.message);
+   if (error.message === "Failed to fetch") {
+    toast.error("Wrong Promo !");
+   } else {
+    setError(error.message || "Wrong Promo");
+   }
+   setDiscount(0);
+   setNewTotal(savedTotalPrice + savedTotalWithDelivery);
+   sessionStorage.setItem("discount", "0");
+   sessionStorage.setItem(
+    "newTotal",
+    (savedTotalPrice + savedTotalWithDelivery).toString()
+   );
+
+   // If there's an error, set promoCode to empty string in session
+   sessionStorage.setItem("promoCode", "");
+   setPromoCode(""); // Also clear the input field
+  }
+ };
+
+ const hasAbroadProduct = state.cart.every(
+  (product: any) => product.productType === "Abroad"
+ );
+
+ // Get selectedPaymentOption from sessionStorage for Pay Now (Advance)
+ const selectedPaymentOption = sessionStorage.getItem("selectedPaymentOption");
+
+ return (
+  <Card1>
+   {state.cart.map((item) => (
+    <ProductCard20
+     margin={0}
+     mb="1.5rem"
+     id={item.id}
+     key={item.id}
+     qty={item.qty}
+     slug={item.slug}
+     productStock={item.productStock}
+     name={item.name}
+     price={item.price}
+     imgUrl={item.imgUrl}
+     discountPrice={item.discountPrice}
+     productId={item.productId}
+     sellerId={item.sellerId}
+    />
+   ))}
+
+   <FlexBox flexDirection="column">
+    <Typography fontWeight="600" mb="0.5rem">
+     Promotion
+    </Typography>
+    <FlexBox justifyContent="space-between" alignItems="center">
+     <input
+      type="text"
+      placeholder="Enter Store/Tizaraa Code"
+      value={promoCode}
+      onChange={handlePromoCodeChange}
+      style={{
+       flex: 1,
+       padding: "0.5rem",
+       border: "1px solid #ddd",
+       borderRadius: "4px",
+       marginRight: "0.5rem",
+       fontSize: "14px",
+      }}
+     />
+     <button
+      onClick={applyPromoCode}
+      style={{
+       backgroundColor: "#E94560",
+       color: "#fff",
+       padding: "0.5rem 1rem",
+       border: "none",
+       borderRadius: "4px",
+       cursor: "pointer",
+       fontSize: "14px",
+      }}
+     >
+      APPLY
+     </button>
+    </FlexBox>
+
+    {/* Display error or message */}
+    <Typography color={error ? "red" : message ? "green" : "inherit"} mt="1rem">
+     {error || message}{" "}
+     {/* Display error if it exists, otherwise display message */}
+    </Typography>
+   </FlexBox>
+
+   <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+    <Typography color="text.hint">Subtotal:</Typography>
+    <FlexBox alignItems="flex-end">
+     <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+      {currency(savedTotalPrice)}
+      {/* {currency(Math.ceil(savedTotalPrice))} */}
+     </Typography>
+    </FlexBox>
+   </FlexBox>
+
+   {hasAbroadProduct && (
+    <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+     <Typography color="#E94560">
+      Pay Now ({selectedPaymentOption}%):
+     </Typography>
+     <FlexBox alignItems="flex-end">
       <Typography
-        fontSize="25px"
-        fontWeight="600"
-        lineHeight="1"
-        textAlign="right"
-        mb="1.5rem"
+       color="#E94560"
+       fontSize="18px"
+       fontWeight="600"
+       lineHeight="1"
       >
-        {hasAbroadProduct
-          ? currency(otcAdvancePaymentAmount || 0)
-          : currency(savedTotalWithDelivery + savedTotalPrice - discount)}
+       {otcAdvancePaymentAmount !== null
+        ? currency(otcAdvancePaymentAmount)
+        : "BDT 0.00"}
       </Typography>
+     </FlexBox>
+    </FlexBox>
+   )}
 
-      <Divider mb="1rem" />
+   {!hasAbroadProduct && (
+    <>
+     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <Typography color="text.hint">Shipping:</Typography>
+      <FlexBox alignItems="flex-end">
+       <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+        {currency(savedTotalWithDelivery)}
+       </Typography>
+      </FlexBox>
+     </FlexBox>
 
-      {hasAbroadProduct && (
-        // <Typography fontSize="13px" color="text.hint" display="block" fontWeight="600">
-        //   Pay on Delivery {currency(savedTotalPrice)} + Shipping & Courier
-        //   Charge
-        // </Typography>
+     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <Typography color="text.hint">VAT:</Typography>
+      <FlexBox alignItems="flex-end">
+       <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+        BDT 0.00
+       </Typography>
+      </FlexBox>
+     </FlexBox>
 
-        <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
-          <Box sx={{ flex: 1 }}>
-            <Box sx={{ display: "flex", gap: 0.5 }}>
-              <Tooltip
-                title={
-                  <>
-                    Shipping & Courier Charge will be calculated based on actual
-                    weight & dimensions when the product is in-house by Tizaraa
-                    <br />
-                    -
-                    <br />
-                    পণ্যটি Tizaraa-তে পৌঁছানোর পর, প্রকৃত ওজন ও মাত্রার ভিত্তিতে
-                    শিপিং ও কুরিয়ার চার্জ নির্ধারণ করা হবে
-                  </>
-                }
-                arrow
-                placement="top"
-              >
-                <InfoOutlinedIcon
-                  fontSize="small"
-                  style={{ color: "#E94560" }}
-                  sx={{ opacity: 0.7 }}
-                />
-              </Tooltip>
-              <Typography fontSize="13px" color="text.primary">
-                Pay on Delivery {currency(Math.ceil(savedTotalPrice))} +
-                Shipping & Courier Charge
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-      )}
+     <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
+      <Typography color="text.hint">Discount:</Typography>
+      <Typography fontWeight="700">{currency(discount)}</Typography>
+     </FlexBox>
+    </>
+   )}
 
-      {/* <Typography
+   <Divider mb="1rem" />
+
+   <Typography
+    fontSize="25px"
+    fontWeight="600"
+    lineHeight="1"
+    textAlign="right"
+    mb="1.5rem"
+   >
+    {hasAbroadProduct
+     ? currency(otcAdvancePaymentAmount || 0)
+     : currency(savedTotalWithDelivery + savedTotalPrice - discount)}
+   </Typography>
+
+   <Divider mb="1rem" />
+
+   {hasAbroadProduct && (
+    // <Typography fontSize="13px" color="text.hint" display="block" fontWeight="600">
+    //   Pay on Delivery {currency(savedTotalPrice)} + Shipping & Courier
+    //   Charge
+    // </Typography>
+
+    <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
+     <Box sx={{ flex: 1 }}>
+      <Box sx={{ display: "flex", gap: 0.5 }}>
+       <Tooltip
+        title={
+         <>
+          Shipping & Courier Charge will be calculated based on actual weight &
+          dimensions when the product is in-house by Tizaraa
+          <br />
+          -
+          <br />
+          পণ্যটি Tizaraa-তে পৌঁছানোর পর, প্রকৃত ওজন ও মাত্রার ভিত্তিতে শিপিং ও
+          কুরিয়ার চার্জ নির্ধারণ করা হবে
+         </>
+        }
+        arrow
+        placement="top"
+       >
+        <InfoOutlinedIcon
+         fontSize="small"
+         style={{ color: "#E94560" }}
+         sx={{ opacity: 0.7 }}
+        />
+       </Tooltip>
+       <Typography fontSize="13px" color="text.primary">
+        Pay on Delivery {currency(Math.ceil(savedTotalPrice))} + Shipping &
+        Courier Charge
+       </Typography>
+      </Box>
+     </Box>
+    </Box>
+   )}
+
+   {/* <Typography
         fontSize="25px"
         fontWeight="600"
         lineHeight="1"
@@ -1132,6 +1116,6 @@ export default function CheckoutSummary({ deliveryCharge }) {
       >
         {currency(savedTotalWithDelivery + savedTotalPrice - discount)}
       </Typography> */}
-    </Card1>
-  );
+  </Card1>
+ );
 }
