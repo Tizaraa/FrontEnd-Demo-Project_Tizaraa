@@ -219,11 +219,11 @@ export default function EmployeeSignup() {
                 type="text"
                 label={
                   <>
-                    Employee ID <span style={{ color: "#e94560" }}>*</span>
+                    Designation <span style={{ color: "#e94560" }}>*</span>
                   </>
                 }
-                placeholder="Enter Your Employee ID"
-                errorText={errors.employee_id?.message}
+                placeholder="Enter Your Designation"
+                errorText={errors.designation?.message}
               />
             )}
           />
