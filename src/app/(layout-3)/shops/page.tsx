@@ -816,7 +816,6 @@
 "use client";
 import { Fragment, useEffect, useState, useRef } from "react";
 import Grid from "@component/grid/Grid";
-import axios from "axios";
 import FlexBox from "@component/FlexBox";
 import ShopCard1 from "@sections/shop/ShopCard1";
 import { H2 } from "@component/Typography";
@@ -829,6 +828,7 @@ import Image from "next/image";
 import NextImage from "@component/NextImage";
 import VendorMapPage from "@sections/shop/VendorMapPage";
 import { Autocomplete, TextField } from "@mui/material";
+import axios from "@lib/axiosClient";
 
 const LoaderWrapper = styled.div`
  display: flex;
