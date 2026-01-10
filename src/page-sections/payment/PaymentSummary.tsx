@@ -168,7 +168,7 @@ import ProductCard20 from "@component/product-cards/ProductCard20";
 import { Tooltip } from "@mui/material";
 import { Box } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-export default function PaymentSummary() {
+export default function PaymentSummary({ user }: any) {
  const { state } = useAppContext();
  const [totalPrice, setTotalPrice] = useState(0);
  const [shippingCharge, setShippingCharge] = useState(0);
@@ -232,6 +232,7 @@ export default function PaymentSummary() {
 
  // Get selectedPaymentOption from sessionStorage for Pay Now (Advance)
  const selectedPaymentOption = sessionStorage.getItem("selectedPaymentOption");
+console.log(user);
 
  return (
   <Card1>
@@ -252,6 +253,16 @@ export default function PaymentSummary() {
      sellerId={item.sellerId}
     />
    ))}
+
+  { user?.type === "Corporate" && <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+    <Typography color="text.hint">Credit:</Typography>
+    <FlexBox alignItems="flex-end">
+     <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+      {user?.credit_balance|| 0.00}
+     </Typography>
+    </FlexBox>
+   </FlexBox>
+   }
 
    <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
     <Typography color="text.hint">Subtotal:</Typography>

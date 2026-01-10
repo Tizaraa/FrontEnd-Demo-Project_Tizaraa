@@ -12,9 +12,11 @@ import { useRouter } from "next/navigation";
 import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
 import Image from "next/image";
 import NextImage from "@component/NextImage";
+import CorporatePaymentForm from "@sections/payment/CorporatePaymentForm";
 
 export default function Checkout() {
  const [isLoggedIn, setIsLoggedIn] = useState(false);
+ const [user , setUser] = useState(null);
  const router = useRouter();
 
  useEffect(() => {
@@ -28,6 +30,15 @@ export default function Checkout() {
   }
  }, [router]);
 
+ useEffect(() => {
+  getUser();
+ }, []);
+
+ const getUser = async () => {
+  const userInfo =await authService.getUser();
+  setUser(userInfo);
+ };
+ 
  // If the user is not logged in, prevent rendering the components
  if (!isLoggedIn) {
   return null; // You can also return a loader or a placeholder here
@@ -63,11 +74,16 @@ export default function Checkout() {
    >
     <Grid container flexWrap="wrap-reverse" spacing={6}>
      <Grid item lg={8} md={8} xs={12}>
-      <PaymentForm />
+      {
+       user?.type === "Corporate"?
+       <CorporatePaymentForm />
+       :
+       <PaymentForm />
+      }
      </Grid>
 
      <Grid item lg={4} md={4} xs={12}>
-      <PaymentSummary />
+      <PaymentSummary user={user}/>
      </Grid>
     </Grid>
    </main>

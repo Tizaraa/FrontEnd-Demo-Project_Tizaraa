@@ -104,7 +104,7 @@ export default function OrderedItem() {
 
   // Workaround for same-tab updates (Next.js does not detect `storage` changes in the same tab)
   const interval = setInterval(() => {
-   syncProducts();
+  //  syncProducts();
   }, 1000); // Check every second
 
   return () => {
