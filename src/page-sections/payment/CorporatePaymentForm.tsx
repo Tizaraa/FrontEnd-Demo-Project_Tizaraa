@@ -91,13 +91,11 @@ console.log("userinfo?.credit_balance", Number(userinfo?.credit_balance));
 console.log("paymentMethod", paymentMethod);
 console.log("userinfo?.type", userinfo?.type);
 
-  if (paymentMethod === "Bay With Credit" && userinfo?.type === "Corporate" &&  savedPrice > Number(userinfo?.credit_balance)) {
+  if (paymentMethod === "Bay with credit" && userinfo?.type === "Corporate" &&  savedPrice > Number(userinfo?.credit_balance)) {
    toast.error("Your credit balance is not enough.");
     setIsHasLoading(false);
    return;
   }
- setIsHasLoading(false);
-return
   let shippingData = sessionStorage.getItem("address");
   // console.log("Session Storage Data:", shippingData);
   let userShippingdata = JSON.parse(shippingData);
