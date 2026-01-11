@@ -44,14 +44,16 @@ export default function Header({ isFixed, className }: HeaderProps) {
 
  useEffect(() => {
   setIsLoggedIn(authService.isAuthenticated());
-  const storedUserInfo = localStorage.getItem("userInfo");
 
-  if (storedUserInfo) {
-    try {
-      setUserInfo(JSON.parse(storedUserInfo));
-    } catch (error) {
-      console.error("Invalid userInfo in localStorage", error);
-      setUserInfo(null);
+  if (typeof window !== "undefined") {
+    const storedUserInfo = localStorage.getItem("userInfo");
+    if (storedUserInfo) {
+      try {
+        setUserInfo(JSON.parse(storedUserInfo));
+      } catch (error) {
+        console.error("Invalid userInfo in localStorage", error);
+        setUserInfo(null);
+      }
     }
   }
  }, []);

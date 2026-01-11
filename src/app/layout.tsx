@@ -174,6 +174,7 @@ import toast, { Toaster } from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
+import SetUser from "@context/app-context/SetUser";
 
 // Load font
 const openSans = Open_Sans({ subsets: ["latin"] });
@@ -243,6 +244,7 @@ export default async function RootLayout({
    <body className={openSans.className}>
     <StyledComponentsRegistry>
      <AppProvider>
+      <SetUser /> 
       <StyledContext>{children}</StyledContext>
       <ToastContainer />
       <Toaster position="top-right" />
