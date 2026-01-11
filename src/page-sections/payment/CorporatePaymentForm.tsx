@@ -130,8 +130,8 @@ export default function CorporatePaymentForm() {
       total_amount: total_ammount,
       advance_payment_percent: advance_payment_percent,
       productType: productType,
-      payment_type: "2",
-      payment_method: "2",
+      payment_type: paymentMethod,
+      payment_method: paymentMethod,
      },
      {
       headers: {
@@ -245,7 +245,7 @@ export default function CorporatePaymentForm() {
       delivery_charge: savedShipping || 0,
       delivery_type: expressDelivery,
       total_ammount: total_ammount,
-      payment_type: 1,
+      payment_type: paymentMethod,
       seller_id: cartData[0]?.sellerId,
       payment_method: paymentMethod,
       productType: productType,
