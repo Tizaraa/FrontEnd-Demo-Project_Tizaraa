@@ -468,9 +468,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import axios from "@lib/axiosClient";
 
 interface ProductDetails {
  product_name: string;
@@ -507,7 +507,7 @@ export default function ResponsiveCategory({ slug }: { slug: string }) {
   const fetchData = async () => {
    try {
     const response = await axios.get(
-     `${ApiBaseUrl.baseUrl}product/details/${slug}`
+     `product/details/${slug}`
     );
     const { productsingledetails, sitemap } = response.data;
 

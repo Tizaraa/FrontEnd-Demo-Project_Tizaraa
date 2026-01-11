@@ -466,6 +466,7 @@ import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_water
 import Image from "next/image";
 import NextImage from "@component/NextImage";
 import Loader from "@component/loader";
+import axios from "@lib/axiosClient";
 
 // Styled components for the search box
 const SearchContainer = styled(Box)`
@@ -593,41 +594,23 @@ export default function SearchResult({ sortOptions, slug }) {
    filters.province = selectedProvinces;
 
   try {
-   // const response = await fetch(
-   //   `${ApiBaseUrl.baseUrl}seller/products/${slug}`,
-   //   {
-   //     method: "POST",
-   //     headers: {
-   //       "Content-Type": "application/json",
-   //     },
-   //     body: JSON.stringify({
-   //       ...filters, // Include only valid filters
-   //       page: currentPage,
-   //       orderBy: selectedSortOption,
-   //     }),
-   //   }
-   // );
 
-   const response = await fetch(
+   const response = await axios.post(
     `${
      ApiBaseUrl.baseUrl
     }seller/products/${slug}?productsearch=${encodeURIComponent(searchTerm)}`,
-    {
-     method: "POST",
-     headers: { "Content-Type": "application/json" },
-     body: JSON.stringify({
+   {
       ...filters,
       page: currentPage,
       orderBy: selectedSortOption,
-     }),
-    }
+     }
    );
 
-   if (!response.ok) {
+   if (response.status !== 200) {
     throw new Error("Network response was not ok");
    }
 
-   const data = await response.json();
+   const data = await response.data;
    console.log("Shop Details:", data);
 
    // Reset products when fetching the first page

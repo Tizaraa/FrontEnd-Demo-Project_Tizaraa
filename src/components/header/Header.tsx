@@ -34,22 +34,26 @@ type HeaderProps = { isFixed?: boolean; className?: string };
 export default function Header({ isFixed, className }: HeaderProps) {
  const { state } = useAppContext();
  const [open, setOpen] = useState(false);
+ const [userInfo, setUserInfo] = useState<any>(null);
  const toggleSidenav = () => setOpen(!open);
  const [isLoggedIn, setIsLoggedIn] = useState(false);
  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
  const router = useRouter();
 
- // Get user info from local storage for set user name in header (user icon)
- const storedUserInfo = localStorage.getItem("userInfo");
- // Parse the stored string to an object
- const userInfo = JSON.parse(storedUserInfo);
- // Now you can access the name property
- // console.log("User Name: ", userInfo.name);
-
  const [isScrolled, setIsScrolled] = useState(false);
 
  useEffect(() => {
   setIsLoggedIn(authService.isAuthenticated());
+  const storedUserInfo = localStorage.getItem("userInfo");
+
+  if (storedUserInfo) {
+    try {
+      setUserInfo(JSON.parse(storedUserInfo));
+    } catch (error) {
+      console.error("Invalid userInfo in localStorage", error);
+      setUserInfo(null);
+    }
+  }
  }, []);
 
  useEffect(() => {
@@ -117,7 +121,7 @@ export default function Header({ isFixed, className }: HeaderProps) {
    <Menu
     handler={
      // <Tooltip title="User">
-     <Tooltip title={userInfo.name || "User"}>
+     <Tooltip title={userInfo?.name || "User"}>
       <IconButton ml="1rem" bg="gray.200" p="8px">
        <Icon size="28px">user</Icon>
       </IconButton>

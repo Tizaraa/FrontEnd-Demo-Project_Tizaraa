@@ -1,7 +1,6 @@
 "use client";
 
 import React, { Fragment, useState, useEffect } from "react";
-import axios from "axios";
 import DOMPurify from "dompurify";
 import ResponsiveCategory from "./ResponsiveCategory";
 import ProductIntro from "@component/products/ProductIntro";
@@ -20,6 +19,7 @@ import Box from "@component/Box";
 import { H5 } from "@component/Typography";
 import ProductReview from "@component/products/ProductReview";
 import ProductDescription from "@component/products/ProductDescription";
+import axios from "@lib/axiosClient";
 
 const LoaderWrapper = styled.div`
  display: flex;
@@ -30,7 +30,7 @@ const LoaderWrapper = styled.div`
 async function fetchProductData(slug: string) {
  try {
   const response = await axios.get(
-   `${ApiBaseUrl.baseUrl}product/details/${slug}`
+   `product/details/${slug}`
   );
   console.log("product details from shipping component:-:", response.data);
   return response.data;

@@ -609,6 +609,7 @@ import { useState, useEffect } from "react";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import axios from "@lib/axiosClient";
 
 const LoaderWrapper = styled.div`
  display: flex;
@@ -724,12 +725,9 @@ export default function ShopIntroCard({ slug }: Props) {
  useEffect(() => {
   const fetchSingleShop = async () => {
    try {
-    const response = await fetch(`${ApiBaseUrl.baseUrl}seller/profile/${slug}`);
+    const response = await axios.get(`${ApiBaseUrl.baseUrl}seller/profile/${slug}`); 
 
-    const data = await response.json();
-    console.log("data.sellerDetails");
-    console.log(data.sellerDetails.latlon);
-
+    const data = response.data
     setShop(data);
    } catch (err) {
     setError("Failed to load shop data");

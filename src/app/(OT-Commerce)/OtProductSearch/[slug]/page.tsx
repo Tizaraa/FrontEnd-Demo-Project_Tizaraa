@@ -1,7 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
 import ProductDetails from "./ProductDetails";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import ResponsiveCategory from "./ResponsiveCategory";
 
@@ -9,7 +9,7 @@ import ResponsiveCategory from "./ResponsiveCategory";
 async function fetchProductData(slug: string) {
  try {
   const response = await axios.get(
-   `${ApiBaseUrl.baseUrl}product/details/${slug}`
+   `product/details/${slug}`
   );
   // console.log(response.data.sitemap);
 

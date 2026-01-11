@@ -299,6 +299,7 @@
 
 "use client";
 
+import useFetcher from "@hook/useFetcher";
 import {
  useMemo,
  useReducer,
@@ -552,9 +553,16 @@ const useLocalStorage = (key: string, initialValue: any) => {
 
 // AppProvider component
 export function AppProvider({ children }: PropsWithChildren) {
+  const {data:profile}= useFetcher(`v1/user/profile`)
  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
  const [isMounted, setIsMounted] = useState(false);
  // const [storedCart, setStoredCart] = useLocalStorage("cart", []);
+
+ useEffect(() => {
+  if (typeof window !== "undefined" && profile?.profile) {
+    localStorage.setItem("userInfo",JSON.stringify(profile?.profile))
+  }   
+ }, [profile]);
 
  // useEffect(() => {
  //   setIsMounted(true);

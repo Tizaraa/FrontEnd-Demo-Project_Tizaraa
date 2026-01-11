@@ -1,7 +1,6 @@
 "use client";
 
 import React, { Fragment, useState, useEffect } from "react";
-import axios from "axios";
 import DOMPurify from "dompurify";
 import ResponsiveCategory from "./ResponsiveCategory";
 import ProductIntro from "@component/products/ProductIntro";
@@ -15,6 +14,7 @@ import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import { ProductCard1 } from "@component/product-cards";
 import Loading from "./loading";
+import axios from "@lib/axiosClient";
 const LoaderWrapper = styled.div`
  display: flex;
  justify-content: center;

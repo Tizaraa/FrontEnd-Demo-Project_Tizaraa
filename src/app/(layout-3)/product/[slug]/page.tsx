@@ -717,7 +717,6 @@
 import React from "react";
 import { Metadata } from "next";
 import ProductDetails from "./ProductDetails";
-import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import ResponsiveCategory from "./ResponsiveCategory";
 
@@ -725,6 +724,7 @@ import ResponsiveCategory from "./ResponsiveCategory";
 import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
 import Image from "next/image";
 import NextImage from "@component/NextImage";
+import axios from "@lib/axiosClient";
 
 // Fetch product data for server-side metadata
 async function fetchProductData(slug: string) {
