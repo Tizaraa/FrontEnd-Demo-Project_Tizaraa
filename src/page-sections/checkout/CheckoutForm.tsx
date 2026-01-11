@@ -101,9 +101,9 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  //   }
  // };
 
- const handlePayment = () => {
+ const handlePayment = async () => {
   const addressData = sessionStorage.getItem("address");
-  const user = authService.getUser();
+  const user = await authService.getUser();
 
   if (user?.type !== "Corporate" && !addressData) {
    // Stop loading first

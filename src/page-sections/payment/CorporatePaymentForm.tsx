@@ -107,7 +107,7 @@ export default function CorporatePaymentForm() {
 
   let cart = cartData;
   
-  if (paymentMethod === "Online Payment") {
+  if (paymentMethod === "2") {
    try {
     const response = await axios.post(
      `${ApiBaseUrl.baseUrl}pay-via-ajax`,
@@ -130,8 +130,8 @@ export default function CorporatePaymentForm() {
       total_amount: total_ammount,
       advance_payment_percent: advance_payment_percent,
       productType: productType,
-      payment_type: "Online Payment",
-      payment_method: "Online Payment",
+      payment_type: "2",
+      payment_method: "2",
      },
      {
       headers: {
@@ -426,16 +426,16 @@ export default function CorporatePaymentForm() {
        <PaymentCheckBox
         mb="1.5rem"
         color="secondary"
-        name="cod"
+        name="1"
         onChange={handlePaymentMethodChange}
-        checked={paymentMethod === "cod"}
+        checked={paymentMethod === "1"}
         label={
          <div
           style={{
            width: "100px",
            height: "120px",
            boxShadow:
-            paymentMethod === "cod"
+            paymentMethod === "1"
              ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
              : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
            display: "flex",
@@ -444,19 +444,19 @@ export default function CorporatePaymentForm() {
            justifyContent: "center",
            padding: "8px",
            background:
-            paymentMethod === "cod" ? "rgba(233, 69, 96, 0.05)" : "white",
+            paymentMethod === "1" ? "rgba(233, 69, 96, 0.05)" : "white",
            transition: "all 0.3s ease",
            boxSizing: "border-box",
            borderRadius: "8px",
            border:
-            paymentMethod === "cod"
+            paymentMethod === "1"
              ? "1px solid #E94560"
              : "1px solid transparent",
            position: "relative",
           }}
          >
           {/* More visible check indicator */}
-          {paymentMethod === "cod" && (
+          {paymentMethod === "1" && (
            <div
             style={{
              position: "absolute",
@@ -498,8 +498,8 @@ export default function CorporatePaymentForm() {
             width: "60px",
             height: "60px",
             marginBottom: "8px",
-            filter: paymentMethod === "cod" ? "none" : "grayscale(20%)",
-            opacity: paymentMethod === "cod" ? 1 : 0.8,
+            filter: paymentMethod === "1" ? "none" : "grayscale(20%)",
+            opacity: paymentMethod === "1" ? 1 : 0.8,
            }}
            priority
           />
@@ -508,7 +508,7 @@ export default function CorporatePaymentForm() {
             fontSize: "14px",
             fontWeight: "600",
             textAlign: "center",
-            color: paymentMethod === "cod" ? "#E94560" : "#333",
+            color: paymentMethod === "1" ? "#E94560" : "#333",
            }}
           >
            Cash on Delivery
@@ -522,16 +522,16 @@ export default function CorporatePaymentForm() {
       <PaymentCheckBox
        mb="1.5rem"
        color="secondary"
-       name="Online Payment"
+       name="2"
        onChange={handlePaymentMethodChange}
-       checked={paymentMethod === "Online Payment"}
+       checked={paymentMethod === "2"}
        label={
         <div
          style={{
           width: "100px",
           height: "120px",
           boxShadow:
-           paymentMethod === "Online Payment"
+           paymentMethod === "2"
             ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
             : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
           display: "flex",
@@ -540,21 +540,21 @@ export default function CorporatePaymentForm() {
           justifyContent: "center",
           padding: "8px",
           background:
-           paymentMethod === "Online Payment"
+           paymentMethod === "2"
             ? "rgba(233, 69, 96, 0.05)"
             : "white",
           transition: "all 0.3s ease",
           boxSizing: "border-box",
           borderRadius: "8px",
           border:
-           paymentMethod === "Online Payment"
+           paymentMethod === "2"
             ? "1px solid #E94560"
             : "1px solid transparent",
           position: "relative",
          }}
         >
          {/* Check indicator */}
-         {paymentMethod === "Online Payment" && (
+         {paymentMethod === "2" && (
           <div
            style={{
             position: "absolute",
@@ -588,15 +588,15 @@ export default function CorporatePaymentForm() {
          )}
 
          <PaymentImage
-          alt="Online Payment"
+          alt="2"
           src={onlinePayment}
           style={{
            width: "60px",
            height: "60px",
            marginBottom: "8px",
            filter:
-            paymentMethod === "Online Payment" ? "none" : "grayscale(20%)",
-           opacity: paymentMethod === "Online Payment" ? 1 : 0.8,
+            paymentMethod === "2" ? "none" : "grayscale(20%)",
+           opacity: paymentMethod === "2" ? 1 : 0.8,
           }}
           priority
          />
@@ -605,7 +605,7 @@ export default function CorporatePaymentForm() {
            fontSize: "14px",
            fontWeight: "600",
            textAlign: "center",
-           color: paymentMethod === "Online Payment" ? "#E94560" : "#333",
+           color: paymentMethod === "2" ? "#E94560" : "#333",
           }}
          >
           Online Payment
@@ -618,16 +618,16 @@ export default function CorporatePaymentForm() {
       <PaymentCheckBox
        mb="1.5rem"
        color="secondary"
-       name="Bay with credit"
+       name="4"
        onChange={handlePaymentMethodChange}
-       checked={paymentMethod === "Bay with credit"}
+       checked={paymentMethod === "4"}
        label={
         <div
          style={{
           width: "100px",
           height: "120px",
           boxShadow:
-           paymentMethod === "Bay with credit"
+           paymentMethod === "4"
             ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
             : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
           display: "flex",
@@ -636,21 +636,21 @@ export default function CorporatePaymentForm() {
           justifyContent: "center",
           padding: "8px",
           background:
-           paymentMethod === "Bay with credit"
+           paymentMethod === "4"
             ? "rgba(233, 69, 96, 0.05)"
             : "white",
           transition: "all 0.3s ease",
           boxSizing: "border-box",
           borderRadius: "8px",
           border:
-           paymentMethod === "Bay with credit"
+           paymentMethod === "4"
             ? "1px solid #E94560"
             : "1px solid transparent",
           position: "relative",
          }}
         >
          {/* Check indicator */}
-         {paymentMethod === "Bay with credit" && (
+         {paymentMethod === "4" && (
           <div
            style={{
             position: "absolute",
@@ -691,8 +691,8 @@ export default function CorporatePaymentForm() {
            height: "60px",
            marginBottom: "8px",
            filter:
-            paymentMethod === "Bay with credit" ? "none" : "grayscale(20%)",
-           opacity: paymentMethod === "Bay with credit" ? 1 : 0.8,
+            paymentMethod === "4" ? "none" : "grayscale(20%)",
+           opacity: paymentMethod === "4" ? 1 : 0.8,
           }}
           priority
          />
@@ -701,7 +701,7 @@ export default function CorporatePaymentForm() {
            fontSize: "14px",
            fontWeight: "600",
            textAlign: "center",
-           color: paymentMethod === "Bay with credit" ? "#E94560" : "#333",
+           color: paymentMethod === "4" ? "#E94560" : "#333",
           }}
          >
           Bay with credit

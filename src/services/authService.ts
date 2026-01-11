@@ -98,7 +98,7 @@ const authService = {
   return localStorage.getItem("token");
  },
 
- getUser: (): UserInfo | null => {
+ getUser: async (): Promise<UserInfo | null> => {
   const userInfoString = localStorage.getItem("userInfo");
   if (userInfoString) {
    const userInfo: UserInfo = JSON.parse(userInfoString);
