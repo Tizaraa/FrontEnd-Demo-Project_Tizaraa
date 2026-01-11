@@ -86,10 +86,6 @@ export default function CorporatePaymentForm() {
   const savedPrice = parseFloat(
    sessionStorage.getItem("savedTotalPrice") || "0"
   );
-console.log("savedPrice", savedPrice);
-console.log("userinfo?.credit_balance", Number(userinfo?.credit_balance));
-console.log("paymentMethod", paymentMethod);
-console.log("userinfo?.type", userinfo?.type);
 
   if (paymentMethod === "Bay with credit" && userinfo?.type === "Corporate" &&  savedPrice > Number(userinfo?.credit_balance)) {
    toast.error("Your credit balance is not enough.");
