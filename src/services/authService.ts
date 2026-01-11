@@ -19,6 +19,16 @@ interface UserInfo {
  created_at: string; // ISO date string
  updated_at: string | null; // Can be null
  user_vercode: string | null; // Can be null, add if applicable
+ type?: string | null; 
+ employee_id?: number | null; 
+ nid?: number | null; 
+ designation?: string | null; 
+ credit_limit?: number | null; 
+ credit_balance?: number | null; 
+ purchase_limit?: number | null; 
+ purchase_balance?: number | null; 
+ employee_status?: string | null; 
+ company_name?: string | null; 
 }
 
 interface RegisterResponse {
@@ -88,7 +98,7 @@ const authService = {
   return localStorage.getItem("token");
  },
 
- getUser: async (): Promise<UserInfo | null> => {
+ getUser: (): UserInfo | null => {
   const userInfoString = localStorage.getItem("userInfo");
   if (userInfoString) {
    const userInfo: UserInfo = JSON.parse(userInfoString);
