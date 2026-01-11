@@ -103,8 +103,9 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
 
  const handlePayment = () => {
   const addressData = sessionStorage.getItem("address");
+  const user = authService.getUser();
 
-  if (!addressData) {
+  if (user?.type !== "Corporate" && !addressData) {
    // Stop loading first
    setIsHasPayLoading(false);
 
