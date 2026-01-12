@@ -69,13 +69,13 @@ export default function OrderedItem() {
    );
 
    if (cartItem) {
-    const productDetails = await fetchProductDetails(item.productId);
+    // const productDetails = await fetchProductDetails(item.productId);
 
     updatedSelectedProducts.push({
      ...item,
      qty: cartItem.qty,
      total_amount: cartItem.price * cartItem.qty,
-     ...productDetails,
+    //  ...productDetails,
     });
    }
   }

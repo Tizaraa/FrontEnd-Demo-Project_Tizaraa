@@ -184,8 +184,14 @@ export default function Checkout() {
  // ====== SYNC CART WITH BACKEND ======
  useEffect(() => {
   const syncCart = async () => {
+   try {
     const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    if (!localCart.length) return;
+    dispatch({ type: "SET_CART", payload: localCart });
+   } catch (error) {
+    console.error("Cart sync failed:", error);
+   } finally {
+    setLoading(false);
+   }
   };
 
   if (isLoggedIn) syncCart();
