@@ -23,6 +23,7 @@ import { CircularProgress, LinearProgress, Tooltip } from "@mui/material";
 export default function CheckoutAddress({
  setDeliveryCharge,
  onAddressChange,
+ seller_type
 }) {
  const [addresses, setAddresses] = useState<Address[]>([]);
  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
@@ -111,8 +112,10 @@ export default function CheckoutAddress({
  useEffect(() => {
   const fetchAddresses = async () => {
    try {
-    const response = await axios.get(`user/address`);
-    const fetchedAddresses = response.data.user;
+    const response = await axios.get(`user/address`,{
+      params:{seller_type}
+    });
+    const fetchedAddresses = response.data?.address || [];
     setAddresses(fetchedAddresses);
     onAddressChange(fetchedAddresses.length > 0, true);
 
@@ -373,7 +376,9 @@ export default function CheckoutAddress({
      );
     } else {
      return (
-      <FlexBox
+    <>
+    {seller_type.toLocaleLowerCase() !== "corporate" &&
+        <FlexBox
        flexDirection="column"
        mb="1rem"
        p="0.5rem"
@@ -426,11 +431,13 @@ export default function CheckoutAddress({
         </Grid>
        </Grid>
       </FlexBox>
+    }
+    </>
      );
     }
    })()}
 
-   {addresses.length > 0 ? (
+   {addresses?.length > 0 ? (
     addresses.map((item) => (
      <AddressItem
       key={item.id}

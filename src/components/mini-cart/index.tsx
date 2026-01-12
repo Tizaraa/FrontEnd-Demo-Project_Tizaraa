@@ -21,6 +21,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { FaTrashAlt } from "react-icons/fa";
 import axios from "@lib/axiosClient";
+import { AxiosError } from "axios";
 
 type MiniCartProps = { toggleSidenav?: () => void };
 
@@ -214,9 +215,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
 
   try {
    // ✅ Price Check API only if logged in
-   const response = await axios.post(`${ApiBaseUrl.baseUrl}checkout/check/pricing`, { orders: selectedItems }
- 
-   );
+   const response = await axios.post(`${ApiBaseUrl.baseUrl}checkout/check/pricing`, { orders: selectedItems });
 
    const data = await response.data?.products;
 if (response.data?.success) {
@@ -260,9 +259,12 @@ if (response.data?.success) {
    toast.error(response.data?.message || "Something went wrong");
 }
  
-  } catch (error: any) {
-   console.error("Price check failed:", error);
-   toast.error("Price check failed. Please try again.");
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {  
+      toast.error(error.response.data?.message || "Price check failed. Please try again.");
+    }else{
+      toast.error("Price check failed. Please try again.");
+    }
   } finally {
    setLoading(false);
   }

@@ -184,49 +184,8 @@ export default function Checkout() {
  // ====== SYNC CART WITH BACKEND ======
  useEffect(() => {
   const syncCart = async () => {
-   try {
     const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
     if (!localCart.length) return;
-
-    const response = await fetch(
-     `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
-     {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ orders: localCart }),
-     }
-    );
-
-    if (!response.ok) {
-     const text = await response.text();
-     console.error("Price check failed:", text);
-     return;
-    }
-
-    const data = await response.json();
-
-    const updatedCart = localCart.map((item: any) => {
-     const updatedItem = data.find((d: any) => d.product_id === item.productId);
-     if (updatedItem) {
-      const newPrice = parseFloat(updatedItem.price);
-      return {
-       ...item,
-       price: newPrice,
-       discountPrice: item.discountPrice ? newPrice : null,
-      };
-     }
-     return item;
-    });
-
-    // Save updated cart
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
-    dispatch({ type: "SET_CART", payload: updatedCart });
-   } catch (error) {
-    console.error("Cart sync failed:", error);
-   } finally {
-    setLoading(false);
-   }
   };
 
   if (isLoggedIn) syncCart();

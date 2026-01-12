@@ -21,6 +21,7 @@ import ExpressedDelivery from "./ExpressedDelivery";
 export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  const router = useRouter();
  const [isMobile, setIsMobile] = useState(false);
+ const [seller_type, setSellerType] = useState("");
  const [isTablet, setIsTablet] = useState(false);
  const [hasAddress, setHasAddress] = useState(false);
  const [isAddressChecked, setIsAddressChecked] = useState(false);
@@ -68,6 +69,15 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  };
 
  useEffect(() => {
+      if (typeof window !== "undefined") {
+            setTimeout(() => {
+            const seller_type = localStorage.getItem("seller_type") || "";
+            setSellerType(seller_type.toLowerCase());
+            }, 100);
+      }
+ }, []);
+
+ useEffect(() => {
   const cart = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
   const totalPrice = parseFloat(
    sessionStorage.getItem("savedTotalPrice") || "0"
@@ -101,11 +111,13 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  //   }
  // };
 
+
+
  const handlePayment = async () => {
   const addressData = sessionStorage.getItem("address");
-  const user = await authService.getUser();
 
-  if (user?.type !== "Corporate" && !addressData) {
+
+  if (seller_type !== "corporate" && !addressData) {
    // Stop loading first
    setIsHasPayLoading(false);
 
@@ -152,7 +164,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   <>
    <ToastContainer autoClose={4000} />
 
-   <FlexBox style={flexBoxStyle}>
+   {seller_type.toLocaleLowerCase() !== "corporate" && <FlexBox style={flexBoxStyle}>
     <Typography>Billing and Shipping</Typography>
     <Button
      px="2rem"
@@ -163,13 +175,14 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
     >
      {isLoading ? <BeatLoader size={18} color="#E94560" /> : "Add New Address"}
     </Button>
-   </FlexBox>
+   </FlexBox>}
 
    {/* <CheckoutAddress /> */}
-   <CheckoutAddress
+  <CheckoutAddress
+  seller_type={seller_type}
     setDeliveryCharge={setDeliveryCharge}
     onAddressChange={handleAddressChange}
-   />
+   /> 
    <OrderedItem></OrderedItem>
 
    <Grid container spacing={7} style={{ marginTop: "2px" }}>
