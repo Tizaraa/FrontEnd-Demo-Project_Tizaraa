@@ -10,7 +10,6 @@ import FlexBox from "@component/FlexBox";
 import { Button } from "@component/buttons";
 import  { H6, SemiSpan } from "@component/Typography";
 import useWindowSize from "@hook/useWindowSize";
-import axios from "axios";
 import { useAppContext } from "@context/app-context";
 import CheckBox from "@component/CheckBox";
 import ApiBaseUrl from "api/ApiBaseUrl";
@@ -25,6 +24,7 @@ import NagadImage from "../../../public/assets/images/payment/Nagad.avif";
 import BkashImage from "../../../public/assets/images/payment/Bkash.png";
 import BeatLoader from "react-spinners/BeatLoader";
 import authService from "services/authService";
+import axios from "@lib/axiosClient";
 
 export default function CorporatePaymentForm() {
  const { push } = useRouter();
@@ -518,102 +518,6 @@ export default function CorporatePaymentForm() {
        />
       )}
 
-      {/* Online Payment */}
-      <PaymentCheckBox
-       mb="1.5rem"
-       color="secondary"
-       name="2"
-       onChange={handlePaymentMethodChange}
-       checked={paymentMethod === "2"}
-       label={
-        <div
-         style={{
-          width: "100px",
-          height: "120px",
-          boxShadow:
-           paymentMethod === "2"
-            ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
-            : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "8px",
-          background:
-           paymentMethod === "2"
-            ? "rgba(233, 69, 96, 0.05)"
-            : "white",
-          transition: "all 0.3s ease",
-          boxSizing: "border-box",
-          borderRadius: "8px",
-          border:
-           paymentMethod === "2"
-            ? "1px solid #E94560"
-            : "1px solid transparent",
-          position: "relative",
-         }}
-        >
-         {/* Check indicator */}
-         {paymentMethod === "2" && (
-          <div
-           style={{
-            position: "absolute",
-            top: "4px",
-            right: "4px",
-            width: "18px",
-            height: "18px",
-            backgroundColor: "#E94560",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-           }}
-          >
-           <svg
-            width="10"
-            height="8"
-            viewBox="0 0 10 8"
-            fill="none"
-            style={{ marginLeft: "1px" }}
-           >
-            <path
-             d="M1 4L3.5 6.5L9 1"
-             stroke="white"
-             strokeWidth="2"
-             strokeLinecap="round"
-             strokeLinejoin="round"
-            />
-           </svg>
-          </div>
-         )}
-
-         <PaymentImage
-          alt="2"
-          src={onlinePayment}
-          style={{
-           width: "60px",
-           height: "60px",
-           marginBottom: "8px",
-           filter:
-            paymentMethod === "2" ? "none" : "grayscale(20%)",
-           opacity: paymentMethod === "2" ? 1 : 0.8,
-          }}
-          priority
-         />
-         <span
-          style={{
-           fontSize: "14px",
-           fontWeight: "600",
-           textAlign: "center",
-           color: paymentMethod === "2" ? "#E94560" : "#333",
-          }}
-         >
-          Online Payment
-         </span>
-        </div>
-       }
-      />
-
       {/* Bay with credit */} 
       <PaymentCheckBox
        mb="1.5rem"
@@ -705,6 +609,102 @@ export default function CorporatePaymentForm() {
           }}
          >
           Bay with credit
+         </span>
+        </div>
+       }
+      />
+
+      {/* Online Payment */}
+      <PaymentCheckBox
+       mb="1.5rem"
+       color="secondary"
+       name="2"
+      //  onChange={handlePaymentMethodChange}
+       checked={paymentMethod === "2"}
+       label={
+        <div
+         style={{
+          width: "100px",
+          height: "120px",
+          boxShadow:
+           paymentMethod === "2"
+            ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
+            : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "8px",
+          background: "rgba(0, 0, 0, 0.5)", // Disabled background
+          pointerEvents: "none", // Disable interactions
+          // background:
+          //  paymentMethod === "2"
+          //   ? "rgba(233, 69, 96, 0.05)"
+          //   : "white",
+          transition: "all 0.3s ease",
+          boxSizing: "border-box",
+          borderRadius: "8px",
+          border:
+           paymentMethod === "2"
+            ? "1px solid #E94560"
+            : "1px solid transparent",
+          position: "relative",
+         }}
+        >
+         {/* Check indicator */}
+         {paymentMethod === "2" && (
+          <div
+           style={{
+            position: "absolute",
+            top: "4px",
+            right: "4px",
+            width: "18px",
+            height: "18px",
+            backgroundColor: "#E94560",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+           }}
+          >
+           <svg
+            width="10"
+            height="8"
+            viewBox="0 0 10 8"
+            fill="none"
+            style={{ marginLeft: "1px" }}
+           >
+            <path
+             d="M1 4L3.5 6.5L9 1"
+             stroke="white"
+             strokeWidth="2"
+             strokeLinecap="round"
+             strokeLinejoin="round"
+            />
+           </svg>
+          </div>
+         )}
+
+         <PaymentImage
+          alt="2"
+          src={onlinePayment}
+          style={{
+           width: "60px",
+           height: "60px",
+           marginBottom: "8px",
+           filter: "grayscale(100%) opacity(50%)",
+          }}
+          priority
+         />
+         <span
+          style={{
+           fontSize: "14px",
+           fontWeight: "600",
+           textAlign: "center",
+           color: paymentMethod === "2" ? "#E94560" : "#333",
+          }}
+         >
+          Online Payment
          </span>
         </div>
        }
