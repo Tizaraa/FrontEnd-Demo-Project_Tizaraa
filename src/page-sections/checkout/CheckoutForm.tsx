@@ -29,6 +29,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  const [isHasLoading, setIsHasLoading] = useState(false);
  const [isHasPayLoading, setIsHasPayLoading] = useState(false);
  const [isLoggedIn, setIsLoggedIn] = useState(false);
+ console.log("seller_type", seller_type);
 
  // const [isExpressedDelivery, setIsExpressedDelivery] = useState(false);
 
@@ -69,12 +70,12 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  };
 
  useEffect(() => {
-      if (typeof window !== "undefined") {
-            setTimeout(() => {
-            const seller_type = localStorage.getItem("seller_type") || "";
-            setSellerType(seller_type.toLowerCase());
-            }, 100);
-      }
+  if (typeof window !== "undefined") {
+   setTimeout(() => {
+    const seller_type = localStorage.getItem("seller_type") || "";
+    setSellerType(seller_type.toLowerCase());
+   }, 100);
+  }
  }, []);
 
  useEffect(() => {
@@ -111,16 +112,12 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  //   }
  // };
 
-
-
  const handlePayment = async () => {
   const addressData = sessionStorage.getItem("address");
 
-
-  if (seller_type !== "corporate" && !addressData) {
+  if (!addressData) {
    // Stop loading first
    setIsHasPayLoading(false);
-
    toast.error("Please select or add an address before proceeding to pay", {
     autoClose: 2000,
    });
@@ -164,25 +161,27 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   <>
    <ToastContainer autoClose={4000} />
 
-   {seller_type.toLocaleLowerCase() !== "corporate" && <FlexBox style={flexBoxStyle}>
-    <Typography>Billing and Shipping</Typography>
-    <Button
-     px="2rem"
-     color="primary"
-     bg="primary.light"
-     my="2rem"
-     onClick={handleAddNewAddress}
-    >
-     {isLoading ? <BeatLoader size={18} color="#E94560" /> : "Add New Address"}
-    </Button>
-   </FlexBox>}
+   {seller_type.toLocaleLowerCase() !== "corporate" && (
+    <FlexBox style={flexBoxStyle}>
+     <Typography>Billing and Shipping</Typography>
+     <Button
+      px="2rem"
+      color="primary"
+      bg="primary.light"
+      my="2rem"
+      onClick={handleAddNewAddress}
+     >
+      {isLoading ? <BeatLoader size={18} color="#E94560" /> : "Add New Address"}
+     </Button>
+    </FlexBox>
+   )}
 
    {/* <CheckoutAddress /> */}
-  <CheckoutAddress
-  seller_type={seller_type}
+   <CheckoutAddress
+    seller_type={seller_type}
     setDeliveryCharge={setDeliveryCharge}
     onAddressChange={handleAddressChange}
-   /> 
+   />
    <OrderedItem></OrderedItem>
 
    <Grid container spacing={7} style={{ marginTop: "2px" }}>

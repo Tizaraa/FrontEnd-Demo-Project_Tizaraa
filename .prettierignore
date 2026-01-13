@@ -1,2 +1,12 @@
-*
-!src/**
+.next
+.vscode
+node_modules
+public
+middleware.ts
+global.d.ts
+next-env.d.ts
+next.config.js
+dist
+build
+coverage
+out

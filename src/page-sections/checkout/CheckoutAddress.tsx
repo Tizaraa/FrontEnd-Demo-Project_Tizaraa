@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -23,7 +22,7 @@ import { CircularProgress, LinearProgress, Tooltip } from "@mui/material";
 export default function CheckoutAddress({
  setDeliveryCharge,
  onAddressChange,
- seller_type
+ seller_type,
 }) {
  const [addresses, setAddresses] = useState<Address[]>([]);
  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
@@ -112,8 +111,8 @@ export default function CheckoutAddress({
  useEffect(() => {
   const fetchAddresses = async () => {
    try {
-    const response = await axios.get(`user/address`,{
-      params:{seller_type}
+    const response = await axios.get(`user/address`, {
+     params: { seller_type },
     });
     const fetchedAddresses = response.data?.address || [];
     setAddresses(fetchedAddresses);
@@ -138,8 +137,9 @@ export default function CheckoutAddress({
     onAddressChange(false, false);
    }
   };
-
-  fetchAddresses();
+  setTimeout(() => {
+   fetchAddresses();
+  }, 100);
   fetchProvince();
  }, [authtoken, onAddressChange]);
 
@@ -376,71 +376,71 @@ export default function CheckoutAddress({
      );
     } else {
      return (
-    <>
-    {seller_type.toLocaleLowerCase() !== "corporate" &&
+      <>
+       {seller_type.toLocaleLowerCase() !== "corporate" && (
         <FlexBox
-       flexDirection="column"
-       mb="1rem"
-       p="0.5rem"
-       border="1px solid #ddd"
-       borderRadius="8px"
-       backgroundColor="#f7eded"
-      >
-       <Grid container spacing={2} alignItems="center">
-        <Grid item xs={6}>
-         <FlexBox alignItems="center">
-          <FaTruckFast style={{ fontSize: "24px", color: "#E94560" }} />
-          <label
-           htmlFor="expressDelivery"
-           style={{
-            marginLeft: "0.5rem",
-            fontSize: "14px",
-            fontWeight: "500",
-            color: "#333",
-           }}
-          >
-           <span style={{ color: "#E94560", fontWeight: "600" }}>
-            Delivery Options
-           </span>
-          </label>
-         </FlexBox>
-        </Grid>
-        <Grid item xs={6}>
-         <FlexBox alignItems="center" justifyContent="flex-end">
-          <input
-           checked={expressDelivery}
-           onChange={handleExpressDeliveryChange}
-           type="checkbox"
-           id="expressDelivery"
-           style={{ cursor: "pointer", accentColor: "#E94560" }}
-          />
-          <label
-           htmlFor="expressDelivery"
-           style={{
-            marginLeft: "0.5rem",
-            fontSize: "14px",
-            fontWeight: "500",
-            color: "#333",
-           }}
-          >
-           <span style={{ color: "#E94560", fontWeight: "600" }}>
-            Express Delivery
-           </span>
-          </label>
-         </FlexBox>
-        </Grid>
-       </Grid>
-      </FlexBox>
-    }
-    </>
+         flexDirection="column"
+         mb="1rem"
+         p="0.5rem"
+         border="1px solid #ddd"
+         borderRadius="8px"
+         backgroundColor="#f7eded"
+        >
+         <Grid container spacing={2} alignItems="center">
+          <Grid item xs={6}>
+           <FlexBox alignItems="center">
+            <FaTruckFast style={{ fontSize: "24px", color: "#E94560" }} />
+            <label
+             htmlFor="expressDelivery"
+             style={{
+              marginLeft: "0.5rem",
+              fontSize: "14px",
+              fontWeight: "500",
+              color: "#333",
+             }}
+            >
+             <span style={{ color: "#E94560", fontWeight: "600" }}>
+              Delivery Options
+             </span>
+            </label>
+           </FlexBox>
+          </Grid>
+          <Grid item xs={6}>
+           <FlexBox alignItems="center" justifyContent="flex-end">
+            <input
+             checked={expressDelivery}
+             onChange={handleExpressDeliveryChange}
+             type="checkbox"
+             id="expressDelivery"
+             style={{ cursor: "pointer", accentColor: "#E94560" }}
+            />
+            <label
+             htmlFor="expressDelivery"
+             style={{
+              marginLeft: "0.5rem",
+              fontSize: "14px",
+              fontWeight: "500",
+              color: "#333",
+             }}
+            >
+             <span style={{ color: "#E94560", fontWeight: "600" }}>
+              Express Delivery
+             </span>
+            </label>
+           </FlexBox>
+          </Grid>
+         </Grid>
+        </FlexBox>
+       )}
+      </>
      );
     }
    })()}
 
    {addresses?.length > 0 ? (
-    addresses.map((item) => (
+    addresses.map((item, i) => (
      <AddressItem
-      key={item.id}
+      key={i}
       item={item}
       isSelected={selectedAddress?.id === item.id}
       onSelect={handleSelect}
