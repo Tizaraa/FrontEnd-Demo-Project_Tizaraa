@@ -215,56 +215,61 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
 
   try {
    // ✅ Price Check API only if logged in
-   const response = await axios.post(`${ApiBaseUrl.baseUrl}checkout/check/pricing`, { orders: selectedItems });
+   const response = await axios.post(
+    `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
+    { orders: selectedItems }
+   );
 
    const data = await response.data?.products;
-if (response.data?.success) {
-     // Update cart prices
-   const updatedCart = state.cart.map((item) => {
-    const updatedItem = data.find((d: any) => d.product_id === item.productId);
-    if (updatedItem) {
-     const newPrice = parseFloat(updatedItem.price); 
-     return {
-      ...item,
-      price: newPrice,
-      discountPrice: item.discountPrice ? newPrice : null,
-     };
-    }
-    return item;
-   });
+   if (response.data?.success) {
+    // Update cart prices
+    const updatedCart = state.cart.map((item) => {
+     const updatedItem = data.find((d: any) => d.product_id === item.productId);
+     if (updatedItem) {
+      const newPrice = parseFloat(updatedItem.price);
+      return {
+       ...item,
+       price: newPrice,
+       discountPrice: item.discountPrice ? newPrice : null,
+      };
+     }
+     return item;
+    });
 
-   // Update app state first
-   dispatch({ type: "SET_CART", payload: updatedCart });
+    // Update app state first
+    dispatch({ type: "SET_CART", payload: updatedCart });
 
-   // Get selected items with updated prices
-   const updatedSelectedItems = updatedCart.filter((item) =>
-    state.selectedProducts.includes(item.id)
-   );
+    // Get selected items with updated prices
+    const updatedSelectedItems = updatedCart.filter((item) =>
+     state.selectedProducts.includes(item.id)
+    );
 
-   // Save updated cart & selected items with updated prices
-   localStorage.setItem("seller_type",response.data?.seller_type || '')
-   localStorage.setItem("cart", JSON.stringify(updatedCart));
-   sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
-   sessionStorage.setItem(
-    "selectedProducts",
-    JSON.stringify(updatedSelectedItems)
-   );
+    // Save updated cart & selected items with updated prices
+    localStorage.setItem("seller_type", response.data?.seller_type || "");
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
+    sessionStorage.setItem(
+     "selectedProducts",
+     JSON.stringify(updatedSelectedItems)
+    );
 
-   // Navigate to checkout
-   setTimeout(() => {
-    router.push("/checkout");
-    toggleSidenav();
-   }, 500);
-}else{
-   toast.error(response.data?.message || "Something went wrong");
-}
- 
+    // Navigate to checkout
+    setTimeout(() => {
+     router.refresh();
+     router.push("/checkout");
+     toggleSidenav();
+    }, 500);
+   } else {
+    toast.error(response.data?.message || "Something went wrong");
+   }
   } catch (error: unknown) {
-    if (error instanceof AxiosError) {  
-      toast.error(error.response.data?.message || "Price check failed. Please try again.");
-    }else{
-      toast.error("Price check failed. Please try again.");
-    }
+   if (error instanceof AxiosError) {
+    toast.error(
+     error.response.data?.message || "Price check failed. Please try again."
+    );
+   } else {
+    toast.error("Price check failed. Please try again.");
+   }
   } finally {
    setLoading(false);
   }

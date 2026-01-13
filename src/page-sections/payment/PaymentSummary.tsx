@@ -168,7 +168,11 @@ import ProductCard20 from "@component/product-cards/ProductCard20";
 import { Tooltip } from "@mui/material";
 import { Box } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-export default function PaymentSummary({ user }: any) {
+export default function PaymentSummary({
+ seller_type,
+}: {
+ seller_type: string;
+}) {
  const { state } = useAppContext();
  const [totalPrice, setTotalPrice] = useState(0);
  const [shippingCharge, setShippingCharge] = useState(0);
@@ -176,6 +180,21 @@ export default function PaymentSummary({ user }: any) {
  const [discount, setDiscount] = useState(0);
  const [newTotal, setNewTotal] = useState(0);
  const [isAbroadProduct, setIsAbroadProduct] = useState(false);
+ const [user, setUser] = useState(null);
+
+ useEffect(() => {
+  setTimeout(() => {
+   getUser();
+  }, 100);
+ }, []);
+
+ const getUser = async () => {
+  if (typeof window !== "undefined") {
+   const userInfo =
+    JSON.parse(localStorage.getItem("userInfo") || "{}") || null;
+   setUser(userInfo);
+  }
+ };
 
  useEffect(() => {
   // Check if any product is from abroad
@@ -232,7 +251,6 @@ export default function PaymentSummary({ user }: any) {
 
  // Get selectedPaymentOption from sessionStorage for Pay Now (Advance)
  const selectedPaymentOption = sessionStorage.getItem("selectedPaymentOption");
-console.log(user);
 
  return (
   <Card1>
@@ -254,15 +272,16 @@ console.log(user);
     />
    ))}
 
-  { user?.type === "Corporate" && <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-    <Typography color="text.hint">Credit:</Typography>
-    <FlexBox alignItems="flex-end">
-     <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-      {user?.credit_balance|| 0.00}
-     </Typography>
+   {seller_type.toLocaleLowerCase() === "corporate" && (
+    <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+     <Typography color="text.hint">Credit:</Typography>
+     <FlexBox alignItems="flex-end">
+      <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+       {user?.credit_balance || 0.0}
+      </Typography>
+     </FlexBox>
     </FlexBox>
-   </FlexBox>
-   }
+   )}
 
    <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
     <Typography color="text.hint">Subtotal:</Typography>

@@ -139,7 +139,7 @@ export default function CheckoutAddress({
   };
   setTimeout(() => {
    fetchAddresses();
-  }, 100);
+  }, 200);
   fetchProvince();
  }, [authtoken, onAddressChange]);
 
