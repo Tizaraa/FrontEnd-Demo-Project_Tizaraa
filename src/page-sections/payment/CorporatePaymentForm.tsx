@@ -1,20 +1,19 @@
-
 "use client";
 import { useEffect } from "react";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, Fragment, useState } from "react";
 import Box from "@component/Box";
 import Grid from "@component/grid/Grid";
 import { Card1 } from "@component/Card1";
 import FlexBox from "@component/FlexBox";
 import { Button } from "@component/buttons";
-import  { H6, SemiSpan } from "@component/Typography";
+import { H6, SemiSpan } from "@component/Typography";
 import useWindowSize from "@hook/useWindowSize";
 import { useAppContext } from "@context/app-context";
 import CheckBox from "@component/CheckBox";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import toast from "react-hot-toast"; // Import toast and ToastContainer
-import "react-toastify/dist/ReactToastify.css"; // Import styles for toast 
+import "react-toastify/dist/ReactToastify.css"; // Import styles for toast
 import PaymentCheckBox from "@component/PaymentCheckBox";
 import PaymentImage from "@component/PaymentImage";
 import cashOnDeliveryImage from "../../../public/assets/images/payment/cashOnDelivery.jpg";
@@ -25,6 +24,7 @@ import BkashImage from "../../../public/assets/images/payment/Bkash.png";
 import BeatLoader from "react-spinners/BeatLoader";
 import authService from "services/authService";
 import axios from "@lib/axiosClient";
+import { AxiosError } from "axios";
 
 export default function CorporatePaymentForm() {
  const { push } = useRouter();
@@ -75,6 +75,11 @@ export default function CorporatePaymentForm() {
 
  let authtoken = localStorage.getItem("token");
  const orderSubmit = async () => {
+  if (isLoggedIn) {
+   router.push("/payment");
+  } else {
+   router.push("/login");
+  }
   setIsHasLoading(true);
   if (isSubtotalZero) {
    toast.error("Your cart is empty. Please add items before proceeding.");
@@ -87,9 +92,13 @@ export default function CorporatePaymentForm() {
    sessionStorage.getItem("savedTotalPrice") || "0"
   );
 
-  if (paymentMethod === "Bay with credit" && userinfo?.type === "Corporate" &&  savedPrice > Number(userinfo?.credit_balance)) {
+  if (
+   paymentMethod.toString() === "4" &&
+   userinfo?.type === "Corporate" &&
+   savedPrice > Number(userinfo?.credit_balance)
+  ) {
    toast.error("Your credit balance is not enough.");
-    setIsHasLoading(false);
+   setIsHasLoading(false);
    return;
   }
   let shippingData = sessionStorage.getItem("address");
@@ -106,39 +115,30 @@ export default function CorporatePaymentForm() {
    cartData.length > 0 ? cartData[0]?.productType : "General";
 
   let cart = cartData;
-  
+
   if (paymentMethod === "2") {
    try {
-    const response = await axios.post(
-     `${ApiBaseUrl.baseUrl}pay-via-ajax`,
-     {
-      user_id: userinfo?.id,
-      seller_id: cartData[0]?.sellerId,
-      cus_name: userShippingdata?.shipping_name || userShippingdata?.name,
-      cus_email: userinfo?.email,
-      cus_phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
-      province_id:
-       userShippingdata?.shipping_province || userShippingdata?.province_id,
-      city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
-      area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
-      house_level:
-       userShippingdata?.selectedLandmark || userShippingdata?.landmark,
-      delivery_charge: savedShipping || 0,
-      cus_add1:
-       userShippingdata?.shipping_address1 || userShippingdata?.address,
-      currency: "BDT",
-      total_amount: total_ammount,
-      advance_payment_percent: advance_payment_percent,
-      productType: productType,
-      payment_type: paymentMethod,
-      payment_method: paymentMethod,
-     },
-     {
-      headers: {
-       Authorization: `Bearer ${authtoken}`,
-      },
-     }
-    );
+    const response = await axios.post(`pay-via-ajax`, {
+     user_id: userinfo?.id,
+     seller_id: cartData[0]?.sellerId,
+     cus_name: userShippingdata?.shipping_name || userShippingdata?.name,
+     cus_email: userinfo?.email,
+     cus_phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
+     province_id:
+      userShippingdata?.shipping_province || userShippingdata?.province_id,
+     city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
+     area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
+     house_level:
+      userShippingdata?.selectedLandmark || userShippingdata?.landmark,
+     delivery_charge: savedShipping || 0,
+     cus_add1: userShippingdata?.shipping_address1 || userShippingdata?.address,
+     currency: "BDT",
+     total_amount: total_ammount,
+     advance_payment_percent: advance_payment_percent,
+     productType: productType,
+     payment_type: paymentMethod,
+     payment_method: paymentMethod,
+    });
     // console.log("online Response:", response);
 
     let orderId = response.data?.orderid;
@@ -159,33 +159,24 @@ export default function CorporatePaymentForm() {
        }
 
        // Place order items for all products, including OTC
-       const response = await axios.post(
-        `${ApiBaseUrl.baseUrl}checkout/order-items`,
-        {
-         orders: [
-          {
-           delivery_charge: savedShipping,
-           user_id: userinfo.id,
-           seller_id: cartdata.sellerId,
-           order_id: orderId,
-           product_id: cartdata.productId,
-           color: cartdata.selectedColor,
-           size: cartdata.selectedSize,
-           attribute: cartdata.selectedSpecification,
-           qty: cartdata.qty,
-           note1: "lorem10",
-           single_amount: cartdata.price,
-           total_amount: cartdata.total_amount,
-          },
-         ],
-        },
-        {
-         headers: {
-          Authorization: `Bearer ${authtoken}`,
-          "Content-Type": "application/json",
+       const response = await axios.post(`checkout/order-items`, {
+        orders: [
+         {
+          delivery_charge: savedShipping,
+          user_id: userinfo.id,
+          seller_id: cartdata.sellerId,
+          order_id: orderId,
+          product_id: cartdata.productId,
+          color: cartdata.selectedColor,
+          size: cartdata.selectedSize,
+          attribute: cartdata.selectedSpecification,
+          qty: cartdata.qty,
+          note1: "lorem10",
+          single_amount: cartdata.price,
+          total_amount: cartdata.total_amount,
          },
-        }
-       );
+        ],
+       });
 
        console.log("Cart Item Response:", response.data);
       } catch (error) {
@@ -228,38 +219,34 @@ export default function CorporatePaymentForm() {
    }
   } else {
    try {
-    const orderResponse = await axios.post(
-     `${ApiBaseUrl.baseUrl}checkout/order`,
-     {
-      user_id: userinfo?.id,
-      name: userShippingdata?.shipping_name || userShippingdata?.name,
-      phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
-      email: userinfo?.email,
-      province_id:
-       userShippingdata?.shipping_province || userShippingdata?.province_id,
-      city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
-      area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
-      house_level:
-       userShippingdata?.selectedLandmark || userShippingdata?.landmark,
-      address: userShippingdata?.shipping_address1 || userShippingdata?.address,
-      delivery_charge: savedShipping || 0,
-      delivery_type: expressDelivery,
-      total_ammount: total_ammount,
-      payment_type: paymentMethod,
-      seller_id: cartData[0]?.sellerId,
-      payment_method: paymentMethod,
-      productType: productType,
-      promocode: promocode_price > 0 ? promocode : null,
-      promocode_price: promocode_price > 0 ? promocode_price : null,
-     },
-
-     {
-      headers: {
-       Authorization: `Bearer ${authtoken}`,
-      },
-     }
-    );
-
+    const orderResponse = await axios.post(`checkout/order`, {
+     user_id: userinfo?.id,
+     name: userShippingdata?.shipping_name || userShippingdata?.name,
+     phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
+     email: userinfo?.email,
+     province_id:
+      userShippingdata?.shipping_province || userShippingdata?.province_id,
+     city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
+     area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
+     house_level:
+      userShippingdata?.selectedLandmark || userShippingdata?.landmark,
+     address: userShippingdata?.shipping_address1 || userShippingdata?.address,
+     delivery_charge: savedShipping || 0,
+     delivery_type: expressDelivery,
+     total_ammount: total_ammount,
+     payment_type: paymentMethod,
+     seller_id: cartData[0]?.sellerId,
+     payment_method: paymentMethod,
+     productType: productType,
+     promocode: promocode_price > 0 ? promocode : null,
+     promocode_price: promocode_price > 0 ? promocode_price : null,
+    });
+    if (!orderResponse.data?.success) {
+     toast.error(
+      orderResponse.data.message || "Error placing cash on delivery order!"
+     );
+     return;
+    }
     // console.log("Order Response:", orderResponse);
 
     let orderId = orderResponse.data.message.orderid;
@@ -307,16 +294,9 @@ export default function CorporatePaymentForm() {
          };
 
          // Send the order to the API
-         const response = await axios.post(
-          `${ApiBaseUrl.baseUrl}checkout/order-items`,
-          { orders: [order] },
-          {
-           headers: {
-            Authorization: `Bearer ${authtoken}`,
-            "Content-Type": "application/json",
-           },
-          }
-         );
+         const response = await axios.post(`checkout/order-items`, {
+          orders: [order],
+         });
 
          console.log("Cart Item Response:", response.data);
         } catch (error) {
@@ -349,14 +329,13 @@ export default function CorporatePaymentForm() {
       payload: { ...item, qty: 0 },
      });
     });
-   } catch (error) {
-    console.error("Error placing order:", error);
-    toast.error("Error placing cash on delivery order!");
-    if (isLoggedIn) {
-     router.push("/payment");
-    } else {
-     router.push("/login");
+   } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+     toast.error(
+      error.response.data?.message || "Error placing cash on delivery order!"
+     );
     }
+    console.log("Error placing order:", error);
     setIsHasLoading(false);
    }
   }
@@ -518,7 +497,7 @@ export default function CorporatePaymentForm() {
        />
       )}
 
-      {/* Bay with credit */} 
+      {/* Buy with credit */}
       <PaymentCheckBox
        mb="1.5rem"
        color="secondary"
@@ -540,9 +519,7 @@ export default function CorporatePaymentForm() {
           justifyContent: "center",
           padding: "8px",
           background:
-           paymentMethod === "4"
-            ? "rgba(233, 69, 96, 0.05)"
-            : "white",
+           paymentMethod === "4" ? "rgba(233, 69, 96, 0.05)" : "white",
           transition: "all 0.3s ease",
           boxSizing: "border-box",
           borderRadius: "8px",
@@ -588,14 +565,13 @@ export default function CorporatePaymentForm() {
          )}
 
          <PaymentImage
-          alt="Bay with credit"
+          alt="Buy with credit"
           src={bayWithCredit}
           style={{
            width: "60px",
            height: "60px",
            marginBottom: "8px",
-           filter:
-            paymentMethod === "4" ? "none" : "grayscale(20%)",
+           filter: paymentMethod === "4" ? "none" : "grayscale(20%)",
            opacity: paymentMethod === "4" ? 1 : 0.8,
           }}
           priority
@@ -608,7 +584,7 @@ export default function CorporatePaymentForm() {
            color: paymentMethod === "4" ? "#E94560" : "#333",
           }}
          >
-          Bay with credit
+          Buy with credit
          </span>
         </div>
        }
@@ -619,7 +595,7 @@ export default function CorporatePaymentForm() {
        mb="1.5rem"
        color="secondary"
        name="2"
-      //  onChange={handlePaymentMethodChange}
+       //  onChange={handlePaymentMethodChange}
        checked={paymentMethod === "2"}
        label={
         <div
@@ -910,5 +886,3 @@ export default function CorporatePaymentForm() {
   </Fragment>
  );
 }
-
-

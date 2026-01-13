@@ -16,7 +16,7 @@ import CorporatePaymentForm from "@sections/payment/CorporatePaymentForm";
 
 export default function Checkout() {
  const [isLoggedIn, setIsLoggedIn] = useState(false);
- const [user , setUser] = useState(null);
+ const [user, setUser] = useState(null);
  const router = useRouter();
 
  useEffect(() => {
@@ -35,10 +35,13 @@ export default function Checkout() {
  }, []);
 
  const getUser = async () => {
-  const userInfo =await authService.getUser();
-  setUser(userInfo);
+  if (typeof window !== "undefined") {
+   const userInfo =
+    JSON.parse(localStorage.getItem("seller_type") || "{}") || null;
+   setUser(userInfo);
+  }
  };
- 
+
  // If the user is not logged in, prevent rendering the components
  if (!isLoggedIn) {
   return null; // You can also return a loader or a placeholder here
@@ -74,16 +77,11 @@ export default function Checkout() {
    >
     <Grid container flexWrap="wrap-reverse" spacing={6}>
      <Grid item lg={8} md={8} xs={12}>
-      {
-       user?.type === "Corporate"?
-       <CorporatePaymentForm />
-       :
-       <PaymentForm />
-      }
+      {user?.type === "Corporate" ? <CorporatePaymentForm /> : <PaymentForm />}
      </Grid>
 
      <Grid item lg={4} md={4} xs={12}>
-      <PaymentSummary user={user}/>
+      <PaymentSummary user={user} />
      </Grid>
     </Grid>
    </main>
