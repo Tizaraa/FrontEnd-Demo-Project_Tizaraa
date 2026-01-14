@@ -1,35 +1,32 @@
 "use client";
 
-import { FC, useState, useEffect } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import FlexBox from "@component/FlexBox";
 import CheckoutAddress from "./CheckoutAddress";
 import { Button } from "@component/buttons";
 import Typography from "@component/Typography";
 import Grid from "@component/grid/Grid";
 import authService from "services/authService";
-
+import Address from "@models/address.model";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import OrderedItem from "./OrderedItem";
-import Cart from "app/(layout-3)/(checkout)/cart/page";
-import ExpressedDelivery from "./ExpressedDelivery";
+import { useAppContext } from "@context/app-context";
 
 export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
+ const { state } = useAppContext();
  const router = useRouter();
  const [isMobile, setIsMobile] = useState(false);
  const [seller_type, setSellerType] = useState("");
+ const [ShowAddress, setShowAddress] = useState(false);
  const [isTablet, setIsTablet] = useState(false);
- const [hasAddress, setHasAddress] = useState(false);
- const [isAddressChecked, setIsAddressChecked] = useState(false);
  const [isLoading, setIsLoading] = useState(false);
  const [isHasLoading, setIsHasLoading] = useState(false);
  const [isHasPayLoading, setIsHasPayLoading] = useState(false);
  const [isLoggedIn, setIsLoggedIn] = useState(false);
- console.log("seller_type", seller_type);
+ const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
 
  // const [isExpressedDelivery, setIsExpressedDelivery] = useState(false);
 
@@ -74,9 +71,10 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
    setTimeout(() => {
     const seller_type = localStorage.getItem("seller_type") || "";
     setSellerType(seller_type.toLowerCase());
+    setShowAddress(true);
    }, 100);
   }
- }, []);
+ }, [state.cart]);
 
  useEffect(() => {
   const cart = JSON.parse(sessionStorage.getItem("selectedProducts") || "[]");
@@ -113,9 +111,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  // };
 
  const handlePayment = async () => {
-  const addressData = sessionStorage.getItem("address");
-
-  if (!addressData) {
+  if (!selectedAddress) {
    // Stop loading first
    setIsHasPayLoading(false);
    toast.error("Please select or add an address before proceeding to pay", {
@@ -141,11 +137,6 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   setIsHasLoading(true);
   toast.info("Returning to Cart...");
   router.push("/cart");
- };
-
- const handleAddressChange = (hasAddressData: boolean, isSelected: boolean) => {
-  setHasAddress(hasAddressData);
-  setIsAddressChecked(isSelected);
  };
 
  const handleAddNewAddress = () => {
@@ -177,11 +168,14 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
    )}
 
    {/* <CheckoutAddress /> */}
-   <CheckoutAddress
-    seller_type={seller_type}
-    setDeliveryCharge={setDeliveryCharge}
-    onAddressChange={handleAddressChange}
-   />
+   {ShowAddress && (
+    <CheckoutAddress
+     seller_type={seller_type}
+     setDeliveryCharge={setDeliveryCharge}
+     selectedAddress={selectedAddress}
+     setSelectedAddress={setSelectedAddress}
+    />
+   )}
    <OrderedItem></OrderedItem>
 
    <Grid container spacing={7} style={{ marginTop: "2px" }}>

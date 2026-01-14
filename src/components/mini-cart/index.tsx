@@ -196,6 +196,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
  // };
 
  const handleCheckout = async () => {
+  sessionStorage.removeItem("address");
   const selectedItems = state.cart.filter((item) =>
    state.selectedProducts.includes(item.id)
   );

@@ -5,6 +5,7 @@ import Image from "next/image";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import authService from "services/authService";
 import Box from "@component/Box";
+import { useAppContext } from "@context/app-context";
 
 interface SelectedProduct {
  productId: number;
@@ -24,6 +25,7 @@ interface SelectedProduct {
 }
 
 export default function OrderedItem() {
+ const { state, dispatch } = useAppContext();
  const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>(
   []
  );
@@ -55,7 +57,7 @@ export default function OrderedItem() {
  };
 
  const syncProducts = async () => {
-  const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+  const cartItems = state.cart;
   const selectedItems = JSON.parse(
    sessionStorage.getItem("selectedProducts") || "[]"
   );
@@ -75,7 +77,7 @@ export default function OrderedItem() {
      ...item,
      qty: cartItem.qty,
      total_amount: cartItem.price * cartItem.qty,
-    //  ...productDetails,
+     //  ...productDetails,
     });
    }
   }
@@ -89,29 +91,8 @@ export default function OrderedItem() {
  };
 
  useEffect(() => {
-  // Initial load
   syncProducts();
-
-  // Listen for localStorage changes
-  const handleStorageChange = (event: StorageEvent) => {
-   if (event.key === "cart") {
-    syncProducts();
-   }
-  };
-
-  // Listen for cart updates
-  window.addEventListener("storage", handleStorageChange);
-
-  // Workaround for same-tab updates (Next.js does not detect `storage` changes in the same tab)
-  const interval = setInterval(() => {
-  //  syncProducts();
-  }, 1000); // Check every second
-
-  return () => {
-   window.removeEventListener("storage", handleStorageChange);
-   clearInterval(interval);
-  };
- }, []);
+ }, [state.cart]);
 
  return (
   <div

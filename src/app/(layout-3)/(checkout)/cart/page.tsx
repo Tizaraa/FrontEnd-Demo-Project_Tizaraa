@@ -84,6 +84,7 @@ export default function Cart() {
   }, 0);
 
  const handleCheckout = async () => {
+  sessionStorage.removeItem("address");
   setIsLoading(true);
 
   if (!isLoggedIn) {
@@ -115,10 +116,12 @@ export default function Cart() {
    setIsLoading(false);
    return;
   }
- 
+
   // ===== PRICE CHECK API =====
   try {
-   const response = await axios.post(`checkout/check/pricing`, { orders: selectedItems });   
+   const response = await axios.post(`checkout/check/pricing`, {
+    orders: selectedItems,
+   });
 
    if (!response.data.success) {
     toast.error(response.data.message || "Failed to check pricing");
@@ -150,23 +153,24 @@ export default function Cart() {
     state.selectedProducts.includes(item.id)
    );
 
-   localStorage.setItem("seller_type",response.data?.seller_type || '')
+   localStorage.setItem("seller_type", response.data?.seller_type || "");
    localStorage.setItem("cart", JSON.stringify(updatedCart));
    sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
    sessionStorage.setItem(
     "selectedProducts",
     JSON.stringify(updatedSelectedItems)
    );
-     router.push("/checkout");
-  } catch (error: unknown) { 
-
-    if (error instanceof AxiosError) {  
-      toast.error(error.response.data?.message || "Price check failed. Please try again.");
-    }else{
-      toast.error("Price check failed. Please try again.");
-    }
-  }finally{
-    setIsLoading(false);
+   router.push("/checkout");
+  } catch (error: unknown) {
+   if (error instanceof AxiosError) {
+    toast.error(
+     error.response.data?.message || "Price check failed. Please try again."
+    );
+   } else {
+    toast.error("Price check failed. Please try again.");
+   }
+  } finally {
+   setIsLoading(false);
   }
  };
 

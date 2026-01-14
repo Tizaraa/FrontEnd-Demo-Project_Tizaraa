@@ -11,21 +11,22 @@ import { Small } from "@component/Typography";
 import Typography from "@component/Typography";
 import authService from "services/authService";
 import Address from "@models/address.model";
-import ApiBaseUrl from "api/ApiBaseUrl";
 import { SemiSpan } from "@component/Typography";
 import { FaTruckFast } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { CreditCardIcon, InfoIcon } from "lucide-react";
 import { CircularProgress, LinearProgress, Tooltip } from "@mui/material";
+import { useAppContext } from "@context/app-context";
 
 export default function CheckoutAddress({
  setDeliveryCharge,
- onAddressChange,
  seller_type,
+ selectedAddress,
+ setSelectedAddress,
 }) {
+ const { state } = useAppContext();
  const [addresses, setAddresses] = useState<Address[]>([]);
- const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
  const [province, setProvince] = useState([]);
  const authtoken = authService.getToken();
  const [expressDelivery, setExpressDelivery] = useState(false);
@@ -39,9 +40,6 @@ export default function CheckoutAddress({
  >(null);
 
  const handlePaymentOptionSelect = async (percentage) => {
-  // Log the selected percentage
-  console.log("Selected payment option:", percentage);
-
   // Store the selected percentage in sessionStorage
   sessionStorage.setItem("selectedPaymentOption", percentage.toString());
 
@@ -116,8 +114,15 @@ export default function CheckoutAddress({
     });
     const fetchedAddresses = response.data?.address || [];
     setAddresses(fetchedAddresses);
-    onAddressChange(fetchedAddresses.length > 0, true);
+    if (
+     fetchedAddresses.length > 0 &&
+     seller_type.toLocaleLowerCase() == "corporate"
+    ) {
+     const item = fetchedAddresses[0];
 
+     sessionStorage.setItem("address", JSON.stringify(item));
+     setSelectedAddress(item);
+    }
     // Load the selected address from sessionStorage
     const storedAddress = sessionStorage.getItem("address");
     if (storedAddress) {
@@ -125,23 +130,16 @@ export default function CheckoutAddress({
      const matchingAddress = fetchedAddresses.find(
       (addr) => addr.id === parsedAddress.id
      );
-     if (matchingAddress) {
-      handleSelect(matchingAddress, true);
-      return;
-     }
     }
-
-    onAddressChange(fetchedAddresses.length > 0, false);
    } catch (error) {
     console.error("Error fetching addresses:", error);
-    onAddressChange(false, false);
    }
   };
   setTimeout(() => {
    fetchAddresses();
   }, 200);
   fetchProvince();
- }, [authtoken, onAddressChange]);
+ }, [state.cart, seller_type]);
 
  // Recalculate delivery charge when selectedAddress or expressDelivery changes
  useEffect(() => {
@@ -192,11 +190,15 @@ export default function CheckoutAddress({
 
  // Handle selection of an address
  const handleSelect = async (item: Address, isAutoSelect = false) => {
-  setSelectedAddress(item);
+  setSelectedAddress((prev) => {
+   if (prev?.id == item.id) {
+    return null;
+   }
+   return item;
+  });
   if (!isAutoSelect) {
    sessionStorage.setItem("address", JSON.stringify(item));
   }
-  onAddressChange(true, true);
  };
 
  // Handle express delivery checkbox change
@@ -238,10 +240,6 @@ export default function CheckoutAddress({
   const storedAdvancePayment = sessionStorage.getItem(
    "otcAdvancePaymentAmount"
   );
-
-  if (storedAddress) {
-   setSelectedAddress(JSON.parse(storedAddress));
-  }
 
   if (storedCharge) {
    setDeliveryCharge(parseFloat(storedCharge));
