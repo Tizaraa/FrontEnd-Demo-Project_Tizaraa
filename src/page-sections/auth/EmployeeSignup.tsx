@@ -283,6 +283,19 @@ export default function EmployeeSignup() {
       control={control}
       rules={{
        required: "NID is required",
+       maxLength: {
+        value: 16,
+        message: "National ID number cannot be longer than 16 digits",
+       },
+       minLength: {
+        value: 10,
+        message: "National ID number must contain at least 10 digits",
+       },
+
+       pattern: {
+        value: /^[0-9]*$/,
+        message: "NID must be a number",
+       },
       }}
       render={({ field }) => (
        <TextField
