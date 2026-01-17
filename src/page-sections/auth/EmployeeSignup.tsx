@@ -30,6 +30,8 @@ interface FormValues {
  name: string;
  email: string;
  phone: string;
+ salary: number;
+ company_name: string;
  employee_id: string;
  designation: string;
  nid: string;
@@ -175,6 +177,54 @@ export default function EmployeeSignup() {
         placeholder="Enter Your Phone Number"
         errorText={errors.phone?.message}
         inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+       />
+      )}
+     />
+
+     {/* Salary */}
+     <Controller
+      name="salary"
+      control={control}
+      rules={{
+       required: "Salary is required",
+      }}
+      render={({ field }) => (
+       <TextField
+        {...field}
+        fullwidth
+        mb="1rem"
+        type="number"
+        label={
+         <>
+          Salary <span style={{ color: "#e94560" }}>*</span>
+         </>
+        }
+        placeholder="Enter Your Salary"
+        errorText={errors.salary?.message}
+       />
+      )}
+     />
+
+     {/* Company name */}
+     <Controller
+      name="company_name"
+      control={control}
+      rules={{
+       required: "Company name is required",
+      }}
+      render={({ field }) => (
+       <TextField
+        {...field}
+        fullwidth
+        mb="1rem"
+        type="text"
+        label={
+         <>
+          Company Name <span style={{ color: "#e94560" }}>*</span>
+         </>
+        }
+        placeholder="Enter Your Company Name"
+        errorText={errors.company_name?.message}
        />
       )}
      />
