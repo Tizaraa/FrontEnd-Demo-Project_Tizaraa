@@ -19,27 +19,26 @@ const fetcher = async (url: string, config: any = {}) => {
 
 export default function useFetcher(url: string, config: any = {}) {
  const token = authService.getToken();
- const { revalidateTime = 300000, ...axiosConfig } = config;
+ const { revalidateTime = 300000, fallbackData, ...axiosConfig } = config;
 
  const { data, error, isLoading, mutate } = useSWR(
   url + token,
   () => fetcher(url, axiosConfig),
   {
+   fallbackData,
    refreshInterval: revalidateTime, // auto revalidate
-   revalidateOnFocus: true, // revalidate on window focus
    revalidateOnReconnect: false, // revalidate on reconnect
-   revalidateIfStale: false, // don't revalidate if cache exists
    dedupingInterval: 5000, // prevent double fetch within 5 seconds
-   shouldRetryOnError: false,
-   errorRetryCount: 0,
-   // suspense: false, // optional: if you want loading states
+   errorRetryCount: 2,
   }
  );
+
+ const isInitialLoading = !fallbackData && !data && isLoading;
 
  return {
   data,
   error,
-  isLoading,
   mutate,
+  isLoading: isInitialLoading, // ← renamed / filtered
  };
 }

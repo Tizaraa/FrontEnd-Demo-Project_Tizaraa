@@ -20,25 +20,7 @@ import { H5 } from "@component/Typography";
 import ProductReview from "@component/products/ProductReview";
 import ProductDescription from "@component/products/ProductDescription";
 import axios from "@lib/axiosClient";
-
-const LoaderWrapper = styled.div`
- display: flex;
- justify-content: center;
- align-items: center;
-`;
-
-async function fetchProductData(slug: string) {
- try {
-  const response = await axios.get(
-   `product/details/${slug}`
-  );
-  console.log("product details from shipping component:-:", response.data);
-  return response.data;
- } catch (error) {
-  console.error("Error fetching product data:", error);
-  return null;
- }
-}
+import useFetcher from "@hook/useFetcher";
 
 async function fetchQRCode(slug: string) {
  try {
@@ -56,6 +38,7 @@ async function fetchQRCode(slug: string) {
 
 interface Props {
  params: { slug: string };
+ fallbackData: any;
 }
 
 const ShippingInfo: React.FC<{
@@ -590,13 +573,15 @@ const ProductView: React.FC<{
  );
 };
 
-const ProductDetails: React.FC<Props> = ({ params }) => {
- const [isDesktop, setIsDesktop] = useState(true);
- const [productData, setProductData] = useState<any>(null);
- const [isLoading, setIsLoading] = useState(true);
- const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
- const [loading, setLoading] = useState(true);
+const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
  const { slug } = params;
+ const { data: productData, isLoading } = useFetcher(
+  `product/details/${slug}`,
+  { fallbackData }
+ );
+
+ const [isDesktop, setIsDesktop] = useState(true);
+ const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
  const [qrCode, setQrCode] = useState<string | null>(null);
 
  useEffect(() => {
@@ -611,42 +596,20 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
  }, []);
 
  useEffect(() => {
-  const loadProductData = async () => {
-   setIsLoading(true);
-   const data = await fetchProductData(params.slug);
-   setProductData(data);
-   setIsLoading(false);
-  };
-
-  const loadQRCode = async () => {
-   setIsLoading(true);
-   const qrCodeData = await fetchQRCode(params.slug);
+  const fetchData = async () => {
+   const qrCodeData = await fetchQRCode(slug);
    if (qrCodeData) {
     setQrCodeUrl(qrCodeData);
    } else {
     console.log("No QR Code data received.");
    }
-   setIsLoading(false);
-  };
-
-  loadProductData();
-  loadQRCode();
- }, [params.slug]);
-
- useEffect(() => {
-  const fetchData = async () => {
-   setLoading(true);
-   const data = await fetchProductData(slug);
-   const qrCodeData = await fetchQRCode(slug);
-   setProductData(data);
    setQrCode(qrCodeData);
-   setLoading(false);
   };
 
   fetchData();
  }, [slug]);
 
- if (loading) return <Loading />;
+ if (isLoading) return <Loading />;
 
  if (!productData || !productData.productsingledetails) {
   return (
@@ -672,8 +635,6 @@ const ProductDetails: React.FC<Props> = ({ params }) => {
  const campaignBannerImage =
   productData.productsingledetails?.campaign?.banner_image;
  const campaignSlug = productData.productsingledetails?.campaign?.slug;
-
- console.log(sizeColor);
 
  // Get shipping info props for tab usage
  const shippingProps = {
