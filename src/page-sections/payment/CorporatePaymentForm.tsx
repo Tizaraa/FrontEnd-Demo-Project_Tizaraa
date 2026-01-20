@@ -232,7 +232,7 @@ export default function CorporatePaymentForm() {
       userShippingdata?.selectedLandmark || userShippingdata?.landmark,
      address: userShippingdata?.shipping_address1 || userShippingdata?.address,
      delivery_charge: savedShipping || 0,
-     delivery_type: expressDelivery,
+     delivery_type: paymentMethod === "4" ? 1 : expressDelivery,
      total_ammount: total_ammount,
      payment_type: paymentMethod,
      seller_id: cartData[0]?.sellerId,
