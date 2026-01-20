@@ -241,15 +241,13 @@ export default function CorporatePaymentForm() {
      promocode: promocode_price > 0 ? promocode : null,
      promocode_price: promocode_price > 0 ? promocode_price : null,
     });
-    if (!orderResponse.data?.success) {
-     toast.error(
-      orderResponse.data.message || "Error placing cash on delivery order!"
-     );
+    if (orderResponse.data?.message?.status !== "success") {
+     toast.error("Error placing cash on delivery order!");
      return;
     }
     // console.log("Order Response:", orderResponse);
 
-    let orderId = orderResponse.data.message.orderid;
+    let orderId = orderResponse.data?.message?.orderid;
     localStorage.setItem("orderId", orderId);
     localStorage.setItem("orderSuccess", "true");
 
@@ -335,7 +333,8 @@ export default function CorporatePaymentForm() {
       error.response.data?.message || "Error placing cash on delivery order!"
      );
     }
-    console.log("Error placing order:", error);
+    setIsHasLoading(false);
+   } finally {
     setIsHasLoading(false);
    }
   }
