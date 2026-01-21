@@ -120,7 +120,7 @@
 // export default navbarNavigations;
 
 const navbarNavigations = [
- { title: "International Products", url: "/OtCategory/otc-189", extLink: true },
+ // { title: "International Products", url: "/OtCategory/otc-189", extLink: true },
  {
   title: "Become A Seller",
   url: "https://seller.tizaraa.shop",
