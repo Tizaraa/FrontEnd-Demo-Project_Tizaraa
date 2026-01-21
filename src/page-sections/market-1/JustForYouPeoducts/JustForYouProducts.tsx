@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 
 import Box from "@component/Box";
 import Card from "@component/Card";
@@ -40,11 +40,7 @@ const JustForYouProducts = () => {
   setLoadingMore(page > 1);
   try {
    const response = await axios.get(
-    `https://seller.tizaraa.shop/api/frontend/latest/justoforyou/product/view/'?page=${page}`,
-    {
-     adapter: "fetch",
-     fetchOptions: { cache: "force-cache" },
-    }
+    `frontend/latest/justoforyou/product/view?page=${page}`
    );
    const data = response.data;
 

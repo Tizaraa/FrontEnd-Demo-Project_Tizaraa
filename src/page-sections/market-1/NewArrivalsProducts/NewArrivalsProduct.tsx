@@ -416,7 +416,7 @@
 
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 
 import Box from "@component/Box";
 import Card from "@component/Card";
@@ -459,9 +459,7 @@ export default function NewArrivalsProduct() {
  useEffect(() => {
   const fetchProducts = async () => {
    try {
-    const response = await axios.get(
-     `${ApiBaseUrl.baseUrl}frontend/remark/product/items`
-    );
+    const response = await axios.get(`frontend/remark/product/items`);
 
     if (response.data && response.data.newarrival) {
      setBigDiscountList(response.data.newarrival);

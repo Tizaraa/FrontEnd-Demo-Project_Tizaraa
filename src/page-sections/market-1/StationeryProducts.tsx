@@ -400,7 +400,7 @@
 
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 
 import Box from "@component/Box";
 import Card from "@component/Card";
@@ -441,9 +441,7 @@ export default function StationeryProducts() {
  useEffect(() => {
   const fetchProducts = async () => {
    try {
-    const response = await axios.get(
-     `${ApiBaseUrl.baseUrl}frontend/category/product/view`
-    );
+    const response = await axios.get(`frontend/category/product/view`);
 
     if (response.data && response.data.stationeryproduct) {
      setStationeryProducts(response.data.stationeryproduct);
