@@ -1,5 +1,3 @@
-"use client";
-
 export default function Loading() {
  const skeletonStyle = {
   backgroundColor: "#e2e8f0",
