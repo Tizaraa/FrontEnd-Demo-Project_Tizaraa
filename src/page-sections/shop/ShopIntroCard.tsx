@@ -610,6 +610,7 @@ import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import axios from "@lib/axiosClient";
+import useFetcher from "@hook/useFetcher";
 
 const LoaderWrapper = styled.div`
  display: flex;
@@ -716,27 +717,11 @@ interface Props {
 }
 
 export default function ShopIntroCard({ slug }: Props) {
- const [shop, setShop] = useState<any>(null);
- const [error, setError] = useState(null);
+ const { data: shop, isLoading, error } = useFetcher(`seller/profile/${slug}`);
+
  const [showMapModal, setShowMapModal] = useState(false);
  const [mapKey, setMapKey] = useState(0);
  const [isVisible, setIsVisible] = useState(true);
-
- useEffect(() => {
-  const fetchSingleShop = async () => {
-   try {
-    const response = await axios.get(`${ApiBaseUrl.baseUrl}seller/profile/${slug}`); 
-
-    const data = response.data
-    setShop(data);
-   } catch (err) {
-    setError("Failed to load shop data");
-    console.error(err);
-   }
-  };
-
-  fetchSingleShop();
- }, [slug]);
 
  // Detect when user returns to tab and refresh map
  useEffect(() => {
@@ -910,12 +895,16 @@ export default function ShopIntroCard({ slug }: Props) {
   }
  };
 
- if (!shop) {
+ if (isLoading) {
   return (
    <LoaderWrapper>
     <Vortex />
    </LoaderWrapper>
   );
+ }
+
+ if (error) {
+  return null;
  }
 
  return (
