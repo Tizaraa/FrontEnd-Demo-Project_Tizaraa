@@ -78,6 +78,14 @@ export default function CarouselSlider(): JSX.Element {
   ),
  };
 
+ if (isLoading) {
+  return (
+   <Typography>
+    <Loader />
+   </Typography>
+  );
+ }
+
  return (
   <>
    <Navbar navListOpen={true} />
@@ -121,48 +129,42 @@ export default function CarouselSlider(): JSX.Element {
       position: "relative",
      }}
     >
-     {isLoading ? (
-      <Typography>
-       <Loader />
-      </Typography>
-     ) : (
-      <div
-       className="slider"
-       style={{
-        width: isDesktop ? "75%" : "calc(100% - 40px)",
-        margin: isDesktop ? "20px 0" : "0 20px",
-        borderRadius: "12px",
-        overflow: "hidden",
-       }}
-      >
-       <Slider {...settings}>
-        {slides?.map((slide, index) => (
-         <div key={index}>
-          <div
+     <div
+      className="slider"
+      style={{
+       width: isDesktop ? "75%" : "calc(100% - 40px)",
+       margin: isDesktop ? "20px 0" : "0 20px",
+       borderRadius: "12px",
+       overflow: "hidden",
+      }}
+     >
+      <Slider {...settings}>
+       {slides?.map((slide, index) => (
+        <div key={index}>
+         <div
+          style={{
+           position: "relative",
+           borderRadius: "8px",
+           overflow: "hidden",
+          }}
+         >
+          <Image
+           src={`${ApiBaseUrl.ImgUrl}${slide.slider_image}`}
+           alt={`Slide ${index + 1}`}
+           width={800}
+           height={400}
            style={{
-            position: "relative",
-            borderRadius: "8px",
-            overflow: "hidden",
+            width: "100%",
+            height: "auto",
+            borderRadius: "12px",
            }}
-          >
-           <Image
-            src={`${ApiBaseUrl.ImgUrl}${slide.slider_image}`}
-            alt={`Slide ${index + 1}`}
-            width={800}
-            height={400}
-            style={{
-             width: "100%",
-             height: "auto",
-             borderRadius: "12px",
-            }}
-            priority={index === 0}
-           />
-          </div>
+           priority={index === 0}
+          />
          </div>
-        ))}
-       </Slider>
-      </div>
-     )}
+        </div>
+       ))}
+      </Slider>
+     </div>
     </div>
    </div>
    <style jsx global>{`
