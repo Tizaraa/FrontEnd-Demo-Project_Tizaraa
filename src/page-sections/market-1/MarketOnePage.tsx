@@ -15,6 +15,9 @@ import useFetcher from "@hook/useFetcher";
 
 const MarketOnePage = () => {
  const { data, isLoading } = useFetcher(`frontend/remark/product/items`);
+ const { data: corporateProduct, isLoading: isLoadingCorporate } = useFetcher(
+  `v1/home/corporate-product`
+ );
  const { data: groceryProduct, isLoading: isLoadingGrocery } = useFetcher(
   `frontend/category/product/view`
  );
@@ -56,6 +59,13 @@ const MarketOnePage = () => {
     {/* ======================================= */}
     <Section10 />
 
+    {corporateProduct?.data?.length > 0 && (
+     <ProductCarousel
+      title="Corporate Products"
+      data={corporateProduct?.data || []}
+      isLoading={isLoadingCorporate}
+     />
+    )}
     {/* ======================================= */}
     {/* Campaign Section Banner */}
     {/* ======================================= */}

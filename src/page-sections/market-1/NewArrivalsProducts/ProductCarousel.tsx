@@ -154,29 +154,29 @@ export default function ProductCarousel({ title, data, isLoading }: any) {
 
       return (
        <Box py="0.25rem" key={`${item.product_slug}-${index}`}>
-        <Card
-         p="1rem"
-         borderRadius={8}
-         style={{ height: "auto", minHeight: "300px" }}
-         position="relative"
-        >
-         {hasDiscount && (
-          <Chip
-           top="1rem"
-           left="1.2rem"
-           p="0.25rem 0.5rem"
-           fontSize="12px"
-           fontWeight="600"
-           bg="primary.main"
-           position="absolute"
-           color="primary.text"
-           zIndex={1}
-          >
-           {discountPercent}% off
-          </Chip>
-         )}
+        <Link href={`/product/${item.product_slug}`}>
+         <Card
+          p="1rem"
+          borderRadius={8}
+          style={{ height: "auto", minHeight: "300px" }}
+          position="relative"
+         >
+          {hasDiscount && (
+           <Chip
+            top="1rem"
+            left="1.2rem"
+            p="0.25rem 0.5rem"
+            fontSize="12px"
+            fontWeight="600"
+            bg="primary.main"
+            position="absolute"
+            color="primary.text"
+            zIndex={1}
+           >
+            {discountPercent}% off
+           </Chip>
+          )}
 
-         <Link href={`/product/${item.product_slug}`}>
           <Box position="relative" style={{ padding: "0 0.5rem" }}>
            <div
             style={{
@@ -240,8 +240,8 @@ export default function ProductCarousel({ title, data, isLoading }: any) {
             )}
            </FlexBox>
           </Box>
-         </Link>
-        </Card>
+         </Card>
+        </Link>
        </Box>
       );
      })}

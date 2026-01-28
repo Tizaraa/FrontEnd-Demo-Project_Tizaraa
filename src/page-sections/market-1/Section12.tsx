@@ -1,125 +1,102 @@
-// import Card from "@component/Card";
-// import Grid from "@component/grid/Grid";
-// import Icon from "@component/icon/Icon";
-// import FlexBox from "@component/FlexBox";
-// import Container from "@component/Container";
-// import { H4, SemiSpan } from "@component/Typography";
-// import Service from "@models/service.model";
-
-// // ==================================================
-// type Props = { serviceList: Service[] };
-// // ==================================================
-
-// export default function Section12({ serviceList }: Props) {
-//   return (
-//     <Container mb="70px">
-//       <Grid container spacing={6}>
-//         {serviceList.map((item) => (
-//           <Grid item lg={3} md={6} xs={12} key={item.id}>
-//             <FlexBox
-//               p="3rem"
-//               as={Card}
-//               hoverEffect
-//               height="100%"
-//               borderRadius={8}
-//               boxShadow="border"
-//               alignItems="center"
-//               flexDirection="column">
-//               <FlexBox
-//                 size="64px"
-//                 bg="gray.200"
-//                 alignItems="center"
-//                 borderRadius="300px"
-//                 justifyContent="center">
-//                 <Icon color="secondary" size="1.75rem">
-//                   {item.icon}
-//                 </Icon>
-//               </FlexBox>
-
-//               <H4 mt="20px" mb="10px" textAlign="center">
-//                 {item.title}
-//               </H4>
-
-//               <SemiSpan textAlign="center">{item.description}</SemiSpan>
-//             </FlexBox>
-//           </Grid>
-//         ))}
-//       </Grid>
-//     </Container>
-//   );
-// }
-
 "use client";
 
-import { useEffect, useState } from "react";
-import Card from "@component/Card";
 import Grid from "@component/grid/Grid";
-import FlexBox from "@component/FlexBox";
-import Container from "@component/Container";
-import { H4, SemiSpan } from "@component/Typography";
-import Image from "@component/Image";
 import CategorySectionCreator from "@component/CategorySectionCreator";
-import { marginTop } from "styled-system";
+import { H4 } from "@component/Typography";
 import Link from "next/link";
-import ApiBaseUrl from "api/ApiBaseUrl";
+import Image from "next/image"; // ← prefer next/image
+import useFetcher from "@hook/useFetcher";
+import Box from "@component/Box";
 
-type Service = {
+// ──────────────────────────────────────────────
+// Types
+// ──────────────────────────────────────────────
+type CountryItem = {
  id: number;
  location: string;
- image: string; // Image URL
- location_slug: string; // Added to use in URL
+ image: string; // full URL expected
+ location_slug: string;
 };
 
-export default function Section12() {
- const [serviceList, setServiceList] = useState<Service[]>([]);
+// ──────────────────────────────────────────────
+// Skeleton Item
+// ──────────────────────────────────────────────
+function CountrySkeleton() {
+ return (
+  <Grid item lg={2} md={2} sm={4} xs={6}>
+   <Box textAlign="center" py="0.5rem">
+    {/* Flag / image placeholder */}
+    <Box
+     width={100}
+     height={64}
+     mx="auto"
+     borderRadius={8}
+     backgroundColor="#e0e0e0"
+     mb="12px"
+    />
+   </Box>
+  </Grid>
+ );
+}
 
- // Fetch data from the API
- useEffect(() => {
-  fetch(`${ApiBaseUrl.baseUrl}product/country/flag`)
-   .then((response) => response.json())
-   .then((data) => {
-    setServiceList(data.country);
-    // console.log(data.country);
-   })
-   .catch((error) => {
-    console.error("Error fetching service list:", error);
-   });
- }, []);
+// ──────────────────────────────────────────────
+// Main Component
+// ──────────────────────────────────────────────
+export default function Section12() {
+ const { data, isLoading } = useFetcher(`product/country/flag`);
+ const countries: CountryItem[] = data?.country || [];
 
  return (
-  <div style={{ marginTop: "70px" }}>
-   {/* <CategorySectionCreator title="Find products by country or region" seeMoreLink={`countryList/CountryList`}> */}
+  <Box mt="70px">
    <CategorySectionCreator
     title="Find products by country"
-    seeMoreLink={`countryList/CountryList`}
+    seeMoreLink="/countryList/CountryList"
    >
-    <Grid container spacing={0}>
-     {serviceList.length > 0 ? (
-      serviceList.map((item) => (
-       <Grid
-        item
-        lg={2}
-        md={2}
-        sm={4}
-        xs={6}
-        key={item.id}
-        style={{ textAlign: "center" }}
-       >
-        <Link href={`/country/${encodeURIComponent(item.location_slug)}`}>
-         <Image src={item.image} alt={item.location} width={100} height={64} />
-         <H4 mt="10px" mb="5px" textAlign="center">
-          {item.location}
-         </H4>
+    <Grid container spacing={2}>
+     {isLoading ? (
+      [1, 2, 3, 4, 5, 6].map((i) => <CountrySkeleton key={`skeleton-${i}`} />)
+     ) : countries.length > 0 ? (
+      countries.map((country) => (
+       <Grid item lg={2} md={2} sm={4} xs={6} key={country.id}>
+        <Link href={`/country/${encodeURIComponent(country.location_slug)}`}>
+         <Box textAlign="center" py="0.5rem">
+          <Box position="relative" width={100} height={64} mx="auto" mb="12px">
+           <Image
+            src={country.image}
+            alt={`${country.location} flag`}
+            fill
+            sizes="(max-width: 600px) 120px, 100px"
+            style={{ objectFit: "cover", borderRadius: "8px" }}
+            placeholder="blur"
+            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAErgJ9aA9l9gAAAABJRU5ErkJggg==" // low quality placeholder
+           />
+          </Box>
+
+          <H4
+           fontSize={{ xs: "14px", sm: "15px", md: "16px" }}
+           fontWeight={600}
+           lineHeight={1.3}
+           mb={0}
+          >
+           {country.location}
+          </H4>
+         </Box>
         </Link>
        </Grid>
       ))
      ) : (
-      <div style={{ textAlign: "center", width: "100%", padding: "20px" }}>
-       <p>No services available.</p>
-      </div>
+      // ─── Empty state ───
+      <Grid item xs={12}>
+       <Box textAlign="center" py="40px" color="text.muted">
+        <H4 fontSize="18px" mb="8px">
+         No countries available
+        </H4>
+        <p>Check back later or explore other categories.</p>
+       </Box>
+      </Grid>
      )}
     </Grid>
    </CategorySectionCreator>
-  </div>
+  </Box>
  );
 }
