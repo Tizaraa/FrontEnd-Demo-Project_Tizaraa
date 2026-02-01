@@ -1,25 +1,20 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Metadata } from "next";
 import ProductDetails from "./ProductDetails";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import ResponsiveCategory from "./ResponsiveCategory";
-
-// import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
 import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
-import Image from "next/image";
 import NextImage from "@component/NextImage";
+import LoadingSkeleton from "./loading"; // Import your loading component directly
 
-// Fetch product data for server-side metadata
+// Fetch product data (Keep this as is)
 async function fetchProductData(slug: string) {
  try {
-  const response = await fetch(
-   `${ApiBaseUrl.baseUrl}product/details/${slug}`, // Use env var for base URL
-   {
-    next: {
-     revalidate: 3600, // ISR: revalidate every 1
-    },
-   }
-  );
+  const response = await fetch(`${ApiBaseUrl.baseUrl}product/details/${slug}`, {
+   next: {
+    revalidate: 3600,
+   },
+  });
 
   if (!response.ok) {
    return null;
@@ -43,7 +38,7 @@ export async function generateStaticParams() {
  }));
 }
 
-// Generate SEO metadata for the product page
+// Metadata (Keep this - note that this still causes a slight initial navigation delay)
 export async function generateMetadata({
  params,
 }: {
@@ -60,7 +55,7 @@ export async function generateMetadata({
     title: seo.title || "Product Not Found",
     description: seo.description || "No description available.",
     url: seo.url || "",
-    images: Array.isArray(seo.image) ? seo.image : [seo.image], // Ensure images are in an array
+    images: Array.isArray(seo.image) ? seo.image : [seo.image],
    },
   };
  } else {
@@ -75,13 +70,29 @@ interface Props {
  params: { slug: string };
 }
 
-// Server Component for rendering product details page
-export default async function ProductDetailsPage({ params }: Props) {
- const productData = await fetchProductData(params.slug);
+// 1. Create an async wrapper component for the data-dependent parts
+async function ProductContent({ slug }: { slug: string }) {
+ // This await happens inside the Suspense boundary
+ const productData = await fetchProductData(slug);
 
  return (
+  <main
+   style={{
+    position: "relative",
+    background: "none",
+   }}
+  >
+   <ResponsiveCategory slug={slug} fallbackData={productData} />
+   <ProductDetails params={{ slug }} fallbackData={productData} />
+  </main>
+ );
+}
+
+// 2. The Main Page Component is now non-blocking (UI Shell)
+export default function ProductDetailsPage({ params }: Props) {
+ return (
   <>
-   {/* Background image */}
+   {/* Background image loads immediately */}
    <NextImage
     alt="newArrivalBanner"
     src={tizaraa_watermark}
@@ -91,25 +102,19 @@ export default async function ProductDetailsPage({ params }: Props) {
      top: "50%",
      left: "50%",
      transform: "translate(-50%, -20%)",
-     width: "100%", // Set to 100% to ensure full responsiveness
-     height: "auto", // Maintain aspect ratio
-     maxWidth: "1200px", // Optional: Limit the maximum width
-     backgroundSize: "contain", // Adjust the scaling behavior
+     width: "100%",
+     height: "auto",
+     maxWidth: "1200px",
+     backgroundSize: "contain",
      backgroundPosition: "center",
      opacity: 0.1,
      zIndex: 0,
     }}
    />
 
-   <main
-    style={{
-     position: "relative",
-     background: "none",
-    }}
-   >
-    <ResponsiveCategory slug={params.slug} fallbackData={productData} />
-    <ProductDetails params={params} fallbackData={productData} />
-   </main>
+   <Suspense fallback={<LoadingSkeleton />}>
+    <ProductContent slug={params.slug} />
+   </Suspense>
   </>
  );
 }

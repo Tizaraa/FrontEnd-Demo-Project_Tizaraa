@@ -339,11 +339,6 @@ export default function CampaignProducts({
   };
  }, [displayProducts.length, isPaused]);
 
- const handleProductClick = () => {
-  setIsLoading(true);
-  setTimeout(() => setIsLoading(false), 1000);
- };
-
  // Generate the "See More" link with campaign type as query parameter
  const getSeeMoreLink = () => {
   if (!campaignInfo?.type) return "/campaign/campaign";
@@ -361,12 +356,6 @@ export default function CampaignProducts({
    endTime={campaignInfo.end_date}
    seeMoreLink={getSeeMoreLink()}
   >
-   {isLoading && (
-    <div className={styles.loadingOverlay}>
-     <div className={styles.loader}></div>
-    </div>
-   )}
-
    <Box
     my="-0.25rem"
     onMouseEnter={() => setIsPaused(true)}
@@ -407,11 +396,7 @@ export default function CampaignProducts({
          )}
 
          <Link href={`/product/${item.product_slug}`}>
-          <Box
-           position="relative"
-           style={{ padding: "0 0.5rem" }}
-           onClick={handleProductClick}
-          >
+          <Box position="relative" style={{ padding: "0 0.5rem" }}>
            <div
             style={{
              position: "relative",

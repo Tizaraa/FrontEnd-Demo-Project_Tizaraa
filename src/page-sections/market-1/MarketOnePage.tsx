@@ -1,21 +1,26 @@
-// PAGE SECTION COMPONENTS
+"use client";
 import Section1 from "@sections/market-1/Section1";
 import Section8 from "@sections/market-1/Section8";
 import Section10 from "@sections/market-1/Section10";
 import Section12 from "@sections/market-1/Section12";
 import JustForYouProducts from "@sections/market-1/JustForYouPeoducts/JustForYouProducts";
-import NewArrivalsProduct from "@sections/market-1/NewArrivalsProducts/NewArrivalsProduct";
-import FlashSaleProducts from "@sections/market-1/FlashSaleProducts";
+import ProductCarousel from "@sections/market-1/NewArrivalsProducts/ProductCarousel";
 import CampaignProducts from "@sections/market-1/CampaingProducts";
 import FlashSaleBanner from "@sections/market-1/FlashSaleBanner";
-import StationeryProducts from "@sections/market-1/StationeryProducts";
-import GroceryProducts from "@sections/market-1/GroceryProducts";
 import OTCProducts from "@sections/market-1/OTCProducts";
-import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
+import tizaraa_watermark from "../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
 import NextImage from "@component/NextImage";
 import CampaignBanner from "@sections/market-1/CampaignBanner";
+import useFetcher from "@hook/useFetcher";
 
-export default async function Market1() {
+const MarketOnePage = () => {
+ const { data, isLoading } = useFetcher(`frontend/remark/product/items`);
+ const { data: corporateProduct, isLoading: isLoadingCorporate } = useFetcher(
+  `v1/home/corporate-product`
+ );
+ const { data: groceryProduct, isLoading: isLoadingGrocery } = useFetcher(
+  `frontend/category/product/view`
+ );
  return (
   <>
    {/* Background image */}
@@ -54,6 +59,13 @@ export default async function Market1() {
     {/* ======================================= */}
     <Section10 />
 
+    {corporateProduct?.data?.length > 0 && (
+     <ProductCarousel
+      title="Corporate Products"
+      data={corporateProduct?.data || []}
+      isLoading={isLoadingCorporate}
+     />
+    )}
     {/* ======================================= */}
     {/* Campaign Section Banner */}
     {/* ======================================= */}
@@ -72,7 +84,11 @@ export default async function Market1() {
     {/* ======================================= */}
     {/* New Arrivals Section */}
     {/* ======================================= */}
-    <NewArrivalsProduct />
+    <ProductCarousel
+     title="New Arrivals"
+     data={data?.newarrival || []}
+     isLoading={isLoading}
+    />
 
     {/* ======================================= */}
     {/* Flash Sale Banner */}
@@ -82,7 +98,11 @@ export default async function Market1() {
     {/* ======================================= */}
     {/* Flash Sale Products */}
     {/* ======================================= */}
-    <FlashSaleProducts />
+    <ProductCarousel
+     data={data?.flashSale || []}
+     title="Flash Sale"
+     isLoading={isLoading}
+    />
 
     {/* ======================================= */}
     {/* OTC Products */}
@@ -92,12 +112,20 @@ export default async function Market1() {
     {/* ======================================= */}
     {/* Grocery Products */}
     {/* ======================================= */}
-    <GroceryProducts />
+    <ProductCarousel
+     title="Grocery"
+     data={groceryProduct?.GroceryProduct || []}
+     isLoading={isLoadingGrocery}
+    />
 
     {/* ======================================= */}
     {/* Stationery Products */}
     {/* ======================================= */}
-    <StationeryProducts />
+    <ProductCarousel
+     title="Stationery & Craft"
+     data={groceryProduct?.stationeryproduct || []}
+     isLoading={isLoadingGrocery}
+    />
 
     {/* ======================================= */}
     {/* Just For You Products */}
@@ -111,4 +139,6 @@ export default async function Market1() {
    </main>
   </>
  );
-}
+};
+
+export default MarketOnePage;
