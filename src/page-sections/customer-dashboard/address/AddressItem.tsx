@@ -347,7 +347,7 @@ export default function AddressList() {
 
  return (
   <div>
-   {addresses.length > 0 ? (
+   {addresses?.length > 0 ? (
     addresses.map((item) => (
      <AddressItem key={item.id} item={item} onDelete={handleDelete} />
     ))
