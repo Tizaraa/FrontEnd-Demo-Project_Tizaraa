@@ -39,31 +39,82 @@ export async function generateStaticParams() {
 }
 
 // Metadata (Keep this - note that this still causes a slight initial navigation delay)
+// export async function generateMetadata({
+//  params,
+// }: {
+//  params: { slug: string };
+// }): Promise<Metadata> {
+//  const productData = await fetchProductData(params.slug);
+//  if (productData && productData.seo) {
+//   const seo = productData.seo;
+//   return {
+//    title: seo.title || "Product Not Found",
+//    description: seo.description || "No description available.",
+//    keywords: seo.keywords || "products, ecommerce",
+//    openGraph: {
+//     title: seo.title || "Product Not Found",
+//     description: seo.description || "No description available.",
+//     url: seo.url || "",
+//     images: Array.isArray(seo.image) ? seo.image : [seo.image],
+//    },
+//   };
+//  } else {
+//   return {
+//    title: "Product Not Found",
+//    description: "No SEO metadata found for this product.",
+//   };
+//  }
+// }
+
+
+// Generate SEO metadata for the product page
 export async function generateMetadata({
- params,
+  params,
 }: {
- params: { slug: string };
+  params: { slug: string };
 }): Promise<Metadata> {
- const productData = await fetchProductData(params.slug);
- if (productData && productData.seo) {
-  const seo = productData.seo;
-  return {
-   title: seo.title || "Product Not Found",
-   description: seo.description || "No description available.",
-   keywords: seo.keywords || "products, ecommerce",
-   openGraph: {
-    title: seo.title || "Product Not Found",
-    description: seo.description || "No description available.",
-    url: seo.url || "",
-    images: Array.isArray(seo.image) ? seo.image : [seo.image],
-   },
-  };
- } else {
-  return {
-   title: "Product Not Found",
-   description: "No SEO metadata found for this product.",
-  };
- }
+  const productData = await fetchProductData(params.slug);
+  
+  if (productData && productData.seo) {
+    const seo = productData.seo;
+    
+    // Convert relative image path to absolute URL
+    const imageUrl = seo.image 
+      ? `${ApiBaseUrl.baseUrl}/${seo.image}` // Assuming seo.image is a relative path
+      : `${ApiBaseUrl.baseUrl}/default-image.jpg`; // Fallback image
+    
+    return {
+      title: seo.title || "Product Not Found",
+      description: seo.description || "No description available.",
+      keywords: seo.keywords || "products, ecommerce",
+      openGraph: {
+        title: seo.title || "Product Not Found",
+        description: seo.description || "No description available.",
+        url: seo.url || `${ApiBaseUrl.baseUrl}/product/${params.slug}`,
+        images: [
+          {
+            url: imageUrl,
+            width: 1200,
+            height: 630,
+            alt: seo.title || "Product Image",
+          },
+        ],
+        type: "website",
+        siteName: seo.site_name || "Tizaraa",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: seo.title || "Product Not Found",
+        description: seo.description || "No description available.",
+        images: [imageUrl],
+      },
+    };
+  } else {
+    return {
+      title: "Product Not Found",
+      description: "No SEO metadata found for this product.",
+    };
+  }
 }
 
 interface Props {
