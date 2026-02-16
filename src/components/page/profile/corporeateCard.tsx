@@ -1,7 +1,7 @@
 import Card from "@component/Card";
 import Avatar from "@component/avatar";
-import FlexBox from "@component/FlexBox";
 import { H5 } from "@component/Typography";
+import Link from "next/link";
 
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,182 +12,321 @@ import {
  faUser,
  faCalendar,
  faFemale,
+ faBriefcase,
+ faIdBadge,
+ faBuilding,
+ faWallet,
+ faStore,
+ faEnvelope,
+ faPhone,
 } from "@fortawesome/free-solid-svg-icons";
 
 const CorporateCard = ({ profile }) => {
+ const genderLabel =
+  profile?.gender === "male"
+   ? "Male"
+   : profile?.gender === "female"
+     ? "Female"
+     : "N/A";
+
+ const formattedBirthDate = profile?.birth_date
+  ? new Date(profile.birth_date)
+     .toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+     })
+     .replace(/(\d{2} \w{3}) (\d{4})/, "$1, $2")
+  : "N/A";
+
  return (
   <Card
-   p="2rem"
-   borderRadius="16px"
+   p="0"
+   borderRadius="8px"
    style={{
-    boxShadow: "0 8px 30px rgba(0, 0, 0, 0.08)",
+    boxShadow: "0px 4px 16px rgba(43, 52, 69, 0.1)",
     height: "100%",
-    background: "linear-gradient(145deg, #ffffff, #f5f7fa)",
-    border: "1px solid rgba(230, 230, 230, 0.5)",
-    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+    background: "#ffffff",
+    border: "1px solid #DAE1E7",
+    overflow: "hidden",
     display: "flex",
     flexDirection: "column",
    }}
   >
-   <FlexBox
-    alignItems="flex-start" // Changed to flex-start so long content doesn't stretch vertically
-    mb="1.5rem"
+   {/* Header */}
+   <div
     style={{
-     gap: "1.5rem",
-     width: "100%",
+     background: "linear-gradient(135deg, #0F3460, #E94560)",
+     padding: "1rem 1.25rem",
+     display: "flex",
+     alignItems: "center",
+     gap: "1rem",
     }}
    >
-    {/* Avatar / Placeholder */}
     {profile?.image ? (
      <Avatar
-      size={100}
+      size={56}
       src={`${ApiBaseUrl.ImgUrl}${profile.image}`}
       style={{
-       border: "3px solid #E94560",
-       boxShadow: "0 4px 15px rgba(233, 69, 96, 0.2)",
-       flexShrink: 0, // Prevents avatar from shrinking
+       border: "2px solid rgba(255,255,255,0.8)",
+       flexShrink: 0,
       }}
      />
     ) : (
      <div
       style={{
-       width: "100px",
-       height: "100px",
+       width: "56px",
+       height: "56px",
        borderRadius: "50%",
-       background: "linear-gradient(135deg, #f5f7fa, #e4e8f0)",
+       background: "rgba(255,255,255,0.15)",
        display: "flex",
        alignItems: "center",
        justifyContent: "center",
-       boxShadow: "0 4px 15px rgba(107, 114, 128, 0.2)",
-       border: "3px solid #6b7280",
+       border: "2px solid rgba(255,255,255,0.8)",
        flexShrink: 0,
       }}
      >
-      {profile?.gender === "male" ? (
-       <FontAwesomeIcon icon={faUser} size="3x" color="#1e3a8a" />
-      ) : profile?.gender === "female" ? (
-       <FontAwesomeIcon icon={faFemale} size="3x" color="#E94560" />
-      ) : (
-       <FontAwesomeIcon icon={faUser} size="3x" color="#6b7280" />
-      )}
+      <FontAwesomeIcon
+       icon={profile?.gender === "female" ? faFemale : faUser}
+       size="lg"
+       color="#fff"
+      />
      </div>
     )}
-
-    {/* Right side - Info */}
-    <div
-     style={{
-      flex: 1,
-      minWidth: 0, // ← Critical: prevents overflow
-      overflow: "hidden",
-     }}
-    >
-     {/* Name - truncated with ellipsis if too long */}
+    <div style={{ minWidth: 0, flex: 1 }}>
      <H5
       style={{
-       fontSize: "24px",
-       background: "linear-gradient(90deg, #1e3a8a, #E94560)",
-       WebkitBackgroundClip: "text",
-       WebkitTextFillColor: "transparent",
+       fontSize: "1.1rem",
+       color: "#fff",
        fontWeight: "700",
+       margin: 0,
        whiteSpace: "nowrap",
        overflow: "hidden",
        textOverflow: "ellipsis",
        lineHeight: "1.3",
       }}
-      title={profile?.name ? `${profile.name}` : ""} // tooltip shows full name on hover
+      title={profile?.name || ""}
      >
-      {profile?.name || "No Name"}{" "}
+      {profile?.name || "No Name"}
      </H5>
-     <H5
-      style={{
-       fontSize: "0.8rem",
-       margin: "0 0 0.6rem 0",
-       background: "linear-gradient(90deg, #1e3a8a, #E94560)",
-       WebkitBackgroundClip: "text",
-       WebkitTextFillColor: "transparent",
-       fontWeight: "700",
-       whiteSpace: "nowrap",
-       overflow: "hidden",
-       textOverflow: "ellipsis",
-       lineHeight: "1.3",
-      }}
-      title={` (${profile?.type || ""})`}
-     >
-      {profile?.type ? `(${profile.type})` : ""}
-     </H5>
-
-     {/* Info rows */}
-     <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-      {/* Birth Date */}
-      <p style={infoStyle}>
-       <FontAwesomeIcon icon={faCalendar} size="sm" color="#6b7280" />
-       <strong>Birthday:</strong>{" "}
-       {profile?.birth_date
-        ? new Date(profile.birth_date)
-           .toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-           })
-           .replace(/(\d{2} \w{3}) (\d{4})/, "$1, $2")
-        : "N/A"}
-      </p>
-
-      {/* Gender */}
-      <p style={infoStyle}>
-       {profile?.gender === "male" ? (
-        <FontAwesomeIcon icon={faMars} size="sm" color="#1e3a8a" />
-       ) : profile?.gender === "female" ? (
-        <FontAwesomeIcon icon={faVenus} size="sm" color="#E94560" />
-       ) : (
-        <FontAwesomeIcon icon={faGenderless} size="sm" color="#6b7280" />
-       )}
-       <strong>Gender:</strong>{" "}
-       {profile?.gender === "male"
-        ? "Male"
-        : profile?.gender === "female"
-          ? "Female"
-          : "N/A"}
-      </p>
-
-      {/* Company */}
-      <p style={infoStyle}>
-       <strong>Company:</strong> {profile?.company_name || "N/A"}
-      </p>
-
-      {/* Employee ID */}
-      <p style={infoStyle}>
-       <strong>Employee ID:</strong> {profile?.employee_id || "N/A"}
-      </p>
-
-      {/* Designation */}
-      <p style={infoStyle}>
-       <strong>Designation:</strong>{" "}
-       <span style={{ wordBreak: "break-word" }}>
-        {profile?.designation || "N/A"}
-       </span>
-      </p>
-
-      {/* Credit Balance */}
-      <p style={infoStyle}>
-       <strong>Credit Balance:</strong> {profile?.credit_balance ?? 0}
-      </p>
-     </div>
+     {profile?.type && (
+      <span
+       style={{
+        display: "inline-block",
+        marginTop: "0.2rem",
+        padding: "2px 10px",
+        borderRadius: "10px",
+        background: "rgba(255,255,255,0.2)",
+        color: "#fff",
+        fontSize: "0.7rem",
+        fontWeight: "600",
+       }}
+      >
+       {profile.type}
+      </span>
+     )}
     </div>
-   </FlexBox>
+   </div>
+
+   {/* Info Grid - Two Columns */}
+   <div
+    style={{
+     padding: "0.75rem 1rem",
+     display: "grid",
+     gridTemplateColumns: "1fr 1fr",
+     gap: "0.35rem",
+     flex: 1,
+    }}
+   >
+    <InfoRow
+     icon={faBuilding}
+     iconBg="#FCE9EC"
+     iconColor="#D23F57"
+     label="Company"
+     value={profile?.company_name || "N/A"}
+    />
+    <InfoRow
+     icon={faIdBadge}
+     iconBg="rgba(15, 52, 96, 0.1)"
+     iconColor="#0F3460"
+     label="Employee ID"
+     value={profile?.employee_id || "N/A"}
+    />
+    <InfoRow
+     icon={faBriefcase}
+     iconBg="#FCE9EC"
+     iconColor="#D23F57"
+     label="Designation"
+     value={profile?.designation || "N/A"}
+    />
+    <InfoRow
+     icon={faCalendar}
+     iconBg="rgba(15, 52, 96, 0.1)"
+     iconColor="#0F3460"
+     label="Birthday"
+     value={formattedBirthDate}
+    />
+    <InfoRow
+     icon={
+      profile?.gender === "male"
+       ? faMars
+       : profile?.gender === "female"
+         ? faVenus
+         : faGenderless
+     }
+     iconBg="#FCE9EC"
+     iconColor={
+      profile?.gender === "male"
+       ? "#0F3460"
+       : profile?.gender === "female"
+         ? "#E94560"
+         : "#7D879C"
+     }
+     label="Gender"
+     value={genderLabel}
+    />
+    <InfoRow
+     icon={faWallet}
+     iconBg="rgba(51, 208, 103, 0.15)"
+     iconColor="#15803d"
+     label="Credit Balance"
+     value={profile?.credit_balance ?? "0"}
+     highlight
+    />
+    <a href={`mailto:${profile?.email}`} style={{ textDecoration: "none" }}>
+     <InfoRow
+      icon={faEnvelope}
+      iconBg="rgba(15, 52, 96, 0.1)"
+      iconColor="#0F3460"
+      label="Email"
+      value={profile?.email || "N/A"}
+     />
+    </a>
+    <a href={`tel:${profile?.phone}`} style={{ textDecoration: "none" }}>
+     <InfoRow
+      icon={faPhone}
+      iconBg="#FCE9EC"
+      iconColor="#D23F57"
+      label="Phone"
+      value={profile?.phone || "N/A"}
+     />
+    </a>
+   </div>
+
+   {/* Corporate Shop Link */}
+   {(
+    <Link href={`/shops/${profile?.shop_slug || "corporate-shop"}`}>
+     <div
+      style={{
+       margin: "0 1rem 0.75rem",
+       padding: "0.5rem 0.75rem",
+       borderRadius: "6px",
+       background: "linear-gradient(135deg, #0F3460, #E94560)",
+       display: "flex",
+       alignItems: "center",
+       gap: "0.6rem",
+       cursor: "pointer",
+       transition: "opacity 0.2s ease",
+      }}
+     >
+      <div
+       style={{
+        width: "28px",
+        height: "28px",
+        borderRadius: "6px",
+        background: "rgba(255,255,255,0.2)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+       }}
+      >
+       <FontAwesomeIcon icon={faStore} size="xs" color="#fff" />
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+       <span
+        style={{
+         fontSize: "0.85rem",
+         color: "#fff",
+         fontWeight: "600",
+         display: "block",
+         lineHeight: "1.3",
+        }}
+       >
+        Visit Corporate Shop
+       </span>
+       <span
+        style={{
+         fontSize: "0.65rem",
+         color: "rgba(255,255,255,0.7)",
+        }}
+       >
+        {profile?.company_name || "Browse products"}
+       </span>
+      </div>
+      <span style={{ color: "#fff", fontSize: "1rem" }}>&#8594;</span>
+     </div>
+    </Link>
+   )}
   </Card>
  );
 };
 
-// Reusable style for info rows
-const infoStyle = {
- margin: 0,
- color: "#6b7280",
- display: "flex",
- alignItems: "center",
- gap: "0.6rem",
- fontSize: "0.95rem",
- lineHeight: "1.4",
-};
+const InfoRow = ({
+ icon,
+ iconBg,
+ iconColor,
+ label,
+ value,
+ highlight = false,
+}: {
+ icon: any;
+ iconBg: string;
+ iconColor: string;
+ label: string;
+ value: string;
+ highlight?: boolean;
+}) => (
+ <div
+  style={{
+   display: "flex",
+   alignItems: "center",
+   gap: "0.6rem",
+   padding: "0.4rem 0.6rem",
+   borderRadius: "6px",
+   background: highlight ? "rgba(51, 208, 103, 0.08)" : "#F6F9FC",
+  }}
+ >
+  <div
+   style={{
+    width: "28px",
+    height: "28px",
+    borderRadius: "6px",
+    background: iconBg,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+   }}
+  >
+   <FontAwesomeIcon icon={icon} size="xs" color={iconColor} />
+  </div>
+  <span style={{ fontSize: "0.8rem", color: "#7D879C", flexShrink: 0 }}>
+   {label}
+  </span>
+  <span
+   style={{
+    fontSize: "0.85rem",
+    color: highlight ? "#15803d" : "#2B3445",
+    fontWeight: highlight ? "700" : "500",
+    marginLeft: "auto",
+    textAlign: "right",
+    wordBreak: "break-word",
+   }}
+  >
+   {value}
+  </span>
+ </div>
+);
 
 export default CorporateCard;
