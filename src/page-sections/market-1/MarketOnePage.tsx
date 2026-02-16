@@ -64,7 +64,7 @@ const MarketOnePage = () => {
                         title="Corporate Products"
                         data={corporateProduct?.data || []}
                         isLoading={isLoadingCorporate}
-                        seeMoreLink="/shops/payoneer-garments"
+                        seeMoreLink={`/shops/${corporateProduct?.seller_slug}`}
                     />
                 )}
                 {/* ======================================= */}
