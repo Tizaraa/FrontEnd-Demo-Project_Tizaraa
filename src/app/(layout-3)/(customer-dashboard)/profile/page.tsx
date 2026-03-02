@@ -313,6 +313,7 @@ type profileType = {
  designation?: any;
  employee_status?: any;
  company_name?: any;
+ shop_slug?: string;
  created_at?: string;
  updated_at?: string;
 };
@@ -446,7 +447,7 @@ export default function Profile() {
 
     <Grid container spacing={4} mb="2rem">
      {/* Profile Card */}
-     <Grid item md={6} xs={12}>
+     <Grid item md={12} xs={12}>
       {profile?.type === "Regular" ? (
        <Card
         p="2rem"
@@ -565,108 +566,6 @@ export default function Profile() {
       )}
      </Grid>
 
-     {/* Contact Info Card */}
-     <Grid item md={6} xs={12}>
-      <Card
-       p="2rem"
-       borderRadius="16px"
-       style={{
-        boxShadow: "0 8px 30px rgba(0, 0, 0, 0.08)",
-        height: "100%",
-        background: "linear-gradient(145deg, #ffffff, #f5f7fa)",
-        border: "1px solid rgba(230, 230, 230, 0.5)",
-        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-        display: "flex",
-        flexDirection: "column",
-       }}
-      >
-       <Typography
-        variant="h5"
-        mb="1.5rem"
-        fontWeight={"bold"}
-        style={{
-         background: "linear-gradient(90deg, #1e3a8a, #E94560)",
-         WebkitBackgroundClip: "text",
-         WebkitTextFillColor: "transparent",
-         fontSize: "1.5rem",
-        }}
-       >
-        Contact Info
-       </Typography>
-       <FlexBox
-        alignItems="center"
-        style={{
-         gap: "0.75rem",
-         marginBottom: "1.5rem",
-         padding: "0.75rem 1rem",
-         borderRadius: "8px",
-         background: "rgba(107, 114, 128, 0.05)",
-         transition: "transform 0.2s ease",
-        }}
-       >
-        <div
-         style={{
-          width: "40px",
-          height: "40px",
-          borderRadius: "50%",
-          background: "linear-gradient(135deg, #1e3a8a, #3b82f6)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-         }}
-        >
-         <FontAwesomeIcon icon={faEnvelope} size="lg" color="#ffffff" />
-        </div>
-        <a
-         href={`mailto:${profile?.email}`}
-         style={{
-          color: "#4b5563",
-          textDecoration: "none",
-          fontWeight: "500",
-          fontSize: "1rem",
-         }}
-        >
-         <Typography color="#4b5563">{profile?.email}</Typography>
-        </a>
-       </FlexBox>
-
-       <FlexBox
-        alignItems="center"
-        style={{
-         gap: "0.75rem",
-         padding: "0.75rem 1rem",
-         borderRadius: "8px",
-         background: "rgba(107, 114, 128, 0.05)",
-         transition: "transform 0.2s ease",
-        }}
-       >
-        <div
-         style={{
-          width: "40px",
-          height: "40px",
-          borderRadius: "50%",
-          background: "linear-gradient(135deg, #E94560, #f87171)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-         }}
-        >
-         <FontAwesomeIcon icon={faPhone} size="lg" color="#ffffff" />
-        </div>
-        <a
-         href={`tel:${profile?.phone}`}
-         style={{
-          color: "#4b5563",
-          textDecoration: "none",
-          fontWeight: "500",
-          fontSize: "1rem",
-         }}
-        >
-         <Typography color="#4b5563">{profile?.phone}</Typography>
-        </a>
-       </FlexBox>
-      </Card>
-     </Grid>
     </Grid>
 
     <Grid container spacing={4} style={{ marginTop: "1rem" }}>

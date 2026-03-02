@@ -539,7 +539,10 @@ export default function AddressList() {
       Authorization: `Bearer ${authtoken}`,
      },
     });
-    setAddresses(response.data.user);
+    // setAddresses(response.data.user);
+    setAddresses(response.data.address);
+    console.log("address", response.data.address);
+
    } catch (error) {
     console.error("Error fetching addresses:", error);
    } finally {
@@ -587,7 +590,7 @@ export default function AddressList() {
     <Typography>
      <Loader />
     </Typography>
-   ) : addresses.length > 0 ? (
+   ) : addresses?.length > 0 ? (
     addresses.map((item) => (
      <AddressItem key={item.id} item={item} onDelete={handleDelete} />
     ))
