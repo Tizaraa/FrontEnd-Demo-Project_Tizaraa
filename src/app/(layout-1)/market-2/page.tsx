@@ -59,7 +59,7 @@ export default async function MarketTwo() {
     {/* DISCOUNT OFFER BANNER AREA */}
     <Section8 />
 
-    {/* WOMEN'S CATEGORY BASED PRODUCTS AREA */}
+    {/*   AREA */}
     <Section6 data={womenFashionProducts} />
 
     {/* FEATURES BRAND LIST AREA */}
