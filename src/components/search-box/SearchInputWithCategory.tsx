@@ -155,7 +155,7 @@ export default function SearchInputWithCategory() {
   setResultList([]);
  }, [pathname]);
 
- // ✅ Hide dropdown when clicking outside
+ //  Hide dropdown when clicking outside
  useEffect(() => {
   const handleClickOutside = (event: MouseEvent) => {
    if (
@@ -172,12 +172,23 @@ export default function SearchInputWithCategory() {
   };
  }, []);
 
+ //  Fetch search suggestions from API
  const fetchSearchResults = async (query: string) => {
+  if (!query) return; // prevent unnecessary API calls for empty query
   try {
    const response = await axios.get(
-    `${ApiBaseUrl.baseUrl}search/suggestion/${query}`
+    `${ApiBaseUrl.baseUrl}/v1/search/suggestion`,
+    {
+     params: {
+      q: query,
+      limit: 100,
+      page: 1,
+     },
+    }
    );
    const results = response.data || [];
+   console.log(results);
+   return;
    const uniqueResults = Array.from(
     new Set(results.map((item) => item.keyword))
    ).map((keyword) => results.find((item) => item.keyword === keyword));

@@ -594,16 +594,15 @@ export default function SearchResult({ sortOptions, slug }) {
    filters.province = selectedProvinces;
 
   try {
-
    const response = await axios.post(
     `${
      ApiBaseUrl.baseUrl
     }seller/products/${slug}?productsearch=${encodeURIComponent(searchTerm)}`,
-   {
-      ...filters,
-      page: currentPage,
-      orderBy: selectedSortOption,
-     }
+    {
+     ...filters,
+     page: currentPage,
+     orderBy: selectedSortOption,
+    }
    );
 
    if (response.status !== 200) {
@@ -635,9 +634,9 @@ export default function SearchResult({ sortOptions, slug }) {
   searchTerm,
  ]);
 
- useEffect(() => {
-  fetchProducts();
- }, [fetchProducts]);
+ //  useEffect(() => {
+ //   fetchProducts();
+ //  }, [fetchProducts]);
 
  useEffect(() => {
   fetchProducts();
