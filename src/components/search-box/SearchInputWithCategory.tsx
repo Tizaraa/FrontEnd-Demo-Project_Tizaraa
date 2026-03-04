@@ -231,14 +231,14 @@ export default function SearchInputWithCategory() {
  const handleSearchAction = () => {
   if (searchValue.trim() !== "") {
    const encodedSearchValue = encodeURIComponent(searchValue.trim());
-   console.log("encodedSearchValue", encodedSearchValue);
+
    setResultList([]); // Hide suggestions
    router.push(`/product/search/${encodedSearchValue}`);
   }
  };
 
  const handleSuggestionClick = (item: any) => {
-  const selectedValue = item.slug || `Product ${item.slug}`;
+  const selectedValue = item.name || `Product ${item.name}`;
   setSearchValue(selectedValue);
   setResultList([]); // Hide suggestions
   router.push(`/product/search/${encodeURIComponent(selectedValue)}`);

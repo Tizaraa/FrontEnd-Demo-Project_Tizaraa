@@ -242,7 +242,7 @@ export default function ProductGridView({
  return (
   <div>
    <Grid container spacing={isLargeScreen ? 6 : 2}>
-    {products.length > 0 ? (
+    {products?.length > 0 ? (
      products.map((item) => (
       <Grid item key={item.id} xs={6} sm={4} md={4} lg={4}>
        <ProductCard1

@@ -407,21 +407,69 @@ export default function SearchResult({ sortOptions, slug }) {
   setSelectedSortOption(sortOption.value);
  };
 
+ //  const fetchProducts = useCallback(async () => {
+ //   setLoading(true);
+ //   try {
+ //    const response = await fetch(`${ApiBaseUrl.baseUrl}search/product/${slug}`, {
+ //     method: "POST",
+ //     headers: {
+ //      "Content-Type": "application/json",
+ //     },
+ //     body: JSON.stringify({
+ //      category: selectedCategory || "all",
+ //      brand: selectedBrand || null,
+ //      country: selectedCountry || null,
+ //      province: selectedProvinces || null,
+ //      page: currentPage,
+ //      orderBy: selectedSortOption,
+ //     }),
+ //    });
+
+ //    if (!response.ok) {
+ //     throw new Error("Network response was not ok");
+ //    }
+
+ //    const data = await response.json();
+ //    // Reset products when fetching the first page
+ //    if (currentPage === 1) {
+ //     setProducts(data.data);
+ //    } else {
+ //     setProducts((prevProducts) => [...prevProducts, ...data.data]);
+ //    }
+ //    setTotalProducts(data.total);
+ //   } catch (error) {
+ //    console.error("Error fetching products:", error);
+ //   } finally {
+ //    setLoading(false);
+ //   }
+ //  }, [
+ //   selectedBrand,
+ //   selectedCategory,
+ //   selectedCountry,
+ //   currentPage,
+ //   selectedSortOption,
+ //  ]);
+
  const fetchProducts = useCallback(async () => {
   setLoading(true);
+
   try {
-   const response = await fetch(`${ApiBaseUrl.baseUrl}search/product/${slug}`, {
+   const response = await fetch(`${ApiBaseUrl.baseUrl}v1/search/product`, {
     method: "POST",
     headers: {
      "Content-Type": "application/json",
     },
+
     body: JSON.stringify({
-     category: selectedCategory || "all",
-     brand: selectedBrand || null,
-     country: selectedCountry || null,
-     province: selectedProvinces || null,
-     page: currentPage,
-     orderBy: selectedSortOption,
+     ...{ category: selectedCategory ? selectedCategory : [] },
+     ...{ brand: selectedBrand ? selectedBrand : [] },
+     //  ...{ country: selectedCountry ? selectedCountry : [] },
+     //  ...{ province: selectedProvinces ? selectedProvinces : [] },
+     page: currentPage ? currentPage : 1,
+     //  orderBy: selectedSortOption,
+     min_price: priceMin ? priceMin : null,
+     max_price: priceMax ? priceMax : null,
+     q: slug.split("%").join(" "),
     }),
    });
 
@@ -432,11 +480,11 @@ export default function SearchResult({ sortOptions, slug }) {
    const data = await response.json();
    // Reset products when fetching the first page
    if (currentPage === 1) {
-    setProducts(data.data);
+    setProducts(data.products);
    } else {
-    setProducts((prevProducts) => [...prevProducts, ...data.data]);
+    setProducts((prevProducts) => [...prevProducts, ...data.products]);
    }
-   setTotalProducts(data.total);
+   setTotalProducts(data.pagination.total);
   } catch (error) {
    console.error("Error fetching products:", error);
   } finally {
@@ -448,11 +496,9 @@ export default function SearchResult({ sortOptions, slug }) {
   selectedCountry,
   currentPage,
   selectedSortOption,
+  priceMin,
+  priceMax,
  ]);
-
- useEffect(() => {
-  fetchProducts();
- }, [fetchProducts]);
 
  useEffect(() => {
   fetchProducts();

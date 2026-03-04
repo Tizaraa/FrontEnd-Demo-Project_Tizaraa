@@ -1202,7 +1202,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
  useEffect(() => {
   const fetchFilters = async () => {
    try {
-    let response;
+    let response: any;
     if (pageType === "default") {
      response = await axios.get(`${ApiBaseUrl.baseUrl}category-filter/${slug}`);
     } else if (pageType === "search") {
@@ -1239,10 +1239,10 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   setIsLoadingBrands(true);
   try {
    const queryParams = [];
-   if (priceMin !== null) queryParams.push(`min_price=${priceMin}`);
-   if (priceMax !== null) queryParams.push(`max_price=${priceMax}`);
+   //  if (priceMin !== null) queryParams.push(`price_min=${priceMin}`);
+   //  if (priceMax !== null) queryParams.push(`price_max=${priceMax}`);
    const queryString = queryParams.length ? `?${queryParams.join("&")}` : "";
-   console.log("queryString", queryString);
+
    let response;
    if (pageType === "default") {
     response = await axios.post(
@@ -1250,7 +1250,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
     );
    } else if (pageType === "search") {
     response = await axios.post(
-     `${ApiBaseUrl.baseUrl}search-filter/${categorySlug}${queryString}`
+     `${ApiBaseUrl.baseUrl}/search/product/${categorySlug}${queryString}`
     );
    } else if (pageType === "shop") {
     response = await axios.post(
@@ -1258,7 +1258,8 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
     );
    }
 
-   const categoryBrands = response.data.brand_filter || [];
+   //  set filter brands based on category and price range
+   const categoryBrands = response.data.brands || [];
    setBrandList(categoryBrands);
 
    const availableBrandIds = categoryBrands.map((brand: Brand) => brand.id);
@@ -1351,6 +1352,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
 
  const handleApplyPriceFilter = () => {
   onPriceChange(priceMin, priceMax);
+  return;
   if (selectedCategorySlug) {
    fetchBrandsByCategory(selectedCategorySlug);
   }
@@ -1579,7 +1581,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
     onClickHandler={handleCountryChange}
     labelKey="location"
    />
-   <FilterSection
+   {/* <FilterSection
     title="Shipped From"
     items={provinceList.filter((p) => p.province && p.province.trim() !== "")}
     selectedItems={selectedProvinces}
@@ -1589,7 +1591,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
     setShowSection={setShowProvinces}
     onClickHandler={handleProvinceChange}
     labelKey="province"
-   />
+   /> */}
 
    {/* Price Range Section */}
    <div style={filterSectionStyle}>
