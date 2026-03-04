@@ -138,7 +138,7 @@ export default function SearchInputWithCategory() {
  const pathname = usePathname();
  const wrapperRef = useRef<HTMLDivElement>(null); // 🔄 Ref for outside click detection
 
- // ✅ Extract search term from URL and set as searchValue
+ //  Extract search term from URL and set as searchValue
  useEffect(() => {
   const pathParts = pathname.split("/");
 
@@ -177,7 +177,8 @@ export default function SearchInputWithCategory() {
   if (!query) return; // prevent unnecessary API calls for empty query
   try {
    const response = await axios.post(
-    `${ApiBaseUrl.baseUrl}v1/search/suggestion?q=${query}&limit=100`
+    `${ApiBaseUrl.baseUrl}v1/search/suggestion`,
+    { q: query, limit: 100, page: 1 }
    );
    const results = response.data.products || [];
 
@@ -198,7 +199,7 @@ export default function SearchInputWithCategory() {
   } else {
    fetchSearchResults(value);
   }
- }, 100);
+ }, 200);
 
  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
  //   const value = event.target.value;

@@ -1,7 +1,6 @@
 "use client"; // Add this line at the top
 import Box from "@component/Box";
 import SearchResult from "./SearchResult";
-import { useEffect } from "react";
 
 interface Props {
  params: { slug: string };

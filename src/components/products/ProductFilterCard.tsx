@@ -1239,10 +1239,10 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   setIsLoadingBrands(true);
   try {
    const queryParams = [];
-   if (priceMin !== null) queryParams.push(`price_min=${priceMin}`);
-   if (priceMax !== null) queryParams.push(`price_max=${priceMax}`);
+   if (priceMin !== null) queryParams.push(`min_price=${priceMin}`);
+   if (priceMax !== null) queryParams.push(`max_price=${priceMax}`);
    const queryString = queryParams.length ? `?${queryParams.join("&")}` : "";
-
+   console.log("queryString", queryString);
    let response;
    if (pageType === "default") {
     response = await axios.post(
