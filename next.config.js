@@ -62,7 +62,6 @@ const nextConfig = {
   },
   experimental: {
     missingSuspenseWithCSRBailout: false,
-    middleware: true,
   },
   
   // Add custom headers to handle CORS and referrer issues
