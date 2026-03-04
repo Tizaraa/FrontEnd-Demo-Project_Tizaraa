@@ -176,22 +176,14 @@ export default function SearchInputWithCategory() {
  const fetchSearchResults = async (query: string) => {
   if (!query) return; // prevent unnecessary API calls for empty query
   try {
-   const response = await axios.get(
-    `${ApiBaseUrl.baseUrl}/v1/search/suggestion`,
-    {
-     params: {
-      q: query,
-      limit: 100,
-      page: 1,
-     },
-    }
+   const response = await axios.post(
+    `${ApiBaseUrl.baseUrl}v1/search/suggestion?q=${query}&limit=100`
    );
-   const results = response.data || [];
-   console.log(results);
-   return;
+   const results = response.data.products || [];
+
    const uniqueResults = Array.from(
-    new Set(results.map((item) => item.keyword))
-   ).map((keyword) => results.find((item) => item.keyword === keyword));
+    new Set(results.map((item: any) => item.code))
+   ).map((keyword) => results.find((item: any) => item.code === keyword));
 
    setResultList(uniqueResults);
   } catch (error) {
@@ -206,7 +198,7 @@ export default function SearchInputWithCategory() {
   } else {
    fetchSearchResults(value);
   }
- }, 300);
+ }, 100);
 
  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
  //   const value = event.target.value;
@@ -238,13 +230,14 @@ export default function SearchInputWithCategory() {
  const handleSearchAction = () => {
   if (searchValue.trim() !== "") {
    const encodedSearchValue = encodeURIComponent(searchValue.trim());
+   console.log("encodedSearchValue", encodedSearchValue);
    setResultList([]); // Hide suggestions
    router.push(`/product/search/${encodedSearchValue}`);
   }
  };
 
  const handleSuggestionClick = (item: any) => {
-  const selectedValue = item.keyword || `Product ${item.product_id}`;
+  const selectedValue = item.slug || `Product ${item.slug}`;
   setSearchValue(selectedValue);
   setResultList([]); // Hide suggestions
   router.push(`/product/search/${encodeURIComponent(selectedValue)}`);
@@ -283,9 +276,7 @@ export default function SearchInputWithCategory() {
     >
      {resultList.map((item: any, index: number) => (
       <MenuItem key={index} onClick={() => handleSuggestionClick(item)}>
-       <Span fontSize="14px">
-        {item.keyword || `Product ${item.product_id}`}
-       </Span>
+       <Span fontSize="14px">{`${item.name} `}</Span>
       </MenuItem>
      ))}
     </Card>

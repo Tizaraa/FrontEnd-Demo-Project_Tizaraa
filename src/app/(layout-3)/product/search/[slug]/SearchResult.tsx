@@ -428,6 +428,7 @@ export default function SearchResult({ sortOptions, slug }) {
    if (!response.ok) {
     throw new Error("Network response was not ok");
    }
+   console.log("from search result components", response);
 
    const data = await response.json();
    // Reset products when fetching the first page
