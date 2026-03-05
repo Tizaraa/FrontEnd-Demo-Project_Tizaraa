@@ -1249,9 +1249,10 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
      `${ApiBaseUrl.baseUrl}category/${categorySlug}${queryString}`
     );
    } else if (pageType === "search") {
-    response = await axios.post(
-     `${ApiBaseUrl.baseUrl}/search/product/${categorySlug}${queryString}`
-    );
+    response = await axios.post(`${ApiBaseUrl.baseUrl}v1/search/product`, {
+     category: [categorySlug],
+     q: slug.split("%").join(" "),
+    });
    } else if (pageType === "shop") {
     response = await axios.post(
      `${ApiBaseUrl.baseUrl}shop-filter/${categorySlug}${queryString}`

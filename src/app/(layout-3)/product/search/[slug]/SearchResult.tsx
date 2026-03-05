@@ -461,7 +461,7 @@ export default function SearchResult({ sortOptions, slug }) {
     },
 
     body: JSON.stringify({
-     ...{ category: selectedCategory ? selectedCategory : [] },
+     ...{ category: selectedCategory ? [selectedCategory] : [] },
      ...{ brand: selectedBrand ? selectedBrand : [] },
      //  ...{ country: selectedCountry ? selectedCountry : [] },
      //  ...{ province: selectedProvinces ? selectedProvinces : [] },
