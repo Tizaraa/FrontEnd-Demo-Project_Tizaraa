@@ -60,10 +60,10 @@ const nextConfig = {
     unoptimized: true,
     dangerouslyAllowSVG: true,
   },
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-    middleware: true,
-  },
+  // experimental: {
+  //   missingSuspenseWithCSRBailout: false,
+  //   // middleware: true,
+  // },
   
   // Add custom headers to handle CORS and referrer issues
   async headers() {

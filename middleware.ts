@@ -4,11 +4,17 @@ import authService from "services/authService"; // Ensure this service works ser
 
 // This function runs on every request
 export function middleware(request: NextRequest) {
+
+  const token = request.cookies.get("token")?.value;
+  const isLoggedIn = !!token;
+
   // Simulate the check for authentication
-  const isLoggedIn = authService.isAuthenticated(); // Adjust the method to work server-side
-  console.log("isLoggedIn" , isLoggedIn)
+  //const isLoggedIn = authService.isAuthenticated(); // Adjust the method to work server-side
+  
 
   const path = request.nextUrl.pathname; // Get the current URL path
+  console.log("isLoggedIn" , isLoggedIn , path)
+
 
   const isAuthPath = ["/login", "/signup"].includes(path); // Public paths like login and signup
   const isProtectedPath = ["/profile", "/orders", "/checkout", "/payment", "/wish-list", "/address", "/payment-methods"].includes(path); // Protected paths

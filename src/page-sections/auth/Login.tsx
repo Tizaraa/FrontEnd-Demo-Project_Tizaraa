@@ -575,6 +575,7 @@ export default function Login() {
 
    const data = response.data;
 
+
    if (data.token && response.status === 200) {
     Cookies.set("token", data.token, { expires: 7 });
     localStorage.setItem("token", data.token);

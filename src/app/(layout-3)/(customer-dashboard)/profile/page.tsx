@@ -352,16 +352,16 @@ export default function Profile() {
    router.push("/profile");
   }
 
-  if (!authService.isAuthenticated()) {
-   router.push("/login");
-  } else {
-   authService.getUser().then((userData) => {
-    setUser(userData);
-    console.log("userData", userData);
+  // if (!authService.isAuthenticated()) {
+  //  router.push("/login");
+  // } else {
+  //  authService.getUser().then((userData) => {
+  //   setUser(userData);
+  //   console.log("userData", userData);
 
-    setLoading(false);
-   });
-  }
+  //   setLoading(false);
+  //  });
+  // }
  }, [router, searchParams]);
 
  useEffect(() => {
@@ -399,7 +399,7 @@ export default function Profile() {
    }
   };
 
-  fetchProfileData();
+  // fetchProfileData();
  }, []);
 
  if (loading) return <LoadingFallback />;
@@ -565,7 +565,6 @@ export default function Profile() {
        <CorporateCard profile={profile} />
       )}
      </Grid>
-
     </Grid>
 
     <Grid container spacing={4} style={{ marginTop: "1rem" }}>
