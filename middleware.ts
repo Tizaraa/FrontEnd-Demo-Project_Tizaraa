@@ -6,6 +6,7 @@ import authService from "services/authService"; // Ensure this service works ser
 export function middleware(request: NextRequest) {
   // Simulate the check for authentication
   const isLoggedIn = authService.isAuthenticated(); // Adjust the method to work server-side
+  console.log("isLoggedIn" , isLoggedIn)
 
   const path = request.nextUrl.pathname; // Get the current URL path
 
@@ -22,7 +23,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  return NextResponse.next(); // Continue the request if everything is fine
+   return NextResponse.next(); // Continue the request if everything is fine
 }
 
 // Configuring the middleware to match specific routes

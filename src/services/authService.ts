@@ -19,16 +19,16 @@ interface UserInfo {
  created_at: string; // ISO date string
  updated_at: string | null; // Can be null
  user_vercode: string | null; // Can be null, add if applicable
- type?: string | null; 
- employee_id?: number | null; 
- nid?: number | null; 
- designation?: string | null; 
- credit_limit?: number | null; 
- credit_balance?: number | null; 
- purchase_limit?: number | null; 
- purchase_balance?: number | null; 
- employee_status?: string | null; 
- company_name?: string | null; 
+ type?: string | null;
+ employee_id?: number | null;
+ nid?: number | null;
+ designation?: string | null;
+ credit_limit?: number | null;
+ credit_balance?: number | null;
+ purchase_limit?: number | null;
+ purchase_balance?: number | null;
+ employee_status?: string | null;
+ company_name?: string | null;
 }
 
 interface RegisterResponse {
@@ -36,42 +36,42 @@ interface RegisterResponse {
 }
 
 const authService = {
- login: async (values: any): Promise<LoginResponse> => {
-  try {
-   const response = await fetch(`${ApiBaseUrl.baseUrl}login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(values),
-   });
+ // login: async (values: any): Promise<LoginResponse> => {
+ //  try {
+ //   const response = await fetch(`${ApiBaseUrl.baseUrl}login`, {
+ //    method: "POST",
+ //    headers: { "Content-Type": "application/json" },
+ //    body: JSON.stringify(values),
+ //   });
 
-   if (!response.ok) throw new Error("Login failed");
+ //   if (!response.ok) throw new Error("Login failed");
 
-   const data: LoginResponse = await response.json();
-   localStorage.setItem("token", data.token);
-   localStorage.setItem("userInfo", JSON.stringify(data.user)); // Storing userInfo as a JSON string
-   return data;
-  } catch (error) {
-   console.error("Error in login:", error);
-   throw error;
-  }
- },
+ //   const data: LoginResponse = await response.json();
+ //   localStorage.setItem("token", data.token);
+ //   localStorage.setItem("userInfo", JSON.stringify(data.user)); // Storing userInfo as a JSON string
+ //   return data;
+ //  } catch (error) {
+ //   console.error("Error in login:", error);
+ //   throw error;
+ //  }
+ // },
 
  googleLogin: (): void => {
   // Redirect to the Laravel Google login route
   window.location.href = `${ApiBaseUrl.baseUrl}login/google`;
  },
 
- isAuthenticated: (): boolean => {
-  // const token = Cookies.get('token') || localStorage.getItem('token');
-  const token = authService.getToken() || localStorage.getItem("token");
-  return !!token; // Check if token exists
- },
+ // isAuthenticated: (): boolean => {
+ //  // const token = Cookies.get('token') || localStorage.getItem('token');
+ //  const token = authService.getToken() || localStorage.getItem("token");
+ //  return !!token; // Check if token exists
+ // },
 
- logout: (): void => {
-  Cookies.remove("token");
-  localStorage.removeItem("token");
-  localStorage.removeItem("userInfo");
- },
+ // logout: (): void => {
+ //  Cookies.remove("token");
+ //  localStorage.removeItem("token");
+ //  localStorage.removeItem("userInfo");
+ // },
 
  register: async (
   email: string,
@@ -94,38 +94,83 @@ const authService = {
   }
  },
 
- getToken: (): string | null => {
-  return localStorage.getItem("token");
- },
+ // getToken: (): string | null => {
+ //  return localStorage.getItem("token");
+ // },
 
- getUser: async (): Promise<UserInfo | null> => {
-  const userInfoString = localStorage.getItem("userInfo");
-  if (userInfoString) {
-   const userInfo: UserInfo = JSON.parse(userInfoString);
-   return userInfo;
+ // getUser: async (): Promise<UserInfo | null> => {
+ //  const userInfoString = localStorage.getItem("userInfo");
+ //  if (userInfoString) {
+ //   const userInfo: UserInfo = JSON.parse(userInfoString);
+ //   return userInfo;
+ //  }
+
+ login: async (values: any): Promise<LoginResponse> => {
+  try {
+   const response = await fetch(`${ApiBaseUrl.baseUrl}login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(values),
+   });
+
+   if (!response.ok) throw new Error("Login failed");
+
+   const data: LoginResponse = await response.json();
+
+   // Token Cookie-te save kora (Expires 7 days, Path '/')
+   Cookies.set("token", data.token, { expires: 7, path: "/" });
+
+   // User info server-e lage na tai eta localStorage-e thakte pare
+   localStorage.setItem("userInfo", JSON.stringify(data.user));
+
+   return data;
+  } catch (error) {
+   console.error("Error in login:", error);
+   throw error;
   }
-
-  // Optionally fetch from API if userInfo is not found in localStorage
-  //     try {
-  //         const response = await fetch("https://frontend.tizaraa.com/api/user", {
-  //             method: "GET",
-  //             headers: {
-  //                 "Authorization": `Bearer ${this.getToken()}`, // Use the stored token
-  //                 "Content-Type": "application/json"
-  //             },
-  //         });
-
-  //         if (!response.ok) throw new Error("Failed to fetch user data");
-
-  //         const data: UserInfo = await response.json();
-  //         localStorage.setItem("userInfo", JSON.stringify(data)); // Update localStorage with fetched user info
-  //         return data;
-  //     } catch (error) {
-  //         console.error("Error fetching user info:", error);
-  //         return null;
-  //     }
-  // },
  },
+
+ getToken: (): string | null => {
+  return Cookies.get("token") || null;
+ },
+
+ isAuthenticated: (): boolean => {
+  const token = authService.getToken();
+  return !!token;
+ },
+
+ logout: (): void => {
+  Cookies.remove("token", { path: "/" });
+  localStorage.removeItem("userInfo");
+  localStorage.removeItem("token");
+ },
+
+ getUser: (): UserInfo | null => {
+  if (typeof window === "undefined") return null;
+  const userInfoString = localStorage.getItem("userInfo");
+  return userInfoString ? JSON.parse(userInfoString) : null;
+ },
+
+ // Optionally fetch from API if userInfo is not found in localStorage
+ //     try {
+ //         const response = await fetch("https://frontend.tizaraa.com/api/user", {
+ //             method: "GET",
+ //             headers: {
+ //                 "Authorization": `Bearer ${this.getToken()}`, // Use the stored token
+ //                 "Content-Type": "application/json"
+ //             },
+ //         });
+
+ //         if (!response.ok) throw new Error("Failed to fetch user data");
+
+ //         const data: UserInfo = await response.json();
+ //         localStorage.setItem("userInfo", JSON.stringify(data)); // Update localStorage with fetched user info
+ //         return data;
+ //     } catch (error) {
+ //         console.error("Error fetching user info:", error);
+ //         return null;
+ //     }
+ // },
 };
 
 export default authService;
