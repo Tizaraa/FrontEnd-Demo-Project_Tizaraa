@@ -575,7 +575,6 @@ export default function Login() {
 
    const data = response.data;
 
-
    if (data.token && response.status === 200) {
     Cookies.set("token", data.token, { expires: 7 });
     localStorage.setItem("token", data.token);
@@ -588,7 +587,7 @@ export default function Login() {
 
     toast.success("User logged in successfully!");
 
-    // ✅ Check for redirect URL
+    // Check for redirect URL
     const redirectPath = sessionStorage.getItem("redirectAfterLogin");
     if (redirectPath) {
      sessionStorage.removeItem("redirectAfterLogin");

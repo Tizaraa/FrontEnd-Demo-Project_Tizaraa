@@ -1206,22 +1206,24 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
     if (pageType === "default") {
      response = await axios.get(`${ApiBaseUrl.baseUrl}category-filter/${slug}`);
     } else if (pageType === "search") {
-     response = await axios.get(`${ApiBaseUrl.baseUrl}search-filter/${slug}`);
+     response = await axios.post(`${ApiBaseUrl.baseUrl}v1/search/filter`, {
+      q: slug.split("%").join(" "),
+     });
     } else if (pageType === "shop") {
      response = await axios.get(`${ApiBaseUrl.baseUrl}shop-filter/${slug}`);
     }
 
-    const brands = response.data.brand_filter || [];
+    const brands = response.data.brands || [];
     setBrandList(brands);
     setAllBrandList(brands);
 
     // Sort categories alphabetically before setting state
-    const categories = response.data.category_filter || [];
+    const categories = response.data.categories || [];
     const sortedCategories = sortCategoriesAlphabetically(categories);
     setCategoryList(sortedCategories);
 
-    setCountryList(response.data.location_filter || []);
-    setProvinceList(response.data.province_filter || []);
+    setCountryList(response.data.locations || []);
+    setProvinceList(response.data.provinces || []);
    } catch (error) {
     console.error("Error fetching filters:", error);
    }

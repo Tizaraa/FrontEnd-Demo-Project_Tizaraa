@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import authService from "services/authService";
+import authService from "services/authService"; // Ensure this service works server-side
 
 // This function runs on every request
 export function middleware(request: NextRequest) {
  // Simulate the check for authentication
- const token = authService.getToken();
- console.log("token from middleware" , token);
- console.log(request.cookies)
+ // const isLoggedIn = authService.isAuthenticated(); // Adjust the method to work server-side
+ const path = request.nextUrl.pathname; // Get the current URL path
+ console.log("isLoggedIn", path);
 
 
  // const isAuthPath = ["/login", "/signup"].includes(path); // Public paths like login and signup
@@ -27,23 +27,23 @@ export function middleware(request: NextRequest) {
 }
 
 // Configuring the middleware to match specific routes
-export const config = {
- matcher: [
-  "/profile",
-  "/address",
-  "/orders",
-  "/checkout",
-  "/payment",
-  "/wish-list",
-  "/login",
-  "/signup",
-  "/payment-methods",
- ], // Routes where this middleware applies
-};
-
 // export const config = {
-//   matcher: [
-//     // Exclude API routes, static files, image optimizations, and .png files
-//     '/((?!api|_next/static|_next/image|.*\\.png$).*)',
-//   ],
-// }
+//  matcher: [
+//   "/profile",
+//   "/address",
+//   "/orders",
+//   "/checkout",
+//   "/payment",
+//   "/wish-list",
+//   "/login",
+//   "/signup",
+//   "/payment-methods",
+//  ], // Routes where this middleware applies
+// };
+
+export const config = {
+  matcher: [
+    // Exclude API routes, static files, image optimizations, and .png files
+    '/((?!api|_next/static|_next/image|.*\\.png$).*)',
+  ],
+}
