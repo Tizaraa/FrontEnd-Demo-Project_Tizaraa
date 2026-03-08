@@ -365,8 +365,9 @@ const updateCartItem = (cart: any[], cartItem: any) => {
  const exist = cart.find((item) => item.id === cartItem.id);
  // Check if the requested quantity exceeds stock
  if (cartItem.qty > cartItem.productStock) {
-  //toast.error("Out of Stock");// Display toast message
-  return cartItem; // Do not update the cart
+  toast.error("Out of Stock");
+  // Do not update the cart — return the unchanged cart array
+  return cart;
  }
 
  // Calculate the price based on quantity and B2B pricing if available
@@ -455,6 +456,7 @@ const reducer = (state: InitialState, action: ActionType) => {
 
   case "CHANGE_CART_AMOUNT": {
    const newCart = updateCartItem(state.cart, action.payload);
+
    return { ...state, cart: newCart };
   }
 
