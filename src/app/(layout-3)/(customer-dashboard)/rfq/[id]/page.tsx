@@ -633,6 +633,7 @@ import authService from "services/authService";
 import RfqComment from "./rfq-comment";
 import { useRouter } from "next/navigation";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import DOMPurify from "dompurify";
 
 export default function Component({ params }: { params: { id: string } }) {
  const router = useRouter();
@@ -761,7 +762,9 @@ export default function Component({ params }: { params: { id: string } }) {
       whiteSpace: "normal",
       overflowX: "auto",
      }}
-     dangerouslySetInnerHTML={{ __html: productDetails.detailedRequirements }}
+     dangerouslySetInnerHTML={{
+      __html: DOMPurify.sanitize(productDetails.detailedRequirements),
+     }}
     ></div>
    </div>
 

@@ -9,6 +9,7 @@ import "react-quill/dist/quill.snow.css";
 import authService from "services/authService";
 import { format } from "date-fns";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import DOMPurify from "dompurify";
 
 // Dynamic import of react-quill for rich text editing
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -216,7 +217,11 @@ export default function RfqComment({
           overflowX: "auto",
          }}
         >
-         <div dangerouslySetInnerHTML={{ __html: c.message_content }}></div>
+         <div
+          dangerouslySetInnerHTML={{
+           __html: DOMPurify.sanitize(c.message_content),
+          }}
+         ></div>
         </div>
        </div>
       </div>

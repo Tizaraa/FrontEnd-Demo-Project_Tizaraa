@@ -22,6 +22,7 @@
 // }
 
 import React, { useState } from "react";
+import DOMPurify from "dompurify";
 
 interface ProductDescriptionProps {
  description: string;
@@ -41,7 +42,10 @@ export default function ProductDescription({
    <div
     className="product-description-content"
     dangerouslySetInnerHTML={{
-     __html: (isExpanded ? description : shortDescription)
+     __html: (isExpanded
+      ? DOMPurify.sanitize(description)
+      : DOMPurify.sanitize(shortDescription)
+     )
       .replace(/<img /g, `<img style="max-width: 100%; height: auto;" `)
       .replace(
        /<table /g,
