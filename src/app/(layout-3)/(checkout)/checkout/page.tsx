@@ -177,7 +177,10 @@ export default function Checkout() {
 
  useEffect(() => {
   if (!authService.isAuthenticated()) {
-   router.push("/login");
+   // router.push("/login");
+   console.log(
+    "turn of navigation manually for checking middleware in checkout page"
+   );
   } else setIsLoggedIn(true);
  }, [router]);
 
