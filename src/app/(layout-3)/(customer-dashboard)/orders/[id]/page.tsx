@@ -125,11 +125,10 @@ export default function OrderDetails({ params }: IDParams) {
   };
 
   const token = authService.getToken();
-
-  if (!token) {
-   router.push("/login");
-  } else if (!fetched) {
-   fetchOrder(token); // Pass the token to the fetchOrder function
+  // Pass the cookie to the fetchOrder function
+  if (!fetched) {
+   console.log(token);
+   //  fetchOrder(token);
   }
 
   const success = localStorage.getItem("orderSuccess");

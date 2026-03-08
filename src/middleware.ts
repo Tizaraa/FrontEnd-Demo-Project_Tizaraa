@@ -4,7 +4,7 @@ import authService from "services/authService";
 
 export function middleware(request: NextRequest) {
 // this method gives you a cookie
- const isLoggedIn = authService.isAuthenticated();
+ const token = request.cookies.get('token')?.value    
 
  const path = request.nextUrl.pathname;
 
@@ -15,12 +15,13 @@ export function middleware(request: NextRequest) {
  const isProtectedPath = ["/profile", "/orders", "/checkout", "/payment", "/wish-list", "/address", "/payment-methods"].includes(path); 
 
  // If the user is trying to access protected paths without being logged in, redirect to login
- if (isProtectedPath && !isLoggedIn) {
+
+ if (isProtectedPath && !token) {
    return NextResponse.redirect(new URL("/login", request.url));
  }
 
  // If the user is authenticated and tries to access login or signup, redirect to home
- if (isAuthPath && isLoggedIn) {
+ if (isAuthPath && token) {
    return NextResponse.redirect(new URL("/", request.url));
  }
 

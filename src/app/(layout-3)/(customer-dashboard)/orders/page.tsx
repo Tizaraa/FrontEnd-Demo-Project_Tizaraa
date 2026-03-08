@@ -202,7 +202,7 @@ export default function OrderList() {
   const token = authService.getToken();
 
   if (!token) {
-   // router.push("/login");
+   router.push("/login");
   } else if (!fetched) {
    fetchOrderList(token);
   }
@@ -214,13 +214,13 @@ export default function OrderList() {
   }
  }, [fetched, router]);
 
- // useEffect(() => {
- //   if (orderSuccess) {
- //     toast.success("Order placed successfully!");
+ useEffect(() => {
+  if (orderSuccess) {
+   toast.success("Order placed successfully!");
 
- //     setOrderSuccess(false); // Reset orderSuccess state after toast displays
- //   }
- // }, [orderSuccess]);
+   setOrderSuccess(false); // Reset orderSuccess state after toast displays
+  }
+ }, [orderSuccess]);
 
  useEffect(() => {
   const queryString = window.location.search;
