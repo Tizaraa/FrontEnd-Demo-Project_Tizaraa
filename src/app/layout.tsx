@@ -169,10 +169,9 @@ import { Open_Sans } from "next/font/google";
 import StyledComponentsRegistry from "@lib/registry";
 import { AppProvider } from "@context/app-context";
 import StyledContext from "@context/StyledContext";
-import { ToastContainer } from "react-toastify";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+
 import ApiBaseUrl from "api/ApiBaseUrl";
-import "react-toastify/dist/ReactToastify.css";
 // import Head from "next/head";
 import SetUser from "@context/app-context/SetUser";
 
@@ -206,7 +205,7 @@ async function fetchGlobalSEOData() {
 // Generate metadata asynchronously
 export async function generateMetadata() {
  const seo = await fetchGlobalSEOData();
- console.log(seo);
+
 
  return {
   title: seo?.title || defaultMetadata.title,
@@ -245,7 +244,6 @@ export default async function RootLayout({
      <AppProvider>
       <SetUser />
       <StyledContext>{children}</StyledContext>
-      <ToastContainer />
       <Toaster position="top-right" />
      </AppProvider>
     </StyledComponentsRegistry>

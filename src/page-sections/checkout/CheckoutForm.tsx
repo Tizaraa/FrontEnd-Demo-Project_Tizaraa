@@ -9,8 +9,7 @@ import Typography from "@component/Typography";
 import Grid from "@component/grid/Grid";
 import authService from "services/authService";
 import Address from "@models/address.model";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast from "react-hot-toast";
 import BeatLoader from "react-spinners/BeatLoader";
 import OrderedItem from "./OrderedItem";
 import { useAppContext } from "@context/app-context";
@@ -114,16 +113,14 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   if (!selectedAddress) {
    // Stop loading first
    setIsHasPayLoading(false);
-   toast.error("Please select or add an address before proceeding to pay", {
-    autoClose: 2000,
-   });
+   toast.error("Please select or add an address before proceeding to pay");
 
    return; // Stop further execution
   }
 
   // Address exists, proceed
   setIsHasPayLoading(true);
-  toast.success("Proceeding to payment...", { autoClose: 2000 });
+  toast.success("Proceeding to payment...");
 
   if (isLoggedIn) {
    router.push("/payment");
@@ -135,7 +132,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  // Handle back to cart button click
  const handleBackToCart = () => {
   setIsHasLoading(true);
-  toast.info("Returning to Cart...");
+  toast("Returning to Cart...");
   router.push("/cart");
  };
 
@@ -150,8 +147,6 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
 
  return (
   <>
-   <ToastContainer autoClose={4000} />
-
    {seller_type.toLocaleLowerCase() !== "corporate" && (
     <FlexBox style={flexBoxStyle}>
      <Typography>Billing and Shipping</Typography>

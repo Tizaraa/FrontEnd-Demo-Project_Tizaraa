@@ -12,8 +12,7 @@ import Grid from "@component/grid/Grid";
 import authService from "services/authService";
 import BeatLoader from "react-spinners/BeatLoader";
 
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 interface RfqCheckoutFormProps {
@@ -149,7 +148,7 @@ const RfqCheckoutForm: FC<RfqCheckoutFormProps> = ({ responseId }) => {
 
  // Handle back to cart button click
  const handleBackToCart = () => {
-  toast.info("Returning to Cart...");
+  toast("Returning to Cart...");
   router.push("/cart");
  };
 
@@ -169,8 +168,6 @@ const RfqCheckoutForm: FC<RfqCheckoutFormProps> = ({ responseId }) => {
 
  return (
   <>
-   <ToastContainer autoClose={4000} />
-
    <FlexBox style={flexBoxStyle}>
     <Typography>Billing and Shipping</Typography>
     <Button

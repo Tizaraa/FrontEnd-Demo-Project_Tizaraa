@@ -290,7 +290,7 @@
 
 //   return (
 //     <AppContext.Provider value={contextValue}>
-//       {isMounted ? children : null}
+//       {children}
 //     </AppContext.Provider>
 //   );
 // }
@@ -555,7 +555,6 @@ const useLocalStorage = (key: string, initialValue: any) => {
 // AppProvider component
 export function AppProvider({ children }: PropsWithChildren) {
  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
- const [isMounted, setIsMounted] = useState(false);
  // const [storedCart, setStoredCart] = useLocalStorage("cart", []);
 
  // useEffect(() => {
@@ -570,7 +569,6 @@ export function AppProvider({ children }: PropsWithChildren) {
  const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
  useEffect(() => {
-  setIsMounted(true);
   // Restore cart and selected products from localStorage
   const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
   const storedSelectedProducts = JSON.parse(
@@ -600,7 +598,7 @@ export function AppProvider({ children }: PropsWithChildren) {
 
  return (
   <AppContext.Provider value={contextValue}>
-   {isMounted ? children : null}
+    {children}
   </AppContext.Provider>
  );
 }

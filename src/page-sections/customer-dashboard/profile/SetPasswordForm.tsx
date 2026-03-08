@@ -294,7 +294,7 @@ import { Shield, Mail, Smartphone } from "lucide-react";
 import { useState, CSSProperties, useEffect } from "react";
 import SetPassword from "./SetPassword";
 import axios from "axios";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 const styles = {

@@ -31,13 +31,19 @@ export default function Checkout() {
  }, [router]);
 
  useEffect(() => {
-  if (typeof window !== "undefined") {
-   setTimeout(() => {
-    const seller_type = localStorage.getItem("seller_type") || "";
-    setSellerType(seller_type.toLowerCase());
-   }, 100);
-  }
+  const seller_type = localStorage.getItem("seller_type") || "";
+  setSellerType(seller_type.toLowerCase());
  }, []);
+
+ // previous code
+ // useEffect(() => {
+ //  if (typeof window !== "undefined") {
+ //   setTimeout(() => {
+ //    const seller_type = localStorage.getItem("seller_type") || "";
+ //    setSellerType(seller_type.toLowerCase());
+ //   }, 100);
+ //  }
+ // }, []);
 
  // If the user is not logged in, prevent rendering the components
  if (!isLoggedIn) {

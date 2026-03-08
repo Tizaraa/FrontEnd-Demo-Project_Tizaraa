@@ -22,7 +22,7 @@ export default function useFetcher(url: string, config: any = {}) {
  const { revalidateTime = 300000, fallbackData, ...axiosConfig } = config;
 
  const { data, error, isLoading, mutate } = useSWR(
-  url + token,
+  token ? url + token : null,
   () => fetcher(url, axiosConfig),
   {
    fallbackData,

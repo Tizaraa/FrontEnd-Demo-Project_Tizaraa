@@ -520,7 +520,7 @@ import { ProductCard2, ProductCard7 } from "@component/product-cards";
 import { currency } from "@utils/utils";
 import ProductCard20 from "@component/product-cards/ProductCard20";
 import authService from "services/authService";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { Box, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -728,21 +728,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
   const storedAddress = JSON.parse(sessionStorage.getItem("address"));
 
   if (!storedAddress) {
-   toast.warning("Please select an address first!", {
-    position: "top-right",
-    autoClose: 3000,
-    style: {
-     background: "rgb(245, 124, 0)",
-     color: "#000",
-     fontSize: "16px",
-     border: "2px solid #fff",
-     boxShadow: "0 0 10px rgba(255, 152, 0, 0.7)",
-    },
-    icon: <FaExclamationTriangle style={{ color: "#000", fontSize: "20px" }} />, // Custom icon
-    progressStyle: {
-     background: "#fff",
-    },
-   });
+   toast.error("Please select an address first!");
    return;
   }
 
@@ -752,12 +738,12 @@ export default function CheckoutSummary({ deliveryCharge }) {
   );
 
   if (hasAbroadProduct) {
-   toast.warning("Promo codes cannot be applied to abroad products");
+   toast.error("Promo codes cannot be applied to abroad products");
    return;
   }
 
   if (!promoCode) {
-   toast.warning("Please Enter a Promo Code !");
+   toast.error("Please Enter a Promo Code !");
    return;
   }
 

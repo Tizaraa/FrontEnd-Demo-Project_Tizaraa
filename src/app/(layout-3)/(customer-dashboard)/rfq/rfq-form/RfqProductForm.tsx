@@ -150,8 +150,7 @@ import { useRef, useState, useEffect } from "react";
 import { Upload } from "lucide-react";
 import axios from "axios";
 import authService from "services/authService";
-import { toast } from "react-toastify"; // Import toast and ToastContainer
-import "react-toastify/dist/ReactToastify.css";
+import toast from "react-hot-toast";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useRouter } from "next/navigation";
 import { debounce } from "lodash";
