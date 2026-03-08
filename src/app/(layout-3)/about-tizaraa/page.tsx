@@ -1,17 +1,15 @@
-import Head from "next/head";
 import "../about-tizaraa/about.css";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+ title: "About Us | Tizaraa",
+ description:
+  "Learn about Tizaraa's story, mission, and what makes us your ideal online shopping destination",
+};
 
 export default function AboutUs() {
  return (
   <>
-   <Head>
-    <title>About Us | Tizaraa</title>
-    <meta
-     name="description"
-     content="Learn about Tizaraa's story, mission, and what makes us your ideal online shopping destination"
-    />
-   </Head>
-
    <main className="container">
     {/* Hero Section */}
     <section className="hero">

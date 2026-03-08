@@ -173,7 +173,7 @@ import { ToastContainer } from "react-toastify";
 import toast, { Toaster } from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import "react-toastify/dist/ReactToastify.css";
-import Head from "next/head";
+// import Head from "next/head";
 import SetUser from "@context/app-context/SetUser";
 
 // Load font
@@ -186,7 +186,7 @@ const defaultMetadata = {
   "Tizaraa is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
  authors: [{ name: "Tizaraa", url: "https://www.tizaraa.com" }],
  keywords: ["e-commerce", "e-commerce template", "next.js", "react", "tizaraa"],
- siteFavIcon: "/default-favicon.ico", // default favicon path
+ siteFavIcon: "/favicon.ico", // default favicon path
 };
 
 // Async function to fetch global SEO data from the API
@@ -206,6 +206,7 @@ async function fetchGlobalSEOData() {
 // Generate metadata asynchronously
 export async function generateMetadata() {
  const seo = await fetchGlobalSEOData();
+ console.log(seo);
 
  return {
   title: seo?.title || defaultMetadata.title,
@@ -215,9 +216,14 @@ export async function generateMetadata() {
    title: seo?.title || defaultMetadata.title,
    description: seo?.description || defaultMetadata.description,
    url: seo?.url || defaultMetadata.authors[0].url,
-   images: seo?.image || "/default-image.jpg",
+   images: seo?.image || "/favicon.ico",
   },
   favicon: seo?.site_fav_icon || defaultMetadata.siteFavIcon,
+  icons: {
+   icon: seo?.site_fav_icon || "/favicon.ico",
+   shortcut: seo?.site_fav_icon || "/favicon.ico",
+   apple: seo?.site_fav_icon || "/favicon.ico",
+  },
  };
 }
 
@@ -227,24 +233,17 @@ export default async function RootLayout({
 }: {
  children: React.ReactNode;
 }) {
- // Await metadata asynchronously before rendering
- const metadata = await generateMetadata();
-
  return (
   <html lang="en">
    <meta
     httpEquiv="Content-Security-Policy"
     content="upgrade-insecure-requests"
    />
-   {/* <link rel="icon" href={metadata.favicon} type="image/x-icon" /> */}
-   <Head>
-    <link rel="icon" href={metadata.favicon} type="image/x-icon" />
-    {/* <link rel="preload" href={metadata.favicon} /> */}
-   </Head>
+
    <body className={openSans.className}>
     <StyledComponentsRegistry>
      <AppProvider>
-      <SetUser /> 
+      <SetUser />
       <StyledContext>{children}</StyledContext>
       <ToastContainer />
       <Toaster position="top-right" />

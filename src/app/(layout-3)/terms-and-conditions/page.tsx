@@ -1,20 +1,20 @@
 "use client";
 
-import Head from "next/head";
 import Link from "next/link";
 import "../terms-and-conditions/terms.css";
 import { useState } from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+ title: "Terms & Conditions | Tizaraa",
+ description: "Tizaraa Terms and Conditions",
+};
 
 export default function TermsAndConditions() {
  const [language, setLanguage] = useState("english");
 
  return (
   <div className="terms-container">
-   <Head>
-    <title>Terms & Conditions | Tizaraa</title>
-    <meta name="description" content="Tizaraa Terms and Conditions" />
-   </Head>
-
    <div className="terms-content">
     {/* Header */}
     <div className="terms-header">

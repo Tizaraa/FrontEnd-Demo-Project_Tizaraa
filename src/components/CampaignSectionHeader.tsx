@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import Icon from "./icon/Icon";
 import FlexBox from "./FlexBox";
 import { H2, H3, H4, H5, SemiSpan } from "./Typography";
-import Head from "next/head";
+
 import { Yesteryear } from "next/font/google";
 // ==============================================================
 export interface CampaignSectionHeaderProps {

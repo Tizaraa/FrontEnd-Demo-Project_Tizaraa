@@ -4,17 +4,18 @@ import Head from "next/head";
 import Link from "next/link";
 import "../return-and-refund-policy/terms.css";
 import { useState } from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+ title: "Return and Refund Policy | Tizaraa",
+ description: "Return and Refund Policy",
+};
 
 export default function ReturnRefundPolicy() {
  const [language, setLanguage] = useState("english");
 
  return (
   <div className="terms-container">
-   <Head>
-    <title>Return and Refund Policy | Tizaraa</title>
-    <meta name="description" content="Return and Refund Policy" />
-   </Head>
-
    <div className="terms-content">
     {/* Header */}
     <div className="terms-header">

@@ -1,20 +1,19 @@
 "use client";
 
-import Head from "next/head";
 import Link from "next/link";
 import "../privacy-policy/privacy.css";
 import { useState } from "react";
+import { Metadata } from "next";
+export const metadata: Metadata = {
+ title: "Privacy Policy | Tizaraa",
+ description: "Tizaraa Terms and Conditions",
+};
 
 export default function PrivacyPolicyPage() {
  const [language, setLanguage] = useState("english");
 
  return (
   <div className="terms-container">
-   <Head>
-    <title>Privacy Policy | Tizaraa</title>
-    <meta name="description" content="Tizaraa Terms and Conditions" />
-   </Head>
-
    <div className="terms-content">
     {/* Header */}
     <div className="terms-header">

@@ -1,17 +1,17 @@
 import React from "react";
 import Head from "next/head";
 import "../replacement/ReplacementPolicy.css";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+ title: "Replacement Policy | Tizaraa",
+ description:
+  "Tizaraa Replacement Policy for genuine and quality-checked products",
+};
 
 const ReplacementPolicy = () => {
  return (
   <>
-   <Head>
-    <title>Tizaraa Replacement Policy</title>
-    <meta
-     name="description"
-     content="Tizaraa Replacement Policy for genuine and quality-checked products"
-    />
-   </Head>
    <div className="replacement-container">
     {/* Header Section */}
     <header className="replacement-header">
