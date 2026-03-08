@@ -103,13 +103,12 @@ export default function OrderDetails({ params }: IDParams) {
 
  useEffect(() => {
   const fetchOrder = async (token: string) => {
-   const authtoken = localStorage.getItem("token");
    try {
     const response = await axios.get(
      `${ApiBaseUrl.baseUrl}user/order/detailss/${params.id}`,
      {
       headers: {
-       Authorization: `Bearer ${authtoken}`,
+       Authorization: `Bearer ${token}`,
       },
      }
     );
@@ -127,8 +126,7 @@ export default function OrderDetails({ params }: IDParams) {
   const token = authService.getToken();
   // Pass the cookie to the fetchOrder function
   if (!fetched) {
-   console.log(token);
-   //  fetchOrder(token);
+   fetchOrder(token);
   }
 
   const success = localStorage.getItem("orderSuccess");
@@ -141,7 +139,7 @@ export default function OrderDetails({ params }: IDParams) {
  const fetchInvoice = async () => {
   setInvoiceLoading(true); // Start loading state for invoice
   setInvoiceError(""); // Reset any previous errors
-  const authToken = localStorage.getItem("token");
+  const authToken = authService.getToken();
   if (!authToken) {
    setInvoiceError("Authentication token not found. Please log in."); // Handle missing token
    setInvoiceLoading(false);

@@ -201,9 +201,7 @@ export default function OrderList() {
  useEffect(() => {
   const token = authService.getToken();
 
-  if (!token) {
-   router.push("/login");
-  } else if (!fetched) {
+  if (!fetched) {
    fetchOrderList(token);
   }
 
@@ -310,15 +308,84 @@ export default function OrderList() {
      </TableRow>
     </Hidden>
 
-    {currentOrders.map((order) => (
-     <OrderRow key={order.invoice} order={order} />
-    ))}
-    <OrdersPagination
-     orderList={orderList}
-     ordersPerPage={ordersPerPage}
-     currentPage={currentPage}
-     onPageChange={setCurrentPage}
-    />
+    {orderList?.length === 0 ? (
+     <div
+      style={{
+       display: "flex",
+       flexDirection: "column",
+       alignItems: "center",
+       justifyContent: "center",
+       padding: "60px 20px",
+       textAlign: "center",
+       color: "#888",
+      }}
+     >
+      <svg
+       xmlns="http://www.w3.org/2000/svg"
+       width="80"
+       height="80"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="#D3D3D3"
+       strokeWidth="1.5"
+       strokeLinecap="round"
+       strokeLinejoin="round"
+       style={{ marginBottom: "20px" }}
+      >
+       <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+       <line x1="3" y1="6" x2="21" y2="6" />
+       <path d="M16 10a4 4 0 0 1-8 0" />
+      </svg>
+      <h3
+       style={{
+        fontSize: "20px",
+        fontWeight: 600,
+        color: "#444",
+        marginBottom: "8px",
+       }}
+      >
+       No Orders Yet!
+      </h3>
+      <p
+       style={{
+        fontSize: "14px",
+        color: "#999",
+        marginBottom: "24px",
+        maxWidth: "320px",
+       }}
+      >
+       You haven't placed any orders yet. Browse our products and place your
+       first order today!
+      </p>
+      <a
+       href="/"
+       style={{
+        display: "inline-block",
+        padding: "10px 28px",
+        backgroundColor: "#D23F57",
+        color: "#fff",
+        borderRadius: "6px",
+        textDecoration: "none",
+        fontWeight: 600,
+        fontSize: "14px",
+       }}
+      >
+       Shop Now
+      </a>
+     </div>
+    ) : (
+     <>
+      {currentOrders.map((order) => (
+       <OrderRow key={order.invoice} order={order} />
+      ))}
+      <OrdersPagination
+       orderList={orderList}
+       ordersPerPage={ordersPerPage}
+       currentPage={currentPage}
+       onPageChange={setCurrentPage}
+      />
+     </>
+    )}
    </Fragment>
    {/* </main> */}
   </>
