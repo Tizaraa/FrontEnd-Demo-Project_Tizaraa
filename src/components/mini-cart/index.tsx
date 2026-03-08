@@ -261,12 +261,12 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
      toggleSidenav();
     }, 500);
    } else {
-    toast.error(response.data?.message || "Something went wrong");
+    toast.error(response?.data?.message || "Something went wrong");
    }
   } catch (error: unknown) {
    if (error instanceof AxiosError) {
     toast.error(
-     error.response.data?.message || "Price check failed. Please try again."
+     error?.response?.data?.message || "Price check failed. Please try again."
     );
    } else {
     toast.error("Price check failed. Please try again.");

@@ -330,7 +330,7 @@
 //    } catch (error: unknown) {
 //     if (error instanceof AxiosError) {
 //      toast.error(
-//       error.response.data?.message || "Error placing cash on delivery order!"
+//       error?.response?.data?.message || "Error placing cash on delivery order!"
 //      );
 //     }
 //     setIsHasLoading(false);
@@ -886,9 +886,6 @@
 //  );
 // }
 
-
-
-
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -1139,8 +1136,7 @@ export default function CorporatePaymentForm() {
 
     // Update credit_balance in localStorage after successful credit purchase
     if (paymentMethod === "4") {
-     const updatedBalance =
-      Number(userinfo?.credit_balance) - savedTotalPrice;
+     const updatedBalance = Number(userinfo?.credit_balance) - savedTotalPrice;
      userinfo.credit_balance = updatedBalance;
      localStorage.setItem("userInfo", JSON.stringify(userinfo));
     }
@@ -1228,7 +1224,7 @@ export default function CorporatePaymentForm() {
    } catch (error: unknown) {
     if (error instanceof AxiosError) {
      toast.error(
-      error.response.data?.message || "Error placing cash on delivery order!"
+      error?.response?.data?.message || "Error placing cash on delivery order!"
      );
     }
     setIsHasLoading(false);

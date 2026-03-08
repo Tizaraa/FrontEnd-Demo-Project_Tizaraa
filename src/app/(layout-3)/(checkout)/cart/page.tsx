@@ -123,7 +123,7 @@ export default function Cart() {
     orders: selectedItems,
    });
 
-   if (!response.data.success) {
+   if (!response?.data?.success) {
     toast.error(response.data.message || "Failed to check pricing");
     return;
    }
@@ -164,7 +164,7 @@ export default function Cart() {
   } catch (error: unknown) {
    if (error instanceof AxiosError) {
     toast.error(
-     error.response.data?.message || "Price check failed. Please try again."
+     error?.response?.data?.message || "Price check failed. Please try again."
     );
    } else {
     toast.error("Price check failed. Please try again.");
