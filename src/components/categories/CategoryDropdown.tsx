@@ -211,7 +211,8 @@ export default function CategoryDropdown({
       href={item.categorie_name_slug}
       title={item.categorie_name}
       icon={item.categorie_image}
-      caret={!!item.menuData}
+      // caret={!!item.menuData}
+      caret={false}
      >
       {MegaMenu ? <MegaMenu data={item.menuData || {}} /> : null}
      </CategoryMenuItem>
