@@ -164,7 +164,9 @@ export default function CategoryDropdown({
     }
 
     // Fetch data from API
-    const response = await fetch(`${ApiBaseUrl.baseUrl}categories`);
+    const response = await fetch(
+     `${ApiBaseUrl.baseUrl}frontend/home/categorie/all`
+    );
     if (!response.ok) {
      throw new Error("Network response was not ok");
     }
@@ -205,10 +207,10 @@ export default function CategoryDropdown({
 
     return (
      <CategoryMenuItem
-      key={item.title}
-      href={item.href}
-      icon={item.icon}
-      title={item.title}
+      key={item.id}
+      href={item.categorie_name_slug}
+      title={item.categorie_name}
+      icon={item.categorie_image}
       caret={!!item.menuData}
      >
       {MegaMenu ? <MegaMenu data={item.menuData || {}} /> : null}

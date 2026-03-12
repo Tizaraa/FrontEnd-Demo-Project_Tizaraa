@@ -20,7 +20,7 @@ export default function CategoryMenuItem(props: CategoryMenuItemProps) {
    <Link href={`/category/${href}`}>
     <div className="category-dropdown-link">
      {/* {icon && <Icon variant="small">{icon}</Icon>} */}
-     <span className="title">{title}</span>
+     <span className="title">{title || "Missing"}</span>
      {caret && <Icon variant="small">chevron-right</Icon>}
     </div>
    </Link>

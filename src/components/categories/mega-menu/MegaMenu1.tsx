@@ -15,6 +15,7 @@ export default function MegaMenu1({
  data: { categories, rightImage, bottomImage },
  minWidth = "278px",
 }: MegaMenu1Props) {
+ console.log("from megamenu 1", categories);
  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
  const [subCategoryData, setSubCategoryData] = useState<any | null>(null);
 
