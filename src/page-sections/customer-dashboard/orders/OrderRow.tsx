@@ -32,7 +32,7 @@
 //   };
 
 //   return (
-//     <Link href={`/orders/${order.invoice}`}>
+//     <Link href={`/orders/${order.id}`}>
 //       <TableRow my="1rem" padding="6px 18px">
 //         <H5 m="6px" textAlign="left">
 //           #{order.invoice}
@@ -102,7 +102,7 @@
 //   };
 
 //   return (
-//     <Link href={`/orders/${order.invoice}`}>
+//     <Link href={`/orders/${order.id}`}>
 //       <TableRow my="1rem" padding="6px 18px">
 //         <H5 m="6px" textAlign="left">
 //           {order.invoice}
@@ -201,7 +201,7 @@ export default function OrderRow({ order }: OrderRowProps) {
   };
 
   return (
-    <Link href={`/orders/${order.invoice}`}>
+    <Link href={`/orders/${order.id}`}>
       <TableRow>
         {/* Invoice Number */}
         <H5 m="6px" textAlign="left" color="rgb(233, 69, 96)" flex="1 1 0">

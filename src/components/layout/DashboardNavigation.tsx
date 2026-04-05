@@ -273,7 +273,7 @@
 import { Fragment, useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import axios from "axios"; // Import axios for API requests
+import axios from "@lib/axiosClient"; // Import axios for API requests
 
 import Icon from "@component/icon/Icon";
 import FlexBox from "@component/FlexBox";
@@ -304,15 +304,7 @@ export default function DashboardNavigation() {
  useEffect(() => {
   const fetchData = async () => {
    try {
-    const token = authService.getToken(); // Assuming your authService provides the token
-    const response = await axios.get(
-     `${ApiBaseUrl.baseUrl}user/profile/history`,
-     {
-      headers: {
-       Authorization: `Bearer ${token}`, // Pass token in the Authorization header
-      },
-     }
-    );
+    const response = await axios.get(`user/profile/history`);
 
     // Extract the needed fields from the API response
     const {
@@ -322,22 +314,16 @@ export default function DashboardNavigation() {
      cancelitem,
      returnlitem,
      customeraddress,
+     total_rfqs,
     } = response.data;
 
-    setOrderCount(totalorder); // Set the total order count
-    setPendingOrderCount(pending); // Set the pending order count
-    setDeliveredOrderCount(deliveryitem); // Set the delivered order count
-    setCanceledOrderCount(cancelitem); // Set the delivered order count
-    setReturnOrderCount(returnlitem); // Set the delivered order count
-    setAddressCount(customeraddress); // Set the customer address count
-    const rfqResponse = await axios.get(`${ApiBaseUrl.baseUrl}rfqs`, {
-     headers: {
-      Authorization: `Bearer ${token}`, // Pass token in the Authorization header
-     },
-    });
-
-    const { total_rfqs } = rfqResponse.data; // Extract RFQ count from response
-    setRfqCount(total_rfqs); // Set the RFQ count
+    setOrderCount(totalorder ?? 0);
+    setPendingOrderCount(pending ?? 0);
+    setDeliveredOrderCount(deliveryitem ?? 0);
+    setCanceledOrderCount(cancelitem ?? 0);
+    setReturnOrderCount(returnlitem ?? 0);
+    setAddressCount(customeraddress ?? 0);
+    setRfqCount(total_rfqs ?? 0);
    } catch (error) {
     console.error("Error fetching user profile data:", error);
    }

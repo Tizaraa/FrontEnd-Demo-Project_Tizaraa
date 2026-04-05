@@ -846,11 +846,11 @@ const ShippingInfo: React.FC<{
                 color: "#555",
               }}
             >
-              {delivery_type === 1 || delivery_type === "1"
+              {String(delivery_type) === "1"
                 ? "Courier Delivery"
-                : delivery_type === 2 || delivery_type === "2"
+                : String(delivery_type) === "2"
                 ? "Self Pickup"
-                : delivery_type === 3 || delivery_type === "3"
+                : String(delivery_type) === "3"
                 ? "Corporate Pickup"
                 : "Standard Delivery"}
             </span>

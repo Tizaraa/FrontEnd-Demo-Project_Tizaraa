@@ -2,7 +2,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import { currency } from "@utils/utils";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 import { Button } from "@component/buttons";
 import Card from "@component/Card";
 import Grid from "@component/grid/Grid";
@@ -103,20 +103,72 @@ export default function OrderDetails({ params }: IDParams) {
 
  useEffect(() => {
   const fetchOrder = async (token: string) => {
-   const authtoken = localStorage.getItem("token");
    try {
-    const response = await axios.get(
-     `${ApiBaseUrl.baseUrl}user/order/detailss/${params.id}`,
-     {
-      headers: {
-       Authorization: `Bearer ${authtoken}`,
+    const response = await axios.get(`user/order/${params.id}`);
+    const raw = response.data?.data ?? response.data;
+
+    // Transform our API response to the shape this page expects
+    const sellerName = raw.seller_name ?? "Tizaraa Store";
+    const orderItems = (raw.items ?? []).map((item: any) => ({
+     order_item_id: item.id,
+     product_id: item.product_id,
+     product_name: item.product_name,
+     product_image: item.thumbnail_url,
+     price: item.unit_price,
+     quantity: item.quantity,
+     color: item.color ?? null,
+     size: item.size ?? null,
+     attribute: null,
+     product_slug: null,
+     productType: "Local",
+     status: item.item_status ?? raw.order_status,
+     order_days_gone: 0,
+     return_status: null,
+     ratingcheck: false,
+     rating: 0,
+     comments: "",
+     images: [],
+    }));
+
+    const adapted = {
+     Order: {
+      invoice_id: raw.invoice_no,
+      createdAt: raw.created_at,
+      isDelivered: raw.order_status === "delivered",
+      deliveredAt: raw.delivered_at ?? null,
+      productType: "Local",
+      status: raw.order_status,
+      payment_method: raw.payment_method,
+      amount_percentage: String(raw.advance_payment_percent ?? 100),
+      amount: raw.total_amount,
+      main_total: raw.subtotal,
+      delivery_charge: raw.shipping_amount,
+      delivery_charge_reason: "",
+      due_amount: 0,
+      paid: raw.total_amount,
+      address: raw.buyer_address,
+      area_id: raw.area_name,
+      city_id: raw.city_name,
+      province_id: raw.province_name,
+      phone: raw.buyer_phone,
+      items: {
+       [sellerName]: {
+        delivered_at: raw.delivered_at ?? null,
+        status: raw.order_status,
+        delivery_charge: raw.shipping_amount,
+        sub_total: raw.subtotal,
+        total: raw.total_amount,
+        promocodeStatus: raw.discount_amount > 0 ? 1 : 0,
+        isAbroad: false,
+        order_items: orderItems,
+       },
       },
-     }
-    );
-    console.log("Order details data:", response);
-    setOrder(response.data);
-    setStatus(response.data.Order.status);
-    setEstimateDate(response.data.Order.deliveredAt);
+     },
+    };
+
+    setOrder(adapted);
+    setStatus(adapted.Order.status);
+    setEstimateDate(adapted.Order.deliveredAt);
    } catch (error) {
     console.error("Error fetching order details:", error);
    } finally {
@@ -182,48 +234,16 @@ export default function OrderDetails({ params }: IDParams) {
   }
 
   try {
-   // Fetch the order details again to get the latest status
-   const orderResponse = await axios.get(
-    `${ApiBaseUrl.baseUrl}user/order/detailss/${params.id}`,
-    {
-     headers: {
-      Authorization: `Bearer ${authToken}`,
-     },
-    }
-   );
+   const orderResponse = await axios.get(`user/order/${params.id}`);
+   const raw = orderResponse.data?.data ?? orderResponse.data;
 
-   const orderData = orderResponse.data.Order;
-   //console.log("");
+   const paymentResponse = await axios.post(`pay-via-ajax`, {
+    invoice_id: raw.invoice_no,
+    total_amount: raw.total_amount,
+    payment_type: "Online Payment",
+    payment_method: raw.payment_method,
+   });
 
-   const paymentResponse = await axios.post(
-    `${ApiBaseUrl.baseUrl}pay-via-ajax`,
-    {
-     user_id: orderData.user_id,
-     seller_id: orderData.seller_id,
-     cus_name: orderData.user,
-     cus_email: orderData.email,
-     cus_phone: orderData.phone,
-     province_id: orderData.province_id,
-     city_id: orderData.city_id,
-     area_id: orderData.area_id,
-     house_level: orderData.house_level,
-     delivery_charge: orderData.delivery_charge,
-     cus_add1: orderData.address,
-     currency: orderData.currency,
-     total_amount: orderData.amount,
-     productType: orderData.productType,
-     payment_type: "Online Payment", // Assuming "mb" is a predefined value for the payment method
-     payment_method: orderData.payment_method,
-     invoice_id: orderData.invoice,
-    },
-    {
-     headers: {
-      Authorization: `Bearer ${authToken}`,
-     },
-    }
-   );
-
-   const updatedOrder = orderResponse.data;
    const redirectUrl = paymentResponse.data.redirect_url;
    window.location.href = redirectUrl;
   } catch (error) {

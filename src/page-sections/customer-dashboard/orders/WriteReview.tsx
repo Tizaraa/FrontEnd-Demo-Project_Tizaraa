@@ -176,6 +176,7 @@ export default function WriteReview({
 
  // Conditionally Handle Image URL for product image for General and Abroad products
  const getProductImageUrl = (imagePath) => {
+  if (!imagePath) return null;
   if (/^https?:\/\//i.test(imagePath)) {
    return imagePath;
   }
@@ -184,7 +185,6 @@ export default function WriteReview({
   }
   return `${ApiBaseUrl.ImgUrl}/${imagePath}`;
  };
- console.log("getProductImageUrl: ", getProductImageUrl(item.product_image));
 
  return (
   <>

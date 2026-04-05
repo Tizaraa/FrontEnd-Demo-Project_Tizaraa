@@ -23,7 +23,10 @@ const axios = Axios.create({
    // Endpoints to redirect to local API
    const localEndpoints = [
     "user/profile",
+    "user/profile/history",
     "user/address",
+    "user/order",
+    "user/order/",
     "frontend/home/categorie/all",
     "product/country/flag",
     "frontend/remark/product/items",
