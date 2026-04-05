@@ -23,6 +23,7 @@ const axios = Axios.create({
    // Endpoints to redirect to local API
    const localEndpoints = [
     "user/profile",
+    "user/address",
     "frontend/home/categorie/all",
     "product/country/flag",
     "frontend/remark/product/items",
@@ -34,6 +35,14 @@ const axios = Axios.create({
     "seller/products/",
     "shop-filter/",
     "cart/product/info/",
+    "pay-via-ajax",
+    "checkout/order",
+    "checkout/order-items",
+    "checkout/check/pricing",
+    "checkout/promo/validate",
+    "checkout/address",
+    "delivery/charge/apply",
+    "otc/price/percentage",
    ];
    if (config.url && localEndpoints.some((e) => config.url.includes(e))) {
     config.url = config.url.replace(ApiBaseUrl.baseUrl, ApiBaseUrl.localApiUrl);

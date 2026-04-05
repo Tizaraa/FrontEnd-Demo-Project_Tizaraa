@@ -223,7 +223,7 @@ export default function OrderedItem() {
        BDT{" "}
        {(product.sizeColor?.nosize?.length === 0 && product.discountPrice
         ? product.discountPrice
-        : product.price
+        : product.price ?? 0
        ).toLocaleString()}
       </div>
      </div>

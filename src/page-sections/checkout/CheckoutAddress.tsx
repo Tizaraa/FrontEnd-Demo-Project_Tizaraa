@@ -463,13 +463,24 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
     onSelect(item);
   };
 
-  const landmarkMap: { [key: number]: string } = {
-    1: "Home",
-    2: "Office",
-    3: "Pickup Point",
+  const landmarkMap: { [key: string]: string } = {
+    // integer keys (legacy UAT)
+    "1": "Home",
+    "2": "Office",
+    "3": "Pickup Point",
+    // string keys (local API)
+    "home": "Home",
+    "office": "Office",
+    "pickup_point": "Pickup Point",
+    "pickup point": "Pickup Point",
   };
 
-  const landmarkLabel = landmarkMap[item.landmark] || "Other";
+  const landmarkKey = String(item.landmark ?? "").toLowerCase();
+  const landmarkLabel =
+    landmarkMap[String(item.landmark)] ??
+    landmarkMap[landmarkKey] ??
+    item.landmark ??
+    "Other";
 
   return (
     <Grid

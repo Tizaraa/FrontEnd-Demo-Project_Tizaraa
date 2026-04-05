@@ -271,7 +271,7 @@ import { Button } from "@component/buttons";
 import TextField from "@component/text-field";
 import Typography, { H6, SemiSpan } from "@component/Typography";
 import useWindowSize from "@hook/useWindowSize";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 import { useAppContext } from "@context/app-context";
 import CheckBox from "@component/CheckBox";
 import ApiBaseUrl from "api/ApiBaseUrl";
@@ -384,7 +384,7 @@ export default function PaymentForm() {
   if (paymentMethod === "Online Payment") {
    try {
     const response = await axios.post(
-     `${ApiBaseUrl.baseUrl}pay-via-ajax`,
+     `pay-via-ajax`,
      {
       user_id: userinfo?.id,
       seller_id: cartData[0]?.sellerId,
@@ -434,7 +434,7 @@ export default function PaymentForm() {
 
        // Place order items for all products, including OTC
        const response = await axios.post(
-        `${ApiBaseUrl.baseUrl}checkout/order-items`,
+        `checkout/order-items`,
         {
          orders: [
           {
@@ -503,7 +503,7 @@ export default function PaymentForm() {
   } else if (paymentMethod === "cod") {
    try {
     const orderResponse = await axios.post(
-     `${ApiBaseUrl.baseUrl}checkout/order`,
+     `checkout/order`,
      {
       user_id: userinfo?.id,
       name: userShippingdata?.shipping_name || userShippingdata?.name,
@@ -583,7 +583,7 @@ export default function PaymentForm() {
 
          // Send the order to the API
          const response = await axios.post(
-          `${ApiBaseUrl.baseUrl}checkout/order-items`,
+          `checkout/order-items`,
           { orders: [order] },
           {
            headers: {
