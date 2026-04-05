@@ -513,11 +513,13 @@ export default function CheckOutAddressForm() {
    address: values.address,
    landmark: selectedLandmark,
    delivery_charge: values.deliveryCharge,
+   postal_code: values.postal_code,
+   is_default: values.is_default ? 1 : 0,
   };
 
   try {
    const response = await axios.post(
-    `${ApiBaseUrl.baseUrl}user/address/store`,
+    `${ApiBaseUrl.localApiUrl}user/address/store`,
     addressData,
     {
      headers: {
@@ -526,7 +528,7 @@ export default function CheckOutAddressForm() {
     }
    );
 
-   if (response.status === 200) {
+   if (response.status === 200 || response.status === 201) {
     sessionStorage.setItem("address", JSON.stringify(values));
     if (isLoggedIn) {
      router.push("/checkout");
@@ -537,6 +539,7 @@ export default function CheckOutAddressForm() {
     // router.push("/checkout");
     // toast.success("Address Added successfully!");
    }
+   setLoading(false);
   } catch (error) {
    console.error("Failed submitting address data:", error);
 
@@ -561,7 +564,7 @@ export default function CheckOutAddressForm() {
  const fetchProvince = async () => {
   const authtoken = localStorage.getItem("token");
   try {
-   const response = await axios.get(`${ApiBaseUrl.baseUrl}checkout/address`, {
+   const response = await axios.get(`${ApiBaseUrl.localApiUrl}checkout/address`, {
     headers: {
      Authorization: `Bearer ${authtoken}`,
     },
@@ -580,7 +583,7 @@ export default function CheckOutAddressForm() {
  }, []);
 
  const handleProvinceChange = (provinceId: number, setFieldValue: any) => {
-  const selectedProvince = province.find((prov: any) => prov.id === provinceId);
+  const selectedProvince = province.find((prov: any) => prov.id == provinceId);
 
   if (selectedProvince) {
    setFieldValue("province", provinceId);
@@ -595,7 +598,7 @@ export default function CheckOutAddressForm() {
  const handleCityChange = (cityId: number, setFieldValue: any) => {
   setFieldValue("city", cityId);
 
-  const selectedCity = city.find((c: any) => c.id === cityId);
+  const selectedCity = city.find((c: any) => c.id == cityId);
 
   if (selectedCity) {
    setArea(selectedCity.areas);
@@ -675,6 +678,17 @@ export default function CheckOutAddressForm() {
          errorText={touched.address && errors.address ? errors.address : ""} // Show error if touched and has error
         />
 
+        <TextField
+         fullwidth
+         mb="1rem"
+         label="Postal Code (Optional)"
+         onBlur={handleBlur}
+         onChange={handleChange}
+         name="postal_code"
+         value={values.postal_code}
+         errorText={touched.postal_code && errors.postal_code}
+        />
+
         <Typography fontWeight="600" mb="0.5rem">
          Select a label for effective delivery:
         </Typography>
@@ -734,7 +748,7 @@ export default function CheckOutAddressForm() {
           values.province
            ? {
               value: values.province,
-              label: province.find((prov) => prov.id === values.province)
+              label: province.find((prov) => prov.id == values.province)
                ?.province,
              }
            : null
@@ -756,7 +770,7 @@ export default function CheckOutAddressForm() {
           values.city
            ? {
               value: values.city,
-              label: city.find((c) => c.id === values.city)?.city,
+              label: city.find((c) => c.id == values.city)?.city,
              }
            : null
          }
@@ -777,7 +791,7 @@ export default function CheckOutAddressForm() {
           values.area
            ? {
               value: values.area,
-              label: area.find((a) => a.id === values.area)?.area,
+              label: area.find((a) => a.id == values.area)?.area,
              }
            : null
          }
@@ -786,6 +800,35 @@ export default function CheckOutAddressForm() {
           setFieldValue("area", selectedArea.value)
          }
         />
+        {/* Default Address Checkbox */}
+        <div style={{ marginTop: "1rem", display: "flex", alignItems: "center" }}>
+         <input
+          type="checkbox"
+          id="is_default"
+          name="is_default"
+          checked={values.is_default || false}
+          onChange={handleChange}
+          style={{
+           width: "18px",
+           height: "18px",
+           marginRight: "0.8rem",
+           cursor: "pointer",
+           accentColor: "#E94560",
+          }}
+         />
+         <label
+          htmlFor="is_default"
+          style={{
+           fontWeight: "600",
+           color: "#2c3e50",
+           fontSize: "0.9rem",
+           cursor: "pointer",
+          }}
+         >
+          Set as default address
+         </label>
+        </div>
+
        </Grid>
       </Grid>
      </Card1>
@@ -812,6 +855,8 @@ const initialValues = {
  city: "",
  area: "",
  selectedLandmark: null,
+ postal_code: "",
+ is_default: false,
 };
 
 const checkoutSchema = yup.object().shape({

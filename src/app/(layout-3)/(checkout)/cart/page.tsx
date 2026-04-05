@@ -236,9 +236,11 @@ export default function Cart() {
         name={item.name}
         price={item.price}
         imgUrl={
-         item.productType === "Abroad"
+         item.imgUrl?.startsWith("http")
           ? item.imgUrl
-          : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+          : item.imgUrl
+          ? `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+          : ""
         }
         productStock={item.productStock}
         discountPrice={item.discountPrice}

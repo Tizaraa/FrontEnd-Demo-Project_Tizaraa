@@ -192,7 +192,7 @@ export default function ProductCarousel({
                         }}
                       >
                         <Image
-                          src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
+                          src={item.product_thumbnail?.startsWith("http") ? item.product_thumbnail : `${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
                           alt={item.product_name}
                           fill
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"

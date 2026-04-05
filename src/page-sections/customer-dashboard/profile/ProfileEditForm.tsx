@@ -795,8 +795,8 @@ const styles = `
   }
 `;
 
-const API_URL = `${ApiBaseUrl.baseUrl}user/profile`;
-const UPDATE_API_URL = `${ApiBaseUrl.baseUrl}user/profile/update`;
+const API_URL = `${ApiBaseUrl.localApiUrl}user/profile`;
+const UPDATE_API_URL = `${ApiBaseUrl.localApiUrl}user/profile/update`;
 
 export default function ProfileEditForm() {
  const router = useRouter();
@@ -866,7 +866,7 @@ export default function ProfileEditForm() {
   const formData = new FormData();
   formData.append("name", values.name);
   formData.append("phone", values.phone);
-  formData.append("birthdate", values.birth_date);
+  formData.append("birth_date", values.birth_date);
   formData.append("gender", values.gender);
   if (values.image) {
    formData.append("image", values.image);

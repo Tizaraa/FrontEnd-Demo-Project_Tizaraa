@@ -23,7 +23,6 @@ When delegating a task, identify which agent owns it and follow that agent's ins
 
 ## Sub-Agent Type Mapping
 
-The following table maps each named agent to the actual Claude sub-agent type used when invoking via the `Agent` tool:
 
 | Named Agent | Sub-Agent Type | Notes |
 |---|---|---|

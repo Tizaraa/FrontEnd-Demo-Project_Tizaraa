@@ -106,7 +106,7 @@ export default function FlashSaleProducts() {
            }}
           >
            <Image
-            src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
+            src={item.product_thumbnail?.startsWith("http") ? item.product_thumbnail : `${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
             alt={item.product_name}
             layout="responsive"
             width={1}

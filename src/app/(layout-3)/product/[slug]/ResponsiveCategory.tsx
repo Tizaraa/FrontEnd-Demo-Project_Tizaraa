@@ -23,7 +23,7 @@ export default function ResponsiveCategory({
  slug: string;
  fallbackData: any;
 }) {
- const { data } = useFetcher(`product/details/${slug}`, { fallbackData });
+ const { data } = useFetcher(`frontend/product/details/${slug}`, { fallbackData });
  const [isExpanded, setIsExpanded] = useState(false);
  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
  const [productDetails, setProductDetails] = useState<ProductDetails | null>(

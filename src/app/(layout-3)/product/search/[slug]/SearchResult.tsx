@@ -454,7 +454,7 @@ export default function SearchResult({ sortOptions, slug }) {
   setLoading(true);
 
   try {
-   const response = await fetch(`${ApiBaseUrl.baseUrl}v1/search/product`, {
+   const response = await fetch(`${ApiBaseUrl.localApiUrl}search/product`, {
     method: "POST",
     headers: {
      "Content-Type": "application/json",
@@ -469,7 +469,7 @@ export default function SearchResult({ sortOptions, slug }) {
      //  orderBy: selectedSortOption,
      min_price: priceMin ? priceMin : null,
      max_price: priceMax ? priceMax : null,
-     q: slug.split("%").join(" "),
+     q: decodeURIComponent(slug),
     }),
    });
 

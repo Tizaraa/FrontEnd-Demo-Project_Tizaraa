@@ -163,8 +163,8 @@ export default function CategoryDropdown({
      }
     }
 
-    // Fetch data from API
-    const response = await fetch(`${ApiBaseUrl.baseUrl}categories`);
+    // Fetch data from local API
+    const response = await fetch(`${ApiBaseUrl.localApiUrl}categories/navigation`);
     if (!response.ok) {
      throw new Error("Network response was not ok");
     }

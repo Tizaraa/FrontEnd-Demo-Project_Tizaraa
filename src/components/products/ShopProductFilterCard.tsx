@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Card from "@component/Card";
 import { H6 } from "@component/Typography";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 type Brand = {

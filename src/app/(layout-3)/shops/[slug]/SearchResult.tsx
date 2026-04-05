@@ -595,9 +595,7 @@ export default function SearchResult({ sortOptions, slug }) {
 
   try {
    const response = await axios.post(
-    `${
-     ApiBaseUrl.baseUrl
-    }seller/products/${slug}?productsearch=${encodeURIComponent(searchTerm)}`,
+    `seller/products/${slug}?productsearch=${encodeURIComponent(searchTerm)}`,
     {
      ...filters,
      page: currentPage,

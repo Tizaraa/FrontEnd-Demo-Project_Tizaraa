@@ -177,8 +177,8 @@ export default function SearchInputWithCategory() {
   if (!query) return; // prevent unnecessary API calls for empty query
   try {
    const response = await axios.post(
-    `${ApiBaseUrl.baseUrl}v1/search/suggestion`,
-    { q: query, limit: 100, page: 1 }
+    `${ApiBaseUrl.localApiUrl}search/suggestion`,
+    { q: query, limit: 10, page: 1 }
    );
    const results = response.data.products || [];
 

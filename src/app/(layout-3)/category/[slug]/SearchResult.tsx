@@ -724,6 +724,7 @@ export default function SearchResult({
 
  const handleSortChange = (sortOption: any) => {
   setSelectedSortOption(sortOption.value);
+  setCurrentPage(1);
  };
 
  const fetchProducts = useCallback(async () => {
@@ -745,7 +746,7 @@ export default function SearchResult({
    }
 
    const response = await fetch(
-    `${ApiBaseUrl.baseUrl}category/${selectedCategory || slug}`,
+    `${ApiBaseUrl.localApiUrl}category/${selectedCategory || slug}`,
     {
      method: "POST",
      headers: {

@@ -177,7 +177,7 @@
 //                 title={item?.title || "No Title"}
 //                 off={item?.discount || 0}
 //                 images={item?.images?.map(image => `${ApiBaseUrl.ImgUrl}${image}`) || []}
-//                 imgUrl={item?.thumbnail ? `${ApiBaseUrl.ImgUrl}${item.thumbnail}` : ""}
+//                 imgUrl={item?.thumbnail ? (item.thumbnail.startsWith("http") ? item.thumbnail : `${ApiBaseUrl.ImgUrl}${item.thumbnail}`) : ""}
 //                 rating={item?.rating || 0}
 //               />
 //             </Grid>
@@ -256,7 +256,7 @@ export default function ProductGridView({
         images={
          item?.images?.map((image) => `${ApiBaseUrl.ImgUrl}${image}`) || []
         }
-        imgUrl={item?.thumbnail ? `${ApiBaseUrl.ImgUrl}${item.thumbnail}` : ""}
+        imgUrl={item?.thumbnail ? (item.thumbnail.startsWith("http") ? item.thumbnail : `${ApiBaseUrl.ImgUrl}${item.thumbnail}`) : ""}
         rating={item?.rating || 0}
        />
       </Grid>

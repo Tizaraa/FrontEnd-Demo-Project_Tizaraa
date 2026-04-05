@@ -882,8 +882,7 @@ export default function ShopList() {
 
  const fetchProvinces = async () => {
   try {
-   // const response = await axios.get("https://frontend.tizaraa.com/api/all/address");
-   const response = await axios.get(`${ApiBaseUrl.baseUrl}all/address`);
+   const response = await axios.get(`${ApiBaseUrl.localApiUrl}address/hierarchy`);
    setProvinces(response.data);
   } catch (error) {
    console.error("Error fetching provinces", error);
@@ -966,7 +965,7 @@ export default function ShopList() {
   try {
    // const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {});
    const response = await axios.post(
-    `${ApiBaseUrl.baseUrl}all/seller/profile`,
+    `${ApiBaseUrl.localApiUrl}all/seller/profile`,
     {}
    );
    let shops = response.data.sellerDetails || [];
@@ -992,7 +991,7 @@ export default function ShopList() {
   try {
    // const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
    const response = await axios.post(
-    `${ApiBaseUrl.baseUrl}all/seller/profile`,
+    `${ApiBaseUrl.localApiUrl}all/seller/profile`,
     {
      province_id: provinceId,
     }
@@ -1013,7 +1012,7 @@ export default function ShopList() {
   try {
    // const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
    const response = await axios.post(
-    `${ApiBaseUrl.baseUrl}all/seller/profile`,
+    `${ApiBaseUrl.localApiUrl}all/seller/profile`,
     {
      city_id: cityId,
     }
@@ -1034,7 +1033,7 @@ export default function ShopList() {
   try {
    // const response = await axios.post(`https://frontend.tizaraa.shop/api/all/seller/profile`, {
    const response = await axios.post(
-    `${ApiBaseUrl.baseUrl}all/seller/profile`,
+    `${ApiBaseUrl.localApiUrl}all/seller/profile`,
     {
      area_id: areaId,
     }

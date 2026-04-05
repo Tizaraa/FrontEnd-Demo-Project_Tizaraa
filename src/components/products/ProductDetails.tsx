@@ -456,6 +456,8 @@ type ProductDetailsProps = {
   };
   size?: { size: string; price: string; qty: string }[];
   color?: { color: string; price: string; qty: string }[];
+  colorGroupName?: string;
+  sizeGroupName?: string;
  };
  campaignBannerImage?: string;
  campaignSlug?: string;
@@ -775,61 +777,71 @@ const ProductDetails = ({
      </a>
     </Typography>
 
-    {sizeColor?.colorwithsize && (
-     <div>
-      <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>
-       Available Colors
-      </h3>
-      <FlexBox>
-       {Object.keys(sizeColor.colorwithsize).map((color) => (
-        <button
-         key={color}
-         style={{
-          padding: isDesktop ? "8px 16px" : "6px 12px",
-          margin: "5px",
-          fontSize: isDesktop ? "14px" : "12px",
-          border:
-           selectedColor === color ? "2px solid #e94560" : "1px solid gray",
-          background: "white",
-          cursor: "pointer",
-         }}
-         onClick={() => handleColorSelection(color)}
-        >
-         {color}
-        </button>
-       ))}
-      </FlexBox>
+    {sizeColor?.colorwithsize && (() => {
+     const colors = Object.keys(sizeColor.colorwithsize);
+     const onlyDefaultColor = colors.length === 1 && colors[0] === "Default";
+     const colorLabel = sizeColor.colorGroupName || "Color";
+     const sizeLabel  = sizeColor.sizeGroupName  || "Size";
+     return (
+      <div>
+       {!onlyDefaultColor && (
+        <>
+         <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>
+          Available {colorLabel}s
+         </h3>
+         <FlexBox>
+          {colors.map((color) => (
+           <button
+            key={color}
+            style={{
+             padding: isDesktop ? "8px 16px" : "6px 12px",
+             margin: "5px",
+             fontSize: isDesktop ? "14px" : "12px",
+             border:
+              selectedColor === color ? "2px solid #e94560" : "1px solid gray",
+             background: "white",
+             cursor: "pointer",
+            }}
+            onClick={() => handleColorSelection(color)}
+           >
+            {color}
+           </button>
+          ))}
+         </FlexBox>
+        </>
+       )}
 
-      {selectedColor && (
-       <>
-        <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>
-         Available Sizes
-        </h3>
-        <FlexBox>
-         {sizeColor.colorwithsize[selectedColor].map((item, index) => (
-          <button
-           key={index}
-           style={{
-            padding: isDesktop ? "8px 16px" : "6px 12px",
-            margin: "5px",
-            fontSize: isDesktop ? "14px" : "12px",
-            border:
-             selectedSize === item.size
-              ? "2px solid #e94560"
-              : "1px solid gray",
-            background: "white",
-            cursor: "pointer",
-           }}
-           onClick={() => handleSizeSelection(item.size)}
-          >
-           {item.size}
-          </button>
-         ))}
-        </FlexBox>
-       </>
-      )}
-     </div>
-    )}
+       {selectedColor && (
+        <>
+         <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>
+          Available {sizeLabel}s
+         </h3>
+         <FlexBox>
+          {sizeColor.colorwithsize[selectedColor].map((item, index) => (
+           <button
+            key={index}
+            style={{
+             padding: isDesktop ? "8px 16px" : "6px 12px",
+             margin: "5px",
+             fontSize: isDesktop ? "14px" : "12px",
+             border:
+              selectedSize === item.size
+               ? "2px solid #e94560"
+               : "1px solid gray",
+             background: "white",
+             cursor: "pointer",
+            }}
+            onClick={() => handleSizeSelection(item.size)}
+           >
+            {item.size}
+           </button>
+          ))}
+         </FlexBox>
+        </>
+       )}
+      </div>
+     );
+    })()}
 
     {sizeColor?.color && (
      <div>

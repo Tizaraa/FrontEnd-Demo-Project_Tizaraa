@@ -55,7 +55,13 @@ const nextConfig = {
         hostname: '**.alicdn.com',
         port: '',
         pathname: '/**',
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'minio.tizaraa.shop',
+        port: '',
+        pathname: '/**',
+      },
     ],
     unoptimized: true,
     dangerouslyAllowSVG: true,

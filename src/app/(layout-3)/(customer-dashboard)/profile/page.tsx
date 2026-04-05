@@ -369,7 +369,7 @@ export default function Profile() {
    try {
     const token = localStorage.getItem("token");
     const profileResponse = await axios.get(
-     `${ApiBaseUrl.baseUrl}v1/user/profile`,
+     `${ApiBaseUrl.localApiUrl}user/profile`,
      {
       headers: { Authorization: `Bearer ${token}` },
      }
@@ -380,7 +380,7 @@ export default function Profile() {
     console.log("profileResponse", profileResponse.data.profile);
 
     const historyResponse = await axios.get(
-     `${ApiBaseUrl.baseUrl}user/profile/history`,
+     `${ApiBaseUrl.localApiUrl}user/profile/history`,
      { headers: { Authorization: `Bearer ${token}` } }
     );
     const profileData = historyResponse.data;

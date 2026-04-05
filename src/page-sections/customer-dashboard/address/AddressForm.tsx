@@ -166,11 +166,13 @@ export default function AddressForm() {
    country: "BD", // Assuming country is always Bangladesh
    address: values.address, // Assuming this is the same as the TextArea field
    landmark: selectedLandmark,
+   postal_code: values.postal_code,
+   is_default: values.is_default ? 1 : 0,
   };
 
   try {
    const response = await axios.post(
-    `${ApiBaseUrl.baseUrl}user/address/store`,
+    `${ApiBaseUrl.localApiUrl}user/address/store`,
     addressData,
     {
      headers: {
@@ -179,7 +181,7 @@ export default function AddressForm() {
     }
    );
 
-   if (response.status === 200) {
+   if (response.status === 200 || response.status === 201) {
     // Handle successful response, e.g., redirect or show a success message
     sessionStorage.setItem("address", JSON.stringify(values));
     //console.log(response.data)
@@ -191,6 +193,7 @@ export default function AddressForm() {
      router.push("/login");
     }
    }
+   setLoading(false);
   } catch (error) {
    console.error(
     "Failed submitting address data:",
@@ -218,7 +221,7 @@ export default function AddressForm() {
  const fetchProvince = async () => {
   const authtoken = localStorage.getItem("token"); // Retrieve the auth token
   try {
-   const response = await axios.get(`${ApiBaseUrl.baseUrl}checkout/address`, {
+   const response = await axios.get(`${ApiBaseUrl.localApiUrl}checkout/address`, {
     headers: {
      Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
     },
@@ -238,7 +241,7 @@ export default function AddressForm() {
 
  // Handle province selection
  const handleProvinceChange = (provinceId: number, setFieldValue: any) => {
-  const selectedProvince = province.find((prov: any) => prov.id === provinceId);
+  const selectedProvince = province.find((prov: any) => prov.id == provinceId);
 
   if (selectedProvince) {
    setFieldValue("province", provinceId);
@@ -253,7 +256,7 @@ export default function AddressForm() {
  const handleCityChange = (cityId: number, setFieldValue: any) => {
   setFieldValue("city", cityId);
 
-  const selectedCity = city.find((c: any) => c.id === cityId); // Find the selected city object
+  const selectedCity = city.find((c: any) => c.id == cityId); // Find the selected city object
 
   if (selectedCity) {
    setArea(selectedCity.areas); // Update the area state based on the selected city
@@ -549,6 +552,63 @@ export default function AddressForm() {
            )}
           </div>
 
+          {/* Postal Code */}
+          <div style={{ marginBottom: "1.5rem" }}>
+           <label
+            style={{
+             display: "block",
+             marginBottom: "0.5rem",
+             fontWeight: "600",
+             color: "#2c3e50",
+             fontSize: "0.9rem",
+            }}
+           >
+            Postal Code (Optional)
+           </label>
+           <input
+            type="text"
+            name="postal_code"
+            onChange={handleChange}
+            value={values.postal_code}
+            placeholder="e.g. 1200"
+            style={{
+             width: "100%",
+             padding: "1rem",
+             border: `2px solid ${touched.postal_code && errors.postal_code ? "#E94560" : "#e1e8ed"}`,
+             borderRadius: "12px",
+             fontSize: "1rem",
+             transition: "all 0.3s ease",
+             background: "#fafbfc",
+             outline: "none",
+             boxSizing: "border-box",
+            }}
+            onFocus={(e) => {
+             e.target.style.borderColor = "#E94560";
+             e.target.style.background = "white";
+             e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)";
+            }}
+            onBlur={(e) => {
+             handleBlur(e);
+             e.target.style.borderColor =
+              touched.postal_code && errors.postal_code ? "#E94560" : "#e1e8ed";
+             e.target.style.background = "#fafbfc";
+             e.target.style.boxShadow = "none";
+            }}
+           />
+           {touched.postal_code && errors.postal_code && (
+            <div
+             style={{
+              color: "#E94560",
+              fontSize: "0.8rem",
+              marginTop: "0.5rem",
+              fontWeight: "500",
+             }}
+            >
+             {String(errors.postal_code)}
+            </div>
+           )}
+          </div>
+
           {/* Landmark Selection */}
           <div style={{ marginBottom: "1.5rem" }}>
            <label
@@ -625,318 +685,126 @@ export default function AddressForm() {
             </div>
            )}
           </div>
+          {/* Default Address Checkbox */}
+          <div style={{ marginBottom: "1.5rem", display: "flex", alignItems: "center" }}>
+           <input
+            type="checkbox"
+            id="is_default"
+            name="is_default"
+            checked={values.is_default}
+            onChange={handleChange}
+            style={{
+             width: "18px",
+             height: "18px",
+             marginRight: "0.8rem",
+             cursor: "pointer",
+             accentColor: "#E94560",
+            }}
+           />
+           <label
+            htmlFor="is_default"
+            style={{
+             fontWeight: "600",
+             color: "#2c3e50",
+             fontSize: "0.9rem",
+             cursor: "pointer",
+            }}
+           >
+            Set as default address
+           </label>
+          </div>
          </div>
 
          {/* Right Column */}
          <div>
           {/* Country */}
           <div style={{ marginBottom: "1.5rem" }}>
-           <label
-            style={{
-             display: "block",
-             marginBottom: "0.5rem",
-             fontWeight: "600",
-             color: "#2c3e50",
-             fontSize: "0.9rem",
-            }}
-           >
-            Country *
-           </label>
-           <div
-            style={{
-             position: "relative",
-            }}
-           >
-            <select
-             value="BD"
-             onChange={() =>
-              setFieldValue("country", { value: "BD", label: "Bangladesh" })
-             }
-             style={{
-              width: "100%",
-              padding: "1rem",
-              border: `2px solid ${touched.country && errors.country ? "#E94560" : "#e1e8ed"}`,
-              borderRadius: "12px",
-              fontSize: "1rem",
-              background: "#fafbfc",
-              outline: "none",
-              cursor: "pointer",
-              appearance: "none",
-              boxSizing: "border-box",
-             }}
-             onFocus={(e) => {
-              e.target.style.borderColor = "#E94560";
-              e.target.style.background = "white";
-              e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)";
-             }}
-             onBlur={(e) => {
-              e.target.style.borderColor =
-               touched.country && errors.country ? "#E94560" : "#e1e8ed";
-              e.target.style.background = "#fafbfc";
-              e.target.style.boxShadow = "none";
-             }}
-            >
-             <option value="BD">🇧🇩 Bangladesh</option>
-            </select>
-            <div
-             style={{
-              position: "absolute",
-              right: "1rem",
-              top: "50%",
-              transform: "translateY(-50%)",
-              pointerEvents: "none",
-              color: "#666",
-             }}
-            >
-             ▼
-            </div>
-           </div>
-           {touched.country && errors.country && (
-            <div
-             style={{
-              color: "#E94560",
-              fontSize: "0.8rem",
-              marginTop: "0.5rem",
-              fontWeight: "500",
-             }}
-            >
-             {typeof errors.country === "string" ? errors.country : ""}
-            </div>
-           )}
+           <Select
+            mb="1rem"
+            label="Country *"
+            options={[{ value: "BD", label: "Bangladesh" }]}
+            value={{ value: "BD", label: "Bangladesh" }}
+            errorText={touched.country && errors.country}
+            onChange={() =>
+             setFieldValue("country", {
+              value: "BD",
+              label: "Bangladesh",
+             })
+            }
+           />
           </div>
 
           {/* Province */}
           <div style={{ marginBottom: "1.5rem" }}>
-           <label
-            style={{
-             display: "block",
-             marginBottom: "0.5rem",
-             fontWeight: "600",
-             color: "#2c3e50",
-             fontSize: "0.9rem",
-            }}
-           >
-            Province / Region *
-           </label>
-           <div style={{ position: "relative" }}>
-            <select
-             value={values.province || ""}
-             onChange={(e) =>
-              handleProvinceChange(
-               Number.parseInt(e.target.value),
-               setFieldValue
-              )
-             }
-             style={{
-              width: "100%",
-              padding: "1rem",
-              border: `2px solid ${touched.province && errors.province ? "#E94560" : "#e1e8ed"}`,
-              borderRadius: "12px",
-              fontSize: "1rem",
-              background: "#fafbfc",
-              outline: "none",
-              cursor: "pointer",
-              appearance: "none",
-              boxSizing: "border-box",
-             }}
-             onFocus={(e) => {
-              e.target.style.borderColor = "#E94560";
-              e.target.style.background = "white";
-              e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)";
-             }}
-             onBlur={(e) => {
-              e.target.style.borderColor =
-               touched.province && errors.province ? "#E94560" : "#e1e8ed";
-              e.target.style.background = "#fafbfc";
-              e.target.style.boxShadow = "none";
-             }}
-            >
-             <option value="">Select Province</option>
-             {province?.map((prov) => (
-              <option key={prov.id} value={prov.id}>
-               {prov.province}
-              </option>
-             ))}
-            </select>
-            <div
-             style={{
-              position: "absolute",
-              right: "1rem",
-              top: "50%",
-              transform: "translateY(-50%)",
-              pointerEvents: "none",
-              color: "#666",
-             }}
-            >
-             ▼
-            </div>
-           </div>
-           {touched.province && errors.province && (
-            <div
-             style={{
-              color: "#E94560",
-              fontSize: "0.8rem",
-              marginTop: "0.5rem",
-              fontWeight: "500",
-             }}
-            >
-             {String(errors.province)}
-            </div>
-           )}
+           <Select
+            mb="1rem"
+            label="Province / Region *"
+            options={province.map((prov) => ({
+             value: prov.id,
+             label: prov.province,
+            }))}
+            value={
+             values.province
+              ? {
+                 value: values.province,
+                 label: province.find((prov) => prov.id == values.province)
+                  ?.province,
+                }
+              : null
+            }
+            errorText={touched.province && errors.province}
+            onChange={(e: { value: number; label: string }) =>
+             handleProvinceChange(e.value, setFieldValue)
+            }
+           />
           </div>
 
           {/* City */}
           <div style={{ marginBottom: "1.5rem" }}>
-           <label
-            style={{
-             display: "block",
-             marginBottom: "0.5rem",
-             fontWeight: "600",
-             color: "#2c3e50",
-             fontSize: "0.9rem",
-            }}
-           >
-            City *
-           </label>
-           <div style={{ position: "relative" }}>
-            <select
-             value={values.city || ""}
-             onChange={(e) =>
-              handleCityChange(Number.parseInt(e.target.value), setFieldValue)
-             }
-             style={{
-              width: "100%",
-              padding: "1rem",
-              border: `2px solid ${touched.city && errors.city ? "#E94560" : "#e1e8ed"}`,
-              borderRadius: "12px",
-              fontSize: "1rem",
-              background: "#fafbfc",
-              outline: "none",
-              cursor: "pointer",
-              appearance: "none",
-              boxSizing: "border-box",
-             }}
-             onFocus={(e) => {
-              e.target.style.borderColor = "#E94560";
-              e.target.style.background = "white";
-              e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)";
-             }}
-             onBlur={(e) => {
-              e.target.style.borderColor =
-               touched.city && errors.city ? "#E94560" : "#e1e8ed";
-              e.target.style.background = "#fafbfc";
-              e.target.style.boxShadow = "none";
-             }}
-            >
-             <option value="">Select City</option>
-             {city?.map((c) => (
-              <option key={c.id} value={c.id}>
-               {c.city}
-              </option>
-             ))}
-            </select>
-            <div
-             style={{
-              position: "absolute",
-              right: "1rem",
-              top: "50%",
-              transform: "translateY(-50%)",
-              pointerEvents: "none",
-              color: "#666",
-             }}
-            >
-             ▼
-            </div>
-           </div>
-           {touched.city && errors.city && (
-            <div
-             style={{
-              color: "#E94560",
-              fontSize: "0.8rem",
-              marginTop: "0.5rem",
-              fontWeight: "500",
-             }}
-            >
-             {String(errors.city)}
-            </div>
-           )}
+           <Select
+            mb="1rem"
+            label="City *"
+            options={city.map((c: any) => ({
+             value: c.id,
+             label: c.city,
+            }))}
+            value={
+             values.city
+              ? {
+                 value: values.city,
+                 label: city.find((c) => c.id == values.city)?.city,
+                }
+              : null
+            }
+            errorText={touched.city && errors.city}
+            onChange={(e: { value: number; label: string }) =>
+             handleCityChange(e.value, setFieldValue)
+            }
+           />
           </div>
 
           {/* Area */}
           <div style={{ marginBottom: "1.5rem" }}>
-           <label
-            style={{
-             display: "block",
-             marginBottom: "0.5rem",
-             fontWeight: "600",
-             color: "#2c3e50",
-             fontSize: "0.9rem",
-            }}
-           >
-            Area *
-           </label>
-           <div style={{ position: "relative" }}>
-            <select
-             value={values.area || ""}
-             onChange={(e) =>
-              setFieldValue("area", Number.parseInt(e.target.value))
-             }
-             style={{
-              width: "100%",
-              padding: "1rem",
-              border: `2px solid ${touched.area && errors.area ? "#E94560" : "#e1e8ed"}`,
-              borderRadius: "12px",
-              fontSize: "1rem",
-              background: "#fafbfc",
-              outline: "none",
-              cursor: "pointer",
-              appearance: "none",
-              boxSizing: "border-box",
-             }}
-             onFocus={(e) => {
-              e.target.style.borderColor = "#E94560";
-              e.target.style.background = "white";
-              e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)";
-             }}
-             onBlur={(e) => {
-              e.target.style.borderColor =
-               touched.area && errors.area ? "#E94560" : "#e1e8ed";
-              e.target.style.background = "#fafbfc";
-              e.target.style.boxShadow = "none";
-             }}
-            >
-             <option value="">Select Area</option>
-             {area?.map((a) => (
-              <option key={a.id} value={a.id}>
-               {a.area}
-              </option>
-             ))}
-            </select>
-            <div
-             style={{
-              position: "absolute",
-              right: "1rem",
-              top: "50%",
-              transform: "translateY(-50%)",
-              pointerEvents: "none",
-              color: "#666",
-             }}
-            >
-             ▼
-            </div>
-           </div>
-           {touched.area && errors.area && (
-            <div
-             style={{
-              color: "#E94560",
-              fontSize: "0.8rem",
-              marginTop: "0.5rem",
-              fontWeight: "500",
-             }}
-            >
-             {String(errors.area)}
-            </div>
-           )}
+           <Select
+            mb="1rem"
+            label="Area *"
+            options={area.map((a: any) => ({
+             value: a.id,
+             label: a.area,
+            }))}
+            value={
+             values.area
+              ? {
+                 value: values.area,
+                 label: area.find((a) => a.id == values.area)?.area,
+                }
+              : null
+            }
+            errorText={touched.area && errors.area}
+            onChange={(selectedArea: { value: number; label: string }) =>
+             setFieldValue("area", selectedArea.value)
+            }
+           />
           </div>
          </div>
         </div>
@@ -1020,6 +888,8 @@ const initialValues = {
  city: "",
  area: "",
  selectedLandmark: null,
+ postal_code: "",
+ is_default: false,
 };
 
 const checkoutSchema = yup.object().shape({

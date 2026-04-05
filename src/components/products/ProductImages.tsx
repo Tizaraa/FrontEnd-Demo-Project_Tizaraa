@@ -36,7 +36,7 @@
 //       </FlexBox>
 //       <FlexBox overflow="auto">
 //         {images.map((url, ind) => {
-//           const imageUrl = `${ApiBaseUrl.ImgUrl}${url}`; // Prepend base URL to the image URL
+//           const imageUrl = url?.startsWith("http") ? url : `${ApiBaseUrl.ImgUrl}${url}`; // Prepend base URL to the image URL
 //           return (
 //             <Box
 //               key={ind}
@@ -195,7 +195,7 @@
 //       {/* Thumbnails remain unchanged */}
 //       <FlexBox overflow="auto">
 //         {images.map((url, ind) => {
-//           const imageUrl = `${ApiBaseUrl.ImgUrl}${url}`;
+//           const imageUrl = url?.startsWith("http") ? url : `${ApiBaseUrl.ImgUrl}${url}`;
 //           return (
 //             <Box
 //               key={ind}
@@ -378,7 +378,7 @@
 //       {/* Thumbnails remain unchanged */}
 //       <FlexBox overflow="auto">
 //         {images.map((url, ind) => {
-//           const imageUrl = `${ApiBaseUrl.ImgUrl}${url}`;
+//           const imageUrl = url?.startsWith("http") ? url : `${ApiBaseUrl.ImgUrl}${url}`;
 //           return (
 //             <Box
 //               key={ind}
@@ -489,7 +489,7 @@ const ProductImages = ({ images }: ProductImagesProps) => {
  };
 
  const currentImageUrl = images?.[selectedImage]
-  ? `${ApiBaseUrl.ImgUrl}${images?.[selectedImage]}`
+  ? (images[selectedImage].startsWith("http") ? images[selectedImage] : `${ApiBaseUrl.ImgUrl}${images[selectedImage]}`)
   : "";
 
  const lensWidth = imgDimensions.width / ZOOM_LEVEL;
@@ -580,7 +580,7 @@ const ProductImages = ({ images }: ProductImagesProps) => {
    {/* Thumbnails */}
    <FlexBox overflow="auto">
     {images.map((url, ind) => {
-     const imageUrl = `${ApiBaseUrl.ImgUrl}${url}`;
+     const imageUrl = url?.startsWith("http") ? url : `${ApiBaseUrl.ImgUrl}${url}`;
      return (
       <Box
        key={ind}

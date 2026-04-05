@@ -1204,9 +1204,9 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
    try {
     let response: any;
     if (pageType === "default") {
-     response = await axios.get(`${ApiBaseUrl.baseUrl}category-filter/${slug}`);
+     response = await axios.get(`${ApiBaseUrl.localApiUrl}category-filter/${slug}`);
     } else if (pageType === "search") {
-     response = await axios.get(`${ApiBaseUrl.baseUrl}search-filter/${slug}`);
+     response = await axios.get(`${ApiBaseUrl.localApiUrl}search-filter/${slug}`);
     } else if (pageType === "shop") {
      response = await axios.get(`${ApiBaseUrl.baseUrl}shop-filter/${slug}`);
     }
@@ -1244,13 +1244,9 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
    const queryString = queryParams.length ? `?${queryParams.join("&")}` : "";
 
    let response;
-   if (pageType === "default") {
+   if (pageType === "default" || pageType === "search") {
     response = await axios.post(
-     `${ApiBaseUrl.baseUrl}category/${categorySlug}${queryString}`
-    );
-   } else if (pageType === "search") {
-    response = await axios.post(
-     `${ApiBaseUrl.baseUrl}/search/product/${categorySlug}${queryString}`
+     `${ApiBaseUrl.localApiUrl}category/${categorySlug}${queryString}`
     );
    } else if (pageType === "shop") {
     response = await axios.post(
@@ -1259,7 +1255,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
    }
 
    //  set filter brands based on category and price range
-   const categoryBrands = response.data.brands || [];
+   const categoryBrands = response.data.brand || response.data.brands || [];
    setBrandList(categoryBrands);
 
    const availableBrandIds = categoryBrands.map((brand: Brand) => brand.id);

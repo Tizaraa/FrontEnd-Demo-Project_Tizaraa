@@ -140,7 +140,7 @@ function ForgotPasswordModal({
    setOtp("");
    setLoading(false); // Ensure "Confirm" button doesn't show loading
    setIsResetOtpDisabled(true); // Disable the "Reset OTP" button during the process
-   const response = await axios.post(`${ApiBaseUrl.baseUrl}forgot-password`, {
+   const response = await axios.post(`${ApiBaseUrl.localApiUrl}forgot-password`, {
     email_or_phone: emailOrPhone,
    });
    toast.success(response.data.message); // Show API success message
@@ -160,7 +160,7 @@ function ForgotPasswordModal({
   }
   setLoading(true);
   try {
-   const response = await axios.post(`${ApiBaseUrl.baseUrl}forgot-password`, {
+   const response = await axios.post(`${ApiBaseUrl.localApiUrl}forgot-password`, {
     email_or_phone: emailOrPhone,
    });
 
@@ -188,7 +188,7 @@ function ForgotPasswordModal({
   }
   setLoading(true);
   try {
-   const response = await axios.post(`${ApiBaseUrl.baseUrl}verify-otp`, {
+   const response = await axios.post(`${ApiBaseUrl.localApiUrl}verify-otp`, {
     email_or_phone: emailOrPhone,
     otp: otp,
    });
@@ -227,7 +227,7 @@ function ForgotPasswordModal({
   }
   setLoading(true);
   try {
-   const response = await axios.post(`${ApiBaseUrl.baseUrl}reset-password`, {
+   const response = await axios.post(`${ApiBaseUrl.localApiUrl}reset-password`, {
     email_or_phone: emailOrPhone,
     password: newPassword,
     confirm_password: confirmPassword,
@@ -568,7 +568,7 @@ export default function Login() {
   setApiError(null);
 
   try {
-   const response = await axios.post(`${ApiBaseUrl.baseUrl}login`, {
+   const response = await axios.post(`${ApiBaseUrl.localApiUrl}login`, {
     email: values.email,
     password: values.password,
    });

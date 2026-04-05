@@ -143,19 +143,21 @@ export default function SubCategoryMenu({
                 /> */}
 
          {/* image cache  */}
-         <Image
-          src={`${ApiBaseUrl.ImgUrl}${sub.imgUrl}`}
-          alt={sub.title}
-          width={200}
-          height={200}
-          objectFit="cover"
-          style={{
-           width: "50px",
-           height: "50px",
-           borderRadius: "50%",
-           objectFit: "cover",
-          }}
-         />
+         {sub.imgUrl && (
+          <Image
+           src={sub.imgUrl?.startsWith("http") ? sub.imgUrl : `${ApiBaseUrl.ImgUrl}${sub.imgUrl}`}
+           alt={sub.title}
+           width={200}
+           height={200}
+           objectFit="cover"
+           style={{
+            width: "50px",
+            height: "50px",
+            borderRadius: "50%",
+            objectFit: "cover",
+           }}
+          />
+         )}
 
          <span>{sub.title}</span>
         </span>

@@ -38,7 +38,7 @@ interface RegisterResponse {
 const authService = {
  login: async (values: any): Promise<LoginResponse> => {
   try {
-   const response = await fetch(`${ApiBaseUrl.baseUrl}login`, {
+   const response = await fetch(`${ApiBaseUrl.localApiUrl}login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(values),
@@ -58,7 +58,7 @@ const authService = {
 
  googleLogin: (): void => {
   // Redirect to the Laravel Google login route
-  window.location.href = `${ApiBaseUrl.baseUrl}login/google`;
+  window.location.href = `${ApiBaseUrl.localApiUrl}login/google`;
  },
 
  isAuthenticated: (): boolean => {
@@ -78,7 +78,7 @@ const authService = {
   password: string
  ): Promise<RegisterResponse> => {
   try {
-   const response = await fetch("/api/register", {
+   const response = await fetch(`${ApiBaseUrl.localApiUrl}register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),

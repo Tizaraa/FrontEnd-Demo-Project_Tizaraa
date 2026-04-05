@@ -191,16 +191,13 @@ import FlexBox from "@component/FlexBox";
 import { Button } from "@component/buttons";
 import LazyImage from "@component/LazyImage";
 import Typography from "@component/Typography";
-import { IconButton } from "@component/buttons";
 import { currency, getTheme, isValidProp } from "@utils/utils";
 import { useAppContext } from "@context/app-context";
 import { useState, useEffect } from "react";
 import { Styledbutton } from "./style";
 import CheckBox from "@component/CheckBox";
 import toast from "react-hot-toast";
-import ApiBaseUrl from "api/ApiBaseUrl";
-import axios from "axios";
-import authService from "services/authService";
+import axios from "@lib/axiosClient";
 import Card from "@component/Card";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -280,8 +277,6 @@ export default function ProductCard7(props: ProductCard7Props) {
   delivereyType: string;
  } | null>(null);
 
- const authtoken = authService.getToken();
-
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState(false);
 
@@ -312,14 +307,7 @@ export default function ProductCard7(props: ProductCard7Props) {
    setLoading(true);
    setError(false);
    try {
-    const response = await axios.get(
-     `${ApiBaseUrl.baseUrl}cart/product/info/${productId}`,
-     {
-      headers: {
-       Authorization: `Bearer ${authtoken}`,
-      },
-     }
-    );
+    const response = await axios.get(`cart/product/info/${productId}`);
     setProductInfo(response.data);
    } catch (error) {
     console.error("Failed to fetch product info:", error);
@@ -467,15 +455,15 @@ export default function ProductCard7(props: ProductCard7Props) {
 
      {/* display size and color  */}
      {sizeColor && (
-      <Box display="flex">
-       {selectedColor && (
+      <Box display="flex" flexWrap="wrap">
+       {selectedColor && selectedColor !== "Default" && (
         <Typography fontSize="14px" color="gray.600" mr="8px">
-         Color: {selectedColor}
+         {sizeColor?.colorGroupName || "Color"}: {selectedColor}
         </Typography>
        )}
-       {selectedSize && (
+       {selectedSize && selectedSize !== "Default" && (
         <Typography fontSize="14px" color="gray.600">
-         Size: {selectedSize}
+         {sizeColor?.sizeGroupName || "Size"}: {selectedSize}
         </Typography>
        )}
       </Box>

@@ -91,18 +91,12 @@ interface SelectProps extends Props, SpaceProps {
 }
 // ==============================================================
 
-const options = [
- { label: "Relevance", value: "Relevance" },
- { label: "Date", value: "Date" },
- { label: "Price Low to High", value: "Price Low to High" },
- { label: "Price High to Low", value: "Price High to Low" },
-];
-
 const Select = ({
  isMulti = false,
  id,
  label,
  errorText,
+ options,
  ...props
 }: SelectProps) => {
  // extract spacing props

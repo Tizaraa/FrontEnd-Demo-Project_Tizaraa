@@ -65,7 +65,7 @@ export default function Section10() {
           }}
          >
           <Image
-           src={`${ApiBaseUrl.ImgUrl}${item.categorie_image}`}
+           src={item.categorie_image?.startsWith("http") ? item.categorie_image : `${ApiBaseUrl.ImgUrl}${item.categorie_image}`}
            alt={item.categorie_name}
            fill
            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16vw"

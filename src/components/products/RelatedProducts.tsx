@@ -231,10 +231,10 @@ const RelatedProducts = ({ productId }: RelatedProductsProps) => {
   const fetchRelatedProducts = async () => {
    try {
     const response = await axios.get(
-     `${ApiBaseUrl.baseUrl}product/details/related/product/${productId}`
+     `${ApiBaseUrl.localApiUrl}frontend/product/related/${productId}`
     );
     console.log(response);
-    setRelatedProducts(response.data || []);
+    setRelatedProducts(Array.isArray(response.data) ? response.data : []);
     setLoading(false);
    } catch (error) {
     console.error("Error fetching related products:", error);
@@ -282,7 +282,7 @@ const RelatedProducts = ({ productId }: RelatedProductsProps) => {
                     /> */}
 
           <Image
-           src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
+           src={item.product_thumbnail?.startsWith("http") ? item.product_thumbnail : `${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
            alt={item.product_name}
            layout="responsive"
            width={1}

@@ -2038,7 +2038,7 @@ import CommonHeader from "@component/header/CommonHeader";
 
 export default function VerifyEmail() {
  const [otp, setOtp] = useState("");
- const [resendTimer, setResendTimer] = useState(60); // Timer in seconds (3 minutes)
+ const [resendTimer, setResendTimer] = useState(120); // Timer in seconds (2 minutes)
  const [isResendDisabled, setIsResendDisabled] = useState(false); // Track if the button is disabled
  const router = useRouter();
  const [loading, setLoading] = useState(false);
@@ -2058,7 +2058,7 @@ export default function VerifyEmail() {
    try {
     const userId = sessionStorage.getItem("userId");
     const response = await axios.get(
-     `${ApiBaseUrl.baseUrl}get/provided/register/number/${userId}`
+     `${ApiBaseUrl.localApiUrl}get/provided/register/number/${userId}`
     );
     setCurrentPhoneNumber(response.data.phone || "No phone number available");
    } catch (error) {
@@ -2106,7 +2106,7 @@ export default function VerifyEmail() {
   try {
    const userId = sessionStorage.getItem("userId");
    const response = await axios.post(
-    `${ApiBaseUrl.baseUrl}set/provided/register/number/${userId}`,
+    `${ApiBaseUrl.localApiUrl}set/provided/register/number/${userId}`,
     { phone: newPhoneNumber }
    );
 
@@ -2115,9 +2115,9 @@ export default function VerifyEmail() {
     setCurrentPhoneNumber(newPhoneNumber); // Update the current phone number
     toggleModal(); // Close the modal
 
-    // Reset timer to 3 minutes when phone number is changed
-    setResendTimer(60); // Reset the resend timer to 3 minutes
-    sessionStorage.setItem("resendTimer", "60"); // Save the reset timer in sessionStorage
+    // Reset timer to 2 minutes when phone number is changed
+    setResendTimer(120); // Reset the resend timer to 2 minutes
+    sessionStorage.setItem("resendTimer", "120"); // Save the reset timer in sessionStorage
     sessionStorage.setItem("resendTimestamp", String(Date.now())); // Save timestamp to restart countdown
     setIsResendButtonClicked(true); // Mark resend as clicked to start the timer
     setShowExpiryMessage(false); // Hide expiry message when phone number is changed
@@ -2141,7 +2141,7 @@ export default function VerifyEmail() {
   e.preventDefault();
   setLoading(true);
   try {
-   const response = await fetch(`${ApiBaseUrl.baseUrl}setregister`, {
+   const response = await fetch(`${ApiBaseUrl.localApiUrl}setregister`, {
     method: "POST",
     headers: {
      "Content-Type": "application/json",
@@ -2177,7 +2177,7 @@ export default function VerifyEmail() {
    const token = localStorage.getItem("token"); // Or fetch token from the appropriate place
    const userId = sessionStorage.getItem("userId");
    const response = await fetch(
-    `${ApiBaseUrl.baseUrl}resend/otp/register/${userId}`,
+    `${ApiBaseUrl.localApiUrl}resend/otp/register/${userId}`,
     {
      method: "GET",
      headers: {
@@ -2191,7 +2191,7 @@ export default function VerifyEmail() {
    if (response.ok) {
     toast.success("OTP resent successfully");
     // Reset the timer after OTP is resent
-    setResendTimer(60); // Reset to 3 minutes
+    setResendTimer(120); // Reset to 2 minutes
     setShowExpiryMessage(false); // Hide expiry message when OTP is resent
    } else {
     console.log("Error:", data);

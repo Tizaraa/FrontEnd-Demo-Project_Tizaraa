@@ -490,9 +490,11 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
          style={{ marginInline: "1rem" }}
          alt={item.name}
          src={
-          item.productType === "Abroad"
+          item.imgUrl?.startsWith("http")
            ? item.imgUrl
-           : `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+           : item.imgUrl
+           ? `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+           : "/assets/images/products/iphone-xi.png"
          }
         />
        </Link>

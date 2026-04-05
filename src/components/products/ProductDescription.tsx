@@ -32,7 +32,7 @@ export default function ProductDescription({
 }: ProductDescriptionProps) {
  const [isExpanded, setIsExpanded] = useState(false);
 
- const words = description.split(" ");
+ const words = (description ?? "").split(" ");
  const isLongDescription = words.length > 214;
  const shortDescription = words.slice(0, 214).join(" ");
 

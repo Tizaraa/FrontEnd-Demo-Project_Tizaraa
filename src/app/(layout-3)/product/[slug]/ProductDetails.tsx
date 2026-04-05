@@ -846,7 +846,13 @@ const ShippingInfo: React.FC<{
                 color: "#555",
               }}
             >
-              {delivery_type}
+              {delivery_type === 1 || delivery_type === "1"
+                ? "Courier Delivery"
+                : delivery_type === 2 || delivery_type === "2"
+                ? "Self Pickup"
+                : delivery_type === 3 || delivery_type === "3"
+                ? "Corporate Pickup"
+                : "Standard Delivery"}
             </span>
             <button
               onClick={() => setShowDeliveryChart(true)}
@@ -1321,7 +1327,7 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
     const fetchProductData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`${ApiBaseUrl.baseUrl}product/details/${slug}`);
+        const response = await axios.get(`${ApiBaseUrl.localApiUrl}frontend/product/details/${slug}`);
         setProductData(response.data);
         console.log("Product data fetched for slug:", slug);
       } catch (err) {
@@ -1387,15 +1393,18 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
   const product = productData.productsingledetails;
   const productImages = productData.productmultiimages;
   const images = productImages.map((img: any) => img.product_img);
-  const description = product.short_description;
+  const description = product.description || product.short_description || '';
+  const shortDescription = product.short_description || '';
   const sellerShopName = product.seller_shop_name;
   const sellerShopLogo = product.seller_shop_logo;
   const shopUrl = product.seller_shop_slug;
   const delivery_type = product.delivereyType;
-  const warranty = productData.warranty;
+  const warrantyObj = productData.warranty;
+  const warranty = warrantyObj?.name ?? warrantyObj ?? null;
   const warrantyType = productData.warrantytype;
-  const replacewarranty = productData.replacement_warranty;
-  const express_deliverey = product.express_deliverey;
+  const replaceWarrantyObj = productData.replacement_warranty;
+  const replacewarranty = replaceWarrantyObj?.name ?? replaceWarrantyObj ?? null;
+  const express_deliverey = product.express_deliverey === true || product.express_deliverey === 1 ? 1 : 0;
   const sizeColor = productData.productsingledetails.SizeColor;
   const campaignBannerImage =
     productData.productsingledetails?.campaign?.banner_image;
@@ -1475,6 +1484,23 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
             </div>
           )}
         </div>
+
+        {/* Short description summary */}
+        {shortDescription ? (
+          <div
+            style={{
+              margin: "1rem 0",
+              padding: "0.75rem 1rem",
+              borderLeft: "4px solid #e94560",
+              backgroundColor: "#fff8f8",
+              borderRadius: "4px",
+              fontSize: "14px",
+              color: "#444",
+              lineHeight: 1.6,
+            }}
+            dangerouslySetInnerHTML={{ __html: shortDescription }}
+          />
+        ) : null}
 
         {/* ProductView with shipping props passed on mobile */}
         <ProductView

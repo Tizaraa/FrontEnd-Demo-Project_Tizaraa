@@ -191,7 +191,7 @@ async function fetchProductData(slug: string) {
     // Decode the slug to handle URL-encoded characters
     const decodedSlug = decodeURIComponent(slug);
 
-    const response = await fetch(`${ApiBaseUrl.baseUrl}product/details/${decodedSlug}`, {
+    const response = await fetch(`${ApiBaseUrl.localApiUrl}frontend/product/details/${decodedSlug}`, {
       cache: 'no-store', // Use no-store to align with page-level revalidate: 0
     });
 

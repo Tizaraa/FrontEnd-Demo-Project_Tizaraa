@@ -1230,7 +1230,7 @@ export default function Signup() {
   setIsSubmitting(true);
 
   try {
-   const response = await fetch(`${ApiBaseUrl.baseUrl}register`, {
+   const response = await fetch(`${ApiBaseUrl.localApiUrl}register`, {
     method: "POST",
     headers: {
      "Content-Type": "application/json",
@@ -1240,7 +1240,7 @@ export default function Signup() {
      email: values.email,
      phone: values.phone,
      password: values.password,
-     cpassword: values.cpassword,
+     password_confirmation: values.cpassword,
     }),
    });
 

@@ -534,7 +534,7 @@ export default function AddressList() {
  useEffect(() => {
   const fetchAddresses = async () => {
    try {
-    const response = await axios.get(`${ApiBaseUrl.baseUrl}user/address`, {
+    const response = await axios.get(`${ApiBaseUrl.localApiUrl}user/address`, {
      headers: {
       Authorization: `Bearer ${authtoken}`,
      },
@@ -564,7 +564,7 @@ export default function AddressList() {
  const areYouSureDelete = async (choose: boolean) => {
   if (choose && dialog.id) {
    try {
-    await axios.get(`${ApiBaseUrl.baseUrl}user/address/delete/${dialog.id}`, {
+    await axios.get(`${ApiBaseUrl.localApiUrl}user/address/delete/${dialog.id}`, {
      headers: {
       Authorization: `Bearer ${authtoken}`,
      },

@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
-import axios from "@lib/axiosClient";
 import Box from "@component/Box";
 import Card from "@component/Card";
 import FlexBox from "@component/FlexBox";
@@ -107,7 +106,7 @@ export default function NewArrivalsProduct() {
            }}
           >
            <Image
-            src={`${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
+            src={item.product_thumbnail?.startsWith("http") ? item.product_thumbnail : `${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
             alt={item.product_name}
             layout="responsive"
             width={1}
