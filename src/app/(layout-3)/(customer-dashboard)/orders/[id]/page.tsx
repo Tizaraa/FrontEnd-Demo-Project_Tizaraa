@@ -139,6 +139,9 @@ export default function OrderDetails({ params }: IDParams) {
       productType: "Local",
       status: raw.order_status,
       payment_method: raw.payment_method,
+      payment_status: raw.payment_status,
+      discount_amount: raw.discount_amount,
+      promo_code: raw.promo_code,
       amount_percentage: String(raw.advance_payment_percent ?? 100),
       amount: raw.total_amount,
       main_total: raw.subtotal,
@@ -158,7 +161,7 @@ export default function OrderDetails({ params }: IDParams) {
         delivery_charge: raw.shipping_amount,
         sub_total: raw.subtotal,
         total: raw.total_amount,
-        promocodeStatus: raw.discount_amount > 0 ? 1 : 0,
+        promocodeStatus: (raw.discount_amount > 0 || raw.promo_code) ? 1 : 0,
         isAbroad: false,
         order_items: orderItems,
        },
@@ -984,7 +987,7 @@ export default function OrderDetails({ params }: IDParams) {
                 borderRadius="1rem"
                 color="rgb(233, 69, 96)"
                >
-                {order?.Order?.delivery_type}
+                {order?.Order?.payment_method || "N/A"}
                </H6>
               </FlexBox>
               <FlexBox alignItems="center" mb="1rem">
@@ -998,9 +1001,26 @@ export default function OrderDetails({ params }: IDParams) {
                 borderRadius="1rem"
                 color="rgb(233, 69, 96)"
                >
-                {order?.Order?.payment_status}
+                {order?.Order?.payment_status || "N/A"}
                </H6>
               </FlexBox>
+              {order?.Order?.promo_code && (
+               <FlexBox alignItems="center" mb="1rem">
+                Promo Code:
+                <H6
+                 my="0px"
+                 mx="1rem"
+                 backgroundColor="#e8f8f0"
+                 p="5px"
+                 px="10px"
+                 borderRadius="1rem"
+                 color="#3BB77E"
+                 style={{ border: "1px solid #3BB77E" }}
+                >
+                 🏷️ {order.Order.promo_code}
+                </H6>
+               </FlexBox>
+              )}
              </Box>
             )}
            </Box>
@@ -1166,7 +1186,11 @@ export default function OrderDetails({ params }: IDParams) {
               <Typography fontSize="14px" color="text.hint">
                 Discount:
               </Typography>
-              <H6 my="0px">{currency(order.discount || 0)}</H6>
+              <H6 my="0px" color={order?.Order?.promo_code && (order?.Order?.discount_amount ?? 0) === 0 ? "#3BB77E" : undefined}>
+                {order?.Order?.promo_code && (order?.Order?.discount_amount ?? 0) === 0
+                  ? "Free Shipping"
+                  : currency(order?.Order?.discount_amount || 0)}
+              </H6>
             </FlexBox>
 
             <Divider mb="0.5rem" />
@@ -1191,7 +1215,7 @@ export default function OrderDetails({ params }: IDParams) {
             >
               Payment Method:
               <H6 my="0px" mx="1rem">
-                {order.Order.delivery_type}
+                {order.Order.payment_method || "N/A"}
               </H6>
             </FlexBox>
             <FlexBox
@@ -1200,7 +1224,7 @@ export default function OrderDetails({ params }: IDParams) {
             >
               Payment Status:
               <H6 my="0px" mx="1rem">
-                {order.Order.payment_status}
+                {order.Order.payment_status || "N/A"}
               </H6>
             </FlexBox>
             <FlexBox

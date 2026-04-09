@@ -50,6 +50,8 @@ const axios = Axios.create({
     "checkout/promo/validate",
     "promo/apply",
     "checkout/address",
+    "search",
+    "search/suggestions",
     "delivery/charge/apply",
     "otc/price/percentage",
    ];

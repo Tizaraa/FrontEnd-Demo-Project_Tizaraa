@@ -317,9 +317,10 @@ export default function PaymentForm() {
  };
  // const total = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
 
- const savedShipping = parseFloat(
-  sessionStorage.getItem("savedTotalWithDelivery") || "0"
- );
+ const isFreeShipping = sessionStorage.getItem("isFreeShipping") === "1";
+ const savedShipping = isFreeShipping
+  ? 0
+  : parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
 
  const expressDelivery = sessionStorage.getItem("expressDelivery");
 
@@ -476,6 +477,10 @@ export default function PaymentForm() {
     sessionStorage.removeItem("paymentMethod");
     sessionStorage.removeItem("savedTotalPrice");
     sessionStorage.removeItem("savedTotalWithDelivery");
+    sessionStorage.removeItem("promoCode");
+    sessionStorage.removeItem("discount");
+    sessionStorage.removeItem("isFreeShipping");
+    sessionStorage.removeItem("newTotal");
     cart.forEach((item) => {
      dispatch({
       type: "CHANGE_CART_AMOUNT",
@@ -523,9 +528,9 @@ export default function PaymentForm() {
       seller_id: cartData[0]?.sellerId,
       // payment_method: "cod",
       productType: productType,
-      promocode: promocode_price > 0 ? promocode : null,
+      promocode: (promocode_price > 0 || isFreeShipping) ? promocode : null,
       // promocode_price: promocode_price,
-      promocode_price: promocode_price > 0 ? promocode_price : null,
+      promocode_price: (promocode_price > 0 || isFreeShipping) ? promocode_price : null,
      },
 
      {
@@ -618,6 +623,10 @@ export default function PaymentForm() {
     sessionStorage.removeItem("paymentMethod");
     sessionStorage.removeItem("savedTotalPrice");
     sessionStorage.removeItem("savedTotalWithDelivery");
+    sessionStorage.removeItem("promoCode");
+    sessionStorage.removeItem("discount");
+    sessionStorage.removeItem("isFreeShipping");
+    sessionStorage.removeItem("newTotal");
     cart.forEach((item) => {
      dispatch({
       type: "CHANGE_CART_AMOUNT",

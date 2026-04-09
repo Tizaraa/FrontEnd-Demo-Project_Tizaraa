@@ -180,6 +180,7 @@ export default function PaymentSummary({
  const [discount, setDiscount] = useState(0);
  const [newTotal, setNewTotal] = useState(0);
  const [isAbroadProduct, setIsAbroadProduct] = useState(false);
+ const [isFreeShipping, setIsFreeShipping] = useState(false);
  const [user, setUser] = useState(null);
 
  useEffect(() => {
@@ -207,9 +208,11 @@ export default function PaymentSummary({
   const savedPrice = parseFloat(
    sessionStorage.getItem("savedTotalPrice") || "0"
   );
-  const savedShipping = parseFloat(
-   sessionStorage.getItem("deliveryCharge") || "0"
-  );
+  const freeShipping = sessionStorage.getItem("isFreeShipping") === "1";
+  setIsFreeShipping(freeShipping);
+  const savedShipping = freeShipping
+   ? 0
+   : parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || sessionStorage.getItem("deliveryCharge") || "0");
   const savedCart = JSON.parse(sessionStorage.getItem("cartItems") || "[]");
   const savedDiscount = parseFloat(sessionStorage.getItem("discount") || "0");
 
@@ -315,10 +318,14 @@ export default function PaymentSummary({
      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
       <Typography color="text.hint">Shipping:</Typography>
 
-      <FlexBox alignItems="flex-end">
-       <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-        {/* {deliveryChargeDisplay} */}
-        {currency(shippingCharge)}
+      <FlexBox alignItems="flex-end" style={{ gap: "0.5rem" }}>
+       {isFreeShipping && (
+        <Typography fontSize="14px" color="text.muted" style={{ textDecoration: "line-through" }}>
+         {currency(parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0"))}
+        </Typography>
+       )}
+       <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? "#3BB77E" : "inherit"}>
+        {isFreeShipping ? "FREE" : currency(shippingCharge)}
        </Typography>
       </FlexBox>
      </FlexBox>

@@ -169,54 +169,43 @@ export default function SearchInputWithCategory() {
   document.addEventListener("mousedown", handleClickOutside);
   return () => {
    document.removeEventListener("mousedown", handleClickOutside);
+   debouncedFetch.cancel();
   };
  }, []);
 
- //  Fetch search suggestions from API
+ //  Fetch search suggestions from Typesense via local API
  const fetchSearchResults = async (query: string) => {
-  if (!query) return; // prevent unnecessary API calls for empty query
+  if (!query) return;
   try {
-   const response = await axios.post(
-    `${ApiBaseUrl.localApiUrl}search/suggestion`,
-    { q: query, limit: 10, page: 1 }
+   const response = await axios.get(
+    `${ApiBaseUrl.localApiUrl}search/suggestions`,
+    { params: { q: query } }
    );
-   const results = response.data.products || [];
-
-   const uniqueResults = Array.from(
-    new Set(results.map((item: any) => item.code))
-   ).map((keyword) => results.find((item: any) => item.code === keyword));
-
-   setResultList(uniqueResults);
+   const results: any[] = Array.isArray(response.data) ? response.data : [];
+   setResultList(results);
   } catch (error) {
    console.error("Error fetching search results:", error);
    setResultList([]);
   }
  };
 
- const search = debounce((value: string) => {
-  if (!value.trim()) {
-   setResultList([]);
-  } else {
+ // Memoize debounced function in a ref so it is created once per mount,
+ // not recreated on every render (which would reset the timer each keystroke).
+ const debouncedFetch = useRef(
+  debounce((value: string) => {
    fetchSearchResults(value);
-  }
- }, 200);
+  }, 400)
+ ).current;
 
- // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
- //   const value = event.target.value;
- //   setSearchValue(value);
- //   search(value);
- // };
-
- // Improve search input behavior and placeholder text
  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   const value = event.target.value;
   setSearchValue(value);
 
   if (!value.trim()) {
    setResultList([]);
-   router.push("/"); // Navigate to home if input cleared
+   debouncedFetch.cancel();
   } else {
-   search(value);
+   debouncedFetch(value);
   }
  };
 

@@ -931,9 +931,10 @@ export default function CorporatePaymentForm() {
   setIsLoggedIn(authService.isAuthenticated());
  }, []);
 
- const savedShipping = parseFloat(
-  sessionStorage.getItem("savedTotalWithDelivery") || "0"
- );
+ const isFreeShipping = sessionStorage.getItem("isFreeShipping") === "1";
+ const savedShipping = isFreeShipping
+  ? 0
+  : parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
 
  const expressDelivery = sessionStorage.getItem("expressDelivery");
 
