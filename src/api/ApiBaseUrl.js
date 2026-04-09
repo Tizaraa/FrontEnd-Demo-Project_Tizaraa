@@ -12,7 +12,7 @@ const ApiBaseUrl = {
 
  //  tizaraa-customerapi-3oular-4cda3a-145-223-88-141.traefik.me/api/v1
  ImgUrl: `https://minio.tizaraa.shop/tizaraa/`,
- localApiUrl: `http://tizaraa-customerapi-3oular-4cda3a-145-223-88-141.traefik.me/api/v1`,
+
 
  // UAT
 //  baseUrl1: `https://frontend.tizaraa.com/api/`,
