@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Card from "@component/Card";
 import { H6 } from "@component/Typography";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 type Brand = {
@@ -214,7 +214,7 @@ const CampaignProductFilter: React.FC<CampaignProductFilterProps> = ({
     let activeCampaignId = 1;
 
     // Fetch active campaign
-    const activeRes = await axios.get(`${ApiBaseUrl.baseUrl}campaigns/active`);
+    const activeRes = await axios.get(`campaigns/active`);
     activeCampaignId = activeRes.data?.campaign?.id || 1;
 
     let response;
@@ -238,7 +238,7 @@ const CampaignProductFilter: React.FC<CampaignProductFilterProps> = ({
      );
     } else if (pageType === "campaign") {
      response = await axios.get(
-      `${ApiBaseUrl.baseUrl}campaigns/product/filter/${activeCampaignId}`
+      `campaigns/product/filter/${activeCampaignId}`
      );
     }
 

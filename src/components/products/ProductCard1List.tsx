@@ -248,8 +248,8 @@ export default function ProductGridView({
        <ProductCard1
         id={item?.id || ""}
         slug={item?.slug || ""}
-        price={item?.price || 0}
-        discountPrice={item?.discount_price || 0}
+        price={item?.original_price || item?.price || 0}
+        discountPrice={item?.original_price && item.original_price !== item.price ? (item?.price || 0) : (item?.discount_price || 0)}
         productStock={item?.product_stock || 0}
         title={item?.title || "No Title"}
         off={item?.discount || 0}

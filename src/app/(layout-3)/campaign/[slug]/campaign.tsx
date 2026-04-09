@@ -416,8 +416,9 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
   const fetchActiveCampaign = async () => {
    try {
     setCampaignLoading(true);
-    const res = await fetch(`${ApiBaseUrl.baseUrl}campaigns/active`);
-    const data = await res.json();
+    const { default: axiosClient } = await import("@lib/axiosClient");
+    const res = await axiosClient.get(`campaigns/active`);
+    const data = res.data;
 
     if (data?.campaign) {
      // Check if the campaign type matches the URL parameter
@@ -459,22 +460,13 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
    filters.province = selectedProvinces;
 
   try {
-   const response = await fetch(
-    `${ApiBaseUrl.baseUrl}campaigns/product/${activeCampaign.id}`,
-    {
-     method: "POST",
-     headers: { "Content-Type": "application/json" },
-     body: JSON.stringify({
-      ...filters,
-      page: currentPage,
-      orderBy: selectedSortOption,
-     }),
-    }
+   const { default: axiosClient } = await import("@lib/axiosClient");
+   const response = await axiosClient.post(
+    `campaigns/product/${activeCampaign.id}`,
+    { ...filters, page: currentPage, orderBy: selectedSortOption }
    );
 
-   if (!response.ok) throw new Error("Network response was not ok");
-
-   const data = await response.json();
+   const data = response.data;
 
    if (currentPage === 1) setProducts(data.data);
    else setProducts((prev) => [...prev, ...data.data]);

@@ -12,6 +12,7 @@ import { Button, IconButton } from "@component/buttons";
 import Sidenav from "@component/sidenav/Sidenav";
 import Typography, { H5, Paragraph } from "@component/Typography";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import axios from "@lib/axiosClient";
 
 import ProductGridView from "@component/products/ProductCard1List";
 import ProductListView from "@component/products/ProductCard9List";
@@ -50,7 +51,7 @@ export default function CountryResult({ sortOptions, slug }) {
  const [selectedCountry, setSelectedCountry] = useState<number[] | null>(null); // Track selected country
  const [selectedProvinces, setSelectedProvinces] = useState<number[]>([]);
  const [products, setProducts] = useState<any[]>([]);
- const [loading, setLoading] = useState(false);
+ const [loading, setLoading] = useState(true);
  const [totalProducts, setTotalProducts] = useState(0);
  const [currentPage, setCurrentPage] = useState(1);
  let pageType = "shop";
@@ -95,26 +96,20 @@ export default function CountryResult({ sortOptions, slug }) {
    filters.province = selectedProvinces;
 
   try {
-   const response = await fetch(
-    `${ApiBaseUrl.baseUrl}country/product/view/${slug}`,
+   const response = await axios.post(
+    `country/product/view/${slug}`,
     {
-     method: "POST",
-     headers: {
-      "Content-Type": "application/json",
-     },
-     body: JSON.stringify({
-      ...filters, // Include only valid filters
-      page: currentPage,
-      orderBy: selectedSortOption,
-     }),
+     ...filters,
+     page: currentPage,
+     orderBy: selectedSortOption,
     }
    );
 
-   if (!response.ok) {
+   if (!response.data) {
     throw new Error("Network response was not ok");
    }
 
-   const data = await response.json();
+   const data = response.data;
    // console.log("Shop Details:", data);
 
    // Reset products when fetching the first page
@@ -312,7 +307,7 @@ export default function CountryResult({ sortOptions, slug }) {
 
      <Grid item lg={9} xs={12}>
       {currentPage === 1 && loading ? ( // Show loading only on initial load
-       <Typography>{/* <Loader /> */}</Typography>
+       <Typography><Loader /></Typography>
       ) : view === "grid" ? (
        <>
         <ProductGridView

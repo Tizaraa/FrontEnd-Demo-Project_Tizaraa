@@ -17,11 +17,13 @@ export default function CampaignBanner() {
  useEffect(() => {
   async function fetchCampaign() {
    try {
-    const res = await fetch(`${ApiBaseUrl.baseUrl}campaigns/active`);
-    const data = await res.json();
+    const { default: axiosClient } = await import("@lib/axiosClient");
+    const res = await axiosClient.get(`campaigns/active`);
+    const data = res.data;
 
     if (data?.campaign) {
-     setBanner(`${ApiBaseUrl.ImgUrl}${data.campaign.banner_image}`);
+     const img = data.campaign.banner_image;
+     setBanner(img?.startsWith('http') ? img : `${ApiBaseUrl.ImgUrl}${img}`);
      setSlug(data.campaign.slug);
     } else {
      console.warn("No active campaign found");

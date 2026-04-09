@@ -149,7 +149,7 @@ export default function CarouselSlider(): JSX.Element {
           }}
          >
           <Image
-           src={`${ApiBaseUrl.ImgUrl}${slide.slider_image}`}
+           src={slide.slider_image?.startsWith('http') ? slide.slider_image : `${ApiBaseUrl.ImgUrl}${slide.slider_image}`}
            alt={`Slide ${index + 1}`}
            width={800}
            height={400}

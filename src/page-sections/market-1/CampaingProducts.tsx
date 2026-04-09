@@ -230,7 +230,7 @@
 
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 import Box from "@component/Box";
 import Card from "@component/Card";
 import FlexBox from "@component/FlexBox";
@@ -292,7 +292,7 @@ export default function CampaignProducts({
  useEffect(() => {
   const fetchProducts = async () => {
    try {
-    const response = await axios.get(`${ApiBaseUrl.baseUrl}campaigns/active`);
+    const response = await axios.get(`campaigns/active`);
 
     if (response.data && response.data.data) {
      const fetchedCampaign = response.data.campaign;

@@ -537,6 +537,8 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
  const [discount, setDiscount] = useState(0);
  const [newTotal, setNewTotal] = useState(0);
+ const [isFreeShipping, setIsFreeShipping] = useState(false);
+ const [appliedPromoCode, setAppliedPromoCode] = useState("");
 
  // newly added
  const [isExpressDelivery, setIsExpressDelivery] = useState(false);
@@ -823,106 +825,50 @@ export default function CheckoutSummary({ deliveryCharge }) {
   };
 
   try {
-   const response = await fetch(
-    "https://frontend.tizaraa.shop/api/promo/apply",
-    {
-     method: "POST",
-     headers: {
-      Authorization: `Bearer ${authtoken}`,
-      "Content-Type": "application/json",
-     },
-     body: JSON.stringify(requestBody),
-    }
-   );
+   const { default: axiosClient } = await import("@lib/axiosClient");
+   const response = await axiosClient.post("promo/apply", requestBody);
+   const data = response.data;
 
-   const contentType = response.headers.get("content-type");
-   if (!contentType || !contentType.includes("application/json")) {
-    const text = await response.text();
-    console.error("Unexpected response:", text);
-    throw new Error(
-     "The server returned an invalid response. Please try again later."
-    );
-   }
+   toast.success(data.message);
+   const discountValue = parseFloat(data.discount);
+   const freeShipping = !!data.free_shipping;
 
-   const data = await response.json();
+   setDiscount(discountValue);
+   setIsFreeShipping(freeShipping);
+   setAppliedPromoCode(promoCode);
 
-   if (response.ok) {
-    toast.success(data.message);
-    const discountValue = parseFloat(data.discount);
-    setDiscount(discountValue);
+   const totalPrice = savedTotalPrice;
+   const effectiveShipping = freeShipping ? 0 : savedTotalWithDelivery;
 
-    // Skip discount calculation for abroad products start
-    if (hasAbroadProduct) {
-     const advancePayment = otcAdvancePaymentAmount || 0;
-     setNewTotal(advancePayment);
-     sessionStorage.setItem("newTotal", advancePayment.toString());
-    } else {
-     const totalPrice = savedTotalPrice;
-     const shippingCharge = savedTotalWithDelivery;
-     const finalPrice = totalPrice + shippingCharge - discountValue;
-
-     setNewTotal(finalPrice);
-     sessionStorage.setItem("newTotal", finalPrice.toString());
-    }
-    // Skip discount calculation for abroad products end
-
-    const totalPrice = savedTotalPrice;
-    const shippingCharge = savedTotalWithDelivery;
-    const finalPrice = totalPrice + shippingCharge - discountValue;
-
+   if (hasAbroadProduct) {
+    const advancePayment = otcAdvancePaymentAmount || 0;
+    setNewTotal(advancePayment);
+    sessionStorage.setItem("newTotal", advancePayment.toString());
+   } else {
+    const finalPrice = totalPrice + effectiveShipping - discountValue;
     setNewTotal(finalPrice);
-
-    // Save discount and newTotal to sessionStorage
-    sessionStorage.setItem("discount", discountValue.toString());
     sessionStorage.setItem("newTotal", finalPrice.toString());
-
-    // Handle promoCode in session based on discount
-    if (discountValue === 0) {
-     sessionStorage.removeItem("promoCode");
-     setPromoCode("");
-    } else {
-     sessionStorage.setItem("promoCode", promoCode);
-    }
-
-    // ✅ After success, reset promo code in storage and UI
-    // sessionStorage.removeItem("promoCode");
-    // setPromoCode("");
-   } else {
-    const errorMsg =
-     data.message || data.error || "An error occurred. Please try again.";
-    toast.error(errorMsg);
-    console.error("Error:", data.error);
-
-    setDiscount(0);
-    setNewTotal(savedTotalPrice + savedTotalWithDelivery);
-    sessionStorage.setItem("discount", "0");
-    sessionStorage.setItem(
-     "newTotal",
-     (savedTotalPrice + savedTotalWithDelivery).toString()
-    );
-
-    // If there's an error, set promoCode to empty string in session
-    sessionStorage.setItem("promoCode", "");
-    setPromoCode(""); // Also clear the input field
    }
-  } catch (error) {
-   console.error("API Error:", error.message);
-   if (error.message === "Failed to fetch") {
-    toast.error("Wrong Promo !");
-   } else {
-    setError(error.message || "Wrong Promo");
-   }
+
+   sessionStorage.setItem("discount", discountValue.toString());
+   sessionStorage.setItem("promoCode", promoCode);
+   sessionStorage.setItem("isFreeShipping", freeShipping ? "1" : "0");
+  } catch (error: any) {
+   const message =
+    error?.response?.data?.message ||
+    error?.message ||
+    "Invalid promo code.";
+   toast.error(message);
+
    setDiscount(0);
+   setIsFreeShipping(false);
+   setAppliedPromoCode("");
    setNewTotal(savedTotalPrice + savedTotalWithDelivery);
    sessionStorage.setItem("discount", "0");
-   sessionStorage.setItem(
-    "newTotal",
-    (savedTotalPrice + savedTotalWithDelivery).toString()
-   );
-
-   // If there's an error, set promoCode to empty string in session
+   sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
    sessionStorage.setItem("promoCode", "");
-   setPromoCode(""); // Also clear the input field
+   sessionStorage.setItem("isFreeShipping", "0");
+   setPromoCode("");
   }
  };
 
@@ -988,11 +934,44 @@ export default function CheckoutSummary({ deliveryCharge }) {
      </button>
     </FlexBox>
 
-    {/* Display error or message */}
-    <Typography color={error ? "red" : message ? "green" : "inherit"} mt="1rem">
-     {error || message}{" "}
-     {/* Display error if it exists, otherwise display message */}
-    </Typography>
+    {/* Applied promo badge */}
+    {appliedPromoCode && (
+     <FlexBox alignItems="center" mt="0.5rem" gap="0.5rem">
+      <span
+       style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "6px",
+        backgroundColor: "#e8f8f0",
+        border: "1px solid #3BB77E",
+        color: "#3BB77E",
+        borderRadius: "16px",
+        padding: "4px 10px",
+        fontSize: "13px",
+        fontWeight: 600,
+       }}
+      >
+       🏷️ {appliedPromoCode}
+       {isFreeShipping && " · Free Shipping"}
+       <span
+        onClick={() => {
+         setAppliedPromoCode("");
+         setIsFreeShipping(false);
+         setDiscount(0);
+         setPromoCode("");
+         setNewTotal(savedTotalPrice + savedTotalWithDelivery);
+         sessionStorage.setItem("discount", "0");
+         sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
+         sessionStorage.removeItem("promoCode");
+         sessionStorage.setItem("isFreeShipping", "0");
+        }}
+        style={{ cursor: "pointer", marginLeft: "4px", fontWeight: 700 }}
+       >
+        ×
+       </span>
+      </span>
+     </FlexBox>
+    )}
    </FlexBox>
 
    <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
@@ -1029,9 +1008,14 @@ export default function CheckoutSummary({ deliveryCharge }) {
     <>
      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
       <Typography color="text.hint">Shipping:</Typography>
-      <FlexBox alignItems="flex-end">
-       <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-        {currency(savedTotalWithDelivery)}
+      <FlexBox alignItems="flex-end" gap="0.5rem">
+       {isFreeShipping && (
+        <Typography fontSize="14px" color="text.muted" style={{ textDecoration: "line-through" }}>
+         {currency(savedTotalWithDelivery)}
+        </Typography>
+       )}
+       <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? "#3BB77E" : "inherit"}>
+        {isFreeShipping ? "FREE" : currency(savedTotalWithDelivery)}
        </Typography>
       </FlexBox>
      </FlexBox>
@@ -1063,7 +1047,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
    >
     {hasAbroadProduct
      ? currency(otcAdvancePaymentAmount || 0)
-     : currency(savedTotalWithDelivery + savedTotalPrice - discount)}
+     : currency((isFreeShipping ? 0 : savedTotalWithDelivery) + savedTotalPrice - discount)}
    </Typography>
 
    <Divider mb="1rem" />

@@ -613,8 +613,7 @@ export default function ProductCard1({
        color="primary.text"
        zIndex={1}
       >
-       {/* {off}%  */}
-       {DiscountPercentage(price, off as number)}% off
+       {discountPrice && discountPrice > 0 ? off : DiscountPercentage(price, off as number)}% off
       </Chip>
      )}
 
@@ -660,10 +659,10 @@ export default function ProductCard1({
           color="primary.main"
           mb="0.25rem"
          >
-          {calculateDiscount(price, off as number)}
+          {discountPrice && discountPrice > 0 ? currency(discountPrice) : calculateDiscount(price, off as number)}
          </H5>
 
-         {off > 0 && (
+         {(discountPrice && discountPrice > 0 || off > 0) && (
           <SemiSpan className="price" fontWeight="600" color="text.muted">
            <del>{currency(price)}</del>
           </SemiSpan>
