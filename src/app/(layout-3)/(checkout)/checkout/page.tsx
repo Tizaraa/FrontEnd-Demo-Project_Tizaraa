@@ -167,7 +167,7 @@ import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_water
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function Checkout() {
- const { state, dispatch } = useAppContext();
+ const { state } = useAppContext();
  const searchParams = useSearchParams();
  const responseId = searchParams.get("response_id");
  const [deliveryCharge, setDeliveryCharge] = useState("");
@@ -181,21 +181,9 @@ export default function Checkout() {
   } else setIsLoggedIn(true);
  }, [router]);
 
- // ====== SYNC CART WITH BACKEND ======
  useEffect(() => {
-  const syncCart = async () => {
-   try {
-    const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    dispatch({ type: "SET_CART", payload: localCart });
-   } catch (error) {
-    console.error("Cart sync failed:", error);
-   } finally {
-    setLoading(false);
-   }
-  };
-
-  if (isLoggedIn) syncCart();
- }, [isLoggedIn, dispatch]);
+  if (isLoggedIn) setLoading(false);
+ }, [isLoggedIn]);
 
  if (!isLoggedIn || loading) return null;
 

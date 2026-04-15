@@ -54,6 +54,11 @@ const axios = Axios.create({
     "search/suggestions",
     "delivery/charge/apply",
     "otc/price/percentage",
+    "home/corporate-product",
+    "corporate-shop",
+    "corporate/",
+    "employee/registration",
+    "employee-details",
    ];
    if (config.url && localEndpoints.some((e) => config.url.includes(e))) {
     config.url = config.url.replace(ApiBaseUrl.baseUrl, ApiBaseUrl.localApiUrl);

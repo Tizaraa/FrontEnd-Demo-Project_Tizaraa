@@ -90,7 +90,7 @@ export default function Section13() {
 
          <FlexBox>
           <H4 fontWeight="600" fontSize="14px" color="text.muted">
-           <del>{currency(item.seeling_price)}</del>
+           <del>{currency(item.selling_price)}</del>
           </H4>
          </FlexBox>
 

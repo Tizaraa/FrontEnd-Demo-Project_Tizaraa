@@ -230,7 +230,7 @@ function ForgotPasswordModal({
    const response = await axios.post(`${ApiBaseUrl.localApiUrl}reset-password`, {
     email_or_phone: emailOrPhone,
     password: newPassword,
-    confirm_password: confirmPassword,
+    password_confirmation: confirmPassword,
     reset_token: resetToken,
    });
 

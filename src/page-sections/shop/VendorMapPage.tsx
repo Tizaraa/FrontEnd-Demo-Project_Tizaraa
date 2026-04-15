@@ -338,27 +338,25 @@ const defaultCenter = {
 };
 
 const VendorMapPage: React.FC<VendorMapPageProps> = ({
- selectedProvince,
- selectedCity,
- selectedArea,
+ selectedProvince: _selectedProvince,
+ selectedCity: _selectedCity,
+ selectedArea: _selectedArea,
  vendors,
 }) => {
  const [showOverlay, setShowOverlay] = useState(true); // State to toggle overlay visibility
  const { isLoaded } = useLoadScript({
   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-  libraries: ["places", "marker"],
+  libraries: ["places"],
  });
 
  const mapRef = useRef<HTMLDivElement | null>(null);
- const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+ const markersRef = useRef<google.maps.Marker[]>([]);
  const mapInstanceRef = useRef<google.maps.Map | null>(null);
  const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
 
  // Initialize the map and markers when the map is loaded or vendors change
  useEffect(() => {
   if (!isLoaded || !mapRef.current || !window.google) return;
-
-  const { AdvancedMarkerElement } = google.maps.marker;
 
   // Calculate the center dynamically based on vendors with valid lat/lon
   let center = defaultCenter;
@@ -376,15 +374,14 @@ const VendorMapPage: React.FC<VendorMapPageProps> = ({
   // Initialize the map
   const map = new google.maps.Map(mapRef.current, {
    center: center,
-   zoom: 15,
-   mapId: "e1ef4c90f9cab1e5",
-   mapTypeId: "roadmap", // Default to roadmap view
-   streetViewControl: true, // Enable Street View
-   mapTypeControl: true, // Enable map type control (satellite/roadmap toggle via default Google Maps UI)
-   zoomControl: true, // Enable zoom control
-   fullscreenControl: true, // Enable fullscreen control
-   draggable: true, // Enable dragging by default
-   scrollwheel: true, // Enable scroll zooming
+   zoom: 12,
+   mapTypeId: "roadmap",
+   streetViewControl: true,
+   mapTypeControl: true,
+   zoomControl: true,
+   fullscreenControl: true,
+   draggable: true,
+   scrollwheel: true,
   });
   mapInstanceRef.current = map;
 
@@ -392,7 +389,7 @@ const VendorMapPage: React.FC<VendorMapPageProps> = ({
   infoWindowRef.current = new google.maps.InfoWindow();
 
   // Clear existing markers
-  markersRef.current.forEach((marker) => (marker.map = null));
+  markersRef.current.forEach((marker) => marker.setMap(null));
   markersRef.current = [];
 
   // Add new markers for vendors with valid lat/lon
@@ -404,7 +401,7 @@ const VendorMapPage: React.FC<VendorMapPageProps> = ({
 
    if (isNaN(lat) || isNaN(lon)) return;
 
-   const marker = new AdvancedMarkerElement({
+   const marker = new google.maps.Marker({
     position: { lat, lng: lon },
     map,
     title: vendor.shop_name,

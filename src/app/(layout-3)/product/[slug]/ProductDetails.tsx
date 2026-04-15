@@ -679,7 +679,7 @@
 //      >
 //       <ProductIntro
 //        id={product.id}
-//        price={product.seeling_price}
+//        price={product.selling_price}
 //        title={product.product_name}
 //        images={images}
 //        sellerShopName={product.seller_shop_name}
@@ -1453,7 +1453,7 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
           >
             <ProductIntro
               id={product.id}
-              price={product.seeling_price}
+              price={product.selling_price}
               title={product.product_name}
               images={images}
               sellerShopName={product.seller_shop_name}

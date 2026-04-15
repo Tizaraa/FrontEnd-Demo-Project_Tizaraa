@@ -648,10 +648,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
   const getTotalPrice = () => {
    return state.cart.reduce((accumulator, item) => {
     if (state.selectedProducts.includes(item.id)) {
-     const price =
-      item.sizeColor?.nosize?.length === 0 && item.discountPrice
-       ? item.discountPrice
-       : item.price;
+     const price = item.discountPrice ?? item.price;
      return accumulator + price * item.qty;
     }
     return accumulator;

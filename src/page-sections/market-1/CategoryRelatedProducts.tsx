@@ -48,7 +48,7 @@ const CategoryRelatedProducts = ({ products }) => {
            }}
           />
           {!!item.discount_price &&
-           item.discount_price < item.seeling_price && (
+           item.discount_price < item.selling_price && (
             <Chip
              top="1rem"
              left="1.2rem"
@@ -61,8 +61,8 @@ const CategoryRelatedProducts = ({ products }) => {
              zIndex={1}
             >
              {Math.floor(
-              ((item.seeling_price - item.discount_price) /
-               item.seeling_price) *
+              ((item.selling_price - item.discount_price) /
+               item.selling_price) *
                100
              )}
              % off
@@ -84,12 +84,12 @@ const CategoryRelatedProducts = ({ products }) => {
          {item.rating > 0 && <Rating value={item.rating} outof={5} readOnly />}
          {item.discount_price == null ? (
           <H4 fontWeight="600" fontSize="14px" color="primary.main">
-           {currency(item.seeling_price)}
+           {currency(item.selling_price)}
           </H4>
          ) : (
           <FlexBox flexDirection="column">
            <H4 fontWeight="600" fontSize="14px" color="text.muted">
-            BDT <del>{currency(item.seeling_price)}</del>
+            BDT <del>{currency(item.selling_price)}</del>
            </H4>
            <H4 fontWeight="600" fontSize="14px" color="primary.main">
             {currency(item.discount_price)}

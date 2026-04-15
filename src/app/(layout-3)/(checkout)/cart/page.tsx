@@ -135,13 +135,17 @@ export default function Cart() {
     const updatedItem = data.find((d: any) => d.product_id === item.productId);
     if (updatedItem) {
      const newPrice = parseFloat(updatedItem.price);
-     if (item.price !== newPrice) {
-      toast(`Price updated for "${item.name}" to BDT ${newPrice}`);
+     const newDiscountPrice = updatedItem.discount_price
+      ? parseFloat(updatedItem.discount_price)
+      : null;
+     const effectivePrice = newDiscountPrice ?? newPrice;
+     if ((item.discountPrice ?? item.price) !== effectivePrice) {
+      toast(`Price updated for "${item.name}" to BDT ${effectivePrice}`);
      }
      return {
       ...item,
       price: newPrice,
-      discountPrice: item.discountPrice ? newPrice : null,
+      discountPrice: newDiscountPrice,
      };
     }
     return item;
@@ -154,6 +158,9 @@ export default function Cart() {
    );
 
    localStorage.setItem("seller_type", response.data?.seller_type || "");
+   if (response.data?.shop_slug) {
+    localStorage.setItem("shop_slug", response.data.shop_slug);
+   }
    localStorage.setItem("cart", JSON.stringify(updatedCart));
    sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
    sessionStorage.setItem(

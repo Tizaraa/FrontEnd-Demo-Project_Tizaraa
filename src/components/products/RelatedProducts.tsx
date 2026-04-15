@@ -80,7 +80,7 @@
 //                       />
 
 //                     {/* Discount Badge */}
-//                     {!!item.discount_price && item.discount_price < item.seeling_price && (
+//                     {!!item.discount_price && item.discount_price < item.selling_price && (
 //                       <Chip
 //                         top="1rem"
 //                         left="0.1rem"
@@ -92,7 +92,7 @@
 //                         color="primary.text"
 //                         zIndex={1}
 //                       >
-//                         {Math.floor(((item.seeling_price - item.discount_price) / item.seeling_price) * 100)}% off
+//                         {Math.floor(((item.selling_price - item.discount_price) / item.selling_price) * 100)}% off
 //                       </Chip>
 //                     )}
 //                   </Box>
@@ -117,13 +117,13 @@
 //                 {/* {item.discount_price == null ? (
 //                   <FlexBox>
 //                     <H4 fontWeight="600" fontSize="14px" color="primary.main">
-//                       {currency(item.seeling_price)}
+//                       {currency(item.selling_price)}
 //                     </H4>
 //                   </FlexBox>
 //                 ) : (
 //                   <FlexBox flexDirection="column">
 //                     <H4 fontWeight="600" fontSize="14px" color="text.muted">
-//                       BDT <del>{item.seeling_price}</del>
+//                       BDT <del>{item.selling_price}</del>
 //                     </H4>
 //                     <Box marginTop="4px">
 //                       <H4 fontWeight="600" fontSize="14px" color="primary.main">
@@ -132,7 +132,7 @@
 //                     </Box>
 //                   </FlexBox>
 //                 )} */}
-//                 {item.seeling_price === 0 ? (
+//                 {item.selling_price === 0 ? (
 //                 <FlexBox>
 //                   <H4 fontWeight="600" fontSize="14px" color="primary.main">
 //                     RFQ
@@ -141,13 +141,13 @@
 //               ) : item.discount_price == null ? (
 //                 <FlexBox>
 //                   <H4 fontWeight="600" fontSize="14px" color="primary.main">
-//                     {currency(item.seeling_price)}
+//                     {currency(item.selling_price)}
 //                   </H4>
 //                 </FlexBox>
 //               ) : (
 //                 <FlexBox flexDirection="column">
 //                   <H4 fontWeight="600" fontSize="14px" color="text.muted">
-//                     BDT <del>{currency(item.seeling_price)}</del>
+//                     BDT <del>{currency(item.selling_price)}</del>
 //                   </H4>
 //                   <Box marginTop="4px">
 //                     <H4 fontWeight="600" fontSize="14px" color="primary.main">
@@ -294,7 +294,7 @@ const RelatedProducts = ({ productId }: RelatedProductsProps) => {
 
           {/* Discount Badge */}
           {!!item.discount_price &&
-           item.discount_price < item.seeling_price && (
+           item.discount_price < item.selling_price && (
             <Chip
              top="1rem"
              left="0.1rem"
@@ -307,8 +307,8 @@ const RelatedProducts = ({ productId }: RelatedProductsProps) => {
              zIndex={1}
             >
              {Math.floor(
-              ((item.seeling_price - item.discount_price) /
-               item.seeling_price) *
+              ((item.selling_price - item.discount_price) /
+               item.selling_price) *
                100
              )}
              % off
@@ -336,13 +336,13 @@ const RelatedProducts = ({ productId }: RelatedProductsProps) => {
         {/* {item.discount_price == null ? (
                   <FlexBox>
                     <H4 fontWeight="600" fontSize="14px" color="primary.main">
-                      {currency(item.seeling_price)}
+                      {currency(item.selling_price)}
                     </H4>
                   </FlexBox>
                 ) : (
                   <FlexBox flexDirection="column">
                     <H4 fontWeight="600" fontSize="14px" color="text.muted">
-                      BDT <del>{item.seeling_price}</del>
+                      BDT <del>{item.selling_price}</del>
                     </H4>
                     <Box marginTop="4px">
                       <H4 fontWeight="600" fontSize="14px" color="primary.main">
@@ -351,7 +351,7 @@ const RelatedProducts = ({ productId }: RelatedProductsProps) => {
                     </Box>
                   </FlexBox>
                 )} */}
-        {item.seeling_price === 0 ? (
+        {item.selling_price === 0 ? (
          <FlexBox>
           <H4 fontWeight="600" fontSize="14px" color="primary.main">
            RFQ
@@ -360,13 +360,13 @@ const RelatedProducts = ({ productId }: RelatedProductsProps) => {
         ) : item.discount_price == null ? (
          <FlexBox>
           <H4 fontWeight="600" fontSize="14px" color="primary.main">
-           {currency(item.seeling_price)}
+           {currency(item.selling_price)}
           </H4>
          </FlexBox>
         ) : (
          <FlexBox flexDirection="column">
           <H4 fontWeight="600" fontSize="14px" color="text.muted">
-           BDT <del>{currency(item.seeling_price)}</del>
+           BDT <del>{currency(item.selling_price)}</del>
           </H4>
           <Box marginTop="4px">
            <H4 fontWeight="600" fontSize="14px" color="primary.main">

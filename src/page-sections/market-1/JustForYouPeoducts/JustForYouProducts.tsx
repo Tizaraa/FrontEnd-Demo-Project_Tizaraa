@@ -85,7 +85,7 @@ const JustForYouProducts = () => {
            </div>
            {/* Discount Badge */}
            {!!item.discount_price &&
-            item.discount_price < item.seeling_price && (
+            item.discount_price < item.selling_price && (
              <Chip
               top="-0.5rem"
               left="-10px"
@@ -98,8 +98,8 @@ const JustForYouProducts = () => {
               zIndex={1}
              >
               {Math.floor(
-               ((item.seeling_price - item.discount_price) /
-                item.seeling_price) *
+               ((item.selling_price - item.discount_price) /
+                item.selling_price) *
                 100
               )}
               % off
@@ -124,7 +124,7 @@ const JustForYouProducts = () => {
            <Rating value={item.rating} outof={5} color="warn" readOnly />
           )}
 
-          {item.seeling_price == 0 ? (
+          {item.selling_price == 0 ? (
            <FlexBox>
             <H4 fontWeight="600" fontSize="14px" color="primary.main">
              RFQ
@@ -133,13 +133,13 @@ const JustForYouProducts = () => {
           ) : item.discount_price == null ? (
            <FlexBox>
             <H4 fontWeight="600" fontSize="14px" color="primary.main">
-             {currency(item.seeling_price)}
+             {currency(item.selling_price)}
             </H4>
            </FlexBox>
           ) : (
            <FlexBox flexDirection="column" mt="0.25rem">
             <H4 fontWeight="600" fontSize="14px" color="text.muted">
-             BDT <del>{item.seeling_price}</del>
+             BDT <del>{item.selling_price}</del>
             </H4>
             <Box>
              <H4 fontWeight="600" fontSize="14px" color="primary.main">

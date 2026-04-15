@@ -97,11 +97,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
  const getTotalPrice = () => {
   return state.cart.reduce((accumulator, item) => {
    if (state.selectedProducts.includes(item.id)) {
-    const price =
-     item.sizeColor?.nosize?.length === 0 && item.discountPrice
-      ? item.discountPrice
-      : item.price;
-
+    const price = item.discountPrice ?? item.price;
     return accumulator + price * item.qty;
    }
    return accumulator;
@@ -217,7 +213,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
   try {
    // ✅ Price Check API only if logged in
    const response = await axios.post(
-    `${ApiBaseUrl.baseUrl}checkout/check/pricing`,
+    `checkout/check/pricing`,
     { orders: selectedItems }
    );
 
@@ -225,13 +221,16 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
    if (response.data?.success) {
     // Update cart prices
     const updatedCart = state.cart.map((item) => {
-     const updatedItem = data.find((d: any) => d.product_id === item.productId);
+     const updatedItem = data.find((d: any) => String(d.product_id) === String(item.productId));
      if (updatedItem) {
       const newPrice = parseFloat(updatedItem.price);
+      const newDiscountPrice = updatedItem.discount_price
+       ? parseFloat(updatedItem.discount_price)
+       : null;
       return {
        ...item,
        price: newPrice,
-       discountPrice: item.discountPrice ? newPrice : null,
+       discountPrice: newDiscountPrice,
       };
      }
      return item;
@@ -247,6 +246,9 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
 
     // Save updated cart & selected items with updated prices
     localStorage.setItem("seller_type", response.data?.seller_type || "");
+    if (response.data?.shop_slug) {
+     localStorage.setItem("shop_slug", response.data.shop_slug);
+    }
     localStorage.setItem("cart", JSON.stringify(updatedCart));
     sessionStorage.setItem("cartItems", JSON.stringify(updatedCart));
     sessionStorage.setItem(
@@ -507,11 +509,15 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
         </Link>
 
         <Tiny color="text.muted">
-         {currency(
-          item.sizeColor?.nosize?.length === 0
-           ? (item.discountPrice ?? item.price)
-           : item.price,
-          0
+         {item.discountPrice ? (
+          <>
+           <del style={{ color: "#aaa", marginRight: "4px" }}>
+            {currency(item.price, 0)}
+           </del>
+           {currency(item.discountPrice, 0)}
+          </>
+         ) : (
+          currency(item.price, 0)
          )}{" "}
          x {item.qty}
         </Tiny>
@@ -522,12 +528,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
          color="primary.main"
          mt="4px"
         >
-         {currency(
-          item.qty *
-           (item.sizeColor?.nosize?.length === 0
-            ? (item.discountPrice ?? item.price)
-            : item.price)
-         )}
+         {currency(item.qty * (item.discountPrice ?? item.price))}
         </Typography>
 
         {(item.selectedSize ||

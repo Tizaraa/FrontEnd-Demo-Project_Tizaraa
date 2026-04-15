@@ -111,17 +111,16 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  // };
 
  const handlePayment = async () => {
-  if (!selectedAddress) {
-   // Stop loading first
+  const isCorporate = seller_type.toLowerCase() === "corporate";
+
+  if (!isCorporate && !selectedAddress) {
    setIsHasPayLoading(false);
    toast.error("Please select or add an address before proceeding to pay", {
     autoClose: 2000,
    });
-
-   return; // Stop further execution
+   return;
   }
 
-  // Address exists, proceed
   setIsHasPayLoading(true);
   toast.success("Proceeding to payment...", { autoClose: 2000 });
 

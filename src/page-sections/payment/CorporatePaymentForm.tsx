@@ -1109,7 +1109,69 @@ export default function CorporatePaymentForm() {
     toast.error("Error initiating online payment payment!");
     setIsHasLoading(false);
    }
+  } else if (paymentMethod === "4") {
+   // ===== BUY WITH CREDIT (corporate checkout) =====
+   try {
+    const shopSlug = localStorage.getItem("shop_slug");
+    if (!shopSlug) {
+     toast.error("Corporate shop not found. Please go back and try again.");
+     setIsHasLoading(false);
+     return;
+    }
+
+    const items = cart.map((cartdata) => {
+     const unitPrice = Number(
+      cartdata.discountPrice ?? cartdata.price ?? 0
+     );
+     return {
+      product_id:   cartdata.productId,
+      product_name: cartdata.name,
+      quantity:     cartdata.qty,
+      unit_price:   unitPrice,
+      total_price:  unitPrice * cartdata.qty,
+     };
+    });
+
+    const orderResponse = await axios.post(`corporate/${shopSlug}/checkout`, {
+     total_amount: savedTotalPrice,
+     items,
+    });
+
+    // Deduct credit balance locally
+    const updatedBalance = Number(userinfo?.credit_balance) - savedTotalPrice;
+    userinfo.credit_balance = updatedBalance;
+    localStorage.setItem("userInfo", JSON.stringify(userinfo));
+
+    // Clear cart & storage
+    cart.forEach((item) => {
+     dispatch({ type: "CHANGE_CART_AMOUNT", payload: { ...item, qty: 0 } });
+    });
+    localStorage.removeItem("shop_slug");
+    localStorage.removeItem("seller_type");
+    sessionStorage.removeItem("selectedProducts");
+    sessionStorage.removeItem("cartItems");
+    sessionStorage.removeItem("paymentMethod");
+    sessionStorage.removeItem("savedTotalPrice");
+    sessionStorage.removeItem("savedTotalWithDelivery");
+
+    toast.success("Order placed successfully!");
+    router.push("/orders?status=success&message=Order placed successfully");
+   } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+     toast.error(
+      error.response?.data?.message ||
+      error.response?.data?.errors?.credit?.[0] ||
+      "Failed to place corporate order."
+     );
+    } else {
+     toast.error("Failed to place corporate order.");
+    }
+    setIsHasLoading(false);
+   } finally {
+    setIsHasLoading(false);
+   }
   } else {
+   // ===== CASH ON DELIVERY =====
    try {
     const orderResponse = await axios.post(`checkout/order`, {
      user_id: userinfo?.id,
@@ -1124,7 +1186,7 @@ export default function CorporatePaymentForm() {
       userShippingdata?.selectedLandmark || userShippingdata?.landmark,
      address: userShippingdata?.shipping_address1 || userShippingdata?.address,
      delivery_charge: savedShipping || 0,
-     delivery_type: paymentMethod === "4" ? 1 : expressDelivery,
+     delivery_type: expressDelivery,
      total_ammount: total_ammount,
      payment_type: paymentMethod,
      seller_id: cartData[0]?.sellerId,
@@ -1133,103 +1195,65 @@ export default function CorporatePaymentForm() {
      promocode: promocode_price > 0 ? promocode : null,
      promocode_price: promocode_price > 0 ? promocode_price : null,
     });
+
     if (orderResponse.data?.message?.status !== "success") {
      toast.error("Error placing cash on delivery order!");
      return;
-    }
-
-    // Update credit_balance in localStorage after successful credit purchase
-    if (paymentMethod === "4") {
-     const updatedBalance =
-      Number(userinfo?.credit_balance) - savedTotalPrice;
-     userinfo.credit_balance = updatedBalance;
-     localStorage.setItem("userInfo", JSON.stringify(userinfo));
     }
 
     let orderId = orderResponse.data?.message?.orderid;
     localStorage.setItem("orderId", orderId);
     localStorage.setItem("orderSuccess", "true");
 
-    const handleOrderItems = async () => {
-     try {
-      // Wait for all async operations to finish using Promise.all
-      await Promise.all(
-       cart.map(async (cartdata) => {
-        try {
-         // Set color handling logic
-         let color = cartdata.id;
-         if (/\D--\d+$/.test(cartdata.id)) {
-          color = cartdata.id.replace(/--\d+$/, "");
-         } else if (cartdata.id) {
-          color = "";
-         }
-
-         const single_amount = Number(
-          cartdata.selectedColor && cartdata.selectedSize
-           ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
-              (s) => s.size === cartdata.selectedSize
-             )?.price ||
-              cartdata.discountPrice ||
-              cartdata.price
-           : cartdata.discountPrice || cartdata.price
-         );
-
-         // Create the order object
-         const order = {
-          delivery_charge: savedShipping,
-          user_id: userinfo.id,
-          seller_id: cartdata.sellerId,
-          order_id: orderId,
-          product_id: cartdata.productId,
-          color: cartdata.selectedColor,
-          attribute: cartdata.selectedSpecification,
-          size: cartdata.selectedSize,
-          qty: cartdata.qty,
-          note1: "lorem10",
-          single_amount: single_amount,
-          total_amount: single_amount * cartdata.qty,
-         };
-
-         // Send the order to the API
-         const response = await axios.post(`checkout/order-items`, {
-          orders: [order],
-         });
-
-         console.log("Cart Item Response:", response.data);
-        } catch (error) {
-         console.error("Failed to add item to order:", error.response);
-        }
-       })
+    await Promise.all(
+     cart.map(async (cartdata) => {
+      const single_amount = Number(
+       cartdata.selectedColor && cartdata.selectedSize
+        ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
+           (s) => s.size === cartdata.selectedSize
+          )?.price ||
+           cartdata.discountPrice ||
+           cartdata.price
+        : cartdata.discountPrice || cartdata.price
       );
-     } catch (error) {
-      console.error("Error in processing cart items:", error);
-     } finally {
-      setIsHasLoading(false);
-     }
-    };
+      try {
+       await axios.post(`checkout/order-items`, {
+        orders: [{
+         delivery_charge: savedShipping,
+         user_id: userinfo.id,
+         seller_id: cartdata.sellerId,
+         order_id: orderId,
+         product_id: cartdata.productId,
+         color: cartdata.selectedColor,
+         attribute: cartdata.selectedSpecification,
+         size: cartdata.selectedSize,
+         qty: cartdata.qty,
+         note1: "lorem10",
+         single_amount: single_amount,
+         total_amount: single_amount * cartdata.qty,
+        }],
+       });
+      } catch (err) {
+       // item-level errors don't abort the whole order
+      }
+     })
+    );
 
-    // Call the function to handle the order items
-    handleOrderItems();
-
-    router.push("/orders?status=success&message=Order placed successfully");
     localStorage.removeItem("orderId");
     localStorage.removeItem("selectedProducts");
     sessionStorage.removeItem("selectedProducts");
-    //localStorage.removeItem("cart");
     sessionStorage.removeItem("cartItems");
     sessionStorage.removeItem("paymentMethod");
     sessionStorage.removeItem("savedTotalPrice");
     sessionStorage.removeItem("savedTotalWithDelivery");
     cart.forEach((item) => {
-     dispatch({
-      type: "CHANGE_CART_AMOUNT",
-      payload: { ...item, qty: 0 },
-     });
+     dispatch({ type: "CHANGE_CART_AMOUNT", payload: { ...item, qty: 0 } });
     });
+    router.push("/orders?status=success&message=Order placed successfully");
    } catch (error: unknown) {
     if (error instanceof AxiosError) {
      toast.error(
-      error.response.data?.message || "Error placing cash on delivery order!"
+      error.response?.data?.message || "Error placing cash on delivery order!"
      );
     }
     setIsHasLoading(false);

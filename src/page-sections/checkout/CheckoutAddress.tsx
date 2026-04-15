@@ -141,8 +141,19 @@ export default function CheckoutAddress({
     fetchProvince();
   }, [state.cart, seller_type]);
 
+  // Corporate products have no delivery charge — pickup only
+  useEffect(() => {
+    if (seller_type.toLowerCase() === "corporate") {
+      setDeliveryCharge(0);
+      sessionStorage.setItem("deliveryCharge", "0");
+      return;
+    }
+  }, [seller_type, setDeliveryCharge]);
+
   // Recalculate delivery charge when selectedAddress or expressDelivery changes
   useEffect(() => {
+    if (seller_type.toLowerCase() === "corporate") return;
+
     if (selectedAddress) {
       const selectedProducts = JSON.parse(
         sessionStorage.getItem("selectedProducts") || "[]"
@@ -175,7 +186,6 @@ export default function CheckoutAddress({
           axios
             .post(`delivery/charge/apply`, payload)
             .then((response) => {
-              // const totalDeliveryCost = response.data.totalDeliveryCost;
               const totalDeliveryCost = Math.round(response.data.totalDeliveryCost);
               setDeliveryCharge(totalDeliveryCost);
               sessionStorage.setItem("deliveryCharge", totalDeliveryCost.toString());
@@ -186,7 +196,7 @@ export default function CheckoutAddress({
         }
       }
     }
-  }, [selectedAddress, expressDelivery, province, authtoken, setDeliveryCharge]);
+  }, [selectedAddress, expressDelivery, province, authtoken, setDeliveryCharge, seller_type]);
 
   // Handle selection of an address
   const handleSelect = async (item: Address, isAutoSelect = false) => {
@@ -434,7 +444,30 @@ export default function CheckoutAddress({
         }
       })()}
 
-      {addresses?.length > 0 ? (
+      {seller_type.toLowerCase() === "corporate" ? (
+        <FlexBox
+          flexDirection="column"
+          p="1.25rem"
+          mb="1rem"
+          border="1px solid #4CAF50"
+          borderRadius="8px"
+          backgroundColor="#f0faf0"
+        >
+          <FlexBox alignItems="center" style={{ gap: "8px", marginBottom: "0.5rem" }}>
+            <FaTruckFast style={{ fontSize: "22px", color: "#4CAF50" }} />
+            <Typography style={{ fontWeight: "700", color: "#2e7d32", fontSize: "15px" }}>
+              Corporate Pickup — No Delivery Charge
+            </Typography>
+          </FlexBox>
+          <Typography style={{ fontSize: "13px", color: "#555", lineHeight: "1.6" }}>
+            This is a corporate order. You will collect your items directly from your
+            company's designated pickup location. Shipping address is not required.
+          </Typography>
+          <Typography style={{ fontSize: "13px", color: "#E94560", marginTop: "0.5rem", fontWeight: "600" }}>
+            Delivery charge: <strong>BDT 0</strong>
+          </Typography>
+        </FlexBox>
+      ) : addresses?.length > 0 ? (
         addresses.map((item, i) => (
           <AddressItem
             key={i}

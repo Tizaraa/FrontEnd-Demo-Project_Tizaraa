@@ -148,11 +148,11 @@ export default function ProductCarousel({
 
             // Real product
             const hasDiscount =
-              item.discount_price && item.discount_price < item.seeling_price;
+              item.discount_price && item.discount_price < item.selling_price;
 
             const discountPercent = hasDiscount
               ? Math.floor(
-                ((item.seeling_price - item.discount_price) / item.seeling_price) *
+                ((item.selling_price - item.discount_price) / item.selling_price) *
                 100
               )
               : 0;
@@ -235,12 +235,12 @@ export default function ProductCarousel({
                               {currency(item.discount_price)}
                             </H4>
                             <Small color="text.muted">
-                              <del>{currency(item.seeling_price)}</del>
+                              <del>{currency(item.selling_price)}</del>
                             </Small>
                           </>
                         ) : (
                           <H4 fontWeight="700" fontSize="15px" color="primary.main">
-                            {currency(item.seeling_price)}
+                            {currency(item.selling_price)}
                           </H4>
                         )}
                       </FlexBox>

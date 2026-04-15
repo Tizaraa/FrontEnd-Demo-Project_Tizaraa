@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import authService from "services/authService";
 import Box from "@component/Box";
 import { useAppContext } from "@context/app-context";
 
@@ -25,36 +24,10 @@ interface SelectedProduct {
 }
 
 export default function OrderedItem() {
- const { state, dispatch } = useAppContext();
+ const { state } = useAppContext();
  const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>(
   []
  );
-
- const authtoken = authService.getToken();
- const fetchProductDetails = async (productId: number) => {
-  try {
-   const response = await fetch(
-    `https://frontend.tizaraa.shop/api/cart/product/info/${productId}`,
-    {
-     headers: {
-      Authorization: `Bearer ${authtoken}`, // Attach auth token to headers
-     },
-    }
-   );
-   const data = await response.json();
-   // console.log(data)
-
-   return {
-    shopname: data.shopname,
-    shopimage: data.shopimage,
-    brand: data.brand,
-    delivereyType: data.delivereyType,
-   };
-  } catch (error) {
-   console.error("Failed to fetch product details:", error);
-   return {};
-  }
- };
 
  const syncProducts = async () => {
   const cartItems = state.cart;
@@ -218,13 +191,28 @@ export default function OrderedItem() {
        style={{
         fontSize: "16px",
         fontWeight: 500,
+        textAlign: "right",
        }}
       >
-       BDT{" "}
-       {(product.sizeColor?.nosize?.length === 0 && product.discountPrice
-        ? product.discountPrice
-        : product.price ?? 0
-       ).toLocaleString()}
+       {product.discountPrice && product.discountPrice < product.price ? (
+        <>
+         <div
+          style={{
+           fontSize: "13px",
+           color: "#aaa",
+           textDecoration: "line-through",
+           lineHeight: 1.2,
+          }}
+         >
+          BDT {product.price.toLocaleString()}
+         </div>
+         <div style={{ color: "#E94560" }}>
+          BDT {product.discountPrice.toLocaleString()}
+         </div>
+        </>
+       ) : (
+        <>BDT {(product.price ?? 0).toLocaleString()}</>
+       )}
       </div>
      </div>
     ))

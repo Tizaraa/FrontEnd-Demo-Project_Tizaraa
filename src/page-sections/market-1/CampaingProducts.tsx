@@ -118,7 +118,7 @@
 //                 >
 //                   {/* Discount Badge */}
 //                   {parseFloat(item.campaign_price) <
-//                     parseFloat(item.seeling_price) && (
+//                     parseFloat(item.selling_price) && (
 //                     <Chip
 //                       top="1rem"
 //                       left="1.2rem"
@@ -131,8 +131,8 @@
 //                       zIndex={1}
 //                     >
 //                       {Math.floor(
-//                         ((item.seeling_price - item.campaign_price) /
-//                           item.seeling_price) *
+//                         ((item.selling_price - item.campaign_price) /
+//                           item.selling_price) *
 //                           100
 //                       )}
 //                       % off
@@ -189,20 +189,20 @@
 
 //                     {/* Price display */}
 //                     {parseFloat(item.campaign_price) ===
-//                     parseFloat(item.seeling_price) ? (
+//                     parseFloat(item.selling_price) ? (
 //                       <FlexBox>
 //                         <H4
 //                           fontWeight="600"
 //                           fontSize="14px"
 //                           color="primary.main"
 //                         >
-//                           {currency(item.seeling_price)}
+//                           {currency(item.selling_price)}
 //                         </H4>
 //                       </FlexBox>
 //                     ) : (
 //                       <FlexBox flexDirection="column" mt="0.25rem">
 //                         <H4 fontWeight="600" fontSize="14px" color="text.muted">
-//                           BDT <del>{item.seeling_price}</del>
+//                           BDT <del>{item.selling_price}</del>
 //                         </H4>
 //                         <Box>
 //                           <H4
@@ -375,7 +375,7 @@ export default function CampaignProducts({
          style={{ height: "auto", minHeight: "300px" }}
         >
          {/* Discount Badge */}
-         {parseFloat(item.campaign_price) < parseFloat(item.seeling_price) && (
+         {parseFloat(item.campaign_price) < parseFloat(item.selling_price) && (
           <Chip
            top="1rem"
            left="1.2rem"
@@ -388,7 +388,7 @@ export default function CampaignProducts({
            zIndex={1}
           >
            {Math.floor(
-            ((item.seeling_price - item.campaign_price) / item.seeling_price) *
+            ((item.selling_price - item.campaign_price) / item.selling_price) *
              100
            )}
            % off
@@ -436,16 +436,16 @@ export default function CampaignProducts({
 
           {/* Price display */}
           {parseFloat(item.campaign_price) ===
-          parseFloat(item.seeling_price) ? (
+          parseFloat(item.selling_price) ? (
            <FlexBox>
             <H4 fontWeight="600" fontSize="14px" color="primary.main">
-             {currency(item.seeling_price)}
+             {currency(item.selling_price)}
             </H4>
            </FlexBox>
           ) : (
            <FlexBox flexDirection="column" mt="0.25rem">
             <H4 fontWeight="600" fontSize="14px" color="text.muted">
-             BDT <del>{item.seeling_price}</del>
+             BDT <del>{item.selling_price}</del>
             </H4>
             <Box>
              <H4 fontWeight="600" fontSize="14px" color="primary.main">
