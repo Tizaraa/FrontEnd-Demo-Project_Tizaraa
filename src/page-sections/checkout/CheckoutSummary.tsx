@@ -933,7 +933,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
     {/* Applied promo badge */}
     {appliedPromoCode && (
-     <FlexBox alignItems="center" mt="0.5rem" gap="0.5rem">
+     <FlexBox alignItems="center" mt="0.5rem" style={{ gap: "0.5rem" }}>
       <span
        style={{
         display: "inline-flex",
@@ -1005,7 +1005,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
     <>
      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
       <Typography color="text.hint">Shipping:</Typography>
-      <FlexBox alignItems="flex-end" gap="0.5rem">
+      <FlexBox alignItems="flex-end" style={{ gap: "0.5rem" }}>
        {isFreeShipping && (
         <Typography fontSize="14px" color="text.muted" style={{ textDecoration: "line-through" }}>
          {currency(savedTotalWithDelivery)}
