@@ -342,14 +342,36 @@ import useWindowSize from "@hook/useWindowSize";
 interface OrderStatusProps {
  orderStatus: string | null;
  deliveredAt: string | null;
+ returnStatus?: string | null; // return_status from the order_returns record
 }
 
 export default function OrderStatus({
  orderStatus,
  deliveredAt,
+ returnStatus,
 }: OrderStatusProps) {
  const width = useWindowSize();
  const breakpoint = 350;
+
+ // Return record status → step index
+ // DB values: pending | approved | rejected | received | refunded
+ const RETURN_RECORD_STEPS: { [key: string]: number } = {
+  pending:  0,
+  approved: 1,
+  received: 2,
+  refunded: 3,
+ };
+
+ const normalizedStatus = orderStatus?.toLowerCase() ?? "";
+ const RETURN_FLOW_ORDER_STATUSES = ["return requested", "returned", "refunded", "return approved", "return received"];
+ const isReturnFlow = RETURN_FLOW_ORDER_STATUSES.includes(normalizedStatus);
+
+ // Use the return record status when available; if the order itself is "refunded" force final step
+ const returnStepIndex = isReturnFlow
+  ? (normalizedStatus === "refunded"
+     ? 3
+     : (returnStatus ? (RETURN_RECORD_STEPS[returnStatus.toLowerCase()] ?? 0) : 0))
+  : -1;
 
  // Map string status to numeric value
  const statusMap: { [key: string]: number } = {
@@ -364,7 +386,7 @@ export default function OrderStatus({
 
  // Convert string status to number
  const numericStatus = orderStatus
-  ? (statusMap[orderStatus.toLowerCase()] ?? null)
+  ? (statusMap[normalizedStatus] ?? null)
   : null;
 
  // Determine the status index for the progress bar
@@ -415,7 +437,64 @@ export default function OrderStatus({
   );
  }, [orderStatus, numericStatus]);
 
- // Hide the order status part if the status is "Canceled" or "Return"
+ // Return flow tracker
+ if (isReturnFlow) {
+  const returnSteps = ["Return Requested", "Return Approved", "Item Received", "Refunded"];
+  const isRejected = returnStatus?.toLowerCase() === "rejected";
+  const activeStep = isRejected ? 0 : returnStepIndex;
+
+  return (
+   <Box p="1rem">
+    <Typography fontWeight="600" fontSize="14px" color="#e94560" mb="1rem">
+     Return Status
+    </Typography>
+    <FlexBox alignItems="center" flexWrap="wrap" style={{ gap: "0" }}>
+     {returnSteps.map((step, ind) => {
+      const done = ind < activeStep;
+      const current = ind === activeStep;
+      const color = done || current ? "#e94560" : "#ccc";
+      return (
+       <Fragment key={step}>
+        <FlexBox flexDirection="column" alignItems="center" style={{ minWidth: 80 }}>
+         <Box
+          width="32px"
+          height="32px"
+          borderRadius="50%"
+          bg={done || current ? "#e94560" : "#eee"}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+         >
+          <Typography fontSize="12px" color={done || current ? "white" : "#999"} fontWeight="700">
+           {done ? "✓" : ind + 1}
+          </Typography>
+         </Box>
+         <Typography fontSize="11px" color={color} textAlign="center" mt="6px" fontWeight={current ? "700" : "400"}>
+          {step}
+         </Typography>
+        </FlexBox>
+        {ind < returnSteps.length - 1 && (
+         <Box
+          flex="1"
+          height="3px"
+          bg={ind < activeStep ? "#e94560" : "#eee"}
+          style={{ minWidth: 20, marginBottom: 22 }}
+         />
+        )}
+       </Fragment>
+      );
+     })}
+    </FlexBox>
+    {isRejected && (
+     <Box mt="12px" p="10px 14px" bg="#fee2e2" borderRadius="6px">
+      <Typography fontSize="13px" color="#b91c1c" fontWeight="600">
+       Your return request was rejected by the seller.
+      </Typography>
+     </Box>
+    )}
+   </Box>
+  );
+ }
+
+ // Hide the order status part if the status is "Canceled" or unknown
  if (statusIndex === -1) {
   return null;
  }

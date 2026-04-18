@@ -155,7 +155,7 @@ export default function WriteReview({
  const handleReturnClick = () => {
   const encryptedOrderItemId = btoa(orderItemId);
   sessionStorage.setItem("returnItem", JSON.stringify(item));
-  router.push(`/return-order?orderItemId=${encryptedOrderItemId}`);
+  router.push(`/return-order?orderItemId=${encryptedOrderItemId}&orderId=${item.order_id}`);
  };
 
  // cancek click function

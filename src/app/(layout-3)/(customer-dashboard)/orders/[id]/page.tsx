@@ -70,6 +70,7 @@ export default function OrderDetails({ params }: IDParams) {
  const [onlinePaymentLoading, setOnlinePaymentLoading] = useState(false);
  const [orderSuccess, setOrderSuccess] = useState(false);
  const [fetched, setFetched] = useState(false);
+ const [returnDetails, setReturnDetails] = useState<any[]>([]);
  const router = useRouter();
 
  const [openSummaries, setOpenSummaries] = useState<{
@@ -78,6 +79,14 @@ export default function OrderDetails({ params }: IDParams) {
  const buttonRef = useRef<HTMLButtonElement>(null);
 
  const PrimaryLoader = `${ApiBaseUrl.ImgUrl}frontend/loader/loader.gif`;
+
+ const formatStatus = (s: string): string => {
+  if (!s) return s;
+  return s
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+ };
 
  const getColor = (status: string) => {
   switch (status) {
@@ -111,6 +120,7 @@ export default function OrderDetails({ params }: IDParams) {
     const sellerName = raw.seller_name ?? "Tizaraa Store";
     const orderItems = (raw.items ?? []).map((item: any) => ({
      order_item_id: item.id,
+     order_id: Number(params.id),
      product_id: item.product_id,
      product_name: item.product_name,
      product_image: item.thumbnail_url,
@@ -137,7 +147,7 @@ export default function OrderDetails({ params }: IDParams) {
       isDelivered: raw.order_status === "delivered",
       deliveredAt: raw.delivered_at ?? null,
       productType: "Local",
-      status: raw.order_status,
+      status: formatStatus(raw.order_status),
       payment_method: raw.payment_method,
       payment_status: raw.payment_status,
       discount_amount: raw.discount_amount,
@@ -157,7 +167,7 @@ export default function OrderDetails({ params }: IDParams) {
       items: {
        [sellerName]: {
         delivered_at: raw.delivered_at ?? null,
-        status: raw.order_status,
+        status: formatStatus(raw.order_status),
         delivery_charge: raw.shipping_amount,
         sub_total: raw.subtotal,
         total: raw.total_amount,
@@ -172,6 +182,17 @@ export default function OrderDetails({ params }: IDParams) {
     setOrder(adapted);
     setStatus(adapted.Order.status);
     setEstimateDate(adapted.Order.deliveredAt);
+
+    // Fetch return details if order is in a return flow
+    const returnStatuses = ["return_requested", "returned", "return_approved", "return_received", "refunded"];
+    if (returnStatuses.includes(raw.order_status)) {
+     try {
+      const returnRes = await axios.get(`orders/${params.id}/returns`);
+      setReturnDetails(returnRes.data?.data ?? []);
+     } catch {
+      // non-critical — silently ignore
+     }
+    }
    } catch (error) {
     console.error("Error fetching order details:", error);
    } finally {
@@ -883,8 +904,85 @@ export default function OrderDetails({ params }: IDParams) {
              <OrderStatus
               orderStatus={details.status}
               deliveredAt={details.delivered_at}
+              returnStatus={returnDetails[0]?.return_status ?? null}
              />
             </Box>
+
+            {/* Return details card */}
+            {returnDetails.length > 0 && returnDetails.map((ret: any) => (
+             <Box
+              key={ret.id}
+              mt="10px"
+              p="16px"
+              border="1px solid #fca5a5"
+              borderRadius="8px"
+              bg="#fff5f5"
+             >
+              <Typography fontWeight="700" fontSize="14px" color="#e94560" mb="12px">
+               Return Request Details
+              </Typography>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px" }}>
+               <div>
+                <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                 Reason Category
+                </Typography>
+                <Typography fontSize="13px" fontWeight="600" color="#374151" mt="2px">
+                 {ret.return_reason_category === "buyer_remorse"
+                  ? "Changed Mind / No Longer Needed"
+                  : ret.return_reason_category === "seller_fault"
+                  ? "Damaged / Defective / Wrong Item"
+                  : ret.return_reason_category}
+                </Typography>
+               </div>
+               <div>
+                <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                 Return Type
+                </Typography>
+                <Typography fontSize="13px" fontWeight="600" color="#374151" mt="2px" style={{ textTransform: "capitalize" }}>
+                 {(ret.return_type ?? "").replace("_", " ")}
+                </Typography>
+               </div>
+               <div>
+                <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                 Status
+                </Typography>
+                <Typography fontSize="13px" fontWeight="600" color="#e94560" mt="2px" style={{ textTransform: "capitalize" }}>
+                 {ret.return_status}
+                </Typography>
+               </div>
+              </div>
+              <div style={{ marginTop: "12px" }}>
+               <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                Return Reason
+               </Typography>
+               <Typography fontSize="13px" color="#374151" mt="4px" lineHeight="1.6">
+                {ret.return_reason}
+               </Typography>
+              </div>
+              {ret.refund_amount && (
+               <div style={{ marginTop: "12px" }}>
+                <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                 Refund Amount
+                </Typography>
+                <Typography fontSize="13px" fontWeight="700" color="#16a34a" mt="2px">
+                 BDT {ret.refund_amount}
+                </Typography>
+               </div>
+              )}
+              {ret.images?.length > 0 && (
+               <div style={{ marginTop: "12px" }}>
+                <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>
+                 Submitted Photos
+                </Typography>
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                 {ret.images.map((url: string, i: number) => (
+                  <img key={i} src={url} alt={`proof-${i}`} style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 6, border: "1px solid #fca5a5" }} />
+                 ))}
+                </div>
+               </div>
+              )}
+             </Box>
+            ))}
 
             {openSummaries[shopName] && (
              <Box p="20px" borderRadius={8} mt="1rem">
