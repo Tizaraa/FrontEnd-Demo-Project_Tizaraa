@@ -1406,6 +1406,7 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
   const replacewarranty = replaceWarrantyObj?.name ?? replaceWarrantyObj ?? null;
   const express_deliverey = product.express_deliverey === true || product.express_deliverey === 1 ? 1 : 0;
   const sizeColor = productData.productsingledetails.SizeColor;
+  const unitOfMeasure = product.unit_of_measure ?? null;
   const campaignBannerImage =
     productData.productsingledetails?.campaign?.banner_image;
   const campaignSlug = productData.productsingledetails?.campaign?.slug;
@@ -1466,6 +1467,7 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
               sellerId={product.seller_shop_id}
               slug={params.slug}
               brandName={product.brand_name}
+              unitOfMeasure={unitOfMeasure}
               warranty={warranty}
               warrantyType={warrantyType}
               replacewarranty={replacewarranty}

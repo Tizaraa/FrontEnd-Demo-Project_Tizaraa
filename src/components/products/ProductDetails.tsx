@@ -447,6 +447,7 @@ type ProductDetailsProps = {
  sellerShopName: string;
  sellerShopLogo: string;
  brandName: string;
+ unitOfMeasure?: { id: number; name: string; symbol: string } | null;
  warranty: string;
  warrantyType: string;
  replacewarranty: string;
@@ -479,6 +480,7 @@ const ProductDetails = ({
  sellerShopName,
  sellerShopLogo,
  brandName,
+ unitOfMeasure,
  warranty,
  warrantyType,
  replacewarranty,
@@ -776,6 +778,16 @@ const ProductDetails = ({
       {brandName || "N/A"}
      </a>
     </Typography>
+
+    {unitOfMeasure && (
+     <Typography style={{ fontSize: isDesktop ? "16px" : "14px", marginTop: "4px" }}>
+      Unit of Measure:{" "}
+      <span style={{ color: "#2C3A4A", fontWeight: 500 }}>
+       {unitOfMeasure.name}
+       {unitOfMeasure.symbol ? ` (${unitOfMeasure.symbol})` : ""}
+      </span>
+     </Typography>
+    )}
 
     {sizeColor?.colorwithsize && (() => {
      const colors = Object.keys(sizeColor.colorwithsize);

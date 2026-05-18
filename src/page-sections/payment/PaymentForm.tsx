@@ -304,345 +304,114 @@ export default function PaymentForm() {
  useEffect(() => {
   setIsLoggedIn(authService.isAuthenticated());
  }, []);
- const getTotalPrice = () => {
-  return state.cart.reduce((accumulator, item) => {
-   if (state.selectedProducts.includes(item.id)) {
-    return (
-     accumulator +
-     (item.discountPrice ? item.discountPrice : item.price) * item.qty
-    );
-   }
-   return accumulator;
-  }, 0);
- };
- // const total = parseFloat(sessionStorage.getItem("savedTotalPrice") || "0");
 
  const isFreeShipping = sessionStorage.getItem("isFreeShipping") === "1";
  const savedShipping = isFreeShipping
   ? 0
   : parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0");
 
- const expressDelivery = sessionStorage.getItem("expressDelivery");
-
- // const total_ammount = total;
- // const isSubtotalZero = total_ammount === 0;
-
- // Check if all products are abroad
  const hasAbroadProduct = state.cart.every(
   (product) => product.productType === "Abroad"
  );
-
- // For abroad products, use savedTotalPrice instead of newTotal
  const totalFromNewTotal = hasAbroadProduct
   ? parseFloat(sessionStorage.getItem("savedTotalPrice") || "0")
   : parseFloat(sessionStorage.getItem("newTotal") || "0");
 
- const savedTotalPrice = parseFloat(
-  sessionStorage.getItem("savedTotalPrice") || "0"
- );
-
- const total_ammount = totalFromNewTotal - savedShipping;
- const isSubtotalZero = total_ammount === 0;
-
- // promocode & promocode_price get from session storage
- const promocode = sessionStorage.getItem("promoCode");
- const promocode_price = parseFloat(sessionStorage.getItem("discount"));
-
- const advance_payment_percent = parseFloat(
-  sessionStorage.getItem("selectedPaymentOption")
- );
+ const totalAmount = totalFromNewTotal - savedShipping;
+ const isSubtotalZero = totalAmount === 0;
 
  const router = useRouter();
 
- let authtoken = localStorage.getItem("token");
+ const clearSessionState = (cartItems: any[]) => {
+  [
+   "selectedProducts", "address", "paymentMethod", "savedTotalPrice",
+   "savedTotalWithDelivery", "promoCode", "discount", "isFreeShipping",
+   "newTotal", "cartItems", "expressDelivery", "selectedPaymentOption",
+  ].forEach((k) => sessionStorage.removeItem(k));
+  localStorage.removeItem("orderId");
+  localStorage.removeItem("selectedProducts");
+  cartItems.forEach((item: any) => {
+   dispatch({ type: "CHANGE_CART_AMOUNT", payload: { ...item, qty: 0 } });
+  });
+ };
+
  const orderSubmit = async () => {
   setIsHasLoading(true);
-  if (isSubtotalZero) {
-   toast.error("Your cart is empty. Please add items before proceeding.");
+
+  const addressData = JSON.parse(sessionStorage.getItem("address") || "null");
+  const addressId = addressData?.id;
+
+  if (!addressId) {
+   toast.error("Please select a delivery address.");
+   setIsHasLoading(false);
    return;
   }
-  let getData = localStorage.getItem("userInfo");
-  let userinfo = JSON.parse(getData);
 
-  let shippingData = sessionStorage.getItem("address");
-  // console.log("Session Storage Data:", shippingData);
-  let userShippingdata = JSON.parse(shippingData);
-
-  // let cartData = localStorage.getItem('cart');
-  const cartData = JSON.parse(
+  const selectedItems = JSON.parse(
    sessionStorage.getItem("selectedProducts") || "[]"
   );
 
-  // Ensure cartData is valid and not empty before trying to access its items
-  const productType =
-   cartData.length > 0 ? cartData[0]?.productType : "General";
+  if (selectedItems.length === 0) {
+   toast.error("Your cart is empty. Please add items before proceeding.");
+   setIsHasLoading(false);
+   return;
+  }
 
-  let cart = cartData;
+  const promoCode = sessionStorage.getItem("promoCode");
+  const promoPrice = parseFloat(sessionStorage.getItem("discount") || "0");
 
-  // console.log("Orders:", cart);
-  // console.log("Product Type:", productType);
-  // console.log("Selected payment method:", paymentMethod);
-  if (paymentMethod === "Online Payment") {
-   try {
-    const response = await axios.post(
-     `pay-via-ajax`,
-     {
-      user_id: userinfo?.id,
-      seller_id: cartData[0]?.sellerId,
-      cus_name: userShippingdata?.shipping_name || userShippingdata?.name,
-      cus_email: userinfo?.email,
-      cus_phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
-      province_id:
-       userShippingdata?.shipping_province || userShippingdata?.province_id,
-      city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
-      area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
-      house_level:
-       userShippingdata?.selectedLandmark || userShippingdata?.landmark,
-      delivery_charge: savedShipping || 0,
-      cus_add1:
-       userShippingdata?.shipping_address1 || userShippingdata?.address,
-      currency: "BDT",
-      total_amount: total_ammount,
-      advance_payment_percent: advance_payment_percent,
-      productType: productType,
-      payment_type: "Online Payment",
-      payment_method: "Online Payment",
-     },
-     {
-      headers: {
-       Authorization: `Bearer ${authtoken}`,
-      },
-     }
-    );
-    // console.log("online Response:", response);
-
-    let orderId = response.data?.orderid;
-    // console.log("id", orderId);
-    // console.log("Selected payment method:", paymentMethod);
-    localStorage.setItem("orderId", orderId);
-    localStorage.setItem("orderSuccess", "true");
-
-    await Promise.all(
-     cart.map(async (cartdata) => {
-      try {
-       // Set color handling logic
-       let color = cartdata.id;
-       if (/\D--\d+$/.test(cartdata.id)) {
-        color = cartdata.id.replace(/--\d+$/, "");
-       } else if (cartdata.id) {
-        color = "";
-       }
-
-       // Place order items for all products, including OTC
-       const response = await axios.post(
-        `checkout/order-items`,
-        {
-         orders: [
-          {
-           delivery_charge: savedShipping,
-           user_id: userinfo.id,
-           seller_id: cartdata.sellerId,
-           order_id: orderId,
-           product_id: cartdata.productId,
-           color: cartdata.selectedColor,
-           size: cartdata.selectedSize,
-           attribute: cartdata.selectedSpecification,
-           qty: cartdata.qty,
-           note1: "lorem10",
-           single_amount: cartdata.price,
-           total_amount: cartdata.total_amount,
-          },
-         ],
-        },
-        {
-         headers: {
-          Authorization: `Bearer ${authtoken}`,
-          "Content-Type": "application/json",
-         },
-        }
-       );
-
-       console.log("Cart Item Response:", response.data);
-      } catch (error) {
-       console.error("Failed to add item to order:", error.response);
-       setIsHasLoading(false);
-      }
+  try {
+   // Sync selected items to Redis cart for atomic engine checkout
+   await axios.delete("cart/clear");
+   await Promise.all(
+    selectedItems.map((item: any) =>
+     axios.post("cart/add", {
+      product_id: Number(item.productId),
+      quantity: Number(item.qty),
+      variant_id: item.variantId ? Number(item.variantId) : null,
      })
-    );
+    )
+   );
 
-    //router.push("/orders");
-    localStorage.removeItem("orderId");
-    sessionStorage.removeItem("selectedProducts");
-    //localStorage.removeItem("cart");
-    sessionStorage.removeItem("paymentMethod");
-    sessionStorage.removeItem("savedTotalPrice");
-    sessionStorage.removeItem("savedTotalWithDelivery");
-    sessionStorage.removeItem("promoCode");
-    sessionStorage.removeItem("discount");
-    sessionStorage.removeItem("isFreeShipping");
-    sessionStorage.removeItem("newTotal");
-    cart.forEach((item) => {
-     dispatch({
-      type: "CHANGE_CART_AMOUNT",
-      payload: { ...item, qty: 0 },
-     });
-    });
+   const gateway = paymentMethod === "cod" ? "cod" : "sslcommerz";
 
-    const redirectUrl = response.data?.redirect_url;
-    // console.log(redirectUrl);
-    //return
+   const orderRes = await axios.post("checkout/order", {
+    address_id: addressId,
+    payment_method: gateway,
+    promo_code: promoPrice > 0 || isFreeShipping ? promoCode : null,
+   });
 
-    if (redirectUrl) {
-     //const searchParams = useSearchParams();
-     window.location.href = redirectUrl;
-     localStorage.setItem("redirectUrl", redirectUrl);
-    } else {
-     toast.error("Payment initiation failed. No redirect URL received.");
-     setIsHasLoading(false);
-    }
-   } catch (error) {
-    console.error("Online Payment Error:", error);
-    toast.error("Error initiating online payment payment!");
-    setIsHasLoading(false);
-   }
-  } else if (paymentMethod === "cod") {
-   try {
-    const orderResponse = await axios.post(
-     `checkout/order`,
-     {
-      user_id: userinfo?.id,
-      name: userShippingdata?.shipping_name || userShippingdata?.name,
-      phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
-      email: userinfo?.email,
-      province_id:
-       userShippingdata?.shipping_province || userShippingdata?.province_id,
-      city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
-      area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
-      house_level:
-       userShippingdata?.selectedLandmark || userShippingdata?.landmark,
-      address: userShippingdata?.shipping_address1 || userShippingdata?.address,
-      delivery_charge: savedShipping || 0,
-      delivery_type: expressDelivery,
-      total_ammount: total_ammount,
-      payment_type: 1,
-      seller_id: cartData[0]?.sellerId,
-      // payment_method: "cod",
-      productType: productType,
-      promocode: (promocode_price > 0 || isFreeShipping) ? promocode : null,
-      // promocode_price: promocode_price,
-      promocode_price: (promocode_price > 0 || isFreeShipping) ? promocode_price : null,
-     },
+   const orders: any[] = orderRes.data?.data?.orders ?? [];
 
-     {
-      headers: {
-       Authorization: `Bearer ${authtoken}`,
-      },
-     }
-    );
+   clearSessionState(selectedItems);
 
-    // console.log("Order Response:", orderResponse);
-
-    let orderId = orderResponse.data.message.orderid;
-    localStorage.setItem("orderId", orderId);
-    localStorage.setItem("orderSuccess", "true");
-
-    const handleOrderItems = async () => {
-     try {
-      // Wait for all async operations to finish using Promise.all
-      await Promise.all(
-       cart.map(async (cartdata) => {
-        try {
-         // Set color handling logic
-         let color = cartdata.id;
-         if (/\D--\d+$/.test(cartdata.id)) {
-          color = cartdata.id.replace(/--\d+$/, "");
-         } else if (cartdata.id) {
-          color = "";
-         }
-
-         const single_amount = Number(
-          cartdata.selectedColor && cartdata.selectedSize
-           ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
-              (s) => s.size === cartdata.selectedSize
-             )?.price ||
-              cartdata.discountPrice ||
-              cartdata.price
-           : cartdata.discountPrice || cartdata.price
-         );
-
-         // Create the order object
-         const order = {
-          delivery_charge: savedShipping,
-          user_id: userinfo.id,
-          seller_id: cartdata.sellerId,
-          order_id: orderId,
-          product_id: cartdata.productId,
-          color: cartdata.selectedColor,
-          attribute: cartdata.selectedSpecification,
-          size: cartdata.selectedSize,
-          qty: cartdata.qty,
-          note1: "lorem10",
-          single_amount: single_amount,
-          total_amount: single_amount * cartdata.qty,
-         };
-
-         // Send the order to the API
-         const response = await axios.post(
-          `checkout/order-items`,
-          { orders: [order] },
-          {
-           headers: {
-            Authorization: `Bearer ${authtoken}`,
-            "Content-Type": "application/json",
-           },
-          }
-         );
-
-         console.log("Cart Item Response:", response.data);
-        } catch (error) {
-         console.error("Failed to add item to order:", error.response);
-        }
-       })
-      );
-     } catch (error) {
-      console.error("Error in processing cart items:", error);
-     } finally {
-      setIsHasLoading(false);
-     }
-    };
-
-    // Call the function to handle the order items
-    handleOrderItems();
-
+   if (paymentMethod === "cod") {
     router.push("/orders?status=success&message=Order placed successfully");
-    localStorage.removeItem("orderId");
-    localStorage.removeItem("selectedProducts");
-    sessionStorage.removeItem("selectedProducts");
-    //localStorage.removeItem("cart");
-    sessionStorage.removeItem("cartItems");
-    sessionStorage.removeItem("paymentMethod");
-    sessionStorage.removeItem("savedTotalPrice");
-    sessionStorage.removeItem("savedTotalWithDelivery");
-    sessionStorage.removeItem("promoCode");
-    sessionStorage.removeItem("discount");
-    sessionStorage.removeItem("isFreeShipping");
-    sessionStorage.removeItem("newTotal");
-    cart.forEach((item) => {
-     dispatch({
-      type: "CHANGE_CART_AMOUNT",
-      payload: { ...item, qty: 0 },
-     });
-    });
-   } catch (error) {
-    console.error("Error placing order:", error);
-    toast.error("Error placing cash on delivery order!");
-    if (isLoggedIn) {
-     router.push("/payment");
-    } else {
-     router.push("/login");
-    }
+    return;
+   }
+
+   // Online payment: initiate SSLCommerz gateway
+   if (orders.length === 0) throw new Error("No orders created.");
+   const orderId = orders[0].order_id;
+
+   const payRes = await axios.post("pay-via-ajax", {
+    order_id: orderId,
+    gateway: "sslcommerz",
+   });
+
+   const redirectUrl = payRes.data?.redirect_url;
+   if (redirectUrl) {
+    window.location.href = redirectUrl;
+   } else {
+    toast.error("Payment initiation failed. No redirect URL received.");
     setIsHasLoading(false);
    }
+  } catch (err: any) {
+   const msg =
+    err?.response?.data?.message || "Error placing order. Please try again.";
+   toast.error(msg);
+   if (!isLoggedIn) router.push("/login");
+   setIsHasLoading(false);
   }
  };
 
