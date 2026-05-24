@@ -56,9 +56,10 @@ const authService = {
   }
  },
 
- googleLogin: (): void => {
-  // Redirect to the Laravel Google login route
-  window.location.href = `${ApiBaseUrl.localApiUrl}login/google`;
+ googleLogin: async (): Promise<void> => {
+  const res = await fetch(`${ApiBaseUrl.localApiUrl}login/google`);
+  const data = await res.json();
+  if (data.url) window.location.href = data.url;
  },
 
  isAuthenticated: (): boolean => {
