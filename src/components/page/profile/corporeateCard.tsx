@@ -122,7 +122,7 @@ const CorporateCard = ({ profile }) => {
         fontWeight: "600",
        }}
       >
-       {profile.type}
+       {profile.type === 'employee' ? 'Corporate Employee' : profile.type === 'buyer' ? 'Customer' : profile.type === 'seller' ? 'Seller' : profile.type}
       </span>
      )}
     </div>
