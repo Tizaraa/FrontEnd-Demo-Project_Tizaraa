@@ -6,7 +6,7 @@ import { Button, Card, CardContent, CardHeader, Checkbox } from "@mui/material";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 import { useRouter } from "next/navigation";
 import CheckBox from "@component/CheckBox";
 import FlexBox from "@component/FlexBox";
@@ -39,31 +39,19 @@ export default function CancellationForm() {
  }
 
  const handleSubmit = async () => {
-  const authtoken = localStorage.getItem("token");
-  const payload = {
-   order_item_id: cancelItem.order_item_id,
-   product_id: cancelItem.product_id,
-   comment: additionalInfo,
-   order_type: productType || "Local",
-  };
-
   try {
    const response = await axios.post(
-    `${ApiBaseUrl.baseUrl}order/item/cencel`,
-    payload,
-    {
-     headers: {
-      Authorization: `Bearer ${authtoken}`,
-     },
-    }
+    `user/order/${cancelItem.order_id}/cancel`,
+    { reason: additionalInfo }
    );
    console.log("Cancellation Successful:", response.data);
    toast.success("Cancellation request submitted successfully.");
 
    router.back();
-  } catch (error) {
+  } catch (error: any) {
    console.error("Error cancelling the item:", error);
-   alert("Failed to submit cancellation request. Please try again.");
+   const message = error?.response?.data?.message ?? "Failed to submit cancellation request. Please try again.";
+   alert(message);
   }
  };
 
