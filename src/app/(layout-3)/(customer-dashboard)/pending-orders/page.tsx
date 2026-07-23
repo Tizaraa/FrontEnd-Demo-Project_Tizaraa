@@ -188,8 +188,8 @@ export default function OrderList() {
 
       console.log("Pending: ", data);
 
-      if (Array.isArray(data.orders)) {
-        setOrderList(data.orders);
+      if (Array.isArray(data.data)) {
+        setOrderList(data.data);
         if (!fetched) {
           // Show toast only on initial fetch
           //toast.success("Order placed successfully!");

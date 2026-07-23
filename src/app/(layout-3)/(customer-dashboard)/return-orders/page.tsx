@@ -187,8 +187,8 @@ export default function OrderList() {
 
       const data = response.data;
 
-      if (Array.isArray(data.orders)) {
-        setOrderList(data.orders);
+      if (Array.isArray(data.data)) {
+        setOrderList(data.data);
         if (!fetched) {
           // Show toast only on initial fetch
           //toast.success("Order placed successfully!");
