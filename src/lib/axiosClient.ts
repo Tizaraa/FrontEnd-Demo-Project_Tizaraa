@@ -64,6 +64,8 @@ const axios = Axios.create({
     "employee-details",
     "order/item/return",
     "orders/",
+    "reviews",
+    "user/reviews",
    ];
    if (config.url && localEndpoints.some((e) => config.url.includes(e))) {
     config.url = config.url.replace(ApiBaseUrl.baseUrl, ApiBaseUrl.localApiUrl);
