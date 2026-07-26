@@ -214,8 +214,8 @@ const CorporateCard = ({ profile }) => {
    </div>
 
    {/* Corporate Shop Link */}
-   {(
-    <Link href={`/shops/${profile?.shop_slug || "corporate-shop"}`}>
+   {profile?.shop_slug && (
+    <Link href={`/shops/${profile.shop_slug}`}>
      <div
       style={{
        margin: "0 1rem 0.75rem",
