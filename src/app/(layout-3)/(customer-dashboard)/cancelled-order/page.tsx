@@ -70,13 +70,19 @@ export default function CancellationForm() {
       </Typography>
       <div style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
        <div style={{ display: "flex", gap: "1rem", flex: 1 }}>
-        <Image
-         src={`${ApiBaseUrl.ImgUrl}${cancelItem.product_image}`}
-         alt={cancelItem.product_name}
-         width={100}
-         height={100}
-         style={{ borderRadius: "0.375rem" }}
-        />
+        {cancelItem.product_image && (
+         <Image
+          src={
+           /^https?:\/\//i.test(cancelItem.product_image)
+            ? cancelItem.product_image
+            : `${ApiBaseUrl.ImgUrl}${cancelItem.product_image}`
+          }
+          alt={cancelItem.product_name}
+          width={100}
+          height={100}
+          style={{ borderRadius: "0.375rem" }}
+         />
+        )}
         <div
          style={{
           flex: 1,
