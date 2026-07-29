@@ -77,7 +77,7 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
 
           if (data.employee_status === "active") {
             toast.success(`Welcome to ${data.company_name}! Your account is active.`);
-            router.push(`/corporate/${data.shop_slug}`);
+            router.push(`/shops/${data.shop_slug}`);
           } else {
             toast.success("Registration complete! Your account is pending approval from the corporate admin.");
             router.push("/");
