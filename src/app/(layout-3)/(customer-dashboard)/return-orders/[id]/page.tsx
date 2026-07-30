@@ -19,7 +19,6 @@ import {
 } from "@sections/customer-dashboard/orders";
 import { IDParams } from "interfaces";
 import { Vortex } from "react-loader-spinner";
-import styled from "@emotion/styled";
 import Box from "@component/Box";
 import BeatLoader from "react-spinners/BeatLoader";
 
@@ -42,33 +41,11 @@ import Loader from "@component/loader";
 //   align-items: center;
 // `;
 
-const InvoiceWrapper = styled.div`
- margin-top: 20px;
- height: 80vh; // Use 80% of the viewport height for responsiveness
- width: 100%; // Take full width
- overflow: hidden; // Prevent scrollbars on the wrapper itself
- border: 1px solid #ccc; // Optional border styling
- display: flex; // Align content in the center
- justify-content: center;
- align-items: center;
-
- @media (min-width: 1024px) {
-  height: 90vh; // Adjust height for larger screens
- }
-`;
-
-const EmbedWrapper = styled.div`
- width: 100%;
- height: 100%;
- overflow: hidden; // Ensure scrolling within the embed area
-`;
-
 export default function OrderDetails({ params }: IDParams) {
  const [order, setOrder] = useState(null);
  const [loading, setLoading] = useState(true);
  const [getStatus, setStatus] = useState(null);
  const [getEstimateDate, setEstimateDate] = useState(null);
- const [pdfUrl, setPdfUrl] = useState(null); // State to hold the PDF URL
  const [invoiceLoading, setInvoiceLoading] = useState(false); // Loading state for invoice
  const [invoiceError, setInvoiceError] = useState(""); // Error message for invoice
  const [onlinePaymentError, setOnlinePaymentError] = useState("");
@@ -226,6 +203,10 @@ export default function OrderDetails({ params }: IDParams) {
    return;
   }
 
+  // Open the tab synchronously (within the click's call stack) so browsers
+  // don't treat it as a blocked popup once the async request resolves.
+  const invoiceTab = window.open("", "_blank");
+
   try {
    const response = await axios.get(
     `${ApiBaseUrl.baseUrl}get-invoice?id=${params.id}`,
@@ -237,12 +218,14 @@ export default function OrderDetails({ params }: IDParams) {
     }
    );
    const pdfBlobUrl = URL.createObjectURL(response.data);
-   // console.log("ifty", pdfBlobUrl);
 
-   setPdfUrl(pdfBlobUrl);
+   if (invoiceTab) {
+    invoiceTab.location.href = pdfBlobUrl;
+   }
   } catch (error) {
    console.error("Error fetching invoice data:", error);
    setInvoiceError("Failed to load invoice. Please try again."); // Set error message for user
+   invoiceTab?.close();
   } finally {
    setInvoiceLoading(false); // Stop loading state
   }
@@ -858,23 +841,8 @@ export default function OrderDetails({ params }: IDParams) {
        )}
      </div>
 
-     {/* Invoice Display */}
-     {/* {invoiceLoading && <Typography>Loading Invoice...</Typography>} */}
+     {/* Invoice opens in a new tab; no inline preview needed */}
      {invoiceError && <Typography color="red">{invoiceError}</Typography>}
-     {pdfUrl && (
-      <InvoiceWrapper>
-       <EmbedWrapper>
-        <embed
-         src={pdfUrl}
-         type="application/pdf"
-         width="100%"
-         height="100%"
-         style={{ overflow: "hidden" }}
-         title={`Invoice PDF ${params.id}`}
-        />
-       </EmbedWrapper>
-      </InvoiceWrapper>
-     )}
     </Grid>
 
     {/* <Grid item lg={6} md={6} xs={12}>
