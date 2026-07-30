@@ -8,6 +8,7 @@ import { currency } from "@utils/utils";
 import Modal from "@component/Modal";
 import toast from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import axios from "@lib/axiosClient";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ReturnedOrderStatus from "./ReturnedOrderStatus";
@@ -64,19 +65,22 @@ export default function WriteReview({
    const parsedReview = JSON.parse(storedReview);
    setRating(parsedReview.rating);
    setComments(parsedReview.comments);
-   setImage(parsedReview.images);
+   setExistingReview({
+    rating: parsedReview.rating,
+    comments: parsedReview.comments,
+    images: parsedReview.images || [],
+   });
    setReviewMode("preview"); // Set to preview mode if review already exists
-  }
-
-  // Set the existing review data for preview mode if applicable
-  if (reviewMode === "preview" && item.ratingcheck) {
+  } else if (item.ratingcheck) {
    setExistingReview({
     rating: item.rating,
     comments: item.comments,
     images: item.images,
    });
   }
- }, [reviewMode, item]);
+ }, [item]);
+
+ const [submitting, setSubmitting] = useState(false);
 
  const handleReviewSubmit = async () => {
   if (comments.length < 10) {
@@ -84,58 +88,48 @@ export default function WriteReview({
    return;
   }
 
-  if (!item?.order_item_id || !item?.product_id || rating === 0 || !comments) {
-   console.error("Missing required fields.");
+  if (!item?.order_item_id || rating === 0 || !comments) {
+   toast.error("Missing required fields.");
    return;
   }
 
   const formData = new FormData();
-  formData.append("order_item_id", String(item?.order_item_id));
-  formData.append("product_id", String(item?.product_id));
+  formData.append("order_item_id", String(item.order_item_id));
   formData.append("rating", String(rating));
-  formData.append("comments", comments);
+  formData.append("comment", comments);
 
-  image.forEach((img) => formData.append("image[]", img));
+  image.forEach((img) => formData.append("images[]", img));
 
-  const token = localStorage.getItem("token");
-  if (!token) {
-   console.error("No auth token found");
-   return;
-  }
-
+  setSubmitting(true);
   try {
-   const response = await fetch(`${ApiBaseUrl.baseUrl}order/product/review`, {
-    method: "POST",
-    body: formData,
-    headers: {
-     Authorization: `Bearer ${token}`,
-    },
+   const response = await axios.post("reviews", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
    });
 
-   if (response.ok) {
-    const responseBody = await response.json();
-    toast.success(responseBody.message);
+   toast.success("Review submitted successfully");
 
-    // Save the review in localStorage for persistence across page reloads
-    const reviewData = {
-     rating: String(rating),
-     comments,
-     images: image.map((img) => URL.createObjectURL(img)),
-    };
-    localStorage.setItem(
-     `review-${item.order_item_id}`,
-     JSON.stringify(reviewData)
-    );
+   // Use the server's saved copy (real image URLs, not ephemeral blob: URLs)
+   // so the preview stays accurate after a reload.
+   const created = response.data?.data ?? {};
+   const reviewData = {
+    rating: created.rating ?? rating,
+    comments: created.comment ?? comments,
+    images: created.images ?? [],
+   };
+   localStorage.setItem(
+    `review-${item.order_item_id}`,
+    JSON.stringify(reviewData)
+   );
 
-    setReviewMode("preview"); // Switch to preview mode
-    setExistingReview(reviewData);
-    setIsModalOpen(false);
-   } else {
-    const responseBody = await response.json();
-    toast.error(responseBody.message);
-   }
-  } catch (error) {
-   console.error("Error submitting review", error);
+   setReviewMode("preview"); // Switch to preview mode
+   setExistingReview(reviewData);
+   setIsModalOpen(false);
+  } catch (error: any) {
+   const msg =
+    error?.response?.data?.message ?? "Failed to submit review.";
+   toast.error(msg);
+  } finally {
+   setSubmitting(false);
   }
  };
 
@@ -421,79 +415,102 @@ export default function WriteReview({
          }}
         />
        </Box>
-       <Button variant="contained" color="primary" onClick={handleReviewSubmit}>
-        Submit Review
+       <Button
+        variant="contained"
+        color="primary"
+        disabled={submitting}
+        onClick={handleReviewSubmit}
+       >
+        {submitting ? "Submitting..." : "Submit Review"}
        </Button>
       </>
      ) : (
       <>
-       <Typography mb="1rem">Your Review:</Typography>
-       {/* preReview Form */}
-       <Box>
-        <Typography>Rate the Product:</Typography>
-        <FlexBox>
-         {[1, 2, 3, 4, 5].map((star) => (
-          <button
-           key={star}
-           style={{
-            background: "transparent",
-            cursor: "pointer",
-            fontSize: "24px",
-            color: star <= existingReview?.rating ? "#FFD700" : "#ccc",
-            border: "none",
-            padding: "2px",
-           }}
-          >
-           ★
-          </button>
-         ))}
+       <FlexBox alignItems="center" mb="1rem" style={{ gap: "8px" }}>
+        <FontAwesomeIcon icon={faStore} size="sm" color="#0F3460" />
+        <Typography fontWeight="600" fontSize="1.05rem" color="#0F3460">
+         Your Review
+        </Typography>
+       </FlexBox>
+
+       <Box
+        style={{
+         background: "#FAFBFC",
+         border: "1px solid #E5E9F0",
+         borderRadius: "10px",
+         padding: "1rem 1.25rem",
+        }}
+       >
+        <FlexBox
+         alignItems="center"
+         justifyContent="space-between"
+         flexWrap="wrap"
+         style={{ gap: "0.5rem" }}
+        >
+         <FlexBox alignItems="center">
+          {[1, 2, 3, 4, 5].map((star) => (
+           <span
+            key={star}
+            style={{
+             fontSize: "20px",
+             lineHeight: 1,
+             color:
+              star <= Math.round(Number(existingReview?.rating ?? rating))
+               ? "#FFD700"
+               : "#DDD",
+             marginRight: "2px",
+            }}
+           >
+            ★
+           </span>
+          ))}
+         </FlexBox>
+
+         <span
+          style={{
+           fontSize: "0.7rem",
+           fontWeight: 600,
+           color: "#1E8E3E",
+           background: "rgba(30,142,62,0.1)",
+           padding: "3px 10px",
+           borderRadius: "999px",
+           whiteSpace: "nowrap",
+          }}
+         >
+          ✓ Verified Purchase
+         </span>
         </FlexBox>
-       </Box>
-       <Box mt="1rem">
-        <Typography>Upload Images:</Typography>
-        {/* Display already reviewed images */}
-        {existingReview?.images && existingReview?.images.length > 0 && (
-         <Box mt="1rem">
-          <Typography>Reviewed Images:</Typography>
-          <Box>
-           {existingReview.images.map((src, idx) => (
-            <img
-             key={idx}
-             src={`${ApiBaseUrl.baseUrl}${src}`}
-             alt={`Review Image ${idx}`}
-             style={{
-              width: "100px",
-              height: "100px",
-              marginRight: "8px",
-             }}
-            />
-           ))}
-          </Box>
-         </Box>
-        )}
-        {/* Input to upload new images */}
-        <input
-         type="file"
-         accept="image/*"
-         multiple
-         onChange={(e) =>
-          setImage([...image, ...Array.from(e.target.files || [])])
-         }
-        />
-       </Box>
-       <Box mt="1rem">
-        <Typography>Share your experience:</Typography>
-        <textarea
-         rows={4}
-         value={comments || existingReview?.comments || ""}
-         placeholder="Share your experience..."
-         onChange={(e) => setComments(e.target.value)}
+
+        <Typography
+         mt="0.75rem"
          style={{
-          width: "100%",
-          border: "1px solid #ccc",
-          padding: "8px",
+          color: "#444",
+          lineHeight: 1.6,
+          fontStyle: "italic",
+          wordBreak: "break-word",
          }}
-        />
+        >
+         &ldquo;{existingReview?.comments || comments}&rdquo;
+        </Typography>
+
+        {existingReview?.images && existingReview.images.length > 0 && (
+         <FlexBox mt="1rem" flexWrap="wrap" style={{ gap: "8px" }}>
+          {existingReview.images.map((src, idx) => (
+           <img
+            key={idx}
+            src={getProductImageUrl(src)}
+            alt={`Review attachment ${idx + 1}`}
+            style={{
+             width: "72px",
+             height: "72px",
+             objectFit: "cover",
+             borderRadius: "8px",
+             border: "1px solid #E5E9F0",
+            }}
+           />
+          ))}
+         </FlexBox>
+        )}
        </Box>
       </>
      )}

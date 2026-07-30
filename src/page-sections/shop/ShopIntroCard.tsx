@@ -608,7 +608,6 @@ import { ShopIntroWrapper } from "./styles";
 import { useState, useEffect } from "react";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
-import ApiBaseUrl from "api/ApiBaseUrl";
 import axios from "@lib/axiosClient";
 import useFetcher from "@hook/useFetcher";
 
@@ -916,7 +915,7 @@ export default function ShopIntroCard({ slug }: Props) {
      style={{
       backgroundImage: `url(${
        shop.sellerDetails.seller_banner
-        ? `${ApiBaseUrl.ImgUrl}${shop.sellerDetails.seller_banner}`
+        ? shop.sellerDetails.seller_banner
         : "https://static.vecteezy.com/system/resources/previews/011/059/783/non_2x/best-seller-text-button-speech-bubble-best-seller-colorful-web-banner-template-illustration-vector.jpg"
       })`,
       backgroundSize: "cover",
@@ -932,7 +931,7 @@ export default function ShopIntroCard({ slug }: Props) {
       borderColor="gray.100"
       src={
        shop.sellerDetails.seller_logo
-        ? `${ApiBaseUrl.ImgUrl}${shop.sellerDetails.seller_logo}`
+        ? shop.sellerDetails.seller_logo
         : "https://t4.ftcdn.net/jpg/04/15/60/27/360_F_415602715_uy5b6P84JetkpRCLxNmYgrx8pWIATsAD.jpg"
       }
      />

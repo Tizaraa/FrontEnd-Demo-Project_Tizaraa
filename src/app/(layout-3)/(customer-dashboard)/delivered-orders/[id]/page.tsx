@@ -2,7 +2,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import { currency } from "@utils/utils";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 import { Button } from "@component/buttons";
 import Card from "@component/Card";
 import Grid from "@component/grid/Grid";
@@ -19,7 +19,6 @@ import {
 } from "@sections/customer-dashboard/orders";
 import { IDParams } from "interfaces";
 import { Vortex } from "react-loader-spinner";
-import styled from "@emotion/styled";
 import Box from "@component/Box";
 import BeatLoader from "react-spinners/BeatLoader";
 
@@ -41,33 +40,11 @@ import Loader from "@component/loader";
 //   align-items: center;
 // `;
 
-const InvoiceWrapper = styled.div`
- margin-top: 20px;
- height: 80vh; // Use 80% of the viewport height for responsiveness
- width: 100%; // Take full width
- overflow: hidden; // Prevent scrollbars on the wrapper itself
- border: 1px solid #ccc; // Optional border styling
- display: flex; // Align content in the center
- justify-content: center;
- align-items: center;
-
- @media (min-width: 1024px) {
-  height: 90vh; // Adjust height for larger screens
- }
-`;
-
-const EmbedWrapper = styled.div`
- width: 100%;
- height: 100%;
- overflow: hidden; // Ensure scrolling within the embed area
-`;
-
 export default function OrderDetails({ params }: IDParams) {
  const [order, setOrder] = useState(null);
  const [loading, setLoading] = useState(true);
  const [getStatus, setStatus] = useState(null);
  const [getEstimateDate, setEstimateDate] = useState(null);
- const [pdfUrl, setPdfUrl] = useState(null); // State to hold the PDF URL
  const [invoiceLoading, setInvoiceLoading] = useState(false); // Loading state for invoice
  const [invoiceError, setInvoiceError] = useState(""); // Error message for invoice
  const [onlinePaymentError, setOnlinePaymentError] = useState("");
@@ -80,6 +57,14 @@ export default function OrderDetails({ params }: IDParams) {
   {}
  );
  const buttonRef = useRef<HTMLButtonElement>(null);
+
+ const formatStatus = (s: string): string => {
+  if (!s) return s;
+  return s
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+ };
 
  const getColor = (status: string) => {
   switch (status) {
@@ -106,42 +91,76 @@ export default function OrderDetails({ params }: IDParams) {
  // ======= START: Fetch Order Details based on DELIVERED status ===========
  useEffect(() => {
   const fetchOrder = async (token: string) => {
-   const authtoken = localStorage.getItem("token");
    try {
-    const response = await axios.get(
-     `${ApiBaseUrl.baseUrl}user/status/wise/order/details/delivered/${params.id}`,
-     {
-      headers: {
-       Authorization: `Bearer ${authtoken}`,
+    const response = await axios.get(`user/order/${params.id}`);
+    const raw = response.data?.data ?? response.data;
+
+    // Transform our API response to the shape this page expects
+    const sellerName = raw.seller_name ?? "Tizaraa Store";
+    const orderItems = (raw.items ?? []).map((item: any) => ({
+     order_item_id: item.id,
+     order_id: Number(params.id),
+     product_id: item.product_id,
+     product_name: item.product_name,
+     product_image: item.thumbnail_url,
+     price: item.unit_price,
+     quantity: item.quantity,
+     color: item.color ?? null,
+     size: item.size ?? null,
+     attribute: null,
+     product_slug: null,
+     productType: "Local",
+     status: item.item_status ?? raw.order_status,
+     order_days_gone: 0,
+     return_status: null,
+     ratingcheck: false,
+     rating: 0,
+     comments: "",
+     images: [],
+    }));
+
+    const adapted = {
+     Order: {
+      invoice_id: raw.invoice_no,
+      createdAt: raw.created_at,
+      isDelivered: raw.order_status === "delivered",
+      deliveredAt: raw.delivered_at ?? null,
+      productType: "Local",
+      status: formatStatus(raw.order_status),
+      payment_method: raw.payment_method,
+      payment_status: raw.payment_status,
+      discount_amount: raw.discount_amount,
+      promo_code: raw.promo_code,
+      amount_percentage: String(raw.advance_payment_percent ?? 100),
+      amount: raw.total_amount,
+      main_total: raw.subtotal,
+      delivery_charge: raw.shipping_amount,
+      delivery_charge_reason: "",
+      due_amount: 0,
+      paid: raw.total_amount,
+      address: raw.buyer_address,
+      area_id: raw.area_name,
+      city_id: raw.city_name,
+      province_id: raw.province_name,
+      phone: raw.buyer_phone,
+      items: {
+       [sellerName]: {
+        delivered_at: raw.delivered_at ?? null,
+        status: formatStatus(raw.order_status),
+        delivery_charge: raw.shipping_amount,
+        sub_total: raw.subtotal,
+        total: raw.total_amount,
+        promocodeStatus: (raw.discount_amount > 0 || raw.promo_code) ? 1 : 0,
+        isAbroad: false,
+        order_items: orderItems,
+       },
       },
-     }
-    );
-    console.log("delivered orders details data:", response);
+     },
+    };
 
-    // Since the API only returns orders with status "delivered", you can directly set the state
-    setOrder(response.data);
-
-    // Extract the status from the items object
-    // const items = response.data.Order.items;
-    // const firstShopKey = Object.keys(items)[0];
-    // const shopStatus = items[firstShopKey].status;
-    // console.log(shopStatus);
-    // setStatus(shopStatus);
-
-    // interface ShopItem {
-    //   status: string; // Adjust the type (string, number, etc.) based on your actual data
-    //   // Add other properties if they exist
-    // }
-
-    // const items = response.data.Order.items;
-    // const shopStatuses = Object.values(items).map((item: ShopItem) => item.status);
-    // console.log(shopStatuses);
-    // const status = shopStatuses[0];
-    // console.log(status);
-    // setStatus(status);
-
-    setStatus(response.data.Order.status);
-    setEstimateDate(response.data.Order.deliveredAt);
+    setOrder(adapted);
+    setStatus(adapted.Order.status);
+    setEstimateDate(adapted.Order.deliveredAt);
    } catch (error) {
     console.error("Error fetching order details:", error);
    } finally {
@@ -175,6 +194,10 @@ export default function OrderDetails({ params }: IDParams) {
    return;
   }
 
+  // Open the tab synchronously (within the click's call stack) so browsers
+  // don't treat it as a blocked popup once the async request resolves.
+  const invoiceTab = window.open("", "_blank");
+
   try {
    const response = await axios.get(
     `${ApiBaseUrl.baseUrl}get-invoice?id=${params.id}`,
@@ -186,12 +209,14 @@ export default function OrderDetails({ params }: IDParams) {
     }
    );
    const pdfBlobUrl = URL.createObjectURL(response.data);
-   // console.log("ifty", pdfBlobUrl);
 
-   setPdfUrl(pdfBlobUrl);
+   if (invoiceTab) {
+    invoiceTab.location.href = pdfBlobUrl;
+   }
   } catch (error) {
    console.error("Error fetching invoice data:", error);
    setInvoiceError("Failed to load invoice. Please try again."); // Set error message for user
+   invoiceTab?.close();
   } finally {
    setInvoiceLoading(false); // Stop loading state
   }
@@ -208,48 +233,16 @@ export default function OrderDetails({ params }: IDParams) {
   }
 
   try {
-   // Fetch the order details again to get the latest status
-   const orderResponse = await axios.get(
-    `${ApiBaseUrl.baseUrl}user/order/detailss/${params.id}`,
-    {
-     headers: {
-      Authorization: `Bearer ${authToken}`,
-     },
-    }
-   );
+   const orderResponse = await axios.get(`user/order/${params.id}`);
+   const raw = orderResponse.data?.data ?? orderResponse.data;
 
-   const orderData = orderResponse.data.Order;
-   //console.log("");
+   const paymentResponse = await axios.post(`pay-via-ajax`, {
+    invoice_id: raw.invoice_no,
+    total_amount: raw.total_amount,
+    payment_type: "Online Payment",
+    payment_method: raw.payment_method,
+   });
 
-   const paymentResponse = await axios.post(
-    `${ApiBaseUrl.baseUrl}pay-via-ajax`,
-    {
-     user_id: orderData.user_id,
-     seller_id: orderData.seller_id,
-     cus_name: orderData.user,
-     cus_email: orderData.email,
-     cus_phone: orderData.phone,
-     province_id: orderData.province_id,
-     city_id: orderData.city_id,
-     area_id: orderData.area_id,
-     house_level: orderData.house_level,
-     delivery_charge: orderData.delivery_charge,
-     cus_add1: orderData.address,
-     currency: orderData.currency,
-     total_amount: orderData.amount,
-     productType: orderData.productType,
-     payment_type: "Online Payment", // Assuming "mb" is a predefined value for the payment method
-     payment_method: orderData.payment_method,
-     invoice_id: orderData.invoice,
-    },
-    {
-     headers: {
-      Authorization: `Bearer ${authToken}`,
-     },
-    }
-   );
-
-   const updatedOrder = orderResponse.data;
    const redirectUrl = paymentResponse.data.redirect_url;
    window.location.href = redirectUrl;
   } catch (error) {
@@ -797,23 +790,8 @@ export default function OrderDetails({ params }: IDParams) {
        )}
      </div>
 
-     {/* Invoice Display */}
-     {/* {invoiceLoading && <Typography>Loading Invoice...</Typography>} */}
+     {/* Invoice opens in a new tab; no inline preview needed */}
      {invoiceError && <Typography color="red">{invoiceError}</Typography>}
-     {pdfUrl && (
-      <InvoiceWrapper>
-       <EmbedWrapper>
-        <embed
-         src={pdfUrl}
-         type="application/pdf"
-         width="100%"
-         height="100%"
-         style={{ overflow: "hidden" }}
-         title={`Invoice PDF ${params.id}`}
-        />
-       </EmbedWrapper>
-      </InvoiceWrapper>
-     )}
     </Grid>
 
     {/* <Grid item lg={6} md={6} xs={12}>
