@@ -134,7 +134,7 @@
 
 "use client";
 import { Fragment, useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@lib/axiosClient";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import api from "@utils/__api__/orders"; // Assuming you have an API utility
@@ -178,19 +178,14 @@ export default function OrderList() {
 
   const fetchOrderList = async (token: string) => {
     try {
-      const response = await axios.get(
-        `${ApiBaseUrl.baseUrl}user/delivered/order`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`user/delivered/order`);
 
       const data = response.data;
 
-      if (Array.isArray(data.data)) {
-        setOrderList(data.data);
+      // API returns paginated: { data: [...], meta: {...} }
+      const orders = data.data ?? data.orders ?? [];
+      if (Array.isArray(orders)) {
+        setOrderList(orders);
         if (!fetched) {
           // Show toast only on initial fetch
           //toast.success("Order placed successfully!");
