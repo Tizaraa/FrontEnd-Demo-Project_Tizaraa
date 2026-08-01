@@ -209,7 +209,7 @@ export default function OrderDetails({ params }: IDParams) {
 
   try {
    const response = await axios.get(
-    `${ApiBaseUrl.baseUrl}get-invoice?id=${params.id}`,
+    `get-invoice?id=${params.id}`,
     {
      headers: {
       Authorization: `Bearer ${authToken}`,

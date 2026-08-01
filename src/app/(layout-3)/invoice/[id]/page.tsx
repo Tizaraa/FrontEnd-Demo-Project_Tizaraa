@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import ApiBaseUrl from "api/ApiBaseUrl";
+import axios from "@lib/axiosClient";
 
 export default function InvoicePage({ params }) {
  const { id } = params;
@@ -21,7 +20,7 @@ export default function InvoicePage({ params }) {
 
    try {
     const response = await axios.get(
-     `${ApiBaseUrl.baseUrl}get-invoice?id=${id}`,
+     `get-invoice?id=${id}`,
      {
       headers: {
        Authorization: `Bearer ${authToken}`,
