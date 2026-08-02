@@ -59,7 +59,18 @@ export default function WriteReview({
  const deliveryCharge = orderDetails?.delivery_charge;
 
  useEffect(() => {
-  // Check localStorage for any stored reviews on page load
+  // Server data is authoritative; only fall back to the localStorage cache
+  // (written right after a submit) if the server hasn't recorded a review yet.
+  if (item.ratingcheck) {
+   setExistingReview({
+    rating: item.rating,
+    comments: item.comments,
+    images: item.images,
+   });
+   setReviewMode("preview");
+   return;
+  }
+
   const storedReview = localStorage.getItem(`review-${item.order_item_id}`);
   if (storedReview) {
    const parsedReview = JSON.parse(storedReview);
@@ -71,12 +82,6 @@ export default function WriteReview({
     images: parsedReview.images || [],
    });
    setReviewMode("preview"); // Set to preview mode if review already exists
-  } else if (item.ratingcheck) {
-   setExistingReview({
-    rating: item.rating,
-    comments: item.comments,
-    images: item.images,
-   });
   }
  }, [item]);
 
