@@ -113,10 +113,10 @@ export default function OrderDetails({ params }: IDParams) {
      status: item.item_status ?? raw.order_status,
      order_days_gone: 0,
      return_status: null,
-     ratingcheck: false,
-     rating: 0,
-     comments: "",
-     images: [],
+     ratingcheck: !!item.review,
+     rating: item.review?.rating ?? 0,
+     comments: item.review?.comment ?? "",
+     images: item.review?.images ?? [],
     }));
 
     const adapted = {
