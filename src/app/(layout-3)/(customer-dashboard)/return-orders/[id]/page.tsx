@@ -110,7 +110,7 @@ export default function OrderDetails({ params }: IDParams) {
      color: item.color ?? null,
      size: item.size ?? null,
      attribute: null,
-     product_slug: null,
+     product_slug: item.product_slug ?? null,
      productType: "Local",
      status: item.item_status ?? raw.order_status,
      order_days_gone: 0,
