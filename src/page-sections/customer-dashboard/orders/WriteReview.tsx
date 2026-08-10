@@ -218,7 +218,7 @@ export default function WriteReview({
 
      <Link
       href={`/${
-       item.product_image?.startsWith("https") ? "otproducts" : "product"
+       item.productType === "Abroad" ? "otproducts" : "product"
       }/${item.product_slug}`}
      >
       <FlexBox flex="2 2 260px" m="6px" alignItems="center">
