@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import ApiBaseUrl from "api/ApiBaseUrl";
+import axios from "@lib/axiosClient";
 import NoReviews from "./no-reviews";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,26 +7,25 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 const ProductRating = ({ productId }) => {
  const [ratingData, setRatingData] = useState(null);
- const apiURL = `${ApiBaseUrl.baseUrl}product/comment/${productId}`;
 
  useEffect(() => {
   const fetchRatingData = async () => {
    try {
-    const response = await axios.get(apiURL);
-    setRatingData(response.data);
+    const response = await axios.get(`products/${productId}/reviews`);
+    setRatingData(response.data.stats);
    } catch (error) {
     console.error("Error fetching rating data:", error);
    }
   };
 
   fetchRatingData();
- }, [apiURL]);
+ }, [productId]);
 
  if (!ratingData) {
   return <div>Loading...</div>;
  }
 
- const { rating_avarage, total_rating, perrating } = ratingData;
+ const { average: rating_avarage, total: total_rating, per_rating: perrating } = ratingData;
 
  const isMobilee = window.innerWidth <= 768;
  const isSmallMobile = window.innerWidth <= 480;

@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState, CSSProperties } from "react";
-import axios from "axios";
-import ApiBaseUrl from "api/ApiBaseUrl";
+import axios from "@lib/axiosClient";
 import ProductRating from "./product-rating";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,11 +20,8 @@ export default function ReviewCard({ productId }: { productId: string }) {
  useEffect(() => {
   const fetchComments = async () => {
    try {
-    const response = await axios.get(
-     `${ApiBaseUrl.baseUrl}product/comment/${productId}`
-    );
-    // Assuming the API response structure provided
-    setComments(response.data.rating || []);
+    const response = await axios.get(`products/${productId}/reviews`);
+    setComments(response.data.data || []);
    } catch (err) {
     console.error("Error fetching comments:", err);
     setError("Failed to load reviews. Please try again.");
@@ -161,9 +157,11 @@ export default function ReviewCard({ productId }: { productId: string }) {
      <div style={{ display: "flex", justifyContent: "space-between" }}>
       {/* User image, name, rating */}
       <div style={styles.header}>
-       <div style={styles.avatar}>{comment.user[0]}</div>
+       <div style={styles.avatar}>
+        {(comment.buyer_name || "A")[0].toUpperCase()}
+       </div>
        <div style={styles.userInfo}>
-        <div style={styles.userName}>{comment.user}</div>
+        <div style={styles.userName}>{comment.buyer_name || "Anonymous"}</div>
         <div style={styles.rating}>
          {Array.from({ length: Number(comment.rating) }).map((_, i) => (
           <span key={i} style={styles.star}>
@@ -174,35 +172,32 @@ export default function ReviewCard({ productId }: { productId: string }) {
        </div>
       </div>
       {/* Rating date */}
-      <div style={styles.date}>{comment.comment_date}</div>
+      <div style={styles.date}>
+       {comment.created_at
+        ? new Date(comment.created_at).toLocaleDateString()
+        : ""}
+      </div>
      </div>
 
-     <p style={styles.reviewText}>{comment.user_comment}</p>
+     <p style={styles.reviewText}>{comment.comment}</p>
 
      <div
       style={{
        width: "200px",
-       height: comment.allimages.length > 0 ? "200px" : "0", // Set height to 0 if no images
+       height: comment.images?.length > 0 ? "200px" : "0", // Set height to 0 if no images
        position: "relative",
        overflow: "hidden", // Ensures no empty space is visible
       }}
      >
-      {comment.allimages.map((image: any, imgIndex: number) => (
+      {(comment.images || []).map((imageUrl: string, imgIndex: number) => (
        <Image
         key={imgIndex}
-        src={`${ApiBaseUrl.ImgUrl}${image.image}`}
+        src={imageUrl}
         alt="Review Image"
         layout="fill" // Use layout="fill" to make the image fill the container
         objectFit="cover" // Ensures the image covers the container proportionally
         style={{ cursor: "pointer", borderRadius: "4px" }}
-        onClick={() =>
-         openModal(
-          comment.allimages.map(
-           (img: any) => `${ApiBaseUrl.ImgUrl}${img.image}`
-          ),
-          imgIndex
-         )
-        }
+        onClick={() => openModal(comment.images, imgIndex)}
        />
       ))}
      </div>
