@@ -12,11 +12,17 @@ import CheckBox from "@component/CheckBox";
 import FlexBox from "@component/FlexBox";
 import toast from "react-hot-toast";
 
+type CancelScope = "item" | "order";
+
 export default function CancellationForm() {
  const [cancelItem, setCancelItem] = useState<any | null>(null);
  const [additionalInfo, setAdditionalInfo] = useState("");
  const [policyAccepted, setPolicyAccepted] = useState(false);
  const [productType, setProductType] = useState<string | null>(null);
+ // Default to cancelling just the item the buyer clicked — cancelling the whole
+ // order has to be a deliberate choice, not a side effect of clicking one row.
+ const [scope, setScope] = useState<CancelScope>("item");
+ const [submitting, setSubmitting] = useState(false);
  const router = useRouter(); // Initialize the useRouter hook
 
  useEffect(() => {
@@ -38,20 +44,35 @@ export default function CancellationForm() {
   return <Typography>Loading...</Typography>;
  }
 
+ const canCancelSingleItem = Boolean(cancelItem?.order_item_id);
+
  const handleSubmit = async () => {
+  if (submitting) return;
+  setSubmitting(true);
+
   try {
-   const response = await axios.post(
-    `user/order/${cancelItem.order_id}/cancel`,
-    { reason: additionalInfo }
+   const cancelWholeOrder = scope === "order" || !canCancelSingleItem;
+
+   const url = cancelWholeOrder
+    ? `user/order/${cancelItem.order_id}/cancel`
+    : `user/order/${cancelItem.order_id}/items/${cancelItem.order_item_id}/cancel`;
+
+   await axios.post(url, { reason: additionalInfo });
+
+   toast.success(
+    cancelWholeOrder
+     ? "Order cancelled successfully."
+     : `${cancelItem.product_name} cancelled.`
    );
-   console.log("Cancellation Successful:", response.data);
-   toast.success("Cancellation request submitted successfully.");
 
    router.back();
   } catch (error: any) {
-   console.error("Error cancelling the item:", error);
-   const message = error?.response?.data?.message ?? "Failed to submit cancellation request. Please try again.";
-   alert(message);
+   const message =
+    error?.response?.data?.message ??
+    "Failed to submit cancellation request. Please try again.";
+   toast.error(message);
+  } finally {
+   setSubmitting(false);
   }
  };
 
@@ -102,6 +123,70 @@ export default function CancellationForm() {
        </div>
       </div>
      </div>
+
+     {/* What exactly is being cancelled */}
+     {canCancelSingleItem && (
+      <div>
+       <h3 style={{ fontSize: "0.875rem", fontWeight: "500", marginBottom: "0.5rem" }}>
+        What would you like to cancel?
+       </h3>
+       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+        {(
+         [
+          {
+           value: "item" as CancelScope,
+           title: `Just this item — ${cancelItem.product_name}`,
+           detail: "The rest of your order stays as it is.",
+          },
+          {
+           value: "order" as CancelScope,
+           title: "The whole order",
+           detail: "Every item in this order is cancelled.",
+          },
+         ]
+        ).map((option) => (
+         <label
+          key={option.value}
+          style={{
+           display: "flex",
+           alignItems: "flex-start",
+           gap: "0.6rem",
+           padding: "0.75rem",
+           cursor: "pointer",
+           borderRadius: "0.375rem",
+           border:
+            scope === option.value ? "1px solid #e94560" : "1px solid #ddd",
+           backgroundColor: scope === option.value ? "#fff4f6" : "#fff",
+          }}
+         >
+          <input
+           type="radio"
+           name="cancel-scope"
+           value={option.value}
+           checked={scope === option.value}
+           onChange={() => setScope(option.value)}
+           style={{ marginTop: "0.2rem", accentColor: "#e94560" }}
+          />
+          <span>
+           <span
+            style={{
+             display: "block",
+             fontSize: "0.875rem",
+             fontWeight: 600,
+             color: "#2C3A4A",
+            }}
+           >
+            {option.title}
+           </span>
+           <span style={{ display: "block", fontSize: "0.75rem", color: "#7A8A99" }}>
+            {option.detail}
+           </span>
+          </span>
+         </label>
+        ))}
+       </div>
+      </div>
+     )}
 
      {/* Additional Information */}
      <div>
@@ -232,10 +317,10 @@ export default function CancellationForm() {
         !policyAccepted || !additionalInfo.trim() ? "#d1d1d1" : "#e94560",
        color: "#fff",
       }}
-      disabled={!policyAccepted || !additionalInfo.trim()}
+      disabled={!policyAccepted || !additionalInfo.trim() || submitting}
       onClick={handleSubmit}
      >
-      SUBMIT
+      {submitting ? "SUBMITTING…" : "SUBMIT"}
      </Button>
     </CardContent>
    </Card>
