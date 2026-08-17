@@ -145,6 +145,7 @@ import { IconButton } from "@component/buttons";
 import Typography, { H5 } from "@component/Typography";
 import Icon from "@component/icon/Icon";
 import { currency } from "@utils/utils";
+import Box from "@component/Box";
 
 // =================================================
 type OrderRowProps = { order: any };
@@ -223,6 +224,20 @@ export default function ReturnOrderRow({ order }: OrderRowProps) {
           flex="1 1 0"
         >
           {order.item_count}
+          {order.returned_item_count > 0 && (
+            <Box
+              mt="4px"
+              px="8px"
+              py="2px"
+              bg="#EEF1F5"
+              borderRadius="100px"
+              display="inline-block"
+            >
+              <Typography fontSize="11px" fontWeight="600" color="#5b6472">
+                {order.returned_item_count} returned
+              </Typography>
+            </Box>
+          )}
         </Typography>
 
         <Typography
