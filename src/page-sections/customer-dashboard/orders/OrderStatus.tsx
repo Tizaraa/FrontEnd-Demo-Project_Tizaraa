@@ -343,12 +343,14 @@ interface OrderStatusProps {
  orderStatus: string | null;
  deliveredAt: string | null;
  returnStatus?: string | null; // return_status from the order_returns record
+ isCorporate?: boolean; // corporate shop order — collected at the counter, never shipped
 }
 
 export default function OrderStatus({
  orderStatus,
  deliveredAt,
  returnStatus,
+ isCorporate = false,
 }: OrderStatusProps) {
  const width = useWindowSize();
  const breakpoint = 350;
@@ -392,6 +394,29 @@ export default function OrderStatus({
  // Determine the status index for the progress bar
  const getStatusIndex = (status: number | null) => {
   if (status === null || status === undefined) return -1;
+
+  // Corporate orders are collected at the shop counter — there is no shipping leg,
+  // so the tracker runs confirmed -> packed -> delivered.
+  if (isCorporate) {
+   switch (status) {
+    case 0: // Pending — order placed, seller has not confirmed yet
+     return -2; // No active steps
+    case 1: // Confirmed
+     return 0;
+    case 2: // Processing — seller is packing it
+     return 1;
+    case 3: // Shipped — not part of the corporate flow, but treat as packed
+     return 1;
+    case 4: // Delivered
+     return 2;
+    case 5: // Canceled
+    case 6: // Return
+     return -1; // No progress bar
+    default:
+     return -1;
+   }
+  }
+
   switch (status) {
    case 0: // Pending
    case 1: // Confirmed
@@ -412,20 +437,35 @@ export default function OrderStatus({
 
  const statusIndex = getStatusIndex(numericStatus);
 
- const orderSteps = [
-  {
-   icon: "package-box",
-   label: "Processing",
-  },
-  {
-   icon: "truck-1",
-   label: "Shipped",
-  },
-  {
-   icon: "delivery",
-   label: "Delivered",
-  },
- ];
+ const orderSteps = isCorporate
+  ? [
+     {
+      icon: "bag",
+      label: "Confirmed",
+     },
+     {
+      icon: "package-box",
+      label: "Packed: Ready to deliver",
+     },
+     {
+      icon: "delivery",
+      label: "Delivered",
+     },
+    ]
+  : [
+     {
+      icon: "package-box",
+      label: "Processing",
+     },
+     {
+      icon: "truck-1",
+      label: "Shipped",
+     },
+     {
+      icon: "delivery",
+      label: "Delivered",
+     },
+    ];
 
  // Log the current status
  useEffect(() => {
@@ -507,6 +547,22 @@ export default function OrderStatus({
  };
 
  const getStatusDescription = () => {
+  if (isCorporate) {
+   switch (numericStatus) {
+    case 0:
+     return "Your order is pending confirmation from the shop";
+    case 1:
+     return "Your order has been confirmed and will be packed soon";
+    case 2:
+    case 3:
+     return "Your order is packed and ready to collect from the shop";
+    case 4:
+     return "Your order has been delivered successfully";
+    default:
+     return "Order status information";
+   }
+  }
+
   switch (numericStatus) {
    case 0:
     return "Your order is pending";
@@ -575,7 +631,8 @@ export default function OrderStatus({
          position="absolute"
          top="-45px"
          zIndex={10}
-         width="80px"
+         // "Packed: Ready to deliver" needs more room than the one-word labels
+         width={isCorporate ? "108px" : "80px"}
          className="status-tooltip"
          style={{
           animationDelay: `${ind * 0.15}s, ${ind * 0.15 + 0.4}s`,

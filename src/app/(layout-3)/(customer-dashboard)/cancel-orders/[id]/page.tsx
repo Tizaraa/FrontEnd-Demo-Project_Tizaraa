@@ -113,6 +113,12 @@ export default function OrderDetails({ params }: IDParams) {
      status: item.item_status ?? raw.order_status,
      order_days_gone: 0,
      return_status: null,
+     // Per-item return state — a corporate counter return refunds one item
+     // while the rest of the order stays delivered.
+     item_return_status: item.return_status ?? "active",
+     item_returned_at: item.returned_at ?? null,
+     item_refund_amount: item.refund_amount ?? null,
+     item_cancelled_at: item.cancelled_at ?? null,
      ratingcheck: false,
      rating: 0,
      comments: "",
@@ -143,6 +149,9 @@ export default function OrderDetails({ params }: IDParams) {
       city_id: raw.city_name,
       province_id: raw.province_name,
       phone: raw.buyer_phone,
+      refunded_total: raw.refunded_total ?? 0,
+      original_total: raw.original_total ?? raw.total_amount,
+      returned_item_count: raw.returned_item_count ?? 0,
       items: {
        [sellerName]: {
         delivered_at: raw.delivered_at ?? null,

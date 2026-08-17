@@ -113,6 +113,12 @@ export default function OrderDetails({ params }: IDParams) {
      status: item.item_status ?? raw.order_status,
      order_days_gone: 0,
      return_status: null,
+     // Per-item return state — a corporate counter return refunds one item
+     // while the rest of the order stays delivered.
+     item_return_status: item.return_status ?? "active",
+     item_returned_at: item.returned_at ?? null,
+     item_refund_amount: item.refund_amount ?? null,
+     item_cancelled_at: item.cancelled_at ?? null,
      ratingcheck: !!item.review,
      rating: item.review?.rating ?? 0,
      comments: item.review?.comment ?? "",
@@ -143,6 +149,9 @@ export default function OrderDetails({ params }: IDParams) {
       city_id: raw.city_name,
       province_id: raw.province_name,
       phone: raw.buyer_phone,
+      refunded_total: raw.refunded_total ?? 0,
+      original_total: raw.original_total ?? raw.total_amount,
+      returned_item_count: raw.returned_item_count ?? 0,
       items: {
        [sellerName]: {
         delivered_at: raw.delivered_at ?? null,
@@ -608,13 +617,52 @@ export default function OrderDetails({ params }: IDParams) {
               order_days_gone={item.order_days_gone}
               return_status={item.return_status}
               delivered_at={details.delivered_at}
+              isCorporate={order?.Order?.payment_method === "corporate_credit"}
              />
             ))}
             {/* <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} /> */}
 
+            {order?.Order?.refunded_total > 0 && (
+             <Box
+              mt="10px"
+              p="12px 14px"
+              bg="#F7F9FC"
+              border="1px solid #E5E9F0"
+              borderRadius="8px"
+             >
+              <FlexBox
+               justifyContent="space-between"
+               alignItems="center"
+               flexWrap="wrap"
+               style={{ gap: "8px" }}
+              >
+               <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
+                {order?.Order?.returned_item_count}{" "}
+                {order?.Order?.returned_item_count === 1 ? "item" : "items"}{" "}
+                returned
+               </Typography>
+               <FlexBox alignItems="center" style={{ gap: "12px" }}>
+                <Typography fontSize="13px" color="text.muted">
+                 Original{" "}
+                 <span style={{ textDecoration: "line-through" }}>
+                  {currency(order?.Order?.original_total || 0)}
+                 </span>
+                </Typography>
+                <Typography fontSize="13px" color="#e94560" fontWeight="600">
+                 −{currency(order?.Order?.refunded_total || 0)}
+                </Typography>
+                <Typography fontSize="14px" fontWeight="700" color="#2C3A4A">
+                 Now {currency(order?.Order?.amount || 0)}
+                </Typography>
+               </FlexBox>
+              </FlexBox>
+             </Box>
+            )}
+
             <OrderStatus
              orderStatus={details.status}
              deliveredAt={details.delivered_at}
+             isCorporate={order?.Order?.payment_method === "corporate_credit"}
             />
 
             {openSummaries[shopName] && (
