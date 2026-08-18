@@ -142,20 +142,21 @@ import { format } from "date-fns";
 import styled from "@emotion/styled";
 import Hidden from "@component/hidden";
 import { IconButton } from "@component/buttons";
-import Typography, { H5 } from "@component/Typography";
+import Typography, { H5, Small } from "@component/Typography";
 import Icon from "@component/icon/Icon";
 import { currency } from "@utils/utils";
-import Box from "@component/Box";
+import { buildStatusBuckets } from "./orderRowStatus";
 
 // =================================================
 type OrderRowProps = { order: any };
 // =================================================
 
 // Reusable styled components
+// The arrow sits outside the text column so it stays centred against the whole
+// card, not just the first line, once the breakdown footer is present.
 const TableRow = styled.div`
  display: flex;
  align-items: center;
- justify-content: space-between;
  padding: 12px 18px;
  margin: 0.5rem 0;
  border-radius: 8px;
@@ -168,6 +169,39 @@ const TableRow = styled.div`
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   cursor: pointer;
  }
+`;
+
+const RowContent = styled.div`
+ display: flex;
+ flex-direction: column;
+ flex: 1 1 auto;
+ min-width: 0;
+`;
+
+const MainLine = styled.div`
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+`;
+
+// Footer line: how the order's items split, when they are not all in one state.
+const BreakdownLine = styled.div`
+ display: flex;
+ align-items: center;
+ flex-wrap: wrap;
+ gap: 8px;
+ margin-top: 8px;
+`;
+
+const Pill = styled.span`
+ display: inline-block;
+ padding: 2px 10px;
+ border-radius: 100px;
+ background-color: #eef1f5;
+ color: #5b6472;
+ font-size: 11px;
+ font-weight: 600;
+ white-space: nowrap;
 `;
 
 const StyledIconButton = styled(IconButton)`
@@ -183,83 +217,70 @@ const StyledIconButton = styled(IconButton)`
 `;
 
 export default function ReturnOrderRow({ order }: OrderRowProps) {
-  const getColor = (status: string) => {
-    switch (status) {
-      case "Order Pending":
-        return "rgb(255, 193, 7)";
-      case "Order Confirmed":
-        return "rgb(33, 150, 243)";
-      case "Order Delivered":
-        return "rgb(76, 175, 80)";
-      case "Order Cancelled":
-        return "rgb(244, 67, 54)";
-      default:
-        return "rgb(158, 158, 158)";
-    }
-  };
+ const buckets = buildStatusBuckets(order);
 
-  return (
-    <Link href={`/return-orders/${order.id}`}>
-      <TableRow>
-        <H5 m="6px" textAlign="left" color="rgb(233, 69, 96)" flex="1 1 0">
-          {order.invoice}
-        </H5>
+ return (
+  <Link href={`/return-orders/${order.id}`}>
+   <TableRow>
+    <RowContent>
+     <MainLine>
+      <H5 m="6px" textAlign="left" color="rgb(233, 69, 96)" flex="1 1 0">
+       {order.invoice}
+      </H5>
 
-        <Typography
-          className="flex-grow pre"
-          m="6px"
-          textAlign="left"
-          color="gray.700"
-          fontSize="14px"
-          flex="1 1 0"
-        >
-          {format(new Date(order.date), "MMM dd, yyyy")}
-        </Typography>
+      <Typography
+       className="flex-grow pre"
+       m="6px"
+       textAlign="left"
+       color="gray.700"
+       fontSize="14px"
+       flex="1 1 0"
+      >
+       {format(new Date(order.date), "MMM dd, yyyy")}
+      </Typography>
 
-        <Typography
-          m="6px"
-          textAlign="left"
-          color="gray.700"
-          fontSize="14px"
-          flex="1 1 0"
-        >
-          {order.item_count}
-          {order.returned_item_count > 0 && (
-            <Box
-              mt="4px"
-              px="8px"
-              py="2px"
-              bg="#EEF1F5"
-              borderRadius="100px"
-              display="inline-block"
-            >
-              <Typography fontSize="11px" fontWeight="600" color="#5b6472">
-                {order.returned_item_count} returned
-              </Typography>
-            </Box>
-          )}
-        </Typography>
+      <Typography
+       m="6px"
+       textAlign="left"
+       color="gray.700"
+       fontSize="14px"
+       flex="1 1 0"
+      >
+       {order.item_count}
+      </Typography>
 
-        <Typography
-          m="6px"
-          textAlign="left"
-          fontWeight="600"
-          color="rgb(51, 51, 51)"
-          flex="1 1 0"
-        >
-          {currency(order.amount)}
-        </Typography>
+      <Typography
+       m="6px"
+       textAlign="left"
+       fontWeight="600"
+       color="rgb(51, 51, 51)"
+       flex="1 1 0"
+      >
+       {currency(order.amount)}
+      </Typography>
+     </MainLine>
 
-        <Hidden flex="0 0 0 !important" down={769}>
-          <Typography textAlign="center" color="text.muted">
-            <StyledIconButton size="small">
-              <Icon variant="small" defaultcolor="currentColor">
-                arrow-right
-              </Icon>
-            </StyledIconButton>
-          </Typography>
-        </Hidden>
-      </TableRow>
-    </Link>
-  );
+     {buckets.length > 0 && (
+      <BreakdownLine>
+       {buckets.map((bucket) => (
+        <Pill key={bucket.label}>
+         {bucket.count} {bucket.label}
+        </Pill>
+       ))}
+      </BreakdownLine>
+     )}
+    </RowContent>
+
+    <Hidden flex="0 0 auto !important" down={769}>
+     <Typography textAlign="center" color="text.muted">
+      <StyledIconButton size="small">
+       <Icon variant="small" defaultcolor="currentColor">
+        arrow-right
+       </Icon>
+      </StyledIconButton>
+     </Typography>
+    </Hidden>
+   </TableRow>
+  </Link>
+ );
 }
