@@ -5,6 +5,7 @@ import FlexBox from "@component/FlexBox";
 import { Button } from "@component/buttons";
 import Typography, { H6 } from "@component/Typography";
 import { currency } from "@utils/utils";
+import { format } from "date-fns";
 import Modal from "@component/Modal";
 import toast from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
@@ -30,6 +31,7 @@ export default function WriteReview({
  order_days_gone,
  return_status,
  delivered_at,
+ isCorporate = false,
 }: {
  item: any;
  shopName: string;
@@ -40,9 +42,11 @@ export default function WriteReview({
  order_days_gone: any;
  return_status: any;
  delivered_at: any;
+ isCorporate?: boolean;
 }) {
  const [showOrderStatus, setShowOrderStatus] = useState(false);
  const [isModalOpen, setIsModalOpen] = useState(false);
+ const [isCorporateReturnOpen, setIsCorporateReturnOpen] = useState(false);
  const [rating, setRating] = useState(0);
  const [comments, setComments] = useState("");
  const [image, setImage] = useState<File[]>([]);
@@ -57,6 +61,21 @@ export default function WriteReview({
  const router = useRouter();
 
  const deliveryCharge = orderDetails?.delivery_charge;
+
+ // A corporate counter return refunds this one item while the rest of the order
+ // stays delivered, so the row has to carry its own returned state.
+ const isItemReturned = item?.item_return_status === "returned";
+
+ // Likewise an item can be cancelled on its own before delivery, by either the
+ // buyer here or the seller in the panel.
+ const isItemCancelled = Boolean(item?.item_cancelled_at);
+
+ // Buyers may only pull an item until the seller starts preparing the order; the
+ // engine enforces this too, this just avoids offering a button that will 422.
+ const canCancelItem =
+  !isItemCancelled &&
+  !isItemReturned &&
+  ["Pending", "Confirmed"].includes(status);
 
  useEffect(() => {
   // Server data is authoritative; only fall back to the localStorage cache
@@ -159,11 +178,10 @@ export default function WriteReview({
 
  // cancek click function
  const handleCancelClick = () => {
-  if (cancel_status >= 0 && cancel_status <= 2) {
-   const encryptedOrderItemId = btoa(orderItemId);
-   sessionStorage.setItem("cancelItem", JSON.stringify(item));
-   router.push(`/cancelled-order?orderItemId=${encryptedOrderItemId}`);
-  }
+  if (!canCancelItem) return;
+  // The cancellation page reads this to offer "just this item" or "the whole order".
+  sessionStorage.setItem("cancelItem", JSON.stringify(item));
+  router.push(`/cancelled-order?orderItemId=${btoa(String(item.order_item_id))}`);
  };
 
  const handleToggle = () => {
@@ -226,15 +244,87 @@ export default function WriteReview({
         src={getProductImageUrl(item.product_image)}
         alt={item.product_image}
         size={64}
+        style={isItemReturned || isItemCancelled ? { opacity: 0.5 } : undefined}
        />
        <Box ml="20px">
-        <H6 my="0px">{item.product_name}</H6>
-        <Typography fontSize="14px" color="text.muted">
+        <H6
+         my="0px"
+         style={
+          isItemReturned || isItemCancelled
+           ? { textDecoration: "line-through", color: "#8a94a6" }
+           : undefined
+         }
+        >
+         {item.product_name}
+        </H6>
+        <Typography
+         fontSize="14px"
+         color="text.muted"
+         style={
+          isItemReturned || isItemCancelled
+           ? { textDecoration: "line-through" }
+           : undefined
+         }
+        >
          {currency(item.price)} x {item.quantity}
          {item.color && `, Color: ${item.color}`}
          {item.attribute && `, Specification: ${item.attribute}`}
          {item.size && `, Size: ${item.size}`}
         </Typography>
+
+        {isItemCancelled && (
+         <FlexBox alignItems="center" mt="6px" style={{ gap: "8px" }}>
+          <Box
+           px="8px"
+           py="2px"
+           bg="#FEE2E2"
+           borderRadius="100px"
+           style={{ whiteSpace: "nowrap" }}
+          >
+           <Typography
+            fontSize="10px"
+            fontWeight="700"
+            color="#b91c1c"
+            style={{ letterSpacing: "0.4px" }}
+           >
+            CANCELLED
+           </Typography>
+          </Box>
+          <Typography fontSize="12px" color="text.muted">
+           {format(new Date(item.item_cancelled_at), "dd MMM yyyy")}
+          </Typography>
+         </FlexBox>
+        )}
+
+        {isItemReturned && (
+         <FlexBox alignItems="center" mt="6px" style={{ gap: "8px" }}>
+          <Box
+           px="8px"
+           py="2px"
+           bg="#EEF1F5"
+           borderRadius="100px"
+           style={{ whiteSpace: "nowrap" }}
+          >
+           <Typography
+            fontSize="10px"
+            fontWeight="700"
+            color="#5b6472"
+            style={{ letterSpacing: "0.4px" }}
+           >
+            RETURNED
+           </Typography>
+          </Box>
+          <Typography fontSize="12px" color="#2e7d32" fontWeight="600">
+           {currency(item.item_refund_amount ?? item.price * item.quantity)}{" "}
+           refunded
+          </Typography>
+          {item.item_returned_at && (
+           <Typography fontSize="12px" color="text.muted">
+            {format(new Date(item.item_returned_at), "dd MMM yyyy")}
+           </Typography>
+          )}
+         </FlexBox>
+        )}
        </Box>
       </FlexBox>
      </Link>
@@ -263,7 +353,7 @@ export default function WriteReview({
           </Button>
         </FlexBox> */}
 
-     {cancel_status !== 5 && cancel_status !== 6 && (
+     {cancel_status !== 5 && cancel_status !== 6 && !isItemReturned && !isItemCancelled && (
       <FlexBox flex="160px" m="6px" alignItems="center">
        <Button
         variant="text"
@@ -290,7 +380,9 @@ export default function WriteReview({
      {/* return policy */}
      {status === "Delivered" &&
       cancel_status !== 6 &&
-      order_days_gone !== 3 && (
+      order_days_gone !== 3 &&
+      !isItemReturned &&
+      !isItemCancelled && (
        <FlexBox flex="160px" m="6px" alignItems="center">
         <Button
          variant="text"
@@ -301,7 +393,13 @@ export default function WriteReview({
           backgroundColor: "#e94560",
           color: "white",
          }}
-         onClick={handleReturnClick}
+         onClick={
+          // Corporate shop returns happen face to face at the counter — the seller
+          // presses the return button, not the buyer. Explain instead of navigating.
+          isCorporate
+           ? () => setIsCorporateReturnOpen(true)
+           : handleReturnClick
+         }
         >
          <Typography fontSize="14px">Return</Typography>
         </Button>
@@ -333,29 +431,21 @@ export default function WriteReview({
       </>
      )}
 
-     {/* order cancel */}
-     {status !== "Delivered" && cancel_status !== 6 && (
+     {/* item cancel — buyer's window closes once the seller starts processing */}
+     {status !== "Delivered" && cancel_status !== 6 && !isItemCancelled && (
       <FlexBox flex="160px" m="6px" alignItems="center">
        <Button
         variant="text"
         style={{
-         color:
-          cancel_status >= 0 && cancel_status <= 2
-           ? "blue"
-           : cancel_status === 5
-             ? "gray"
-             : "gray",
+         color: canCancelItem ? "blue" : "gray",
          height: "30px",
          borderRadius: "100px",
+         cursor: canCancelItem ? "pointer" : "not-allowed",
         }}
         onClick={handleCancelClick}
-        disabled={
-         cancel_status === 5 || !(cancel_status >= 0 && cancel_status <= 2)
-        }
+        disabled={!canCancelItem}
        >
-        <Typography fontSize="14px">
-         {cancel_status >= 0 && cancel_status <= 2 ? "Cancel" : "Cancelled"}
-        </Typography>
+        <Typography fontSize="14px">Cancel</Typography>
        </Button>
       </FlexBox>
      )}
@@ -519,6 +609,82 @@ export default function WriteReview({
        </Box>
       </>
      )}
+    </Box>
+   </Modal>
+
+   {/* Corporate shop returns are processed by the seller at the counter, so the
+       buyer gets instructions rather than the online return request form. */}
+   <Modal
+    open={isCorporateReturnOpen}
+    onClose={() => setIsCorporateReturnOpen(false)}
+   >
+    <Box
+     p="1.5rem"
+     bg="white"
+     borderRadius="8px"
+     width="440px"
+     maxWidth="90vw"
+     mx="auto"
+     onClick={(e) => e.stopPropagation()}
+    >
+     <FlexBox alignItems="center" mb="1rem" style={{ gap: "10px" }}>
+      <Box
+       width="40px"
+       height="40px"
+       borderRadius="50%"
+       bg="#FFF4F6"
+       style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+       }}
+      >
+       <FontAwesomeIcon icon={faStore} style={{ color: "#e94560" }} />
+      </Box>
+      <Typography fontSize="17px" fontWeight="700" color="#e94560">
+       Return at the shop
+      </Typography>
+     </FlexBox>
+
+     <Typography fontSize="14px" color="#444" style={{ lineHeight: 1.6 }}>
+      This item was bought from a corporate shop, so returns are handled in
+      person — there is nothing to submit here.
+     </Typography>
+
+     <Box mt="1rem" p="12px 14px" bg="#F7F9FC" borderRadius="8px">
+      <Typography fontSize="13px" fontWeight="600" color="#2C3A4A" mb="8px">
+       What to do
+      </Typography>
+      <Typography fontSize="13px" color="#555" style={{ lineHeight: 1.7 }}>
+       1. Bring <b>{item?.product_name}</b> back to the shop.
+       <br />
+       2. Give the seller your Order ID, shown at the top of this page.
+       <br />
+       3. The seller confirms the return and your credit is restored on the
+       spot.
+      </Typography>
+     </Box>
+
+     <Typography fontSize="12px" color="text.muted" mt="12px">
+      Returns must be made on the same day the item was delivered.
+     </Typography>
+
+     <FlexBox justifyContent="flex-end" mt="1.25rem">
+      <Button
+       variant="text"
+       style={{
+        height: "34px",
+        borderRadius: "100px",
+        backgroundColor: "#e94560",
+        color: "white",
+        padding: "0 20px",
+       }}
+       onClick={() => setIsCorporateReturnOpen(false)}
+      >
+       <Typography fontSize="14px">Got it</Typography>
+      </Button>
+     </FlexBox>
     </Box>
    </Modal>
 
