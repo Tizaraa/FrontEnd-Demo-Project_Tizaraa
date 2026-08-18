@@ -947,7 +947,13 @@ export default function ProfileEditForm() {
           name="phone"
           type="text"
           className="input-field"
-          onChange={handleChange}
+          onChange={(e) => {
+           let v = e.target.value.replace(/\s+/g, "");
+           if (v.startsWith("+880")) v = "0" + v.slice(4);
+           else if (v.startsWith("880")) v = "0" + v.slice(3);
+           else if (v.startsWith("+88")) v = "0" + v.slice(3);
+           setFieldValue("phone", v);
+          }}
           onBlur={handleBlur}
           value={values.phone}
           placeholder=" "

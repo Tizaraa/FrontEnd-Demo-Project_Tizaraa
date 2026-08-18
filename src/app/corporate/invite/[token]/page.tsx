@@ -29,7 +29,7 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
   
   const [loadingDetails, setLoadingDetails] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [inviteDetails, setInviteDetails] = useState<{ email: string; name: string; company_name: string; shop_slug: string } | null>(null);
+  const [inviteDetails, setInviteDetails] = useState<{ email: string; name: string; phone: string | null; company_name: string; shop_slug: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
     phone: yup.string().nullable(),
   });
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
     initialValues: { password: "", password_confirmation: "", phone: "" },
     validationSchema: formSchema,
     onSubmit: async (values) => {
@@ -90,6 +90,12 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
       }
     },
   });
+
+  useEffect(() => {
+    if (inviteDetails?.phone) {
+      setFieldValue("phone", inviteDetails.phone);
+    }
+  }, [inviteDetails]);
 
   if (loadingDetails) {
     return (
@@ -150,6 +156,7 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
             onBlur={handleBlur}
             onChange={handleChange}
             errorText={touched.phone && errors.phone}
+            autoComplete="off"
           />
 
           <TextField
