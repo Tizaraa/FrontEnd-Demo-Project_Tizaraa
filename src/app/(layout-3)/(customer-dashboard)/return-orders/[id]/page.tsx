@@ -334,24 +334,6 @@ export default function OrderDetails({ params }: IDParams) {
       </Box>
      </div>
 
-     {order?.Order?.items?.delivered_at && (
-      <p
-       style={{
-        padding: "0.5rem 1rem",
-        backgroundColor: "#FFE1E6",
-        color: "#E94560",
-        borderRadius: "300px",
-        textAlign: "center",
-        height: "40px",
-        marginRight: "20px",
-        marginTop: "10px",
-        minWidth: "200px",
-       }}
-      >
-       Estimated Delivery Date: <b>{order?.Order?.items?.delivered_at}</b>
-      </p>
-     )}
-
      <Box mt="1rem" textAlign="center">
       <Button
        variant="text"
@@ -802,7 +784,7 @@ export default function OrderDetails({ params }: IDParams) {
                 borderRadius="1rem"
                 color="rgb(233, 69, 96)"
                >
-                {order?.Order?.delivery_type}
+                {order?.Order?.payment_method || "N/A"}
                </H6>
               </FlexBox>
               <FlexBox alignItems="center" mb="1rem">
@@ -954,7 +936,7 @@ export default function OrderDetails({ params }: IDParams) {
             >
               Payment Method:
               <H6 my="0px" mx="1rem">
-                {order.Order.delivery_type}
+                {order.Order.payment_method || "N/A"}
               </H6>
             </FlexBox>
             <FlexBox

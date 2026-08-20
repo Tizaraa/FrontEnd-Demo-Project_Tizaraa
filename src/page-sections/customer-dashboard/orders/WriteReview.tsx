@@ -353,7 +353,7 @@ export default function WriteReview({
           </Button>
         </FlexBox> */}
 
-     {cancel_status !== 5 && cancel_status !== 6 && !isItemReturned && !isItemCancelled && (
+     {status === "Delivered" && cancel_status !== 5 && cancel_status !== 6 && !isItemReturned && !isItemCancelled && (
       <FlexBox flex="160px" m="6px" alignItems="center">
        <Button
         variant="text"

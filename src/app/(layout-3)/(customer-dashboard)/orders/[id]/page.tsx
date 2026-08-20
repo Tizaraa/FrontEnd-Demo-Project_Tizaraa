@@ -334,23 +334,6 @@ export default function OrderDetails({ params }: IDParams) {
       </Box>
      </div>
 
-     {order?.Order?.items?.delivered_at && (
-      <p
-       style={{
-        padding: "0.5rem 1rem",
-        backgroundColor: "#FFE1E6",
-        color: "#E94560",
-        borderRadius: "300px",
-        textAlign: "center",
-        height: "40px",
-        marginRight: "20px",
-        marginTop: "10px",
-        minWidth: "200px",
-       }}
-      >
-       Estimated Delivery Date: <b>{order?.Order?.items?.delivered_at}</b>
-      </p>
-     )}
 
      <Box mt="1rem" textAlign="center">
       <Button
@@ -815,23 +798,6 @@ export default function OrderDetails({ params }: IDParams) {
               </Box>
              </div>
 
-             {details?.delivered_at && (
-              <p
-               style={{
-                padding: "0.5rem 1rem",
-                backgroundColor: "#FFE1E6",
-                color: "#E94560",
-                borderRadius: "300px",
-                textAlign: "center",
-                height: "40px",
-                marginRight: "20px",
-                marginTop: "10px",
-                minWidth: "200px",
-               }}
-              >
-               Estimated Delivery Date: <b>{details.delivered_at}</b>
-              </p>
-             )}
 
              <Box mt="1rem" textAlign="center">
               <Button
@@ -925,12 +891,7 @@ export default function OrderDetails({ params }: IDParams) {
             </Box>
            )}
 
-            <Box
-             mt="10px"
-             p="10px"
-             border="1px solid #e94560"
-             borderRadius="8px"
-            >
+            <Box mt="10px" p="10px" borderRadius="8px">
             <OrderStatus
               orderStatus={details.status}
               deliveredAt={details.delivered_at}
