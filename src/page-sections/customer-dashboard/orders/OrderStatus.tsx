@@ -445,7 +445,7 @@ export default function OrderStatus({
      },
      {
       icon: "package-box",
-      label: "Packed: Ready to deliver",
+      label: "Packed",
      },
      {
       icon: "delivery",
@@ -631,8 +631,7 @@ export default function OrderStatus({
          position="absolute"
          top="-45px"
          zIndex={10}
-         // "Packed: Ready to deliver" needs more room than the one-word labels
-         width={isCorporate ? "108px" : "80px"}
+         width="80px"
          className="status-tooltip"
          style={{
           animationDelay: `${ind * 0.15}s, ${ind * 0.15 + 0.4}s`,
@@ -717,38 +716,9 @@ export default function OrderStatus({
     flexWrap="wrap"
     style={{ gap: "1rem" }}
    >
-    {deliveredAt && (
-     <Box
-      p="0.75rem 1rem"
-      bg="white"
-      border="1px solid"
-      borderColor="primary.light"
-      borderRadius="8px"
-      flex="1"
-      minWidth="180px"
-      transition="all 0.2s ease"
-     >
-      <Typography
-       fontSize="11px"
-       color="primary.main"
-       mb="0.25rem"
-       fontWeight="500"
-       textTransform="uppercase"
-       letterSpacing="0.3px"
-      >
-       Estimated Delivery Date
-      </Typography>
-      <Typography fontSize="14px" fontWeight="600" color="text.primary">
-       {deliveredAt}
-      </Typography>
-     </Box>
-    )}
-
     <Box
      p="0.75rem 1rem"
      bg="white"
-     border="1px solid"
-     borderColor="primary.light"
      borderRadius="8px"
      flex="2"
      minWidth="240px"
