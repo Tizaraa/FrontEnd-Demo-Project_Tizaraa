@@ -167,6 +167,9 @@ export interface CartItem {
  slug?: string;
  price: number;
  productStock: number;
+ // Seller's per-order limits. maxOrderQty null/undefined means unlimited.
+ minOrderQty?: number;
+ maxOrderQty?: number | null;
  imgUrl?: string;
  id: string | number;
  totalDiscount?: number;

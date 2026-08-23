@@ -25,6 +25,8 @@ type ProductIntroProps = {
  replacewarranty: string;
  rating: number;
  productStock: number;
+ minOrderQty?: number;
+ maxOrderQty?: number | null;
  slug?: string;
  productId: string | number;
  sellerId: string | number;
@@ -54,6 +56,8 @@ export default function ProductIntro({
  totalDiscount,
  slug,
  productStock,
+ minOrderQty,
+ maxOrderQty,
  productId,
  sellerId,
  sizeColor,
@@ -149,6 +153,8 @@ export default function ProductIntro({
        discountPrice={discountPrice}
        slug={slug}
        productStock={productStock}
+       minOrderQty={minOrderQty}
+       maxOrderQty={maxOrderQty}
        price={price}
        productType="General"
        sizeColor={sizeColor}

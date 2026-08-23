@@ -327,11 +327,35 @@ export default function ProductCard7(props: ProductCard7Props) {
   }
  }, [state.cart, id]);
 
+ // Seller's per-order limits carried on the cart item; max null means unlimited
+ const limitsFor = (product: any) => {
+  const min = Math.max(1, Number(product?.minOrderQty ?? 1) || 1);
+  const rawMax = product?.maxOrderQty;
+  const max =
+   rawMax === null || rawMax === undefined || !Number.isFinite(Number(rawMax))
+    ? null
+    : Math.max(min, Number(rawMax));
+  const ceiling =
+   max === null ? product.productStock : Math.min(max, product.productStock);
+  return { min, max, ceiling };
+ };
+
  const handleCartAmountChange = (amount: number, product: any) => () => {
   if (amount > product.productStock) {
    toast.error("Out of Stock");
    return;
   }
+
+  const { min, max } = limitsFor(product);
+  if (amount > 0 && amount < min) {
+   toast.error(`Minimum order quantity is ${min}.`);
+   return;
+  }
+  if (max !== null && amount > max) {
+   toast.error(`Maximum order quantity is ${max}.`);
+   return;
+  }
+
   dispatch({
    type: "CHANGE_CART_AMOUNT",
    payload: { ...product, qty: amount },
@@ -342,14 +366,20 @@ export default function ProductCard7(props: ProductCard7Props) {
   e: React.ChangeEvent<HTMLInputElement>,
   product: any
  ) => {
-  const newQty = Math.min(
-   product.productStock,
-   Math.max(1, parseInt(e.target.value))
-  );
-  if (newQty > product.productStock) {
-   toast.error("Out of Stock");
-   return;
+  const typed = parseInt(e.target.value);
+  if (Number.isNaN(typed)) return;
+
+  const { min, max, ceiling } = limitsFor(product);
+  const newQty = Math.min(ceiling, Math.max(min, typed));
+
+  if (typed > ceiling) {
+   toast.error(
+    max !== null && max <= product.productStock
+     ? `Maximum order quantity is ${max}.`
+     : "Out of Stock"
+   );
   }
+
   dispatch({
    type: "CHANGE_CART_AMOUNT",
    payload: { ...product, qty: newQty },
@@ -505,7 +535,7 @@ export default function ProductCard7(props: ProductCard7Props) {
           currentCartItem.qty - 1,
           currentCartItem
          )}
-         disabled={currentCartItem.qty === 1}
+         disabled={currentCartItem.qty <= limitsFor(currentCartItem).min}
         >
          <Icon variant="small">minus</Icon>
         </Button>
@@ -514,7 +544,8 @@ export default function ProductCard7(props: ProductCard7Props) {
           className="no-spin-button"
           type="number"
           value={currentCartItem.qty}
-          min={1}
+          min={limitsFor(currentCartItem).min}
+          max={limitsFor(currentCartItem).ceiling}
           onChange={(e) => handleInputChange(e, currentCartItem)}
           style={{
            textDecoration: "none",
@@ -537,6 +568,7 @@ export default function ProductCard7(props: ProductCard7Props) {
           currentCartItem.qty + 1,
           currentCartItem
          )}
+         disabled={currentCartItem.qty >= limitsFor(currentCartItem).ceiling}
         >
          <Icon variant="small">plus</Icon>
         </Button>

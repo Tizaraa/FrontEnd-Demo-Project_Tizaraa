@@ -1463,6 +1463,8 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
               discountPrice={product.discount_price}
               totalDiscount={product.total_discount}
               productStock={product.product_stock}
+              minOrderQty={product.min_order_qty}
+              maxOrderQty={product.max_order_qty}
               productId={product.product_id}
               sellerId={product.seller_shop_id}
               slug={params.slug}
