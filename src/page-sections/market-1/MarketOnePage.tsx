@@ -8,7 +8,7 @@ import ProductCarousel from "@sections/market-1/NewArrivalsProducts/ProductCarou
 import CampaignProducts from "@sections/market-1/CampaingProducts";
 import FlashSaleBanner from "@sections/market-1/FlashSaleBanner";
 import OTCProducts from "@sections/market-1/OTCProducts";
-import tizaraa_watermark from "../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
+import Watermark from "@component/watermark/Watermark";
 import NextImage from "@component/NextImage";
 import CampaignBanner from "@sections/market-1/CampaignBanner";
 import useFetcher from "@hook/useFetcher";
@@ -24,24 +24,7 @@ const MarketOnePage = () => {
     return (
         <>
             {/* Background image */}
-            <NextImage
-                alt="newArrivalBanner"
-                src={tizaraa_watermark}
-                priority
-                style={{
-                    position: "fixed",
-                    top: "70%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: "100%", // Set to 100% to ensure full responsiveness
-                    height: "auto", // Maintain aspect ratio
-                    maxWidth: "1200px", // Optional: Limit the maximum width
-                    backgroundSize: "contain", // Adjust the scaling behavior
-                    backgroundPosition: "center",
-                    opacity: 0.1,
-                    zIndex: 0,
-                }}
-            />
+            <Watermark top="70%" offsetY="-50%" />
 
             <main
                 style={{

@@ -9,7 +9,7 @@ import Link from "next/link";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 // import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
-import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
+import Watermark from "@component/watermark/Watermark";
 import NextImage from "@component/NextImage";
 
 type Product = {
@@ -48,24 +48,7 @@ export default function CountryList() {
  return (
   <>
    {/* Background image */}
-   <NextImage
-    alt="newArrivalBanner"
-    src={tizaraa_watermark}
-    priority
-    style={{
-     position: "fixed",
-     top: "50%",
-     left: "50%",
-     transform: "translate(-50%, -20%)",
-     width: "100%", // Set to 100% to ensure full responsiveness
-     height: "auto", // Maintain aspect ratio
-     maxWidth: "1200px", // Optional: Limit the maximum width
-     backgroundSize: "contain", // Adjust the scaling behavior
-     backgroundPosition: "center",
-     opacity: 0.1,
-     zIndex: 0,
-    }}
-   />
+   <Watermark />
 
    <main
     style={{
