@@ -159,6 +159,7 @@ import Image from "next/image";
 import NextImage from "@component/NextImage";
 import DeliveredOrderRow from "@sections/customer-dashboard/orders/DeliveredOrderRow";
 import ReturnOrderRow from "@sections/customer-dashboard/orders/ReturnOrderRow";
+import EmptyOrders from "@sections/customer-dashboard/orders/EmptyOrders";
 import Loader from "@component/loader";
 
 // const LoaderWrapper = styled.div`
@@ -297,6 +298,13 @@ export default function OrderList() {
         {/* Render ToastContainer for toast notifications */}
         <DashboardPageHeader title="Return Orders" iconName="truck" />
 
+        {orderList.length === 0 ? (
+          <EmptyOrders
+            title="No returned products yet"
+            message="Nothing has been sent back so far. Anything you return will show up here with its refund status."
+          />
+        ) : (
+        <>
         <Hidden down={769}>
           <TableRow
             boxShadow="none"
@@ -331,6 +339,8 @@ export default function OrderList() {
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
+        </>
+        )}
       </Fragment>
       {/* </main> */}
     </>

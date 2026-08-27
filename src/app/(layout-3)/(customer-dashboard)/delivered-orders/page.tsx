@@ -159,6 +159,7 @@ import Image from "next/image";
 import NextImage from "@component/NextImage";
 import DeliveredOrderRow from "@sections/customer-dashboard/orders/DeliveredOrderRow";
 import Loader from "@component/loader";
+import EmptyOrders from "@sections/customer-dashboard/orders/EmptyOrders";
 
 // const LoaderWrapper = styled.div`
 //   display: flex;
@@ -296,6 +297,15 @@ export default function OrderList() {
         {/* Render ToastContainer for toast notifications */}
         <DashboardPageHeader title="Delivered Orders" iconName="delivery" />
 
+        {orderList.length === 0 ? (
+          <EmptyOrders
+            title="No delivered orders yet"
+            message="Nothing has arrived yet. Orders show up here once they have been delivered to you."
+            actionLabel="Continue Shopping"
+          />
+        ) : (
+        <>
+
         <Hidden down={769}>
           <TableRow
             boxShadow="none"
@@ -330,6 +340,8 @@ export default function OrderList() {
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
+        </>
+        )}
       </Fragment>
       {/* </main> */}
     </>

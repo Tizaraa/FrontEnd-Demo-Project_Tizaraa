@@ -158,6 +158,7 @@ import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_water
 import Image from "next/image";
 import NextImage from "@component/NextImage";
 import Loader from "@component/loader";
+import EmptyOrders from "@sections/customer-dashboard/orders/EmptyOrders";
 
 export default function OrderList() {
   //const order_List = await api.getOrders();
@@ -282,6 +283,15 @@ export default function OrderList() {
         {/* Render ToastContainer for toast notifications */}
         <DashboardPageHeader title="My Orders" iconName="bag_filled" />
 
+        {orderList.length === 0 ? (
+          <EmptyOrders
+            title="No orders yet"
+            message="You haven't placed an order yet. Once you do, every order and its status will live here."
+            actionLabel="Start Shopping"
+          />
+        ) : (
+        <>
+
         <Hidden down={769}>
           <TableRow
             boxShadow="none"
@@ -316,6 +326,8 @@ export default function OrderList() {
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
+        </>
+        )}
       </Fragment>
       {/* </main> */}
     </>
