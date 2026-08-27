@@ -1266,10 +1266,15 @@ export default function CorporatePaymentForm() {
  const width = useWindowSize();
 
  useEffect(() => {
-  // Retrieve the selected payment method from localStorage on component mount
+  // Retrieve the selected payment method from localStorage on component mount.
+  // Credit is the only method a corporate order can use, so anything left over
+  // from an earlier cart (cash on delivery, for one) is dropped rather than
+  // silently restored onto a form that no longer offers it.
   const storedPaymentMethod = sessionStorage.getItem("paymentMethod");
-  if (storedPaymentMethod) {
+  if (storedPaymentMethod === "4") {
    setPaymentMethod(storedPaymentMethod);
+  } else if (storedPaymentMethod) {
+   sessionStorage.removeItem("paymentMethod");
   }
  }, []);
 
@@ -1322,101 +1327,46 @@ export default function CorporatePaymentForm() {
        gap: "10px", // Adds consistent spacing between elements
       }}
      >
-      {/* Cash on Delivery */}
+      {/* Cash on Delivery — corporate orders settle on credit, so it is shown
+          greyed out alongside the other unavailable methods */}
       {!hasAbroadProduct && (
-       <PaymentCheckBox
-        mb="1.5rem"
-        color="secondary"
-        name="1"
-        onChange={handlePaymentMethodChange}
-        checked={paymentMethod === "1"}
-        label={
-         <div
-          style={{
-           width: "100px",
-           height: "120px",
-           boxShadow:
-            paymentMethod === "1"
-             ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
-             : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
-           display: "flex",
-           flexDirection: "column",
-           alignItems: "center",
-           justifyContent: "center",
-           padding: "8px",
-           background:
-            paymentMethod === "1" ? "rgba(233, 69, 96, 0.05)" : "white",
-           transition: "all 0.3s ease",
-           boxSizing: "border-box",
-           borderRadius: "8px",
-           border:
-            paymentMethod === "1"
-             ? "1px solid #E94560"
-             : "1px solid transparent",
-           position: "relative",
-          }}
-         >
-          {/* More visible check indicator */}
-          {paymentMethod === "1" && (
-           <div
-            style={{
-             position: "absolute",
-             top: "4px",
-             right: "4px",
-             width: "18px",
-             height: "18px",
-             backgroundColor: "#E94560",
-             borderRadius: "50%",
-             display: "flex",
-             alignItems: "center",
-             justifyContent: "center",
-            }}
-           >
-            <svg
-             width="10"
-             height="8"
-             viewBox="0 0 10 8"
-             fill="none"
-             style={{
-              marginLeft: "1px", // slight visual adjustment
-             }}
-            >
-             <path
-              d="M1 4L3.5 6.5L9 1"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-             />
-            </svg>
-           </div>
-          )}
-
-          <PaymentImage
-           alt="Cash on Delivery"
-           src={cashOnDeliveryImage}
-           style={{
-            width: "60px",
-            height: "60px",
-            marginBottom: "8px",
-            filter: paymentMethod === "1" ? "none" : "grayscale(20%)",
-            opacity: paymentMethod === "1" ? 1 : 0.8,
-           }}
-           priority
-          />
-          <span
-           style={{
-            fontSize: "14px",
-            fontWeight: "600",
-            textAlign: "center",
-            color: paymentMethod === "1" ? "#E94560" : "#333",
-           }}
-          >
-           Cash on Delivery
-          </span>
-         </div>
-        }
-       />
+       <div
+        style={{
+         width: "100px",
+         height: "120px",
+         display: "flex",
+         flexDirection: "column",
+         alignItems: "center",
+         justifyContent: "center",
+         padding: "8px",
+         background: "rgba(0, 0, 0, 0.5)", // Disabled background
+         pointerEvents: "none", // Disable interactions
+         boxSizing: "border-box",
+         borderRadius: "4px",
+        }}
+       >
+        <PaymentImage
+         alt="Cash on Delivery"
+         src={cashOnDeliveryImage}
+         style={{
+          width: "60px",
+          height: "60px",
+          marginBottom: "8px",
+          filter: "grayscale(100%) opacity(50%)",
+         }}
+         priority
+        />
+        <span
+         style={{
+          fontSize: "14px",
+          fontWeight: "600",
+          textAlign: "center",
+          color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
+         }}
+        >
+         Cash on Delivery
+        </span>
+       </div>
       )}
 
       {/* Buy with credit */}
