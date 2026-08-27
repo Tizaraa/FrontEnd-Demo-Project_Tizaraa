@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState, CSSProperties } from "react";
 import axios from "@lib/axiosClient";
 import ProductRating from "./product-rating";
+import { productPageTheme as theme } from "@component/products/productPageTheme";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
@@ -67,37 +68,59 @@ export default function ReviewCard({ productId }: { productId: string }) {
  const styles: Record<string, CSSProperties> = {
   container: {
    padding: isMobilee ? "16px" : "20px",
-   width: isSmallMobile ? "95%" : isMobilee ? "90%" : "70%", // Responsive width
-   maxWidth: "1200px",
+   width: "100%",
+   maxWidth: theme.maxWidth,
    boxSizing: "border-box",
-   boxShadow: "rgba(0, 0, 0, 0.1) 0px 2px 4px",
+   backgroundColor: theme.surface,
+   border: `1px solid ${theme.border}`,
+   borderRadius: "10px",
+  },
+  reviewItem: {
+   padding: "18px 0",
+   borderTop: `1px solid ${theme.border}`,
   },
   header: {
    display: "flex",
    alignItems: "center",
    gap: "12px",
-   marginBottom: "16px",
   },
   avatar: {
-   width: "48px",
-   height: "48px",
+   width: "40px",
+   height: "40px",
+   flexShrink: 0,
    borderRadius: "50%",
-   backgroundColor: "#4C6EF5",
-   color: "white",
+   backgroundColor: theme.accentTint,
+   color: theme.accent,
+   fontWeight: 600,
+   fontSize: "15px",
    display: "flex",
    alignItems: "center",
    justifyContent: "center",
   },
-  userInfo: { display: "flex", flexDirection: "column" as const },
-  userName: { fontSize: "16px", fontWeight: "500" },
-  date: { color: "#6B7280", fontSize: "14px" },
-  rating: { display: "flex", gap: "4px" },
-  star: { color: "#FFC107", fontSize: "14px" },
+  userInfo: { display: "flex", flexDirection: "column" as const, gap: "3px" },
+  userName: { fontSize: "14px", fontWeight: 600, color: theme.heading },
+  date: { color: theme.muted, fontSize: "12.5px", whiteSpace: "nowrap" as const },
+  rating: { display: "flex", gap: "3px" },
+  star: { color: "#FFC107", fontSize: "12px" },
   reviewText: {
-   fontSize: "16px",
-   lineHeight: "1.5",
-   color: "#1F2937",
-   marginTop: "-10px",
+   fontSize: "14px",
+   lineHeight: 1.6,
+   color: theme.body,
+   margin: "12px 0 0",
+  },
+  reviewImages: {
+   display: "flex",
+   flexWrap: "wrap" as const,
+   gap: "10px",
+   marginTop: "12px",
+  },
+  reviewImage: {
+   width: "88px",
+   height: "88px",
+   objectFit: "cover" as const,
+   borderRadius: "8px",
+   border: `1px solid ${theme.border}`,
+   cursor: "pointer",
   },
   productImage: { borderRadius: "4px", height: "300px", cursor: "pointer" },
   modalOverlay: {
@@ -146,15 +169,32 @@ export default function ReviewCard({ productId }: { productId: string }) {
   nextButton: { right: "10px" },
  };
 
- if (loading) return <div>Loading...</div>;
- if (error) return <p>{error}</p>;
+ if (loading)
+  return (
+   <div style={{ ...styles.container, color: theme.muted, fontSize: "14px" }}>
+    Loading reviews…
+   </div>
+  );
+ if (error)
+  return (
+   <p style={{ ...styles.container, color: theme.accent, fontSize: "14px" }}>
+    {error}
+   </p>
+  );
 
  return (
   <div style={styles.container}>
    <ProductRating productId={productId}></ProductRating>
    {comments.map((comment, index) => (
-    <div key={index} style={{ marginBottom: "20px" }}>
-     <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <div key={index} style={styles.reviewItem}>
+     <div
+      style={{
+       display: "flex",
+       justifyContent: "space-between",
+       alignItems: "center",
+       gap: "12px",
+      }}
+     >
       {/* User image, name, rating */}
       <div style={styles.header}>
        <div style={styles.avatar}>
@@ -181,30 +221,20 @@ export default function ReviewCard({ productId }: { productId: string }) {
 
      <p style={styles.reviewText}>{comment.comment}</p>
 
-     <div
-      style={{
-       width: "200px",
-       height: comment.images?.length > 0 ? "200px" : "0", // Set height to 0 if no images
-       position: "relative",
-       overflow: "hidden", // Ensures no empty space is visible
-      }}
-     >
-      {(comment.images || []).map((imageUrl: string, imgIndex: number) => (
-       <Image
-        key={imgIndex}
-        src={imageUrl}
-        alt="Review Image"
-        layout="fill" // Use layout="fill" to make the image fill the container
-        objectFit="cover" // Ensures the image covers the container proportionally
-        style={{ cursor: "pointer", borderRadius: "4px" }}
-        onClick={() => openModal(comment.images, imgIndex)}
-       />
-      ))}
-     </div>
-
-     {/* Only show <hr> if it's not the last comment */}
-     {index !== comments.length - 1 && (
-      <hr style={{ border: "0", borderTop: "1px solid #d3d3d3" }} />
+     {comment.images?.length > 0 && (
+      <div style={styles.reviewImages}>
+       {comment.images.map((imageUrl: string, imgIndex: number) => (
+        <Image
+         key={imgIndex}
+         src={imageUrl}
+         alt="Review Image"
+         width={88}
+         height={88}
+         style={styles.reviewImage}
+         onClick={() => openModal(comment.images, imgIndex)}
+        />
+       ))}
+      </div>
      )}
     </div>
    ))}
