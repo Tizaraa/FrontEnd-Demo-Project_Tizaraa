@@ -20,6 +20,7 @@ import { useAppContext } from "@context/app-context";
 import StyledHeader from "./styles";
 import UserLoginDialog from "./LoginDialog";
 import authService from "services/authService";
+import ApiBaseUrl from "api/ApiBaseUrl";
 import Menu from "@component/Menu";
 import MenuItem from "@component/MenuItem";
 import { useRouter } from "next/navigation";
@@ -118,14 +119,35 @@ export default function Header({ isFixed, className }: HeaderProps) {
   setAnchorEl(null);
  };
 
+ // Google sign-in stores an absolute avatar URL, our own uploads store a path
+ // under the image CDN.
+ const profileImage = userInfo?.image
+  ? String(userInfo.image).startsWith("http")
+    ? userInfo.image
+    : `${ApiBaseUrl.ImgUrl}${userInfo.image}`
+  : null;
+
  const LOGIN_HANDLE = isLoggedIn ? (
   <Fragment>
    <Menu
     handler={
      // <Tooltip title="User">
      <Tooltip title={userInfo?.name || "User"}>
-      <IconButton ml="1rem" bg="gray.200" p="8px">
-       <Icon size="28px">user</Icon>
+      <IconButton ml="1rem" bg="gray.200" p={profileImage ? "0px" : "8px"}>
+       {profileImage ? (
+        <img
+         src={profileImage}
+         alt={userInfo?.name || "Profile"}
+         style={{
+          width: "44px",
+          height: "44px",
+          borderRadius: "50%",
+          objectFit: "cover",
+         }}
+        />
+       ) : (
+        <Icon size="28px">user</Icon>
+       )}
       </IconButton>
      </Tooltip>
     }
