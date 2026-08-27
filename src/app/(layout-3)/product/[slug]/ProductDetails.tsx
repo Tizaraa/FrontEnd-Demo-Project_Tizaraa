@@ -1224,10 +1224,88 @@ const ShippingInfo: React.FC<{
     );
   };
 
+type WarrantyPolicy = {
+  warrantyName?: string | null;
+  warrantyDurationDays?: number | null;
+  warrantyDescription?: string | null;
+  replacementName?: string | null;
+  replacementWindowDays?: number | null;
+  replacementConditions?: string | null;
+};
+
+const hasWarrantyPolicy = (policy?: WarrantyPolicy | null) =>
+  !!policy &&
+  Object.values(policy).some(
+    (value) => value !== null && value !== undefined && value !== ""
+  );
+
+const WarrantyPolicyView: React.FC<{ policy: WarrantyPolicy }> = ({ policy }) => {
+  const sections = [
+    {
+      title: "Warranty",
+      name: policy.warrantyName,
+      duration:
+        policy.warrantyDurationDays != null
+          ? `${policy.warrantyDurationDays} days`
+          : null,
+      durationLabel: "Duration",
+      details: policy.warrantyDescription,
+    },
+    {
+      title: "Replacement Warranty",
+      name: policy.replacementName,
+      duration:
+        policy.replacementWindowDays != null
+          ? `${policy.replacementWindowDays} days`
+          : null,
+      durationLabel: "Return window",
+      details: policy.replacementConditions,
+    },
+  ].filter((section) => section.name || section.duration || section.details);
+
+  return (
+    <Box>
+      {sections.map((section) => (
+        <Box key={section.title} mb="24px">
+          <H5 mb="8px" fontSize="15px">
+            {section.title}
+          </H5>
+
+          {section.name && (
+            <SemiSpan display="block" mb="4px" color="text.hint">
+              {section.name}
+            </SemiSpan>
+          )}
+
+          {section.duration && (
+            <SemiSpan display="block" mb="4px" color="text.hint">
+              {section.durationLabel}: {section.duration}
+            </SemiSpan>
+          )}
+
+          {section.details && (
+            <div
+              style={{
+                fontSize: "14px",
+                color: "#444",
+                lineHeight: 1.7,
+                whiteSpace: "pre-line",
+              }}
+            >
+              {section.details}
+            </div>
+          )}
+        </Box>
+      ))}
+    </Box>
+  );
+};
+
 // Updated ProductView component with shipping info tab
 const ProductView: React.FC<{
   description: string;
   productId: string;
+  warrantyPolicy?: WarrantyPolicy;
   shippingProps?: {
     sellerShopName: string;
     sellerShopLogo: string;
@@ -1237,7 +1315,7 @@ const ProductView: React.FC<{
     express_deliverey: number;
   };
   isDesktop: boolean;
-}> = ({ description, productId, shippingProps, isDesktop }) => {
+}> = ({ description, productId, warrantyPolicy, shippingProps, isDesktop }) => {
   const [selectedOption, setSelectedOption] = useState("description");
   const handleOptionClick = (opt: any) => () => setSelectedOption(opt);
 
@@ -1274,6 +1352,7 @@ const ProductView: React.FC<{
         )}
 
         <H5
+          mr="25px"
           p="4px 10px"
           className="cursor-pointer"
           borderColor="primary.main"
@@ -1284,6 +1363,20 @@ const ProductView: React.FC<{
         >
           Review
         </H5>
+
+        {hasWarrantyPolicy(warrantyPolicy) && (
+          <H5
+            p="4px 10px"
+            className="cursor-pointer"
+            borderColor="primary.main"
+            onClick={handleOptionClick("warranty")}
+            borderBottom={selectedOption === "warranty" ? "2px solid" : ""}
+            color={selectedOption === "warranty" ? "primary.main" : "text.muted"}
+            fontSize="14px"
+          >
+            Warranty Policy
+          </H5>
+        )}
       </FlexBox>
 
       <Box mb="50px">
@@ -1305,6 +1398,9 @@ const ProductView: React.FC<{
           </div>
         )}
         {selectedOption === "review" && <ProductReview productId={productId} />}
+        {selectedOption === "warranty" && hasWarrantyPolicy(warrantyPolicy) && (
+          <WarrantyPolicyView policy={warrantyPolicy!} />
+        )}
       </Box>
     </>
   );
@@ -1404,6 +1500,14 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
   const warrantyType = productData.warrantytype;
   const replaceWarrantyObj = productData.replacement_warranty;
   const replacewarranty = replaceWarrantyObj?.name ?? replaceWarrantyObj ?? null;
+  const warrantyPolicy: WarrantyPolicy = {
+    warrantyName: warrantyObj?.name ?? null,
+    warrantyDurationDays: warrantyObj?.duration_days ?? null,
+    warrantyDescription: warrantyObj?.description ?? null,
+    replacementName: replaceWarrantyObj?.name ?? null,
+    replacementWindowDays: replaceWarrantyObj?.return_window_days ?? null,
+    replacementConditions: replaceWarrantyObj?.conditions ?? null,
+  };
   const express_deliverey = product.express_deliverey === true || product.express_deliverey === 1 ? 1 : 0;
   const sizeColor = productData.productsingledetails.SizeColor;
   const unitOfMeasure = product.unit_of_measure ?? null;
@@ -1510,6 +1614,7 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
         <ProductView
           description={description}
           productId={product.product_id}
+          warrantyPolicy={warrantyPolicy}
           shippingProps={!isDesktop ? shippingProps : undefined}
           isDesktop={isDesktop}
         />
