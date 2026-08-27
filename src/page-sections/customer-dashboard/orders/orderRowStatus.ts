@@ -26,6 +26,26 @@ export const STATUS_LABELS: Record<string, string> = {
 export type StatusBucket = { label: string; count: number };
 
 /**
+ * What the Total column should say for one row.
+ *
+ * order.amount is the order's live value: items cancelled one at a time and items
+ * handed back are taken off it. That reads correctly everywhere except a cancelled
+ * order, where nothing is live and the number means two different things depending
+ * on how the cancel happened — 0.00 when every item was cancelled individually, the
+ * full charge when the order went in one go. Cancelled rows therefore show what the
+ * buyer was originally charged instead.
+ */
+export function rowTotal(order: any): number {
+ const isCancelled = normalizeStatus(order.status) === "cancelled";
+
+ if (isCancelled && typeof order.original_total === "number") {
+  return order.original_total;
+ }
+
+ return order.amount;
+}
+
+/**
  * How an order's items currently split, as pills for the card's footer line.
  *
  * An item is in exactly one bucket: still with the buyer, cancelled off the order

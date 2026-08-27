@@ -442,6 +442,7 @@ type ProductDetailsProps = {
  price: number;
  discountPrice?: number;
  totalDiscount?: number;
+ reviewCount?: number;
  productStock: number;
  isDirectAdd?: boolean;
  sellerShopName: string;
@@ -472,6 +473,7 @@ type ProductDetailsProps = {
 const ProductDetails = ({
  title,
  rating,
+ reviewCount,
  price,
  discountPrice,
  totalDiscount,
@@ -645,26 +647,32 @@ const ProductDetails = ({
 
  return (
   <Box>
-   <H1 fontSize={isDesktop ? "32px" : "16px"}>{title}</H1>
+   <H1 fontSize={isDesktop ? "32px" : "16px"} mb="12px">
+    {title}
+   </H1>
 
-   <FlexBox alignItems="center" justifyContent="space-between">
-    <Box>
+   <FlexBox alignItems="center" justifyContent="space-between" mb="16px">
+    <FlexBox alignItems="center" style={{ gap: "8px" }}>
      <Rating value={rating > 0 ? rating : 0} outof={5} color="warn" readOnly />
-    </Box>
+     {reviewCount !== undefined && (
+      <SemiSpan color="text.hint" style={{ fontSize: "13px" }}>
+       ({reviewCount})
+      </SemiSpan>
+     )}
+    </FlexBox>
     <Box
      onClick={() => setIsShareModalOpen(true)}
      style={{
       cursor: "pointer",
-      padding: "8px",
-      borderRadius: "50%",
+      padding: "4px",
       display: "flex",
       alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "#f5f5f5",
+      gap: "8px",
+      background: "none",
       color: "#666",
      }}
     >
-     <ShareIcon /> &emsp;{" "}
+     <ShareIcon />
      <span style={{ textDecoration: "underline" }}>Share</span>
     </Box>
    </FlexBox>
@@ -769,7 +777,9 @@ const ProductDetails = ({
      </Box>
     )}
 
-    <Typography style={{ fontSize: isDesktop ? "16px" : "14px" }}>
+    <Typography
+     style={{ fontSize: isDesktop ? "16px" : "14px", marginTop: "12px" }}
+    >
      Brand:{" "}
      <a
       href="#"
@@ -780,7 +790,7 @@ const ProductDetails = ({
     </Typography>
 
     {unitOfMeasure && (
-     <Typography style={{ fontSize: isDesktop ? "16px" : "14px", marginTop: "4px" }}>
+     <Typography style={{ fontSize: isDesktop ? "16px" : "14px", marginTop: "8px" }}>
       Unit of Measure:{" "}
       <span style={{ color: "#2C3A4A", fontWeight: 500 }}>
        {unitOfMeasure.name}
@@ -909,44 +919,49 @@ const ProductDetails = ({
      </div>
     )}
 
-    <Typography style={{ fontSize: isDesktop ? "15px" : "13px" }}>
-     <div style={{ marginBottom: "10px", marginTop: "5px" }}>
-      Warranty:
-      <span
+    <Typography
+     style={{ fontSize: isDesktop ? "15px" : "13px", marginTop: "16px" }}
+    >
+     {[
+      { label: "Warranty", value: warranty },
+      { label: "Replacement warranty", value: replacewarranty },
+     ].map(({ label, value }) => (
+      <div
+       key={label}
        style={{
-        backgroundColor: "rgba(249,55,92,0.69)",
-        color: "white",
-        padding: "4px 10px",
-        borderRadius: "4px",
-        marginLeft: "6px",
-        fontSize: isDesktop ? "14px" : "12px",
+        display: "flex",
+        alignItems: "baseline",
+        flexWrap: "wrap",
+        gap: "8px",
+        marginTop: "8px",
        }}
       >
-       {warranty || "N/A"}
-      </span>
-     </div>
-
-     <div style={{ marginBottom: "5px" }}>
-      Replacement warranty:
-      <span
-       style={{
-        backgroundColor: "rgba(249,55,92,0.69)",
-        color: "white",
-        padding: "4px 10px",
-        borderRadius: "4px",
-        marginLeft: "6px",
-        fontSize: isDesktop ? "14px" : "12px",
-       }}
-      >
-       {replacewarranty || "N/A"}
-      </span>
-     </div>
+       <span style={{ color: "#6B7280" }}>{label}:</span>
+       <span
+        style={{
+         backgroundColor: "#FDECEF",
+         color: "#E94560",
+         border: "1px solid #F8D4DA",
+         padding: "3px 10px",
+         borderRadius: "999px",
+         fontSize: isDesktop ? "13px" : "12px",
+         lineHeight: 1.5,
+        }}
+       >
+        {value || "N/A"}
+       </span>
+      </div>
+     ))}
     </Typography>
 
     {price !== 0 && (
      <SemiSpan
       color="inherit"
-      style={{ fontSize: isDesktop ? "16px" : "13px" }}
+      style={{
+       fontSize: isDesktop ? "16px" : "13px",
+       display: "inline-block",
+       marginTop: "18px",
+      }}
      >
       {productStock > 0 ? `${productStock} Products Available` : "Stock Out"}
      </SemiSpan>

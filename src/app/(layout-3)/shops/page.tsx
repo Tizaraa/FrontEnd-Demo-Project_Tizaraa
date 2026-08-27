@@ -823,7 +823,7 @@ import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import Box from "@component/Box";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
+import Watermark from "@component/watermark/Watermark";
 import Image from "next/image";
 import NextImage from "@component/NextImage";
 import VendorMapPage from "@sections/shop/VendorMapPage";
@@ -1104,24 +1104,7 @@ export default function ShopList() {
 
  return (
   <>
-   <NextImage
-    alt="newArrivalBanner"
-    src={tizaraa_watermark}
-    priority
-    style={{
-     position: "fixed",
-     top: "50%",
-     left: "50%",
-     transform: "translate(-50%, -20%)",
-     width: "100%",
-     height: "auto",
-     maxWidth: "1200px",
-     backgroundSize: "contain",
-     backgroundPosition: "center",
-     opacity: 0.1,
-     zIndex: 0,
-    }}
-   />
+   <Watermark />
 
    <main style={{ position: "relative", background: "none" }}>
     <Fragment>

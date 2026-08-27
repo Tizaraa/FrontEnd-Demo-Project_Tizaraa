@@ -159,6 +159,7 @@ import Image from "next/image";
 import NextImage from "@component/NextImage";
 import PendingOrderRow from "@sections/customer-dashboard/orders/PendingOrderRow";
 import Loader from "@component/loader";
+import EmptyOrders from "@sections/customer-dashboard/orders/EmptyOrders";
 
 // const LoaderWrapper = styled.div`
 //   display: flex;
@@ -296,6 +297,15 @@ export default function OrderList() {
         {/* Render ToastContainer for toast notifications */}
         <DashboardPageHeader title="Pending Orders" iconName="bag" />
 
+        {orderList.length === 0 ? (
+          <EmptyOrders
+            title="No pending orders"
+            message="Nothing is waiting to be processed right now. New orders will appear here until they ship."
+            actionLabel="Continue Shopping"
+          />
+        ) : (
+        <>
+
         <Hidden down={769}>
           <TableRow
             boxShadow="none"
@@ -335,6 +345,8 @@ export default function OrderList() {
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
+        </>
+        )}
       </Fragment>
       {/* </main> */}
     </>

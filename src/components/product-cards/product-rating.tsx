@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "@lib/axiosClient";
 import NoReviews from "./no-reviews";
+import Rating from "@component/rating";
+import { productPageTheme as theme } from "@component/products/productPageTheme";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
@@ -22,7 +24,9 @@ const ProductRating = ({ productId }) => {
  }, [productId]);
 
  if (!ratingData) {
-  return <div>Loading...</div>;
+  return (
+   <div style={{ color: theme.muted, fontSize: "14px" }}>Loading ratings…</div>
+  );
  }
 
  const { average: rating_avarage, total: total_rating, per_rating: perrating } = ratingData;
@@ -36,97 +40,86 @@ const ProductRating = ({ productId }) => {
  }
 
  return (
-  <div
-   style={{
-    fontFamily: "Arial, sans-serif",
-   }}
-  >
-   <h3 style={{ marginBottom: "10px", fontSize: "1.2rem" }}>
+  <div style={{ paddingBottom: "20px", borderBottom: `1px solid ${theme.border}` }}>
+   <h3
+    style={{
+     margin: "0 0 16px",
+     fontSize: "16px",
+     fontWeight: 600,
+     color: theme.heading,
+    }}
+   >
     Ratings & Reviews
    </h3>
+
    <div
     style={{
      display: "flex",
-     gap: isSmallMobile ? "10px" : "20px",
+     gap: isSmallMobile ? "16px" : "32px",
      flexDirection: isMobilee ? "column" : "row",
+     alignItems: isMobilee ? "flex-start" : "center",
     }}
    >
-    <div style={{ marginBottom: "20px" }}>
+    {/* average score */}
+    <div style={{ minWidth: "120px" }}>
      <div
-      style={
-       {
-        // display: "flex",
-        // justifyContent: "center",
-        // alignItems: "center",
-        // gap: "10px",
-       }
-      }
+      style={{
+       fontSize: "36px",
+       fontWeight: 700,
+       lineHeight: 1.1,
+       color: theme.heading,
+      }}
      >
-      <div style={{ fontSize: "3rem", fontWeight: "bold" }}>
-       {rating_avarage?.toFixed(1)}/5
-      </div>
-      <div>
-       <div
-        style={{
-         display: "flex",
-         gap: "2px",
-         marginBottom: "5px",
-        }}
-       >
-        {Array(5)
-         .fill(null)
-         .map((_, index) => (
-          <span
-           key={index}
-           style={{
-            color: index < Math.round(rating_avarage) ? "#ffc107" : "#e4e5e9",
-            fontSize: "2rem",
-           }}
-          >
-           <FontAwesomeIcon icon={faStar} />
-          </span>
-         ))}
-       </div>
-       <div style={{ fontSize: "14px", color: "#555" }}>
-        {total_rating} {total_rating === 1 ? "Rating" : "Ratings"}
-       </div>
-      </div>
+      {rating_avarage?.toFixed(1)}
+      <span style={{ fontSize: "18px", color: theme.muted, fontWeight: 500 }}>
+       /5
+      </span>
+     </div>
+
+     {/* Same half-star rendering as the stars under the product title, so 2.5
+         shows as two and a half filled rather than rounding up to three. */}
+     <div style={{ margin: "8px 0 6px" }}>
+      <Rating value={rating_avarage} outof={5} color="warn" readOnly />
+     </div>
+
+     <div style={{ fontSize: "12.5px", color: theme.muted }}>
+      {total_rating} {total_rating === 1 ? "Rating" : "Ratings"}
      </div>
     </div>
-    <div
-     style={{
-      flexBasis: "100%",
-      maxWidth: "500px",
-      margin: "0 50px",
-     }}
-    >
+
+    {/* per-star breakdown */}
+    <div style={{ flex: 1, width: "100%", maxWidth: "420px" }}>
      {[5, 4, 3, 2, 1].map((stars) => (
       <div
        key={stars}
        style={{
         display: "flex",
         alignItems: "center",
-        marginBottom: "8px",
+        marginBottom: "7px",
         gap: "10px",
        }}
       >
-       <span style={{ display: "inline-flex", textAlign: "right" }}>
-        {Array.from({ length: stars }).map((_, index) => (
-         <FontAwesomeIcon
-          key={index}
-          icon={faStar}
-          style={{ color: "#ffc107", marginRight: "2px" }}
-         />
-        ))}
+       <span
+        style={{
+         display: "inline-flex",
+         alignItems: "center",
+         gap: "4px",
+         width: "34px",
+         fontSize: "12.5px",
+         color: "#6B7280",
+        }}
+       >
+        {stars}
+        <FontAwesomeIcon icon={faStar} style={{ color: "#ffc107" }} />
        </span>
 
        <div
         style={{
          flex: 1,
-         background: "#e4e5e9",
-         borderRadius: "4px",
+         background: theme.border,
+         borderRadius: "999px",
          overflow: "hidden",
-         height: "8px",
+         height: "6px",
         }}
        >
         <div
@@ -137,12 +130,21 @@ const ProductRating = ({ productId }) => {
          }}
         ></div>
        </div>
-       <span>{perrating[stars] || 0}</span>
+
+       <span
+        style={{
+         width: "24px",
+         textAlign: "right",
+         fontSize: "12.5px",
+         color: theme.muted,
+        }}
+       >
+        {perrating[stars] || 0}
+       </span>
       </div>
      ))}
     </div>
    </div>
-   <hr style={{ border: "0", borderTop: "1px solid #d3d3d3" }} />
   </div>
  );
 };

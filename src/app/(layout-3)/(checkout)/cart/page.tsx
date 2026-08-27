@@ -19,7 +19,7 @@ import authService from "services/authService";
 import { useRouter } from "next/navigation";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import NextImage from "@component/NextImage";
-import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
+import Watermark from "@component/watermark/Watermark";
 import axios from "@lib/axiosClient";
 import { AxiosError } from "axios";
 
@@ -185,22 +185,7 @@ export default function Cart() {
 
  return (
   <>
-   <NextImage
-    alt="watermark"
-    src={tizaraa_watermark}
-    priority
-    style={{
-     position: "fixed",
-     top: "50%",
-     left: "50%",
-     transform: "translate(-50%, -25%)",
-     width: "100%",
-     height: "auto",
-     maxWidth: "1200px",
-     opacity: 0.1,
-     zIndex: 0,
-    }}
-   />
+   <Watermark offsetY="-25%" />
    <main style={{ position: "relative", background: "none" }}>
     <Grid container spacing={6}>
      <Grid item lg={8} md={8} xs={12}>

@@ -360,6 +360,31 @@ const getB2BPrice = (quantity, b2bPricing) => {
  return applicablePricing.length > 0 ? applicablePricing[0].price : null;
 };
 
+// Seller's per-order limits for a cart item. max null means unlimited.
+const getOrderLimits = (cartItem: any): { min: number; max: number | null } => {
+ const min = Math.max(1, Number(cartItem?.minOrderQty ?? 1) || 1);
+ const rawMax = cartItem?.maxOrderQty;
+ let max =
+  rawMax === null || rawMax === undefined || rawMax === ""
+   ? null
+   : Number(rawMax);
+
+ if (max !== null && (!Number.isFinite(max) || max < min)) {
+  max = max !== null && Number.isFinite(max) ? min : null;
+ }
+
+ return { min, max };
+};
+
+// Returns an error message when qty breaks the seller's limits, otherwise null.
+const checkOrderLimits = (cartItem: any, qty: number): string | null => {
+ const { min, max } = getOrderLimits(cartItem);
+
+ if (qty < min) return `Minimum order quantity is ${min}.`;
+ if (max !== null && qty > max) return `Maximum order quantity is ${max}.`;
+ return null;
+};
+
 // Helper functions
 const updateCartItem = (cart: any[], cartItem: any) => {
  const exist = cart.find((item) => item.id === cartItem.id);
@@ -367,6 +392,15 @@ const updateCartItem = (cart: any[], cartItem: any) => {
  if (cartItem.qty > cartItem.productStock) {
   //toast.error("Out of Stock");// Display toast message
   return cartItem; // Do not update the cart
+ }
+
+ // Seller's per-order limits — qty 0 or less is a removal, handled further down
+ if (cartItem.qty > 0) {
+  const limitError = checkOrderLimits(cartItem, cartItem.qty);
+  if (limitError) {
+   toast.error(limitError);
+   return cart; // Leave the cart untouched
+  }
  }
 
  // Calculate the price based on quantity and B2B pricing if available
@@ -417,6 +451,12 @@ const updateCartItem = (cart: any[], cartItem: any) => {
 const updateBuyNowItem = (cartItem: any) => {
  if (cartItem.qty > cartItem.productStock) {
   toast.error("Out of Stock");
+  return null;
+ }
+
+ const limitError = checkOrderLimits(cartItem, cartItem.qty);
+ if (limitError) {
+  toast.error(limitError);
   return null;
  }
 

@@ -13,7 +13,7 @@ import Box from "@component/Box";
 import { MdLocationSearching } from "react-icons/md";
 import useWindowSize from "@hook/useWindowSize";
 import { ProductCard1 } from "@component/product-cards";
-import tizaraa_watermark from "../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
+import Watermark from "@component/watermark/Watermark";
 import NextImage from "@component/NextImage";
 
 const mapContainerStyle = {
@@ -298,24 +298,7 @@ export default function LocationList() {
 
  return (
   <>
-   <NextImage
-    alt="newArrivalBanner"
-    src={tizaraa_watermark}
-    priority
-    style={{
-     position: "fixed",
-     top: "50%",
-     left: "50%",
-     transform: "translate(-50%, -20%)",
-     width: "100%",
-     height: "auto",
-     maxWidth: "1200px",
-     backgroundSize: "contain",
-     backgroundPosition: "center",
-     opacity: 0.1,
-     zIndex: 0,
-    }}
-   />
+   <Watermark />
 
    <main style={{ position: "relative", background: "none" }}>
     <Fragment>

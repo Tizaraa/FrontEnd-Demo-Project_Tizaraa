@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import useFetcher from "@hook/useFetcher";
+import { productPageTheme as theme } from "@component/products/productPageTheme";
 
 interface ProductDetails {
  product_name: string;
@@ -68,10 +69,9 @@ export default function ResponsiveCategory({
  }, [slug, data]);
 
  const containerStyle: React.CSSProperties = {
-  fontFamily: "Arial, sans-serif",
-  padding: "10px",
-  backgroundColor: "#F6F9FC",
-  borderRadius: "5px",
+  maxWidth: theme.maxWidth,
+  margin: "0 auto",
+  padding: "16px 4px 12px",
  };
 
  const breadcrumbStyle: React.CSSProperties = {
@@ -90,15 +90,15 @@ export default function ResponsiveCategory({
  };
 
  const linkStyle: React.CSSProperties = {
-  color: "#000",
+  color: theme.heading,
   textDecoration: "none",
-  fontSize: "14px",
-  fontWeight: "bold",
+  fontSize: "13.5px",
+  fontWeight: 600,
  };
 
  const currentPageStyle: React.CSSProperties = {
-  color: "#6c757d",
-  fontSize: "14px",
+  color: theme.muted,
+  fontSize: "13.5px",
  };
 
  const toggleStyle: React.CSSProperties = {
@@ -106,10 +106,10 @@ export default function ResponsiveCategory({
   alignItems: "center",
   background: "none",
   border: "none",
-  color: "#ff8c00",
+  color: theme.accent,
   cursor: "pointer",
-  fontSize: "14px",
-  padding: "5px",
+  fontSize: "13.5px",
+  padding: "5px 0",
  };
 
  const renderBreadcrumbs = () => {
@@ -133,7 +133,7 @@ export default function ResponsiveCategory({
     {breadcrumbItems.map((crumb, index) => (
      <li key={index} style={itemStyle}>
       {index > 0 && (
-       <ChevronRight size={16} style={{ color: "#6c757d", margin: "0 5px" }} />
+       <ChevronRight size={16} style={{ color: theme.muted, margin: "0 5px" }} />
       )}
       <a href={crumb.href} style={linkStyle}>
        {crumb.label}
@@ -142,7 +142,7 @@ export default function ResponsiveCategory({
     ))}
     {productDetails && (
      <>
-      <ChevronRight size={16} style={{ color: "#6c757d", margin: "0 5px" }} />
+      <ChevronRight size={16} style={{ color: theme.muted, margin: "0 5px" }} />
       <span style={currentPageStyle}>{productDetails.product_name}</span>
      </>
     )}

@@ -268,6 +268,8 @@ type AddToCartButtonProps = {
  discountPrice?: number;
  price?: any;
  productStock: number;
+ minOrderQty?: number;
+ maxOrderQty?: number | null;
  slug?: string;
  productType: string;
  sizeColor?: {
@@ -294,6 +296,8 @@ const AddToCartButton = ({
  discountPrice,
  price,
  productStock,
+ minOrderQty,
+ maxOrderQty,
  slug,
  productType,
  sizeColor,
@@ -343,10 +347,30 @@ const AddToCartButton = ({
  //   }
 
  //   setQuantity(amount);
+ // Seller's per-order limits — max null/undefined means unlimited
+ const minQty = Math.max(1, Number(minOrderQty ?? 1) || 1);
+ const maxQty =
+  maxOrderQty === null || maxOrderQty === undefined
+   ? null
+   : Math.max(minQty, Number(maxOrderQty));
+
+ // Highest quantity the buyer may pick: capped by both stock and the seller's max
+ const qtyCeiling = maxQty === null ? productStock : Math.min(maxQty, productStock);
+
  const handleCartAmountChange = (amount: number): boolean => {
   if (amount > productStock) {
    toast.error("Out of Stock");
    return false; // indicate failure
+  }
+
+  if (amount < minQty) {
+   toast.error(`Minimum order quantity is ${minQty}.`);
+   return false;
+  }
+
+  if (maxQty !== null && amount > maxQty) {
+   toast.error(`Maximum order quantity is ${maxQty}.`);
+   return false;
   }
 
   if (setCurrentQuantity) {
@@ -365,6 +389,8 @@ const AddToCartButton = ({
     name: title,
     imgUrl: images[0],
     productStock: productStock,
+    minOrderQty: minQty,
+    maxOrderQty: maxQty,
     id: uniqueKey,
     discountPrice,
     slug,
@@ -387,17 +413,28 @@ const AddToCartButton = ({
   e: React.ChangeEvent<HTMLInputElement>,
   product: any
  ) => {
-  const newQty = Math.min(
-   product.productStock,
-   Math.max(1, parseInt(e.target.value))
-  );
-  if (newQty > product.productStock) {
-   toast.error("Out of Stock");
-   return;
+  const typed = parseInt(e.target.value);
+  if (Number.isNaN(typed)) return;
+
+  // Clamp into [minQty, min(maxQty, stock)] so typing can't beat the stepper
+  const newQty = Math.min(qtyCeiling, Math.max(minQty, typed));
+
+  if (typed > qtyCeiling) {
+   toast.error(
+    maxQty !== null && maxQty <= product.productStock
+     ? `Maximum order quantity is ${maxQty}.`
+     : "Out of Stock"
+   );
   }
+
   dispatch({
    type: "CHANGE_CART_AMOUNT",
-   payload: { ...product, qty: newQty },
+   payload: {
+    ...product,
+    qty: newQty,
+    minOrderQty: minQty,
+    maxOrderQty: maxQty,
+   },
   });
  };
 
@@ -460,7 +497,8 @@ const AddToCartButton = ({
   // 3. Add product to cart
   setIsLoading(true);
   setTimeout(() => {
-   const success = handleCartAmountChange(1);
+   // Start at the seller's minimum, not a hardcoded 1
+   const success = handleCartAmountChange(minQty);
    setIsLoading(false);
 
    if (success) {
@@ -495,7 +533,7 @@ const AddToCartButton = ({
       color="primary"
       variant="outlined"
       onClick={() => handleCartAmountChange(cartItem.qty - 1)}
-      disabled={cartItem.qty <= 1}
+      disabled={cartItem.qty <= minQty}
      >
       <Icon variant="small">minus</Icon>
      </Button>
@@ -511,7 +549,8 @@ const AddToCartButton = ({
       className="no-spin-button"
       type="number"
       value={cartItem.qty}
-      min={1}
+      min={minQty}
+      max={qtyCeiling}
       onChange={(e) => handleInputChange(e, cartItem)}
       style={{
        textDecoration: "none",
@@ -530,9 +569,16 @@ const AddToCartButton = ({
       color="primary"
       variant="outlined"
       onClick={() => handleCartAmountChange(cartItem.qty + 1)}
+      disabled={cartItem.qty >= qtyCeiling}
      >
       <Icon variant="small">plus</Icon>
      </Button>
+
+     {maxQty !== null && (
+      <span style={{ fontSize: "12px", color: "#7A8A99" }}>
+       Max {maxQty} per order
+      </span>
+     )}
     </FlexBox>
    )}
   </Styledbutton>

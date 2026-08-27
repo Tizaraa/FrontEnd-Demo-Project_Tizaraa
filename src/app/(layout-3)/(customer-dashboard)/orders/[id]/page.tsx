@@ -123,6 +123,8 @@ export default function OrderDetails({ params }: IDParams) {
      images: [],
     }));
 
+    const isCancelled = raw.order_status === "cancelled";
+
     const adapted = {
      Order: {
       invoice_id: raw.invoice_no,
@@ -155,8 +157,14 @@ export default function OrderDetails({ params }: IDParams) {
         delivered_at: raw.delivered_at ?? null,
         status: formatStatus(raw.order_status),
         delivery_charge: raw.shipping_amount,
-        sub_total: raw.subtotal,
-        total: raw.total_amount,
+        // A cancelled order has nothing live left, so subtotal and total_amount read
+        // 0.00 when the items were cancelled one at a time and the full charge when
+        // the order went at once. The summary shows what was charged instead, which
+        // is the same rule the list rows follow.
+        sub_total: isCancelled
+         ? raw.original_subtotal ?? raw.subtotal
+         : raw.subtotal,
+        total: isCancelled ? raw.original_total ?? raw.total_amount : raw.total_amount,
         promocodeStatus: (raw.discount_amount > 0 || raw.promo_code) ? 1 : 0,
         isAbroad: false,
         order_items: orderItems,
@@ -335,36 +343,6 @@ export default function OrderDetails({ params }: IDParams) {
      </div>
 
 
-     <Box mt="1rem" textAlign="center">
-      <Button
-       variant="text"
-       color="primary"
-       onClick={() => toggleSummary(order?.Order?.invoice_id)}
-       style={{
-        padding: "0.5rem 1rem",
-        backgroundColor: "#FFE1E6",
-        color: "#E94560",
-        borderRadius: "300px",
-        textAlign: "center",
-        height: "40px",
-        marginRight: "20px",
-        marginTop: "-20px",
-        minWidth: "200px",
-       }}
-      >
-       {openSummaries[order?.Order?.invoice_id] ? (
-        <>
-         Total Summary{" "}
-         <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "8px" }} />
-        </>
-       ) : (
-        <>
-         Total Summary{" "}
-         <FontAwesomeIcon icon={faCaretDown} style={{ marginLeft: "8px" }} />
-        </>
-       )}
-      </Button>
-     </Box>
     </div>
     {order?.Order?.items?.order_items?.map((item, index) => (
      <WriteReview
@@ -380,6 +358,35 @@ export default function OrderDetails({ params }: IDParams) {
       return_status={order?.Order?.items?.order_items?.return_status}
      />
     ))}
+
+    <FlexBox mt="1rem" justifyContent="center">
+     <Button
+      variant="text"
+      color="primary"
+      onClick={() => toggleSummary(order?.Order?.invoice_id)}
+      style={{
+       padding: "0.5rem 1rem",
+       backgroundColor: "#FFE1E6",
+       color: "#E94560",
+       borderRadius: "300px",
+       textAlign: "center",
+       height: "40px",
+       minWidth: "200px",
+      }}
+     >
+      {openSummaries[order?.Order?.invoice_id] ? (
+       <>
+        Total Summary{" "}
+        <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "8px" }} />
+       </>
+      ) : (
+       <>
+        Total Summary{" "}
+        <FontAwesomeIcon icon={faCaretDown} style={{ marginLeft: "8px" }} />
+       </>
+      )}
+     </Button>
+    </FlexBox>
 
     {openSummaries[order?.Order?.invoice_id] && (
      <Box p="20px" borderRadius={8} mt="1rem">
@@ -799,42 +806,6 @@ export default function OrderDetails({ params }: IDParams) {
              </div>
 
 
-             <Box mt="1rem" textAlign="center">
-              <Button
-               variant="text"
-               color="primary"
-               onClick={() => toggleSummary(shopName)}
-               style={{
-                padding: "0.5rem 1rem",
-                backgroundColor: "#FFE1E6",
-                color: "#E94560",
-                borderRadius: "300px",
-                textAlign: "center",
-                height: "40px",
-                marginRight: "20px",
-                marginTop: "-20px",
-                minWidth: "200px",
-               }}
-              >
-               {openSummaries[shopName] ? (
-                <>
-                 Total Summary{" "}
-                 <FontAwesomeIcon
-                  icon={faCaretUp}
-                  style={{ marginLeft: "8px" }}
-                 />
-                </>
-               ) : (
-                <>
-                 Total Summary{" "}
-                 <FontAwesomeIcon
-                  icon={faCaretDown}
-                  style={{ marginLeft: "8px" }}
-                 />
-                </>
-               )}
-              </Button>
-             </Box>
             </div>
 
             {details?.order_items?.map((item, ind) => (
@@ -975,6 +946,35 @@ export default function OrderDetails({ params }: IDParams) {
               )}
              </Box>
             ))}
+
+            <FlexBox mt="1rem" justifyContent="center">
+             <Button
+              variant="text"
+              color="primary"
+              onClick={() => toggleSummary(shopName)}
+              style={{
+               padding: "0.5rem 1rem",
+               backgroundColor: "#FFE1E6",
+               color: "#E94560",
+               borderRadius: "300px",
+               textAlign: "center",
+               height: "40px",
+               minWidth: "200px",
+              }}
+             >
+              {openSummaries[shopName] ? (
+               <>
+                Total Summary{" "}
+                <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "8px" }} />
+               </>
+              ) : (
+               <>
+                Total Summary{" "}
+                <FontAwesomeIcon icon={faCaretDown} style={{ marginLeft: "8px" }} />
+               </>
+              )}
+             </Button>
+            </FlexBox>
 
             {openSummaries[shopName] && (
              <Box p="20px" borderRadius={8} mt="1rem">
@@ -1174,15 +1174,20 @@ export default function OrderDetails({ params }: IDParams) {
      </Card>
 
      <div style={{ display: "flex", gap: "20px" }}>
-      {/* <Button
-              px="2rem"
-              color="primary"
-              bg="primary.light"
-              mt="2rem"
-              onClick={fetchInvoice} // Fetch invoice when button is clicked
-            >
-              {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
-            </Button> */}
+      {/* =========== Invoice ==========
+          Only once the order is delivered — there is nothing to invoice while it is
+          still pending, and a cancelled order has no delivery to bill for. */}
+      {order.Order.isDelivered && (
+       <Button
+        px="2rem"
+        color="primary"
+        bg="primary.light"
+        mt="2rem"
+        onClick={fetchInvoice}
+       >
+        {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
+       </Button>
+      )}
 
       {/* {order.Order.payment_status === "Unpaid" && (
              <Button

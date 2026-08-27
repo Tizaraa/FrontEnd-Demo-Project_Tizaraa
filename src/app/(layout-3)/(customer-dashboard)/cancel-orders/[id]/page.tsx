@@ -157,8 +157,11 @@ export default function OrderDetails({ params }: IDParams) {
         delivered_at: raw.delivered_at ?? null,
         status: formatStatus(raw.order_status),
         delivery_charge: raw.shipping_amount,
-        sub_total: raw.subtotal,
-        total: raw.total_amount,
+        // Every order on this page is cancelled, so subtotal and total_amount are the
+        // rebuilt figures — 0.00 when the items went one at a time, the full charge
+        // when the order went at once. Show what was charged, as the rows do.
+        sub_total: raw.original_subtotal ?? raw.subtotal,
+        total: raw.original_total ?? raw.total_amount,
         promocodeStatus: (raw.discount_amount > 0 || raw.promo_code) ? 1 : 0,
         isAbroad: false,
         order_items: orderItems,

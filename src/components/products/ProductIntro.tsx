@@ -3,7 +3,8 @@ import { useParams } from "next/navigation";
 import Box from "@component/Box";
 import Grid from "@component/grid/Grid";
 import { useAppContext } from "@context/app-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "@lib/axiosClient";
 import ProductImages from "./ProductImages";
 import AddToCartButton from "./AddToCartButton";
 import ProductDetails from "./ProductDetails";
@@ -25,6 +26,8 @@ type ProductIntroProps = {
  replacewarranty: string;
  rating: number;
  productStock: number;
+ minOrderQty?: number;
+ maxOrderQty?: number | null;
  slug?: string;
  productId: string | number;
  sellerId: string | number;
@@ -54,6 +57,8 @@ export default function ProductIntro({
  totalDiscount,
  slug,
  productStock,
+ minOrderQty,
+ maxOrderQty,
  productId,
  sellerId,
  sizeColor,
@@ -67,6 +72,35 @@ export default function ProductIntro({
  const [selectedColor, setSelectedColor] = useState<string | null>(null);
  const [selectedSize, setSelectedSize] = useState<string | null>(null);
  const [selectedPrice, setSelectedPrice] = useState<number>(price);
+
+ // The stars under the title come from the same stats the Review tab shows, so
+ // the two never disagree.
+ const [reviewStats, setReviewStats] = useState<{
+  average: number;
+  total: number;
+ } | null>(null);
+
+ useEffect(() => {
+  let active = true;
+
+  axios
+   .get(`products/${productId}/reviews`)
+   .then((response) => {
+    if (!active) return;
+    const stats = response.data?.stats;
+    setReviewStats({
+     average: Number(stats?.average) || 0,
+     total: Number(stats?.total) || 0,
+    });
+   })
+   .catch(() => {
+    if (active) setReviewStats(null);
+   });
+
+  return () => {
+   active = false;
+  };
+ }, [productId]);
 
  const handleSelectionChange = (
   color: string | null,
@@ -91,7 +125,8 @@ export default function ProductIntro({
       price={price}
       discountPrice={discountPrice}
       totalDiscount={totalDiscount}
-      rating={rating}
+      rating={reviewStats ? reviewStats.average : rating}
+      reviewCount={reviewStats?.total}
       productStock={productStock}
       sellerShopName={sellerShopName}
       sellerShopLogo={sellerShopLogo}
@@ -140,7 +175,8 @@ export default function ProductIntro({
        </Link>
       </Box>
      ) : (
-      <AddToCartButton
+      <Box mt="1.5rem">
+       <AddToCartButton
        productId={productId}
        variantId={""}
        sellerId={sellerId}
@@ -149,13 +185,16 @@ export default function ProductIntro({
        discountPrice={discountPrice}
        slug={slug}
        productStock={productStock}
+       minOrderQty={minOrderQty}
+       maxOrderQty={maxOrderQty}
        price={price}
        productType="General"
        sizeColor={sizeColor}
        selectedColor={selectedColor}
        selectedSize={selectedSize}
        selectedPrice={selectedPrice}
-      />
+       />
+      </Box>
      )}
     </Grid>
    </Grid>

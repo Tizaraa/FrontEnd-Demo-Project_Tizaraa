@@ -357,7 +357,7 @@ import useWindowSize from "@hook/useWindowSize";
 import Typography, { H5, Paragraph } from "@component/Typography";
 import BeatLoader from "react-spinners/BeatLoader";
 import NextImage from "@component/NextImage";
-import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
+import Watermark from "@component/watermark/Watermark";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 const productsPerPage = 10;
@@ -567,22 +567,7 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
  // ===== Render =====
  return (
   <>
-   <NextImage
-    alt="watermark"
-    src={tizaraa_watermark}
-    priority
-    style={{
-     position: "fixed",
-     top: "50%",
-     left: "50%",
-     transform: "translate(-50%, -20%)",
-     width: "100%",
-     height: "auto",
-     maxWidth: "1200px",
-     opacity: 0.1,
-     zIndex: 0,
-    }}
-   />
+   <Watermark />
 
    <main style={{ position: "relative", background: "none" }}>
     {/* Campaign Banner/Info */}

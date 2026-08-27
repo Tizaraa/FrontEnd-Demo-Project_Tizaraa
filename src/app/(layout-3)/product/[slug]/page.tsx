@@ -177,7 +177,7 @@ import { Metadata } from "next";
 import ProductDetails from "./ProductDetails";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import ResponsiveCategory from "./ResponsiveCategory";
-import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png";
+import Watermark from "@component/watermark/Watermark";
 import NextImage from "@component/NextImage";
 import LoadingSkeleton from "./loading"; // Import your loading component directly
 
@@ -300,24 +300,7 @@ export default async function ProductDetailsPage({ params }: Props) {
   return (
     <>
       {/* Background image loads immediately */}
-      <NextImage
-        alt="newArrivalBanner"
-        src={tizaraa_watermark}
-        priority
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -20%)",
-          width: "100%",
-          height: "auto",
-          maxWidth: "1200px",
-          backgroundSize: "contain",
-          backgroundPosition: "center",
-          opacity: 0.1,
-          zIndex: 0,
-        }}
-      />
+      <Watermark />
 
       <Suspense fallback={<LoadingSkeleton />}>
         <ProductContent slug={slug} />
