@@ -148,7 +148,7 @@ import { IconButton } from "@component/buttons";
 import Typography, { H5, Small } from "@component/Typography";
 import Icon from "@component/icon/Icon";
 import { currency } from "@utils/utils";
-import { buildStatusBuckets } from "./orderRowStatus";
+import { buildStatusBuckets, rowTotal } from "./orderRowStatus";
 
 // =================================================
 type OrderRowProps = { order: any };
@@ -263,7 +263,7 @@ export default function OrderRow({ order }: OrderRowProps) {
        color="rgb(51, 51, 51)"
        flex="1 1 0"
       >
-       {currency(order.amount)}
+       {currency(rowTotal(order))}
       </Typography>
      </MainLine>
 
