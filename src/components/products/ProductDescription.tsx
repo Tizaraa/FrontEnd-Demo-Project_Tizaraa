@@ -22,6 +22,7 @@
 // }
 
 import React, { useState } from "react";
+import { productPageTheme } from "./productPageTheme";
 
 interface ProductDescriptionProps {
  description: string;
@@ -37,9 +38,36 @@ export default function ProductDescription({
  const shortDescription = words.slice(0, 214).join(" ");
 
  return (
-  <div>
+  // Same panel the Review tab uses, so switching tabs does not change the frame.
+  <div
+   style={{
+    width: "100%",
+    maxWidth: productPageTheme.maxWidth,
+    boxSizing: "border-box",
+    padding: "20px",
+    backgroundColor: productPageTheme.surface,
+    border: `1px solid ${productPageTheme.border}`,
+    borderRadius: "10px",
+   }}
+  >
+   <h3
+    style={{
+     margin: "0 0 16px",
+     fontSize: "16px",
+     fontWeight: 600,
+     color: productPageTheme.heading,
+    }}
+   >
+    Product Description
+   </h3>
+
    <div
     className="product-description-content"
+    style={{
+     fontSize: "14px",
+     lineHeight: 1.7,
+     color: productPageTheme.body,
+    }}
     dangerouslySetInnerHTML={{
      __html: (isExpanded ? description : shortDescription)
       .replace(/<img /g, `<img style="max-width: 100%; height: auto;" `)
@@ -57,18 +85,16 @@ export default function ProductDescription({
     >
      <button
       style={{
-       backgroundColor: "#e94560",
+       backgroundColor: productPageTheme.accent,
        color: "white",
-       padding: "10px 20px",
-       borderRadius: "8px",
+       padding: "9px 22px",
+       borderRadius: "999px",
        border: "none",
+       fontSize: "13px",
+       fontWeight: 600,
        cursor: "pointer",
-       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-       transition: "background-color 0.3s",
       }}
       onClick={() => setIsExpanded(!isExpanded)}
-      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#e94560")}
-      onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#e94560")}
      >
       {isExpanded ? "Show Less" : "Show More"}
      </button>

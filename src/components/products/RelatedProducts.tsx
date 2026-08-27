@@ -209,6 +209,7 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 import Image from "next/image";
 import axios from "axios";
 import styles from "./RelatedProductsStyle.module.css";
+import { sectionTitleStyle } from "./productPageTheme";
 
 const LoaderWrapper = styled.div`
  display: flex;
@@ -251,7 +252,7 @@ const RelatedProducts = ({ productId }: RelatedProductsProps) => {
 
  return (
   <Box my="2rem">
-   <h2>Related Products</h2>
+   <h2 style={sectionTitleStyle}>Related Products</h2>
    <FlexBox className={styles.productList}>
     {loading ? (
      <LoaderWrapper>

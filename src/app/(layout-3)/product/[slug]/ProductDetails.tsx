@@ -98,7 +98,7 @@
 //        width: "30px",
 //        height: "30px",
 //        marginRight: "10px",
-//        backgroundColor: "#E94560",
+//        backgroundColor: theme.accent,
 //        borderRadius: "50%",
 //        display: "flex",
 //        justifyContent: "center",
@@ -122,7 +122,7 @@
 //       style={{
 //        marginLeft: "10px",
 //        fontSize: "10px",
-//        color: "#E94560",
+//        color: theme.accent,
 //        background: "none",
 //        border: "none",
 //        textDecoration: "underline",
@@ -171,7 +171,7 @@
 //         <button
 //          onClick={() => setShowDeliveryChart(false)}
 //          style={{
-//           background: "#E94560",
+//           background: theme.accent,
 //           border: "none",
 //           fontSize: "18px",
 //           cursor: "pointer",
@@ -212,7 +212,7 @@
 //         style={{
 //          marginTop: "15px",
 //          fontSize: "12px",
-//          color: "#E94560",
+//          color: theme.accent,
 //         }}
 //        >
 //         * Delivery charges are calculated based on the total weight of your
@@ -294,7 +294,7 @@
 //        width: "30px",
 //        height: "30px",
 //        marginRight: "10px",
-//        backgroundColor: "#E94560",
+//        backgroundColor: theme.accent,
 //        borderRadius: "50%",
 //        display: "flex",
 //        justifyContent: "center",
@@ -338,7 +338,7 @@
 //        width: "30px",
 //        height: "30px",
 //        marginRight: "10px",
-//        backgroundColor: "#E94560",
+//        backgroundColor: theme.accent,
 //        borderRadius: "50%",
 //        display: "flex",
 //        justifyContent: "center",
@@ -428,7 +428,7 @@
 //          width: "30px",
 //          height: "30px",
 //          marginRight: "10px",
-//          backgroundColor: "#E94560",
+//          backgroundColor: theme.accent,
 //          borderRadius: "50%",
 //          display: "flex",
 //          justifyContent: "center",
@@ -468,7 +468,7 @@
 //        href={`/shops/${shopUrl}`}
 //        style={{
 //         color: "#fff",
-//         backgroundColor: "#E94560",
+//         backgroundColor: theme.accent,
 //         textDecoration: "none",
 //         cursor: "pointer",
 //         display: "inline-block",
@@ -736,6 +736,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import DOMPurify from "dompurify";
 import ResponsiveCategory from "./ResponsiveCategory";
 import ProductIntro from "@component/products/ProductIntro";
+import { productPageTheme as theme } from "@component/products/productPageTheme";
 import RelatedProducts from "@component/products/RelatedProducts";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { SemiSpan } from "@component/Typography";
@@ -793,59 +794,61 @@ const ShippingInfo: React.FC<{
 }) => {
     const [showDeliveryChart, setShowDeliveryChart] = useState(false);
 
+    // One set of styles for the four info blocks, so the card reads as one list
+    // instead of four hand-tuned ones.
+    const sectionStyle: React.CSSProperties = {
+      padding: "14px 0",
+      borderTop: `1px solid ${theme.border}`,
+    };
+    const headingStyle: React.CSSProperties = {
+      fontSize: "11px",
+      fontWeight: 700,
+      letterSpacing: "0.06em",
+      textTransform: "uppercase",
+      margin: "0 0 8px",
+      color: theme.muted,
+    };
+    const rowStyle: React.CSSProperties = {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+    };
+    const iconStyle = (active = true): React.CSSProperties => ({
+      width: "28px",
+      height: "28px",
+      flexShrink: 0,
+      backgroundColor: active ? theme.accent : "#C7CCD4",
+      borderRadius: "50%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      color: "white",
+      fontSize: "13px",
+    });
+    const textStyle: React.CSSProperties = {
+      fontSize: "13.5px",
+      color: theme.body,
+      lineHeight: 1.5,
+    };
+
     return (
       <div
         style={{
           fontFamily: "__Open_Sans_9c011f, __Open_Sans_Fallback_9c011f",
           maxWidth: "400px",
           margin: "0 auto",
-          padding: "20px",
+          padding: "4px 18px 18px",
           boxSizing: "border-box",
-          backgroundColor: "#f9f9f9",
-          borderRadius: "8px",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          backgroundColor: "#FAFBFC",
+          borderRadius: "10px",
+          border: `1px solid ${theme.border}`,
         }}
       >
-        <div style={{ marginBottom: "20px" }}>
-          <h2
-            style={{
-              fontSize: "14px",
-              fontWeight: "bold",
-              marginBottom: "10px",
-              color: "#333",
-            }}
-          >
-            Shipping
-          </h2>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "10px",
-            }}
-          >
-            <span
-              style={{
-                width: "30px",
-                height: "30px",
-                marginRight: "10px",
-                backgroundColor: "#E94560",
-                borderRadius: "50%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                color: "white",
-                fontSize: "14px",
-              }}
-            >
-              🚚
-            </span>
-            <span
-              style={{
-                fontSize: "14px",
-                color: "#555",
-              }}
-            >
+        <div style={{ ...sectionStyle, borderTop: "none" }}>
+          <h2 style={headingStyle}>Shipping</h2>
+          <div style={rowStyle}>
+            <span style={iconStyle()}>🚚</span>
+            <span style={textStyle}>
               {String(delivery_type) === "1"
                 ? "Courier Delivery"
                 : String(delivery_type) === "2"
@@ -857,13 +860,15 @@ const ShippingInfo: React.FC<{
             <button
               onClick={() => setShowDeliveryChart(true)}
               style={{
-                marginLeft: "10px",
-                fontSize: "10px",
-                color: "#E94560",
+                marginLeft: "auto",
+                padding: 0,
+                fontSize: "11px",
+                color: theme.accent,
                 background: "none",
                 border: "none",
                 textDecoration: "underline",
                 cursor: "pointer",
+                whiteSpace: "nowrap",
               }}
             >
               Price Chart for Delivery
@@ -908,7 +913,7 @@ const ShippingInfo: React.FC<{
                   <button
                     onClick={() => setShowDeliveryChart(false)}
                     style={{
-                      background: "#E94560",
+                      background: theme.accent,
                       border: "none",
                       fontSize: "18px",
                       cursor: "pointer",
@@ -949,7 +954,7 @@ const ShippingInfo: React.FC<{
                   style={{
                     marginTop: "15px",
                     fontSize: "12px",
-                    color: "#E94560",
+                    color: theme.accent,
                   }}
                 >
                   * Delivery charges are calculated based on the total weight of your
@@ -961,46 +966,11 @@ const ShippingInfo: React.FC<{
         </div>
 
         {/* express delivery  */}
-        <div style={{ marginBottom: "20px" }}>
-          <h2
-            style={{
-              fontSize: "14px",
-              fontWeight: "bold",
-              marginBottom: "10px",
-              color: "#333",
-            }}
-          >
-            Express Delivery
-          </h2>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "10px",
-            }}
-          >
-            <span
-              style={{
-                width: "30px",
-                height: "30px",
-                marginRight: "10px",
-                backgroundColor: express_deliverey === 1 ? "#E94560" : "#ccc",
-                borderRadius: "50%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                color: "white",
-                fontSize: "14px",
-              }}
-            >
-              🚚
-            </span>
-            <span
-              style={{
-                fontSize: "14px",
-                color: "#555",
-              }}
-            >
+        <div style={sectionStyle}>
+          <h2 style={headingStyle}>Express Delivery</h2>
+          <div style={rowStyle}>
+            <span style={iconStyle(express_deliverey === 1)}>🚚</span>
+            <span style={textStyle}>
               {express_deliverey === 1
                 ? "Express Delivery is possible!"
                 : "Express Delivery is not available."}
@@ -1008,98 +978,28 @@ const ShippingInfo: React.FC<{
           </div>
         </div>
 
-        <div style={{ marginBottom: "20px" }}>
-          <h2
-            style={{
-              fontSize: "14px",
-              fontWeight: "bold",
-              marginBottom: "10px",
-              color: "#333",
-            }}
-          >
-            Payments
-          </h2>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "10px",
-            }}
-          >
-            <span
-              style={{
-                width: "30px",
-                height: "30px",
-                marginRight: "10px",
-                backgroundColor: "#E94560",
-                borderRadius: "50%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                color: "white",
-                fontSize: "14px",
-              }}
-            >
-              🎧
-            </span>
-            <span
-              style={{
-                fontSize: "14px",
-                color: "#555",
-              }}
-            >
+        <div style={sectionStyle}>
+          <h2 style={headingStyle}>Payments</h2>
+          <div style={rowStyle}>
+            <span style={iconStyle()}>🎧</span>
+            <span style={textStyle}>
               Contact us 24 hours a day, 7 days a week.
             </span>
           </div>
         </div>
 
-        <div style={{ marginBottom: "10px" }}>
-          <h2
-            style={{
-              fontSize: "14px",
-              fontWeight: "bold",
-              marginBottom: "10px",
-              color: "#333",
-            }}
-          >
-            Returns & Refunds
-          </h2>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <span
-              style={{
-                width: "30px",
-                height: "30px",
-                marginRight: "10px",
-                backgroundColor: "#E94560",
-                borderRadius: "50%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                color: "white",
-                fontSize: "14px",
-                padding: "5px 10px",
-              }}
-            >
-              💳
-            </span>
-            <span
-              style={{
-                fontSize: "14px",
-                color: "#555",
-              }}
-            >
+        <div style={sectionStyle}>
+          <h2 style={headingStyle}>Returns & Refunds</h2>
+          <div style={rowStyle}>
+            <span style={iconStyle()}>💳</span>
+            <span style={textStyle}>
               Eligible for refunds within 30 days of receiving products.
             </span>
           </div>
         </div>
 
         {qrCodeUrl && (
-          <div style={{ textAlign: "center" }}>
+          <div style={{ ...sectionStyle, textAlign: "center" }}>
             <div
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(qrCodeUrl),
@@ -1113,12 +1013,7 @@ const ShippingInfo: React.FC<{
                 display: "inline-block",
               }}
             ></div>
-            <p
-              style={{
-                fontSize: "14px",
-                color: "#555",
-              }}
-            >
+            <p style={{ ...textStyle, fontSize: "12.5px", margin: 0 }}>
               Scan this QR code for product information
             </p>
           </div>
@@ -1126,21 +1021,22 @@ const ShippingInfo: React.FC<{
 
         <div
           style={{
-            backgroundColor: "#fff",
-            borderRadius: "5px",
+            backgroundColor: theme.surface,
+            border: `1px solid ${theme.border}`,
+            borderRadius: theme.radiusSmall,
+            padding: "12px",
+            marginTop: "14px",
           }}
         >
-          <h3
+          <h3 style={headingStyle}>Sold By</h3>
+          <div
             style={{
-              fontSize: "14px",
-              fontWeight: "bold",
-              marginBottom: "5px",
-              color: "#333",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "10px",
             }}
           >
-            Sold By
-          </h3>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div
               style={{
                 display: "flex",
@@ -1152,11 +1048,12 @@ const ShippingInfo: React.FC<{
                   src={sellerShopLogo}
                   alt="Seller Shop Logo"
                   style={{
-                    width: "60px",
-                    height: "60px",
+                    width: "40px",
+                    height: "40px",
                     marginRight: "10px",
                     borderRadius: "50%",
                     objectFit: "cover",
+                    flexShrink: 0,
                   }}
                 />
               ) : (
@@ -1165,7 +1062,7 @@ const ShippingInfo: React.FC<{
                     width: "30px",
                     height: "30px",
                     marginRight: "10px",
-                    backgroundColor: "#E94560",
+                    backgroundColor: theme.accent,
                     borderRadius: "50%",
                     display: "flex",
                     justifyContent: "center",
@@ -1182,22 +1079,18 @@ const ShippingInfo: React.FC<{
 
               <span
                 style={{
-                  fontSize: "14px",
-                  color: "#555",
-                  fontWeight: "bold",
+                  fontSize: "13.5px",
+                  color: theme.heading,
+                  fontWeight: 600,
+                  lineHeight: 1.5,
                 }}
               >
                 {sellerShopName}
                 <br />
-                <span
-                  style={{
-                    color: "#28a745",
-                    marginRight: "5px",
-                  }}
-                >
-                  ✓
-                </span>{" "}
-                Verified Seller
+                <span style={{ color: "#6B7280", fontWeight: 400 }}>
+                  <span style={{ color: "#28a745", marginRight: "5px" }}>✓</span>{" "}
+                  Verified Seller
+                </span>
               </span>
             </div>
             <div>
@@ -1205,14 +1098,15 @@ const ShippingInfo: React.FC<{
                 href={`/shops/${shopUrl}`}
                 style={{
                   color: "#fff",
-                  backgroundColor: "#E94560",
+                  backgroundColor: theme.accent,
                   textDecoration: "none",
                   cursor: "pointer",
                   display: "inline-block",
-                  marginTop: "10px",
-                  padding: "5px 10px",
-                  borderRadius: "10px",
-                  fontSize: "14px",
+                  padding: "7px 14px",
+                  borderRadius: "999px",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  whiteSpace: "nowrap",
                 }}
               >
                 Visit Profile
@@ -1264,7 +1158,14 @@ const WarrantyPolicyView: React.FC<{ policy: WarrantyPolicy }> = ({ policy }) =>
   ].filter((section) => section.name || section.duration || section.details);
 
   return (
-    <Box>
+    <Box
+      style={{
+        padding: "20px",
+        backgroundColor: theme.surface,
+        border: `1px solid ${theme.border}`,
+        borderRadius: "10px",
+      }}
+    >
       {sections.map((section) => (
         <Box key={section.title} mb="24px">
           <H5 mb="8px" fontSize="15px">
@@ -1543,14 +1444,22 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
       <Fragment>
         <div
           style={{
-            display: "flex",
-            flexDirection: isDesktop ? "row" : "column",
-            gap: "20px",
-            padding: "20px",
-            maxWidth: "1200px",
+            padding: isDesktop ? "28px" : "16px",
+            maxWidth: theme.maxWidth,
             margin: "0 auto",
+            backgroundColor: theme.surface,
+            borderRadius: theme.radius,
+            boxShadow: theme.shadow,
+            border: `1px solid ${theme.border}`,
           }}
         >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: isDesktop ? "row" : "column",
+              gap: "20px",
+            }}
+          >
           <div
             style={{
               flex: isDesktop ? "1 1 70%" : "1 1 100%",
@@ -1591,35 +1500,44 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
               {shippingInfoComponent}
             </div>
           )}
+          </div>
+
+          {/* Short description summary */}
+          {shortDescription ? (
+            <div
+              style={{
+                marginTop: "20px",
+                padding: "14px 18px",
+                borderLeft: `4px solid ${theme.accent}`,
+                backgroundColor: theme.accentTint,
+                borderRadius: theme.radiusSmall,
+                fontSize: "14px",
+                color: theme.body,
+                lineHeight: 1.6,
+              }}
+              dangerouslySetInnerHTML={{ __html: shortDescription }}
+            />
+          ) : null}
         </div>
 
-        {/* Short description summary */}
-        {shortDescription ? (
-          <div
-            style={{
-              margin: "1rem 0",
-              padding: "0.75rem 1rem",
-              borderLeft: "4px solid #e94560",
-              backgroundColor: "#fff8f8",
-              borderRadius: "4px",
-              fontSize: "14px",
-              color: "#444",
-              lineHeight: 1.6,
-            }}
-            dangerouslySetInnerHTML={{ __html: shortDescription }}
-          />
-        ) : null}
-
         {/* ProductView with shipping props passed on mobile */}
-        <ProductView
-          description={description}
-          productId={product.product_id}
-          warrantyPolicy={warrantyPolicy}
-          shippingProps={!isDesktop ? shippingProps : undefined}
-          isDesktop={isDesktop}
-        />
+        <div
+          style={{
+            maxWidth: theme.maxWidth,
+            margin: "24px auto 0",
+            padding: isDesktop ? "0 4px" : "0 16px",
+          }}
+        >
+          <ProductView
+            description={description}
+            productId={product.product_id}
+            warrantyPolicy={warrantyPolicy}
+            shippingProps={!isDesktop ? shippingProps : undefined}
+            isDesktop={isDesktop}
+          />
 
-        <RelatedProducts productId={product.product_id} />
+          <RelatedProducts productId={product.product_id} />
+        </div>
       </Fragment>
     </>
   );
