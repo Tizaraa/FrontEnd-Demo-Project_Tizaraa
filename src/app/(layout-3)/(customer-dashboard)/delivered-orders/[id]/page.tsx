@@ -123,6 +123,7 @@ export default function OrderDetails({ params }: IDParams) {
      rating: item.review?.rating ?? 0,
      comments: item.review?.comment ?? "",
      images: item.review?.images ?? [],
+     is_anonymous: item.review?.is_anonymous ?? false,
     }));
 
     const adapted = {

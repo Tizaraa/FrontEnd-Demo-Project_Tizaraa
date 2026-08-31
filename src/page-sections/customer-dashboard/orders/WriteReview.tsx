@@ -49,6 +49,7 @@ export default function WriteReview({
  const [isCorporateReturnOpen, setIsCorporateReturnOpen] = useState(false);
  const [rating, setRating] = useState(0);
  const [comments, setComments] = useState("");
+ const [isAnonymous, setIsAnonymous] = useState(false);
  const [image, setImage] = useState<File[]>([]);
  const [reviewMode, setReviewMode] = useState<"submit" | "preview">(
   item.ratingcheck ? "preview" : "submit"
@@ -57,6 +58,7 @@ export default function WriteReview({
   rating: any;
   comments: string;
   images: string[];
+  isAnonymous: boolean;
  } | null>(null);
  const router = useRouter();
 
@@ -85,6 +87,7 @@ export default function WriteReview({
     rating: item.rating,
     comments: item.comments,
     images: item.images,
+    isAnonymous: Boolean(item.is_anonymous),
    });
    setReviewMode("preview");
    return;
@@ -95,10 +98,12 @@ export default function WriteReview({
    const parsedReview = JSON.parse(storedReview);
    setRating(parsedReview.rating);
    setComments(parsedReview.comments);
+   setIsAnonymous(Boolean(parsedReview.isAnonymous));
    setExistingReview({
     rating: parsedReview.rating,
     comments: parsedReview.comments,
     images: parsedReview.images || [],
+    isAnonymous: Boolean(parsedReview.isAnonymous),
    });
    setReviewMode("preview"); // Set to preview mode if review already exists
   }
@@ -121,6 +126,8 @@ export default function WriteReview({
   formData.append("order_item_id", String(item.order_item_id));
   formData.append("rating", String(rating));
   formData.append("comment", comments);
+  // "1"/"0", not "true"/"false" — Laravel's boolean rule rejects the word forms.
+  formData.append("is_anonymous", isAnonymous ? "1" : "0");
 
   image.forEach((img) => formData.append("images[]", img));
 
@@ -139,6 +146,7 @@ export default function WriteReview({
     rating: created.rating ?? rating,
     comments: created.comment ?? comments,
     images: created.images ?? [],
+    isAnonymous: Boolean(created.is_anonymous ?? isAnonymous),
    };
    localStorage.setItem(
     `review-${item.order_item_id}`,
@@ -510,6 +518,28 @@ export default function WriteReview({
          }}
         />
        </Box>
+       <Box mt="0.75rem" mb="1rem">
+        <label
+         style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          cursor: "pointer",
+         }}
+        >
+         <input
+          type="checkbox"
+          checked={isAnonymous}
+          onChange={(e) => setIsAnonymous(e.target.checked)}
+          style={{ cursor: "pointer" }}
+         />
+         <Typography fontSize="14px">Post this review anonymously</Typography>
+        </label>
+        <Typography fontSize="12px" color="text.muted" mt="4px" ml="24px">
+         Your name won&apos;t be shown on the product page. The Verified
+         Purchase badge stays.
+        </Typography>
+       </Box>
        <Button
         variant="contained"
         color="primary"
@@ -561,19 +591,37 @@ export default function WriteReview({
           ))}
          </FlexBox>
 
-         <span
-          style={{
-           fontSize: "0.7rem",
-           fontWeight: 600,
-           color: "#1E8E3E",
-           background: "rgba(30,142,62,0.1)",
-           padding: "3px 10px",
-           borderRadius: "999px",
-           whiteSpace: "nowrap",
-          }}
-         >
-          ✓ Verified Purchase
-         </span>
+         <FlexBox alignItems="center" style={{ gap: "6px" }}>
+          {existingReview?.isAnonymous && (
+           <span
+            style={{
+             fontSize: "0.7rem",
+             fontWeight: 600,
+             color: "#5b6472",
+             background: "#EEF1F5",
+             padding: "3px 10px",
+             borderRadius: "999px",
+             whiteSpace: "nowrap",
+            }}
+           >
+            Posted anonymously
+           </span>
+          )}
+
+          <span
+           style={{
+            fontSize: "0.7rem",
+            fontWeight: 600,
+            color: "#1E8E3E",
+            background: "rgba(30,142,62,0.1)",
+            padding: "3px 10px",
+            borderRadius: "999px",
+            whiteSpace: "nowrap",
+           }}
+          >
+           ✓ Verified Purchase
+          </span>
+         </FlexBox>
         </FlexBox>
 
         <Typography
