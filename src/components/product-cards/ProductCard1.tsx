@@ -399,12 +399,7 @@ import { H3, H4, H5, SemiSpan } from "@component/Typography";
 import ProductQuickView from "@component/products/ProductQuickView";
 import { toast } from "react-hot-toast";
 
-import {
- calculateDiscount,
- currency,
- getTheme,
- DiscountPercentage,
-} from "@utils/utils";
+import { currency, getTheme } from "@utils/utils";
 import { deviceSize } from "@utils/constants";
 import Image from "next/image";
 
@@ -570,6 +565,19 @@ export default function ProductCard1({
 
  const cartItem = state.cart.find((item) => item.id === id);
 
+ // OFFER PRICE: either an explicit discounted price, or a flat "off" amount
+ // deducted from the original price. Only counts when it is actually lower.
+ const offerPrice =
+  discountPrice && discountPrice > 0 && discountPrice < price
+   ? discountPrice
+   : off && off > 0 && off < price
+   ? Number((price - off).toFixed(2))
+   : null;
+
+ const discountPercent = offerPrice
+  ? Math.round(((price - offerPrice) / price) * 100)
+  : 0;
+
  const toggleDialog = useCallback(() => setOpen((open) => !open), []);
 
  const handleCartAmountChange = (amount: number) => () => {
@@ -601,7 +609,7 @@ export default function ProductCard1({
   <>
    <Wrapper borderRadius={8} {...props}>
     <div className="image-holder">
-     {!!off && (
+     {discountPercent > 0 && (
       <Chip
        top="10px"
        left="10px"
@@ -613,7 +621,7 @@ export default function ProductCard1({
        color="primary.text"
        zIndex={1}
       >
-       {discountPrice && discountPrice > 0 ? off : DiscountPercentage(price, off as number)}% off
+       {discountPercent}% off
       </Chip>
      )}
 
@@ -659,13 +667,19 @@ export default function ProductCard1({
           color="primary.main"
           mb="0.25rem"
          >
-          {discountPrice && discountPrice > 0 ? currency(discountPrice) : calculateDiscount(price, off as number)}
+          {currency(offerPrice ?? price)}
          </H5>
 
-         {(discountPrice && discountPrice > 0 || off > 0) && (
-          <SemiSpan className="price" fontWeight="600" color="text.muted">
-           <del>{currency(price)}</del>
-          </SemiSpan>
+         {offerPrice && (
+          <FlexBox alignItems="center" style={{ gap: "6px" }}>
+           <SemiSpan className="price" fontWeight="600" color="text.muted">
+            <del>{currency(price)}</del>
+           </SemiSpan>
+
+           <SemiSpan className="price" fontWeight="600" color="primary.main">
+            -{discountPercent}%
+           </SemiSpan>
+          </FlexBox>
          )}
         </FlexBox>
        )}
