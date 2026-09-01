@@ -1127,6 +1127,23 @@ type WarrantyPolicy = {
   replacementConditions?: string | null;
 };
 
+/**
+ * Days back into the words a buyer uses — 365 reads as "1 year", 45 stays
+ * "45 days". Whole units only, so 400 does not become "1.1 years".
+ */
+const formatDurationDays = (days?: number | null): string | null => {
+  if (!days || days <= 0) return null;
+  if (days % 365 === 0) {
+    const years = days / 365;
+    return `${years} year${years === 1 ? "" : "s"}`;
+  }
+  if (days % 30 === 0) {
+    const months = days / 30;
+    return `${months} month${months === 1 ? "" : "s"}`;
+  }
+  return `${days} day${days === 1 ? "" : "s"}`;
+};
+
 const hasWarrantyPolicy = (policy?: WarrantyPolicy | null) =>
   !!policy &&
   Object.values(policy).some(
@@ -1138,24 +1155,26 @@ const WarrantyPolicyView: React.FC<{ policy: WarrantyPolicy }> = ({ policy }) =>
     {
       title: "Warranty",
       name: policy.warrantyName,
-      duration:
-        policy.warrantyDurationDays != null
-          ? `${policy.warrantyDurationDays} days`
-          : null,
+      duration: formatDurationDays(policy.warrantyDurationDays),
       durationLabel: "Duration",
       details: policy.warrantyDescription,
     },
     {
       title: "Replacement Warranty",
       name: policy.replacementName,
-      duration:
-        policy.replacementWindowDays != null
-          ? `${policy.replacementWindowDays} days`
-          : null,
+      duration: formatDurationDays(policy.replacementWindowDays),
       durationLabel: "Return window",
       details: policy.replacementConditions,
     },
-  ].filter((section) => section.name || section.duration || section.details);
+  ]
+    .filter((section) => section.name || section.duration || section.details)
+    // Older rows stored the same string as both the label and the terms, which
+    // printed the whole policy twice. Show it once.
+    .map((section) =>
+      section.name && section.name === section.details
+        ? { ...section, name: null }
+        : section
+    );
 
   return (
     <Box
@@ -1172,29 +1191,51 @@ const WarrantyPolicyView: React.FC<{ policy: WarrantyPolicy }> = ({ policy }) =>
             {section.title}
           </H5>
 
-          {section.name && (
-            <SemiSpan display="block" mb="4px" color="text.hint">
-              {section.name}
-            </SemiSpan>
+          {(section.name || section.duration) && (
+            <FlexBox alignItems="center" flexWrap="wrap" mb="10px" style={{ gap: "8px" }}>
+              {section.name && (
+                <span
+                  style={{
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    color: "#E94560",
+                    background: "#FDECEF",
+                    border: "1px solid #F8D4DA",
+                    borderRadius: "999px",
+                    padding: "3px 10px",
+                  }}
+                >
+                  {section.name}
+                </span>
+              )}
+              {section.duration && (
+                <SemiSpan color="text.hint">
+                  {section.durationLabel}: <b>{section.duration}</b>
+                </SemiSpan>
+              )}
+            </FlexBox>
           )}
 
-          {section.duration && (
-            <SemiSpan display="block" mb="4px" color="text.hint">
-              {section.durationLabel}: {section.duration}
-            </SemiSpan>
-          )}
-
+          {/* Sellers write one term per line; rendering them as a list is what
+              they mean by "1. … 2. …" and keeps a long policy scannable. */}
           {section.details && (
-            <div
+            <ul
               style={{
+                margin: 0,
+                paddingLeft: "18px",
                 fontSize: "14px",
                 color: "#444",
-                lineHeight: 1.7,
-                whiteSpace: "pre-line",
+                lineHeight: 1.8,
               }}
             >
-              {section.details}
-            </div>
+              {section.details
+                .split("\n")
+                .map((line) => line.replace(/^\s*\d+[.)]\s*/, "").trim())
+                .filter(Boolean)
+                .map((line, idx) => (
+                  <li key={idx}>{line}</li>
+                ))}
+            </ul>
           )}
         </Box>
       ))}
@@ -1397,10 +1438,22 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
   const shopUrl = product.seller_shop_slug;
   const delivery_type = product.delivereyType;
   const warrantyObj = productData.warranty;
-  const warranty = warrantyObj?.name ?? warrantyObj ?? null;
   const warrantyType = productData.warrantytype;
   const replaceWarrantyObj = productData.replacement_warranty;
-  const replacewarranty = replaceWarrantyObj?.name ?? replaceWarrantyObj ?? null;
+
+  // Header badges stay short — the type and the period, e.g. "Brand Warranty · 1
+  // year". The full terms live in the Warranty Policy tab.
+  const warranty = warrantyObj
+    ? [warrantyObj.name, formatDurationDays(warrantyObj.duration_days)]
+        .filter(Boolean)
+        .join(" · ")
+    : null;
+  const replacewarranty = replaceWarrantyObj
+    ? replaceWarrantyObj.name ??
+      (replaceWarrantyObj.return_window_days
+        ? `${replaceWarrantyObj.return_window_days}-day replacement`
+        : null)
+    : null;
   const warrantyPolicy: WarrantyPolicy = {
     warrantyName: warrantyObj?.name ?? null,
     warrantyDurationDays: warrantyObj?.duration_days ?? null,
