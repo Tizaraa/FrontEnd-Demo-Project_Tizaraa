@@ -152,6 +152,8 @@ export default function OrderDetails({ params }: IDParams) {
       refunded_total: raw.refunded_total ?? 0,
       original_total: raw.original_total ?? raw.total_amount,
       returned_item_count: raw.returned_item_count ?? 0,
+      cancelled_item_count: raw.cancelled_item_count ?? 0,
+      cancelled_total: raw.cancelled_total ?? 0,
       items: {
        [sellerName]: {
         delivered_at: raw.delivered_at ?? null,
@@ -535,6 +537,23 @@ export default function OrderDetails({ params }: IDParams) {
 
             </div>
 
+            {order?.Order?.payment_method === "corporate_credit" &&
+             details?.status === "Pending" && (
+              <Box
+               mx="1rem"
+               mb="1rem"
+               p="10px 14px"
+               bg="#FFF8E1"
+               border="1px solid #FFE0A3"
+               borderRadius="8px"
+              >
+               <Typography fontSize="13px" color="#8A6D00">
+                Note: As a corporate employee, you can only cancel this
+                product while the order is still Pending.
+               </Typography>
+              </Box>
+             )}
+
             {details?.order_items?.map((item, ind) => (
              <WriteReview
               key={ind}
@@ -699,6 +718,54 @@ export default function OrderDetails({ params }: IDParams) {
                 {currency(details.total || 0)}
                </Typography>
               </FlexBox>
+
+              {(order?.Order?.cancelled_item_count > 0 ||
+                order?.Order?.returned_item_count > 0) && (
+               <Box
+                mb="1rem"
+                p="12px 14px"
+                bg="#F7F9FC"
+                border="1px solid #E5E9F0"
+                borderRadius="8px"
+               >
+                {order?.Order?.cancelled_item_count > 0 && (
+                 <FlexBox
+                  justifyContent="space-between"
+                  alignItems="center"
+                  flexWrap="wrap"
+                  style={{ gap: "8px" }}
+                  mb={order?.Order?.returned_item_count > 0 ? "0.5rem" : "0px"}
+                 >
+                  <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
+                   {order?.Order?.cancelled_item_count}{" "}
+                   {order?.Order?.cancelled_item_count === 1 ? "item" : "items"}{" "}
+                   cancelled
+                  </Typography>
+                  <Typography fontSize="13px" color="#E94560" fontWeight="600">
+                   −{currency(order?.Order?.cancelled_total || 0)}
+                  </Typography>
+                 </FlexBox>
+                )}
+
+                {order?.Order?.returned_item_count > 0 && (
+                 <FlexBox
+                  justifyContent="space-between"
+                  alignItems="center"
+                  flexWrap="wrap"
+                  style={{ gap: "8px" }}
+                 >
+                  <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
+                   {order?.Order?.returned_item_count}{" "}
+                   {order?.Order?.returned_item_count === 1 ? "item" : "items"}{" "}
+                   returned
+                  </Typography>
+                  <Typography fontSize="13px" color="#E94560" fontWeight="600">
+                   −{currency(order?.Order?.refunded_total || 0)}
+                  </Typography>
+                 </FlexBox>
+                )}
+               </Box>
+              )}
 
               <FlexBox alignItems="center" mb="1rem">
                Payment Method:

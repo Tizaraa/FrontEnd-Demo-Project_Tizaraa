@@ -144,7 +144,7 @@ import Box from "@component/Box";
 import { Chip } from "@component/Chip";
 import Hidden from "@component/hidden";
 import { IconButton } from "@component/buttons";
-import Typography, { H5, Small } from "@component/Typography";
+import Typography, { H5 } from "@component/Typography";
 import Icon from "@component/icon/Icon";
 import { currency } from "@utils/utils";
 import { buildStatusBuckets, rowTotal } from "./orderRowStatus";
@@ -220,15 +220,19 @@ const StyledIconButton = styled(IconButton)`
 
 export default function CancelOrderRow({ order }: OrderRowProps) {
  const buckets = buildStatusBuckets(order);
+ const cancelledCount = order.cancelled_item_count || order.item_count;
 
  return (
   <Link href={`/cancel-orders/${order.id}`}>
    <TableRow>
     <RowContent>
      <MainLine>
-      <H5 m="6px" textAlign="left" color="rgb(233, 69, 96)" flex="1 1 0">
-       {order.invoice}
-      </H5>
+      <Box m="6px" flex="1 1 0">
+       <H5 textAlign="left" color="rgb(233, 69, 96)" m="0px">
+        {order.invoice}
+       </H5>
+       <Pill>{cancelledCount} Cancelled</Pill>
+      </Box>
 
       <Typography
        className="flex-grow pre"
@@ -251,14 +255,22 @@ export default function CancelOrderRow({ order }: OrderRowProps) {
        {order.item_count}
       </Typography>
 
-      <Typography
-       m="6px"
-       textAlign="left"
-       fontWeight="600"
-       color="rgb(51, 51, 51)"
-       flex="1 1 0"
-      >
-       {currency(rowTotal(order))}
+      <Typography m="6px" textAlign="left" flex="1 1 0">
+       <span
+        style={{
+         textDecoration: "line-through",
+         textDecorationColor: "#e53935",
+         textDecorationThickness: "2px",
+         color: "rgb(51, 51, 51)",
+         fontWeight: 600,
+        }}
+       >
+        {currency(rowTotal(order))}
+       </span>
+       <br />
+       <span style={{ fontWeight: 700, color: "rgb(51, 51, 51)" }}>
+        {currency(0)}
+       </span>
       </Typography>
      </MainLine>
 

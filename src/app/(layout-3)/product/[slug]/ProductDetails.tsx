@@ -733,7 +733,7 @@
 "use client";
 
 import React, { Fragment, useState, useEffect } from "react";
-import DOMPurify from "dompurify";
+import { QRCodeSVG } from "qrcode.react";
 import ResponsiveCategory from "./ResponsiveCategory";
 import ProductIntro from "@component/products/ProductIntro";
 import { productPageTheme as theme } from "@component/products/productPageTheme";
@@ -754,20 +754,6 @@ import ProductReview from "@component/products/ProductReview";
 import ProductDescription from "@component/products/ProductDescription";
 import axios from "@lib/axiosClient";
 
-async function fetchQRCode(slug: string) {
-  try {
-    const response = await axios.get(
-      `${ApiBaseUrl.baseUrl}product/qr-code/${slug}`,
-      { headers: { Accept: "application/xml" }, responseType: "text" }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching QR code:", error);
-    return null;
-  }
-}
-
 interface Props {
   params: { slug: string };
   fallbackData: any;
@@ -778,21 +764,23 @@ const ShippingInfo: React.FC<{
   sellerShopLogo: string;
   sellerShopName: string;
   shopUrl: string;
-  delivery_type: string;
-  qrCodeUrl: string | null;
-  express_deliverey: number;
+  slug: string;
   showInTab?: boolean;
 }> = ({
   isDesktop,
   sellerShopName,
   sellerShopLogo,
   shopUrl,
-  delivery_type,
-  qrCodeUrl,
-  express_deliverey,
+  slug,
   showInTab = false,
 }) => {
-    const [showDeliveryChart, setShowDeliveryChart] = useState(false);
+    const [infoPageUrl, setInfoPageUrl] = useState("");
+
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        setInfoPageUrl(`${window.location.origin}/product/${slug}/info`);
+      }
+    }, [slug]);
 
     // One set of styles for the four info blocks, so the card reads as one list
     // instead of four hand-tuned ones.
@@ -849,131 +837,7 @@ const ShippingInfo: React.FC<{
           <div style={rowStyle}>
             <span style={iconStyle()}>🚚</span>
             <span style={textStyle}>
-              {String(delivery_type) === "1"
-                ? "Courier Delivery"
-                : String(delivery_type) === "2"
-                ? "Self Pickup"
-                : String(delivery_type) === "3"
-                ? "Corporate Pickup"
-                : "Standard Delivery"}
-            </span>
-            <button
-              onClick={() => setShowDeliveryChart(true)}
-              style={{
-                marginLeft: "auto",
-                padding: 0,
-                fontSize: "11px",
-                color: theme.accent,
-                background: "none",
-                border: "none",
-                textDecoration: "underline",
-                cursor: "pointer",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Price Chart for Delivery
-            </button>
-          </div>
-
-          {/* Delivery Price Chart Modal */}
-          {showDeliveryChart && (
-            <div
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: "rgba(0,0,0,0.5)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                zIndex: 1000,
-              }}
-            >
-              <div
-                style={{
-                  backgroundColor: "white",
-                  padding: "20px",
-                  borderRadius: "8px",
-                  width: "300px",
-                }}
-              >
-                <h3
-                  style={{
-                    fontSize: "15px",
-                    fontWeight: "bold",
-                    marginBottom: "15px",
-                    color: "#333",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  Delivery Cost Breakdown
-                  <button
-                    onClick={() => setShowDeliveryChart(false)}
-                    style={{
-                      background: theme.accent,
-                      border: "none",
-                      fontSize: "18px",
-                      cursor: "pointer",
-                      color: "#fff",
-                    }}
-                  >
-                    ×
-                  </button>
-                </h3>
-                <ul
-                  style={{
-                    listStyle: "none",
-                    padding: 0,
-                    margin: 0,
-                    fontSize: "12px",
-                  }}
-                >
-                  <li
-                    style={{
-                      padding: "8px 0",
-                      borderBottom: "1px solid #eee",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Base Rate (First 1 kg): <strong>60 BDT</strong>
-                  </li>
-                  <li
-                    style={{
-                      padding: "8px 0",
-                      borderBottom: "1px solid #eee",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Additional Weight (Per kg): <strong>25 BDT/kg</strong>
-                  </li>
-                </ul>
-                <div
-                  style={{
-                    marginTop: "15px",
-                    fontSize: "12px",
-                    color: theme.accent,
-                  }}
-                >
-                  * Delivery charges are calculated based on the total weight of your
-                  order.
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* express delivery  */}
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Express Delivery</h2>
-          <div style={rowStyle}>
-            <span style={iconStyle(express_deliverey === 1)}>🚚</span>
-            <span style={textStyle}>
-              {express_deliverey === 1
-                ? "Express Delivery is possible!"
-                : "Express Delivery is not available."}
+              Delivered directly by Tizaraa&apos;s in-house seller.
             </span>
           </div>
         </div>
@@ -982,9 +846,7 @@ const ShippingInfo: React.FC<{
           <h2 style={headingStyle}>Payments</h2>
           <div style={rowStyle}>
             <span style={iconStyle()}>🎧</span>
-            <span style={textStyle}>
-              Contact us 24 hours a day, 7 days a week.
-            </span>
+            <span style={textStyle}>Payment is made through Corporate credit.</span>
           </div>
         </div>
 
@@ -993,28 +855,42 @@ const ShippingInfo: React.FC<{
           <div style={rowStyle}>
             <span style={iconStyle()}>💳</span>
             <span style={textStyle}>
-              Eligible for refunds within 30 days of receiving products.
+              To return a product, employees must visit the seller directly
+              
+              returns are processed according to the seller&apos;s own policy.
             </span>
           </div>
         </div>
 
-        {qrCodeUrl && (
+        {infoPageUrl && (
           <div style={{ ...sectionStyle, textAlign: "center" }}>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(qrCodeUrl),
-              }}
-              style={{
-                maxWidth: "100%",
-                height: "70px",
-                marginBottom: "10px",
-                transform: "scale(2)",
-                transformOrigin: "top left",
-                display: "inline-block",
-              }}
-            ></div>
+            <a
+              href={infoPageUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "inline-block" }}
+            >
+              <div
+                style={{
+                  display: "inline-block",
+                  padding: "8px",
+                  backgroundColor: "#fff",
+                  border: `1px solid ${theme.border}`,
+                  borderRadius: theme.radiusSmall,
+                  marginBottom: "10px",
+                }}
+              >
+                <QRCodeSVG
+                  value={infoPageUrl}
+                  size={110}
+                  bgColor="#ffffff"
+                  fgColor={theme.heading}
+                  level="M"
+                />
+              </div>
+            </a>
             <p style={{ ...textStyle, fontSize: "12.5px", margin: 0 }}>
-              Scan this QR code for product information
+              Scan this QR code on your phone to view full product details
             </p>
           </div>
         )}
@@ -1127,6 +1003,23 @@ type WarrantyPolicy = {
   replacementConditions?: string | null;
 };
 
+/**
+ * Days back into the words a buyer uses — 365 reads as "1 year", 45 stays
+ * "45 days". Whole units only, so 400 does not become "1.1 years".
+ */
+const formatDurationDays = (days?: number | null): string | null => {
+  if (!days || days <= 0) return null;
+  if (days % 365 === 0) {
+    const years = days / 365;
+    return `${years} year${years === 1 ? "" : "s"}`;
+  }
+  if (days % 30 === 0) {
+    const months = days / 30;
+    return `${months} month${months === 1 ? "" : "s"}`;
+  }
+  return `${days} day${days === 1 ? "" : "s"}`;
+};
+
 const hasWarrantyPolicy = (policy?: WarrantyPolicy | null) =>
   !!policy &&
   Object.values(policy).some(
@@ -1138,24 +1031,26 @@ const WarrantyPolicyView: React.FC<{ policy: WarrantyPolicy }> = ({ policy }) =>
     {
       title: "Warranty",
       name: policy.warrantyName,
-      duration:
-        policy.warrantyDurationDays != null
-          ? `${policy.warrantyDurationDays} days`
-          : null,
+      duration: formatDurationDays(policy.warrantyDurationDays),
       durationLabel: "Duration",
       details: policy.warrantyDescription,
     },
     {
       title: "Replacement Warranty",
       name: policy.replacementName,
-      duration:
-        policy.replacementWindowDays != null
-          ? `${policy.replacementWindowDays} days`
-          : null,
+      duration: formatDurationDays(policy.replacementWindowDays),
       durationLabel: "Return window",
       details: policy.replacementConditions,
     },
-  ].filter((section) => section.name || section.duration || section.details);
+  ]
+    .filter((section) => section.name || section.duration || section.details)
+    // Older rows stored the same string as both the label and the terms, which
+    // printed the whole policy twice. Show it once.
+    .map((section) =>
+      section.name && section.name === section.details
+        ? { ...section, name: null }
+        : section
+    );
 
   return (
     <Box
@@ -1172,29 +1067,51 @@ const WarrantyPolicyView: React.FC<{ policy: WarrantyPolicy }> = ({ policy }) =>
             {section.title}
           </H5>
 
-          {section.name && (
-            <SemiSpan display="block" mb="4px" color="text.hint">
-              {section.name}
-            </SemiSpan>
+          {(section.name || section.duration) && (
+            <FlexBox alignItems="center" flexWrap="wrap" mb="10px" style={{ gap: "8px" }}>
+              {section.name && (
+                <span
+                  style={{
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    color: "#E94560",
+                    background: "#FDECEF",
+                    border: "1px solid #F8D4DA",
+                    borderRadius: "999px",
+                    padding: "3px 10px",
+                  }}
+                >
+                  {section.name}
+                </span>
+              )}
+              {section.duration && (
+                <SemiSpan color="text.hint">
+                  {section.durationLabel}: <b>{section.duration}</b>
+                </SemiSpan>
+              )}
+            </FlexBox>
           )}
 
-          {section.duration && (
-            <SemiSpan display="block" mb="4px" color="text.hint">
-              {section.durationLabel}: {section.duration}
-            </SemiSpan>
-          )}
-
+          {/* Sellers write one term per line; rendering them as a list is what
+              they mean by "1. … 2. …" and keeps a long policy scannable. */}
           {section.details && (
-            <div
+            <ul
               style={{
+                margin: 0,
+                paddingLeft: "18px",
                 fontSize: "14px",
                 color: "#444",
-                lineHeight: 1.7,
-                whiteSpace: "pre-line",
+                lineHeight: 1.8,
               }}
             >
-              {section.details}
-            </div>
+              {section.details
+                .split("\n")
+                .map((line) => line.replace(/^\s*\d+[.)]\s*/, "").trim())
+                .filter(Boolean)
+                .map((line, idx) => (
+                  <li key={idx}>{line}</li>
+                ))}
+            </ul>
           )}
         </Box>
       ))}
@@ -1211,9 +1128,7 @@ const ProductView: React.FC<{
     sellerShopName: string;
     sellerShopLogo: string;
     shopUrl: string;
-    delivery_type: string;
-    qrCodeUrl: string | null;
-    express_deliverey: number;
+    slug: string;
   };
   isDesktop: boolean;
 }> = ({ description, productId, warrantyPolicy, shippingProps, isDesktop }) => {
@@ -1291,9 +1206,7 @@ const ProductView: React.FC<{
               sellerShopName={shippingProps.sellerShopName}
               sellerShopLogo={shippingProps.sellerShopLogo}
               shopUrl={shippingProps.shopUrl}
-              delivery_type={shippingProps.delivery_type}
-              qrCodeUrl={shippingProps.qrCodeUrl}
-              express_deliverey={shippingProps.express_deliverey}
+              slug={shippingProps.slug}
               showInTab={true}
             />
           </div>
@@ -1316,8 +1229,6 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
 
 
   const [isDesktop, setIsDesktop] = useState(true);
-  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
-  const [qrCode, setQrCode] = useState<string | null>(null);
 
   // Fetch product data on slug change (no caching)
   useEffect(() => {
@@ -1352,20 +1263,6 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const qrCodeData = await fetchQRCode(slug);
-      if (qrCodeData) {
-        setQrCodeUrl(qrCodeData);
-      } else {
-        console.log("No QR Code data received.");
-      }
-      setQrCode(qrCodeData);
-    };
-
-    fetchData();
-  }, [slug]);
-
   // Update document title when product data changes (for client-side navigation)
   useEffect(() => {
     if (productData?.seo?.title) {
@@ -1395,12 +1292,23 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
   const sellerShopName = product.seller_shop_name;
   const sellerShopLogo = product.seller_shop_logo;
   const shopUrl = product.seller_shop_slug;
-  const delivery_type = product.delivereyType;
   const warrantyObj = productData.warranty;
-  const warranty = warrantyObj?.name ?? warrantyObj ?? null;
   const warrantyType = productData.warrantytype;
   const replaceWarrantyObj = productData.replacement_warranty;
-  const replacewarranty = replaceWarrantyObj?.name ?? replaceWarrantyObj ?? null;
+
+  // Header badges stay short — the type and the period, e.g. "Brand Warranty · 1
+  // year". The full terms live in the Warranty Policy tab.
+  const warranty = warrantyObj
+    ? [warrantyObj.name, formatDurationDays(warrantyObj.duration_days)]
+        .filter(Boolean)
+        .join(" · ")
+    : null;
+  const replacewarranty = replaceWarrantyObj
+    ? replaceWarrantyObj.name ??
+      (replaceWarrantyObj.return_window_days
+        ? `${replaceWarrantyObj.return_window_days}-day replacement`
+        : null)
+    : null;
   const warrantyPolicy: WarrantyPolicy = {
     warrantyName: warrantyObj?.name ?? null,
     warrantyDurationDays: warrantyObj?.duration_days ?? null,
@@ -1409,7 +1317,6 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
     replacementWindowDays: replaceWarrantyObj?.return_window_days ?? null,
     replacementConditions: replaceWarrantyObj?.conditions ?? null,
   };
-  const express_deliverey = product.express_deliverey === true || product.express_deliverey === 1 ? 1 : 0;
   const sizeColor = productData.productsingledetails.SizeColor;
   const unitOfMeasure = product.unit_of_measure ?? null;
   const campaignBannerImage =
@@ -1421,9 +1328,7 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
     sellerShopName,
     sellerShopLogo,
     shopUrl,
-    delivery_type,
-    qrCodeUrl,
-    express_deliverey,
+    slug: params.slug,
   };
 
   // Create shipping info component for sidebar
@@ -1433,9 +1338,7 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
       sellerShopName={sellerShopName}
       sellerShopLogo={sellerShopLogo}
       shopUrl={shopUrl}
-      delivery_type={delivery_type}
-      qrCodeUrl={qrCodeUrl}
-      express_deliverey={express_deliverey}
+      slug={params.slug}
     />
   );
 

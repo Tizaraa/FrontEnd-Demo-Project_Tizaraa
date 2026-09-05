@@ -856,7 +856,10 @@ export default function ProfileEditForm() {
 
  const VALIDATION_SCHEMA = yup.object().shape({
   name: yup.string().required("Name is required"),
-  phone: yup.string().required("Phone is required"),
+  phone: yup
+   .string()
+   .required("Phone is required")
+   .matches(/^01[3-9]\d{8}$/, "Enter a valid 11-digit phone number (e.g. 01712345678)"),
   birth_date: yup.date().required("Birthdate is required"),
   gender: yup.string().required("Gender is required"),
  });
@@ -946,12 +949,13 @@ export default function ProfileEditForm() {
           id="phone"
           name="phone"
           type="text"
+          inputMode="numeric"
+          maxLength={11}
           className="input-field"
           onChange={(e) => {
-           let v = e.target.value.replace(/\s+/g, "");
-           if (v.startsWith("+880")) v = "0" + v.slice(4);
-           else if (v.startsWith("880")) v = "0" + v.slice(3);
-           else if (v.startsWith("+88")) v = "0" + v.slice(3);
+           let v = e.target.value.replace(/\D/g, "");
+           if (v.startsWith("880")) v = "0" + v.slice(3);
+           v = v.slice(0, 11);
            setFieldValue("phone", v);
           }}
           onBlur={handleBlur}
