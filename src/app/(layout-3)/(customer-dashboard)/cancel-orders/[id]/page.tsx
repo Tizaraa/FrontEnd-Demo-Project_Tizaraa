@@ -152,6 +152,8 @@ export default function OrderDetails({ params }: IDParams) {
       refunded_total: raw.refunded_total ?? 0,
       original_total: raw.original_total ?? raw.total_amount,
       returned_item_count: raw.returned_item_count ?? 0,
+      cancelled_item_count: raw.cancelled_item_count ?? 0,
+      cancelled_total: raw.cancelled_total ?? 0,
       items: {
        [sellerName]: {
         delivered_at: raw.delivered_at ?? null,
@@ -607,6 +609,34 @@ export default function OrderDetails({ params }: IDParams) {
               delivered_at={details.delivered_at}
              />
             ))}
+
+            {order?.Order?.cancelled_item_count > 0 && (
+             <Box
+              mt="10px"
+              p="12px 14px"
+              bg="#F7F9FC"
+              border="1px solid #E5E9F0"
+              borderRadius="8px"
+             >
+              <FlexBox
+               justifyContent="space-between"
+               alignItems="center"
+               flexWrap="wrap"
+               style={{ gap: "8px" }}
+              >
+               <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
+                {order?.Order?.cancelled_item_count}{" "}
+                {order?.Order?.cancelled_item_count === 1 ? "item" : "items"}{" "}
+                cancelled
+               </Typography>
+               <FlexBox alignItems="center" style={{ gap: "12px" }}>
+                <Typography fontSize="14px" fontWeight="700" color="#e94560">
+                 {currency(order?.Order?.cancelled_total || 0)}
+                </Typography>
+               </FlexBox>
+              </FlexBox>
+             </Box>
+            )}
 
             {/* <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} /> */}
 

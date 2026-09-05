@@ -53,7 +53,10 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
   const formSchema = yup.object().shape({
     password: yup.string().required("Password is required").min(6, "At least 6 characters"),
     password_confirmation: yup.string().oneOf([yup.ref('password')], 'Passwords must match').required("Confirm password is required"),
-    phone: yup.string().nullable(),
+    phone: yup
+      .string()
+      .nullable()
+      .test("phone-format", "Enter a valid 11-digit phone number (e.g. 01712345678)", (value) => !value || /^01[3-9]\d{8}$/.test(value)),
   });
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
@@ -152,9 +155,15 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
             name="phone"
             label="Phone Number (Optional)"
             placeholder="Enter your phone number"
+            inputMode="numeric"
+            maxLength={11}
             value={values.phone}
             onBlur={handleBlur}
-            onChange={handleChange}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              let v = e.target.value.replace(/\D/g, "");
+              if (v.startsWith("880")) v = "0" + v.slice(3);
+              setFieldValue("phone", v.slice(0, 11));
+            }}
             errorText={touched.phone && errors.phone}
             autoComplete="off"
           />

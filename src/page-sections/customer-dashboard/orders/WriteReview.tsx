@@ -309,20 +309,45 @@ export default function WriteReview({
         >
          {item.product_name}
         </H6>
-        <Typography
-         fontSize="14px"
-         color="text.muted"
-         style={
-          isItemReturned || isItemCancelled
-           ? { textDecoration: "line-through" }
-           : undefined
-         }
-        >
-         {currency(item.price)} x {item.quantity}
-         {item.color && `, Color: ${item.color}`}
-         {item.attribute && `, Specification: ${item.attribute}`}
-         {item.size && `, Size: ${item.size}`}
-        </Typography>
+        {isItemCancelled ? (
+         <Typography fontSize="14px" color="text.muted">
+          <span
+           style={{
+            textDecoration: "line-through",
+            textDecorationColor: "#e53935",
+            textDecorationThickness: "2px",
+           }}
+          >
+           {currency(item.price)}
+          </span>{" "}
+          x {item.quantity}
+          {item.color && `, Color: ${item.color}`}
+          {item.attribute && `, Specification: ${item.attribute}`}
+          {item.size && `, Size: ${item.size}`}
+          <br />
+          <Typography
+           as="span"
+           fontSize="14px"
+           fontWeight="700"
+           color="#333"
+          >
+           {currency(0)}
+          </Typography>
+         </Typography>
+        ) : (
+         <Typography
+          fontSize="14px"
+          color="text.muted"
+          style={
+           isItemReturned ? { textDecoration: "line-through" } : undefined
+          }
+         >
+          {currency(item.price)} x {item.quantity}
+          {item.color && `, Color: ${item.color}`}
+          {item.attribute && `, Specification: ${item.attribute}`}
+          {item.size && `, Size: ${item.size}`}
+         </Typography>
+        )}
 
         {isItemCancelled && (
          <FlexBox alignItems="center" mt="6px" style={{ gap: "8px" }}>

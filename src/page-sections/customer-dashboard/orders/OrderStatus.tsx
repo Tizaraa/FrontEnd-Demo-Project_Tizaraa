@@ -396,17 +396,19 @@ export default function OrderStatus({
   if (status === null || status === undefined) return -1;
 
   // Corporate orders are collected at the shop counter — there is no shipping leg,
-  // so the tracker runs confirmed -> packed -> delivered.
+  // so the tracker runs packed -> delivered. The seller flow now skips "confirmed"
+  // entirely (pending goes straight to processing), so "Mark as Packed" lights up
+  // once the seller marks the order as processing, not on confirmation.
   if (isCorporate) {
    switch (status) {
-    case 0: // Pending — order placed, seller has not confirmed yet
+    case 0: // Pending — order placed, seller has not started processing yet
      return -2; // No active steps
-    case 1: // Confirmed
+    case 1: // Confirmed — kept for any order that reached this before the flow changed
      return 0;
-    case 2: // Processing — seller is packing it
-     return 1;
+    case 2: // Processing — seller has marked it as processing / packing
+     return 0;
     case 3: // Shipped — not part of the corporate flow, but treat as packed
-     return 1;
+     return 0;
     case 4: // Delivered
      return 2;
     case 5: // Canceled
@@ -441,7 +443,7 @@ export default function OrderStatus({
   ? [
      {
       icon: "bag",
-      label: "Confirmed",
+      label: "Mark as Packed",
      },
      {
       icon: "package-box",
