@@ -922,10 +922,14 @@ const ProductDetails = ({
     <Typography
      style={{ fontSize: isDesktop ? "15px" : "13px", marginTop: "16px" }}
     >
+     {/* A missing warranty is not a fact worth a row — an "N/A" chip read as if
+         the seller had answered the question. */}
      {[
       { label: "Warranty", value: warranty },
       { label: "Replacement warranty", value: replacewarranty },
-     ].map(({ label, value }) => (
+     ]
+      .filter(({ value }) => Boolean(value))
+      .map(({ label, value }) => (
       <div
        key={label}
        style={{
@@ -948,7 +952,7 @@ const ProductDetails = ({
          lineHeight: 1.5,
         }}
        >
-        {value || "N/A"}
+        {value}
        </span>
       </div>
      ))}

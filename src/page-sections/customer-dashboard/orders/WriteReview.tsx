@@ -48,9 +48,12 @@ export default function WriteReview({
  const [isModalOpen, setIsModalOpen] = useState(false);
  const [isCorporateReturnOpen, setIsCorporateReturnOpen] = useState(false);
  const [rating, setRating] = useState(0);
+ const [hoverRating, setHoverRating] = useState(0);
  const [comments, setComments] = useState("");
  const [isAnonymous, setIsAnonymous] = useState(false);
  const [image, setImage] = useState<File[]>([]);
+ const [previews, setPreviews] = useState<string[]>([]);
+ const fileInputRef = useRef<HTMLInputElement>(null);
  const [reviewMode, setReviewMode] = useState<"submit" | "preview">(
   item.ratingcheck ? "preview" : "submit"
  );
@@ -110,6 +113,47 @@ export default function WriteReview({
  }, [item]);
 
  const [submitting, setSubmitting] = useState(false);
+
+ // Object URLs are created once per selected file and revoked when the file is
+ // dropped or the modal unmounts — building them inside render leaks one blob
+ // per repaint.
+ useEffect(() => {
+  const urls = image.map((file) => URL.createObjectURL(file));
+  setPreviews(urls);
+
+  return () => urls.forEach((url) => URL.revokeObjectURL(url));
+ }, [image]);
+
+ const MAX_IMAGES = 5;
+ const MAX_COMMENT = 1000;
+
+ const addFiles = (files: FileList | null) => {
+  if (!files) return;
+
+  const picked = Array.from(files).filter((f) => f.type.startsWith("image/"));
+  const room = MAX_IMAGES - image.length;
+
+  if (room <= 0) {
+   toast.error(`You can attach up to ${MAX_IMAGES} images.`);
+   return;
+  }
+  if (picked.length > room) {
+   toast.error(`Only ${room} more image${room === 1 ? "" : "s"} can be added.`);
+  }
+
+  setImage([...image, ...picked.slice(0, room)]);
+ };
+
+ const removeFile = (index: number) =>
+  setImage(image.filter((_, i) => i !== index));
+
+ const ratingLabels = ["", "Poor", "Fair", "Good", "Very good", "Excellent"];
+ const shownRating = hoverRating || rating;
+ const canSubmit = rating > 0 && comments.trim().length >= 10 && !submitting;
+ const savedRating = Math.round(Number(existingReview?.rating ?? rating)) || 0;
+
+ // Full-size view of one attachment, opened from the preview grid.
+ const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
  const handleReviewSubmit = async () => {
   if (comments.length < 10) {
@@ -463,62 +507,233 @@ export default function WriteReview({
    {/* Render Modal */}
    <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
     <Box
-     p="1rem"
+     p="1.5rem"
      bg="white"
-     borderRadius="8px"
-     width="500px"
+     borderRadius="12px"
+     width="520px"
+     maxWidth="92vw"
      mx="auto"
+     // A five-photo grid plus a long comment can outgrow a short viewport.
+     style={{
+      maxHeight: "88vh",
+      overflowY: "auto",
+      boxShadow: "0 12px 40px rgba(15,52,96,0.18)",
+     }}
      onClick={(e) => e.stopPropagation()}
     >
      {reviewMode === "submit" ? (
       <>
-       <Typography mb="1rem">Submit Your Review:</Typography>
-       {/* Review Form */}
+       {/* Header — the product being reviewed, so the buyer is never guessing
+           which item of a multi-item order this modal belongs to. */}
+       <FlexBox alignItems="center" style={{ gap: "12px" }}>
+        <Avatar
+         src={getProductImageUrl(item.product_image)}
+         alt={item.product_name}
+         size={48}
+        />
+        <Box>
+         <Typography fontSize="1.05rem" fontWeight="700" color="#0F3460">
+          Write a review
+         </Typography>
+         <Typography
+          fontSize="13px"
+          color="text.muted"
+          style={{
+           maxWidth: "360px",
+           overflow: "hidden",
+           textOverflow: "ellipsis",
+           whiteSpace: "nowrap",
+          }}
+         >
+          {item.product_name}
+         </Typography>
+        </Box>
+       </FlexBox>
+
+       <Box
+        mt="1rem"
+        mb="1.25rem"
+        style={{ height: "1px", background: "#E5E9F0" }}
+       />
+
+       {/* Rating */}
        <Box>
-        <Typography>Rate the Product:</Typography>
-        <FlexBox>
-         {[1, 2, 3, 4, 5].map((star) => (
-          <button
-           key={star}
-           style={{
-            background: "transparent",
-            cursor: "pointer",
-            fontSize: "24px",
-            color: star <= rating ? "#FFD700" : "#ccc",
-            border: "none",
-            padding: "2px",
-           }}
-           onClick={() => setRating(star)}
-          >
-           ★
-          </button>
-         ))}
+        <Typography fontSize="13px" fontWeight="600" color="#2C3A4A" mb="6px">
+         Rate the product
+        </Typography>
+        <FlexBox alignItems="center" style={{ gap: "10px" }}>
+         <FlexBox onMouseLeave={() => setHoverRating(0)}>
+          {[1, 2, 3, 4, 5].map((star) => (
+           <button
+            key={star}
+            type="button"
+            aria-label={`${star} star${star === 1 ? "" : "s"}`}
+            onMouseEnter={() => setHoverRating(star)}
+            onClick={() => setRating(star)}
+            style={{
+             background: "transparent",
+             cursor: "pointer",
+             fontSize: "28px",
+             lineHeight: 1,
+             color: star <= shownRating ? "#FFB400" : "#DCE0E6",
+             border: "none",
+             padding: "0 2px",
+             transition: "color 0.15s ease, transform 0.15s ease",
+             transform: star <= hoverRating ? "scale(1.12)" : "none",
+            }}
+           >
+            ★
+           </button>
+          ))}
+         </FlexBox>
+         {shownRating > 0 && (
+          <Typography fontSize="13px" fontWeight="600" color="#FFB400">
+           {ratingLabels[shownRating]}
+          </Typography>
+         )}
         </FlexBox>
        </Box>
-       <Box mt="1rem">
-        <Typography>Upload Images:</Typography>
-        <input
-         type="file"
-         accept="image/*"
-         multiple
-         onChange={(e) =>
-          setImage([...image, ...Array.from(e.target.files || [])])
-         }
-        />
-       </Box>
-       <Box mt="1rem">
+
+       {/* Comment */}
+       <Box mt="1.25rem">
+        <Typography fontSize="13px" fontWeight="600" color="#2C3A4A" mb="6px">
+         Your experience
+        </Typography>
         <textarea
          rows={4}
-         placeholder="Share your experience..."
+         value={comments}
+         maxLength={MAX_COMMENT}
+         placeholder="What did you like or dislike? How was the quality and the delivery?"
          onChange={(e) => setComments(e.target.value)}
          style={{
           width: "100%",
-          border: "1px solid #ccc",
-          padding: "8px",
+          border: "1px solid #DCE0E6",
+          borderRadius: "8px",
+          padding: "10px 12px",
+          fontSize: "14px",
+          fontFamily: "inherit",
+          color: "#2C3A4A",
+          resize: "vertical",
+          outline: "none",
          }}
         />
+        <FlexBox justifyContent="space-between" mt="4px">
+         <Typography fontSize="12px" color={comments.trim().length > 0 && comments.trim().length < 10 ? "#D32F2F" : "text.muted"}>
+          {comments.trim().length < 10
+           ? `At least 10 characters (${comments.trim().length}/10)`
+           : "Looks good"}
+         </Typography>
+         <Typography fontSize="12px" color="text.muted">
+          {comments.length}/{MAX_COMMENT}
+         </Typography>
+        </FlexBox>
        </Box>
-       <Box mt="0.75rem" mb="1rem">
+
+       {/* Photos */}
+       <Box mt="1.25rem">
+        <FlexBox justifyContent="space-between" alignItems="center" mb="6px">
+         <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
+          Add photos <span style={{ color: "#8a94a6", fontWeight: 400 }}>(optional)</span>
+         </Typography>
+         <Typography fontSize="12px" color="text.muted">
+          {image.length}/{MAX_IMAGES}
+         </Typography>
+        </FlexBox>
+
+        <input
+         ref={fileInputRef}
+         type="file"
+         accept="image/*"
+         multiple
+         style={{ display: "none" }}
+         onChange={(e) => {
+          addFiles(e.target.files);
+          // Reset so picking the same file twice still fires onChange.
+          e.target.value = "";
+         }}
+        />
+
+        {/* Fixed 5-up grid so the tiles never wrap — MAX_IMAGES is 5, and the
+            add-tile takes the last free cell. */}
+        <Box
+         style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(5, 1fr)",
+          gap: "10px",
+         }}
+        >
+         {previews.map((src, index) => (
+          <Box
+           key={src}
+           style={{
+            position: "relative",
+            width: "100%",
+            aspectRatio: "1 / 1",
+            borderRadius: "10px",
+            overflow: "hidden",
+            border: "1px solid #E5E9F0",
+            background: "#F7F9FC",
+           }}
+          >
+           <img
+            src={src}
+            alt={`Attachment ${index + 1}`}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+           />
+           <button
+            type="button"
+            aria-label={`Remove image ${index + 1}`}
+            onClick={() => removeFile(index)}
+            style={{
+             position: "absolute",
+             top: "4px",
+             right: "4px",
+             width: "20px",
+             height: "20px",
+             borderRadius: "50%",
+             border: "none",
+             background: "rgba(17,24,39,0.65)",
+             color: "white",
+             fontSize: "13px",
+             lineHeight: "20px",
+             cursor: "pointer",
+             padding: 0,
+            }}
+           >
+            ×
+           </button>
+          </Box>
+         ))}
+
+         {image.length < MAX_IMAGES && (
+          <button
+           type="button"
+           onClick={() => fileInputRef.current?.click()}
+           style={{
+            width: "100%",
+            aspectRatio: "1 / 1",
+            borderRadius: "10px",
+            border: "1px dashed #C6CDD8",
+            background: "#FAFBFC",
+            color: "#8a94a6",
+            cursor: "pointer",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "2px",
+            fontFamily: "inherit",
+           }}
+          >
+           <span style={{ fontSize: "20px", lineHeight: 1 }}>+</span>
+           <span style={{ fontSize: "11px" }}>Add photo</span>
+          </button>
+         )}
+        </Box>
+       </Box>
+
+       {/* Anonymous */}
+       <Box mt="1.25rem" p="10px 12px" bg="#F7F9FC" borderRadius="8px">
         <label
          style={{
           display: "flex",
@@ -533,37 +748,96 @@ export default function WriteReview({
           onChange={(e) => setIsAnonymous(e.target.checked)}
           style={{ cursor: "pointer" }}
          />
-         <Typography fontSize="14px">Post this review anonymously</Typography>
+         <Typography fontSize="14px" color="#2C3A4A">
+          Post this review anonymously
+         </Typography>
         </label>
         <Typography fontSize="12px" color="text.muted" mt="4px" ml="24px">
          Your name won&apos;t be shown on the product page. The Verified
          Purchase badge stays.
         </Typography>
        </Box>
-       <Button
-        variant="contained"
-        color="primary"
-        disabled={submitting}
-        onClick={handleReviewSubmit}
+
+       {/* Actions */}
+       <FlexBox
+        justifyContent="flex-end"
+        alignItems="center"
+        mt="1.25rem"
+        style={{ gap: "10px" }}
        >
-        {submitting ? "Submitting..." : "Submit Review"}
-       </Button>
+        <Button
+         variant="text"
+         disabled={submitting}
+         onClick={() => setIsModalOpen(false)}
+         style={{
+          height: "38px",
+          borderRadius: "100px",
+          padding: "0 18px",
+          color: "#5b6472",
+         }}
+        >
+         <Typography fontSize="14px">Cancel</Typography>
+        </Button>
+        <Button
+         variant="text"
+         disabled={!canSubmit}
+         onClick={handleReviewSubmit}
+         style={{
+          height: "38px",
+          borderRadius: "100px",
+          padding: "0 22px",
+          backgroundColor: canSubmit ? "#e94560" : "#F0C4CC",
+          color: "white",
+          cursor: canSubmit ? "pointer" : "not-allowed",
+         }}
+        >
+         <Typography fontSize="14px" fontWeight="600">
+          {submitting ? "Submitting…" : "Submit review"}
+         </Typography>
+        </Button>
+       </FlexBox>
       </>
      ) : (
       <>
-       <FlexBox alignItems="center" mb="1rem" style={{ gap: "8px" }}>
-        <FontAwesomeIcon icon={faStore} size="sm" color="#0F3460" />
-        <Typography fontWeight="600" fontSize="1.05rem" color="#0F3460">
-         Your Review
-        </Typography>
+       {/* Same header as the submit view, so switching between the two does not
+           feel like two different dialogs. */}
+       <FlexBox alignItems="center" style={{ gap: "12px" }}>
+        <Avatar
+         src={getProductImageUrl(item.product_image)}
+         alt={item.product_name}
+         size={48}
+        />
+        <Box>
+         <Typography fontSize="1.05rem" fontWeight="700" color="#0F3460">
+          Your review
+         </Typography>
+         <Typography
+          fontSize="13px"
+          color="text.muted"
+          style={{
+           maxWidth: "360px",
+           overflow: "hidden",
+           textOverflow: "ellipsis",
+           whiteSpace: "nowrap",
+          }}
+         >
+          {item.product_name}
+         </Typography>
+        </Box>
        </FlexBox>
+
+       <Box
+        mt="1rem"
+        mb="1.25rem"
+        style={{ height: "1px", background: "#E5E9F0" }}
+       />
 
        <Box
         style={{
          background: "#FAFBFC",
          border: "1px solid #E5E9F0",
          borderRadius: "10px",
-         padding: "1rem 1.25rem",
+         padding: "1.15rem 1.25rem",
         }}
        >
         <FlexBox
@@ -572,23 +846,27 @@ export default function WriteReview({
          flexWrap="wrap"
          style={{ gap: "0.5rem" }}
         >
-         <FlexBox alignItems="center">
-          {[1, 2, 3, 4, 5].map((star) => (
-           <span
-            key={star}
-            style={{
-             fontSize: "20px",
-             lineHeight: 1,
-             color:
-              star <= Math.round(Number(existingReview?.rating ?? rating))
-               ? "#FFD700"
-               : "#DDD",
-             marginRight: "2px",
-            }}
-           >
-            ★
-           </span>
-          ))}
+         <FlexBox alignItems="center" style={{ gap: "8px" }}>
+          <FlexBox alignItems="center">
+           {[1, 2, 3, 4, 5].map((star) => (
+            <span
+             key={star}
+             style={{
+              fontSize: "22px",
+              lineHeight: 1,
+              color: star <= savedRating ? "#FFB400" : "#DCE0E6",
+              marginRight: "2px",
+             }}
+            >
+             ★
+            </span>
+           ))}
+          </FlexBox>
+          {savedRating > 0 && (
+           <Typography fontSize="13px" fontWeight="600" color="#FFB400">
+            {ratingLabels[savedRating]}
+           </Typography>
+          )}
          </FlexBox>
 
          <FlexBox alignItems="center" style={{ gap: "6px" }}>
@@ -624,38 +902,122 @@ export default function WriteReview({
          </FlexBox>
         </FlexBox>
 
-        <Typography
-         mt="0.75rem"
-         style={{
-          color: "#444",
-          lineHeight: 1.6,
-          fontStyle: "italic",
-          wordBreak: "break-word",
-         }}
-        >
-         &ldquo;{existingReview?.comments || comments}&rdquo;
-        </Typography>
+        {/* Quote mark sits in the margin instead of wrapping the text, so a long
+            comment stays readable. */}
+        <FlexBox mt="0.9rem" style={{ gap: "10px" }}>
+         <Box
+          style={{
+           width: "3px",
+           borderRadius: "3px",
+           background: "#E5E9F0",
+           flexShrink: 0,
+          }}
+         />
+         <Typography
+          style={{
+           color: "#3d4753",
+           lineHeight: 1.65,
+           fontSize: "14px",
+           wordBreak: "break-word",
+           whiteSpace: "pre-line",
+          }}
+         >
+          {existingReview?.comments || comments}
+         </Typography>
+        </FlexBox>
 
         {existingReview?.images && existingReview.images.length > 0 && (
-         <FlexBox mt="1rem" flexWrap="wrap" style={{ gap: "8px" }}>
-          {existingReview.images.map((src, idx) => (
-           <img
-            key={idx}
-            src={getProductImageUrl(src)}
-            alt={`Review attachment ${idx + 1}`}
-            style={{
-             width: "72px",
-             height: "72px",
-             objectFit: "cover",
-             borderRadius: "8px",
-             border: "1px solid #E5E9F0",
-            }}
-           />
-          ))}
-         </FlexBox>
+         <>
+          <Typography
+           fontSize="12px"
+           fontWeight="600"
+           color="text.muted"
+           mt="1.1rem"
+           mb="8px"
+           style={{ letterSpacing: "0.3px" }}
+          >
+           {existingReview.images.length} PHOTO
+           {existingReview.images.length === 1 ? "" : "S"}
+          </Typography>
+          {/* Fixed 5-up grid: the cap is 5 photos, so they always sit on one row. */}
+          <Box
+           style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(5, 1fr)",
+            gap: "10px",
+           }}
+          >
+           {existingReview.images.map((src, idx) => (
+            <button
+             key={idx}
+             type="button"
+             aria-label={`View photo ${idx + 1} full size`}
+             onClick={() => setZoomedImage(getProductImageUrl(src))}
+             style={{
+              width: "100%",
+              aspectRatio: "1 / 1",
+              padding: 0,
+              borderRadius: "10px",
+              overflow: "hidden",
+              border: "1px solid #E5E9F0",
+              background: "#fff",
+              cursor: "zoom-in",
+             }}
+            >
+             <img
+              src={getProductImageUrl(src)}
+              alt={`Review attachment ${idx + 1}`}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+             />
+            </button>
+           ))}
+          </Box>
+         </>
         )}
        </Box>
+
+       <FlexBox justifyContent="flex-end" mt="1.25rem">
+        <Button
+         variant="text"
+         onClick={() => setIsModalOpen(false)}
+         style={{
+          height: "38px",
+          borderRadius: "100px",
+          padding: "0 22px",
+          backgroundColor: "#e94560",
+          color: "white",
+         }}
+        >
+         <Typography fontSize="14px" fontWeight="600">
+          Close
+         </Typography>
+        </Button>
+       </FlexBox>
       </>
+     )}
+    </Box>
+   </Modal>
+
+   {/* Attachments are small in the grid; this shows one at full size. */}
+   <Modal open={Boolean(zoomedImage)} onClose={() => setZoomedImage(null)}>
+    <Box
+     mx="auto"
+     style={{ maxWidth: "92vw", maxHeight: "88vh" }}
+     onClick={() => setZoomedImage(null)}
+    >
+     {zoomedImage && (
+      <img
+       src={zoomedImage}
+       alt="Review attachment"
+       style={{
+        maxWidth: "92vw",
+        maxHeight: "88vh",
+        objectFit: "contain",
+        borderRadius: "12px",
+        display: "block",
+        cursor: "zoom-out",
+       }}
+      />
      )}
     </Box>
    </Modal>
@@ -748,91 +1110,3 @@ export default function WriteReview({
   </>
  );
 }
-
-// image preview *******
-
-// <Box mt="1rem">
-//   <Typography fontSize="14px" mb="0.5rem">
-//     Upload Images:
-//   </Typography>
-//   <Box
-//     border="1px dashed #ccc"
-//     p="1rem"
-//     borderRadius="8px"
-//     display="flex"
-//     flexDirection="column"
-//     alignItems="center"
-//     justifyContent="center"
-//     textAlign="center"
-//     style={{ cursor: "pointer" }}
-//     onClick={() => document.getElementById("imageUploadInput")?.click()}
-//   >
-//     <Typography fontSize="14px" color="#888">
-//       Click to upload or drag and drop
-//     </Typography>
-//     <Typography fontSize="12px" color="#aaa">
-//       You can upload multiple images
-//     </Typography>
-//   </Box>
-//   <input
-//     type="file"
-//     id="imageUploadInput"
-//     accept="image/*"
-//     multiple
-//     style={{ display: "none" }}
-//     onChange={(e) => {
-//       const files = e.target.files;
-//       if (files) {
-//         setImage([...image, ...Array.from(files)]);
-//       }
-//     }}
-//   />
-
-//   {/* Image Preview Section */}
-//   <Box mt="1rem" display="flex" flexWrap="wrap">
-//     {image.map((img, index) => (
-//       <Box
-//         key={index}
-//         position="relative"
-//         border="1px solid #ccc"
-//         borderRadius="8px"
-//         overflow="hidden"
-//         width="100px"
-//         height="100px"
-//         display="flex"
-//         alignItems="center"
-//         justifyContent="center"
-//       >
-//         {/* Image Preview */}
-//         <img
-//           src={URL.createObjectURL(img)}
-//           alt={`Selected ${index + 1}`}
-//           style={{ maxWidth: "100%", maxHeight: "100%" }}
-//         />
-
-//         {/* Delete Button */}
-//         <Box
-//           position="absolute"
-//           top="5px"
-//           right="5px"
-//           width="20px"
-//           height="20px"
-//           borderRadius="50%"
-//           display="flex"
-//           alignItems="center"
-//           justifyContent="center"
-
-//           color="black"
-//           fontSize="24px"
-//           fontWeight="bold"
-//           style={{ cursor: "pointer" }}
-//           onClick={() => {
-//             setImage(image.filter((_, imgIndex) => imgIndex !== index));
-//           }}
-//         >
-//           ×
-//         </Box>
-//       </Box>
-//     ))}
-//   </Box>
-// </Box>

@@ -396,7 +396,7 @@ export default function Navbar({ navListOpen }: NavbarProps) {
        }}
       >
        <div style={{ marginRight: "8px" }}>
-        {navItem.title === "Become A Seller" ? (
+        {navItem.title.includes("Seller") ? (
          <FaUser />
         ) : navItem.title === "International Products" ? (
          <FaGlobe />

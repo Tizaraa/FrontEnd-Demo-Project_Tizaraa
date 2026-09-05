@@ -896,7 +896,9 @@ export default function CheckoutSummary({ deliveryCharge }) {
     />
    ))}
 
-   <FlexBox flexDirection="column">
+   {/* Separates the promo field from the totals below — without it "Subtotal"
+       reads as part of the promotion block. */}
+   <FlexBox flexDirection="column" mb="1.25rem">
     <Typography fontWeight="600" mb="0.5rem">
      Promotion
     </Typography>
