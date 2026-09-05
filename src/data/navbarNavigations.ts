@@ -126,6 +126,11 @@ const navbarNavigations = [
   url: "https://seller.tizaraa.shop",
   extLink: true,
  },
+ {
+  title: "Become A Corporate Seller",
+  url: "https://seller.tizaraa.shop/seller/corporate/apply",
+  extLink: true,
+ },
  { title: "Find Shop", url: "/shops", extLink: false },
  // { title: "Nearby Products", url: "/location", extLink: false },
 ];
