@@ -602,7 +602,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Vortex } from "react-loader-spinner";
 
 // Tailwind CSS styles with two-column grid
@@ -883,12 +883,13 @@ export default function ProfileEditForm() {
     },
    });
    toast.success("Profile updated successfully!", {
-    position: "top-center",
+    position: "top-right",
    });
    router.back();
+   router.refresh();
   } catch (err) {
    toast.error("Failed to update profile.", {
-    position: "top-center",
+    position: "top-right",
    });
   }
  };
@@ -904,7 +905,6 @@ export default function ProfileEditForm() {
  return (
   <>
    <style>{styles}</style>
-   <Toaster />
    <div className="form-container">
     <h2 className="form-title">Edit Profile</h2>
     <Formik

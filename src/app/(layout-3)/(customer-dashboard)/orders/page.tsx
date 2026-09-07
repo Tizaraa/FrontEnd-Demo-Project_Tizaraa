@@ -133,7 +133,7 @@
 // }
 
 "use client";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import axios from "@lib/axiosClient";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -220,19 +220,20 @@ export default function OrderList() {
   //   }
   // }, [orderSuccess]);
 
-  useEffect(() => {
-    const queryString = window.location.search;
-    console.log("Query String:", queryString); // Log query string
+  const statusToastShown = useRef(false);
 
-    const urlParams = new URLSearchParams(queryString);
+  useEffect(() => {
+    if (statusToastShown.current) return;
+
+    const urlParams = new URLSearchParams(window.location.search);
     const status = urlParams.get("status");
     const message = urlParams.get("message");
-    console.log("Status:", status);
-    console.log("Message:", decodeURIComponent(message || ""));
 
     if (status === "success" && message) {
+      statusToastShown.current = true;
       toast.success(decodeURIComponent(message));
     } else if (status === "fail" && message) {
+      statusToastShown.current = true;
       toast.error(decodeURIComponent(message));
     }
   }, []);

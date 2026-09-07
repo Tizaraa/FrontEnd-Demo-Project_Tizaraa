@@ -810,6 +810,23 @@ export default function OrderDetails({ params }: IDParams) {
 
             </div>
 
+            {order?.Order?.payment_method === "corporate_credit" &&
+             details?.status === "Pending" && (
+              <Box
+               mx="1rem"
+               mb="1rem"
+               p="10px 14px"
+               bg="#FFF8E1"
+               border="1px solid #FFE0A3"
+               borderRadius="8px"
+              >
+               <Typography fontSize="13px" color="#8A6D00">
+                Note: As a corporate employee, you can only cancel this
+                product while the order is still Pending.
+               </Typography>
+              </Box>
+             )}
+
             {details?.order_items?.map((item, ind) => (
              <WriteReview
               key={ind}
@@ -870,6 +887,7 @@ export default function OrderDetails({ params }: IDParams) {
               deliveredAt={details.delivered_at}
               returnStatus={returnDetails[0]?.return_status ?? null}
               isCorporate={order?.Order?.payment_method === "corporate_credit"}
+              hideReturnFlow
              />
             </Box>
 

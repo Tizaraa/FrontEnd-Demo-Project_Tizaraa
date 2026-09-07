@@ -49,6 +49,7 @@ export default function Watermark({
         maxWidth,
         opacity,
         zIndex: 0,
+        pointerEvents: "none",
       }}
     />
   );
