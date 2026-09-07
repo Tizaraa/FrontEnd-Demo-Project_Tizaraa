@@ -344,6 +344,7 @@ interface OrderStatusProps {
  deliveredAt: string | null;
  returnStatus?: string | null; // return_status from the order_returns record
  isCorporate?: boolean; // corporate shop order — collected at the counter, never shipped
+ hideReturnFlow?: boolean; // suppress the return-tracker step view (e.g. All Orders tab, where the Return Request Details card already covers it)
 }
 
 export default function OrderStatus({
@@ -351,6 +352,7 @@ export default function OrderStatus({
  deliveredAt,
  returnStatus,
  isCorporate = false,
+ hideReturnFlow = false,
 }: OrderStatusProps) {
  const width = useWindowSize();
  const breakpoint = 350;
@@ -481,6 +483,8 @@ export default function OrderStatus({
 
  // Return flow tracker
  if (isReturnFlow) {
+  if (hideReturnFlow) return null;
+
   const returnSteps = ["Return Requested", "Return Approved", "Item Received", "Refunded"];
   const isRejected = returnStatus?.toLowerCase() === "rejected";
   const activeStep = isRejected ? 0 : returnStepIndex;

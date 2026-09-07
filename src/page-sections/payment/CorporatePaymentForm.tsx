@@ -1154,7 +1154,6 @@ export default function CorporatePaymentForm() {
     sessionStorage.removeItem("savedTotalPrice");
     sessionStorage.removeItem("savedTotalWithDelivery");
 
-    toast.success("Order placed successfully!");
     router.push("/orders?status=success&message=Order placed successfully");
    } catch (error: unknown) {
     if (error instanceof AxiosError) {

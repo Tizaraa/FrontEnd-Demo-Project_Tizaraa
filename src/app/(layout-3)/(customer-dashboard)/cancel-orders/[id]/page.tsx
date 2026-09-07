@@ -534,17 +534,6 @@ export default function OrderDetails({ params }: IDParams) {
                       </Chip>
                     </Box> */}
 
-              <Box
-               m="6px"
-               p="0.5rem 1rem"
-               borderRadius="100px"
-               textAlign="center"
-               color="gray!important"
-               fontWeight={600}
-               backgroundColor="#ddd"
-              >
-               Cancelled
-              </Box>
              </div>
 
              {/* {details?.delivered_at && (

@@ -766,6 +766,7 @@ const ShippingInfo: React.FC<{
   shopUrl: string;
   slug: string;
   showInTab?: boolean;
+  isCorporateShop?: boolean;
 }> = ({
   isDesktop,
   sellerShopName,
@@ -773,6 +774,7 @@ const ShippingInfo: React.FC<{
   shopUrl,
   slug,
   showInTab = false,
+  isCorporateShop = false,
 }) => {
     const [infoPageUrl, setInfoPageUrl] = useState("");
 
@@ -837,7 +839,9 @@ const ShippingInfo: React.FC<{
           <div style={rowStyle}>
             <span style={iconStyle()}>🚚</span>
             <span style={textStyle}>
-              Delivered directly by Tizaraa&apos;s in-house seller.
+              {isCorporateShop
+                ? "Delivered directly by Tizaraa's Corporate seller."
+                : "Delivered directly by the seller."}
             </span>
           </div>
         </div>
@@ -846,7 +850,11 @@ const ShippingInfo: React.FC<{
           <h2 style={headingStyle}>Payments</h2>
           <div style={rowStyle}>
             <span style={iconStyle()}>🎧</span>
-            <span style={textStyle}>Payment is made through Corporate credit.</span>
+            <span style={textStyle}>
+              {isCorporateShop
+                ? "Payment is made through Corporate credit."
+                : "Payment is made through Tizaraa's secure checkout."}
+            </span>
           </div>
         </div>
 
@@ -1129,6 +1137,7 @@ const ProductView: React.FC<{
     sellerShopLogo: string;
     shopUrl: string;
     slug: string;
+    isCorporateShop?: boolean;
   };
   isDesktop: boolean;
 }> = ({ description, productId, warrantyPolicy, shippingProps, isDesktop }) => {
@@ -1207,6 +1216,7 @@ const ProductView: React.FC<{
               sellerShopLogo={shippingProps.sellerShopLogo}
               shopUrl={shippingProps.shopUrl}
               slug={shippingProps.slug}
+              isCorporateShop={shippingProps.isCorporateShop}
               showInTab={true}
             />
           </div>
@@ -1323,12 +1333,15 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
     productData.productsingledetails?.campaign?.banner_image;
   const campaignSlug = productData.productsingledetails?.campaign?.slug;
 
+  const isCorporateShop = Boolean(product.is_corporate_shop);
+
   // Get shipping info props for tab usage
   const shippingProps = {
     sellerShopName,
     sellerShopLogo,
     shopUrl,
     slug: params.slug,
+    isCorporateShop,
   };
 
   // Create shipping info component for sidebar
@@ -1339,6 +1352,7 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
       sellerShopLogo={sellerShopLogo}
       shopUrl={shopUrl}
       slug={params.slug}
+      isCorporateShop={isCorporateShop}
     />
   );
 
