@@ -150,7 +150,7 @@ const CorporateCard = ({ profile }) => {
      iconBg="rgba(15, 52, 96, 0.1)"
      iconColor="#0F3460"
      label="Employee ID"
-     value={profile?.employee_id || "N/A"}
+     value={profile?.employee_code || "N/A"}
     />
     <InfoRow
      icon={faBriefcase}
