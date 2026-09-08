@@ -47,6 +47,41 @@ export default function WriteReview({
  const [showOrderStatus, setShowOrderStatus] = useState(false);
  const [isModalOpen, setIsModalOpen] = useState(false);
  const [isCorporateReturnOpen, setIsCorporateReturnOpen] = useState(false);
+ const [returnWindowLeft, setReturnWindowLeft] = useState<string | null>(null);
+
+ // Corporate returns must happen the same calendar day the item was delivered —
+ // count down to that day's midnight while the "Return at the shop" modal is open.
+ useEffect(() => {
+  if (!isCorporateReturnOpen || !delivered_at) {
+   setReturnWindowLeft(null);
+   return;
+  }
+
+  const deliveredDate = new Date(delivered_at);
+  const deadline = new Date(
+   deliveredDate.getFullYear(),
+   deliveredDate.getMonth(),
+   deliveredDate.getDate() + 1
+  ); // midnight after the delivery day
+
+  const tick = () => {
+   const diffMs = deadline.getTime() - Date.now();
+   if (diffMs <= 0) {
+    setReturnWindowLeft("Return window has closed");
+    return;
+   }
+   const hours = Math.floor(diffMs / (1000 * 60 * 60));
+   const minutes = Math.floor((diffMs / (1000 * 60)) % 60);
+   const seconds = Math.floor((diffMs / 1000) % 60);
+   setReturnWindowLeft(
+    `${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s left to return`
+   );
+  };
+
+  tick();
+  const interval = setInterval(tick, 1000);
+  return () => clearInterval(interval);
+ }, [isCorporateReturnOpen, delivered_at]);
  const [rating, setRating] = useState(0);
  const [hoverRating, setHoverRating] = useState(0);
  const [comments, setComments] = useState("");
@@ -1104,6 +1139,19 @@ export default function WriteReview({
      <Typography fontSize="12px" color="text.muted" mt="12px">
       Returns must be made on the same day the item was delivered.
      </Typography>
+
+     {returnWindowLeft && (
+      <Box mt="8px" p="8px 12px" bg="#FFF4F6" borderRadius="6px">
+       <Typography
+        fontSize="13px"
+        fontWeight="600"
+        color="#e94560"
+        textAlign="center"
+       >
+        {returnWindowLeft}
+       </Typography>
+      </Box>
+     )}
 
      <FlexBox justifyContent="flex-end" mt="1.25rem">
       <Button

@@ -907,18 +907,6 @@ export default function OrderDetails({ params }: IDParams) {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px" }}>
                <div>
                 <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                 Reason Category
-                </Typography>
-                <Typography fontSize="13px" fontWeight="600" color="#374151" mt="2px">
-                 {ret.return_reason_category === "buyer_remorse"
-                  ? "Changed Mind / No Longer Needed"
-                  : ret.return_reason_category === "seller_fault"
-                  ? "Damaged / Defective / Wrong Item"
-                  : ret.return_reason_category}
-                </Typography>
-               </div>
-               <div>
-                <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
                  Return Type
                 </Typography>
                 <Typography fontSize="13px" fontWeight="600" color="#374151" mt="2px" style={{ textTransform: "capitalize" }}>
