@@ -203,9 +203,31 @@ export default function PendingOrderRow({ order }: OrderRowProps) {
   return (
     <Link href={`/pending-orders/${order.id}`}>
       <TableRow>
-        <H5 m="6px" textAlign="left" color="rgb(233, 69, 96)" flex="1 1 0">
-          {order.invoice}
-        </H5>
+        <Box m="6px" flex="1 1 0">
+          <H5 m="0" textAlign="left" color="rgb(233, 69, 96)">
+            {order.invoice}
+          </H5>
+          {(order.cancelled_item_count > 0 || order.active_item_count > 0) && (
+            <Typography
+              mt="4px"
+              fontSize="11px"
+              color="gray.600"
+              style={{
+                display: "inline-block",
+                padding: "2px 8px",
+                borderRadius: "10px",
+                backgroundColor: "#F5F5F5",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+              }}
+            >
+              {order.active_item_count > 0 &&
+                `${order.active_item_count} pending`}
+              {order.active_item_count > 0 && order.cancelled_item_count > 0 && " · "}
+              {order.cancelled_item_count > 0 &&
+                `${order.cancelled_item_count} cancelled`}
+            </Typography>
+          )}
+        </Box>
 
         <Typography
           className="flex-grow pre"
