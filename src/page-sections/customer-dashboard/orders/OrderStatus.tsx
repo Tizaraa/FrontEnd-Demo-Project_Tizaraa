@@ -403,14 +403,14 @@ export default function OrderStatus({
   // once the seller marks the order as processing, not on confirmation.
   if (isCorporate) {
    switch (status) {
-    case 0: // Pending — order placed, seller has not started processing yet
-     return -2; // No active steps
+    case 0: // Pending — order placed, waiting on the seller to pack it
+     return 0; // First step ("Pending") active
     case 1: // Confirmed — kept for any order that reached this before the flow changed
      return 0;
-    case 2: // Processing — seller has marked it as processing / packing
-     return 0;
+    case 2: // Processing — seller has marked it as processing / packed
+     return 1; // Second step ("Packed") active
     case 3: // Shipped — not part of the corporate flow, but treat as packed
-     return 0;
+     return 1;
     case 4: // Delivered
      return 2;
     case 5: // Canceled
@@ -445,7 +445,9 @@ export default function OrderStatus({
   ? [
      {
       icon: "bag",
-      label: "Mark as Packed",
+      // "Mark as Packed" is the seller-facing instruction for this step;
+      // buyers just see it as the order's starting stage, "Pending".
+      label: "Pending",
      },
      {
       icon: "package-box",
