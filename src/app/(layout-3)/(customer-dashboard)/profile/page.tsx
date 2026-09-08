@@ -309,6 +309,7 @@ type profileType = {
  type: string;
  credit_balance?: string;
  employee_id?: any;
+ employee_code?: any;
  nid?: any;
  designation?: any;
  employee_status?: any;

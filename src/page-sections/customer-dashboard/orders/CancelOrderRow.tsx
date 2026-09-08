@@ -220,7 +220,6 @@ const StyledIconButton = styled(IconButton)`
 
 export default function CancelOrderRow({ order }: OrderRowProps) {
  const buckets = buildStatusBuckets(order);
- const cancelledCount = order.cancelled_item_count || order.item_count;
 
  return (
   <Link href={`/cancel-orders/${order.id}`}>
@@ -231,7 +230,6 @@ export default function CancelOrderRow({ order }: OrderRowProps) {
        <H5 textAlign="left" color="rgb(233, 69, 96)" m="0px">
         {order.invoice}
        </H5>
-       <Pill>{cancelledCount} Cancelled</Pill>
       </Box>
 
       <Typography

@@ -20,7 +20,8 @@ interface UserInfo {
  updated_at: string | null; // Can be null
  user_vercode: string | null; // Can be null, add if applicable
  type?: string | null; 
- employee_id?: number | null; 
+ employee_id?: number | null;
+ employee_code?: string | null;
  nid?: number | null; 
  designation?: string | null; 
  credit_limit?: number | null; 

@@ -509,7 +509,7 @@ export default function WriteReview({
      )}
 
      {/* item cancel — buyer's window closes once the seller starts processing */}
-     {status !== "Delivered" && cancel_status !== 6 && !isItemCancelled && (
+     {status !== "Delivered" && cancel_status !== 6 && !isItemCancelled && !isItemReturned && (
       <FlexBox flex="160px" m="6px" alignItems="center">
        <Button
         variant="text"
