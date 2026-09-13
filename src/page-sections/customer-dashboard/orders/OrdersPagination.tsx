@@ -22,8 +22,11 @@ import Pagination from "@component/pagination";
 import Order from "@models/order.model";
 
 interface OrdersPaginationProps {
- orderList: Order[];
- ordersPerPage: number;
+ /** Client-side paging: the full list that gets sliced by the caller. */
+ orderList?: Order[];
+ ordersPerPage?: number;
+ /** Server-side paging: page count straight from the API meta. Wins over orderList. */
+ pageCount?: number;
  currentPage: number;
  onPageChange: (page: number) => void;
 }
@@ -31,10 +34,15 @@ interface OrdersPaginationProps {
 export default function OrdersPagination({
  orderList,
  ordersPerPage,
+ pageCount: pageCountProp,
  currentPage,
  onPageChange,
 }: OrdersPaginationProps) {
- const pageCount = Math.ceil(orderList.length / ordersPerPage);
+ const pageCount =
+  pageCountProp ??
+  Math.ceil((orderList?.length ?? 0) / (ordersPerPage || 10));
+
+ if (pageCount <= 1) return null;
 
  const handlePageChange = (selectedPage: number) => {
   onPageChange(selectedPage);
