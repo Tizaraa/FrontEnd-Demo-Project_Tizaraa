@@ -146,8 +146,8 @@ import Hidden from "@component/hidden";
 import { IconButton } from "@component/buttons";
 import Typography, { H5 } from "@component/Typography";
 import Icon from "@component/icon/Icon";
-import { currency } from "@utils/utils";
-import { buildStatusBuckets, rowTotal } from "./orderRowStatus";
+import { buildStatusBuckets } from "./orderRowStatus";
+import OrderTotal from "./OrderTotal";
 
 // =================================================
 type OrderRowProps = { order: any };
@@ -253,23 +253,7 @@ export default function CancelOrderRow({ order }: OrderRowProps) {
        {order.item_count}
       </Typography>
 
-      <Typography m="6px" textAlign="left" flex="1 1 0">
-       <span
-        style={{
-         textDecoration: "line-through",
-         textDecorationColor: "#e53935",
-         textDecorationThickness: "2px",
-         color: "rgb(51, 51, 51)",
-         fontWeight: 600,
-        }}
-       >
-        {currency(rowTotal(order))}
-       </span>
-       <br />
-       <span style={{ fontWeight: 700, color: "rgb(51, 51, 51)" }}>
-        {currency(0)}
-       </span>
-      </Typography>
+      <OrderTotal order={order} />
      </MainLine>
 
      {buckets.length > 0 && (

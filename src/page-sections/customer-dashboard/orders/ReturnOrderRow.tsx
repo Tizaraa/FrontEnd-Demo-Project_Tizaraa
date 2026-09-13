@@ -144,8 +144,8 @@ import Hidden from "@component/hidden";
 import { IconButton } from "@component/buttons";
 import Typography, { H5 } from "@component/Typography";
 import Icon from "@component/icon/Icon";
-import { currency } from "@utils/utils";
 import { buildStatusBuckets } from "./orderRowStatus";
+import OrderTotal from "./OrderTotal";
 
 // =================================================
 type OrderRowProps = { order: any };
@@ -218,9 +218,6 @@ const StyledIconButton = styled(IconButton)`
 
 export default function ReturnOrderRow({ order }: OrderRowProps) {
  const buckets = buildStatusBuckets(order);
- const originalTotal =
-  typeof order.original_total === "number" ? order.original_total : order.amount;
- const returnedTotal = originalTotal - order.amount;
 
  return (
   <Link href={`/return-orders/${order.id}`}>
@@ -252,15 +249,7 @@ export default function ReturnOrderRow({ order }: OrderRowProps) {
        {order.item_count}
       </Typography>
 
-      <Typography m="6px" textAlign="left" flex="1 1 0">
-       <span style={{ fontSize: "13px", color: "#7A8A99" }}>
-        Original Price: {currency(originalTotal)}
-       </span>
-       <br />
-       <span style={{ fontWeight: 600, color: "rgb(51, 51, 51)" }}>
-        Returned: {currency(returnedTotal)}
-       </span>
-      </Typography>
+      <OrderTotal order={order} />
      </MainLine>
 
      {buckets.length > 0 && (
