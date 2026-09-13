@@ -26,23 +26,62 @@ export const STATUS_LABELS: Record<string, string> = {
 export type StatusBucket = { label: string; count: number };
 
 /**
+ * What one order's own status should be called on a row.
+ *
+ * A corporate order is collected at the shop counter, so the seller marking it
+ * "processing" means it is packed and waiting there — the tracker and the detail
+ * page both say "Packed", and the list has to match.
+ */
+export function statusLabel(order: any): string {
+ const key = normalizeStatus(order.status);
+ const label = STATUS_LABELS[key] ?? "Processing";
+
+ if (order.payment_method === "corporate_credit" && key === "processing") {
+  return "Packed";
+ }
+
+ return label;
+}
+
+/**
  * What the Total column should say for one row.
  *
  * order.amount is the order's live value: items cancelled one at a time and items
- * handed back are taken off it. That reads correctly everywhere except a cancelled
- * order, where nothing is live and the number means two different things depending
- * on how the cancel happened — 0.00 when every item was cancelled individually, the
- * full charge when the order went in one go. Cancelled rows therefore show what the
- * buyer was originally charged instead.
+ * handed back are taken off it. A cancelled order has nothing live left, so it reads
+ * 0.00 — order.amount itself can't be trusted there, since a whole-order cancel
+ * leaves it at the full charge on purpose (the corporate credit refund reads it).
  */
 export function rowTotal(order: any): number {
- const isCancelled = normalizeStatus(order.status) === "cancelled";
-
- if (isCancelled && typeof order.original_total === "number") {
-  return order.original_total;
+ if (normalizeStatus(order.status) === "cancelled") {
+  return 0;
  }
 
  return order.amount;
+}
+
+/**
+ * What the order was worth before anything came off it.
+ *
+ * The API sends original_total with the cancelled items and refunded returns added
+ * back; an older payload without it has nothing taken off yet, so amount is already
+ * the original.
+ */
+export function rowOriginalTotal(order: any): number {
+ return typeof order.original_total === "number"
+  ? order.original_total
+  : order.amount ?? 0;
+}
+
+/**
+ * Whether the row should show the original price struck through next to the live one.
+ *
+ * True whenever something came off the order — a whole-order cancel, an item pulled
+ * before it shipped, or a refunded return — so the buyer can see what they were
+ * charged for as well as what is still standing. Compared with a cent of slack
+ * because both figures are floats off the wire.
+ */
+export function hasReducedTotal(order: any): boolean {
+ return rowOriginalTotal(order) - rowTotal(order) > 0.005;
 }
 
 /**
@@ -53,12 +92,12 @@ export function rowTotal(order: any): number {
  * with the order's own status, so a delivered order reads "2 Delivered" while a
  * pending one reads "2 Pending" rather than claiming a delivery that never happened.
  *
- * Returns nothing for an order where every item is still with the buyer — the row
- * above already says as much. Once anything has been cancelled or handed back the
- * footer appears, even if that accounts for the whole order.
+ * Every order gets the footer, including one where nothing has been cancelled or
+ * handed back — that row still reads "1 Pending" rather than saying nothing about
+ * where the order stands. Returns nothing only when the API sent no counts at all.
  */
 export function buildStatusBuckets(order: any): StatusBucket[] {
- const label = STATUS_LABELS[normalizeStatus(order.status)] ?? "Processing";
+ const label = statusLabel(order);
 
  const active = order.active_item_count;
  const cancelled = order.cancelled_item_count;
@@ -69,7 +108,6 @@ export function buildStatusBuckets(order: any): StatusBucket[] {
  );
 
  if (!hasBreakdown) return [];
- if (!(cancelled ?? 0) && !(returned ?? 0)) return [];
 
  return [
   { label: "Cancel", count: cancelled ?? 0 },
