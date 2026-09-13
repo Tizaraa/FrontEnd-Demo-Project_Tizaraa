@@ -14,6 +14,7 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import {
  OrderStatus,
+ ShippingAddressCard,
  WriteReview,
  OrderListButton,
 } from "@sections/customer-dashboard/orders";
@@ -39,6 +40,31 @@ import Loader from "@component/loader";
 //   justify-content: center;
 //   align-items: center;
 // `;
+
+// One line of the money breakdown. A deduction is the only line that carries colour,
+// so what came off the order is the thing the eye lands on.
+const SummaryLine = ({
+ label,
+ value,
+ negative = false,
+}: {
+ label: string;
+ value: string;
+ negative?: boolean;
+}) => (
+ <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+  <Typography fontSize="14px" color={negative ? "#2C3A4A" : "text.hint"}>
+   {label}
+  </Typography>
+  <Typography
+   fontSize="14px"
+   fontWeight={negative ? "600" : "400"}
+   color={negative ? "#E94560" : "text.hint"}
+  >
+   {negative ? `−${value}` : value}
+  </Typography>
+ </FlexBox>
+);
 
 export default function OrderDetails({ params }: IDParams) {
  const [order, setOrder] = useState(null);
@@ -141,6 +167,9 @@ export default function OrderDetails({ params }: IDParams) {
       amount_percentage: String(raw.advance_payment_percent ?? 100),
       amount: raw.total_amount,
       main_total: raw.subtotal,
+      // The subtotal as charged, before cancelled items and refunded returns came
+      // off it — the summary opens on this so its deduction lines foot to the total.
+      original_subtotal: raw.original_subtotal ?? raw.subtotal,
       delivery_charge: raw.shipping_amount,
       delivery_charge_reason: "",
       due_amount: 0,
@@ -535,7 +564,29 @@ export default function OrderDetails({ params }: IDParams) {
               </Box>
              </div>
 
+             {/* Invoice belongs beside the shop it bills for, not at the foot of
+                 the page under the address — and a failure has to show next to the
+                 button that caused it. */}
+             <Box m="6px" textAlign="right">
+              <Button
+               px="1.5rem"
+               color="primary"
+               bg="primary.light"
+               onClick={fetchInvoice}
+              >
+               {invoiceLoading ? (
+                <BeatLoader size={14} color="#E94560" />
+               ) : (
+                "Invoice"
+               )}
+              </Button>
 
+              {invoiceError && (
+               <Typography color="red" fontSize="12px" mt="4px">
+                {invoiceError}
+               </Typography>
+              )}
+             </Box>
             </div>
 
             {details?.order_items?.map((item, ind) => (
@@ -554,43 +605,6 @@ export default function OrderDetails({ params }: IDParams) {
              />
             ))}
             {/* <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} /> */}
-
-            {order?.Order?.refunded_total > 0 && (
-             <Box
-              mt="10px"
-              p="12px 14px"
-              bg="#F7F9FC"
-              border="1px solid #E5E9F0"
-              borderRadius="8px"
-             >
-              <FlexBox
-               justifyContent="space-between"
-               alignItems="center"
-               flexWrap="wrap"
-               style={{ gap: "8px" }}
-              >
-               <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
-                {order?.Order?.returned_item_count}{" "}
-                {order?.Order?.returned_item_count === 1 ? "item" : "items"}{" "}
-                returned
-               </Typography>
-               <FlexBox alignItems="center" style={{ gap: "12px" }}>
-                <Typography fontSize="13px" color="text.muted">
-                 Original{" "}
-                 <span style={{ textDecoration: "line-through" }}>
-                  {currency(order?.Order?.original_total || 0)}
-                 </span>
-                </Typography>
-                <Typography fontSize="13px" color="#e94560" fontWeight="600">
-                 −{currency(order?.Order?.refunded_total || 0)}
-                </Typography>
-                <Typography fontSize="14px" fontWeight="700" color="#2C3A4A">
-                 Now {currency(order?.Order?.amount || 0)}
-                </Typography>
-               </FlexBox>
-              </FlexBox>
-             </Box>
-            )}
 
             <OrderStatus
              orderStatus={details.status}
@@ -631,34 +645,61 @@ export default function OrderDetails({ params }: IDParams) {
             </FlexBox>
 
             {openSummaries[shopName] && (
-             <Box p="20px" borderRadius={8} mt="1rem">
-              <Typography variant="h6" mt="0px" mb="14px">
-               Total Summary
-              </Typography>
-              <FlexBox
-               justifyContent="space-between"
-               alignItems="center"
-               mb="0.5rem"
-              >
-               <Typography fontSize="14px" color="text.hint">
-                Subtotal:
-               </Typography>
-               <Typography fontSize="14px" color="text.hint">
-                {currency(details.sub_total || 0)}
-               </Typography>
-              </FlexBox>
-              <FlexBox
-               justifyContent="space-between"
-               alignItems="center"
-               mb="0.5rem"
-              >
-               <Typography fontSize="14px" color="text.hint">
-                Shipping fee ({shopName}):
-               </Typography>
-               <Typography fontSize="14px" color="text.hint">
-                {currency(details.delivery_charge || 0)}
-               </Typography>
-              </FlexBox>
+             <Box
+              p="20px"
+              mt="1rem"
+              borderRadius={8}
+              bg="#FBFCFE"
+              border="1px solid #EDF1F6"
+             >
+              {/* The ledger reads top to bottom: what was charged, what came off,
+                  what shipping added, then the total those lines add up to. The
+                  deductions used to sit under the total, where they looked like
+                  money still owed rather than money already taken off. */}
+              <SummaryLine
+               label="Subtotal"
+               value={currency(
+                order?.Order?.original_subtotal ?? details.sub_total ?? 0
+               )}
+              />
+
+              {order?.Order?.cancelled_item_count > 0 && (
+               <SummaryLine
+                negative
+                label={`${order?.Order?.cancelled_item_count} ${
+                 order?.Order?.cancelled_item_count === 1 ? "item" : "items"
+                } cancelled`}
+                value={currency(order?.Order?.cancelled_total || 0)}
+               />
+              )}
+
+              {order?.Order?.returned_item_count > 0 && (
+               <SummaryLine
+                negative
+                label={`${order?.Order?.returned_item_count} ${
+                 order?.Order?.returned_item_count === 1 ? "item" : "items"
+                } returned`}
+                value={currency(order?.Order?.refunded_total || 0)}
+               />
+              )}
+
+              {order?.Order?.discount_amount > 0 && (
+               <SummaryLine
+                negative
+                label={
+                 order?.Order?.promo_code
+                  ? `Promo (${order?.Order?.promo_code})`
+                  : "Discount"
+                }
+                value={currency(order?.Order?.discount_amount)}
+               />
+              )}
+
+              <SummaryLine
+               label={`Shipping fee (${shopName})`}
+               value={currency(details.delivery_charge || 0)}
+              />
+
               <Divider mb="0.5rem" />
               {/* <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
                       <Typography variant="h6">Total</Typography>
@@ -675,111 +716,54 @@ export default function OrderDetails({ params }: IDParams) {
                 Total
                </Typography>
 
-               <Typography variant="h6" display="flex" alignItems="center">
-                {details.promocodeStatus === 1 && (
-                 <Box
-                  mr="0.5rem"
-                  px="0.4rem"
-                  py="0.2rem"
-                  backgroundColor="#E94560"
-                  color="#fff"
-                  borderRadius="12px"
-                  fontSize="13px"
-                  display="flex"
-                  alignItems="center"
-                  letterSpacing="1px"
-                 >
-                  Promo Applied &nbsp;
-                  <span
-                   style={{
-                    color: "#fff",
-                    fontWeight: "bold",
-                    letterSpacing: "1px",
-                   }}
-                  >
-                   &#10003;
-                  </span>
-                 </Box>
-                )}
+               {/* The "Promo Applied" badge that used to sit here said less than
+                   the discount line above, which names the code and the amount. */}
+               <Typography variant="h6">
                 {currency(details.total || 0)}
                </Typography>
               </FlexBox>
 
-              {(order?.Order?.cancelled_item_count > 0 ||
-                order?.Order?.returned_item_count > 0) && (
-               <Box
-                mb="1rem"
-                p="12px 14px"
-                bg="#F7F9FC"
-                border="1px solid #E5E9F0"
-                borderRadius="8px"
-               >
-                {order?.Order?.cancelled_item_count > 0 && (
-                 <FlexBox
-                  justifyContent="space-between"
-                  alignItems="center"
-                  flexWrap="wrap"
-                  style={{ gap: "8px" }}
-                  mb={order?.Order?.returned_item_count > 0 ? "0.5rem" : "0px"}
-                 >
-                  <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
-                   {order?.Order?.cancelled_item_count}{" "}
-                   {order?.Order?.cancelled_item_count === 1 ? "item" : "items"}{" "}
-                   cancelled
-                  </Typography>
-                  <Typography fontSize="13px" color="#E94560" fontWeight="600">
-                   −{currency(order?.Order?.cancelled_total || 0)}
-                  </Typography>
-                 </FlexBox>
-                )}
+              {/* Payment sits under the money, on one line — two stacked rows of
+                  label-plus-chip read as a second summary rather than a footnote.
+                  The raw enum ("corporate_credit") is titled the same way the
+                  order status is. */}
+              <FlexBox
+               alignItems="center"
+               flexWrap="wrap"
+               mt="1rem"
+               style={{ gap: "8px 24px" }}
+              >
+               <FlexBox alignItems="center" style={{ gap: "8px" }}>
+                <Typography fontSize="14px" color="text.hint">
+                 Payment Method
+                </Typography>
+                <H6
+                 my="0px"
+                 p="4px 12px"
+                 backgroundColor="rgba(255,225,230,1)"
+                 borderRadius="1rem"
+                 color="rgb(233, 69, 96)"
+                 fontSize="13px"
+                >
+                 {formatStatus(order?.Order?.payment_method) || "N/A"}
+                </H6>
+               </FlexBox>
 
-                {order?.Order?.returned_item_count > 0 && (
-                 <FlexBox
-                  justifyContent="space-between"
-                  alignItems="center"
-                  flexWrap="wrap"
-                  style={{ gap: "8px" }}
-                 >
-                  <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
-                   {order?.Order?.returned_item_count}{" "}
-                   {order?.Order?.returned_item_count === 1 ? "item" : "items"}{" "}
-                   returned
-                  </Typography>
-                  <Typography fontSize="13px" color="#E94560" fontWeight="600">
-                   −{currency(order?.Order?.refunded_total || 0)}
-                  </Typography>
-                 </FlexBox>
-                )}
-               </Box>
-              )}
-
-              <FlexBox alignItems="center" mb="1rem">
-               Payment Method:
-               <H6
-                my="0px"
-                mx="1rem"
-                backgroundColor="rgba(255,225,230,1)"
-                p="5px"
-                px="10px"
-                borderRadius="1rem"
-                color="rgb(233, 69, 96)"
-               >
-                {order?.Order?.payment_method || "N/A"}
-               </H6>
-              </FlexBox>
-              <FlexBox alignItems="center" mb="1rem">
-               Payment Status:
-               <H6
-                my="0px"
-                mx="1rem"
-                backgroundColor="rgba(255,225,230,1)"
-                p="5px"
-                px="10px"
-                borderRadius="1rem"
-                color="rgb(233, 69, 96)"
-               >
-                {order?.Order?.payment_status}
-               </H6>
+               <FlexBox alignItems="center" style={{ gap: "8px" }}>
+                <Typography fontSize="14px" color="text.hint">
+                 Payment Status
+                </Typography>
+                <H6
+                 my="0px"
+                 p="4px 12px"
+                 backgroundColor="rgba(255,225,230,1)"
+                 borderRadius="1rem"
+                 color="rgb(233, 69, 96)"
+                 fontSize="13px"
+                >
+                 {formatStatus(order?.Order?.payment_status) || "N/A"}
+                </H6>
+               </FlexBox>
               </FlexBox>
              </Box>
             )}
@@ -791,30 +775,20 @@ export default function OrderDetails({ params }: IDParams) {
     )}
    </Card>
 
+   {/* Full width: the column this used to share was commented out years ago, so a
+       6-column card left a half-empty row under a full-width one. */}
    <Grid container spacing={6}>
-    <Grid item lg={6} md={6} xs={12}>
-     <Card p="20px 30px" borderRadius={8}>
-      <H5 mt="0px" mb="14px">
-       Shipping Address
-      </H5>
-      <Paragraph fontSize="14px" my="0px">
-       {order.Order.address}
-      </Paragraph>
-     </Card>
+    <Grid item lg={12} md={12} xs={12}>
+     <ShippingAddressCard
+      address={order.Order.address}
+      area={order.Order.area_id}
+      city={order.Order.city_id}
+      province={order.Order.province_id}
+      phone={order.Order.phone}
+     />
 
+     {/* Invoice now sits in the shop header above; only payment is left here. */}
      <div style={{ display: "flex", gap: "20px" }}>
-      {/* =========== Invoice ========== */}
-
-      <Button
-       px="2rem"
-       color="primary"
-       bg="primary.light"
-       mt="2rem"
-       onClick={fetchInvoice} // Fetch invoice when button is clicked
-      >
-       {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
-      </Button>
-
       {/* {order.Order.payment_status === "Unpaid" && (
              <Button
              px="2rem"
@@ -851,8 +825,6 @@ export default function OrderDetails({ params }: IDParams) {
        )}
      </div>
 
-     {/* Invoice opens in a new tab; no inline preview needed */}
-     {invoiceError && <Typography color="red">{invoiceError}</Typography>}
     </Grid>
 
     {/* <Grid item lg={6} md={6} xs={12}>
