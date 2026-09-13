@@ -14,6 +14,7 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import {
  OrderStatus,
+ ShippingAddressCard,
  WriteReview,
  OrderListButton,
 } from "@sections/customer-dashboard/orders";
@@ -78,6 +79,19 @@ export default function OrderDetails({ params }: IDParams) {
    default:
     return "#9E9E9E"; // Grey for unknown status
   }
+ };
+
+ // Corporate orders are collected at the shop counter, so the seller's
+ // "processing" state means the order is packed and waiting — the pill has to
+ // read the same way the tracker does.
+ const getStatusLabel = (status: string) => {
+  if (
+   order?.Order?.payment_method === "corporate_credit" &&
+   status === "Processing"
+  ) {
+   return "Packed";
+  }
+  return status;
  };
 
  const toggleSummary = (shop: string) => {
@@ -802,7 +816,7 @@ export default function OrderDetails({ params }: IDParams) {
               {/* status  */}
               <Box m="6px">
                <Chip p="0.25rem 1rem" bg={getColor(details?.status)}>
-                <Small color="white">{details?.status}</Small>
+                <Small color="white">{getStatusLabel(details?.status)}</Small>
                </Chip>
               </Box>
              </div>
@@ -1188,46 +1202,13 @@ export default function OrderDetails({ params }: IDParams) {
             </Paragraph>
           </Card> */}
 
-     <Card p="15px 20px" borderRadius={8}>
-      <H5 mt="0px" mb="10px" fontSize="16px">
-       Shipping Address
-      </H5>
-
-      {/* Main Address */}
-      <Paragraph fontSize="14px" my="4px" color="black">
-       {order.Order.address}
-      </Paragraph>
-
-      {/* Flex Layout for Details */}
-      <div
-       style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "10px",
-        marginTop: "8px",
-       }}
-      >
-       <div style={{ display: "flex", gap: "4px" }}>
-        <span style={{ color: "#555", fontWeight: 500 }}>Area:</span>
-        <span style={{ color: "#000" }}>{order.Order.area_id}</span>
-       </div>
-
-       <div style={{ display: "flex", gap: "4px" }}>
-        <span style={{ color: "#555", fontWeight: 500 }}>City:</span>
-        <span style={{ color: "#000" }}>{order.Order.city_id}</span>
-       </div>
-
-       <div style={{ display: "flex", gap: "4px" }}>
-        <span style={{ color: "#555", fontWeight: 500 }}>Province:</span>
-        <span style={{ color: "#000" }}>{order.Order.province_id}</span>
-       </div>
-
-       <div style={{ display: "flex", gap: "4px" }}>
-        <span style={{ color: "#555", fontWeight: 500 }}>Phone:</span>
-        <span style={{ color: "#000" }}>{order.Order.phone}</span>
-       </div>
-      </div>
-     </Card>
+     <ShippingAddressCard
+      address={order.Order.address}
+      area={order.Order.area_id}
+      city={order.Order.city_id}
+      province={order.Order.province_id}
+      phone={order.Order.phone}
+     />
 
      <div style={{ display: "flex", gap: "20px" }}>
       {/* =========== Invoice ==========
