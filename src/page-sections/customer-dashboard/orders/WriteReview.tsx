@@ -294,11 +294,24 @@ export default function WriteReview({
   <>
    <FlexBox
     px="1rem"
-    py="0.5rem"
+    py="0.75rem"
     flexWrap="wrap"
     alignItems="center"
     key={item.product_name}
-    style={{ display: "flex", justifyContent: "space-between" }}
+    style={{
+     display: "flex",
+     justifyContent: "space-between",
+     // A cancelled or returned item keeps its place in the order but is no longer
+     // live, so it sits on its own tinted card rather than being told apart by
+     // struck-through text alone.
+     ...(isItemCancelled || isItemReturned
+      ? {
+         backgroundColor: "#F7F9FC",
+         border: "1px solid #E5E9F0",
+         borderRadius: "8px",
+        }
+      : {}),
+    }}
    >
     <div>
      {/* <Link href={`/product/${item.product_slug}`}>
@@ -344,45 +357,22 @@ export default function WriteReview({
         >
          {item.product_name}
         </H6>
-        {isItemCancelled ? (
-         <Typography fontSize="14px" color="text.muted">
-          <span
-           style={{
-            textDecoration: "line-through",
-            textDecorationColor: "#e53935",
-            textDecorationThickness: "2px",
-           }}
-          >
-           {currency(item.price)}
-          </span>{" "}
-          x {item.quantity}
-          {item.color && `, Color: ${item.color}`}
-          {item.attribute && `, Specification: ${item.attribute}`}
-          {item.size && `, Size: ${item.size}`}
-          <br />
-          <Typography
-           as="span"
-           fontSize="14px"
-           fontWeight="700"
-           color="#333"
-          >
-           {currency(0)}
-          </Typography>
-         </Typography>
-        ) : (
-         <Typography
-          fontSize="14px"
-          color="text.muted"
+        {/* The price is struck once, on the line it belongs to — the pill below
+            says what happened, so a separate 0.00 line only repeated it. */}
+        <Typography fontSize="14px" color="text.muted">
+         <span
           style={
-           isItemReturned ? { textDecoration: "line-through" } : undefined
+           isItemCancelled || isItemReturned
+            ? { textDecoration: "line-through", color: "#8a94a6" }
+            : undefined
           }
          >
           {currency(item.price)} x {item.quantity}
-          {item.color && `, Color: ${item.color}`}
-          {item.attribute && `, Specification: ${item.attribute}`}
-          {item.size && `, Size: ${item.size}`}
-         </Typography>
-        )}
+         </span>
+         {item.color && `, Color: ${item.color}`}
+         {item.attribute && `, Specification: ${item.attribute}`}
+         {item.size && `, Size: ${item.size}`}
+        </Typography>
 
         {isItemCancelled && (
          <FlexBox alignItems="center" mt="6px" style={{ gap: "8px" }}>
@@ -403,7 +393,7 @@ export default function WriteReview({
            </Typography>
           </Box>
           <Typography fontSize="12px" color="text.muted">
-           {format(new Date(item.item_cancelled_at), "dd MMM yyyy")}
+           on {format(new Date(item.item_cancelled_at), "dd MMM yyyy")}
           </Typography>
          </FlexBox>
         )}
@@ -432,7 +422,7 @@ export default function WriteReview({
           </Typography>
           {item.item_returned_at && (
            <Typography fontSize="12px" color="text.muted">
-            {format(new Date(item.item_returned_at), "dd MMM yyyy")}
+            on {format(new Date(item.item_returned_at), "dd MMM yyyy")}
            </Typography>
           )}
          </FlexBox>
@@ -543,19 +533,19 @@ export default function WriteReview({
       </>
      )}
 
-     {/* item cancel — buyer's window closes once the seller starts processing */}
-     {status !== "Delivered" && cancel_status !== 6 && !isItemCancelled && !isItemReturned && (
+     {/* item cancel — the button disappears once the buyer's window closes
+         (seller started preparing the order), rather than sitting disabled */}
+     {canCancelItem && status !== "Delivered" && cancel_status !== 6 && (
       <FlexBox flex="160px" m="6px" alignItems="center">
        <Button
         variant="text"
         style={{
-         color: canCancelItem ? "blue" : "gray",
+         color: "blue",
          height: "30px",
          borderRadius: "100px",
-         cursor: canCancelItem ? "pointer" : "not-allowed",
+         cursor: "pointer",
         }}
         onClick={handleCancelClick}
-        disabled={!canCancelItem}
        >
         <Typography fontSize="14px">Cancel</Typography>
        </Button>
