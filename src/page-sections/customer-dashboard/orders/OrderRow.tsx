@@ -147,8 +147,8 @@ import Hidden from "@component/hidden";
 import { IconButton } from "@component/buttons";
 import Typography, { H5, Small } from "@component/Typography";
 import Icon from "@component/icon/Icon";
-import { currency } from "@utils/utils";
-import { buildStatusBuckets, rowTotal } from "./orderRowStatus";
+import { buildStatusBuckets } from "./orderRowStatus";
+import OrderTotal from "./OrderTotal";
 
 // =================================================
 type OrderRowProps = { order: any };
@@ -256,15 +256,7 @@ export default function OrderRow({ order }: OrderRowProps) {
       </Typography>
 
       {/* Order Amount */}
-      <Typography
-       m="6px"
-       textAlign="left"
-       fontWeight="600"
-       color="rgb(51, 51, 51)"
-       flex="1 1 0"
-      >
-       {currency(rowTotal(order))}
-      </Typography>
+      <OrderTotal order={order} />
      </MainLine>
 
      {buckets.length > 0 && (

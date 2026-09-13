@@ -166,13 +166,16 @@ export default function OrderList() {
   const [orderList, setOrderList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [orderSuccess, setOrderSuccess] = useState(false);
-  const [fetched, setFetched] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const ordersPerPage = 10;
+  const [pageCount, setPageCount] = useState(1);
 
-  const fetchOrderList = async (token: string) => {
+  // The list is paginated by the API (10 per page), so a page change has to
+  // refetch — slicing the response client-side only ever saw page 1.
+  const fetchOrderList = async (page: number) => {
     try {
-      const response = await axios.get(`user/order`);
+      const response = await axios.get(`user/order`, {
+        params: { page: page + 1 },
+      });
 
       const data = response.data;
 
@@ -180,12 +183,7 @@ export default function OrderList() {
       const orders = data.data ?? data.orders ?? [];
       if (Array.isArray(orders)) {
         setOrderList(orders);
-        if (!fetched) {
-          // Show toast only on initial fetch
-          //toast.success("Order placed successfully!");
-          //setOrderSuccess(true);
-          setFetched(true); // Mark as fetched
-        }
+        setPageCount(data.meta?.last_page ?? 1);
       } else {
         console.error("Orders not found in the expected format");
       }
@@ -201,16 +199,20 @@ export default function OrderList() {
 
     if (!token) {
       router.push("/login");
-    } else if (!fetched) {
-      fetchOrderList(token);
+      return;
     }
 
+    setLoading(true);
+    fetchOrderList(currentPage);
+  }, [currentPage, router]);
+
+  useEffect(() => {
     const success = localStorage.getItem("orderSuccess");
     if (success) {
       setOrderSuccess(true);
       localStorage.removeItem("orderSuccess");
     }
-  }, [fetched, router]);
+  }, []);
 
   // useEffect(() => {
   //   if (orderSuccess) {
@@ -237,11 +239,6 @@ export default function OrderList() {
       toast.error(decodeURIComponent(message));
     }
   }, []);
-
-  const currentOrders = orderList.slice(
-    currentPage * ordersPerPage,
-    (currentPage + 1) * ordersPerPage
-  );
 
   if (loading) {
     return (
@@ -284,7 +281,7 @@ export default function OrderList() {
         {/* Render ToastContainer for toast notifications */}
         <DashboardPageHeader title="My Orders" iconName="bag_filled" />
 
-        {orderList.length === 0 ? (
+        {orderList.length === 0 && currentPage === 0 ? (
           <EmptyOrders
             title="No orders yet"
             message="You haven't placed an order yet. Once you do, every order and its status will live here."
@@ -318,12 +315,11 @@ export default function OrderList() {
           </TableRow>
         </Hidden>
 
-        {currentOrders.map((order) => (
+        {orderList.map((order) => (
           <OrderRow key={order.invoice} order={order} />
         ))}
         <OrdersPagination
-          orderList={orderList}
-          ordersPerPage={ordersPerPage}
+          pageCount={pageCount}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />

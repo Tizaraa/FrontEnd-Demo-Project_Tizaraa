@@ -14,6 +14,7 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import {
  OrderStatus,
+ ShippingAddressCard,
  WriteReview,
  OrderListButton,
 } from "@sections/customer-dashboard/orders";
@@ -79,6 +80,19 @@ export default function OrderDetails({ params }: IDParams) {
    default:
     return "#9E9E9E"; // Grey for unknown status
   }
+ };
+
+ // Corporate orders are collected at the shop counter, so the seller's
+ // "processing" state means the order is packed and waiting — the pill has to
+ // read the same way the tracker does.
+ const getStatusLabel = (status: string) => {
+  if (
+   order?.Order?.payment_method === "corporate_credit" &&
+   status === "Processing"
+  ) {
+   return "Packed";
+  }
+  return status;
  };
 
  const toggleSummary = (shop: string) => {
@@ -529,7 +543,7 @@ export default function OrderDetails({ params }: IDParams) {
               {/* status  */}
               <Box m="6px">
                <Chip p="0.25rem 1rem" bg={getColor(details?.status)}>
-                <Small color="white">{details?.status}</Small>
+                <Small color="white">{getStatusLabel(details?.status)}</Small>
                </Chip>
               </Box>
              </div>
@@ -807,14 +821,13 @@ export default function OrderDetails({ params }: IDParams) {
 
    <Grid container spacing={6}>
     <Grid item lg={6} md={6} xs={12}>
-     <Card p="20px 30px" borderRadius={8}>
-      <H5 mt="0px" mb="14px">
-       Shipping Address
-      </H5>
-      <Paragraph fontSize="14px" my="0px">
-       {order.Order.address}
-      </Paragraph>
-     </Card>
+     <ShippingAddressCard
+      address={order.Order.address}
+      area={order.Order.area_id}
+      city={order.Order.city_id}
+      province={order.Order.province_id}
+      phone={order.Order.phone}
+     />
 
      <div style={{ display: "flex", gap: "20px" }}>
       {/* ============= Invoice ============= */}

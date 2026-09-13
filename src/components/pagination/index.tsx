@@ -10,7 +10,8 @@ import { StyledPagination } from "./styled";
 // ==============================================================
 export interface PaginationProps extends SpaceProps {
  pageCount: number;
- currentPage: number;
+ /** Controlled page index (0-based). Omit to let ReactPaginate track it itself. */
+ currentPage?: number;
  pageRangeDisplayed?: number;
  marginPagesDisplayed?: number;
  onChange?: (data: number) => void;
@@ -69,6 +70,9 @@ export default function Pagination({
   <StyledPagination {...props}>
    <ReactPaginate
     pageCount={pageCount}
+    // Without forcePage the highlighted page is ReactPaginate's own internal
+    // state, so a controlled currentPage never reaches the UI.
+    forcePage={typeof currentPage === "number" ? currentPage : undefined}
     nextLabel={NEXT_BUTTON}
     breakLabel={BREAK_LABEL}
     activeClassName="active"
