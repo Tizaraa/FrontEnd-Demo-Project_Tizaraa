@@ -308,6 +308,8 @@ type profileType = {
  image: any;
  type: string;
  credit_balance?: string;
+ credit_pending?: string;
+ due_amount?: string;
  employee_id?: any;
  employee_code?: any;
  nid?: any;
