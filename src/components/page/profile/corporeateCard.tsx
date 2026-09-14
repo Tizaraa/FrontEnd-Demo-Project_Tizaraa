@@ -193,6 +193,20 @@ const CorporateCard = ({ profile }) => {
      value={profile?.credit_balance ?? "0"}
      highlight
     />
+    <InfoRow
+     icon={faWallet}
+     iconBg="rgba(245, 158, 11, 0.15)"
+     iconColor="#B45309"
+     label="Credit Pending"
+     value={profile?.credit_pending ?? "0"}
+    />
+    <InfoRow
+     icon={faWallet}
+     iconBg="rgba(220, 38, 38, 0.12)"
+     iconColor="#DC2626"
+     label="Due Amount"
+     value={profile?.due_amount ?? "0"}
+    />
     <a href={`mailto:${profile?.email}`} style={{ textDecoration: "none" }}>
      <InfoRow
       icon={faEnvelope}
