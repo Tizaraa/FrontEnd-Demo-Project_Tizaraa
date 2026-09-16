@@ -481,7 +481,7 @@ export default function OrderDetails({ params }: IDParams) {
       </Typography>
       <Typography fontSize="14px">
        {order.Order.createdAt
-        ? format(new Date(order.Order.createdAt), "dd MMM, yyyy")
+        ? format(new Date(order.Order.createdAt), "dd MMM, yyyy, hh:mm a")
         : "N/A"}
       </Typography>
      </FlexBox>
@@ -493,7 +493,7 @@ export default function OrderDetails({ params }: IDParams) {
        </Typography>
        <Typography fontSize="14px">
         {order.Order.deliveredAt
-         ? format(new Date(order.Order.deliveredAt), "dd MMM, yyyy hh:mm a")
+         ? format(new Date(order.Order.deliveredAt), "dd MMM, yyyy, hh:mm a")
          : "N/A"}
        </Typography>
       </FlexBox>
