@@ -52,7 +52,7 @@ export default function CorporateDashboard({ params }: { params: { slug: string 
       .catch((err) => {
         const msg = err.response?.data?.message;
         if (err.response?.status === 403) {
-          toast.error("Access denied. Your account may still be pending approval.");
+          toast.error(msg || "Access denied. Your corporate account is not active.");
         } else {
           toast.error(msg || "Failed to load corporate info.");
         }
@@ -168,7 +168,7 @@ export default function CorporateDashboard({ params }: { params: { slug: string 
               color: "#713f12",
             }}
           >
-            ⏳ Your account is <strong>pending approval</strong> from the corporate admin. You'll gain full access once approved.
+            ⏳ Your employee account is <strong>not active yet</strong>. Accept the invitation sent to your email to get full access.
           </div>
         )}
 

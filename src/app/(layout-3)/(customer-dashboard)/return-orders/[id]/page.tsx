@@ -13,6 +13,7 @@ import Typography, { H5, H6, Paragraph, Small } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import {
+ ShippingAddressCard,
  WriteReview,
  OrderListButton,
 } from "@sections/customer-dashboard/orders";
@@ -456,7 +457,7 @@ export default function OrderDetails({ params }: IDParams) {
       </Typography>
       <Typography fontSize="14px">
        {order.Order.createdAt
-        ? format(new Date(order.Order.createdAt), "dd MMM, yyyy")
+        ? format(new Date(order.Order.createdAt), "dd MMM, yyyy, hh:mm a")
         : "N/A"}
       </Typography>
      </FlexBox>
@@ -468,7 +469,7 @@ export default function OrderDetails({ params }: IDParams) {
        </Typography>
        <Typography fontSize="14px">
         {order.Order.deliveredAt
-         ? format(new Date(order.Order.deliveredAt), "dd MMM, yyyy")
+         ? format(new Date(order.Order.deliveredAt), "dd MMM, yyyy, hh:mm a")
          : "N/A"}
        </Typography>
       </FlexBox>
@@ -836,14 +837,13 @@ export default function OrderDetails({ params }: IDParams) {
 
    <Grid container spacing={6}>
     <Grid item lg={6} md={6} xs={12}>
-     <Card p="20px 30px" borderRadius={8}>
-      <H5 mt="0px" mb="14px">
-       Shipping Address
-      </H5>
-      <Paragraph fontSize="14px" my="0px">
-       {order.Order.address}
-      </Paragraph>
-     </Card>
+     <ShippingAddressCard
+      address={order.Order.address}
+      area={order.Order.area_id}
+      city={order.Order.city_id}
+      province={order.Order.province_id}
+      phone={order.Order.phone}
+     />
 
      <div style={{ display: "flex", gap: "20px" }}>
       {/* =========== Invoice ========== */}

@@ -65,7 +65,6 @@ const axios = Axios.create({
     "home/corporate-product",
     "corporate-shop",
     "corporate/",
-    "employee/registration",
     "employee-details",
     "order/item/return",
     "orders/",

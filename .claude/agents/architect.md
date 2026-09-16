@@ -17,7 +17,7 @@ src/
 │   ├── (layout-3)/         ← Main store + all dashboards + checkout
 │   │   ├── (checkout)/     ← cart, checkout, payment
 │   │   └── (customer-dashboard)/ ← orders, profile, address, wishlist, RFQ, support
-│   ├── (auth)/             ← login, signup, emailValidation, employee-signup
+│   ├── (auth)/             ← login, signup, emailValidation
 │   ├── (b2b-products)/     ← B2B product detail + search
 │   ├── (OT-Commerce)/      ← OT product catalog
 │   └── (sale)/             ← sale-page-1, sale-page-2
