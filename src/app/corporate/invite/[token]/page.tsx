@@ -82,7 +82,8 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
             toast.success(`Welcome to ${data.company_name}! Your account is active.`);
             router.push(`/shops/${data.shop_slug}`);
           } else {
-            toast.success("Registration complete! Your account is pending approval from the corporate admin.");
+            // Only happens when the invitation's employee record no longer exists.
+            toast.error("Your account was created, but it is not linked to an active employee record. Please contact your company.");
             router.push("/");
           }
         }
