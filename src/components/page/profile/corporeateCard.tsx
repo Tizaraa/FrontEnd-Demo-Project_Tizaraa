@@ -160,11 +160,12 @@ const CorporateCard = ({ profile }) => {
      value={profile?.designation || "N/A"}
     />
     <InfoRow
-     icon={faCalendar}
-     iconBg="rgba(15, 52, 96, 0.1)"
-     iconColor="#0F3460"
-     label="Birthday"
-     value={formattedBirthDate}
+     icon={faWallet}
+     iconBg="rgba(51, 208, 103, 0.15)"
+     iconColor="#15803d"
+     label="Credit Balance"
+     value={profile?.credit_balance ?? "0"}
+     highlight
     />
     <InfoRow
      icon={
@@ -187,18 +188,17 @@ const CorporateCard = ({ profile }) => {
     />
     <InfoRow
      icon={faWallet}
-     iconBg="rgba(51, 208, 103, 0.15)"
-     iconColor="#15803d"
-     label="Credit Balance"
-     value={profile?.credit_balance ?? "0"}
-     highlight
-    />
-    <InfoRow
-     icon={faWallet}
      iconBg="rgba(245, 158, 11, 0.15)"
      iconColor="#B45309"
      label="Credit Pending"
      value={profile?.credit_pending ?? "0"}
+    />
+    <InfoRow
+     icon={faCalendar}
+     iconBg="rgba(15, 52, 96, 0.1)"
+     iconColor="#0F3460"
+     label="Birthday"
+     value={formattedBirthDate}
     />
     <InfoRow
      icon={faWallet}
