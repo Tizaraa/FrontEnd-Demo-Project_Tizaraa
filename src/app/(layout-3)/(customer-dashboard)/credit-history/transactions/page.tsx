@@ -93,6 +93,8 @@ export default function TransactionHistoryPage() {
  const [historyOrders, setHistoryOrders] = useState<CorporateOrder[]>([]);
  const [historyLoading, setHistoryLoading] = useState(false);
 
+ const VISIBLE_STATUSES = ["delivered", "cancelled", "returned"];
+
  const fetchOrders = async (
   slug: string,
   from?: string,
@@ -102,7 +104,8 @@ export default function TransactionHistoryPage() {
   if (from) params.from = from;
   if (to) params.to = to;
   const res = await axios.get(`corporate/${slug}/orders`, { params });
-  return res.data?.data ?? [];
+  const orders: CorporateOrder[] = res.data?.data ?? [];
+  return orders.filter((order) => VISIBLE_STATUSES.includes(order.order_status));
  };
 
  useEffect(() => {
