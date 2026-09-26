@@ -51,7 +51,14 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
   }, [token]);
 
   const formSchema = yup.object().shape({
-    password: yup.string().required("Password is required").min(6, "At least 6 characters"),
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(8, "At least 8 characters")
+      .matches(/[a-z]/, "Add a lowercase letter")
+      .matches(/[A-Z]/, "Add an uppercase letter")
+      .matches(/[0-9]/, "Add a number")
+      .matches(/[^A-Za-z0-9]/, "Add a special character"),
     password_confirmation: yup.string().oneOf([yup.ref('password')], 'Passwords must match').required("Confirm password is required"),
     phone: yup
       .string()
@@ -170,7 +177,7 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
           />
 
           <TextField
-            mb="1rem"
+            mb="0.25rem"
             fullwidth
             name="password"
             label="Password"
@@ -186,6 +193,10 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
               </IconButton>
             }
           />
+
+          <SemiSpan mb="1rem" display="block" color="gray.700">
+            Minimum 8 characters, with uppercase, lowercase, a number, and a special character.
+          </SemiSpan>
 
           <TextField
             mb="1.5rem"
