@@ -282,6 +282,7 @@ import authService from "services/authService";
 import { toast } from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
+import { useDashboardCountsListener } from "utils/dashboardCounts";
 
 // STYLED COMPONENTS
 import { DashboardNavigationWrapper, StyledDashboardNav } from "./styles";
@@ -301,36 +302,41 @@ export default function DashboardNavigation() {
  const [rfqCount, setRfqCount] = useState(0); // State for RFQ count
 
  // Fetch user data from the API
+ const fetchData = async () => {
+  try {
+   const response = await axios.get(`user/profile/history`);
+
+   // Extract the needed fields from the API response
+   const {
+    totalorder,
+    pending,
+    deliveryitem,
+    cancelitem,
+    returnlitem,
+    customeraddress,
+    total_rfqs,
+   } = response.data;
+
+   setOrderCount(totalorder ?? 0);
+   setPendingOrderCount(pending ?? 0);
+   setDeliveredOrderCount(deliveryitem ?? 0);
+   setCanceledOrderCount(cancelitem ?? 0);
+   setReturnOrderCount(returnlitem ?? 0);
+   setAddressCount(customeraddress ?? 0);
+   setRfqCount(total_rfqs ?? 0);
+  } catch (error) {
+   console.error("Error fetching user profile data:", error);
+  }
+ };
+
  useEffect(() => {
-  const fetchData = async () => {
-   try {
-    const response = await axios.get(`user/profile/history`);
-
-    // Extract the needed fields from the API response
-    const {
-     totalorder,
-     pending,
-     deliveryitem,
-     cancelitem,
-     returnlitem,
-     customeraddress,
-     total_rfqs,
-    } = response.data;
-
-    setOrderCount(totalorder ?? 0);
-    setPendingOrderCount(pending ?? 0);
-    setDeliveredOrderCount(deliveryitem ?? 0);
-    setCanceledOrderCount(cancelitem ?? 0);
-    setReturnOrderCount(returnlitem ?? 0);
-    setAddressCount(customeraddress ?? 0);
-    setRfqCount(total_rfqs ?? 0);
-   } catch (error) {
-    console.error("Error fetching user profile data:", error);
-   }
-  };
-
   fetchData();
  }, []);
+
+ // Re-run the same fetch whenever something elsewhere (cancelling an item,
+ // submitting a return, adding an address, etc.) reports the counts as stale —
+ // otherwise these numbers only ever refresh on a hard reload.
+ useDashboardCountsListener(fetchData);
 
  // Logout function
  const handleLogout = () => {

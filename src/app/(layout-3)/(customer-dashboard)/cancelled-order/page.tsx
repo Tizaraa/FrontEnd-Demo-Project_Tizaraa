@@ -7,6 +7,7 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "@lib/axiosClient";
+import { notifyDashboardCountsChanged } from "utils/dashboardCounts";
 import { useRouter } from "next/navigation";
 import CheckBox from "@component/CheckBox";
 import FlexBox from "@component/FlexBox";
@@ -58,6 +59,10 @@ export default function CancellationForm() {
     : `user/order/${cancelItem.order_id}/items/${cancelItem.order_item_id}/cancel`;
 
    await axios.post(url, { reason: additionalInfo });
+
+   // Sidebar counts and the profile page cards fetched once on mount, so
+   // without this they'd stay stale until the browser was reloaded.
+   notifyDashboardCountsChanged();
 
    toast.success(
     cancelWholeOrder

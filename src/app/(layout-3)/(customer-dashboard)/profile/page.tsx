@@ -282,6 +282,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { marginBottom } from "styled-system";
 import CorporateCard from "@component/page/profile/corporeateCard";
+import { useDashboardCountsListener } from "utils/dashboardCounts";
 
 const LoaderWrapper = styled.div`
  display: flex;
@@ -367,43 +368,47 @@ export default function Profile() {
   }
  }, [router, searchParams]);
 
+ const fetchProfileData = async () => {
+  try {
+   const token = localStorage.getItem("token");
+   const profileResponse = await axios.get(
+    `${ApiBaseUrl.localApiUrl}user/profile`,
+    {
+     headers: { Authorization: `Bearer ${token}` },
+    }
+   );
+   setProfile(profileResponse.data.profile as profileType);
+   setUser(profileResponse.data.profile); // Also update user state
+
+   console.log("profileResponse", profileResponse.data.profile);
+
+   const historyResponse = await axios.get(
+    `${ApiBaseUrl.localApiUrl}user/profile/history`,
+    { headers: { Authorization: `Bearer ${token}` } }
+   );
+   const profileData = historyResponse.data;
+   setData({
+    totalOrders: profileData.totalorder,
+    confirmedOrders: profileData.conformitem,
+    pendingOrders: profileData.pending,
+    deliveredOrders: profileData.deliveryitem,
+    cancelOrders: profileData.cancelitem,
+    totalShipments: profileData.shipeditem,
+    totalDeliveries: profileData.deliveryitem,
+    customerAddresses: profileData.customeraddress,
+   });
+  } catch (error) {
+   console.error("Error fetching profile data:", error);
+  }
+ };
+
  useEffect(() => {
-  const fetchProfileData = async () => {
-   try {
-    const token = localStorage.getItem("token");
-    const profileResponse = await axios.get(
-     `${ApiBaseUrl.localApiUrl}user/profile`,
-     {
-      headers: { Authorization: `Bearer ${token}` },
-     }
-    );
-    setProfile(profileResponse.data.profile as profileType);
-    setUser(profileResponse.data.profile); // Also update user state
-
-    console.log("profileResponse", profileResponse.data.profile);
-
-    const historyResponse = await axios.get(
-     `${ApiBaseUrl.localApiUrl}user/profile/history`,
-     { headers: { Authorization: `Bearer ${token}` } }
-    );
-    const profileData = historyResponse.data;
-    setData({
-     totalOrders: profileData.totalorder,
-     confirmedOrders: profileData.conformitem,
-     pendingOrders: profileData.pending,
-     deliveredOrders: profileData.deliveryitem,
-     cancelOrders: profileData.cancelitem,
-     totalShipments: profileData.shipeditem,
-     totalDeliveries: profileData.deliveryitem,
-     customerAddresses: profileData.customeraddress,
-    });
-   } catch (error) {
-    console.error("Error fetching profile data:", error);
-   }
-  };
-
   fetchProfileData();
  }, []);
+
+ // Re-fetch the moment something elsewhere (cancelling an item, submitting a
+ // return, etc.) reports the counts as stale, instead of only on a hard reload.
+ useDashboardCountsListener(fetchProfileData);
 
  if (loading) return <LoadingFallback />;
 
