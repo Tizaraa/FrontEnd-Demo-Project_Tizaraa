@@ -147,6 +147,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import { notifyDashboardCountsChanged } from "utils/dashboardCounts";
 import { Upload } from "lucide-react";
 import axios from "axios";
 import authService from "services/authService";
@@ -468,6 +469,8 @@ export default function RfqProductForm() {
    setErrors({});
    setSuggestions([]);
    setIsDropdownOpen(false);
+   notifyDashboardCountsChanged();
+
    router.push("/rfq");
    toast.success("Request For Quotation form submitted successfully!");
    //toast.success("Order placed successfully!");
