@@ -7,6 +7,7 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "@lib/axiosClient";
+import { notifyDashboardCountsChanged } from "utils/dashboardCounts";
 import { useRouter, useSearchParams } from "next/navigation";
 import CheckBox from "@component/CheckBox";
 import FlexBox from "@component/FlexBox";
@@ -67,6 +68,10 @@ const ReturnPage = () => {
       await axios.post("order/item/return", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      // Sidebar counts and the profile page cards fetched once on mount, so
+      // without this they'd stay stale until the browser was reloaded.
+      notifyDashboardCountsChanged();
+
       toast.success("Return request submitted successfully");
       router.back();
     } catch (error: any) {

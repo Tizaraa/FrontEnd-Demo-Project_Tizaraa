@@ -73,15 +73,21 @@ export function rowOriginalTotal(order: any): number {
 }
 
 /**
- * Whether the row should show the original price struck through next to the live one.
+ * The single figure the Total column shows.
  *
- * True whenever something came off the order — a whole-order cancel, an item pulled
- * before it shipped, or a refunded return — so the buyer can see what they were
- * charged for as well as what is still standing. Compared with a cent of slack
- * because both figures are floats off the wire.
+ * A cancelled or returned order has nothing live left, so its live value says 0.00 —
+ * useless on a row. Those show what the order was worth instead; the status beside it
+ * already says it is off. Every other order shows its live value, which already has
+ * any individually cancelled or refunded item taken off.
  */
-export function hasReducedTotal(order: any): boolean {
- return rowOriginalTotal(order) - rowTotal(order) > 0.005;
+export function rowDisplayTotal(order: any): number {
+ const key = normalizeStatus(order.status);
+
+ if (key === "cancelled" || key === "returned" || key === "refunded") {
+  return rowOriginalTotal(order);
+ }
+
+ return rowTotal(order);
 }
 
 /**
