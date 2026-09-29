@@ -599,7 +599,7 @@ export default function OrderDetails({ params }: IDParams) {
               <FlexBox alignItems="center" style={{ gap: "12px" }}>
                <Typography fontSize="13px" color="text.muted">
                 Original{" "}
-                <span style={{ textDecoration: "line-through" }}>
+                <span>
                  {currency(order?.Order?.original_total || 0)}
                 </span>
                </Typography>
