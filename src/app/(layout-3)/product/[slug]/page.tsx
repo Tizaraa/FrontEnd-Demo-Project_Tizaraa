@@ -231,10 +231,13 @@ export async function generateMetadata({
     console.log("SEO title found:", seo.title);
 
 
-    // Convert relative image path to absolute URL
-    const imageUrl = seo.image
-      ? `${ApiBaseUrl.baseUrl}/${seo.image}` // Assuming seo.image is a relative path
-      : `${ApiBaseUrl.baseUrl}/default-image.jpg`; // Fallback image
+    // seo.image is already an absolute MinIO URL — the seller's Open Graph upload,
+    // or the product thumbnail when none was uploaded. Prefixing the API base to it
+    // produced a broken link, which is why shared products previewed with nothing.
+    const imageUrl =
+      seo.image ||
+      productData?.productsingledetails?.product_thumbnail ||
+      `${ApiBaseUrl.baseUrl}/default-image.jpg`;
 
     return {
       title: seo.title || "Product Not Found",
