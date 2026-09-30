@@ -20,6 +20,7 @@ type ProductIntroProps = {
  sellerShopName: string;
  sellerShopLogo: string;
  brandName: string;
+ productCode?: string | null;
  unitOfMeasure?: { id: number; name: string; symbol: string } | null;
  warranty: string;
  warrantyType: string;
@@ -48,6 +49,7 @@ export default function ProductIntro({
  sellerShopName,
  sellerShopLogo,
  brandName,
+ productCode,
  unitOfMeasure,
  warranty,
  warrantyType,
@@ -131,6 +133,7 @@ export default function ProductIntro({
       sellerShopName={sellerShopName}
       sellerShopLogo={sellerShopLogo}
       brandName={brandName}
+      productCode={productCode}
       unitOfMeasure={unitOfMeasure}
       warranty={warranty}
       warrantyType={warrantyType}
