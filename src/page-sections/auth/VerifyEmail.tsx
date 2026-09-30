@@ -2036,6 +2036,12 @@ import BeatLoader from "react-spinners/BeatLoader";
 import axios from "axios";
 import CommonHeader from "@component/header/CommonHeader";
 
+// Every OTP-page call is for the account just registered, identified by its token.
+const registerAuthHeader = () => ({
+ Authorization: `Bearer ${sessionStorage.getItem("registerToken")}`,
+ Accept: "application/json",
+});
+
 export default function VerifyEmail() {
  const [otp, setOtp] = useState("");
  const [resendTimer, setResendTimer] = useState(120); // Timer in seconds (2 minutes)
@@ -2056,9 +2062,9 @@ export default function VerifyEmail() {
  useEffect(() => {
   const fetchPhoneNumber = async () => {
    try {
-    const userId = sessionStorage.getItem("userId");
     const response = await axios.get(
-     `${ApiBaseUrl.localApiUrl}get/provided/register/number/${userId}`
+     `${ApiBaseUrl.localApiUrl}get/provided/register/number`,
+     { headers: registerAuthHeader() }
     );
     setCurrentPhoneNumber(response.data.phone || "No phone number available");
    } catch (error) {
@@ -2104,10 +2110,10 @@ export default function VerifyEmail() {
   }
 
   try {
-   const userId = sessionStorage.getItem("userId");
    const response = await axios.post(
-    `${ApiBaseUrl.localApiUrl}set/provided/register/number/${userId}`,
-    { phone: newPhoneNumber }
+    `${ApiBaseUrl.localApiUrl}set/provided/register/number`,
+    { phone: newPhoneNumber },
+    { headers: registerAuthHeader() }
    );
 
    if (response.status === 200) {
@@ -2128,8 +2134,10 @@ export default function VerifyEmail() {
    console.error("Error updating phone number:", error);
 
    // Ensure API error response is handled correctly
-   if (error.response?.data?.message?.phone?.[0]) {
-    toast.error(error.response.data.message.phone[0]); // Show the first validation error
+   if (error.response?.data?.errors?.phone?.[0]) {
+    toast.error(error.response.data.errors.phone[0]); // Show the first validation error
+   } else if (error.response?.status === 429) {
+    toast.error("Too many attempts. Please wait a minute and try again.");
    } else {
     toast.error("Failed to update phone number");
    }
@@ -2145,6 +2153,7 @@ export default function VerifyEmail() {
     method: "POST",
     headers: {
      "Content-Type": "application/json",
+     ...registerAuthHeader(),
     },
     body: JSON.stringify({ code: otp }),
    });
@@ -2155,6 +2164,7 @@ export default function VerifyEmail() {
     // Save token and user info to localStorage
     localStorage.setItem("token", data.token);
     localStorage.setItem("userInfo", JSON.stringify(data.user));
+    sessionStorage.removeItem("registerToken");
 
     console.log("Success:", data);
     toast.success("Logged in successfully");
@@ -2162,7 +2172,11 @@ export default function VerifyEmail() {
     router.push("/");
    } else {
     console.log("Error:", data);
-    toast.error(data.message || "Something went wrong"); // Display error message from the API
+    toast.error(
+     response.status === 429
+      ? "Too many attempts. Please wait a minute and try again."
+      : data.errors?.otp?.[0] || data.message || "Something went wrong"
+    ); // Display error message from the API
    }
   } catch (error) {
    console.error("Error:", error);
@@ -2174,15 +2188,11 @@ export default function VerifyEmail() {
  // Function to handle Resend OTP button click
  const handleResendOtp = async () => {
   try {
-   const token = localStorage.getItem("token"); // Or fetch token from the appropriate place
-   const userId = sessionStorage.getItem("userId");
    const response = await fetch(
-    `${ApiBaseUrl.localApiUrl}resend/otp/register/${userId}`,
+    `${ApiBaseUrl.localApiUrl}resend/otp/register`,
     {
      method: "GET",
-     headers: {
-      Authorization: `Bearer ${token}`,
-     },
+     headers: registerAuthHeader(),
     }
    );
 
@@ -2195,7 +2205,11 @@ export default function VerifyEmail() {
     setShowExpiryMessage(false); // Hide expiry message when OTP is resent
    } else {
     console.log("Error:", data);
-    toast.error("Failed to resend OTP");
+    toast.error(
+     response.status === 429
+      ? "Please wait a minute before requesting another OTP."
+      : "Failed to resend OTP"
+    );
    }
   } catch (error) {
    console.error("Error:", error);

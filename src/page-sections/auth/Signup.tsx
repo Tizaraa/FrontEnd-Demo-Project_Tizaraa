@@ -1249,7 +1249,8 @@ export default function Signup() {
    console.log(data);
 
    if (response.ok) {
-    sessionStorage.setItem("userId", data.id);
+    // The OTP page acts on this account through the token /register returns.
+    sessionStorage.setItem("registerToken", data.token);
     router.push("/emailValidation");
     toast.success(data.message);
    } else {
