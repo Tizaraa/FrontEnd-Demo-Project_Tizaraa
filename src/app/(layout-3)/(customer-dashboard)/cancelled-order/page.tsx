@@ -118,11 +118,11 @@ export default function CancellationForm() {
          }}
         >
          <p style={{ fontSize: "0.875rem" }}>
-          {cancelItem.product_name} {cancelItem.quantity}
+          {cancelItem.product_name}
          </p>
          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <span style={{ fontSize: "0.875rem" }}>Qty:</span>
-          <span style={{ fontWeight: "500" }}>1</span>
+          <span style={{ fontWeight: "500" }}>{cancelItem.quantity}</span>
          </div>
         </div>
        </div>
@@ -257,19 +257,21 @@ export default function CancellationForm() {
          cancelled.
         </li>
         <li>
-         Once you confirm your item(s) cancellation, we will process your refund
-         within 24 hours, provided the item(s) has not been handed over to the
-         logistics partner yet. Please note that, if your item has already been
-         handed over to the logistics partner we will be unable to proceed with
-         your cancellation request and we will inform you accordingly.
+         You can cancel your product order only while it is still in Pending
+         status. Once you confirm the cancellation, the amount will be
+         automatically moved from your Pending Credit back to your available
+         Corporate Credit balance, and it will be deducted from Pending Credit.
         </li>
         <li>
          If you are cancelling your order partially, i.e. not all the items in
-         your order, then we will be unable to refund you the shipping fee.
+         your order, then the credit for the cancelled item(s) will be
+         returned to your Corporate Credit balance proportionally (partial
+         refund).
         </li>
         <li>
-         Once your item(s) has been successfully cancelled you will receive a
-         notification from us with your refund summary.
+         If you cancel the whole order, you will receive both an SMS and an
+         Email notification. If you cancel an item or make a partial
+         cancellation, you will receive an Email notification only.
         </li>
        </ol>
       </div>

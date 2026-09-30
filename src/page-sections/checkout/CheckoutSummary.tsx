@@ -540,6 +540,28 @@ export default function CheckoutSummary({ deliveryCharge }) {
  const [isFreeShipping, setIsFreeShipping] = useState(false);
  const [appliedPromoCode, setAppliedPromoCode] = useState("");
 
+ const [sellerType, setSellerType] = useState("");
+ const [user, setUser] = useState<any>(null);
+ const isCorporate = sellerType.toLowerCase() === "corporate";
+
+ useEffect(() => {
+  const storedSellerType = localStorage.getItem("seller_type") || "";
+  setSellerType(storedSellerType);
+
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}") || null;
+  setUser(userInfo);
+
+  // A promo may already be applied from the Cart page for corporate orders
+  const storedPromoCode = sessionStorage.getItem("promoCode") || "";
+  const storedDiscount = parseFloat(sessionStorage.getItem("discount") || "0");
+  const storedFreeShipping = sessionStorage.getItem("isFreeShipping") === "1";
+  if (storedPromoCode && storedDiscount > 0) {
+   setAppliedPromoCode(storedPromoCode);
+   setDiscount(storedDiscount);
+   setIsFreeShipping(storedFreeShipping);
+  }
+ }, []);
+
  // newly added
  const [isExpressDelivery, setIsExpressDelivery] = useState(false);
 
@@ -680,8 +702,20 @@ export default function CheckoutSummary({ deliveryCharge }) {
    totalWithDelivery.toString()
   );
 
-  // Reset discount and newTotal
-  setDiscount(0);
+  // Reset discount and newTotal — but keep a corporate promo discount that
+  // was already applied on the Cart page (corporate checkout has no promo
+  // input of its own, so state alone can't be trusted to still hold it).
+  const currentSellerType = (
+   localStorage.getItem("seller_type") || ""
+  ).toLowerCase();
+  const preAppliedDiscount = parseFloat(
+   sessionStorage.getItem("discount") || "0"
+  );
+  if (currentSellerType === "corporate" && preAppliedDiscount > 0) {
+   setDiscount(preAppliedDiscount);
+  } else {
+   setDiscount(0);
+  }
 
   // Set newTotal based on product type
   if (hasAbroadProduct) {
@@ -689,7 +723,9 @@ export default function CheckoutSummary({ deliveryCharge }) {
    setNewTotal(advancePayment);
    sessionStorage.setItem("newTotal", advancePayment.toString());
   } else {
-   const regularTotal = totalPrice + totalWithDelivery;
+   const appliedDiscount =
+    currentSellerType === "corporate" ? preAppliedDiscount : 0;
+   const regularTotal = totalPrice + totalWithDelivery - appliedDiscount;
    setNewTotal(regularTotal);
    sessionStorage.setItem("newTotal", regularTotal.toString());
   }
@@ -876,8 +912,157 @@ export default function CheckoutSummary({ deliveryCharge }) {
  // Get selectedPaymentOption from sessionStorage for Pay Now (Advance)
  const selectedPaymentOption = sessionStorage.getItem("selectedPaymentOption");
 
+ // Corporate checkout has no delivery address, so the promo code can be
+ // applied straight from the product list without the address check used
+ // by applyPromoCode() above.
+ const applyCorporatePromoCode = async () => {
+  if (!promoCode) {
+   toast.warning("Please Enter a Promo Code !");
+   return;
+  }
+
+  const selectedItems = state.cart.filter((item) =>
+   state.selectedProducts.includes(item.id)
+  );
+
+  const requestBody = {
+   code: promoCode,
+   products: selectedItems.map((item) => {
+    const price = item.discountPrice ?? item.price;
+    return {
+     price,
+     qty: item.qty,
+     total_amount: price * item.qty,
+     name: item.name,
+     imgUrl: item.imgUrl,
+     productStock: item.productStock,
+     id: item.id,
+     discountPrice: item.discountPrice,
+     slug: item.slug,
+     productId: item.productId,
+     sellerId: item.sellerId,
+     productType: item.productType || "General",
+    };
+   }),
+  };
+
+  try {
+   const { default: axiosClient } = await import("@lib/axiosClient");
+   const response = await axiosClient.post("promo/apply", requestBody);
+   const data = response.data;
+
+   toast.success(data.message);
+   const discountValue = parseFloat(data.discount);
+   const freeShipping = !!data.free_shipping;
+
+   setDiscount(discountValue);
+   setIsFreeShipping(freeShipping);
+   setAppliedPromoCode(promoCode);
+
+   const finalPrice =
+    savedTotalPrice + (freeShipping ? 0 : savedTotalWithDelivery) - discountValue;
+   setNewTotal(finalPrice);
+
+   sessionStorage.setItem("discount", discountValue.toString());
+   sessionStorage.setItem("newTotal", finalPrice.toString());
+   sessionStorage.setItem("promoCode", promoCode);
+   sessionStorage.setItem("isFreeShipping", freeShipping ? "1" : "0");
+  } catch (error: any) {
+   const message =
+    error?.response?.data?.message ||
+    error?.message ||
+    "Invalid promo code.";
+   toast.error(message);
+
+   setDiscount(0);
+   setIsFreeShipping(false);
+   setAppliedPromoCode("");
+   setPromoCode("");
+   sessionStorage.setItem("discount", "0");
+   sessionStorage.setItem("promoCode", "");
+   sessionStorage.setItem("isFreeShipping", "0");
+  }
+ };
+
  return (
-  <Card1>
+  <>
+   {isCorporate && (
+    <Card1 mb="1.5rem">
+     <Typography fontWeight="700" mb="0.75rem">
+      Apply Coupon or Promo Code
+     </Typography>
+     <FlexBox alignItems="center" style={{ gap: "0.5rem" }}>
+      <input
+       type="text"
+       placeholder="Enter Promo Code (e.g. CORP10)"
+       value={promoCode}
+       onChange={handlePromoCodeChange}
+       style={{
+        flex: 1,
+        padding: "0.6rem 0.75rem",
+        border: "1px solid #ddd",
+        borderRadius: "6px",
+        fontSize: "14px",
+       }}
+      />
+      <button
+       onClick={applyCorporatePromoCode}
+       style={{
+        backgroundColor: "#0F3460",
+        color: "#fff",
+        padding: "0.6rem 1.25rem",
+        border: "none",
+        borderRadius: "6px",
+        cursor: "pointer",
+        fontSize: "14px",
+        fontWeight: 600,
+       }}
+      >
+       Apply
+      </button>
+     </FlexBox>
+
+     {appliedPromoCode && (
+      <FlexBox alignItems="center" mt="0.75rem" style={{ gap: "0.5rem" }}>
+       <span
+        style={{
+         display: "inline-flex",
+         alignItems: "center",
+         gap: "6px",
+         backgroundColor: "#e8f8f0",
+         border: "1px solid #3BB77E",
+         color: "#3BB77E",
+         borderRadius: "16px",
+         padding: "4px 10px",
+         fontSize: "13px",
+         fontWeight: 600,
+        }}
+       >
+        🏷️ {appliedPromoCode}
+        {isFreeShipping && " · Free Shipping"}
+        <span
+         onClick={() => {
+          setAppliedPromoCode("");
+          setIsFreeShipping(false);
+          setDiscount(0);
+          setPromoCode("");
+          setNewTotal(savedTotalPrice + savedTotalWithDelivery);
+          sessionStorage.setItem("discount", "0");
+          sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
+          sessionStorage.removeItem("promoCode");
+          sessionStorage.setItem("isFreeShipping", "0");
+         }}
+         style={{ cursor: "pointer", marginLeft: "4px", fontWeight: 700 }}
+        >
+         ×
+        </span>
+       </span>
+      </FlexBox>
+     )}
+    </Card1>
+   )}
+
+   <Card1>
    {state.cart.map((item) => (
     <ProductCard20
      margin={0}
@@ -896,160 +1081,298 @@ export default function CheckoutSummary({ deliveryCharge }) {
     />
    ))}
 
-   {/* Separates the promo field from the totals below — without it "Subtotal"
-       reads as part of the promotion block. */}
-   <FlexBox flexDirection="column" mb="1.25rem">
-    <Typography fontWeight="600" mb="0.5rem">
-     Promotion
-    </Typography>
-    <FlexBox justifyContent="space-between" alignItems="center">
-     <input
-      type="text"
-      placeholder="Enter Store/Tizaraa Code"
-      value={promoCode}
-      onChange={handlePromoCodeChange}
-      style={{
-       flex: 1,
-       padding: "0.5rem",
-       border: "1px solid #ddd",
-       borderRadius: "4px",
-       marginRight: "0.5rem",
-       fontSize: "14px",
-      }}
-     />
-     <button
-      onClick={applyPromoCode}
-      style={{
-       backgroundColor: "#E94560",
-       color: "#fff",
-       padding: "0.5rem 1rem",
-       border: "none",
-       borderRadius: "4px",
-       cursor: "pointer",
-       fontSize: "14px",
-      }}
-     >
-      APPLY
-     </button>
-    </FlexBox>
-
-    {/* Applied promo badge */}
-    {appliedPromoCode && (
-     <FlexBox alignItems="center" mt="0.5rem" style={{ gap: "0.5rem" }}>
+   {isCorporate ? (
+    <>
+     <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
+      <Typography fontWeight="700" fontSize="16px">
+       Order Summary
+      </Typography>
       <span
        style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "6px",
         backgroundColor: "#e8f8f0",
-        border: "1px solid #3BB77E",
-        color: "#3BB77E",
+        color: "#2e7d32",
+        border: "1px solid #4CAF50",
         borderRadius: "16px",
-        padding: "4px 10px",
-        fontSize: "13px",
-        fontWeight: 600,
+        padding: "3px 10px",
+        fontSize: "12px",
+        fontWeight: 700,
        }}
       >
-       🏷️ {appliedPromoCode}
-       {isFreeShipping && " · Free Shipping"}
-       <span
-        onClick={() => {
-         setAppliedPromoCode("");
-         setIsFreeShipping(false);
-         setDiscount(0);
-         setPromoCode("");
-         setNewTotal(savedTotalPrice + savedTotalWithDelivery);
-         sessionStorage.setItem("discount", "0");
-         sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
-         sessionStorage.removeItem("promoCode");
-         sessionStorage.setItem("isFreeShipping", "0");
-        }}
-        style={{ cursor: "pointer", marginLeft: "4px", fontWeight: 700 }}
-       >
-        ×
-       </span>
+       Corporate Credit Active
       </span>
      </FlexBox>
-    )}
-   </FlexBox>
 
-   <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-    <Typography color="text.hint">Subtotal:</Typography>
-    <FlexBox alignItems="flex-end">
-     <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-      {currency(savedTotalPrice)}
-      {/* {currency(Math.ceil(savedTotalPrice))} */}
-     </Typography>
-    </FlexBox>
-   </FlexBox>
-
-   {hasAbroadProduct && (
-    <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-     <Typography color="#E94560">
-      Pay Now ({selectedPaymentOption}%):
-     </Typography>
-     <FlexBox alignItems="flex-end">
-      <Typography
-       color="#E94560"
-       fontSize="18px"
-       fontWeight="600"
-       lineHeight="1"
-      >
-       {otcAdvancePaymentAmount !== null
-        ? currency(otcAdvancePaymentAmount)
-        : "BDT 0.00"}
+     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <Typography color="text.hint">Available Corporate Credit:</Typography>
+      <Typography fontWeight="700">
+       {currency(user?.credit_balance || 0)}
       </Typography>
-     </FlexBox>
-    </FlexBox>
-   )}
-
-   {!hasAbroadProduct && (
-    <>
-     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-      <Typography color="text.hint">Shipping:</Typography>
-      <FlexBox alignItems="flex-end" style={{ gap: "0.5rem" }}>
-       {isFreeShipping && (
-        <Typography fontSize="14px" color="text.muted" style={{ textDecoration: "line-through" }}>
-         {currency(savedTotalWithDelivery)}
-        </Typography>
-       )}
-       <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? "#3BB77E" : "inherit"}>
-        {isFreeShipping ? "FREE" : currency(savedTotalWithDelivery)}
-       </Typography>
-      </FlexBox>
-     </FlexBox>
-
-     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-      <Typography color="text.hint">VAT:</Typography>
-      <FlexBox alignItems="flex-end">
-       <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-        BDT 0.00
-       </Typography>
-      </FlexBox>
      </FlexBox>
 
      <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
-      <Typography color="text.hint">Discount:</Typography>
-      <Typography fontWeight="700">{currency(discount)}</Typography>
+      <Typography color="text.hint">Credit Balance After Purchase:</Typography>
+      <Typography fontWeight="700" color="#E94560">
+       {currency(
+        (user?.credit_balance || 0) -
+         (savedTotalWithDelivery + savedTotalPrice - discount)
+       )}
+      </Typography>
      </FlexBox>
+
+     <Divider mb="1rem" />
+
+     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <Typography color="text.hint">Subtotal (Items Total)</Typography>
+      <Typography fontWeight="600">{currency(savedTotalPrice)}</Typography>
+     </FlexBox>
+
+     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <FlexBox alignItems="center" style={{ gap: "8px" }}>
+       <Typography color="text.hint">Discount</Typography>
+       <span
+        style={{
+         backgroundColor: discount > 0 ? "#e8f8f0" : "#f0f2f5",
+         color: discount > 0 ? "#2e7d32" : "#7A8A99",
+         borderRadius: "10px",
+         padding: "2px 8px",
+         fontSize: "11px",
+         fontWeight: 700,
+        }}
+       >
+        {discount > 0 && savedTotalPrice > 0
+         ? `${((discount / savedTotalPrice) * 100).toFixed(1)}% OFF`
+         : "0% OFF"}
+       </span>
+      </FlexBox>
+      <Typography fontWeight="600" color={discount > 0 ? "#2e7d32" : "inherit"}>
+       {discount > 0 ? `- ${currency(discount)}` : currency(0)}
+      </Typography>
+     </FlexBox>
+
+     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <Typography color="text.hint">Shipping Charge</Typography>
+      <Typography fontWeight="600">
+       {isFreeShipping ? "FREE" : currency(savedTotalWithDelivery)}
+      </Typography>
+     </FlexBox>
+
+     <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
+      <Typography color="text.hint">Estimated Tax / VAT (0%)</Typography>
+      <Typography fontWeight="600">BDT 0.00</Typography>
+     </FlexBox>
+
+     <Divider mb="1rem" />
+
+     <FlexBox justifyContent="space-between" alignItems="flex-end" mb="1rem">
+      <Box>
+       <Typography fontWeight="700">Total Amount</Typography>
+       <Typography fontSize="12px" color="text.hint">
+        Total Net Payable via Credit
+       </Typography>
+      </Box>
+      <Typography fontSize="25px" fontWeight="600" lineHeight="1" color="#E94560">
+       {currency((isFreeShipping ? 0 : savedTotalWithDelivery) + savedTotalPrice - discount)}
+      </Typography>
+     </FlexBox>
+
+     <Box
+      sx={{
+       backgroundColor: "#fdecea",
+       border: "1px solid #f5c6cb",
+       borderRadius: "8px",
+       padding: "0.75rem",
+      }}
+     >
+      <FlexBox alignItems="center" style={{ gap: "6px" }} mb="0.25rem">
+       <span
+        style={{
+         display: "inline-flex",
+         alignItems: "center",
+         justifyContent: "center",
+         width: "16px",
+         height: "16px",
+         borderRadius: "4px",
+         backgroundColor: "#2563eb",
+         color: "#fff",
+         fontSize: "11px",
+         fontWeight: 700,
+         fontStyle: "italic",
+         lineHeight: 1,
+         flexShrink: 0,
+        }}
+       >
+        i
+       </span>
+       <Typography fontWeight="700" fontSize="13px" color="#c0392b">
+        Corporate Credit Purchase Policy
+       </Typography>
+      </FlexBox>
+      <Typography fontSize="12px" color="text.hint">
+       Total{" "}
+       {currency((isFreeShipping ? 0 : savedTotalWithDelivery) + savedTotalPrice - discount)}{" "}
+       will be billed to your corporate account line. No manual cash or debit
+       card is required at checkout.
+      </Typography>
+     </Box>
+    </>
+   ) : (
+    <>
+     {/* Separates the promo field from the totals below — without it "Subtotal"
+         reads as part of the promotion block. */}
+     <FlexBox flexDirection="column" mb="1.25rem">
+      <Typography fontWeight="600" mb="0.5rem">
+       Promotion
+      </Typography>
+      <FlexBox justifyContent="space-between" alignItems="center">
+       <input
+        type="text"
+        placeholder="Enter Store/Tizaraa Code"
+        value={promoCode}
+        onChange={handlePromoCodeChange}
+        style={{
+         flex: 1,
+         padding: "0.5rem",
+         border: "1px solid #ddd",
+         borderRadius: "4px",
+         marginRight: "0.5rem",
+         fontSize: "14px",
+        }}
+       />
+       <button
+        onClick={applyPromoCode}
+        style={{
+         backgroundColor: "#E94560",
+         color: "#fff",
+         padding: "0.5rem 1rem",
+         border: "none",
+         borderRadius: "4px",
+         cursor: "pointer",
+         fontSize: "14px",
+        }}
+       >
+        APPLY
+       </button>
+      </FlexBox>
+
+      {/* Applied promo badge */}
+      {appliedPromoCode && (
+       <FlexBox alignItems="center" mt="0.5rem" style={{ gap: "0.5rem" }}>
+        <span
+         style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "6px",
+          backgroundColor: "#e8f8f0",
+          border: "1px solid #3BB77E",
+          color: "#3BB77E",
+          borderRadius: "16px",
+          padding: "4px 10px",
+          fontSize: "13px",
+          fontWeight: 600,
+         }}
+        >
+         🏷️ {appliedPromoCode}
+         {isFreeShipping && " · Free Shipping"}
+         <span
+          onClick={() => {
+           setAppliedPromoCode("");
+           setIsFreeShipping(false);
+           setDiscount(0);
+           setPromoCode("");
+           setNewTotal(savedTotalPrice + savedTotalWithDelivery);
+           sessionStorage.setItem("discount", "0");
+           sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
+           sessionStorage.removeItem("promoCode");
+           sessionStorage.setItem("isFreeShipping", "0");
+          }}
+          style={{ cursor: "pointer", marginLeft: "4px", fontWeight: 700 }}
+         >
+          ×
+         </span>
+        </span>
+       </FlexBox>
+      )}
+     </FlexBox>
+
+     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <Typography color="text.hint">Subtotal:</Typography>
+      <FlexBox alignItems="flex-end">
+       <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+        {currency(savedTotalPrice)}
+        {/* {currency(Math.ceil(savedTotalPrice))} */}
+       </Typography>
+      </FlexBox>
+     </FlexBox>
+
+     {hasAbroadProduct && (
+      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+       <Typography color="#E94560">
+        Pay Now ({selectedPaymentOption}%):
+       </Typography>
+       <FlexBox alignItems="flex-end">
+        <Typography
+         color="#E94560"
+         fontSize="18px"
+         fontWeight="600"
+         lineHeight="1"
+        >
+         {otcAdvancePaymentAmount !== null
+          ? currency(otcAdvancePaymentAmount)
+          : "BDT 0.00"}
+        </Typography>
+       </FlexBox>
+      </FlexBox>
+     )}
+
+     {!hasAbroadProduct && (
+      <>
+       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+        <Typography color="text.hint">Shipping:</Typography>
+        <FlexBox alignItems="flex-end" style={{ gap: "0.5rem" }}>
+         {isFreeShipping && (
+          <Typography fontSize="14px" color="text.muted" style={{ textDecoration: "line-through" }}>
+           {currency(savedTotalWithDelivery)}
+          </Typography>
+         )}
+         <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? "#3BB77E" : "inherit"}>
+          {isFreeShipping ? "FREE" : currency(savedTotalWithDelivery)}
+         </Typography>
+        </FlexBox>
+       </FlexBox>
+
+       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+        <Typography color="text.hint">VAT:</Typography>
+        <FlexBox alignItems="flex-end">
+         <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+          BDT 0.00
+         </Typography>
+        </FlexBox>
+       </FlexBox>
+
+       <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
+        <Typography color="text.hint">Discount:</Typography>
+        <Typography fontWeight="700">{currency(discount)}</Typography>
+       </FlexBox>
+      </>
+     )}
+
+     <Divider mb="1rem" />
+
+     <Typography
+      fontSize="25px"
+      fontWeight="600"
+      lineHeight="1"
+      textAlign="right"
+      mb="1.5rem"
+     >
+      {hasAbroadProduct
+       ? currency(otcAdvancePaymentAmount || 0)
+       : currency((isFreeShipping ? 0 : savedTotalWithDelivery) + savedTotalPrice - discount)}
+     </Typography>
+
+     <Divider mb="1rem" />
     </>
    )}
-
-   <Divider mb="1rem" />
-
-   <Typography
-    fontSize="25px"
-    fontWeight="600"
-    lineHeight="1"
-    textAlign="right"
-    mb="1.5rem"
-   >
-    {hasAbroadProduct
-     ? currency(otcAdvancePaymentAmount || 0)
-     : currency((isFreeShipping ? 0 : savedTotalWithDelivery) + savedTotalPrice - discount)}
-   </Typography>
-
-   <Divider mb="1rem" />
 
    {hasAbroadProduct && (
     // <Typography fontSize="13px" color="text.hint" display="block" fontWeight="600">
@@ -1100,5 +1423,6 @@ export default function CheckoutSummary({ deliveryCharge }) {
         {currency(savedTotalWithDelivery + savedTotalPrice - discount)}
       </Typography> */}
   </Card1>
+  </>
  );
 }
