@@ -1207,11 +1207,12 @@ export default function Signup() {
    .required("Phone is required"),
   password: yup
    .string()
-   .min(9, "Password must be at least 9 characters")
+   .min(8, "Password must be at least 8 characters")
    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+   .matches(/[0-9]/, "Password must contain at least one number")
    .matches(
-    /[!@#$%^&*(),.?":{}|<>]/,
+    /[^A-Za-z0-9]/,
     "Password must contain at least one special character"
    )
    .required("Password is required"),
@@ -1489,8 +1490,8 @@ export default function Signup() {
         style={{ color: "#e94560", marginRight: "0.5rem" }}
        />
        <span style={{ fontSize: "0.875rem", color: "#495057" }}>
-        Password should be at least 9 characters, contain 1 uppercase, 1
-        lowercase, and 1 special character.
+        Password should be at least 8 characters, contain 1 uppercase, 1
+        lowercase, 1 number, and 1 special character.
        </span>
       </div>
      )}

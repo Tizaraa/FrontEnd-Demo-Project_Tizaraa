@@ -21,13 +21,14 @@ export default function SetPassword() {
 
   // Check if the password meets all criteria together
   if (
-   pwd.length < 9 ||
+   pwd.length < 8 ||
    !/[A-Z]/.test(pwd) ||
    !/[a-z]/.test(pwd) ||
-   !/[@$!%*#?&]/.test(pwd)
+   !/[0-9]/.test(pwd) ||
+   !/[^A-Za-z0-9]/.test(pwd)
   ) {
    errors.push(
-    "Password should be at least 9 characters, contain 1 uppercase, 1 lowercase, and 1 special character."
+    "Password should be at least 8 characters, contain 1 uppercase, 1 lowercase, 1 number, and 1 special character."
    );
   } else {
    // Check individual patterns if the primary message isn't needed
@@ -37,7 +38,10 @@ export default function SetPassword() {
    if (!/[a-z]/.test(pwd)) {
     errors.push("Password should contain at least 1 lowercase letter.");
    }
-   if (!/[@$!%*#?&]/.test(pwd)) {
+   if (!/[0-9]/.test(pwd)) {
+    errors.push("Password should contain at least 1 number.");
+   }
+   if (!/[^A-Za-z0-9]/.test(pwd)) {
     errors.push("Password should contain at least 1 special character.");
    }
   }
