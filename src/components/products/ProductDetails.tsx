@@ -751,7 +751,7 @@ const ProductDetails = ({
         fontSize={isDesktop ? "12px" : "10px"}
         textAlign="center"
        >
-        {Math.floor(((price - discountPrice) / price) * 100)}% off
+        {Math.round(((price - discountPrice) / price) * 100)}% off
        </Chip>
       )}
      </FlexBox>

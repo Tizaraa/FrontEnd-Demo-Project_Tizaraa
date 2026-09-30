@@ -394,7 +394,6 @@ export default function Layout({ children }: PropsWithChildren) {
  const [selectedStep, setSelectedStep] = useState(0);
  const [hasVisitedPayment, setHasVisitedPayment] = useState(false);
  const [stepperList, setStepperList] = useState([
-  { title: "Cart", disabled: false },
   { title: "Details", disabled: false },
   { title: "Payment", disabled: true },
   { title: "Submit", disabled: true },
@@ -424,7 +423,6 @@ export default function Layout({ children }: PropsWithChildren) {
        { title: "Submit", disabled: true },
       ]
     : [
-       { title: "Cart", disabled: false },
        { title: "Details", disabled: false },
        { title: "Payment", disabled: !hasVisitedPayment },
        { title: "Submit", disabled: true },
@@ -441,8 +439,8 @@ export default function Layout({ children }: PropsWithChildren) {
    router.push(routes[ind]);
   } else {
    const routes = isLoggedIn
-    ? ["/cart", "/checkout", "/payment", "/orders"]
-    : ["/cart", "/login", "/login", "/login"];
+    ? ["/checkout", "/payment", "/orders"]
+    : ["/login", "/login", "/login"];
    router.push(routes[ind]);
   }
  };
@@ -456,10 +454,9 @@ export default function Layout({ children }: PropsWithChildren) {
    setSelectedStep(pathname.includes("/checkout") ? 0 : 1);
   } else {
    const stepMap: Record<string, number> = {
-    "/cart": 0,
-    "/checkout": 1,
-    "/payment": 2,
-    "/orders": 3,
+    "/checkout": 0,
+    "/payment": 1,
+    "/orders": 2,
    };
    setSelectedStep(stepMap[pathname] || 0);
   }
@@ -469,6 +466,7 @@ export default function Layout({ children }: PropsWithChildren) {
 
  return (
   <Fragment>
+   {pathname !== "/cart" && (
    <Box mb={isMobile ? "24px" : "14px"} px={{ xs: 2, sm: 0 }}>
     <Grid container spacing={6}>
      <Grid item lg={8} md={8} xs={12}>
@@ -508,6 +506,7 @@ export default function Layout({ children }: PropsWithChildren) {
      </Grid>
     </Grid>
    </Box>
+   )}
    {children}
   </Fragment>
  );

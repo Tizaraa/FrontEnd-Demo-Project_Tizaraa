@@ -31,6 +31,25 @@ export default function Cart() {
  const [isLoggedIn, setIsLoggedIn] = useState(false);
  const router = useRouter();
 
+ const [sellerType, setSellerType] = useState("");
+ const isCorporate = sellerType.toLowerCase() === "corporate";
+ const [promoCode, setPromoCode] = useState("");
+ const [appliedPromoCode, setAppliedPromoCode] = useState("");
+ const [promoDiscount, setPromoDiscount] = useState(0);
+ const [isFreeShipping, setIsFreeShipping] = useState(false);
+
+ useEffect(() => {
+  setSellerType(localStorage.getItem("seller_type") || "");
+
+  const storedPromoCode = sessionStorage.getItem("promoCode") || "";
+  const storedDiscount = parseFloat(sessionStorage.getItem("discount") || "0");
+  if (storedPromoCode && storedDiscount > 0) {
+   setAppliedPromoCode(storedPromoCode);
+   setPromoDiscount(storedDiscount);
+   setIsFreeShipping(sessionStorage.getItem("isFreeShipping") === "1");
+  }
+ }, []);
+
  useEffect(() => setIsLoggedIn(authService.isAuthenticated()), []);
 
  useEffect(() => {
@@ -181,6 +200,83 @@ export default function Cart() {
   }
  };
 
+ const applyPromoCode = async () => {
+  if (!promoCode) {
+   toast.error("Please enter a promo code!");
+   return;
+  }
+
+  const selectedItems = state.cart.filter((item) =>
+   state.selectedProducts.includes(item.id)
+  );
+
+  if (!selectedItems.length) {
+   toast.error("Please select products first");
+   return;
+  }
+
+  const requestBody = {
+   code: promoCode,
+   products: selectedItems.map((item) => {
+    const price = item.discountPrice ?? item.price;
+    return {
+     price,
+     qty: item.qty,
+     total_amount: price * item.qty,
+     name: item.name,
+     imgUrl: item.imgUrl,
+     productStock: item.productStock,
+     id: item.id,
+     discountPrice: item.discountPrice,
+     slug: item.slug,
+     productId: item.productId,
+     sellerId: item.sellerId,
+     productType: item.productType || "General",
+    };
+   }),
+  };
+
+  try {
+   const response = await axios.post("promo/apply", requestBody);
+   const data = response.data;
+
+   toast.success(data.message);
+   const discountValue = parseFloat(data.discount);
+   const freeShipping = !!data.free_shipping;
+
+   setPromoDiscount(discountValue);
+   setIsFreeShipping(freeShipping);
+   setAppliedPromoCode(promoCode);
+
+   sessionStorage.setItem("discount", discountValue.toString());
+   sessionStorage.setItem("promoCode", promoCode);
+   sessionStorage.setItem("isFreeShipping", freeShipping ? "1" : "0");
+  } catch (error: unknown) {
+   const message =
+    error instanceof AxiosError
+     ? error.response?.data?.message || "Invalid promo code."
+     : "Invalid promo code.";
+   toast.error(message);
+
+   setPromoDiscount(0);
+   setIsFreeShipping(false);
+   setAppliedPromoCode("");
+   sessionStorage.setItem("discount", "0");
+   sessionStorage.setItem("promoCode", "");
+   sessionStorage.setItem("isFreeShipping", "0");
+  }
+ };
+
+ const removeAppliedPromo = () => {
+  setAppliedPromoCode("");
+  setPromoDiscount(0);
+  setIsFreeShipping(false);
+  setPromoCode("");
+  sessionStorage.setItem("discount", "0");
+  sessionStorage.setItem("promoCode", "");
+  sessionStorage.setItem("isFreeShipping", "0");
+ };
+
  const totalPrice = getTotalPrice();
 
  return (
@@ -248,6 +344,72 @@ export default function Cart() {
      </Grid>
 
      <Grid item lg={4} md={4} xs={12}>
+      {isCorporate && (
+       <Card1 mb="1.5rem">
+        <Typography fontWeight="700" mb="0.75rem">
+         Apply Coupon or Promo Code
+        </Typography>
+        <FlexBox alignItems="center" style={{ gap: "0.5rem" }}>
+         <input
+          type="text"
+          placeholder="Enter Promo Code (e.g. CORP10)"
+          value={promoCode}
+          onChange={(e) => setPromoCode(e.target.value)}
+          style={{
+           flex: 1,
+           padding: "0.6rem 0.75rem",
+           border: "1px solid #ddd",
+           borderRadius: "6px",
+           fontSize: "14px",
+          }}
+         />
+         <button
+          onClick={applyPromoCode}
+          style={{
+           backgroundColor: "#0F3460",
+           color: "#fff",
+           padding: "0.6rem 1.25rem",
+           border: "none",
+           borderRadius: "6px",
+           cursor: "pointer",
+           fontSize: "14px",
+           fontWeight: 600,
+          }}
+         >
+          Apply
+         </button>
+        </FlexBox>
+
+        {appliedPromoCode && (
+         <FlexBox alignItems="center" mt="0.75rem" style={{ gap: "0.5rem" }}>
+          <span
+           style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            backgroundColor: "#e8f8f0",
+            border: "1px solid #3BB77E",
+            color: "#3BB77E",
+            borderRadius: "16px",
+            padding: "4px 10px",
+            fontSize: "13px",
+            fontWeight: 600,
+           }}
+          >
+           🏷️ {appliedPromoCode}
+           {isFreeShipping && " · Free Shipping"}
+           <span
+            onClick={removeAppliedPromo}
+            style={{ cursor: "pointer", marginLeft: "4px", fontWeight: 700 }}
+           >
+            ×
+           </span>
+          </span>
+         </FlexBox>
+        )}
+       </Card1>
+      )}
+
       <Card1>
        <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
         <Typography color="gray.600">Total:</Typography>

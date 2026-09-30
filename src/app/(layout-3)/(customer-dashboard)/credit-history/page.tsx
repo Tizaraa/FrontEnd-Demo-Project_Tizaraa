@@ -395,9 +395,10 @@ export default function CreditHistoryPage() {
       .totals-wrap { position: relative; display: flex; justify-content: flex-end; }
       .totals-box {
        position: relative; background: #F7F7F7; border-radius: 6px; padding: 16px 20px;
-       min-width: 260px; z-index: 1;
+       min-width: 300px; z-index: 1;
       }
-      .totals-box p { display: flex; justify-content: space-between; font-size: 13px; margin: 6px 0; color: #374151; }
+      .totals-box p { display: flex; justify-content: space-between; gap: 24px; font-size: 13px; margin: 6px 0; color: #374151; }
+      .totals-box p span:first-child { white-space: nowrap; }
       .totals-box p.total { font-size: 15px; font-weight: 800; color: #E75B2A; border-top: 1px solid #E2E5EA; padding-top: 8px; margin-top: 10px; }
       .footer-note { text-align: center; font-size: 12px; color: #374151; margin: 12px 0 4px 0; }
       .footer-note.muted { color: #6B7280; }
@@ -554,8 +555,8 @@ export default function CreditHistoryPage() {
        alignItems: "center",
        padding: "10px 18px",
        borderRadius: "8px",
-       border: "1px solid #1B3D8F",
-       backgroundColor: "#1B3D8F",
+       border: "1px solid #E94560",
+       backgroundColor: "#E94560",
        color: "#fff",
        fontSize: "13px",
        fontWeight: 600,
@@ -612,8 +613,8 @@ export default function CreditHistoryPage() {
          gap: "8px",
          padding: "10px 16px",
          borderRadius: "8px",
-         border: "1px solid #1B3D8F",
-         backgroundColor: "#1B3D8F",
+         border: "1px solid #E94560",
+         backgroundColor: "#E94560",
          color: "#fff",
          fontSize: "13px",
          fontWeight: 600,
@@ -682,13 +683,13 @@ export default function CreditHistoryPage() {
 
      {/* Stat cards */}
      <Grid container spacing={6}>
-      <Grid item lg={3} md={6} xs={12} style={{ display: "flex" }}>
+      <Grid item lg={4} md={6} xs={12} style={{ display: "flex" }}>
        <Box
         p="0.75rem 1rem"
         borderRadius="8px"
         style={{
-         backgroundColor: "#F7F9FC",
-         borderLeft: "4px solid #1B3D8F",
+         backgroundColor: "rgba(15, 52, 96, 0.06)",
+         borderLeft: "4px solid #0F3460",
          width: "100%",
          height: "100%",
          boxSizing: "border-box",
@@ -701,13 +702,13 @@ export default function CreditHistoryPage() {
         <Small color="text.muted">Assigned Limit</Small>
        </Box>
       </Grid>
-      <Grid item lg={3} md={6} xs={12} style={{ display: "flex" }}>
+      <Grid item lg={4} md={6} xs={12} style={{ display: "flex" }}>
        <Box
         p="0.75rem 1rem"
         borderRadius="8px"
         style={{
-         backgroundColor: "#FFF8F0",
-         borderLeft: "4px solid #F5A623",
+         backgroundColor: "rgba(78, 151, 253, 0.08)",
+         borderLeft: "4px solid #4E97FD",
          width: "100%",
          height: "100%",
          boxSizing: "border-box",
@@ -722,13 +723,13 @@ export default function CreditHistoryPage() {
         </Small>
        </Box>
       </Grid>
-      <Grid item lg={3} md={6} xs={12} style={{ display: "flex" }}>
+      <Grid item lg={4} md={6} xs={12} style={{ display: "flex" }}>
        <Box
         p="0.75rem 1rem"
         borderRadius="8px"
         style={{
-         backgroundColor: "#F0FBF6",
-         borderLeft: "4px solid #1FAE68",
+         backgroundColor: "rgba(51, 208, 103, 0.1)",
+         borderLeft: "4px solid #33D067",
          width: "100%",
          height: "100%",
          boxSizing: "border-box",
@@ -743,13 +744,13 @@ export default function CreditHistoryPage() {
         <Small color="text.muted">Available balance</Small>
        </Box>
       </Grid>
-      <Grid item lg={3} md={6} xs={12} style={{ display: "flex" }}>
+      <Grid item lg={4} md={6} xs={12} style={{ display: "flex" }}>
        <Box
         p="0.75rem 1rem"
         borderRadius="8px"
         style={{
-         backgroundColor: "#FDF6EC",
-         borderLeft: "4px solid #D68910",
+         backgroundColor: "rgba(255, 205, 78, 0.2)",
+         borderLeft: "4px solid #FFCD4E",
          width: "100%",
          height: "100%",
          boxSizing: "border-box",
@@ -762,13 +763,13 @@ export default function CreditHistoryPage() {
         <Small color="text.muted">Total delivered (settled + unsettled)</Small>
        </Box>
       </Grid>
-      <Grid item lg={3} md={6} xs={12} style={{ display: "flex" }}>
+      <Grid item lg={4} md={6} xs={12} style={{ display: "flex" }}>
        <Box
         p="0.75rem 1rem"
         borderRadius="8px"
         style={{
-         backgroundColor: "#EEF7EE",
-         borderLeft: "4px solid #2E8B57",
+         backgroundColor: "rgba(51, 208, 103, 0.1)",
+         borderLeft: "4px solid #33D067",
          width: "100%",
          height: "100%",
          boxSizing: "border-box",
@@ -783,12 +784,12 @@ export default function CreditHistoryPage() {
         <Small color="text.muted">Settled by seller</Small>
        </Box>
       </Grid>
-      <Grid item lg={3} md={6} xs={12} style={{ display: "flex" }}>
+      <Grid item lg={4} md={6} xs={12} style={{ display: "flex" }}>
        <Box
         p="0.75rem 1rem"
         borderRadius="8px"
         style={{
-         backgroundColor: "#FDF1F1",
+         backgroundColor: "rgba(233, 69, 96, 0.08)",
          borderLeft: "4px solid #E94560",
          width: "100%",
          height: "100%",

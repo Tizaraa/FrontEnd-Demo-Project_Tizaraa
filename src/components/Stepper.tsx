@@ -15,13 +15,11 @@ type StepperProps = {
 // ==============================================================
 
 export default function Stepper({
- selectedStep = 1,
+ selectedStep = 0,
  stepperList,
  onChange,
 }: StepperProps) {
- const [selected, setSelected] = useState<number>(
-  (selectedStep ? selectedStep : 1) - 1
- );
+ const [selected, setSelected] = useState<number>(selectedStep);
 
  const handleStepClick = (step: Step, ind: number) => () => {
   if (!step.disabled) {
@@ -30,10 +28,7 @@ export default function Stepper({
   }
  };
 
- useEffect(
-  () => setSelected((selectedStep ? selectedStep : 1) - 1),
-  [selectedStep]
- );
+ useEffect(() => setSelected(selectedStep), [selectedStep]);
 
  return (
   <FlexBox
