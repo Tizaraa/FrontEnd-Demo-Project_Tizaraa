@@ -17,6 +17,7 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import EmptyOrders from "@sections/customer-dashboard/orders/EmptyOrders";
 import Loader from "@component/loader";
 import { currency } from "@utils/utils";
+import { FiArrowLeft } from "react-icons/fi";
 
 // ==============================================================
 // Types — mirror the real API response shape exactly (see
@@ -170,17 +171,19 @@ export default function TransactionHistoryPage() {
    style={{
     display: "inline-flex",
     alignItems: "center",
+    gap: "6px",
     padding: "10px 18px",
     borderRadius: "8px",
-    border: "1px solid #1B3D8F",
-    backgroundColor: "#1B3D8F",
+    border: "1px solid #E94560",
+    backgroundColor: "#E94560",
     color: "#fff",
     fontSize: "13px",
     fontWeight: 600,
     textDecoration: "none",
    }}
   >
-   Due Payment
+   <FiArrowLeft size={15} />
+   Back
   </Link>
  );
 
