@@ -448,6 +448,7 @@ type ProductDetailsProps = {
  sellerShopName: string;
  sellerShopLogo: string;
  brandName: string;
+ productCode?: string | null;
  unitOfMeasure?: { id: number; name: string; symbol: string } | null;
  warranty: string;
  warrantyType: string;
@@ -482,6 +483,7 @@ const ProductDetails = ({
  sellerShopName,
  sellerShopLogo,
  brandName,
+ productCode,
  unitOfMeasure,
  warranty,
  warrantyType,
@@ -749,7 +751,7 @@ const ProductDetails = ({
         fontSize={isDesktop ? "12px" : "10px"}
         textAlign="center"
        >
-        {Math.floor(((price - discountPrice) / price) * 100)}% off
+        {Math.round(((price - discountPrice) / price) * 100)}% off
        </Chip>
       )}
      </FlexBox>
@@ -788,6 +790,13 @@ const ProductDetails = ({
       {brandName || "N/A"}
      </a>
     </Typography>
+
+    {productCode && (
+     <Typography style={{ fontSize: isDesktop ? "16px" : "14px", marginTop: "8px" }}>
+      Product Code:{" "}
+      <span style={{ color: "#2C3A4A", fontWeight: 500 }}>{productCode}</span>
+     </Typography>
+    )}
 
     {unitOfMeasure && (
      <Typography style={{ fontSize: isDesktop ? "16px" : "14px", marginTop: "8px" }}>

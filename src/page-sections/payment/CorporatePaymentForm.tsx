@@ -986,7 +986,7 @@ export default function CorporatePaymentForm() {
 
   if (
    paymentMethod.toString() === "4" &&
-   userinfo?.type === "Corporate" &&
+   userinfo?.type === "employee" &&
    savedPrice > Number(userinfo?.credit_balance)
   ) {
    toast.error("Your credit balance is not enough.");

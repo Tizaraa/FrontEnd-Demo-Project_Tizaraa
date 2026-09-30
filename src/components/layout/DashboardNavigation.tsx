@@ -300,6 +300,8 @@ export default function DashboardNavigation() {
  const [returnOrderCount, setReturnOrderCount] = useState(0); // State for Canceled order count
  const [addressCount, setAddressCount] = useState(0); // State for address count
  const [rfqCount, setRfqCount] = useState(0); // State for RFQ count
+ // Corporate employees buy on company credit and have no RFQ flow (yet)
+ const [isCorporateEmployee, setIsCorporateEmployee] = useState(false);
 
  // Fetch user data from the API
  const fetchData = async () => {
@@ -356,6 +358,13 @@ export default function DashboardNavigation() {
   } else {
    setIsLoggedIn(false); // Set logged-out state if no token exists
   }
+
+  try {
+   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
+   setIsCorporateEmployee(userInfo?.type === "employee");
+  } catch {
+   setIsCorporateEmployee(false);
+  }
  }, [pathname]); // Add pathname as a dependency to re-check when route changes
 
  // Listen to window resize to update mobile view state
@@ -410,7 +419,9 @@ export default function DashboardNavigation() {
      title: "Credit History",
      iconName: "credit-card",
     },
-    { href: "/rfq", title: "RFQ", iconName: "request", count: rfqCount },
+    ...(isCorporateEmployee
+     ? []
+     : [{ href: "/rfq", title: "RFQ", iconName: "request", count: rfqCount }]),
     // { href: "/wish-list", title: "Wishlist", iconName: "heart", count: 19 },
     // { href: "/support-tickets", title: "Support Tickets", iconName: "customer-service", count: 1 },
    ],

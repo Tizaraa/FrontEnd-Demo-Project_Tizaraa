@@ -186,7 +186,7 @@ export default function ProductCard9({
             </Icon> */}
       <Link href={`/product/${slug}`}>
        <Image
-        src={`${ApiBaseUrl.ImgUrl}${imgUrl}`}
+        src={imgUrl?.startsWith("http") ? imgUrl : `${ApiBaseUrl.ImgUrl}${imgUrl}`}
         alt={title}
         width="100%"
         borderRadius="0.5rem"

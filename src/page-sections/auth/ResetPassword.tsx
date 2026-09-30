@@ -20,14 +20,15 @@ import { StyledRoot } from "./styles";
 import useVisibility from "./useVisibility";
 import useResetCountdown, { formatCountdown } from "./useResetCountdown";
 
-// Mirrors the backend rule (min 9, mixed case, symbol) so users see errors before submitting.
+// Mirrors the backend rule (min 8, mixed case, number, symbol) so users see errors before submitting.
 const formSchema = yup.object().shape({
  password: yup
   .string()
   .required("New password is required")
-  .min(9, "At least 9 characters")
+  .min(8, "At least 8 characters")
   .matches(/[A-Z]/, "At least 1 uppercase letter")
   .matches(/[a-z]/, "At least 1 lowercase letter")
+  .matches(/[0-9]/, "At least 1 number")
   .matches(/[^A-Za-z0-9]/, "At least 1 special character"),
  confirmPassword: yup
   .string()

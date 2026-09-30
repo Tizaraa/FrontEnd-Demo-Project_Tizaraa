@@ -255,6 +255,8 @@ export default function PaymentSummary({
  // Get selectedPaymentOption from sessionStorage for Pay Now (Advance)
  const selectedPaymentOption = sessionStorage.getItem("selectedPaymentOption");
 
+ const isCorporate = seller_type.toLocaleLowerCase() === "corporate";
+
  return (
   <Card1>
    {state.cart.map((item) => (
@@ -275,106 +277,224 @@ export default function PaymentSummary({
     />
    ))}
 
-   {seller_type.toLocaleLowerCase() === "corporate" && (
-    <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-     <Typography color="text.hint">Credit:</Typography>
-     <FlexBox alignItems="flex-end">
-      <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-       {user?.credit_balance || 0.0}
+   {isCorporate ? (
+    <>
+     <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
+      <Typography fontWeight="700" fontSize="16px">
+       Order Summary
       </Typography>
-     </FlexBox>
-    </FlexBox>
-   )}
-
-   <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-    <Typography color="text.hint">Subtotal:</Typography>
-    <FlexBox alignItems="flex-end">
-     <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-      {currency(totalPrice)}
-     </Typography>
-    </FlexBox>
-   </FlexBox>
-
-   {isAbroadProduct && (
-    <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-     <Typography color="#E94560">
-      Pay Now ({selectedPaymentOption}%):
-     </Typography>
-     <FlexBox alignItems="flex-end">
-      <Typography
-       color="#E94560"
-       fontSize="18px"
-       fontWeight="600"
-       lineHeight="1"
+      <span
+       style={{
+        backgroundColor: "#e8f8f0",
+        color: "#2e7d32",
+        border: "1px solid #4CAF50",
+        borderRadius: "16px",
+        padding: "3px 10px",
+        fontSize: "12px",
+        fontWeight: 700,
+       }}
       >
-       {currency(newTotal)}
+       Corporate Credit Active
+      </span>
+     </FlexBox>
+
+     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <Typography color="text.hint">Available Corporate Credit:</Typography>
+      <Typography fontWeight="700">
+       {currency(user?.credit_balance || 0)}
       </Typography>
      </FlexBox>
-    </FlexBox>
-   )}
 
-   {!isAbroadProduct && (
+     <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
+      <Typography color="text.hint">Credit Balance After Purchase:</Typography>
+      <Typography fontWeight="700" color="#E94560">
+       {currency((user?.credit_balance || 0) - displayTotal)}
+      </Typography>
+     </FlexBox>
+
+     <Divider mb="1rem" />
+
+     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <Typography color="text.hint">Subtotal (Items Total)</Typography>
+      <Typography fontWeight="600">{currency(totalPrice)}</Typography>
+     </FlexBox>
+
+     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <FlexBox alignItems="center" style={{ gap: "8px" }}>
+       <Typography color="text.hint">Discount</Typography>
+       <span
+        style={{
+         backgroundColor: discount > 0 ? "#e8f8f0" : "#f0f2f5",
+         color: discount > 0 ? "#2e7d32" : "#7A8A99",
+         borderRadius: "10px",
+         padding: "2px 8px",
+         fontSize: "11px",
+         fontWeight: 700,
+        }}
+       >
+        {discount > 0 && totalPrice > 0
+         ? `${((discount / totalPrice) * 100).toFixed(1)}% OFF`
+         : "0% OFF"}
+       </span>
+      </FlexBox>
+      <Typography fontWeight="600" color={discount > 0 ? "#2e7d32" : "inherit"}>
+       {discount > 0 ? `- ${currency(discount)}` : currency(0)}
+      </Typography>
+     </FlexBox>
+
+     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+      <Typography color="text.hint">Shipping Charge</Typography>
+      <Typography fontWeight="600">
+       {isFreeShipping ? "FREE" : currency(shippingCharge)}
+      </Typography>
+     </FlexBox>
+
+     <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
+      <Typography color="text.hint">Estimated Tax / VAT (0%)</Typography>
+      <Typography fontWeight="600">BDT 0.00</Typography>
+     </FlexBox>
+
+     <Divider mb="1rem" />
+
+     <FlexBox justifyContent="space-between" alignItems="flex-end" mb="1rem">
+      <Box>
+       <Typography fontWeight="700">Total Amount</Typography>
+       <Typography fontSize="12px" color="text.hint">
+        Total Net Payable via Credit
+       </Typography>
+      </Box>
+      <Typography fontSize="25px" fontWeight="600" lineHeight="1" color="#E94560">
+       {currency(displayTotal)}
+      </Typography>
+     </FlexBox>
+
+     <Box
+      sx={{
+       backgroundColor: "#fdecea",
+       border: "1px solid #f5c6cb",
+       borderRadius: "8px",
+       padding: "0.75rem",
+      }}
+     >
+      <FlexBox alignItems="center" style={{ gap: "6px" }} mb="0.25rem">
+       <span
+        style={{
+         display: "inline-flex",
+         alignItems: "center",
+         justifyContent: "center",
+         width: "16px",
+         height: "16px",
+         borderRadius: "4px",
+         backgroundColor: "#2563eb",
+         color: "#fff",
+         fontSize: "11px",
+         fontWeight: 700,
+         fontStyle: "italic",
+         lineHeight: 1,
+         flexShrink: 0,
+        }}
+       >
+        i
+       </span>
+       <Typography fontWeight="700" fontSize="13px" color="#c0392b">
+        Corporate Credit Purchase Policy
+       </Typography>
+      </FlexBox>
+      <Typography fontSize="12px" color="text.hint">
+       Total {currency(displayTotal)} will be billed to your corporate
+       account line. No manual cash or debit card is required at checkout.
+      </Typography>
+     </Box>
+    </>
+   ) : (
     <>
      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-      <Typography color="text.hint">Shipping:</Typography>
+      <Typography color="text.hint">Subtotal:</Typography>
+      <FlexBox alignItems="flex-end">
+       <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+        {currency(totalPrice)}
+       </Typography>
+      </FlexBox>
+     </FlexBox>
 
-      <FlexBox alignItems="flex-end" style={{ gap: "0.5rem" }}>
-       {isFreeShipping && (
-        <Typography fontSize="14px" color="text.muted" style={{ textDecoration: "line-through" }}>
-         {currency(parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0"))}
+     {isAbroadProduct && (
+      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+       <Typography color="#E94560">
+        Pay Now ({selectedPaymentOption}%):
+       </Typography>
+       <FlexBox alignItems="flex-end">
+        <Typography
+         color="#E94560"
+         fontSize="18px"
+         fontWeight="600"
+         lineHeight="1"
+        >
+         {currency(newTotal)}
         </Typography>
-       )}
-       <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? "#3BB77E" : "inherit"}>
-        {isFreeShipping ? "FREE" : currency(shippingCharge)}
-       </Typography>
+       </FlexBox>
       </FlexBox>
-     </FlexBox>
+     )}
 
-     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-      <Typography color="text.hint">Vat:</Typography>
+     {!isAbroadProduct && (
+      <>
+       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+        <Typography color="text.hint">Shipping:</Typography>
 
-      <FlexBox alignItems="flex-end">
-       <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-        -
-       </Typography>
+        <FlexBox alignItems="flex-end" style={{ gap: "0.5rem" }}>
+         {isFreeShipping && (
+          <Typography fontSize="14px" color="text.muted" style={{ textDecoration: "line-through" }}>
+           {currency(parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0"))}
+          </Typography>
+         )}
+         <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? "#3BB77E" : "inherit"}>
+          {isFreeShipping ? "FREE" : currency(shippingCharge)}
+         </Typography>
+        </FlexBox>
+       </FlexBox>
 
-       {/* <Typography fontWeight="600" fontSize="14px" lineHeight="1">
-            00
-          </Typography> */}
-      </FlexBox>
-     </FlexBox>
+       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
+        <Typography color="text.hint">Vat:</Typography>
 
-     <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-      <Typography color="text.hint">Discount:</Typography>
+        <FlexBox alignItems="flex-end">
+         <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+          -
+         </Typography>
+        </FlexBox>
+       </FlexBox>
 
-      <FlexBox alignItems="flex-end">
-       <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-        {currency(discount)}
-       </Typography>
-      </FlexBox>
-     </FlexBox>
+       <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
+        <Typography color="text.hint">Discount:</Typography>
+
+        <FlexBox alignItems="flex-end">
+         <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+          {currency(discount)}
+         </Typography>
+        </FlexBox>
+       </FlexBox>
+      </>
+     )}
+
+     <Divider mb="1rem" />
+
+     <Typography
+      fontSize="25px"
+      fontWeight="600"
+      lineHeight="1"
+      textAlign="right"
+      mb="1.5rem"
+     >
+      {currency(displayTotal)}
+     </Typography>
+
+     <Divider mb="1rem" />
+
+     {isAbroadProduct && (
+      <Typography fontSize="13px" color="text.primary" textAlign="justify">
+       Shipping & Courier Charge will be calculated based on actual weight &
+       dimensions when the product is in-house by Tizaraa.
+      </Typography>
+     )}
     </>
-   )}
-
-   <Divider mb="1rem" />
-
-   <Typography
-    fontSize="25px"
-    fontWeight="600"
-    lineHeight="1"
-    textAlign="right"
-    mb="1.5rem"
-   >
-    {currency(displayTotal)}
-   </Typography>
-
-   <Divider mb="1rem" />
-
-   {isAbroadProduct && (
-    <Typography fontSize="13px" color="text.primary" textAlign="justify">
-     Shipping & Courier Charge will be calculated based on actual weight &
-     dimensions when the product is in-house by Tizaraa.
-    </Typography>
    )}
   </Card1>
  );

@@ -734,6 +734,7 @@
 
 import React, { Fragment, useState, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import DOMPurify from "dompurify";
 import ResponsiveCategory from "./ResponsiveCategory";
 import ProductIntro from "@component/products/ProductIntro";
 import { productPageTheme as theme } from "@component/products/productPageTheme";
@@ -1399,6 +1400,7 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
               sellerId={product.seller_shop_id}
               slug={params.slug}
               brandName={product.brand_name}
+              productCode={product.product_code ?? null}
               unitOfMeasure={unitOfMeasure}
               warranty={warranty}
               warrantyType={warrantyType}
@@ -1407,6 +1409,20 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
               campaignBannerImage={campaignBannerImage}
               campaignSlug={campaignSlug}
             />
+
+            {/* Short description summary — sits under the intro so the left
+                column fills the space beside the taller sidebar */}
+            {shortDescription ? (
+              <div
+                style={{
+                  marginTop: "20px",
+                  fontSize: "14px",
+                  color: theme.body,
+                  lineHeight: 1.6,
+                }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(shortDescription) }}
+              />
+            ) : null}
           </div>
           {isDesktop && (
             <div
@@ -1418,23 +1434,6 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
             </div>
           )}
           </div>
-
-          {/* Short description summary */}
-          {shortDescription ? (
-            <div
-              style={{
-                marginTop: "20px",
-                padding: "14px 18px",
-                borderLeft: `4px solid ${theme.accent}`,
-                backgroundColor: theme.accentTint,
-                borderRadius: theme.radiusSmall,
-                fontSize: "14px",
-                color: theme.body,
-                lineHeight: 1.6,
-              }}
-              dangerouslySetInnerHTML={{ __html: shortDescription }}
-            />
-          ) : null}
         </div>
 
         {/* ProductView with shipping props passed on mobile */}
