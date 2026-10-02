@@ -187,6 +187,7 @@ export default function OrderDetails({ params }: IDParams) {
       items: {
        [sellerName]: {
         delivered_at: raw.delivered_at ?? null,
+        return_deadline: raw.return_deadline ?? null,
         status: formatStatus(raw.order_status),
         delivery_charge: raw.shipping_amount,
         sub_total: raw.subtotal,
@@ -518,6 +519,7 @@ export default function OrderDetails({ params }: IDParams) {
        ? Object.entries(order.Order.items).map(([shopName, shopDetails]) => {
           const details = shopDetails as {
            delivered_at: string | null;
+           return_deadline: string | null;
            order_items: any[];
            delivery_charge: number | null;
            promocodeStatus: number | null;
@@ -601,6 +603,7 @@ export default function OrderDetails({ params }: IDParams) {
               order_days_gone={item.order_days_gone}
               return_status={item.return_status}
               delivered_at={details.delivered_at}
+              return_deadline={details.return_deadline}
               isCorporate={order?.Order?.payment_method === "corporate_credit"}
              />
             ))}

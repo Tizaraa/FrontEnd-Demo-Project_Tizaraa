@@ -405,6 +405,7 @@ export default function SearchResult({ sortOptions, slug }) {
 
  const handleSortChange = (sortOption: any) => {
   setSelectedSortOption(sortOption.value);
+  setCurrentPage(1); // a new order restarts the list instead of appending to it
  };
 
  //  const fetchProducts = useCallback(async () => {
@@ -466,7 +467,7 @@ export default function SearchResult({ sortOptions, slug }) {
      //  ...{ country: selectedCountry ? selectedCountry : [] },
      //  ...{ province: selectedProvinces ? selectedProvinces : [] },
      page: currentPage ? currentPage : 1,
-     //  orderBy: selectedSortOption,
+     orderBy: selectedSortOption,
      min_price: priceMin ? priceMin : null,
      max_price: priceMax ? priceMax : null,
      q: decodeURIComponent(slug),

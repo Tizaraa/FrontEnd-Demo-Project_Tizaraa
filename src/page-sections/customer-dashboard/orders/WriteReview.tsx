@@ -31,6 +31,7 @@ export default function WriteReview({
  order_days_gone,
  return_status,
  delivered_at,
+ return_deadline = null,
  isCorporate = false,
 }: {
  item: any;
@@ -42,6 +43,7 @@ export default function WriteReview({
  order_days_gone: any;
  return_status: any;
  delivered_at: any;
+ return_deadline?: string | null;
  isCorporate?: boolean;
 }) {
  const [showOrderStatus, setShowOrderStatus] = useState(false);
@@ -49,20 +51,15 @@ export default function WriteReview({
  const [isCorporateReturnOpen, setIsCorporateReturnOpen] = useState(false);
  const [returnWindowLeft, setReturnWindowLeft] = useState<string | null>(null);
 
- // Corporate returns must happen the same calendar day the item was delivered —
- // count down to that day's midnight while the "Return at the shop" modal is open.
+ // Corporate returns close at the admin-set cutoff after delivery. The API sends
+ // that moment as return_deadline, so the countdown matches what the shop enforces.
  useEffect(() => {
-  if (!isCorporateReturnOpen || !delivered_at) {
+  if (!isCorporateReturnOpen || !return_deadline) {
    setReturnWindowLeft(null);
    return;
   }
 
-  const deliveredDate = new Date(delivered_at);
-  const deadline = new Date(
-   deliveredDate.getFullYear(),
-   deliveredDate.getMonth(),
-   deliveredDate.getDate() + 1
-  ); // midnight after the delivery day
+  const deadline = new Date(return_deadline);
 
   const tick = () => {
    const diffMs = deadline.getTime() - Date.now();
@@ -81,7 +78,7 @@ export default function WriteReview({
   tick();
   const interval = setInterval(tick, 1000);
   return () => clearInterval(interval);
- }, [isCorporateReturnOpen, delivered_at]);
+ }, [isCorporateReturnOpen, return_deadline]);
  const [rating, setRating] = useState(0);
  const [hoverRating, setHoverRating] = useState(0);
  const [comments, setComments] = useState("");
@@ -1127,7 +1124,16 @@ export default function WriteReview({
      </Box>
 
      <Typography fontSize="12px" color="text.muted" mt="12px">
-      Returns must be made on the same day the item was delivered.
+      {return_deadline
+       ? `Returns must be made by ${new Date(return_deadline).toLocaleString("en-GB", {
+          timeZone: "Asia/Dhaka",
+          day: "numeric",
+          month: "short",
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+         })} (Bangladesh time).`
+       : "Returns must be made at the shop within the return window."}
      </Typography>
 
      {returnWindowLeft && (

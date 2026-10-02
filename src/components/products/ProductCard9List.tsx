@@ -34,7 +34,13 @@ export default function ProductListView({
      price={item.price}
      productStock={item.product_stock}
      title={item.title}
-     off={item.discount}
+     // ProductCard9 treats `off` as a flat BDT amount; when the API sends an
+     // explicit discount_price, `discount` is a percentage, so derive the amount.
+     off={
+      item.discount_price > 0 && item.discount_price < item.price
+       ? Number((item.price - item.discount_price).toFixed(2))
+       : item.discount
+     }
      rating={item.rating}
      images={item.images}
      imgUrl={item.thumbnail}
