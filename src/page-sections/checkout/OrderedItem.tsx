@@ -187,33 +187,46 @@ export default function OrderedItem() {
             >
               BDT {product.price.toLocaleString()}
             </div> */}
-      <div
-       style={{
-        fontSize: "16px",
-        fontWeight: 500,
-        textAlign: "right",
-       }}
-      >
-       {product.discountPrice && product.discountPrice < product.price ? (
-        <>
+      {(() => {
+       const hasDiscount =
+        !!product.discountPrice && product.discountPrice < product.price;
+       const unitPrice = hasDiscount
+        ? (product.discountPrice as number)
+        : product.price ?? 0;
+       const lineTotal = unitPrice * product.qty;
+       return (
+        <div style={{ textAlign: "right" }}>
+         <div style={{ fontSize: "14px", color: "#666" }}>
+          {hasDiscount && (
+           <span
+            style={{
+             textDecoration: "line-through",
+             color: "#aaa",
+             marginRight: "6px",
+            }}
+           >
+            BDT {product.price.toLocaleString()}
+           </span>
+          )}
+          BDT {unitPrice.toLocaleString()} x {product.qty}
+         </div>
          <div
           style={{
-           fontSize: "13px",
-           color: "#aaa",
-           textDecoration: "line-through",
-           lineHeight: 1.2,
+           fontSize: "16px",
+           fontWeight: 700,
+           color: "#E94560",
+           marginTop: "4px",
           }}
          >
-          BDT {product.price.toLocaleString()}
+          BDT{" "}
+          {lineTotal.toLocaleString(undefined, {
+           minimumFractionDigits: 2,
+           maximumFractionDigits: 2,
+          })}
          </div>
-         <div style={{ color: "#E94560" }}>
-          BDT {product.discountPrice.toLocaleString()}
-         </div>
-        </>
-       ) : (
-        <>BDT {(product.price ?? 0).toLocaleString()}</>
-       )}
-      </div>
+        </div>
+       );
+      })()}
      </div>
     ))
    ) : (

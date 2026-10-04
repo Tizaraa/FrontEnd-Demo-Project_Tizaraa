@@ -984,6 +984,21 @@ export default function CheckoutSummary({ deliveryCharge }) {
   }
  };
 
+ // Subtotal is shown at the original (pre-discount) price; product-level
+ // discounts (price - discountPrice) are folded into the Discount line along
+ // with any promo discount. Totals below are unchanged (they already use the
+ // discounted prices), so Subtotal - Discount === payable items amount.
+ const originalSubtotal = state.cart.reduce((acc, item) => {
+  if (!state.selectedProducts.includes(item.id)) return acc;
+  const effective = item.discountPrice ?? item.price;
+  return acc + Math.max(item.price ?? 0, effective ?? 0) * item.qty;
+ }, 0);
+ const productDiscount = Math.max(originalSubtotal - savedTotalPrice, 0);
+ const totalDiscount = productDiscount + discount;
+ const discountPercent =
+  originalSubtotal > 0 ? (totalDiscount / originalSubtotal) * 100 : 0;
+ const hasDiscount = totalDiscount > 0;
+
  return (
   <>
    {isCorporate && (
@@ -1123,7 +1138,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
       <Typography color="text.hint">Subtotal (Items Total)</Typography>
-      <Typography fontWeight="600">{currency(savedTotalPrice)}</Typography>
+      <Typography fontWeight="600">{currency(originalSubtotal)}</Typography>
      </FlexBox>
 
      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
@@ -1131,21 +1146,21 @@ export default function CheckoutSummary({ deliveryCharge }) {
        <Typography color="text.hint">Discount</Typography>
        <span
         style={{
-         backgroundColor: discount > 0 ? "#e8f8f0" : "#f0f2f5",
-         color: discount > 0 ? "#2e7d32" : "#7A8A99",
+         backgroundColor: hasDiscount ? "#e8f8f0" : "#f0f2f5",
+         color: hasDiscount ? "#2e7d32" : "#7A8A99",
          borderRadius: "10px",
          padding: "2px 8px",
          fontSize: "11px",
          fontWeight: 700,
         }}
        >
-        {discount > 0 && savedTotalPrice > 0
-         ? `${((discount / savedTotalPrice) * 100).toFixed(1)}% OFF`
+        {hasDiscount
+         ? `${Math.round(discountPercent)}% OFF`
          : "0% OFF"}
        </span>
       </FlexBox>
-      <Typography fontWeight="600" color={discount > 0 ? "#2e7d32" : "inherit"}>
-       {discount > 0 ? `- ${currency(discount)}` : currency(0)}
+      <Typography fontWeight="600" color={hasDiscount ? "#2e7d32" : "inherit"}>
+       {hasDiscount ? `- ${currency(totalDiscount)}` : currency(0)}
       </Typography>
      </FlexBox>
 
@@ -1298,7 +1313,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
       <Typography color="text.hint">Subtotal:</Typography>
       <FlexBox alignItems="flex-end">
        <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-        {currency(savedTotalPrice)}
+        {currency(originalSubtotal)}
         {/* {currency(Math.ceil(savedTotalPrice))} */}
        </Typography>
       </FlexBox>
@@ -1350,8 +1365,26 @@ export default function CheckoutSummary({ deliveryCharge }) {
        </FlexBox>
 
        <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
-        <Typography color="text.hint">Discount:</Typography>
-        <Typography fontWeight="700">{currency(discount)}</Typography>
+        <FlexBox alignItems="center" style={{ gap: "8px" }}>
+         <Typography color="text.hint">Discount:</Typography>
+         <span
+          style={{
+           backgroundColor: hasDiscount ? "#e8f8f0" : "#f0f2f5",
+           color: hasDiscount ? "#2e7d32" : "#7A8A99",
+           borderRadius: "10px",
+           padding: "2px 8px",
+           fontSize: "11px",
+           fontWeight: 700,
+          }}
+         >
+          {hasDiscount
+           ? `${Math.round(discountPercent)}% OFF`
+           : "0% OFF"}
+         </span>
+        </FlexBox>
+        <Typography fontWeight="700" color={hasDiscount ? "#2e7d32" : "inherit"}>
+         {hasDiscount ? `- ${currency(totalDiscount)}` : currency(0)}
+        </Typography>
        </FlexBox>
       </>
      )}
