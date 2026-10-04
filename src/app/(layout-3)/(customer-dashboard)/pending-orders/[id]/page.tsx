@@ -21,6 +21,7 @@ import {
 import { IDParams } from "interfaces";
 import { Vortex } from "react-loader-spinner";
 import Box from "@component/Box";
+import OrderTotalSummary from "@sections/customer-dashboard/orders/OrderTotalSummary";
 import BeatLoader from "react-spinners/BeatLoader";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -118,6 +119,7 @@ export default function OrderDetails({ params }: IDParams) {
      product_name: item.product_name,
      product_image: item.thumbnail_url,
      price: item.unit_price,
+     original_price: item.original_unit_price,
      quantity: item.quantity,
      color: item.color ?? null,
      size: item.size ?? null,
@@ -165,12 +167,14 @@ export default function OrderDetails({ params }: IDParams) {
       phone: raw.buyer_phone,
       refunded_total: raw.refunded_total ?? 0,
       original_total: raw.original_total ?? raw.total_amount,
+      original_subtotal: raw.original_subtotal ?? raw.subtotal,
       returned_item_count: raw.returned_item_count ?? 0,
       cancelled_item_count: raw.cancelled_item_count ?? 0,
       cancelled_total: raw.cancelled_total ?? 0,
       items: {
        [sellerName]: {
         delivered_at: raw.delivered_at ?? null,
+        return_deadline: raw.return_deadline ?? null,
         status: formatStatus(raw.order_status),
         delivery_charge: raw.shipping_amount,
         sub_total: raw.subtotal,
@@ -502,6 +506,7 @@ export default function OrderDetails({ params }: IDParams) {
        ? Object.entries(order.Order.items).map(([shopName, shopDetails]) => {
           const details = shopDetails as {
            delivered_at: string | null;
+           return_deadline?: string | null;
            order_items: any[];
            delivery_charge: number | null;
            promocodeStatus: number | null;
@@ -580,45 +585,10 @@ export default function OrderDetails({ params }: IDParams) {
               order_days_gone={item.order_days_gone}
               return_status={item.return_status}
               delivered_at={details.delivered_at}
+              return_deadline={details.return_deadline}
               isCorporate={order?.Order?.payment_method === "corporate_credit"}
              />
             ))}
-            {order?.Order?.refunded_total > 0 && (
-             <Box
-              mt="10px"
-              p="12px 14px"
-              bg="#F7F9FC"
-              border="1px solid #E5E9F0"
-              borderRadius="8px"
-             >
-              <FlexBox
-               justifyContent="space-between"
-               alignItems="center"
-               flexWrap="wrap"
-               style={{ gap: "8px" }}
-              >
-               <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
-                {order?.Order?.returned_item_count}{" "}
-                {order?.Order?.returned_item_count === 1 ? "item" : "items"}{" "}
-                returned
-               </Typography>
-               <FlexBox alignItems="center" style={{ gap: "12px" }}>
-                <Typography fontSize="13px" color="text.muted">
-                 Original{" "}
-                 <span>
-                  {currency(order?.Order?.original_total || 0)}
-                 </span>
-                </Typography>
-                <Typography fontSize="13px" color="#e94560" fontWeight="600">
-                 −{currency(order?.Order?.refunded_total || 0)}
-                </Typography>
-                <Typography fontSize="14px" fontWeight="700" color="#2C3A4A">
-                 Now {currency(order?.Order?.amount || 0)}
-                </Typography>
-               </FlexBox>
-              </FlexBox>
-             </Box>
-            )}
 
             <OrderStatus
              orderStatus={getStatus}
@@ -659,157 +629,11 @@ export default function OrderDetails({ params }: IDParams) {
             </FlexBox>
 
             {openSummaries[shopName] && (
-             <Box p="20px" borderRadius={8} mt="1rem">
-              <Typography variant="h6" mt="0px" mb="14px">
-               Total Summary
-              </Typography>
-              <FlexBox
-               justifyContent="space-between"
-               alignItems="center"
-               mb="0.5rem"
-              >
-               <Typography fontSize="14px" color="text.hint">
-                Subtotal:
-               </Typography>
-               <Typography fontSize="14px" color="text.hint">
-                {currency(details.sub_total || 0)}
-               </Typography>
-              </FlexBox>
-              <FlexBox
-               justifyContent="space-between"
-               alignItems="center"
-               mb="0.5rem"
-              >
-               <Typography fontSize="14px" color="text.hint">
-                Shipping fee ({shopName}):
-               </Typography>
-               <Typography fontSize="14px" color="text.hint">
-                {currency(details.delivery_charge || 0)}
-               </Typography>
-              </FlexBox>
-              <Divider mb="0.5rem" />
-              {/* <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-                      <Typography variant="h6">Total</Typography>
-                      <Typography variant="h6">{currency(details.total || 0)}</Typography>
-                    </FlexBox> */}
-
-              <FlexBox
-               justifyContent="space-between"
-               alignItems="center"
-               mb="1rem"
-               position="relative"
-              >
-               <Typography variant="h6" color={"text.primary"}>
-                Total
-               </Typography>
-
-               <Typography variant="h6" display="flex" alignItems="center">
-                {details.promocodeStatus === 1 && (
-                 <Box
-                  mr="0.5rem"
-                  px="0.4rem"
-                  py="0.2rem"
-                  backgroundColor="#E94560"
-                  color="#fff"
-                  borderRadius="12px"
-                  fontSize="13px"
-                  display="flex"
-                  alignItems="center"
-                  letterSpacing="1px"
-                 >
-                  Promo Applied &nbsp;
-                  <span
-                   style={{
-                    color: "#fff",
-                    fontWeight: "bold",
-                    letterSpacing: "1px",
-                   }}
-                  >
-                   &#10003;
-                  </span>
-                 </Box>
-                )}
-                {currency(details.total || 0)}
-               </Typography>
-              </FlexBox>
-
-              {(order?.Order?.cancelled_item_count > 0 ||
-                order?.Order?.returned_item_count > 0) && (
-               <Box
-                mb="1rem"
-                p="12px 14px"
-                bg="#F7F9FC"
-                border="1px solid #E5E9F0"
-                borderRadius="8px"
-               >
-                {order?.Order?.cancelled_item_count > 0 && (
-                 <FlexBox
-                  justifyContent="space-between"
-                  alignItems="center"
-                  flexWrap="wrap"
-                  style={{ gap: "8px" }}
-                  mb={order?.Order?.returned_item_count > 0 ? "0.5rem" : "0px"}
-                 >
-                  <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
-                   {order?.Order?.cancelled_item_count}{" "}
-                   {order?.Order?.cancelled_item_count === 1 ? "item" : "items"}{" "}
-                   cancelled
-                  </Typography>
-                  <Typography fontSize="13px" color="#E94560" fontWeight="600">
-                   −{currency(order?.Order?.cancelled_total || 0)}
-                  </Typography>
-                 </FlexBox>
-                )}
-
-                {order?.Order?.returned_item_count > 0 && (
-                 <FlexBox
-                  justifyContent="space-between"
-                  alignItems="center"
-                  flexWrap="wrap"
-                  style={{ gap: "8px" }}
-                 >
-                  <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
-                   {order?.Order?.returned_item_count}{" "}
-                   {order?.Order?.returned_item_count === 1 ? "item" : "items"}{" "}
-                   returned
-                  </Typography>
-                  <Typography fontSize="13px" color="#E94560" fontWeight="600">
-                   −{currency(order?.Order?.refunded_total || 0)}
-                  </Typography>
-                 </FlexBox>
-                )}
-               </Box>
-              )}
-
-              <FlexBox alignItems="center" mb="1rem">
-               Payment Method:
-               <H6
-                my="0px"
-                mx="1rem"
-                backgroundColor="rgba(255,225,230,1)"
-                p="5px"
-                px="10px"
-                borderRadius="1rem"
-                color="rgb(233, 69, 96)"
-               >
-                {order?.Order?.payment_method || "N/A"}
-               </H6>
-              </FlexBox>
-              <FlexBox alignItems="center" mb="1rem">
-               Payment Status:
-               <H6
-                my="0px"
-                mx="1rem"
-                backgroundColor="rgba(255,225,230,1)"
-                p="5px"
-                px="10px"
-                borderRadius="1rem"
-                color="rgb(233, 69, 96)"
-               >
-                {order?.Order?.payment_status}
-               </H6>
-              </FlexBox>
-             </Box>
+             <OrderTotalSummary
+              order={order}
+              details={details}
+              shopName={shopName}
+             />
             )}
            </Box>
           );

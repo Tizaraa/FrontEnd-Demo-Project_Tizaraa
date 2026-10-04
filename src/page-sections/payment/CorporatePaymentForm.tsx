@@ -987,7 +987,7 @@ export default function CorporatePaymentForm() {
   if (
    paymentMethod.toString() === "4" &&
    userinfo?.type === "employee" &&
-   savedPrice > Number(userinfo?.credit_balance)
+   savedPrice > Number(userinfo?.credit_available ?? userinfo?.credit_balance)
   ) {
    toast.error("Your credit balance is not enough.");
    setIsHasLoading(false);
@@ -1138,8 +1138,10 @@ export default function CorporatePaymentForm() {
     });
 
     // Deduct credit balance locally
-    const updatedBalance = Number(userinfo?.credit_balance) - savedTotalPrice;
-    userinfo.credit_balance = updatedBalance;
+    // credit_balance only drops on delivery, so just the spendable amount moves now.
+    userinfo.credit_available =
+     Number(userinfo?.credit_available ?? userinfo?.credit_balance) -
+     savedTotalPrice;
     localStorage.setItem("userInfo", JSON.stringify(userinfo));
 
     // Clear cart & storage
