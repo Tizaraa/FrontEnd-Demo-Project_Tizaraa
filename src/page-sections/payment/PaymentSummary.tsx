@@ -257,6 +257,25 @@ export default function PaymentSummary({
 
  const isCorporate = seller_type.toLocaleLowerCase() === "corporate";
 
+ // Subtotal is shown at the original (pre-discount) price; product-level
+ // discounts (price - discountPrice) are folded into the Discount line along
+ // with any promo discount. Totals are unchanged.
+ const selectedCartItems = state.cart.filter((item) =>
+  state.selectedProducts?.includes(item.id)
+ );
+ const discountedItems = selectedCartItems.length
+  ? selectedCartItems
+  : state.cart;
+ const productDiscount = discountedItems.reduce((acc, item) => {
+  const effective = item.discountPrice ?? item.price ?? 0;
+  return acc + Math.max((item.price ?? 0) - effective, 0) * item.qty;
+ }, 0);
+ const originalSubtotal = totalPrice + productDiscount;
+ const totalDiscount = productDiscount + discount;
+ const hasDiscount = totalDiscount > 0;
+ const discountPercent =
+  originalSubtotal > 0 ? (totalDiscount / originalSubtotal) * 100 : 0;
+
  return (
   <Card1>
    {state.cart.map((item) => (
@@ -316,7 +335,7 @@ export default function PaymentSummary({
 
      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
       <Typography color="text.hint">Subtotal (Items Total)</Typography>
-      <Typography fontWeight="600">{currency(totalPrice)}</Typography>
+      <Typography fontWeight="600">{currency(originalSubtotal)}</Typography>
      </FlexBox>
 
      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
@@ -324,21 +343,21 @@ export default function PaymentSummary({
        <Typography color="text.hint">Discount</Typography>
        <span
         style={{
-         backgroundColor: discount > 0 ? "#e8f8f0" : "#f0f2f5",
-         color: discount > 0 ? "#2e7d32" : "#7A8A99",
+         backgroundColor: hasDiscount ? "#e8f8f0" : "#f0f2f5",
+         color: hasDiscount ? "#2e7d32" : "#7A8A99",
          borderRadius: "10px",
          padding: "2px 8px",
          fontSize: "11px",
          fontWeight: 700,
         }}
        >
-        {discount > 0 && totalPrice > 0
-         ? `${((discount / totalPrice) * 100).toFixed(1)}% OFF`
+        {hasDiscount
+         ? `${Math.round(discountPercent)}% OFF`
          : "0% OFF"}
        </span>
       </FlexBox>
-      <Typography fontWeight="600" color={discount > 0 ? "#2e7d32" : "inherit"}>
-       {discount > 0 ? `- ${currency(discount)}` : currency(0)}
+      <Typography fontWeight="600" color={hasDiscount ? "#2e7d32" : "inherit"}>
+       {hasDiscount ? `- ${currency(totalDiscount)}` : currency(0)}
       </Typography>
      </FlexBox>
 
@@ -412,7 +431,7 @@ export default function PaymentSummary({
       <Typography color="text.hint">Subtotal:</Typography>
       <FlexBox alignItems="flex-end">
        <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-        {currency(totalPrice)}
+        {currency(originalSubtotal)}
        </Typography>
       </FlexBox>
      </FlexBox>
@@ -463,11 +482,32 @@ export default function PaymentSummary({
        </FlexBox>
 
        <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-        <Typography color="text.hint">Discount:</Typography>
+        <FlexBox alignItems="center" style={{ gap: "8px" }}>
+         <Typography color="text.hint">Discount:</Typography>
+         <span
+          style={{
+           backgroundColor: hasDiscount ? "#e8f8f0" : "#f0f2f5",
+           color: hasDiscount ? "#2e7d32" : "#7A8A99",
+           borderRadius: "10px",
+           padding: "2px 8px",
+           fontSize: "11px",
+           fontWeight: 700,
+          }}
+         >
+          {hasDiscount
+           ? `${Math.round(discountPercent)}% OFF`
+           : "0% OFF"}
+         </span>
+        </FlexBox>
 
         <FlexBox alignItems="flex-end">
-         <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          {currency(discount)}
+         <Typography
+          fontSize="18px"
+          fontWeight="600"
+          lineHeight="1"
+          color={hasDiscount ? "#2e7d32" : "inherit"}
+         >
+          {hasDiscount ? `- ${currency(totalDiscount)}` : currency(0)}
          </Typography>
         </FlexBox>
        </FlexBox>
