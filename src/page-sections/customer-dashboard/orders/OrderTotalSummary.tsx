@@ -27,10 +27,11 @@ const SummaryLine = ({
  label: string;
  value: string;
  negative?: boolean;
- tone?: "red" | "green";
+ tone?: "red" | "green" | "muted";
  badge?: string;
 }) => {
- const accent = tone === "green" ? GREEN : "#E94560";
+ const accent =
+  tone === "green" ? GREEN : tone === "muted" ? "#7A8A99" : "#E94560";
  return (
   <FlexBox justifyContent="space-between" alignItems="center" mb="0.4rem">
    <FlexBox alignItems="center" style={{ gap: "8px" }}>
@@ -40,8 +41,8 @@ const SummaryLine = ({
     {badge && (
      <span
       style={{
-       backgroundColor: "#e8f8f0",
-       color: GREEN,
+       backgroundColor: tone === "muted" ? "#f0f2f5" : "#e8f8f0",
+       color: tone === "muted" ? "#7A8A99" : GREEN,
        borderRadius: "10px",
        padding: "2px 8px",
        fontSize: "11px",
@@ -106,19 +107,18 @@ export default function OrderTotalSummary({ order, details, shopName }: Props) {
 
    <SummaryLine label="Subtotal" value={currency(subtotal)} />
 
-   {totalDiscount > 0 && (
-    <SummaryLine
-     negative
-     tone="green"
-     label={
-      promoDiscount > 0 && order?.Order?.promo_code
-       ? `Discount (${order.Order.promo_code})`
-       : "Discount"
-     }
-     badge={`${Math.round(discountPercent)}% OFF`}
-     value={currency(totalDiscount)}
-    />
-   )}
+   {/* Always shown — a zero discount reads "0% OFF  −BDT 0.00" in grey. */}
+   <SummaryLine
+    negative
+    tone={totalDiscount > 0 ? "green" : "muted"}
+    label={
+     promoDiscount > 0 && order?.Order?.promo_code
+      ? `Discount (${order.Order.promo_code})`
+      : "Discount"
+    }
+    badge={`${totalDiscount > 0 ? Math.round(discountPercent) : 0}% OFF`}
+    value={currency(totalDiscount)}
+   />
 
    {cancelledCount > 0 && (
     <SummaryLine
