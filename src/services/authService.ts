@@ -26,6 +26,7 @@ interface UserInfo {
  designation?: string | null; 
  credit_limit?: number | null; 
  credit_balance?: number | null; 
+ credit_available?: number | null; 
  purchase_limit?: number | null; 
  purchase_balance?: number | null; 
  employee_status?: string | null; 

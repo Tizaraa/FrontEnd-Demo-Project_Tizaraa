@@ -320,14 +320,16 @@ export default function PaymentSummary({
      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
       <Typography color="text.hint">Available Corporate Credit:</Typography>
       <Typography fontWeight="700">
-       {currency(user?.credit_balance || 0)}
+       {currency(user?.credit_available ?? user?.credit_balance ?? 0)}
       </Typography>
      </FlexBox>
 
      <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
       <Typography color="text.hint">Credit Balance After Purchase:</Typography>
       <Typography fontWeight="700" color="#E94560">
-       {currency((user?.credit_balance || 0) - displayTotal)}
+       {currency(
+        (user?.credit_available ?? user?.credit_balance ?? 0) - displayTotal
+       )}
       </Typography>
      </FlexBox>
 
