@@ -331,8 +331,26 @@ export default function DashboardNavigation() {
   }
  };
 
+ // This sidebar lives in a layout that survives page changes, so a mount-only fetch
+ // goes stale: a seller delivering or cancelling an order doesn't touch this tab.
+ // Refresh on every navigation, when the tab regains focus, and on a light poll so
+ // the counts follow the real order state.
  useEffect(() => {
   fetchData();
+ }, [pathname]);
+
+ useEffect(() => {
+  const refresh = () => {
+   if (document.visibilityState === "visible") fetchData();
+  };
+  const timer = window.setInterval(refresh, 15000);
+  window.addEventListener("focus", refresh);
+  document.addEventListener("visibilitychange", refresh);
+  return () => {
+   window.clearInterval(timer);
+   window.removeEventListener("focus", refresh);
+   document.removeEventListener("visibilitychange", refresh);
+  };
  }, []);
 
  // Re-run the same fetch whenever something elsewhere (cancelling an item,

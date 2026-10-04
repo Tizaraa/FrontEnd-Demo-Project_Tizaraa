@@ -887,8 +887,10 @@ export default function ProfileEditForm() {
    });
    router.back();
    router.refresh();
-  } catch (err) {
-   toast.error("Failed to update profile.", {
+  } catch (err: any) {
+   // Surface the server's validation message (e.g. phone already in use)
+   const phoneError = err?.response?.data?.errors?.phone?.[0];
+   toast.error(phoneError || "Failed to update profile.", {
     position: "top-right",
    });
   }

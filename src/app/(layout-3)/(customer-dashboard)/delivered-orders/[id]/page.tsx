@@ -21,6 +21,7 @@ import {
 import { IDParams } from "interfaces";
 import { Vortex } from "react-loader-spinner";
 import Box from "@component/Box";
+import OrderTotalSummary from "@sections/customer-dashboard/orders/OrderTotalSummary";
 import BeatLoader from "react-spinners/BeatLoader";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -130,6 +131,7 @@ export default function OrderDetails({ params }: IDParams) {
      product_name: item.product_name,
      product_image: item.thumbnail_url,
      price: item.unit_price,
+     original_price: item.original_unit_price,
      quantity: item.quantity,
      color: item.color ?? null,
      size: item.size ?? null,
@@ -648,127 +650,11 @@ export default function OrderDetails({ params }: IDParams) {
             </FlexBox>
 
             {openSummaries[shopName] && (
-             <Box
-              p="20px"
-              mt="1rem"
-              borderRadius={8}
-              bg="#FBFCFE"
-              border="1px solid #EDF1F6"
-             >
-              {/* The ledger reads top to bottom: what was charged, what came off,
-                  what shipping added, then the total those lines add up to. The
-                  deductions used to sit under the total, where they looked like
-                  money still owed rather than money already taken off. */}
-              <SummaryLine
-               label="Subtotal"
-               value={currency(
-                order?.Order?.original_subtotal ?? details.sub_total ?? 0
-               )}
-              />
-
-              {order?.Order?.cancelled_item_count > 0 && (
-               <SummaryLine
-                negative
-                label={`${order?.Order?.cancelled_item_count} ${
-                 order?.Order?.cancelled_item_count === 1 ? "item" : "items"
-                } cancelled`}
-                value={currency(order?.Order?.cancelled_total || 0)}
-               />
-              )}
-
-              {order?.Order?.returned_item_count > 0 && (
-               <SummaryLine
-                negative
-                label={`${order?.Order?.returned_item_count} ${
-                 order?.Order?.returned_item_count === 1 ? "item" : "items"
-                } returned`}
-                value={currency(order?.Order?.refunded_total || 0)}
-               />
-              )}
-
-              {order?.Order?.discount_amount > 0 && (
-               <SummaryLine
-                negative
-                label={
-                 order?.Order?.promo_code
-                  ? `Promo (${order?.Order?.promo_code})`
-                  : "Discount"
-                }
-                value={currency(order?.Order?.discount_amount)}
-               />
-              )}
-
-              <SummaryLine
-               label={`Shipping fee (${shopName})`}
-               value={currency(details.delivery_charge || 0)}
-              />
-
-              <Divider mb="0.5rem" />
-              {/* <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-                      <Typography variant="h6">Total</Typography>
-                      <Typography variant="h6">{currency(details.total || 0)}</Typography>
-                    </FlexBox> */}
-
-              <FlexBox
-               justifyContent="space-between"
-               alignItems="center"
-               mb="1rem"
-               position="relative"
-              >
-               <Typography variant="h6" color={"text.primary"}>
-                Total
-               </Typography>
-
-               {/* The "Promo Applied" badge that used to sit here said less than
-                   the discount line above, which names the code and the amount. */}
-               <Typography variant="h6">
-                {currency(details.total || 0)}
-               </Typography>
-              </FlexBox>
-
-              {/* Payment sits under the money, on one line — two stacked rows of
-                  label-plus-chip read as a second summary rather than a footnote.
-                  The raw enum ("corporate_credit") is titled the same way the
-                  order status is. */}
-              <FlexBox
-               alignItems="center"
-               flexWrap="wrap"
-               mt="1rem"
-               style={{ gap: "8px 24px" }}
-              >
-               <FlexBox alignItems="center" style={{ gap: "8px" }}>
-                <Typography fontSize="14px" color="text.hint">
-                 Payment Method
-                </Typography>
-                <H6
-                 my="0px"
-                 p="4px 12px"
-                 backgroundColor="rgba(255,225,230,1)"
-                 borderRadius="1rem"
-                 color="rgb(233, 69, 96)"
-                 fontSize="13px"
-                >
-                 {formatStatus(order?.Order?.payment_method) || "N/A"}
-                </H6>
-               </FlexBox>
-
-               <FlexBox alignItems="center" style={{ gap: "8px" }}>
-                <Typography fontSize="14px" color="text.hint">
-                 Payment Status
-                </Typography>
-                <H6
-                 my="0px"
-                 p="4px 12px"
-                 backgroundColor="rgba(255,225,230,1)"
-                 borderRadius="1rem"
-                 color="rgb(233, 69, 96)"
-                 fontSize="13px"
-                >
-                 {formatStatus(order?.Order?.payment_status) || "N/A"}
-                </H6>
-               </FlexBox>
-              </FlexBox>
-             </Box>
+             <OrderTotalSummary
+              order={order}
+              details={details}
+              shopName={shopName}
+             />
             )}
            </Box>
           );
