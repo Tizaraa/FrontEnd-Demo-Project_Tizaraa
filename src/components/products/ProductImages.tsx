@@ -415,6 +415,7 @@ import Image from "@component/Image";
 import Avatar from "@component/avatar";
 import Box from "@component/Box";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import tz from "../../theme/tizaraa";
 
 type ProductImagesProps = {
  images: string[];
@@ -539,7 +540,7 @@ const ProductImages = ({ images }: ProductImagesProps) => {
         width: `${lensWidth}px`,
         height: `${lensHeight}px`,
         pointerEvents: "none",
-        border: "1px solid #ccc",
+        border: `1px solid ${tz.color.line}`,
         backgroundColor: "rgba(255, 255, 255, 0.4)",
         cursor: "zoom-in",
         transition: "top 0.05s ease-out, left 0.05s ease-out",
@@ -562,10 +563,10 @@ const ProductImages = ({ images }: ProductImagesProps) => {
        zIndex: 9999,
        width: `${imgDimensions.width * MAGNIFIER_WIDTH_FACTOR}px`,
        height: `${imgDimensions.height * MAGNIFIER_HEIGHT_FACTOR}px`,
-       border: "1px solid #e0e0e0",
-       backgroundColor: "#ffffff",
+       border: `1px solid ${tz.color.line}`,
+       backgroundColor: tz.color.paper,
        borderRadius: "10px",
-       boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
+       boxShadow: tz.elevation.overlay,
        pointerEvents: "none",
        backgroundImage: `url('${currentImageUrl}')`,
        backgroundRepeat: "no-repeat",

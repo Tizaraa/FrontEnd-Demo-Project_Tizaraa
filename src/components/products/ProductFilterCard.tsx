@@ -989,6 +989,7 @@ import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import axios from "axios";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import Link from "next/link";
+import tz from "../../theme/tizaraa";
 
 type Brand = {
  id: number;
@@ -1068,11 +1069,11 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
  const savedScrollPosition = useRef<number>(0);
 
  const cardStyle: React.CSSProperties = {
-  padding: "16px",
-  borderRadius: "12px",
-  boxShadow: "0 2px 12px rgba(0, 0, 0, 0.05)",
-  border: "1px solid #f0f0f0",
-  backgroundColor: "#ffffff",
+  padding: "16px 20px",
+  borderRadius: `${tz.radius.md}px`,
+  boxShadow: "none",
+  border: `1px solid ${tz.color.line}`,
+  backgroundColor: tz.color.paper,
  };
 
  const filterSectionStyle: React.CSSProperties = {
@@ -1092,7 +1093,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   margin: 0,
   fontSize: "14px",
   fontWeight: 600,
-  color: "#333",
+  color: tz.color.ink,
  };
 
  const filterContentStyle: React.CSSProperties = {
@@ -1110,22 +1111,23 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
 
  const baseFilterButtonStyle: React.CSSProperties = {
   padding: "6px 12px",
-  borderRadius: "16px",
-  border: "1px solid #e0e0e0",
-  backgroundColor: "#ffffff",
-  color: "#555",
+  borderRadius: `${tz.radius.pill}px`,
+  border: `1px solid ${tz.color.line}`,
+  backgroundColor: tz.color.paper,
+  color: tz.color.inkSoft,
   cursor: "pointer",
   fontSize: "13px",
-  transition: "all 0.2s ease",
+  fontFamily: "inherit",
+  transition: `border-color ${tz.motion.fast}, background-color ${tz.motion.fast}`,
   outline: "none",
  };
 
  const activeFilterButtonStyle: React.CSSProperties = {
   ...baseFilterButtonStyle,
-  borderColor: "#3BB77E",
-  backgroundColor: "#F2FCF7",
-  color: "#3BB77E",
-  fontWeight: 500,
+  borderColor: tz.color.ember,
+  backgroundColor: tz.color.emberTint,
+  color: tz.color.emberDeep,
+  fontWeight: 600,
  };
 
  const showMoreButtonStyle: React.CSSProperties = {
@@ -1133,9 +1135,11 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   padding: "4px 8px",
   backgroundColor: "transparent",
   border: "none",
-  color: "#3BB77E",
+  color: tz.color.emberDeep,
   cursor: "pointer",
-  fontSize: "12px",
+  fontSize: "13px",
+  fontWeight: 600,
+  fontFamily: "inherit",
   display: "flex",
   alignItems: "center",
   gap: "4px",
@@ -1145,14 +1149,14 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
  const loadingStyle: React.CSSProperties = {
   padding: "8px",
   textAlign: "center",
-  color: "#666",
+  color: tz.color.slate,
   fontSize: "12px",
  };
 
  const priceInputStyle: React.CSSProperties = {
   padding: "6px",
-  borderRadius: "6px",
-  border: "1px solid #ccc",
+  borderRadius: `${tz.radius.sm}px`,
+  border: `1px solid ${tz.color.line}`,
   width: "100%",
   fontSize: "13px",
  };
@@ -1161,9 +1165,9 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   marginTop: "10px",
   padding: "8px 12px",
   borderRadius: "6px",
-  border: "1px solid #3BB77E",
-  backgroundColor: "#3BB77E",
-  color: "#fff",
+  border: `1px solid ${tz.color.emberDeep}`,
+  backgroundColor: tz.color.emberDeep,
+  color: tz.color.paper,
   cursor: "pointer",
   fontSize: "13px",
   fontWeight: 500,
@@ -1174,9 +1178,9 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   marginTop: "8px",
   padding: "8px 12px",
   borderRadius: "6px",
-  border: "1px solid #ccc",
+  border: `1px solid ${tz.color.line}`,
   backgroundColor: "transparent",
-  color: "#666",
+  color: tz.color.slate,
   cursor: "pointer",
   fontSize: "13px",
   fontWeight: 500,
@@ -1384,7 +1388,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
 
    const buttonStyle: React.CSSProperties = {
     ...(isActive ? activeFilterButtonStyle : baseFilterButtonStyle),
-    ...(hovered && !isActive ? { borderColor: "#ccc" } : {}),
+    ...(hovered && !isActive ? { borderColor: tz.color.slate } : {}),
    };
 
    return (
@@ -1478,7 +1482,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
     <div
      style={{
       ...filterHeaderStyle,
-      ...(hovered ? { color: "#3BB77E" } : {}),
+      ...(hovered ? { color: tz.color.emberDeep } : {}),
      }}
      onClick={handleSectionToggle}
      onMouseEnter={() => setHovered(true)}
@@ -1486,9 +1490,9 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
     >
      <H6 style={filterTitleStyle}>{title}</H6>
      {showSection ? (
-      <FiChevronUp size={16} color={hovered ? "#3BB77E" : "#333"} />
+      <FiChevronUp size={16} color={hovered ? tz.color.emberDeep : tz.color.slate} />
      ) : (
-      <FiChevronDown size={16} color={hovered ? "#3BB77E" : "#333"} />
+      <FiChevronDown size={16} color={hovered ? tz.color.emberDeep : tz.color.slate} />
      )}
     </div>
 
@@ -1610,10 +1614,15 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
        setPriceMin(e.target.value ? parseInt(e.target.value) : null)
       }
       style={{
-       padding: "10px",
-       borderRadius: "6px",
-       border: "1px solid #ccc",
+       height: "40px",
+       padding: "0 10px",
+       borderRadius: `${tz.radius.sm}px`,
+       border: `1px solid ${tz.color.line}`,
+       fontSize: "14px",
+       fontFamily: "inherit",
+       color: tz.color.ink,
        width: "100%",
+       minWidth: 0,
        flex: 1,
       }}
       min="0"
@@ -1627,10 +1636,15 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
        setPriceMax(e.target.value ? parseInt(e.target.value) : null)
       }
       style={{
-       padding: "10px",
-       borderRadius: "6px",
-       border: "1px solid #ccc",
+       height: "40px",
+       padding: "0 10px",
+       borderRadius: `${tz.radius.sm}px`,
+       border: `1px solid ${tz.color.line}`,
+       fontSize: "14px",
+       fontFamily: "inherit",
+       color: tz.color.ink,
        width: "100%",
+       minWidth: 0,
        flex: 1,
       }}
       min="0"
@@ -1638,14 +1652,14 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
      <button
       type="button"
       onClick={handleApplyPriceFilter}
+      aria-label="Apply price filter"
       style={{
        // padding: "5px",
-       borderRadius: "8px",
+       borderRadius: `${tz.radius.sm}px`,
        border: "none",
-       backgroundColor: "#E94560",
-       color: "#fff",
+       backgroundColor: tz.color.emberDeep,
+       color: tz.color.paper,
        cursor: "pointer",
-       boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
        display: "flex",
        alignItems: "center",
        justifyContent: "center",
@@ -1658,7 +1672,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
        width="16"
        height="16"
        viewBox="0 0 24 24"
-       fill="white"
+       fill="currentColor"
        xmlns="http://www.w3.org/2000/svg"
       >
        <path d="M8 5v14l11-7z" />
@@ -1672,12 +1686,15 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
       style={{
        marginTop: "8px",
        padding: "8px 12px",
-       borderRadius: "6px",
+       width: "100%",
+       borderRadius: `${tz.radius.sm}px`,
        border: "none",
-       backgroundColor: "#9ECAD6",
-       color: "#333",
+       backgroundColor: tz.color.navyTint,
+       color: tz.color.navy,
        cursor: "pointer",
        fontSize: "14px",
+       fontWeight: 600,
+       fontFamily: "inherit",
       }}
      >
       Clear Price Filter

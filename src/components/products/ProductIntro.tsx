@@ -9,6 +9,7 @@ import ProductImages from "./ProductImages";
 import AddToCartButton from "./AddToCartButton";
 import ProductDetails from "./ProductDetails";
 import Link from "next/link";
+import { Button } from "@component/buttons";
 
 type ProductIntroProps = {
  price: number;
@@ -161,20 +162,11 @@ export default function ProductIntro({
           /> */}
 
      {selectedPrice === 0 ? (
-      <Box mt="1rem">
+      <Box mt="1.5rem">
        <Link href="/rfq">
-        <button
-         style={{
-          padding: "10px 20px",
-          backgroundColor: "#E94560",
-          color: "white",
-          borderRadius: "5px",
-          border: "none",
-          cursor: "pointer",
-         }}
-        >
+        <Button variant="contained" color="primary" size="large">
          Request for Quote
-        </button>
+        </Button>
        </Link>
       </Box>
      ) : (

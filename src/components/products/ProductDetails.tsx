@@ -435,6 +435,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { useRouter } from "next/navigation";
+import tz from "../../theme/tizaraa";
 
 type ProductDetailsProps = {
  title: string;
@@ -574,6 +575,40 @@ const ProductDetails = ({
 
  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
 
+ // Option chips for colour and size choices
+ const optionStyle = (selected: boolean): React.CSSProperties => ({
+  minHeight: "40px",
+  padding: isDesktop ? "8px 16px" : "6px 12px",
+  margin: "0 8px 8px 0",
+  fontSize: isDesktop ? "14px" : "13px",
+  fontFamily: "inherit",
+  fontWeight: selected ? 600 : 500,
+  color: selected ? tz.color.emberDeep : tz.color.ink,
+  border: `1px solid ${selected ? tz.color.ember : tz.color.line}`,
+  borderRadius: `${tz.radius.sm}px`,
+  background: selected ? tz.color.emberTint : tz.color.paper,
+  cursor: "pointer",
+  transition: `border-color ${tz.motion.fast}, background-color ${tz.motion.fast}`,
+ });
+
+ const optionLabelStyle: React.CSSProperties = {
+  margin: "20px 0 8px",
+  fontSize: "14px",
+  fontWeight: 600,
+  color: tz.color.slate,
+ };
+
+ const specRowStyle: React.CSSProperties = {
+  fontSize: isDesktop ? "15px" : "14px",
+  marginTop: "8px",
+  color: tz.color.slate,
+ };
+
+ const specValueStyle: React.CSSProperties = {
+  color: tz.color.ink,
+  fontWeight: 500,
+ };
+
  // Share functions
  const handleShare = (platform: string) => {
   const shareUrl = encodeURIComponent(currentUrl);
@@ -649,7 +684,12 @@ const ProductDetails = ({
 
  return (
   <Box>
-   <H1 fontSize={isDesktop ? "32px" : "16px"} mb="12px">
+   <H1
+    fontSize={isDesktop ? "28px" : "20px"}
+    lineHeight="1.25"
+    mb="12px"
+    color={tz.color.ink}
+   >
     {title}
    </H1>
 
@@ -657,7 +697,7 @@ const ProductDetails = ({
     <FlexBox alignItems="center" style={{ gap: "8px" }}>
      <Rating value={rating > 0 ? rating : 0} outof={5} color="warn" readOnly />
      {reviewCount !== undefined && (
-      <SemiSpan color="text.hint" style={{ fontSize: "13px" }}>
+      <SemiSpan style={{ fontSize: "13px", color: tz.color.slate }}>
        ({reviewCount})
       </SemiSpan>
      )}
@@ -671,7 +711,8 @@ const ProductDetails = ({
       alignItems: "center",
       gap: "8px",
       background: "none",
-      color: "#666",
+      color: tz.color.slate,
+      fontSize: "14px",
      }}
     >
      <ShareIcon />
@@ -681,12 +722,15 @@ const ProductDetails = ({
 
    <Box mb="24px">
     {price !== 0 && (
-     <FlexBox alignItems="center">
+     <FlexBox alignItems="center" flexWrap="wrap" style={{ gap: "10px" }}>
       <H5
-       color="primary.main"
+       className="price"
+       color={tz.color.ink}
        mb="4px"
-       lineHeight="1"
-       fontSize={isDesktop ? "18px" : "14px"}
+       lineHeight="1.1"
+       fontWeight={700}
+       fontFamily={tz.font.display}
+       fontSize={isDesktop ? "28px" : "22px"}
       >
        {selectedColor || selectedSize ? (
         discountPrice && updatedPrice !== price ? (
@@ -695,10 +739,12 @@ const ProductDetails = ({
           <span
            style={{
             textDecoration: "line-through",
-            color: "gray",
+            color: tz.color.slate,
+            fontFamily: tz.font.body,
+            fontWeight: 400,
             marginRight: "10px",
             marginLeft: "10px",
-            fontSize: isDesktop ? "14px" : "12px",
+            fontSize: isDesktop ? "16px" : "13px",
            }}
           >
            {currency(price)}
@@ -714,10 +760,12 @@ const ProductDetails = ({
           <span
            style={{
             textDecoration: "line-through",
-            color: "gray",
+            color: tz.color.slate,
+            fontFamily: tz.font.body,
+            fontWeight: 400,
             marginRight: "10px",
             marginLeft: "10px",
-            fontSize: isDesktop ? "14px" : "12px",
+            fontSize: isDesktop ? "16px" : "13px",
            }}
           >
            {currency(price)}
@@ -743,12 +791,12 @@ const ProductDetails = ({
 
       {!!discountPrice && discountPrice < price && (
        <Chip
-        bg="primary.main"
-        color="white"
-        px="6px"
-        py="0.28rem"
+        bg={tz.color.emberDeep}
+        color={tz.color.paper}
+        px="10px"
+        py="4px"
         fontWeight="600"
-        fontSize={isDesktop ? "12px" : "10px"}
+        fontSize={isDesktop ? "13px" : "12px"}
         textAlign="center"
        >
         {Math.round(((price - discountPrice) / price) * 100)}% off
@@ -779,29 +827,20 @@ const ProductDetails = ({
      </Box>
     )}
 
-    <Typography
-     style={{ fontSize: isDesktop ? "16px" : "14px", marginTop: "12px" }}
-    >
-     Brand:{" "}
-     <a
-      href="#"
-      style={{ textDecoration: "none", color: "blue", cursor: "text" }}
-     >
-      {brandName || "N/A"}
-     </a>
+    <Typography style={{ ...specRowStyle, marginTop: "16px" }}>
+     Brand: <span style={specValueStyle}>{brandName || "N/A"}</span>
     </Typography>
 
     {productCode && (
-     <Typography style={{ fontSize: isDesktop ? "16px" : "14px", marginTop: "8px" }}>
-      Product Code:{" "}
-      <span style={{ color: "#2C3A4A", fontWeight: 500 }}>{productCode}</span>
+     <Typography style={specRowStyle}>
+      Product Code: <span style={specValueStyle}>{productCode}</span>
      </Typography>
     )}
 
     {unitOfMeasure && (
-     <Typography style={{ fontSize: isDesktop ? "16px" : "14px", marginTop: "8px" }}>
+     <Typography style={specRowStyle}>
       Unit of Measure:{" "}
-      <span style={{ color: "#2C3A4A", fontWeight: 500 }}>
+      <span style={specValueStyle}>
        {unitOfMeasure.name}
        {unitOfMeasure.symbol ? ` (${unitOfMeasure.symbol})` : ""}
       </span>
@@ -817,22 +856,14 @@ const ProductDetails = ({
       <div>
        {!onlyDefaultColor && (
         <>
-         <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>
+         <h3 style={optionLabelStyle}>
           Available {colorLabel}s
          </h3>
          <FlexBox>
           {colors.map((color) => (
            <button
             key={color}
-            style={{
-             padding: isDesktop ? "8px 16px" : "6px 12px",
-             margin: "5px",
-             fontSize: isDesktop ? "14px" : "12px",
-             border:
-              selectedColor === color ? "2px solid #e94560" : "1px solid gray",
-             background: "white",
-             cursor: "pointer",
-            }}
+            style={optionStyle(selectedColor === color)}
             onClick={() => handleColorSelection(color)}
            >
             {color}
@@ -844,24 +875,14 @@ const ProductDetails = ({
 
        {selectedColor && (
         <>
-         <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>
+         <h3 style={optionLabelStyle}>
           Available {sizeLabel}s
          </h3>
          <FlexBox>
           {sizeColor.colorwithsize[selectedColor].map((item, index) => (
            <button
             key={index}
-            style={{
-             padding: isDesktop ? "8px 16px" : "6px 12px",
-             margin: "5px",
-             fontSize: isDesktop ? "14px" : "12px",
-             border:
-              selectedSize === item.size
-               ? "2px solid #e94560"
-               : "1px solid gray",
-             background: "white",
-             cursor: "pointer",
-            }}
+            style={optionStyle(selectedSize === item.size)}
             onClick={() => handleSizeSelection(item.size)}
            >
             {item.size}
@@ -876,24 +897,14 @@ const ProductDetails = ({
 
     {sizeColor?.color && (
      <div>
-      <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>
+      <h3 style={optionLabelStyle}>
        Available Colors
       </h3>
       <FlexBox>
        {sizeColor.color.map((item, index) => (
         <button
          key={index}
-         style={{
-          padding: isDesktop ? "8px 16px" : "6px 12px",
-          margin: "5px",
-          fontSize: isDesktop ? "14px" : "12px",
-          border:
-           selectedColor === item.color
-            ? "2px solid #e94560"
-            : "1px solid gray",
-          background: "white",
-          cursor: "pointer",
-         }}
+         style={optionStyle(selectedColor === item.color)}
          onClick={() => handleColorSelection(item.color)}
         >
          {item.color}
@@ -905,20 +916,12 @@ const ProductDetails = ({
 
     {sizeColor?.size && (
      <div>
-      <h3 style={{ fontSize: isDesktop ? "16px" : "14px" }}>Available Sizes</h3>
+      <h3 style={optionLabelStyle}>Available Sizes</h3>
       <FlexBox>
        {sizeColor.size.map((item, index) => (
         <button
          key={index}
-         style={{
-          padding: isDesktop ? "8px 16px" : "6px 12px",
-          margin: "5px",
-          fontSize: isDesktop ? "14px" : "12px",
-          border:
-           selectedSize === item.size ? "2px solid #e94560" : "1px solid gray",
-          background: "white",
-          cursor: "pointer",
-         }}
+         style={optionStyle(selectedSize === item.size)}
          onClick={() => handleSizeSelection(item.size)}
         >
          {item.size}
@@ -949,12 +952,12 @@ const ProductDetails = ({
         marginTop: "8px",
        }}
       >
-       <span style={{ color: "#6B7280" }}>{label}:</span>
+       <span style={{ color: tz.color.slate }}>{label}:</span>
        <span
         style={{
-         backgroundColor: "#FDECEF",
-         color: "#E94560",
-         border: "1px solid #F8D4DA",
+         backgroundColor: tz.tone.info.bg,
+         color: tz.tone.info.fg,
+         fontWeight: 500,
          padding: "3px 10px",
          borderRadius: "999px",
          fontSize: isDesktop ? "13px" : "12px",
@@ -969,13 +972,25 @@ const ProductDetails = ({
 
     {price !== 0 && (
      <SemiSpan
-      color="inherit"
       style={{
-       fontSize: isDesktop ? "16px" : "13px",
-       display: "inline-block",
+       fontSize: isDesktop ? "15px" : "13px",
+       fontWeight: 600,
+       display: "inline-flex",
+       alignItems: "center",
+       gap: "8px",
        marginTop: "18px",
+       color: productStock > 0 ? tz.tone.success.fg : tz.tone.danger.fg,
       }}
      >
+      <span
+       aria-hidden="true"
+       style={{
+        width: "8px",
+        height: "8px",
+        borderRadius: "50%",
+        background: productStock > 0 ? tz.tone.success.fill : tz.tone.danger.fill,
+       }}
+      />
       {productStock > 0 ? `${productStock} Products Available` : "Stock Out"}
      </SemiSpan>
     )}
@@ -990,7 +1005,7 @@ const ProductDetails = ({
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      backgroundColor: "rgba(20, 21, 32, 0.5)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -1001,8 +1016,9 @@ const ProductDetails = ({
     >
      <div
       style={{
-       backgroundColor: "white",
-       borderRadius: "12px",
+       backgroundColor: tz.color.paper,
+       borderRadius: `${tz.radius.lg}px`,
+       boxShadow: tz.elevation.overlay,
        padding: "24px",
        width: "90%",
        maxWidth: "400px",
@@ -1023,7 +1039,7 @@ const ProductDetails = ({
         cursor: "pointer",
         padding: "4px",
         borderRadius: "4px",
-        color: "#666",
+        color: tz.color.slate,
        }}
       >
        <CloseIcon />
@@ -1035,7 +1051,7 @@ const ProductDetails = ({
         margin: "0 0 24px 0",
         fontSize: "18px",
         fontWeight: "600",
-        color: "#333",
+        color: tz.color.ink,
        }}
       >
        Share this link via
@@ -1175,7 +1191,7 @@ const ProductDetails = ({
         style={{
          margin: "0 0 12px 0",
          fontSize: "14px",
-         color: "#666",
+         color: tz.color.slate,
         }}
        >
         Or copy link
@@ -1183,7 +1199,7 @@ const ProductDetails = ({
        <div
         style={{
          display: "flex",
-         backgroundColor: "#f5f5f5",
+         backgroundColor: tz.color.mist,
          borderRadius: "8px",
          padding: "12px",
          alignItems: "center",
@@ -1199,7 +1215,7 @@ const ProductDetails = ({
           border: "none",
           backgroundColor: "transparent",
           fontSize: "14px",
-          color: "#333",
+          color: tz.color.ink,
           outline: "none",
          }}
         />
@@ -1207,10 +1223,12 @@ const ProductDetails = ({
          onClick={handleCopyLink}
          style={{
           padding: "8px 16px",
-          backgroundColor: copySuccess ? "#28a745" : "#007bff",
-          color: "white",
+          backgroundColor: copySuccess ? tz.tone.success.fill : tz.color.emberDeep,
+          color: tz.color.paper,
+          fontFamily: "inherit",
+          fontWeight: 600,
           border: "none",
-          borderRadius: "6px",
+          borderRadius: `${tz.radius.sm}px`,
           cursor: "pointer",
           fontSize: "14px",
           transition: "all 0.2s ease",

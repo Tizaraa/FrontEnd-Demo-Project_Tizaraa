@@ -1,10 +1,10 @@
 "use client";
-import { Fragment } from "react";
 import FlexBox from "@component/FlexBox";
 import Pagination from "@component/pagination";
 import { SemiSpan } from "@component/Typography";
 import { ProductCard9 } from "@component/product-cards";
 import Product from "@models/product.model";
+import { ListingRows } from "@component/listing/Listing";
 
 // ==========================================================
 type Props = {
@@ -24,10 +24,9 @@ export default function ProductListView({
  onPageChange,
 }: Props) {
  return (
-  <Fragment>
+  <ListingRows>
    {products.map((item) => (
     <ProductCard9
-     mb="1.25rem"
      id={item.id}
      key={item.id}
      slug={item.slug}
@@ -59,6 +58,6 @@ export default function ProductListView({
           onChange={onPageChange} 
         />
       </FlexBox> */}
-  </Fragment>
+  </ListingRows>
  );
 }

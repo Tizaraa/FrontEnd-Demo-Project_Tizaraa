@@ -77,7 +77,7 @@ export default function ProductInfoView({ productData }: Props) {
         display: "flex",
         flexDirection: "column",
         gap: "14px",
-        fontFamily: "__Open_Sans_9c011f, __Open_Sans_Fallback_9c011f",
+        fontFamily: "inherit",
       }}
     >
       {/* Product image + gallery */}
@@ -89,7 +89,7 @@ export default function ProductInfoView({ productData }: Props) {
               aspectRatio: "1 / 1",
               borderRadius: theme.radiusSmall,
               overflow: "hidden",
-              backgroundColor: "#F5F6F8",
+              backgroundColor: theme.subtle,
               marginBottom: images.length > 1 ? "10px" : 0,
             }}
           >
@@ -119,7 +119,7 @@ export default function ProductInfoView({ productData }: Props) {
                       ? `2px solid ${theme.accent}`
                       : `1px solid ${theme.border}`,
                   cursor: "pointer",
-                  backgroundColor: "#F5F6F8",
+                  backgroundColor: theme.subtle,
                 }}
               >
                 <img
