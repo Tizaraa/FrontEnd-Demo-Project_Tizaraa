@@ -172,8 +172,9 @@ export default function CarouselSlider(): JSX.Element {
      display: none;
     }
     .slick-dots li.slick-active button {
-     background-color: #fff !important;
-     transform: scale(1.2);
+     background-color: var(--tz-paper) !important;
+     width: 22px !important;
+     border-radius: 999px !important;
     }
    `}</style>
   </>

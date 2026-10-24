@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import tz from "../../theme/tizaraa";
 import Card from "@component/Card";
 import { H6 } from "@component/Typography";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
@@ -69,9 +70,9 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
  const cardStyle: React.CSSProperties = {
   padding: "16px",
   borderRadius: "12px",
-  boxShadow: "0 2px 12px rgba(0, 0, 0, 0.05)",
-  border: "1px solid #f0f0f0",
-  backgroundColor: "#ffffff",
+  boxShadow: "none",
+  border: `1px solid ${tz.color.line}`,
+  backgroundColor: tz.color.paper,
  };
 
  // Filter section style
@@ -94,7 +95,7 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
   margin: 0,
   fontSize: "14px",
   fontWeight: 600,
-  color: "#333",
+  color: tz.color.ink,
  };
 
  // Filter content style
@@ -113,9 +114,9 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
  const baseFilterButtonStyle: React.CSSProperties = {
   padding: "6px 12px",
   borderRadius: "16px",
-  border: "1px solid #e0e0e0",
-  backgroundColor: "#ffffff",
-  color: "#555",
+  border: `1px solid ${tz.color.line}`,
+  backgroundColor: tz.color.paper,
+  color: tz.color.inkSoft,
   cursor: "pointer",
   fontSize: "13px",
   transition: "all 0.2s ease",
@@ -125,9 +126,9 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
  // Active filter button style
  const activeFilterButtonStyle: React.CSSProperties = {
   ...baseFilterButtonStyle,
-  borderColor: "#3BB77E",
-  backgroundColor: "#F2FCF7",
-  color: "#3BB77E",
+  borderColor: tz.color.ember,
+  backgroundColor: tz.color.emberTint,
+  color: tz.color.emberDeep,
   fontWeight: 500,
  };
 
@@ -137,7 +138,7 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
   overflowY: "auto",
   paddingRight: "10px",
   scrollbarWidth: "thin",
-  scrollbarColor: "#888 transparent",
+  scrollbarColor: `${tz.color.slate} transparent`,
  };
 
  // Show more button style
@@ -146,7 +147,7 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
   padding: "4px 8px",
   backgroundColor: "transparent",
   border: "none",
-  color: "#3BB77E",
+  color: tz.color.emberDeep,
   cursor: "pointer",
   fontSize: "12px",
   display: "flex",
@@ -225,7 +226,7 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
 
   const buttonStyle: React.CSSProperties = {
    ...(isActive ? activeFilterButtonStyle : baseFilterButtonStyle),
-   ...(hovered && !isActive ? { borderColor: "#ccc" } : {}),
+   ...(hovered && !isActive ? { borderColor: tz.color.slate } : {}),
   };
 
   return (
@@ -270,7 +271,7 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
     <div
      style={{
       ...filterHeaderStyle,
-      ...(hovered ? { color: "#3BB77E" } : {}),
+      ...(hovered ? { color: tz.color.emberDeep } : {}),
      }}
      onClick={() => setShowSection(!showSection)}
      onMouseEnter={() => setHovered(true)}
@@ -278,9 +279,9 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
     >
      <H6 style={filterTitleStyle}>{title}</H6>
      {showSection ? (
-      <FiChevronUp size={16} color={hovered ? "#3BB77E" : "#333"} />
+      <FiChevronUp size={16} color={hovered ? tz.color.emberDeep : tz.color.slate} />
      ) : (
-      <FiChevronDown size={16} color={hovered ? "#3BB77E" : "#333"} />
+      <FiChevronDown size={16} color={hovered ? tz.color.emberDeep : tz.color.slate} />
      )}
     </div>
 
@@ -304,7 +305,7 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
         onClick={() => setShowAll && setShowAll(true)}
         style={{
          ...showMoreButtonStyle,
-         ...(hovered ? { color: "#2a9d6e" } : {}),
+         ...(hovered ? { color: tz.color.emberDark } : {}),
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -318,7 +319,7 @@ const ShopProductFilterCard: React.FC<ShopProductFilterCardProps> = ({
         onClick={() => setShowAll && setShowAll(false)}
         style={{
          ...showMoreButtonStyle,
-         ...(hovered ? { color: "#2a9d6e" } : {}),
+         ...(hovered ? { color: tz.color.emberDark } : {}),
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}

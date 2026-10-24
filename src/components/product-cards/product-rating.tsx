@@ -106,11 +106,11 @@ const ProductRating = ({ productId }) => {
          gap: "4px",
          width: "34px",
          fontSize: "12.5px",
-         color: "#6B7280",
+         color: theme.muted,
         }}
        >
         {stars}
-        <FontAwesomeIcon icon={faStar} style={{ color: "#ffc107" }} />
+        <FontAwesomeIcon icon={faStar} style={{ color: theme.star }} />
        </span>
 
        <div
@@ -124,7 +124,7 @@ const ProductRating = ({ productId }) => {
        >
         <div
          style={{
-          background: "#ffc107",
+          background: theme.star,
           width: `${((perrating[stars] || 0) / total_rating) * 100}%`,
           height: "100%",
          }}

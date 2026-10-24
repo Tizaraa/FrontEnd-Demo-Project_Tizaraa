@@ -100,13 +100,22 @@
  text-align: center;
 }
 
+.loadMore:hover:enabled {
+ background-color: var(--tz-ember-tint);
+ border-color: var(--tz-ember) !important;
+}
+
 .loadMore {
- background-color: #e94560;
- color: #ffffff;
- padding: 5px 30px;
- border-radius: 4px;
- font-size: 20px;
- margin: 10px 0;
+ background-color: var(--tz-paper);
+ color: var(--tz-ember-deep);
+ border: 1px solid var(--tz-line) !important;
+ padding: 12px 32px;
+ border-radius: var(--tz-radius-md);
+ font-size: 15px;
+ font-weight: 600;
+ font-family: inherit;
+ margin: 16px 0;
+ transition: background-color var(--tz-motion-fast), border-color var(--tz-motion-fast);
  display: inline-block;
  text-align: center;
  border: none;

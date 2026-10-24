@@ -212,7 +212,7 @@ export default function RfqProductForm() {
  const headerStyle: React.CSSProperties = {
   fontSize: "24px",
   fontWeight: "bold",
-  color: "#343a40",
+  color: "var(--tz-ink-soft)",
   marginBottom: "20px",
   textAlign: "center" as const,
  };
@@ -220,11 +220,11 @@ export default function RfqProductForm() {
  const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: "10px",
-  border: "1px solid #ccc",
+  border: "1px solid var(--tz-line)",
   borderRadius: "4px",
   fontSize: "16px",
-  backgroundColor: "#f8f9fa",
-  color: "#343a40",
+  backgroundColor: "var(--tz-mist)",
+  color: "var(--tz-ink-soft)",
   textOverflow: "ellipsis",
   overflow: "hidden",
   position: "relative" as const,
@@ -233,7 +233,7 @@ export default function RfqProductForm() {
  const labelStyle: React.CSSProperties = {
   display: "block",
   marginBottom: "5px",
-  color: "#6c757d",
+  color: "var(--tz-slate)",
   fontSize: "18px",
  };
 
@@ -259,7 +259,7 @@ export default function RfqProductForm() {
   maxHeight: "150px",
   overflow: "auto",
   marginTop: "5px",
-  border: "1px solid #ccc",
+  border: "1px solid var(--tz-line)",
   width: "100%",
   borderRadius: "4px",
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
@@ -270,7 +270,7 @@ export default function RfqProductForm() {
  const dropdownItemStyle: React.CSSProperties = {
   padding: "10px 15px",
   cursor: "pointer",
-  borderBottom: "1px solid #ddd",
+  borderBottom: "1px solid var(--tz-line)",
   whiteSpace: "",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -291,12 +291,12 @@ export default function RfqProductForm() {
  };
 
  const uploadAreaStyle = {
-  border: "2px dashed #ccc",
+  border: "2px dashed var(--tz-line)",
   borderRadius: "4px",
   padding: "20px",
   textAlign: "center" as const,
   cursor: "pointer",
-  color: "#6c757d",
+  color: "var(--tz-slate)",
   marginBottom: "20px",
  };
 
@@ -525,7 +525,7 @@ export default function RfqProductForm() {
         border: "none",
         cursor: "pointer",
         fontSize: "30px",
-        color: "#6c757d",
+        color: "var(--tz-slate)",
         textAlign: "center",
        }}
       >
@@ -701,7 +701,7 @@ export default function RfqProductForm() {
    <button
     style={submitButtonStyle}
     onClick={handleSubmit}
-    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#E97451")}
+    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "var(--tz-ember-deep)")}
     onMouseOut={(e) =>
      (e.currentTarget.style.backgroundColor = "rgb(231, 75, 50)")
     }

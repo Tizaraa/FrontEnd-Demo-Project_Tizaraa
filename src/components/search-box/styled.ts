@@ -10,24 +10,39 @@ const StyledSearchBox = styled.div`
  .search-icon {
   position: absolute;
   color: white;
-  right: 0.5rem;
+  right: 6px;
   z-index: 1;
-  background-color: #e94560;
-  width: 60px;
-  height: 30px;
+  background-color: ${getTheme("colors.primary.main")};
+  transition: background-color ${({ theme }) => theme.tz.motion.fast};
+  width: 56px;
+  height: 34px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   border-radius: 300px;
+
+  &:hover {
+   background-color: ${getTheme("colors.primary.dark")};
+  }
  }
 
  .search-field {
   flex: 1 1 0;
-  padding-left: 1rem;
-  padding-right: 11.5rem;
-  height: 44px;
+  padding-left: 1.25rem;
+  padding-right: 5rem;
+  height: 46px;
   border-radius: 300px;
+  background: ${({ theme }) => theme.tz.color.mist};
+  border-color: ${({ theme }) => theme.tz.color.line};
+
+  &::placeholder {
+   color: ${({ theme }) => theme.tz.color.slate};
+  }
+
+  &:focus {
+   background: ${({ theme }) => theme.tz.color.paper};
+  }
  }
  .search-button {
   position: absolute;

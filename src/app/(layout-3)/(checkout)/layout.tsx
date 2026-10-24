@@ -278,6 +278,7 @@ import { styled, useMediaQuery, useTheme } from "@mui/material";
 import Box from "@component/Box";
 import Grid from "@component/grid/Grid";
 import Stepper from "@component/Stepper";
+import tz from "../../../theme/tizaraa";
 import authService from "services/authService";
 
 // Mobile stepper components
@@ -328,13 +329,17 @@ const MobileStepNumber = styled("div")<{ active: boolean; completed: boolean }>(
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: active ? "#E94560" : completed ? "#4CAF50" : "#e0e0e0",
-  color: active || completed ? "#fff" : "#7D879C",
+  backgroundColor: active
+   ? tz.color.emberDeep
+   : completed
+   ? tz.color.navy
+   : tz.color.lineSoft,
+  color: active || completed ? tz.color.paper : tz.color.slate,
   fontWeight: 600,
   fontSize: "16px",
   marginBottom: "8px",
   transition: "all 0.3s ease",
-  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+  boxShadow: active ? `0 0 0 4px ${tz.color.emberTint}` : "none",
   "@media (max-width: 600px)": {
    width: "32px",
    height: "32px",
@@ -346,7 +351,7 @@ const MobileStepNumber = styled("div")<{ active: boolean; completed: boolean }>(
 const MobileStepTitle = styled("div")<{ active: boolean }>(({ active }) => ({
  fontSize: "14px",
  fontWeight: active ? 600 : 400,
- color: active ? "#2B3445" : "#7D879C",
+ color: active ? tz.color.ink : tz.color.slate,
  whiteSpace: "nowrap",
  textAlign: "center",
  transition: "all 0.3s ease",
@@ -363,13 +368,12 @@ const MobileProgressLine = styled("div")<{ progress: number }>(
   position: "absolute",
   top: "50%",
   left: "0",
-  height: "4px",
-  backgroundColor: "#E94560",
+  height: "2px",
+  backgroundColor: tz.color.navy,
   width: `${progress}%`,
   transition: "width 0.4s ease",
   zIndex: 0,
   transform: "translateY(-50%)",
-  boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
   borderRadius: "2px",
  })
 );
@@ -378,13 +382,12 @@ const MobileBackgroundLine = styled("div")({
  position: "absolute",
  top: "50%",
  left: "0",
- height: "4px",
- backgroundColor: "#e0e0e0",
+ height: "2px",
+ backgroundColor: tz.color.line,
  width: "100%",
  zIndex: 0,
  transform: "translateY(-50%)",
  borderRadius: "2px",
- boxShadow: "inset 0 1px 2px rgba(0,0,0,0.05)",
 });
 
 export default function Layout({ children }: PropsWithChildren) {

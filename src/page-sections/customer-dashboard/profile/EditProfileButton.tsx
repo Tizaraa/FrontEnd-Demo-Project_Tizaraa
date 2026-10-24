@@ -38,28 +38,14 @@ export default function EditProfileButton() {
  const status = userInfo?.status;
 
  return (
-  <FlexBox style={{ gap: "1rem" }}>
-   {/* Blue Edit Profile Button */}
-   <Button
-    style={{
-     backgroundColor: "#357EE2",
-     color: "#ffffff",
-    }}
-    onClick={() => push("/profile/edit")}
-   >
-    Edit Profile
+  <FlexBox flexWrap="wrap" style={{ gap: "8px" }}>
+   <Button variant="contained" color="primary" onClick={() => push("/profile/edit")}>
+    Edit profile
    </Button>
 
-   {/* Orange Change Password Button */}
    {status !== 2 && (
-    <Button
-     style={{
-      backgroundColor: "#FF7870",
-      color: "#ffffff",
-     }}
-     onClick={() => push("/profile/set-password")}
-    >
-     Change Password
+    <Button variant="outlined" color="secondary" onClick={() => push("/profile/set-password")}>
+     Change password
     </Button>
    )}
   </FlexBox>

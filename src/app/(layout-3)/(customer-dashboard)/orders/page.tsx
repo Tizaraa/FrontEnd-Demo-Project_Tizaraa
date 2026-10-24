@@ -101,7 +101,7 @@
 
 //   return (
 //     <Fragment>
-//       <DashboardPageHeader title="My Orders" iconName="bag_filled" />
+//       <DashboardPageHeader title="My orders" subtitle="Every order you have placed" iconName="bag_filled" />
 
 //       <Hidden down={769}>
 //         <TableRow
@@ -159,6 +159,7 @@ import Image from "next/image";
 import NextImage from "@component/NextImage";
 import Loader from "@component/loader";
 import EmptyOrders from "@sections/customer-dashboard/orders/EmptyOrders";
+import { OrderListHead } from "@sections/customer-dashboard/orders/OrderCard";
 
 export default function OrderList() {
   //const order_List = await api.getOrders();
@@ -279,7 +280,7 @@ export default function OrderList() {
 
       <Fragment>
         {/* Render ToastContainer for toast notifications */}
-        <DashboardPageHeader title="My Orders" iconName="bag_filled" />
+        <DashboardPageHeader title="My orders" subtitle="Every order you have placed" iconName="bag_filled" />
 
         {orderList.length === 0 && currentPage === 0 ? (
           <EmptyOrders
@@ -290,30 +291,7 @@ export default function OrderList() {
         ) : (
         <>
 
-        <Hidden down={769}>
-          <TableRow
-            boxShadow="none"
-            padding="0px 18px"
-            backgroundColor="transparent"
-          >
-            <H5 color="text.muted" my="0px" mx="6px" textAlign="left">
-              Order ID
-            </H5>
-            {/* <H5 color="text.muted" my="0px" mx="6px" textAlign="left">
-            Status
-          </H5> */}
-            <H5 color="text.muted" my="0px" mx="6px" textAlign="left">
-              Date purchased
-            </H5>
-            <H5 color="text.muted" my="0px" mx="6px" textAlign="left">
-              Items
-            </H5>
-            <H5 color="text.muted" my="0px" mx="6px" textAlign="left">
-              Total
-            </H5>
-            <H5 flex="0 0 0 !important" color="text.muted" px="22px" my="0px" />
-          </TableRow>
-        </Hidden>
+        <OrderListHead />
 
         {orderList.map((order) => (
           <OrderRow key={order.invoice} order={order} />

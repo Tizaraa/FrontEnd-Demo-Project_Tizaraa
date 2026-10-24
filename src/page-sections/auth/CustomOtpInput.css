@@ -1,57 +1,46 @@
+/* OTP boxes: 48x52, radius sm, line border, tabular figures, ember focus */
 .otp-container {
- --ReactInputVerificationCode-itemWidth: 46.5px;
- --ReactInputVerificationCode-itemHeight: 46.5px;
+ --ReactInputVerificationCode-itemWidth: 48px;
+ --ReactInputVerificationCode-itemHeight: 52px;
+ --ReactInputVerificationCode-itemSpacing: 8px;
+ display: flex;
+ justify-content: center;
+ gap: 8px;
  margin-bottom: 1rem;
- gap: 8px; /* Add spacing between OTP inputs */
- font-size: 1rem;
+ font-size: 20px;
+ font-variant-numeric: tabular-nums;
 }
 
-/* Mobile (small screens, 320px width and below) */
-@media (max-width: 320px) {
- .otp-container {
-  --ReactInputVerificationCode-itemWidth: 28px;
-  --ReactInputVerificationCode-itemHeight: 28px;
-  gap: 4px; /* Adjust gap for very small screens */
-  font-size: 0.5rem;
- }
+.otp-container input,
+.otp-container .ReactInputVerificationCode__item {
+ width: var(--ReactInputVerificationCode-itemWidth);
+ height: var(--ReactInputVerificationCode-itemHeight);
+ border: 1px solid var(--tz-line);
+ border-radius: var(--tz-radius-sm);
+ background: var(--tz-paper);
+ box-shadow: none;
+ color: var(--tz-ink);
+ font-family: inherit;
+ font-size: 20px;
+ font-weight: 600;
+ font-variant-numeric: tabular-nums;
+ line-height: var(--ReactInputVerificationCode-itemHeight);
+ text-align: center;
+ outline: none;
+ transition: border-color var(--tz-motion-fast), box-shadow var(--tz-motion-fast);
 }
 
-/* Mobile (small screens, 321px to 576px) */
-@media (min-width: 321px) and (max-width: 576px) {
- .otp-container {
-  --ReactInputVerificationCode-itemWidth: 34px;
-  --ReactInputVerificationCode-itemHeight: 34px;
-  gap: 5px; /* Adjust gap for smaller screens */
-  font-size: 0.5rem;
- }
+.otp-container input:focus,
+.otp-container .ReactInputVerificationCode__item.is-active {
+ border-color: var(--tz-ember);
+ box-shadow: 0 0 0 3px var(--tz-ember-tint);
 }
 
-/* Tablet (medium screens) */
-@media (min-width: 577px) and (max-width: 768px) {
+/* Narrow phones: shrink the boxes so six still fit beside 16px gutters */
+@media (max-width: 360px) {
  .otp-container {
-  --ReactInputVerificationCode-itemWidth: 46.5px;
-  --ReactInputVerificationCode-itemHeight: 46.5px;
-  gap: 6px; /* Adjust gap for medium screens */
-  font-size: 0.9rem;
- }
-}
-
-/* Laptop (large screens) */
-@media (min-width: 769px) and (max-width: 1200px) {
- .otp-container {
-  --ReactInputVerificationCode-itemWidth: 46.5px;
-  --ReactInputVerificationCode-itemHeight: 46.5px;
-  gap: 7px; /* Adjust gap for large screens */
-  font-size: 1rem;
- }
-}
-
-/* Desktop (extra large screens) */
-@media (min-width: 1201px) {
- .otp-container {
-  --ReactInputVerificationCode-itemWidth: 46.5px;
-  --ReactInputVerificationCode-itemHeight: 46.5px;
-  gap: 8px; /* Maintain gap for extra-large screens */
-  font-size: 1rem;
+  --ReactInputVerificationCode-itemWidth: 40px;
+  --ReactInputVerificationCode-itemHeight: 48px;
+  gap: 6px;
  }
 }

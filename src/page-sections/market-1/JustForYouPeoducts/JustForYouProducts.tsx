@@ -1,20 +1,28 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import Box from "@component/Box";
-import Card from "@component/Card";
-import FlexBox from "@component/FlexBox";
-import { H4 } from "@component/Typography";
+import styled from "styled-components";
 import CategorySectionCreator from "@component/CategorySectionCreator";
-import { currency } from "@utils/utils";
-import Rating from "@component/rating";
+import ProductTile from "@component/product-cards/ProductTile";
 import styles from "./JustForYouParoducts.module.css";
-import { Chip } from "@component/Chip";
 import BeatLoader from "react-spinners/BeatLoader";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import Image from "next/image";
 import useFetcher from "@hook/useFetcher";
+
+const ProductGrid = styled.div`
+ display: grid;
+ grid-template-columns: repeat(5, minmax(0, 1fr));
+ gap: 16px;
+
+ @media (max-width: 1023px) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+ }
+
+ @media (max-width: 767px) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+ }
+`;
 
 const JustForYouProducts = () => {
  const [currentPage, setCurrentPage] = useState(1);
@@ -39,124 +47,24 @@ const JustForYouProducts = () => {
 
  return (
   <CategorySectionCreator title="Just For You">
-   <Box my="-0.25rem">
-    <FlexBox
-     flexWrap="wrap"
-     justifyContent="space-between"
-     className={styles.flexContainer} // Use a custom class for better control
-    >
-     {products.length > 0 ? (
-      products.map((item, i) => (
-       <Box
-        py="0.25rem"
-        key={i}
-        className={styles.productCard} // Use a custom class for responsive sizing
-       >
-        <Card
-         p="1rem"
-         borderRadius={8}
-         style={{ height: "auto", minHeight: "300px" }}
-        >
-         <Link href={`/product/${item.product_slug}`}>
-          <Box
-           position="relative"
-           style={{
-            padding: "0 0.5rem", // Added padding to prevent content touching the edges
-           }}
-          >
-           {/* image cache  */}
-           <div
-            style={{
-             position: "relative",
-             borderRadius: "8px",
-             overflow: "hidden",
-            }}
-           >
-            <Image
-             src={item.product_thumbnail?.startsWith("http") ? item.product_thumbnail : `${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
-             alt={item.product_name}
-             layout="responsive"
-             width={1}
-             height={1}
-             objectFit="cover"
-             style={{ borderRadius: "8px" }}
-             className={styles.imgPart}
-            />
-           </div>
-           {/* Discount Badge */}
-           {!!item.discount_price &&
-            item.discount_price < item.selling_price && (
-             <Chip
-              top="-0.5rem"
-              left="-10px"
-              p="0.25rem 0.5rem"
-              fontSize="12px"
-              fontWeight="600"
-              bg="primary.main"
-              position="absolute"
-              color="primary.text"
-              zIndex={1}
-             >
-              {Math.floor(
-               ((item.selling_price - item.discount_price) /
-                item.selling_price) *
-                100
-              )}
-              % off
-             </Chip>
-            )}
-          </Box>
-
-          <H4
-           fontWeight="600"
-           fontSize="18px"
-           mb="0.25rem"
-           style={{
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-           }}
-          >
-           {item.product_name}
-          </H4>
-
-          {item.rating > 0 && (
-           <Rating value={item.rating} outof={5} color="warn" readOnly />
-          )}
-
-          {item.selling_price == 0 ? (
-           <FlexBox>
-            <H4 fontWeight="600" fontSize="14px" color="primary.main">
-             RFQ
-            </H4>
-           </FlexBox>
-          ) : item.discount_price == null ? (
-           <FlexBox>
-            <H4 fontWeight="600" fontSize="14px" color="primary.main">
-             {currency(item.selling_price)}
-            </H4>
-           </FlexBox>
-          ) : (
-           <FlexBox flexDirection="column" mt="0.25rem">
-            <H4 fontWeight="600" fontSize="14px" color="text.muted">
-             BDT <del>{item.selling_price}</del>
-            </H4>
-            <Box>
-             <H4 fontWeight="600" fontSize="14px" color="primary.main">
-              {currency(item.discount_price)}
-             </H4>
-            </Box>
-           </FlexBox>
-          )}
-         </Link>
-        </Card>
-       </Box>
-      ))
-     ) : (
-      <p>No products available</p>
-     )}
-    </FlexBox>
-   </Box>
+   {products.length > 0 ? (
+    <ProductGrid>
+     {products.map((item, i) => (
+      <ProductTile
+       key={i}
+       href={`/product/${item.product_slug}`}
+       imageSrc={item.product_thumbnail?.startsWith("http") ? item.product_thumbnail : `${ApiBaseUrl.ImgUrl}${item.product_thumbnail}`}
+       name={item.product_name}
+       rating={item.rating}
+       isRfq={item.selling_price == 0}
+       price={item.discount_price ?? item.selling_price}
+       originalPrice={item.selling_price}
+      />
+     ))}
+    </ProductGrid>
+   ) : (
+    <p>No products available</p>
+   )}
 
    <div className={styles.buttonStyle}>
     <button
@@ -164,7 +72,7 @@ const JustForYouProducts = () => {
      onClick={handleLoadMore}
      disabled={isLoading}
     >
-     {isLoading ? <BeatLoader size={18} color="#fff" /> : "Load More"}
+     {isLoading ? <BeatLoader size={10} color="currentColor" /> : "Load more"}
     </button>
    </div>
   </CategorySectionCreator>

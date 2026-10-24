@@ -185,49 +185,184 @@
 import Link from "next/link";
 import styled from "styled-components";
 import { space, SpaceProps } from "styled-system";
-import Box from "@component/Box";
 import Icon from "@component/icon/Icon";
-import FlexBox from "@component/FlexBox";
-import { Button } from "@component/buttons";
 import LazyImage from "@component/LazyImage";
-import Typography from "@component/Typography";
-import { currency, getTheme, isValidProp } from "@utils/utils";
+import { currency, isValidProp } from "@utils/utils";
 import { useAppContext } from "@context/app-context";
 import { useState, useEffect } from "react";
-import { Styledbutton } from "./style";
 import CheckBox from "@component/CheckBox";
 import toast from "react-hot-toast";
 import axios from "@lib/axiosClient";
-import Card from "@component/Card";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShop } from "@fortawesome/free-solid-svg-icons";
 import { useMediaQuery } from "@mui/material";
 
-const Wrapper = styled.div.withConfig({
+// One cart line: shop strip on top, then checkbox, image, details, price and quantity
+const Line = styled.article.withConfig({
  shouldForwardProp: (prop) => isValidProp(prop),
 })`
- display: flex;
+ margin-bottom: 16px;
  overflow: hidden;
- position: relative;
- border-radius: 10px;
- box-shadow: ${getTheme("shadows.4")};
- background-color: ${getTheme("colors.body.paper")};
- .product-details {
-  padding: 20px;
+ background: ${({ theme }) => theme.tz.color.paper};
+ border: 1px solid ${({ theme }) => theme.tz.color.line};
+ border-radius: ${({ theme }) => theme.tz.radius.md}px;
+
+ .cl-shop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.tz.color.slate};
+  background: ${({ theme }) => theme.tz.color.mist};
+  border-bottom: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
  }
- .title {
+
+ .cl-body {
+  display: grid;
+  grid-template-columns: auto 104px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+ }
+
+ .cl-image {
+  width: 104px;
+  height: 104px;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
- }
- @media only screen and (max-width: 425px) {
-  flex-wrap: wrap;
+  border-radius: ${({ theme }) => theme.tz.radius.sm}px;
+  background: ${({ theme }) => theme.tz.color.mist};
+
   img {
-   height: auto;
-   min-width: 100%;
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
   }
  }
+
+ .cl-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0 0 6px;
+  font-family: ${({ theme }) => theme.tz.font.body};
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: ${({ theme }) => theme.tz.color.ink};
+
+  &:hover {
+   color: ${({ theme }) => theme.tz.color.emberDeep};
+  }
+ }
+
+ .cl-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  font-size: 13px;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+
+ .cl-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+ }
+
+ .cl-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.tz.color.ink};
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+ }
+
+ .cl-qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: ${({ theme }) => theme.tz.radius.sm}px;
+  overflow: hidden;
+
+  button {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 36px;
+   height: 36px;
+   border: 0;
+   background: ${({ theme }) => theme.tz.color.paper};
+   color: ${({ theme }) => theme.tz.color.ink};
+   cursor: pointer;
+   transition: background-color ${({ theme }) => theme.tz.motion.fast};
+
+   &:hover:enabled {
+    background: ${({ theme }) => theme.tz.color.mist};
+   }
+
+   &:disabled {
+    color: ${({ theme }) => theme.tz.color.line};
+    cursor: not-allowed;
+   }
+  }
+
+  input {
+   width: 48px;
+   height: 36px;
+   padding: 0;
+   border: 0;
+   border-left: 1px solid ${({ theme }) => theme.tz.color.line};
+   border-right: 1px solid ${({ theme }) => theme.tz.color.line};
+   text-align: center;
+   font-family: inherit;
+   font-size: 15px;
+   font-weight: 600;
+   font-variant-numeric: tabular-nums;
+   color: ${({ theme }) => theme.tz.color.ink};
+   -moz-appearance: textfield;
+
+   &::-webkit-inner-spin-button,
+   &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+   }
+
+   &:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 2px ${({ theme }) => theme.tz.color.ember};
+   }
+  }
+ }
+
+ @media (max-width: 600px) {
+  .cl-body {
+   grid-template-columns: auto 72px minmax(0, 1fr);
+   gap: 12px;
+   padding: 12px;
+  }
+
+  .cl-image {
+   width: 72px;
+   height: 72px;
+  }
+
+  .cl-title {
+   font-size: 14px;
+  }
+
+  .cl-side {
+   grid-column: 2 / -1;
+   flex-direction: row;
+   align-items: center;
+   justify-content: space-between;
+  }
+ }
+
  ${space}
 `;
 
@@ -397,55 +532,29 @@ export default function ProductCard7(props: ProductCard7Props) {
  const currentCartItem = state.cart.find((item) => item.id === id);
  const isMobile = useMediaQuery("(max-width:700px)");
 
+ const unitPrice =
+  sizeColor?.nosize?.length === 0 && discountPrice ? discountPrice : price;
+
  return (
-  <Card>
-   <div style={{ padding: "3px" }}>
-    {/* <Typography fontSize="14px" color="gray.600">
-          <FontAwesomeIcon icon={faShop} style={{ marginRight: "5px" }} />
-          {!isMobile && (
-            <FontAwesomeIcon 
-              icon={faShop} 
-              style={{ 
-                marginRight: "5px",
-                width: "14px",
-                height: "14px"
-              }} 
-            />
-          )}
-          {productInfo ? productInfo.shopname : "Loading..."}
-        </Typography> */}
-
-    <Typography fontSize="14px" color="gray.600">
-     {!isMobile && (
-      <FontAwesomeIcon
-       icon={faShop}
-       style={{ marginRight: "5px", width: "14px", height: "14px" }}
-      />
-     )}
-     {loading
-      ? "Loading shop info..."
-      : error
-        ? "Shop info unavailable"
-        : productInfo?.shopname || "Shop name not found"}
-    </Typography>
-
-    <hr />
+  <Line {...others}>
+   <div className="cl-shop">
+    {!isMobile && (
+     <FontAwesomeIcon icon={faShop} style={{ width: "13px", height: "13px" }} />
+    )}
+    {loading
+     ? "Loading shop info..."
+     : error
+       ? "Shop info unavailable"
+       : productInfo?.shopname || "Shop name not found"}
    </div>
 
-   <Wrapper {...others}>
-    <div
-     style={{
-      display: "flex",
-      flexDirection: "row",
-      gap: "5px",
-      marginLeft: "16px",
-      alignItems: "center",
-     }}
-    >
-     <CheckBox
-      checked={state.selectedProducts.includes(id)}
-      onChange={handleProductSelect}
-     />
+   <div className="cl-body">
+    <CheckBox
+     checked={state.selectedProducts.includes(id)}
+     onChange={handleProductSelect}
+    />
+
+    <div className="cl-image">
      <LazyImage
       alt={name}
       width={140}
@@ -453,138 +562,78 @@ export default function ProductCard7(props: ProductCard7Props) {
       src={imgUrl || "/assets/images/products/iphone-xi.png"}
      />
     </div>
-    <FlexBox
-     width="100%"
-     minWidth="0px"
-     flexDirection="column"
-     className="product-details"
-     justifyContent="space-between"
-    >
+
+    <div style={{ minWidth: 0 }}>
      <Link href={`/product/${slug}`}>
-      <Typography
-       className="title"
-       fontWeight="600"
-       fontSize="18px"
-       mb="0.5rem"
-      >
+      <h3 className="cl-title" title={name}>
        {name}
-      </Typography>
+      </h3>
      </Link>
 
-     {/* Display fetched product info */}
-     {productInfo && (
-      <Box mb="0.5rem">
-       <Typography fontSize="14px" color="gray.600">
-        Brand: {productInfo.brand}
-       </Typography>
-       <Typography fontSize="14px" color="gray.600">
-        Delivery: {productInfo.delivereyType}
-       </Typography>
-      </Box>
-     )}
+     <div className="cl-meta">
+      {/* Display fetched product info */}
+      {productInfo && <span>Brand: {productInfo.brand}</span>}
+      {productInfo && <span>Delivery: {productInfo.delivereyType}</span>}
 
-     {/* display size and color  */}
-     {sizeColor && (
-      <Box display="flex" flexWrap="wrap">
-       {selectedColor && selectedColor !== "Default" && (
-        <Typography fontSize="14px" color="gray.600" mr="8px">
-         {sizeColor?.colorGroupName || "Color"}: {selectedColor}
-        </Typography>
-       )}
-       {selectedSize && selectedSize !== "Default" && (
-        <Typography fontSize="14px" color="gray.600">
-         {sizeColor?.sizeGroupName || "Size"}: {selectedSize}
-        </Typography>
-       )}
-      </Box>
-     )}
-
-     <FlexBox justifyContent="space-between" alignItems="flex-end">
-      <FlexBox flexWrap="wrap" alignItems="center">
-       {/* {discountPrice ? (
-                <>
-                  <Typography color="primary.main" mr="0.5rem">
-                    {currency(discountPrice, 0)} x {quantity}
-                  </Typography>
-                </>
-              ) : (
-                <Typography fontWeight={600} color="primary.main" mr="1rem">
-                  {currency(price, 0)} x {quantity}
-                </Typography>
-              )} */}
-       {sizeColor?.nosize?.length === 0 && discountPrice ? (
-        <Typography color="primary.main" mr="0.5rem">
-         {currency(discountPrice, 0)} x {quantity}
-        </Typography>
-       ) : (
-        <Typography fontWeight={600} color="primary.main" mr="1rem">
-         {currency(price, 0)} x {quantity}
-        </Typography>
-       )}
-      </FlexBox>
-
-      {currentCartItem && (
-       <FlexBox alignItems="center">
-        <Button
-         size="none"
-         padding="5px"
-         color="primary"
-         variant="outlined"
-         borderColor="primary.light"
-         onClick={handleCartAmountChange(
-          currentCartItem.qty - 1,
-          currentCartItem
-         )}
-         disabled={currentCartItem.qty <= limitsFor(currentCartItem).min}
-        >
-         <Icon variant="small">minus</Icon>
-        </Button>
-        <Styledbutton>
-         <input
-          className="no-spin-button"
-          type="number"
-          value={currentCartItem.qty}
-          min={limitsFor(currentCartItem).min}
-          max={limitsFor(currentCartItem).ceiling}
-          onChange={(e) => handleInputChange(e, currentCartItem)}
-          style={{
-           textDecoration: "none",
-           borderRadius: "30px",
-           scrollBehavior: "unset",
-           border: "1px solid #E94560",
-           padding: "8px",
-           width: "50px",
-           textAlign: "center",
-          }}
-         ></input>
-        </Styledbutton>
-        <Button
-         size="none"
-         padding="5px"
-         color="primary"
-         variant="outlined"
-         borderColor="primary.light"
-         onClick={handleCartAmountChange(
-          currentCartItem.qty + 1,
-          currentCartItem
-         )}
-         disabled={currentCartItem.qty >= limitsFor(currentCartItem).ceiling}
-        >
-         <Icon variant="small">plus</Icon>
-        </Button>
-       </FlexBox>
+      {/* display size and color  */}
+      {sizeColor && selectedColor && selectedColor !== "Default" && (
+       <span>
+        {sizeColor?.colorGroupName || "Color"}: {selectedColor}
+       </span>
       )}
-     </FlexBox>
-    </FlexBox>
-   </Wrapper>
+      {sizeColor && selectedSize && selectedSize !== "Default" && (
+       <span>
+        {sizeColor?.sizeGroupName || "Size"}: {selectedSize}
+       </span>
+      )}
+     </div>
+    </div>
 
-   <style jsx>{`
-    input.no-spin-button::-webkit-inner-spin-button,
-    input.no-spin-button::-webkit-outer-spin-button {
-     -webkit-appearance: none;
-     margin: 0;
-    }
-   `}</style>
-  </Card>
+    <div className="cl-side">
+     <span className="cl-price">
+      {currency(unitPrice, 0)} &times; {quantity}
+     </span>
+
+     {currentCartItem && (
+      <div className="cl-qty">
+       <button
+        type="button"
+        aria-label="Decrease quantity"
+        onClick={handleCartAmountChange(
+         currentCartItem.qty - 1,
+         currentCartItem
+        )}
+        disabled={currentCartItem.qty <= limitsFor(currentCartItem).min}
+       >
+        <Icon size="14px" defaultcolor="currentColor">
+         minus
+        </Icon>
+       </button>
+       <input
+        type="number"
+        aria-label="Quantity"
+        value={currentCartItem.qty}
+        min={limitsFor(currentCartItem).min}
+        max={limitsFor(currentCartItem).ceiling}
+        onChange={(e) => handleInputChange(e, currentCartItem)}
+       />
+       <button
+        type="button"
+        aria-label="Increase quantity"
+        onClick={handleCartAmountChange(
+         currentCartItem.qty + 1,
+         currentCartItem
+        )}
+        disabled={currentCartItem.qty >= limitsFor(currentCartItem).ceiling}
+       >
+        <Icon size="14px" defaultcolor="currentColor">
+         plus
+        </Icon>
+       </button>
+      </div>
+     )}
+    </div>
+   </div>
+  </Line>
  );
 }

@@ -174,8 +174,8 @@ export default function TransactionHistoryPage() {
     gap: "6px",
     padding: "10px 18px",
     borderRadius: "8px",
-    border: "1px solid #E94560",
-    backgroundColor: "#E94560",
+    border: "1px solid var(--tz-ember-deep)",
+    backgroundColor: "var(--tz-ember-deep)",
     color: "#fff",
     fontSize: "13px",
     fontWeight: 600,
@@ -190,7 +190,7 @@ export default function TransactionHistoryPage() {
  if (notCorporate) {
   return (
    <Fragment>
-    <DashboardPageHeader title="Transaction History" iconName="credit-card" button={dueButton} />
+    <DashboardPageHeader title="Transaction history" iconName="credit-card" button={dueButton} />
     <EmptyOrders
      title="This feature is for corporate customers"
      message="Your account isn't linked to a corporate shop, so the Transaction History dashboard isn't available."
@@ -201,7 +201,7 @@ export default function TransactionHistoryPage() {
 
  return (
   <Fragment>
-   <DashboardPageHeader title="Transaction History" iconName="credit-card" button={dueButton} />
+   <DashboardPageHeader title="Transaction history" iconName="credit-card" button={dueButton} />
 
    {errorMessage && (
     <Card p="1rem" mb="1.5rem" border="1px solid" borderColor="error.main">
@@ -209,21 +209,21 @@ export default function TransactionHistoryPage() {
     </Card>
    )}
 
-   <Card p="1.5rem" mb="1.5rem" borderRadius="8px" border="1px solid #DAE1E7">
+   <Card p="1.5rem" mb="1.5rem" borderRadius="8px" border="1px solid var(--tz-line)">
     <FlexBox justifyContent="space-between" alignItems="center" flexWrap="wrap" mb="1rem" style={{ gap: "10px" }}>
      <FlexBox alignItems="center" flexWrap="wrap" style={{ gap: "8px" }}>
       <input
        type="date"
        value={historyFrom}
        onChange={(e) => setHistoryFrom(e.target.value)}
-       style={{ padding: "6px 10px", borderRadius: "6px", border: "1px solid #DAE1E7" }}
+       style={{ padding: "6px 10px", borderRadius: "6px", border: "1px solid var(--tz-line)" }}
       />
       <Typography my="0px" fontSize="13px" color="text.muted">to</Typography>
       <input
        type="date"
        value={historyTo}
        onChange={(e) => setHistoryTo(e.target.value)}
-       style={{ padding: "6px 10px", borderRadius: "6px", border: "1px solid #DAE1E7" }}
+       style={{ padding: "6px 10px", borderRadius: "6px", border: "1px solid var(--tz-line)" }}
       />
       <button
        onClick={applyHistoryFilter}
@@ -231,7 +231,7 @@ export default function TransactionHistoryPage() {
         padding: "6px 16px",
         borderRadius: "999px",
         border: "none",
-        backgroundColor: "#E94560",
+        backgroundColor: "var(--tz-ember-deep)",
         color: "#fff",
         fontSize: "13px",
         fontWeight: 600,
@@ -279,7 +279,7 @@ export default function TransactionHistoryPage() {
          flexWrap: "nowrap",
          minWidth: "700px",
          borderRadius: 0,
-         borderBottom: "1px solid #EDEFF2",
+         borderBottom: "1px solid var(--tz-line)",
         }}
        >
         <Typography my="0px" mx="6px" fontSize="14px" style={{ whiteSpace: "nowrap" }}>{order.order_number}</Typography>

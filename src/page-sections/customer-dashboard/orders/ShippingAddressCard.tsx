@@ -67,7 +67,7 @@ export default function ShippingAddressCard({
       >
        {details.map((detail) => (
         <div key={detail.label} style={{ display: "flex", gap: "4px" }}>
-         <span style={{ color: "#555", fontWeight: 500 }}>{detail.label}:</span>
+         <span style={{ color: "var(--tz-ink-soft)", fontWeight: 500 }}>{detail.label}:</span>
          <span style={{ color: "#000" }}>{detail.value}</span>
         </div>
        ))}

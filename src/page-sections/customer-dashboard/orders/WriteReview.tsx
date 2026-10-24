@@ -303,8 +303,8 @@ export default function WriteReview({
      // struck-through text alone.
      ...(isItemCancelled || isItemReturned
       ? {
-         backgroundColor: "#F7F9FC",
-         border: "1px solid #E5E9F0",
+         backgroundColor: "var(--tz-mist)",
+         border: "1px solid var(--tz-line)",
          borderRadius: "8px",
         }
       : {}),
@@ -348,7 +348,7 @@ export default function WriteReview({
          my="0px"
          style={
           isItemReturned || isItemCancelled
-           ? { textDecoration: "line-through", color: "#8a94a6" }
+           ? { textDecoration: "line-through", color: "var(--tz-slate)" }
            : undefined
          }
         >
@@ -360,7 +360,7 @@ export default function WriteReview({
          <span
           style={
            isItemCancelled || isItemReturned
-            ? { textDecoration: "line-through", color: "#8a94a6" }
+            ? { textDecoration: "line-through", color: "var(--tz-slate)" }
             : undefined
           }
          >
@@ -376,14 +376,14 @@ export default function WriteReview({
           <Box
            px="8px"
            py="2px"
-           bg="#FEE2E2"
+           bg="var(--tz-danger-bg)"
            borderRadius="100px"
            style={{ whiteSpace: "nowrap" }}
           >
            <Typography
             fontSize="10px"
             fontWeight="700"
-            color="#b91c1c"
+            color="var(--tz-danger)"
             style={{ letterSpacing: "0.4px" }}
            >
             CANCELLED
@@ -400,20 +400,20 @@ export default function WriteReview({
           <Box
            px="8px"
            py="2px"
-           bg="#EEF1F5"
+           bg="var(--tz-mist)"
            borderRadius="100px"
            style={{ whiteSpace: "nowrap" }}
           >
            <Typography
             fontSize="10px"
             fontWeight="700"
-            color="#5b6472"
+            color="var(--tz-slate)"
             style={{ letterSpacing: "0.4px" }}
            >
             RETURNED
            </Typography>
           </Box>
-          <Typography fontSize="12px" color="#2e7d32" fontWeight="600">
+          <Typography fontSize="12px" color="var(--tz-success)" fontWeight="600">
            {currency(item.item_refund_amount ?? item.price * item.quantity)}{" "}
            refunded
           </Typography>
@@ -440,7 +440,7 @@ export default function WriteReview({
             style={{
               height: "30px",
               borderRadius: "100px",
-              backgroundColor: reviewMode !== "submit" ? "#e94560" : "",  
+              backgroundColor: reviewMode !== "submit" ? "var(--tz-ember-deep)" : "",  
               color: reviewMode !== "submit" ? "white" : "gray",  
               pointerEvents: status !== "Delivered" ? "none" : "auto", 
               transition: "none"  
@@ -462,7 +462,7 @@ export default function WriteReview({
         style={{
          height: "30px",
          borderRadius: "100px",
-         backgroundColor: status === "Delivered" ? "#e94560" : "gray", // Set background color
+         backgroundColor: status === "Delivered" ? "var(--tz-ember-deep)" : "gray", // Set background color
          color: status === "Delivered" ? "white" : "darkgray", // Set text color
          cursor: status === "Delivered" ? "pointer" : "not-allowed",
          pointerEvents: status !== "Delivered" ? "none" : "auto",
@@ -489,7 +489,7 @@ export default function WriteReview({
          style={{
           height: "30px",
           borderRadius: "100px",
-          backgroundColor: "#e94560",
+          backgroundColor: "var(--tz-ember-deep)",
           color: "white",
          }}
          onClick={
@@ -515,7 +515,7 @@ export default function WriteReview({
           color: "white",
           height: "30px",
           borderRadius: "100px",
-          backgroundColor: "#e94560",
+          backgroundColor: "var(--tz-ember-deep)",
          }}
          onClick={handleToggle} // Toggle the component visibility on click
         >
@@ -579,7 +579,7 @@ export default function WriteReview({
          size={48}
         />
         <Box>
-         <Typography fontSize="1.05rem" fontWeight="700" color="#0F3460">
+         <Typography fontSize="1.05rem" fontWeight="700" color="var(--tz-navy)">
           Write a review
          </Typography>
          <Typography
@@ -600,12 +600,12 @@ export default function WriteReview({
        <Box
         mt="1rem"
         mb="1.25rem"
-        style={{ height: "1px", background: "#E5E9F0" }}
+        style={{ height: "1px", background: "var(--tz-line)" }}
        />
 
        {/* Rating */}
        <Box>
-        <Typography fontSize="13px" fontWeight="600" color="#2C3A4A" mb="6px">
+        <Typography fontSize="13px" fontWeight="600" color="var(--tz-ink)" mb="6px">
          Rate the product
         </Typography>
         <FlexBox alignItems="center" style={{ gap: "10px" }}>
@@ -622,7 +622,7 @@ export default function WriteReview({
              cursor: "pointer",
              fontSize: "28px",
              lineHeight: 1,
-             color: star <= shownRating ? "#FFB400" : "#DCE0E6",
+             color: star <= shownRating ? "#FFB400" : "var(--tz-line)",
              border: "none",
              padding: "0 2px",
              transition: "color 0.15s ease, transform 0.15s ease",
@@ -643,7 +643,7 @@ export default function WriteReview({
 
        {/* Comment */}
        <Box mt="1.25rem">
-        <Typography fontSize="13px" fontWeight="600" color="#2C3A4A" mb="6px">
+        <Typography fontSize="13px" fontWeight="600" color="var(--tz-ink)" mb="6px">
          Your experience
         </Typography>
         <textarea
@@ -654,18 +654,18 @@ export default function WriteReview({
          onChange={(e) => setComments(e.target.value)}
          style={{
           width: "100%",
-          border: "1px solid #DCE0E6",
+          border: "1px solid var(--tz-line)",
           borderRadius: "8px",
           padding: "10px 12px",
           fontSize: "14px",
           fontFamily: "inherit",
-          color: "#2C3A4A",
+          color: "var(--tz-ink)",
           resize: "vertical",
           outline: "none",
          }}
         />
         <FlexBox justifyContent="space-between" mt="4px">
-         <Typography fontSize="12px" color={comments.trim().length > 0 && comments.trim().length < 10 ? "#D32F2F" : "text.muted"}>
+         <Typography fontSize="12px" color={comments.trim().length > 0 && comments.trim().length < 10 ? "var(--tz-danger)" : "text.muted"}>
           {comments.trim().length < 10
            ? `At least 10 characters (${comments.trim().length}/10)`
            : "Looks good"}
@@ -679,8 +679,8 @@ export default function WriteReview({
        {/* Photos */}
        <Box mt="1.25rem">
         <FlexBox justifyContent="space-between" alignItems="center" mb="6px">
-         <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
-          Add photos <span style={{ color: "#8a94a6", fontWeight: 400 }}>(optional)</span>
+         <Typography fontSize="13px" fontWeight="600" color="var(--tz-ink)">
+          Add photos <span style={{ color: "var(--tz-slate)", fontWeight: 400 }}>(optional)</span>
          </Typography>
          <Typography fontSize="12px" color="text.muted">
           {image.length}/{MAX_IMAGES}
@@ -718,8 +718,8 @@ export default function WriteReview({
             aspectRatio: "1 / 1",
             borderRadius: "10px",
             overflow: "hidden",
-            border: "1px solid #E5E9F0",
-            background: "#F7F9FC",
+            border: "1px solid var(--tz-line)",
+            background: "var(--tz-mist)",
            }}
           >
            <img
@@ -760,9 +760,9 @@ export default function WriteReview({
             width: "100%",
             aspectRatio: "1 / 1",
             borderRadius: "10px",
-            border: "1px dashed #C6CDD8",
-            background: "#FAFBFC",
-            color: "#8a94a6",
+            border: "1px dashed var(--tz-line)",
+            background: "var(--tz-mist)",
+            color: "var(--tz-slate)",
             cursor: "pointer",
             display: "flex",
             flexDirection: "column",
@@ -780,7 +780,7 @@ export default function WriteReview({
        </Box>
 
        {/* Anonymous */}
-       <Box mt="1.25rem" p="10px 12px" bg="#F7F9FC" borderRadius="8px">
+       <Box mt="1.25rem" p="10px 12px" bg="var(--tz-mist)" borderRadius="8px">
         <label
          style={{
           display: "flex",
@@ -795,7 +795,7 @@ export default function WriteReview({
           onChange={(e) => setIsAnonymous(e.target.checked)}
           style={{ cursor: "pointer" }}
          />
-         <Typography fontSize="14px" color="#2C3A4A">
+         <Typography fontSize="14px" color="var(--tz-ink)">
           Post this review anonymously
          </Typography>
         </label>
@@ -820,7 +820,7 @@ export default function WriteReview({
           height: "38px",
           borderRadius: "100px",
           padding: "0 18px",
-          color: "#5b6472",
+          color: "var(--tz-slate)",
          }}
         >
          <Typography fontSize="14px">Cancel</Typography>
@@ -833,7 +833,7 @@ export default function WriteReview({
           height: "38px",
           borderRadius: "100px",
           padding: "0 22px",
-          backgroundColor: canSubmit ? "#e94560" : "#F0C4CC",
+          backgroundColor: canSubmit ? "var(--tz-ember-deep)" : "var(--tz-danger-bg)",
           color: "white",
           cursor: canSubmit ? "pointer" : "not-allowed",
          }}
@@ -855,7 +855,7 @@ export default function WriteReview({
          size={48}
         />
         <Box>
-         <Typography fontSize="1.05rem" fontWeight="700" color="#0F3460">
+         <Typography fontSize="1.05rem" fontWeight="700" color="var(--tz-navy)">
           Your review
          </Typography>
          <Typography
@@ -876,13 +876,13 @@ export default function WriteReview({
        <Box
         mt="1rem"
         mb="1.25rem"
-        style={{ height: "1px", background: "#E5E9F0" }}
+        style={{ height: "1px", background: "var(--tz-line)" }}
        />
 
        <Box
         style={{
-         background: "#FAFBFC",
-         border: "1px solid #E5E9F0",
+         background: "var(--tz-mist)",
+         border: "1px solid var(--tz-line)",
          borderRadius: "10px",
          padding: "1.15rem 1.25rem",
         }}
@@ -901,7 +901,7 @@ export default function WriteReview({
              style={{
               fontSize: "22px",
               lineHeight: 1,
-              color: star <= savedRating ? "#FFB400" : "#DCE0E6",
+              color: star <= savedRating ? "#FFB400" : "var(--tz-line)",
               marginRight: "2px",
              }}
             >
@@ -922,8 +922,8 @@ export default function WriteReview({
             style={{
              fontSize: "0.7rem",
              fontWeight: 600,
-             color: "#5b6472",
-             background: "#EEF1F5",
+             color: "var(--tz-slate)",
+             background: "var(--tz-mist)",
              padding: "3px 10px",
              borderRadius: "999px",
              whiteSpace: "nowrap",
@@ -937,7 +937,7 @@ export default function WriteReview({
            style={{
             fontSize: "0.7rem",
             fontWeight: 600,
-            color: "#1E8E3E",
+            color: "var(--tz-success)",
             background: "rgba(30,142,62,0.1)",
             padding: "3px 10px",
             borderRadius: "999px",
@@ -956,13 +956,13 @@ export default function WriteReview({
           style={{
            width: "3px",
            borderRadius: "3px",
-           background: "#E5E9F0",
+           background: "var(--tz-line)",
            flexShrink: 0,
           }}
          />
          <Typography
           style={{
-           color: "#3d4753",
+           color: "var(--tz-ink-soft)",
            lineHeight: 1.65,
            fontSize: "14px",
            wordBreak: "break-word",
@@ -1006,7 +1006,7 @@ export default function WriteReview({
               padding: 0,
               borderRadius: "10px",
               overflow: "hidden",
-              border: "1px solid #E5E9F0",
+              border: "1px solid var(--tz-line)",
               background: "#fff",
               cursor: "zoom-in",
              }}
@@ -1031,7 +1031,7 @@ export default function WriteReview({
           height: "38px",
           borderRadius: "100px",
           padding: "0 22px",
-          backgroundColor: "#e94560",
+          backgroundColor: "var(--tz-ember-deep)",
           color: "white",
          }}
         >
@@ -1089,7 +1089,7 @@ export default function WriteReview({
        width="40px"
        height="40px"
        borderRadius="50%"
-       bg="#FFF4F6"
+       bg="var(--tz-ember-tint)"
        style={{
         display: "flex",
         alignItems: "center",
@@ -1097,23 +1097,23 @@ export default function WriteReview({
         flexShrink: 0,
        }}
       >
-       <FontAwesomeIcon icon={faStore} style={{ color: "#e94560" }} />
+       <FontAwesomeIcon icon={faStore} style={{ color: "var(--tz-ember-deep)" }} />
       </Box>
-      <Typography fontSize="17px" fontWeight="700" color="#e94560">
+      <Typography fontSize="17px" fontWeight="700" color="var(--tz-ember-deep)">
        Return at the shop
       </Typography>
      </FlexBox>
 
-     <Typography fontSize="14px" color="#444" style={{ lineHeight: 1.6 }}>
+     <Typography fontSize="14px" color="var(--tz-ink-soft)" style={{ lineHeight: 1.6 }}>
       This item was bought from a corporate shop, so returns are handled in
       person — there is nothing to submit here.
      </Typography>
 
-     <Box mt="1rem" p="12px 14px" bg="#F7F9FC" borderRadius="8px">
-      <Typography fontSize="13px" fontWeight="600" color="#2C3A4A" mb="8px">
+     <Box mt="1rem" p="12px 14px" bg="var(--tz-mist)" borderRadius="8px">
+      <Typography fontSize="13px" fontWeight="600" color="var(--tz-ink)" mb="8px">
        What to do
       </Typography>
-      <Typography fontSize="13px" color="#555" style={{ lineHeight: 1.7 }}>
+      <Typography fontSize="13px" color="var(--tz-ink-soft)" style={{ lineHeight: 1.7 }}>
        1. Bring <b>{item?.product_name}</b> back to the shop.
        <br />
        2. Give the seller your Order ID, shown at the top of this page.
@@ -1137,11 +1137,11 @@ export default function WriteReview({
      </Typography>
 
      {returnWindowLeft && (
-      <Box mt="8px" p="8px 12px" bg="#FFF4F6" borderRadius="6px">
+      <Box mt="8px" p="8px 12px" bg="var(--tz-ember-tint)" borderRadius="6px">
        <Typography
         fontSize="13px"
         fontWeight="600"
-        color="#e94560"
+        color="var(--tz-ember-deep)"
         textAlign="center"
        >
         {returnWindowLeft}
@@ -1155,7 +1155,7 @@ export default function WriteReview({
        style={{
         height: "34px",
         borderRadius: "100px",
-        backgroundColor: "#e94560",
+        backgroundColor: "var(--tz-ember-deep)",
         color: "white",
         padding: "0 20px",
        }}
@@ -1169,7 +1169,7 @@ export default function WriteReview({
 
    {/* Show the component outside of FlexBox, but directly underneath */}
    {showOrderStatus && (
-    <Box mt="10px" p="10px" border="1px solid #e94560" borderRadius="8px">
+    <Box mt="10px" p="10px" border="1px solid var(--tz-ember-deep)" borderRadius="8px">
      <ReturnedOrderStatus
       return_status={return_status}
       deliveredAt={delivered_at}

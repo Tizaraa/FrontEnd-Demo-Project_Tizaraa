@@ -151,7 +151,7 @@ export default function ResponsiveCategory({
  };
 
  const renderSitemap = () => (
-  <ul style={{ paddingLeft: "20px", color: "#333" }}>
+  <ul style={{ paddingLeft: "20px", color: theme.heading }}>
    {sitemap.length ? (
     sitemap.map((item) => (
      <li

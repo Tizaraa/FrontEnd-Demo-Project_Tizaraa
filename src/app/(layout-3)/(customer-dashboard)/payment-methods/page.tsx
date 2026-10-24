@@ -24,7 +24,7 @@ export default function PaymentMethods() {
   <Fragment>
    <DashboardPageHeader
     button={<AddNewPayment />}
-    title="Payment Methods"
+    title="Payment methods"
     iconName="credit-card_filled"
    />
 

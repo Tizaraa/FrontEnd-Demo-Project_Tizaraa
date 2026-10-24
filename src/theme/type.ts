@@ -1,4 +1,5 @@
 import { colors } from "./colors/colors";
+import { TizaraaTokens } from "./tizaraa";
 
 export type Shadows = string[] & {
  small?: string;
@@ -21,4 +22,5 @@ export interface ThemeOption {
  colors: Colors;
  shadows: Shadows;
  breakpoints: Breakpoints;
+ tz: TizaraaTokens;
 }

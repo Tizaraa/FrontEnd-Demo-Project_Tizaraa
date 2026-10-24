@@ -13,7 +13,7 @@ export default function CreateAddress() {
   <Fragment>
    <DashboardPageHeader
     iconName="pin_filled"
-    title="Add New Address"
+    title="Add new address"
     button={<BackToAddress />}
    />
 

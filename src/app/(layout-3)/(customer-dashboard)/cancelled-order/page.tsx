@@ -160,8 +160,8 @@ export default function CancellationForm() {
            cursor: "pointer",
            borderRadius: "0.375rem",
            border:
-            scope === option.value ? "1px solid #e94560" : "1px solid #ddd",
-           backgroundColor: scope === option.value ? "#fff4f6" : "#fff",
+            scope === option.value ? "1px solid var(--tz-ember-deep)" : "1px solid var(--tz-line)",
+           backgroundColor: scope === option.value ? "var(--tz-ember-tint)" : "#fff",
           }}
          >
           <input
@@ -170,7 +170,7 @@ export default function CancellationForm() {
            value={option.value}
            checked={scope === option.value}
            onChange={() => setScope(option.value)}
-           style={{ marginTop: "0.2rem", accentColor: "#e94560" }}
+           style={{ marginTop: "0.2rem", accentColor: "var(--tz-ember-deep)" }}
           />
           <span>
            <span
@@ -178,12 +178,12 @@ export default function CancellationForm() {
              display: "block",
              fontSize: "0.875rem",
              fontWeight: 600,
-             color: "#2C3A4A",
+             color: "var(--tz-ink)",
             }}
            >
             {option.title}
            </span>
-           <span style={{ display: "block", fontSize: "0.75rem", color: "#7A8A99" }}>
+           <span style={{ display: "block", fontSize: "0.75rem", color: "var(--tz-slate)" }}>
             {option.detail}
            </span>
           </span>
@@ -209,7 +209,7 @@ export default function CancellationForm() {
          width: "100%",
          resize: "none",
          padding: "0.5rem",
-         border: "1px solid #ccc",
+         border: "1px solid var(--tz-line)",
          borderRadius: "0.375rem",
         }}
        />
@@ -219,7 +219,7 @@ export default function CancellationForm() {
          bottom: "0.5rem",
          right: "0.5rem",
          fontSize: "0.75rem",
-         color: "#6c757d",
+         color: "var(--tz-slate)",
         }}
        >
         {additionalInfo.length}/{maxLength}
@@ -236,7 +236,7 @@ export default function CancellationForm() {
        style={{
         fontSize: "0.875rem",
         padding: "1rem",
-        backgroundColor: "#f8f9fa",
+        backgroundColor: "var(--tz-mist)",
         borderRadius: "0.375rem",
        }}
       >
@@ -321,13 +321,17 @@ export default function CancellationForm() {
        width: "100%",
        maxWidth: "200px",
        backgroundColor:
-        !policyAccepted || !additionalInfo.trim() ? "#d1d1d1" : "#e94560",
-       color: "#fff",
+        !policyAccepted || !additionalInfo.trim() ? "var(--tz-line)" : "var(--tz-ember-deep)",
+       color: !policyAccepted || !additionalInfo.trim() ? "var(--tz-slate)" : "#fff",
+       minHeight: "44px",
+       borderRadius: "var(--tz-radius-md)",
+       textTransform: "none",
+       fontWeight: 600,
       }}
       disabled={!policyAccepted || !additionalInfo.trim() || submitting}
       onClick={handleSubmit}
      >
-      {submitting ? "SUBMITTING…" : "SUBMIT"}
+      {submitting ? "Submitting…" : "Confirm cancellation"}
      </Button>
     </CardContent>
    </Card>

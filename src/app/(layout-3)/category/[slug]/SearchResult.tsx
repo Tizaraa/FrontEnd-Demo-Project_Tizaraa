@@ -641,32 +641,20 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import Box from "@component/Box";
-import Card from "@component/Card";
-import Select from "@component/Select";
-import Icon from "@component/icon/Icon";
 import Grid from "@component/grid/Grid";
-import FlexBox from "@component/FlexBox";
-import { Button, IconButton } from "@component/buttons";
-import Sidenav from "@component/sidenav/Sidenav";
-import { H5, Paragraph } from "@component/Typography";
 import ProductGridView from "@component/products/ProductCard1List";
 import ProductListView from "@component/products/ProductCard9List";
 import ProductFilterCard from "@component/products/ProductFilterCard";
+import {
+ ListingEmpty,
+ ListingLoadMore,
+ ListingSkeleton,
+ ListingToolbar,
+ slugToTitle,
+} from "@component/listing/Listing";
 import useWindowSize from "@hook/useWindowSize";
-import { Vortex } from "react-loader-spinner";
-import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import BeatLoader from "react-spinners/BeatLoader";
-import NextImage from "@component/NextImage";
 import Watermark from "@component/watermark/Watermark";
-import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
-
-const LoaderWrapper = styled.div`
- display: flex;
- justify-content: center;
- align-items: center;
-`;
 
 const productsPerPage: number = 10;
 
@@ -804,167 +792,73 @@ export default function SearchResult({
   fetchProducts();
  }, [fetchProducts]);
 
+ const filterCard = (
+  <ProductFilterCard
+   onBrandChange={handleBrandChange}
+   onCategoryChange={handleCategoryChange}
+   onCountryChange={handleCountryChange}
+   onProvinceChange={handleProvinceChange}
+   onPriceChange={handlePriceChange}
+   slug={slug}
+   pageType="default"
+  />
+ );
+
+ const hasMore = currentPage * productsPerPage < totalProducts;
+
  return (
   <>
    <Watermark />
    <main style={{ position: "relative", background: "none" }}>
-    <FlexBox
-     as={Card}
-     mb="55px"
-     p="1.25rem"
-     elevation={5}
-     flexWrap="wrap"
-     borderRadius={8}
-     alignItems="center"
-     justifyContent="space-between"
-    >
-     <div>
-      <H5>Searching for {decodeURIComponent(selectedCategory || slug)}</H5>
-      <Paragraph color="text.muted">{totalProducts} results found</Paragraph>
-     </div>
-     <FlexBox alignItems="center" flexWrap="wrap">
-      <Paragraph color="text.muted" mr="1rem">
-       Sort by:
-      </Paragraph>
-      <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
-       <Select
-        placeholder="Sort by"
-        options={sortOptions}
-        defaultValue={sortOptions.find(
-         (option) => option.value === selectedSortOption
-        )}
-        onChange={handleSortChange}
-        styles={{ menu: (provided) => ({ ...provided, zIndex: 1000 }) }}
-       />
-      </Box>
-      <Paragraph color="text.muted" mr="0.5rem">
-       View:
-      </Paragraph>
-      <IconButton onClick={() => setView("grid")}>
-       {" "}
-       <Icon variant="small" color={view === "grid" ? "primary" : "inherit"}>
-        grid
-       </Icon>{" "}
-      </IconButton>
-      <IconButton onClick={() => setView("list")}>
-       {" "}
-       <Icon variant="small" color={view === "list" ? "primary" : "inherit"}>
-        menu
-       </Icon>{" "}
-      </IconButton>
-      {isTablet && (
-       <Sidenav
-        position="left"
-        scroll={true}
-        handle={
-         <IconButton>
-          <Icon>options</Icon>
-         </IconButton>
-        }
-       >
-        <ProductFilterCard
-         onBrandChange={handleBrandChange}
-         onCategoryChange={handleCategoryChange}
-         onCountryChange={handleCountryChange}
-         onProvinceChange={handleProvinceChange}
-         onPriceChange={handlePriceChange}
-         slug={slug}
-         pageType="default"
-        />
-       </Sidenav>
-      )}
-     </FlexBox>
-    </FlexBox>
+    <ListingToolbar
+     title={slugToTitle(selectedCategory || slug)}
+     count={totalProducts}
+     sortOptions={sortOptions}
+     sortValue={selectedSortOption}
+     onSortChange={handleSortChange}
+     view={view}
+     onViewChange={setView}
+     mobileFilter={isTablet ? filterCard : undefined}
+    />
 
     <Grid container spacing={6}>
      {!isTablet && (
       <Grid item lg={3} xs={12}>
-       <ProductFilterCard
-        onBrandChange={handleBrandChange}
-        onCategoryChange={handleCategoryChange}
-        onCountryChange={handleCountryChange}
-        onProvinceChange={handleProvinceChange}
-        onPriceChange={handlePriceChange}
-        slug={slug}
-        pageType="default"
-       />
+       {filterCard}
       </Grid>
      )}
      <Grid item lg={9} xs={12}>
       {currentPage === 1 && loading ? (
-       <LoaderWrapper>
-        <Vortex />
-       </LoaderWrapper>
+       <ListingSkeleton />
       ) : products.length === 0 ? (
-       <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        height="300px"
-        textAlign="center"
-        p="2rem"
-        backgroundColor="background.paper"
-        borderRadius={8}
-       >
-        <ShoppingBasketIcon
-         style={{ fontSize: 100, color: "#999", marginBottom: "1rem" }}
-        />
-        <H5 color="text.secondary" fontSize="28px">
-         Search No Result
-        </H5>
-        <Paragraph color="text.muted" mt="0.5rem" fontSize="16px">
-         {/* We're sorry. We cannot find any matches for your search term. */}
-         We cannot find any matches for your search items.
-        </Paragraph>
-       </Box>
-      ) : view === "grid" ? (
-       <>
-        <ProductGridView
-         products={products}
-         totalProducts={totalProducts}
-         currentPage={currentPage}
-         productsPerPage={productsPerPage}
-         onPageChange={handleLoadMore}
-        />
-        <FlexBox justifyContent="center" alignItems="center" mt="32px">
-         <Button
-          onClick={handleLoadMore}
-          variant="contained"
-          color="primary"
-          disabled={loading || currentPage >= totalProducts / productsPerPage}
-          style={{
-           display:
-            currentPage * productsPerPage < totalProducts ? "block" : "none",
-          }}
-         >
-          {loading ? <BeatLoader size={18} color="#fff" /> : "Show More"}
-         </Button>
-        </FlexBox>
-       </>
+       <ListingEmpty
+        title="No results"
+        message="We cannot find any matches for your search items."
+       />
       ) : (
        <>
-        <ProductListView
-         products={products}
-         totalProducts={totalProducts}
-         currentPage={currentPage}
-         productsPerPage={productsPerPage}
-         onPageChange={handleLoadMore}
+        {view === "grid" ? (
+         <ProductGridView
+          products={products}
+          totalProducts={totalProducts}
+          currentPage={currentPage}
+          productsPerPage={productsPerPage}
+          onPageChange={handleLoadMore}
+         />
+        ) : (
+         <ProductListView
+          products={products}
+          totalProducts={totalProducts}
+          currentPage={currentPage}
+          productsPerPage={productsPerPage}
+          onPageChange={handleLoadMore}
+         />
+        )}
+        <ListingLoadMore
+         onClick={handleLoadMore}
+         loading={loading}
+         visible={hasMore}
         />
-        <FlexBox justifyContent="center" alignItems="center" mt="32px">
-         <Button
-          onClick={handleLoadMore}
-          variant="contained"
-          color="primary"
-          disabled={loading || currentPage >= totalProducts / productsPerPage}
-          style={{
-           display:
-            currentPage * productsPerPage < totalProducts ? "block" : "none",
-          }}
-         >
-          {loading ? <BeatLoader size={18} color="#fff" /> : "Show More"}
-         </Button>
-        </FlexBox>
        </>
       )}
      </Grid>

@@ -24,7 +24,7 @@ export default async function TicketDetails({ params }: SlugParams) {
   <Fragment>
    <DashboardPageHeader
     iconName="support"
-    title="Support Ticket"
+    title="Support ticket"
     button={<BackToSupport />}
    />
 

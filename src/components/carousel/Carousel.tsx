@@ -33,6 +33,7 @@ export interface CarouselProps {
  showDots?: boolean;
  showArrow?: boolean;
  showArrowOnHover?: boolean;
+ hideArrowOnMobile?: boolean;
  dotClass?: string;
  dotColor?: string;
  dotGroupMarginTop?: string;
@@ -51,6 +52,7 @@ const Carousel = ({
  children,
  currentSlide,
  showArrowOnHover,
+ hideArrowOnMobile,
  dotClass,
  dotColor,
  arrowButtonClass,
@@ -88,6 +90,7 @@ const Carousel = ({
    visibleSlides={visibleSlides}
    hasMasterSpinner={hasMasterSpinner}
    showArrowOnHover={showArrowOnHover}
+   hideArrowOnMobile={hideArrowOnMobile}
    naturalSlideWidth={naturalSlideWidth}
    isIntrinsicHeight={isIntrinsicHeight}
    dotGroupMarginTop={dotGroupMarginTop}

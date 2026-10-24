@@ -34,7 +34,7 @@ const AddressDetails = async ({ params }: IDParams) => {
   <Fragment>
    <DashboardPageHeader
     iconName="pin_filled"
-    title="Edit Address"
+    title="Edit address"
     button={<BackToAddress />}
    />
 

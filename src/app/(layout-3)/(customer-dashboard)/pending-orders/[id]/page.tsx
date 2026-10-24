@@ -71,15 +71,15 @@ export default function OrderDetails({ params }: IDParams) {
  const getColor = (status: string) => {
   switch (status) {
    case "Pending":
-    return "#FFC107"; // Yellow for Pending
+    return "var(--tz-warning)"; // Yellow for Pending
    case "Confirmed":
-    return "#2196F3"; // Blue for Processing
+    return "var(--tz-navy)"; // Blue for Processing
    case "Delivered":
-    return "#4CAF51"; // Green for Delivered
+    return "var(--tz-success)"; // Green for Delivered
    case "Cancelled":
-    return "#F44336"; // Red for Cancelled
+    return "var(--tz-danger)"; // Red for Cancelled
    default:
-    return "#9E9E9E"; // Grey for unknown status
+    return "var(--tz-slate)"; // Grey for unknown status
   }
  };
 
@@ -353,8 +353,8 @@ export default function OrderDetails({ params }: IDParams) {
        onClick={() => toggleSummary(order?.Order?.invoice_id)}
        style={{
         padding: "0.5rem 1rem",
-        backgroundColor: "#FFE1E6",
-        color: "#E94560",
+        backgroundColor: "var(--tz-ember-tint)",
+        color: "var(--tz-ember-deep)",
         borderRadius: "300px",
         textAlign: "center",
         height: "40px",
@@ -427,14 +427,14 @@ export default function OrderDetails({ params }: IDParams) {
 
       <FlexBox alignItems="center" mb="1rem">
        Payment Method:
-       <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+       <H6 my="0px" mx="1rem" backgroundColor="var(--tz-line)" p="2px">
         {order?.Order?.payment_method}
        </H6>
       </FlexBox>
 
       <FlexBox alignItems="center" mb="1rem">
        Payment Status:
-       <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+       <H6 my="0px" mx="1rem" backgroundColor="var(--tz-line)" p="2px">
         {order?.Order?.payment_status}
        </H6>
       </FlexBox>
@@ -447,7 +447,7 @@ export default function OrderDetails({ params }: IDParams) {
  return (
   <Fragment>
    <DashboardPageHeader
-    title="Pending Order Details"
+    title="Pending order details"
     iconName="bag"
     // button={<OrderListButton params={params} />}
    />
@@ -562,11 +562,11 @@ export default function OrderDetails({ params }: IDParams) {
                mx="1rem"
                mb="1rem"
                p="10px 14px"
-               bg="#FFF8E1"
-               border="1px solid #FFE0A3"
+               bg="var(--tz-warning-bg)"
+               border="1px solid var(--tz-warning-bg)"
                borderRadius="8px"
               >
-               <Typography fontSize="13px" color="#8A6D00">
+               <Typography fontSize="13px" color="var(--tz-warning)">
                 Note: As a corporate employee, you can only cancel this
                 product while the order is still Pending.
                </Typography>
@@ -603,8 +603,8 @@ export default function OrderDetails({ params }: IDParams) {
               onClick={() => toggleSummary(shopName)}
               style={{
                padding: "0.5rem 1rem",
-               backgroundColor: "#FFE1E6",
-               color: "#E94560",
+               backgroundColor: "var(--tz-ember-tint)",
+               color: "var(--tz-ember-deep)",
                borderRadius: "300px",
                textAlign: "center",
                height: "40px",
@@ -662,7 +662,7 @@ export default function OrderDetails({ params }: IDParams) {
               mt="2rem"
               onClick={fetchInvoice} // Fetch invoice when button is clicked
             >
-              {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
+              {invoiceLoading ? <BeatLoader size={18} color="var(--tz-ember-deep)" /> : "Invoice"}
             </Button> */}
 
       {/* {order.Order.payment_status === "Unpaid" && (

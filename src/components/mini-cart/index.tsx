@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
+import { useTheme } from "styled-components";
 import Avatar from "@component/avatar";
 import Icon from "@component/icon/Icon";
 import Divider from "@component/Divider";
@@ -26,6 +27,7 @@ import { AxiosError } from "axios";
 type MiniCartProps = { toggleSidenav?: () => void };
 
 export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
+ const theme = useTheme();
  const { state, dispatch } = useAppContext();
  const [isLoggedIn, setIsLoggedIn] = useState(false);
  const [selectAll, setSelectAll] = useState(false);
@@ -392,7 +394,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
       className={`delete-button ${isDeleting ? "deleting" : ""}`}
      >
       {isDeleting ? (
-       <BeatLoader size={18} color="#E94560" />
+       <BeatLoader size={12} color={theme.tz.color.ember} />
       ) : (
        <>
         <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} /> Remove
@@ -464,7 +466,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
           textDecoration: "none",
           borderRadius: "30px",
           scrollBehavior: "unset",
-          border: "1px solid #E94560",
+          border: `1px solid ${theme.tz.color.line}`,
           padding: "8px",
           width: "50px",
           textAlign: "center",
@@ -511,7 +513,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
         <Tiny color="text.muted">
          {item.discountPrice ? (
           <>
-           <del style={{ color: "#aaa", marginRight: "4px" }}>
+           <del style={{ color: theme.tz.color.slate, marginRight: "4px" }}>
             {currency(item.price, 0)}
            </del>
            {currency(item.discountPrice, 0)}
@@ -580,10 +582,10 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
       }
      >
       {loading ? (
-       <BeatLoader size={18} color="#E94560" />
+       <BeatLoader size={12} color={theme.tz.color.ember} />
       ) : (
        <Typography fontWeight={600}>
-        PROCEED TO CHECKOUT ({currency(getTotalPrice())})
+        Proceed to checkout ({currency(getTotalPrice())})
        </Typography>
       )}
      </Button>
@@ -597,7 +599,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
       disabled={viewCartLoading}
      >
       {viewCartLoading ? (
-       <BeatLoader size={18} color="#E94560" />
+       <BeatLoader size={12} color={theme.tz.color.ember} />
       ) : (
        <Typography fontWeight={600}>View Cart</Typography>
       )}
@@ -613,7 +615,7 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
      pointer-events: none;
     }
     .delete-button:hover {
-     background-color: #f44336;
+     background-color: ${theme.tz.tone.danger.fill};
      color: white;
     }
    `}</style>

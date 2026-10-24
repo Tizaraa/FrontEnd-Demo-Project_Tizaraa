@@ -2,7 +2,7 @@ import { InputHTMLAttributes } from "react";
 import styled from "styled-components";
 import { color, compose, space, SpaceProps } from "styled-system";
 import systemCss from "@styled-system/css";
-import { convertHexToRGB, isValidProp } from "@utils/utils";
+import { isValidProp } from "@utils/utils";
 import { TextFieldProps } from "./index";
 
 export const SyledTextField = styled.input.withConfig({
@@ -11,11 +11,13 @@ export const SyledTextField = styled.input.withConfig({
  (props) =>
   systemCss({
    padding: "8px 12px",
-   height: "40px",
+   height: "44px",
    fontSize: "inherit",
    color: "body.text",
-   borderRadius: 5,
+   borderRadius: props.theme.tz.radius.sm,
    border: "1px solid",
+   bg: "body.paper",
+   transition: `border-color ${props.theme.tz.motion.fast}, box-shadow ${props.theme.tz.motion.fast}`,
    borderColor: "text.disabled",
    width: props.fullwidth ? "100%" : "inherit",
    outline: "none",
@@ -25,9 +27,9 @@ export const SyledTextField = styled.input.withConfig({
     borderColor: "gray.500",
    },
    "&:focus": {
-    outlineColor: "primary.main",
-    borderColor: "primary.main",
-    boxShadow: `1px 1px 8px 4px rgba(${convertHexToRGB(props.theme.colors.primary.light)}, 0.1)`,
+    outline: "none",
+    borderColor: props.theme.tz.color.ember,
+    boxShadow: `0 0 0 3px ${props.theme.tz.color.emberTint}`,
    },
   }),
  compose(color)
@@ -44,7 +46,9 @@ export const TextFieldWrapper = styled.div.withConfig({
    label: {
     display: "block",
     marginBottom: "6px",
-    fontSize: "0.875rem",
+    fontSize: "13px",
+    fontWeight: 500,
+    color: "text.hint",
    },
 
    small: {

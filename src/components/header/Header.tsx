@@ -76,19 +76,21 @@ export default function Header({ isFixed, className }: HeaderProps) {
  const CART_HANDLE = (
   <Box ml="20px" position="relative">
    <Tooltip title="Cart">
-    <IconButton bg="gray.200" p="12px" size="small">
+    <IconButton className="header-icon-btn" bg="gray.100" p="12px" size="small" aria-label="Cart">
      <Icon size="20px">bag</Icon>
     </IconButton>
    </Tooltip>
 
    {!!state.cart.length && (
     <FlexBox
-     top={-5}
-     right={-5}
+     top={-4}
+     right={-6}
      height={20}
      minWidth={20}
+     px="6px"
      bg="primary.main"
-     borderRadius="50%"
+     borderRadius={999}
+     border="2px solid white"
      alignItems="center"
      position="absolute"
      justifyContent="center"
@@ -133,7 +135,7 @@ export default function Header({ isFixed, className }: HeaderProps) {
     handler={
      // <Tooltip title="User">
      <Tooltip title={userInfo?.name || "User"}>
-      <IconButton ml="1rem" bg="gray.200" p={profileImage ? "0px" : "8px"}>
+      <IconButton className="header-icon-btn" ml="12px" bg="gray.100" p={profileImage ? "0px" : "10px"} aria-label="Account">
        {profileImage ? (
         <img
          src={profileImage}
@@ -146,7 +148,7 @@ export default function Header({ isFixed, className }: HeaderProps) {
          }}
         />
        ) : (
-        <Icon size="28px">user</Icon>
+        <Icon size="24px">user</Icon>
        )}
       </IconButton>
      </Tooltip>
@@ -166,28 +168,23 @@ export default function Header({ isFixed, className }: HeaderProps) {
  ) : (
   <Tooltip title="Login">
    <IconButton
-    ml="1rem"
-    bg="gray.200"
-    p="8px"
+    className="header-icon-btn"
+    aria-label="Login"
+    ml="12px"
+    bg="gray.100"
+    p="10px"
     onClick={() => {
      router.push("/login");
     }}
    >
-    <Icon size="28px">user</Icon>
+    <Icon size="24px">user</Icon>
    </IconButton>
   </Tooltip>
  );
 
- // #f18c5138
-
  return (
   <StyledHeader
-   className={className}
-   style={{
-    backgroundColor: isScrolled
-     ? "white" // Remove transparency when scrolled
-     : "rgba(241, 140, 81, 0.22)", // Transparent background when not scrolled
-   }}
+   className={[className, isScrolled ? "scrolled" : ""].filter(Boolean).join(" ")}
   >
    <Container
     display="flex"

@@ -829,6 +829,7 @@ import NextImage from "@component/NextImage";
 import VendorMapPage from "@sections/shop/VendorMapPage";
 import { Autocomplete, TextField } from "@mui/material";
 import axios from "@lib/axiosClient";
+import tz from "../../../theme/tizaraa";
 
 const LoaderWrapper = styled.div`
  display: flex;
@@ -1123,7 +1124,8 @@ export default function ShopList() {
        <H2
         mb="20px"
         style={{
-         color: "#E94560",
+         color: tz.color.ink,
+         fontFamily: tz.font.display,
         }}
        >
         All Shops

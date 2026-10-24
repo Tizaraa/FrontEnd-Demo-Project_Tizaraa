@@ -26,7 +26,7 @@ export default function WishList() {
   <Fragment>
    {/* PAGE TITLE AREA */}
    <DashboardPageHeader
-    title="My Wish List"
+    title="My wishlist"
     iconName="heart_filled"
     button={
      <Button color="primary" bg="primary.light" px="2rem">

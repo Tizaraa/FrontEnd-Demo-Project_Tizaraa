@@ -288,6 +288,7 @@ import NagadImage from "../../../public/assets/images/payment/Nagad.avif";
 import BkashImage from "../../../public/assets/images/payment/Bkash.png";
 import BeatLoader from "react-spinners/BeatLoader";
 import authService from "services/authService";
+import tz from "../../theme/tizaraa";
 
 export default function PaymentForm() {
  const { push } = useRouter();
@@ -476,8 +477,8 @@ export default function PaymentForm() {
      width="100%"
      style={{
       gap: "20px",
-      background: "#FFFFFF",
-      boxShadow: "0px 1px 3px rgba(3, 0, 71, 0.09)",
+      background: tz.color.paper,
+      boxShadow: tz.elevation.rest,
      }}
     >
      <div
@@ -502,21 +503,21 @@ export default function PaymentForm() {
            height: "120px",
            boxShadow:
             paymentMethod === "cod"
-             ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
-             : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
+             ? `0 0 0 2px ${tz.color.ember}`
+             : `0 0 0 1px ${tz.color.line}`,
            display: "flex",
            flexDirection: "column",
            alignItems: "center",
            justifyContent: "center",
            padding: "8px",
            background:
-            paymentMethod === "cod" ? "rgba(233, 69, 96, 0.05)" : "white",
+            paymentMethod === "cod" ? tz.color.emberTint : tz.color.paper,
            transition: "all 0.3s ease",
            boxSizing: "border-box",
            borderRadius: "8px",
            border:
             paymentMethod === "cod"
-             ? "1px solid #E94560"
+             ? `1px solid ${tz.color.emberDeep}`
              : "1px solid transparent",
            position: "relative",
           }}
@@ -530,7 +531,7 @@ export default function PaymentForm() {
              right: "4px",
              width: "18px",
              height: "18px",
-             backgroundColor: "#E94560",
+             backgroundColor: tz.color.emberDeep,
              borderRadius: "50%",
              display: "flex",
              alignItems: "center",
@@ -548,7 +549,7 @@ export default function PaymentForm() {
             >
              <path
               d="M1 4L3.5 6.5L9 1"
-              stroke="white"
+              stroke={tz.color.paper}
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -574,7 +575,7 @@ export default function PaymentForm() {
             fontSize: "14px",
             fontWeight: "600",
             textAlign: "center",
-            color: paymentMethod === "cod" ? "#E94560" : "#333",
+            color: paymentMethod === "cod" ? tz.color.emberDeep : tz.color.ink,
            }}
           >
            Cash on Delivery
@@ -598,8 +599,8 @@ export default function PaymentForm() {
           height: "120px",
           boxShadow:
            paymentMethod === "Online Payment"
-            ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
-            : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
+            ? `0 0 0 2px ${tz.color.ember}`
+            : `0 0 0 1px ${tz.color.line}`,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -607,14 +608,14 @@ export default function PaymentForm() {
           padding: "8px",
           background:
            paymentMethod === "Online Payment"
-            ? "rgba(233, 69, 96, 0.05)"
-            : "white",
+            ? tz.color.emberTint
+            : tz.color.paper,
           transition: "all 0.3s ease",
           boxSizing: "border-box",
           borderRadius: "8px",
           border:
            paymentMethod === "Online Payment"
-            ? "1px solid #E94560"
+            ? `1px solid ${tz.color.emberDeep}`
             : "1px solid transparent",
           position: "relative",
          }}
@@ -628,7 +629,7 @@ export default function PaymentForm() {
             right: "4px",
             width: "18px",
             height: "18px",
-            backgroundColor: "#E94560",
+            backgroundColor: tz.color.emberDeep,
             borderRadius: "50%",
             display: "flex",
             alignItems: "center",
@@ -644,7 +645,7 @@ export default function PaymentForm() {
            >
             <path
              d="M1 4L3.5 6.5L9 1"
-             stroke="white"
+             stroke={tz.color.paper}
              strokeWidth="2"
              strokeLinecap="round"
              strokeLinejoin="round"
@@ -671,7 +672,7 @@ export default function PaymentForm() {
            fontSize: "14px",
            fontWeight: "600",
            textAlign: "center",
-           color: paymentMethod === "Online Payment" ? "#E94560" : "#333",
+           color: paymentMethod === "Online Payment" ? tz.color.emberDeep : tz.color.ink,
           }}
          >
           Online Payment
@@ -713,7 +714,7 @@ export default function PaymentForm() {
          fontSize: "14px",
          fontWeight: "600",
          textAlign: "center",
-         color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
+         color: tz.color.inkSoft, // Matches disabled state
         }}
        >
         Nagad
@@ -753,7 +754,7 @@ export default function PaymentForm() {
          fontSize: "14px",
          fontWeight: "600",
          textAlign: "center",
-         color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
+         color: tz.color.inkSoft, // Matches disabled state
         }}
        >
         Bkash
@@ -902,7 +903,7 @@ export default function PaymentForm() {
       onClick={handleClick}
      >
       {isHasPayLoading ? (
-       <BeatLoader size={18} color="#E94560" />
+       <BeatLoader size={18} color={tz.color.emberDeep} />
       ) : (
        "Back to Checkout Details"
       )}
@@ -915,12 +916,12 @@ export default function PaymentForm() {
       style={{
        color:
         isSubtotalZero || !paymentMethod || !isCheckboxChecked
-         ? "#999999"
-         : "#ffe1e6",
+         ? tz.color.slate
+         : tz.color.paper,
        backgroundColor:
         isSubtotalZero || !paymentMethod || !isCheckboxChecked
-         ? "#cccccc"
-         : "#e94560",
+         ? tz.color.lineSoft
+         : tz.color.emberDeep,
        cursor:
         isSubtotalZero || !paymentMethod || !isCheckboxChecked // Disable button if checkbox is unchecked
          ? "not-allowed"
@@ -932,7 +933,7 @@ export default function PaymentForm() {
        isSubtotalZero || !paymentMethod || !isCheckboxChecked // Disable button if checkbox is unchecked
       }
      >
-      {isHasLoading ? <BeatLoader size={18} color="white" /> : "Proceed to Pay"}
+      {isHasLoading ? <BeatLoader size={18} color={tz.color.paper} /> : "Proceed to Pay"}
      </Button>
     </Grid>
    </Grid>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import tz from "../../theme/tizaraa";
 import Card from "@component/Card";
 import { H6 } from "@component/Typography";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
@@ -71,9 +72,9 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
  const cardStyle: React.CSSProperties = {
   padding: "16px",
   borderRadius: "12px",
-  boxShadow: "0 2px 12px rgba(0, 0, 0, 0.05)",
-  border: "1px solid #f0f0f0",
-  backgroundColor: "#ffffff",
+  boxShadow: "none",
+  border: `1px solid ${tz.color.line}`,
+  backgroundColor: tz.color.paper,
  };
 
  // Filter section style
@@ -96,7 +97,7 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
   margin: 0,
   fontSize: "14px",
   fontWeight: 600,
-  color: "#333",
+  color: tz.color.ink,
  };
 
  // Filter content style
@@ -115,9 +116,9 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
  const baseFilterButtonStyle: React.CSSProperties = {
   padding: "6px 12px",
   borderRadius: "16px",
-  border: "1px solid #e0e0e0",
-  backgroundColor: "#ffffff",
-  color: "#555",
+  border: `1px solid ${tz.color.line}`,
+  backgroundColor: tz.color.paper,
+  color: tz.color.inkSoft,
   cursor: "pointer",
   fontSize: "13px",
   transition: "all 0.2s ease",
@@ -127,9 +128,9 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
  // Active filter button style
  const activeFilterButtonStyle: React.CSSProperties = {
   ...baseFilterButtonStyle,
-  borderColor: "#3BB77E",
-  backgroundColor: "#F2FCF7",
-  color: "#3BB77E",
+  borderColor: tz.color.ember,
+  backgroundColor: tz.color.emberTint,
+  color: tz.color.emberDeep,
   fontWeight: 500,
  };
 
@@ -139,7 +140,7 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
   padding: "4px 8px",
   backgroundColor: "transparent",
   border: "none",
-  color: "#3BB77E",
+  color: tz.color.emberDeep,
   cursor: "pointer",
   fontSize: "12px",
   display: "flex",
@@ -226,7 +227,7 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
 
   const buttonStyle: React.CSSProperties = {
    ...(isActive ? activeFilterButtonStyle : baseFilterButtonStyle),
-   ...(hovered && !isActive ? { borderColor: "#ccc" } : {}),
+   ...(hovered && !isActive ? { borderColor: tz.color.slate } : {}),
   };
 
   return (
@@ -269,7 +270,7 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
     <div
      style={{
       ...filterHeaderStyle,
-      ...(hovered ? { color: "#3BB77E" } : {}),
+      ...(hovered ? { color: tz.color.emberDeep } : {}),
      }}
      onClick={() => setShowSection(!showSection)}
      onMouseEnter={() => setHovered(true)}
@@ -277,9 +278,9 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
     >
      <H6 style={filterTitleStyle}>{title}</H6>
      {showSection ? (
-      <FiChevronUp size={16} color={hovered ? "#3BB77E" : "#333"} />
+      <FiChevronUp size={16} color={hovered ? tz.color.emberDeep : tz.color.slate} />
      ) : (
-      <FiChevronDown size={16} color={hovered ? "#3BB77E" : "#333"} />
+      <FiChevronDown size={16} color={hovered ? tz.color.emberDeep : tz.color.slate} />
      )}
     </div>
 
@@ -301,7 +302,7 @@ const FlashSaleProductFilter: React.FC<FlashSaleProductFilterProps> = ({
         onClick={() => setShowAll(!showAll)}
         style={{
          ...showMoreButtonStyle,
-         ...(hovered ? { color: "#2a9d6e" } : {}),
+         ...(hovered ? { color: tz.color.emberDark } : {}),
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
