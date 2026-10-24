@@ -71,6 +71,6 @@ export const StyledCategoryMenuItem = styled.div`
 
  .non-clickable:hover {
   background: transparent;
-  color: #2b3445;
+  color: ${getTheme("colors.text.primary")};
  }
 `;

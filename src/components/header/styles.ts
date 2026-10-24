@@ -7,6 +7,20 @@ const StyledHeader = styled.header`
  position: relative;
  height: ${layoutConstant.headerHeight};
  background: ${getTheme("colors.body.paper")};
+ border-bottom: 1px solid ${({ theme }) => theme.tz.color.line};
+ transition: box-shadow ${({ theme }) => theme.tz.motion.base};
+
+ &.scrolled {
+  box-shadow: ${({ theme }) => theme.tz.elevation.raised};
+  border-bottom-color: transparent;
+ }
+
+ .header-icon-btn {
+  transition: background-color ${({ theme }) => theme.tz.motion.fast};
+  &:hover {
+   background: ${({ theme }) => theme.tz.color.emberTint};
+  }
+ }
 
  .logo {
   img {
