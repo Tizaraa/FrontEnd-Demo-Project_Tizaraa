@@ -276,23 +276,27 @@ import Cookies from "js-cookie";
 import axios from "@lib/axiosClient"; // Import axios for API requests
 
 import Icon from "@component/icon/Icon";
-import FlexBox from "@component/FlexBox";
-import Typography from "@component/Typography";
 import authService from "services/authService";
 import { toast } from "react-hot-toast";
-import ApiBaseUrl from "api/ApiBaseUrl";
-import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
 import { useDashboardCountsListener } from "utils/dashboardCounts";
+import { UserAvatar } from "@sections/customer-dashboard/ui";
 
 // STYLED COMPONENTS
-import { DashboardNavigationWrapper, StyledDashboardNav } from "./styles";
+import {
+ NavPanel,
+ NavUser,
+ NavGroupLabel,
+ NavItem,
+ NavButton,
+ NavDivider,
+} from "./customer-dashboard/styles";
 
 export default function DashboardNavigation() {
  const pathname = usePathname();
  const router = useRouter();
 
- const [isMobileView, setIsMobileView] = useState(false);
  const [isLoggedIn, setIsLoggedIn] = useState(false);
+ const [user, setUser] = useState<{ name?: string; email?: string; image?: string | null }>({});
  const [orderCount, setOrderCount] = useState(0); // State for order count
  const [pendingOrderCount, setPendingOrderCount] = useState(0); // State for pending order count
  const [deliveredOrderCount, setDeliveredOrderCount] = useState(0); // State for delivered order count
@@ -380,27 +384,15 @@ export default function DashboardNavigation() {
   try {
    const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
    setIsCorporateEmployee(userInfo?.type === "employee");
+   setUser({ name: userInfo?.name, email: userInfo?.email, image: userInfo?.image });
   } catch {
    setIsCorporateEmployee(false);
   }
  }, [pathname]); // Add pathname as a dependency to re-check when route changes
 
- // Listen to window resize to update mobile view state
- useEffect(() => {
-  const handleResize = () => {
-   setIsMobileView(window.innerWidth < 768); // Mobile view threshold
-  };
-
-  handleResize(); // Check on mount
-
-  window.addEventListener("resize", handleResize); // Listen for resize events
-
-  return () => window.removeEventListener("resize", handleResize); // Clean up listener
- }, []);
-
  const linkList = [
   {
-   title: "DASHBOARD",
+   title: "Shopping",
    list: [
     {
      href: "/orders",
@@ -445,7 +437,7 @@ export default function DashboardNavigation() {
    ],
   },
   {
-   title: "ACCOUNT SETTINGS",
+   title: "Account",
    list: [
     { href: "/profile", title: "Profile Info", iconName: "user" },
     {
@@ -460,25 +452,26 @@ export default function DashboardNavigation() {
  ];
 
  return (
-  <DashboardNavigationWrapper
-   px="0px"
-   pb="1.5rem"
-   color="gray.900"
-   borderRadius={8}
-  >
+  <NavPanel aria-label="Account">
+   {user.name || user.email ? (
+    <NavUser>
+     <UserAvatar name={user.name || user.email} image={user.image} size={44} />
+     <div className="nu-text">
+      <p className="nu-name">{user.name || "My account"}</p>
+      {user.email && <p className="nu-email">{user.email}</p>}
+     </div>
+    </NavUser>
+   ) : null}
+
    {linkList.map((item) => (
     <Fragment key={item.title}>
-     <Typography p="26px 30px 1rem" color="text.muted" fontSize="12px">
-      {item.title}
-     </Typography>
+     <NavGroupLabel>{item.title}</NavGroupLabel>
 
      {item.list.map((navItem) => (
-      <StyledDashboardNav
-       px="1.5rem"
-       mb="1.25rem"
+      <NavItem
        href={navItem.href}
        key={navItem.title}
-       isCurrentPath={pathname.includes(navItem.href)}
+       aria-current={pathname.includes(navItem.href) ? "page" : undefined}
        onClick={() => {
         // Prevent access to profile if not logged in
         if (navItem.href === "/profile" && !isLoggedIn) {
@@ -486,34 +479,33 @@ export default function DashboardNavigation() {
         }
        }}
       >
-       <FlexBox alignItems="center">
-        <div className="dashboard-nav-icon-holder">
-         <Icon variant="small" defaultcolor="currentColor" mr="10px">
-          {navItem.iconName}
-         </Icon>
-        </div>
-        <span>{navItem.title}</span>
-       </FlexBox>
-       <span>{navItem.count}</span>
-      </StyledDashboardNav>
+       <span className="ni-icon">
+        <Icon variant="small" defaultcolor="currentColor">
+         {navItem.iconName}
+        </Icon>
+       </span>
+       <span className="ni-label">{navItem.title}</span>
+       {typeof navItem.count === "number" && (
+        <span className="ni-count">{navItem.count}</span>
+       )}
+      </NavItem>
      ))}
     </Fragment>
    ))}
 
-   {isMobileView && isLoggedIn && (
-    <FlexBox
-     alignItems="center"
-     style={{ cursor: "pointer", marginLeft: "30px" }}
-     onClick={handleLogout}
-    >
-     <div className="dashboard-nav-icon-holder">
-      <Icon variant="small" defaultcolor="currentColor" mr="10px">
-       logout
-      </Icon>
-     </div>
-     <span>Logout</span>
-    </FlexBox>
+   {isLoggedIn && (
+    <>
+     <NavDivider />
+     <NavButton type="button" onClick={handleLogout}>
+      <span className="ni-icon">
+       <Icon variant="small" defaultcolor="currentColor">
+        logout
+       </Icon>
+      </span>
+      <span className="ni-label">Logout</span>
+     </NavButton>
+    </>
    )}
-  </DashboardNavigationWrapper>
+  </NavPanel>
  );
 }

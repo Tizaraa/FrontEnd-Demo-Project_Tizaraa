@@ -1,25 +1,101 @@
-import Card from "@component/Card";
-import Avatar from "@component/avatar";
-import { H5 } from "@component/Typography";
-import Link from "next/link";
+"use client";
 
-import ApiBaseUrl from "api/ApiBaseUrl";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
- faMars,
- faGenderless,
- faVenus,
- faUser,
- faCalendar,
- faFemale,
- faBriefcase,
- faIdBadge,
- faBuilding,
- faWallet,
- faStore,
- faEnvelope,
- faPhone,
-} from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import styled from "styled-components";
+
+import ProfileIdentity from "@sections/customer-dashboard/profile/ProfileIdentity";
+import { DetailList, DetailItem } from "@sections/customer-dashboard/ui";
+
+// Profile card for corporate employees: identity, company credit and work details.
+
+const CreditRow = styled.div`
+ display: grid;
+ grid-template-columns: repeat(3, minmax(0, 1fr));
+ gap: 12px;
+ margin: 24px 0 8px;
+
+ @media (max-width: 650px) {
+  grid-template-columns: minmax(0, 1fr);
+ }
+
+ > div {
+  padding: 12px 16px;
+  border-radius: ${({ theme }) => theme.tz.radius.sm}px;
+  background: ${({ theme }) => theme.tz.color.mist};
+ }
+
+ .cr-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+
+ .cr-value {
+  display: block;
+  margin-top: 2px;
+  font-family: ${({ theme }) => theme.tz.font.display};
+  font-size: 20px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.tz.color.ink};
+  font-variant-numeric: tabular-nums;
+ }
+
+ .cr-success {
+  background: ${({ theme }) => theme.tz.tone.success.bg};
+
+  .cr-value {
+   color: ${({ theme }) => theme.tz.tone.success.fg};
+  }
+ }
+
+ .cr-danger .cr-value {
+  color: ${({ theme }) => theme.tz.tone.danger.fg};
+ }
+`;
+
+const ShopLink = styled(Link)`
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ margin-top: 20px;
+ padding: 14px 16px;
+ border-radius: ${({ theme }) => theme.tz.radius.sm}px;
+ background: ${({ theme }) => theme.tz.color.navy};
+ color: ${({ theme }) => theme.tz.color.paper};
+ text-decoration: none;
+ transition: background-color ${({ theme }) => theme.tz.motion.fast};
+
+ .sl-title {
+  display: block;
+  font-weight: 600;
+ }
+
+ .sl-sub {
+  display: block;
+  font-size: 13px;
+  opacity: 0.8;
+ }
+
+ &:hover {
+  background: ${({ theme }) => theme.tz.color.ink};
+ }
+
+ &:focus-visible {
+  outline: none;
+  box-shadow: ${({ theme }) => theme.tz.focusRing};
+ }
+`;
+
+const typeLabelOf = (type?: string) =>
+ type === "employee"
+  ? "Corporate employee"
+  : type === "buyer"
+    ? "Customer"
+    : type === "seller"
+      ? "Seller"
+      : type;
 
 const CorporateCard = ({ profile }) => {
  const genderLabel =
@@ -40,307 +116,54 @@ const CorporateCard = ({ profile }) => {
   : "N/A";
 
  return (
-  <Card
-   p="0"
-   borderRadius="8px"
-   style={{
-    boxShadow: "0px 4px 16px rgba(43, 52, 69, 0.1)",
-    height: "100%",
-    background: "#ffffff",
-    border: "1px solid #DAE1E7",
-    overflow: "hidden",
-    display: "flex",
-    flexDirection: "column",
-   }}
+  <ProfileIdentity
+   name={profile?.name}
+   email={profile?.email}
+   phone={profile?.phone}
+   image={profile?.image}
+   typeLabel={typeLabelOf(profile?.type)}
   >
-   {/* Header */}
-   <div
-    style={{
-     background: "linear-gradient(135deg, #0F3460, #E94560)",
-     padding: "1rem 1.25rem",
-     display: "flex",
-     alignItems: "center",
-     gap: "1rem",
-    }}
-   >
-    {profile?.image ? (
-     <Avatar
-      size={56}
-      src={`${ApiBaseUrl.ImgUrl}${profile.image}`}
-      style={{
-       border: "2px solid rgba(255,255,255,0.8)",
-       flexShrink: 0,
-      }}
-     />
-    ) : (
-     <div
-      style={{
-       width: "56px",
-       height: "56px",
-       borderRadius: "50%",
-       background: "rgba(255,255,255,0.15)",
-       display: "flex",
-       alignItems: "center",
-       justifyContent: "center",
-       border: "2px solid rgba(255,255,255,0.8)",
-       flexShrink: 0,
-      }}
-     >
-      <FontAwesomeIcon
-       icon={profile?.gender === "female" ? faFemale : faUser}
-       size="lg"
-       color="#fff"
-      />
-     </div>
-    )}
-    <div style={{ minWidth: 0, flex: 1 }}>
-     <H5
-      style={{
-       fontSize: "1.1rem",
-       color: "#fff",
-       fontWeight: "700",
-       margin: 0,
-       whiteSpace: "nowrap",
-       overflow: "hidden",
-       textOverflow: "ellipsis",
-       lineHeight: "1.3",
-      }}
-      title={profile?.name || ""}
-     >
-      {profile?.name || "No Name"}
-     </H5>
-     {profile?.type && (
-      <span
-       style={{
-        display: "inline-block",
-        marginTop: "0.2rem",
-        padding: "2px 10px",
-        borderRadius: "10px",
-        background: "rgba(255,255,255,0.2)",
-        color: "#fff",
-        fontSize: "0.7rem",
-        fontWeight: "600",
-       }}
-      >
-       {profile.type === 'employee' ? 'Corporate Employee' : profile.type === 'buyer' ? 'Customer' : profile.type === 'seller' ? 'Seller' : profile.type}
-      </span>
-     )}
+   <CreditRow>
+    <div className="cr-success">
+     <span className="cr-label">Credit balance</span>
+     <span className="cr-value">{profile?.credit_balance ?? "0"}</span>
     </div>
-   </div>
+    <div>
+     <span className="cr-label">Credit pending</span>
+     <span className="cr-value">{profile?.credit_pending ?? "0"}</span>
+    </div>
+    <div className="cr-danger">
+     <span className="cr-label">Due amount</span>
+     <span className="cr-value">{profile?.due_amount ?? "0"}</span>
+    </div>
+   </CreditRow>
 
-   {/* Info Grid - Two Columns */}
-   <div
-    style={{
-     padding: "0.75rem 1rem",
-     display: "grid",
-     gridTemplateColumns: "1fr 1fr",
-     gap: "0.35rem",
-     flex: 1,
-    }}
-   >
-    <InfoRow
-     icon={faBuilding}
-     iconBg="#FCE9EC"
-     iconColor="#D23F57"
-     label="Company"
-     value={profile?.company_name || "N/A"}
-    />
-    <InfoRow
-     icon={faIdBadge}
-     iconBg="rgba(15, 52, 96, 0.1)"
-     iconColor="#0F3460"
-     label="Employee ID"
-     value={profile?.employee_code || "N/A"}
-    />
-    <InfoRow
-     icon={faBriefcase}
-     iconBg="#FCE9EC"
-     iconColor="#D23F57"
-     label="Designation"
-     value={profile?.designation || "N/A"}
-    />
-    <InfoRow
-     icon={faWallet}
-     iconBg="rgba(51, 208, 103, 0.15)"
-     iconColor="#15803d"
-     label="Credit Balance"
-     value={profile?.credit_balance ?? "0"}
-     highlight
-    />
-    <InfoRow
-     icon={
-      profile?.gender === "male"
-       ? faMars
-       : profile?.gender === "female"
-         ? faVenus
-         : faGenderless
-     }
-     iconBg="#FCE9EC"
-     iconColor={
-      profile?.gender === "male"
-       ? "#0F3460"
-       : profile?.gender === "female"
-         ? "#E94560"
-         : "#7D879C"
-     }
-     label="Gender"
-     value={genderLabel}
-    />
-    <InfoRow
-     icon={faWallet}
-     iconBg="rgba(245, 158, 11, 0.15)"
-     iconColor="#B45309"
-     label="Credit Pending"
-     value={profile?.credit_pending ?? "0"}
-    />
-    <InfoRow
-     icon={faCalendar}
-     iconBg="rgba(15, 52, 96, 0.1)"
-     iconColor="#0F3460"
-     label="Birthday"
-     value={formattedBirthDate}
-    />
-    <InfoRow
-     icon={faWallet}
-     iconBg="rgba(220, 38, 38, 0.12)"
-     iconColor="#DC2626"
-     label="Due Amount"
-     value={profile?.due_amount ?? "0"}
-    />
-    <a href={`mailto:${profile?.email}`} style={{ textDecoration: "none" }}>
-     <InfoRow
-      icon={faEnvelope}
-      iconBg="rgba(15, 52, 96, 0.1)"
-      iconColor="#0F3460"
-      label="Email"
-      value={profile?.email || "N/A"}
-     />
-    </a>
-    <a href={`tel:${profile?.phone}`} style={{ textDecoration: "none" }}>
-     <InfoRow
-      icon={faPhone}
-      iconBg="#FCE9EC"
-      iconColor="#D23F57"
-      label="Phone"
-      value={profile?.phone || "N/A"}
-     />
-    </a>
-   </div>
+   <DetailList>
+    <DetailItem label="Company">{profile?.company_name || "N/A"}</DetailItem>
+    <DetailItem label="Employee ID">{profile?.employee_code || "N/A"}</DetailItem>
+    <DetailItem label="Designation">{profile?.designation || "N/A"}</DetailItem>
+    <DetailItem label="Email">
+     {profile?.email ? <a href={`mailto:${profile.email}`}>{profile.email}</a> : "N/A"}
+    </DetailItem>
+    <DetailItem label="Phone">
+     {profile?.phone ? <a href={`tel:${profile.phone}`}>{profile.phone}</a> : "N/A"}
+    </DetailItem>
+    <DetailItem label="Birthday">{formattedBirthDate}</DetailItem>
+    <DetailItem label="Gender">{genderLabel}</DetailItem>
+   </DetailList>
 
    {/* Corporate Shop Link */}
    {profile?.shop_slug && (
-    <Link href={`/shops/${profile.shop_slug}`}>
-     <div
-      style={{
-       margin: "0 1rem 0.75rem",
-       padding: "0.5rem 0.75rem",
-       borderRadius: "6px",
-       background: "linear-gradient(135deg, #0F3460, #E94560)",
-       display: "flex",
-       alignItems: "center",
-       gap: "0.6rem",
-       cursor: "pointer",
-       transition: "opacity 0.2s ease",
-      }}
-     >
-      <div
-       style={{
-        width: "28px",
-        height: "28px",
-        borderRadius: "6px",
-        background: "rgba(255,255,255,0.2)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-       }}
-      >
-       <FontAwesomeIcon icon={faStore} size="xs" color="#fff" />
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-       <span
-        style={{
-         fontSize: "0.85rem",
-         color: "#fff",
-         fontWeight: "600",
-         display: "block",
-         lineHeight: "1.3",
-        }}
-       >
-        Visit Corporate Shop
-       </span>
-       <span
-        style={{
-         fontSize: "0.65rem",
-         color: "rgba(255,255,255,0.7)",
-        }}
-       >
-        {profile?.company_name || "Browse products"}
-       </span>
-      </div>
-      <span style={{ color: "#fff", fontSize: "1rem" }}>&#8594;</span>
-     </div>
-    </Link>
+    <ShopLink href={`/shops/${profile.shop_slug}`}>
+     <span>
+      <span className="sl-title">Visit corporate shop</span>
+      <span className="sl-sub">{profile?.company_name || "Browse products"}</span>
+     </span>
+     <span aria-hidden="true">&#8594;</span>
+    </ShopLink>
    )}
-  </Card>
+  </ProfileIdentity>
  );
 };
-
-const InfoRow = ({
- icon,
- iconBg,
- iconColor,
- label,
- value,
- highlight = false,
-}: {
- icon: any;
- iconBg: string;
- iconColor: string;
- label: string;
- value: string;
- highlight?: boolean;
-}) => (
- <div
-  style={{
-   display: "flex",
-   alignItems: "center",
-   gap: "0.6rem",
-   padding: "0.4rem 0.6rem",
-   borderRadius: "6px",
-   background: highlight ? "rgba(51, 208, 103, 0.08)" : "#F6F9FC",
-  }}
- >
-  <div
-   style={{
-    width: "28px",
-    height: "28px",
-    borderRadius: "6px",
-    background: iconBg,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-   }}
-  >
-   <FontAwesomeIcon icon={icon} size="xs" color={iconColor} />
-  </div>
-  <span style={{ fontSize: "0.8rem", color: "#7D879C", flexShrink: 0 }}>
-   {label}
-  </span>
-  <span
-   style={{
-    fontSize: "0.85rem",
-    color: highlight ? "#15803d" : "#2B3445",
-    fontWeight: highlight ? "700" : "500",
-    marginLeft: "auto",
-    textAlign: "right",
-    wordBreak: "break-word",
-   }}
-  >
-   {value}
-  </span>
- </div>
-);
 
 export default CorporateCard;
