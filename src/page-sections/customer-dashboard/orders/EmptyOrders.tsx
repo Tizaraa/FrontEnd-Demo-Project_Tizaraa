@@ -2,6 +2,69 @@
 
 import Link from "next/link";
 import { PackageOpen } from "lucide-react";
+import styled from "styled-components";
+
+const Box = styled.div`
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ padding: 56px 24px;
+ text-align: center;
+ background: ${({ theme }) => theme.tz.color.paper};
+ border: 1px solid ${({ theme }) => theme.tz.color.line};
+ border-radius: ${({ theme }) => theme.tz.radius.md}px;
+
+ .eo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.tz.color.navyTint};
+  color: ${({ theme }) => theme.tz.color.navy};
+ }
+
+ h3 {
+  margin: 0 0 8px;
+  font-family: ${({ theme }) => theme.tz.font.display};
+  font-size: 20px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+
+ p {
+  max-width: 360px;
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+
+ .eo-action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 24px;
+  border-radius: ${({ theme }) => theme.tz.radius.md}px;
+  background: ${({ theme }) => theme.tz.color.emberDeep};
+  color: ${({ theme }) => theme.tz.color.paper};
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color ${({ theme }) => theme.tz.motion.fast};
+
+  &:hover {
+   background: ${({ theme }) => theme.tz.color.emberDark};
+  }
+
+  &:focus-visible {
+   outline: none;
+   box-shadow: ${({ theme }) => theme.tz.focusRing};
+  }
+ }
+`;
 
 type EmptyOrdersProps = {
  title: string;
@@ -22,71 +85,15 @@ export default function EmptyOrders({
  actionHref = "/",
 }: EmptyOrdersProps) {
  return (
-  <div
-   style={{
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    textAlign: "center",
-    padding: "56px 24px",
-    backgroundColor: "#fff",
-    border: "1px solid #EDEFF2",
-    borderRadius: "12px",
-   }}
-  >
-   <div
-    style={{
-     width: "64px",
-     height: "64px",
-     borderRadius: "50%",
-     backgroundColor: "#FDECEF",
-     color: "#E94560",
-     display: "flex",
-     alignItems: "center",
-     justifyContent: "center",
-     marginBottom: "16px",
-    }}
-   >
+  <Box>
+   <span className="eo-icon" aria-hidden="true">
     <PackageOpen size={28} />
-   </div>
-
-   <h3
-    style={{
-     margin: "0 0 8px",
-     fontSize: "17px",
-     fontWeight: 600,
-     color: "#2C3A4A",
-    }}
-   >
-    {title}
-   </h3>
-
-   <p
-    style={{
-     margin: "0 0 20px",
-     fontSize: "14px",
-     lineHeight: 1.6,
-     color: "#6B7280",
-     maxWidth: "360px",
-    }}
-   >
-    {message}
-   </p>
-
-   <Link
-    href={actionHref}
-    style={{
-     backgroundColor: "#E94560",
-     color: "#fff",
-     textDecoration: "none",
-     padding: "9px 22px",
-     borderRadius: "999px",
-     fontSize: "13px",
-     fontWeight: 600,
-    }}
-   >
+   </span>
+   <h3>{title}</h3>
+   <p>{message}</p>
+   <Link href={actionHref} className="eo-action">
     {actionLabel}
    </Link>
-  </div>
+  </Box>
  );
 }

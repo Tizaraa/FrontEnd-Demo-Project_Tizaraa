@@ -55,14 +55,9 @@ export default function OrderListButton({ params }) {
       >
         Invoice
       </Button> */}
-   <Button
-    px="2rem"
-    color="primary"
-    bg="primary.light"
-    onClick={handleNavigation}
-   >
+   <Button variant="outlined" color="secondary" onClick={handleNavigation}>
     {/* Order List */}
-    {isNavigating ? <BeatLoader size={18} color="#fff" /> : "Order List"}
+    {isNavigating ? <BeatLoader size={14} color="var(--tz-navy)" /> : "Back to orders"}
    </Button>
   </FlexBox>
  );

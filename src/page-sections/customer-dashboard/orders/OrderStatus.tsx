@@ -493,14 +493,14 @@ export default function OrderStatus({
 
   return (
    <Box p="1rem">
-    <Typography fontWeight="600" fontSize="14px" color="#e94560" mb="1rem">
+    <Typography fontWeight="600" fontSize="14px" color="var(--tz-ember-deep)" mb="1rem">
      Return Status
     </Typography>
     <FlexBox alignItems="center" flexWrap="wrap" style={{ gap: "0" }}>
      {returnSteps.map((step, ind) => {
       const done = ind < activeStep;
       const current = ind === activeStep;
-      const color = done || current ? "#e94560" : "#ccc";
+      const color = done || current ? "var(--tz-ember-deep)" : "var(--tz-line)";
       return (
        <Fragment key={step}>
         <FlexBox flexDirection="column" alignItems="center" style={{ minWidth: 80 }}>
@@ -508,10 +508,10 @@ export default function OrderStatus({
           width="32px"
           height="32px"
           borderRadius="50%"
-          bg={done || current ? "#e94560" : "#eee"}
+          bg={done || current ? "var(--tz-ember-deep)" : "var(--tz-line)"}
           style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
          >
-          <Typography fontSize="12px" color={done || current ? "white" : "#999"} fontWeight="700">
+          <Typography fontSize="12px" color={done || current ? "white" : "var(--tz-slate)"} fontWeight="700">
            {done ? "✓" : ind + 1}
           </Typography>
          </Box>
@@ -523,7 +523,7 @@ export default function OrderStatus({
          <Box
           flex="1"
           height="3px"
-          bg={ind < activeStep ? "#e94560" : "#eee"}
+          bg={ind < activeStep ? "var(--tz-ember-deep)" : "var(--tz-line)"}
           style={{ minWidth: 20, marginBottom: 22 }}
          />
         )}
@@ -532,8 +532,8 @@ export default function OrderStatus({
      })}
     </FlexBox>
     {isRejected && (
-     <Box mt="12px" p="10px 14px" bg="#fee2e2" borderRadius="6px">
-      <Typography fontSize="13px" color="#b91c1c" fontWeight="600">
+     <Box mt="12px" p="10px 14px" bg="var(--tz-danger-bg)" borderRadius="6px">
+      <Typography fontSize="13px" color="var(--tz-danger)" fontWeight="600">
        Your return request was rejected by the seller.
       </Typography>
      </Box>
@@ -646,8 +646,8 @@ export default function OrderStatus({
          }}
         >
          <Box
-          bg={isActive ? "primary.main" : "#E8E8E8"}
-          color={isActive ? "white" : "#666"}
+          bg={isActive ? "primary.main" : "var(--tz-line)"}
+          color={isActive ? "white" : "var(--tz-slate)"}
           px="14px"
           py="8px"
           borderRadius="6px"
@@ -672,7 +672,7 @@ export default function OrderStatus({
            transform: "translateX(-50%)",
            borderLeft: "8px solid transparent",
            borderRight: "8px solid transparent",
-           borderTop: `8px solid ${isActive ? "#E94560" : "#E8E8E8"}`,
+           borderTop: `8px solid ${isActive ? "var(--tz-ember-deep)" : "var(--tz-line)"}`,
           }}
          />
         </Box>

@@ -110,7 +110,7 @@ const ReturnPage = () => {
             <p style={{ fontSize: "0.875rem", fontWeight: 600, marginBottom: "0.25rem" }}>
               {returnItem.product_name}
             </p>
-            <p style={{ fontSize: "0.875rem", color: "#6b7280" }}>
+            <p style={{ fontSize: "0.875rem", color: "var(--tz-slate)" }}>
               Qty: {returnItem.quantity}
             </p>
           </div>
@@ -119,7 +119,7 @@ const ReturnPage = () => {
         {/* Reason category */}
         <Box mb="1rem">
           <Typography style={{ fontSize: "0.875rem", fontWeight: 500, marginBottom: "0.5rem" }}>
-            Reason Category <span style={{ color: "#e94560" }}>*</span>
+            Reason Category <span style={{ color: "var(--tz-ember-deep)" }}>*</span>
           </Typography>
           <select
             value={reasonCategory}
@@ -127,7 +127,7 @@ const ReturnPage = () => {
             style={{
               width: "100%",
               padding: "0.5rem",
-              border: "1px solid #ccc",
+              border: "1px solid var(--tz-line)",
               borderRadius: "0.375rem",
               fontSize: "0.875rem",
             }}
@@ -143,7 +143,7 @@ const ReturnPage = () => {
         {/* Return type */}
         <Box mb="1rem">
           <Typography style={{ fontSize: "0.875rem", fontWeight: 500, marginBottom: "0.5rem" }}>
-            Return Type <span style={{ color: "#e94560" }}>*</span>
+            Return Type <span style={{ color: "var(--tz-ember-deep)" }}>*</span>
           </Typography>
           <select
             value={returnType}
@@ -151,7 +151,7 @@ const ReturnPage = () => {
             style={{
               width: "100%",
               padding: "0.5rem",
-              border: "1px solid #ccc",
+              border: "1px solid var(--tz-line)",
               borderRadius: "0.375rem",
               fontSize: "0.875rem",
             }}
@@ -167,7 +167,7 @@ const ReturnPage = () => {
         {/* Return reason */}
         <Box mb="1rem">
           <Typography style={{ fontSize: "0.875rem", fontWeight: 500, marginBottom: "0.5rem" }}>
-            Return Reason <span style={{ color: "#e94560" }}>*</span>
+            Return Reason <span style={{ color: "var(--tz-ember-deep)" }}>*</span>
           </Typography>
           <div style={{ position: "relative" }}>
             <TextArea
@@ -180,7 +180,7 @@ const ReturnPage = () => {
                 width: "100%",
                 resize: "none",
                 padding: "0.5rem",
-                border: "1px solid #ccc",
+                border: "1px solid var(--tz-line)",
                 borderRadius: "0.375rem",
               }}
             />
@@ -190,7 +190,7 @@ const ReturnPage = () => {
                 bottom: "0.5rem",
                 right: "0.5rem",
                 fontSize: "0.75rem",
-                color: "#6c757d",
+                color: "var(--tz-slate)",
               }}
             >
               {returnReason.length}/{maxLength}
@@ -201,7 +201,7 @@ const ReturnPage = () => {
         {/* Images */}
         <Box mb="1.5rem">
           <Typography style={{ fontSize: "0.875rem", fontWeight: 500, marginBottom: "0.5rem" }}>
-            Upload Images{reasonCategory === "seller_fault" && <span style={{ color: "#e94560" }}> * (required for damaged/defective items)</span>}
+            Upload Images{reasonCategory === "seller_fault" && <span style={{ color: "var(--tz-ember-deep)" }}> * (required for damaged/defective items)</span>}
           </Typography>
           <input
             type="file"
@@ -209,13 +209,13 @@ const ReturnPage = () => {
             multiple
             onChange={handleImageChange}
           />
-          <Typography style={{ fontSize: "0.75rem", color: "#6b7280", marginTop: "0.25rem" }}>
+          <Typography style={{ fontSize: "0.75rem", color: "var(--tz-slate)", marginTop: "0.25rem" }}>
             Max 5 images. JPG, PNG, WEBP accepted.
           </Typography>
         </Box>
 
         {/* Policy */}
-        <Box mb="1.5rem" p="1rem" bg="#f8f9fa" borderRadius="0.375rem">
+        <Box mb="1.5rem" p="1rem" bg="var(--tz-mist)" borderRadius="0.375rem">
           <Typography style={{ fontSize: "0.875rem", fontWeight: 500, marginBottom: "0.5rem" }}>
             Return Policy
           </Typography>
@@ -258,13 +258,17 @@ const ReturnPage = () => {
           style={{
             width: "100%",
             maxWidth: "200px",
-            backgroundColor: !canSubmit ? "#d1d1d1" : "#e94560",
-            color: "#fff",
-          }}
+            backgroundColor: !canSubmit ? "var(--tz-line)" : "var(--tz-ember-deep)",
+            color: !canSubmit ? "var(--tz-slate)" : "#fff",
+            minHeight: "44px",
+            borderRadius: "var(--tz-radius-md)",
+            textTransform: "none",
+            fontWeight: 600,
+           }}
           disabled={!canSubmit}
           onClick={handleSubmit}
         >
-          SUBMIT RETURN
+          Submit return
         </Button>
       </Box>
     </div>
