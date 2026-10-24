@@ -9,7 +9,7 @@ import FlasSaleBanner from "../../../public/assets/images/banners/Flash_sale_ban
 
 export default function FlashSaleBanner() {
  return (
-  <Container mb="70px">
+  <Container mb="3rem">
    {/* <Grid container >
         <Grid item xs={12} md={4}>
           <Link href="/">
@@ -23,7 +23,7 @@ export default function FlashSaleBanner() {
           </Link>
         </Grid>
       </Grid> */}
-   <Link href="/flashsale/flash_sale">
+   <Link href="/flashsale/flash_sale" style={{ display: "block", borderRadius: 12, overflow: "hidden" }}>
     <NextImage alt="flashSaleBanner" src={FlasSaleBanner} priority />
    </Link>
   </Container>

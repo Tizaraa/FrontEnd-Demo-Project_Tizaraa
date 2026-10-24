@@ -101,7 +101,7 @@ export default function ReviewCard({ productId }: { productId: string }) {
   userName: { fontSize: "14px", fontWeight: 600, color: theme.heading },
   date: { color: theme.muted, fontSize: "12.5px", whiteSpace: "nowrap" as const },
   rating: { display: "flex", gap: "3px" },
-  star: { color: "#FFC107", fontSize: "12px" },
+  star: { color: theme.star, fontSize: "12px" },
   reviewText: {
    fontSize: "14px",
    lineHeight: 1.6,

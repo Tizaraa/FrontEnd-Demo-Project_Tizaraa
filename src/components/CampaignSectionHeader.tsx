@@ -1,13 +1,41 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
+import styled from "styled-components";
 
 import Icon from "./icon/Icon";
-import FlexBox from "./FlexBox";
-import { H2, H3, H4, H5, SemiSpan } from "./Typography";
-import Head from "next/head";
-import { Yesteryear } from "next/font/google";
+import { SectionHeadRow, ViewAllLink } from "./SectionHead";
+
+const Countdown = styled.div`
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ font-variant-numeric: tabular-nums;
+
+ .countdown-label {
+  margin-right: 2px;
+  font-size: 13px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+
+ .countdown-unit {
+  min-width: 36px;
+  padding: 4px 6px;
+  border-radius: ${({ theme }) => theme.tz.radius.xs}px;
+  background: ${({ theme }) => theme.tz.color.navy};
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+ }
+
+ .countdown-expired {
+  font-size: 13px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.tz.tone.danger.fg};
+ }
+`;
 // ==============================================================
 export interface CampaignSectionHeaderProps {
  title?: string;
@@ -16,7 +44,6 @@ export interface CampaignSectionHeaderProps {
  endTime?: string; // ISO string or date string
 }
 // ==============================================================
-const lobster = Yesteryear({ weight: "400", subsets: ["latin"] });
 
 export default function CampaignSectionHeader({
  title,
@@ -69,139 +96,37 @@ export default function CampaignSectionHeader({
   return () => clearInterval(timer);
  }, [endTime]);
 
+ const pad = (n: number) => n.toString().padStart(2, "0");
+
  return (
-  <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
-   <FlexBox alignItems="center">
-    {iconName && (
-     <Icon mr="0.5rem" color="primary">
-      {iconName}
-     </Icon>
-    )}
-    <H3 fontWeight="bold" lineHeight="1">
-     {title}
-    </H3>
-   </FlexBox>
+  <SectionHeadRow>
+   <h2 className="section-title">
+    {iconName && <Icon color="primary">{iconName}</Icon>}
+    {title}
+   </h2>
 
-   <FlexBox style={{ alignItems: "center", gap: "16px" }}>
+   <div className="section-extras">
     {endTime && timeLeft && (
-     <FlexBox style={{ alignItems: "center", gap: "8px" }}>
-      <SemiSpan
-       className={lobster.className}
-       style={{
-        fontSize: "14px",
-        fontWeight: 600,
-        color: "#ff3c00",
-        fontFamily: "'Lobster', cursive",
-        letterSpacing: "0.05em", // Slight letter spacing for flair
-        textTransform: "uppercase", // Uppercase for emphasis
-       }}
-      >
-       ENDS IN:
-      </SemiSpan>
-      <SemiSpan
-       style={{
-        color: timeLeft.isExpired ? "#ef4444" : "#374151",
-        fontSize: "14px",
-        fontWeight: 600,
-       }}
-      >
-       {timeLeft.isExpired ? (
-        "Expired"
-       ) : (
-        <span style={{ display: "flex", gap: "8px" }}>
-         {timeLeft.days > 0 && (
-          <span
-           style={{
-            backgroundColor: "#ff4d6d",
-            color: "#ffffff",
-            padding: "4px 8px",
-            borderRadius: "4px",
-           }}
-          >
-           {timeLeft.days}d
-          </span>
-         )}
-         {(timeLeft.hours > 0 || timeLeft.days > 0) && (
-          <span
-           style={{
-            backgroundColor: "#3b82f6",
-            color: "#ffffff",
-            padding: "4px 8px",
-            borderRadius: "4px",
-           }}
-          >
-           {timeLeft.hours.toString().padStart(2, "0")}h
-          </span>
-         )}
-         <span
-          style={{
-           backgroundColor: "#10b981",
-           color: "#ffffff",
-           padding: "4px 8px",
-           borderRadius: "4px",
-          }}
-         >
-          {timeLeft.minutes.toString().padStart(2, "0")}m
-         </span>
-         <span
-          style={{
-           backgroundColor: "#8b5cf6",
-           color: "#ffffff",
-           padding: "4px 8px",
-           borderRadius: "4px",
-          }}
-         >
-          {timeLeft.seconds.toString().padStart(2, "0")}s
-         </span>
-        </span>
-       )}
-      </SemiSpan>
-     </FlexBox>
+     <Countdown aria-live="off">
+      {timeLeft.isExpired ? (
+       <span className="countdown-expired">Ended</span>
+      ) : (
+       <>
+        <span className="countdown-label">Ends in</span>
+        {timeLeft.days > 0 && <span className="countdown-unit">{timeLeft.days}d</span>}
+        {(timeLeft.hours > 0 || timeLeft.days > 0) && (
+         <span className="countdown-unit">{pad(timeLeft.hours)}h</span>
+        )}
+        <span className="countdown-unit">{pad(timeLeft.minutes)}m</span>
+        <span className="countdown-unit">{pad(timeLeft.seconds)}s</span>
+       </>
+      )}
+     </Countdown>
     )}
-   </FlexBox>
 
-   {seeMoreLink && (
-    <Link href={seeMoreLink}>
-     <FlexBox
-      style={{
-       alignItems: "center",
-       marginLeft: "8px",
-       color: "#6b7280",
-       transition: "color 0.3s ease",
-      }}
-      onMouseEnter={(e) =>
-       ((e.currentTarget as HTMLElement).style.color = "#ff4d6d")
-      }
-      onMouseLeave={(e) =>
-       ((e.currentTarget as HTMLElement).style.color = "#6b7280")
-      }
-     >
-      <SemiSpan
-       style={{ marginRight: "8px", fontSize: "14px", fontWeight: 500 }}
-      >
-       View all
-      </SemiSpan>
-      <span
-       style={{
-        display: "inline-block", // needed for transform to work properly
-        transform: "translateX(0)",
-        transition: "transform 0.3s ease",
-       }}
-       onMouseEnter={(e) =>
-        ((e.currentTarget as HTMLElement).style.transform = "translateX(4px)")
-       }
-       onMouseLeave={(e) =>
-        ((e.currentTarget as HTMLElement).style.transform = "translateX(0)")
-       }
-      >
-       <Icon size="12px" defaultcolor="currentColor">
-        right-arrow
-       </Icon>
-      </span>
-     </FlexBox>
-    </Link>
-   )}
-  </FlexBox>
+    {seeMoreLink && <ViewAllLink href={seeMoreLink} />}
+   </div>
+  </SectionHeadRow>
  );
 }
 

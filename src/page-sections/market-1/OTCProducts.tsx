@@ -1,25 +1,20 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import Link from "next/link";
 import axios from "axios";
 
 import Box from "@component/Box";
-import Card from "@component/Card";
 import FlexBox from "@component/FlexBox";
 import HoverBox from "@component/HoverBox";
-import { H4, SemiSpan } from "@component/Typography";
+import { SemiSpan } from "@component/Typography";
 import { Carousel } from "@component/carousel";
 import CategorySectionCreator from "@component/CategorySectionCreator";
-import { currency } from "@utils/utils";
 import useWindowSize from "@hook/useWindowSize";
 
 import Rating from "@component/rating";
-import { Chip } from "@component/Chip";
+import ProductTile from "@component/product-cards/ProductTile";
 import OTsectioncreator from "@component/OTsectioncreator";
 import Icon from "@component/icon/Icon";
 
-import styles from "../market-1/JustForYouPeoducts/JustForYouParoducts.module.css";
-import Image from "next/image";
 
 // Example: Replace this with your actual base URL or env variable
 const API_BASE_URL =
@@ -190,65 +185,23 @@ const OTCProducts = () => {
      }
     >
      <Box my="-0.25rem">
-      <Carousel totalSlides={products.length} visibleSlides={visibleSlides}>
+      <Carousel totalSlides={products.length} visibleSlides={visibleSlides} hideArrowOnMobile>
        {products.map((product) => (
-        <Box py="0.25rem" key={product.Id}>
-         <Card p="1rem" borderRadius={8} style={{ height: "300px" }}>
-          <Link href={`/otproducts/${product.Id}`}>
-           <Box position="relative">
-            <div
-             style={{
-              position: "relative",
-              borderRadius: "8px",
-              overflow: "hidden",
-             }}
-            >
-             <Image
-              src={product.MainPictureUrl}
-              alt={product.Title}
-              layout="responsive"
-              width={1}
-              height={1}
-              objectFit="cover"
-              style={{ borderRadius: "8px" }}
-              className={styles.imgPart}
-              referrerPolicy="no-referrer"
-              crossOrigin="anonymous"
-             />
-            </div>
-           </Box>
-           <H4
-            fontWeight="600"
-            fontSize="18px"
-            mb="0.25rem"
-            style={{
-             whiteSpace: "nowrap",
-             overflow: "hidden",
-             textOverflow: "ellipsis",
-            }}
-           >
-            {product.Title}
-           </H4>
-           <FlexBox flexDirection="column">
-            {product.Price.DiscountPrice > 0 ? (
-             <>
-              <H4 fontWeight="600" fontSize="14px" color="text.muted">
-               BDT <del>{product.Price.OriginalPrice}</del>
-              </H4>
-              <Box marginTop="4px">
-               <H4 fontWeight="600" fontSize="14px" color="primary.main">
-                {currency(product.Price.DiscountPrice)}
-               </H4>
-              </Box>
-             </>
-            ) : (
-             <H4 fontWeight="600" fontSize="14px" color="primary.main">
-              {currency(product.Price.ConvertedPriceWithoutSign)}
-             </H4>
-            )}
-           </FlexBox>
-          </Link>
-         </Card>
+        <Box py="0.25rem" height="100%" key={product.Id}>
+         <ProductTile
+          href={`/otproducts/${product.Id}`}
+          imageSrc={product.MainPictureUrl}
+          name={product.Title}
+          price={
+           product.Price.DiscountPrice > 0
+            ? product.Price.DiscountPrice
+            : product.Price.ConvertedPriceWithoutSign
+          }
+          originalPrice={
+           product.Price.DiscountPrice > 0 ? product.Price.OriginalPrice : undefined
+          }
+          externalImage
+         />
         </Box>
        ))}
       </Carousel>

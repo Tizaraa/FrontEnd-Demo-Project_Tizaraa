@@ -25,7 +25,7 @@ export default function Section10() {
 
  return (
   <Container
-   mb={{ xs: "40px", sm: "50px", md: "60px", lg: "70px" }}
+   mb={{ xs: "32px", sm: "40px", md: "48px" }}
    // px={{ xs: "1rem", sm: "1.5rem", md: "2rem" }}
   >
    <CategorySectionHeader title="Categories" iconName="categories" />
@@ -38,8 +38,8 @@ export default function Section10() {
         hoverEffect
         p={{ xs: "0.75rem", sm: "1rem", md: "1.25rem" }}
         textAlign="center"
-        borderRadius={8}
-        boxShadow="small"
+        borderRadius={12}
+        boxShadow="border"
         alignItems="center"
         height={{ xs: "160px", sm: "180px", md: "200px", lg: "220px" }}
         display="flex"

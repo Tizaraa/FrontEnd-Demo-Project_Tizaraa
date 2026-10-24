@@ -12,6 +12,7 @@ type StyledCarouselProps = {
  dotColor?: string;
  showDots?: boolean;
  showArrowOnHover?: boolean;
+ hideArrowOnMobile?: boolean;
  dotGroupMarginTop?: string;
 };
 // ==============================================================
@@ -22,6 +23,7 @@ export const StyledCarousel = styled(
   showDots,
   dotColor,
   showArrowOnHover,
+  hideArrowOnMobile,
   dotGroupMarginTop,
   ...props
  }: CarouselProviderProps & StyledCarouselProps) => (
@@ -87,6 +89,18 @@ export const StyledCarousel = styled(
    left: 0px;
   }
  }
+
+ ${(props) =>
+  // phones swipe the rail; arrows would cover the product images
+  props.hideArrowOnMobile
+   ? `
+  @media only screen and (max-width: ${deviceSize.xs}px) {
+    [class*="arrow-class"] {
+      display: none;
+    }
+  }
+  `
+   : ""}
 
  .custom-dot {
   display: flex;

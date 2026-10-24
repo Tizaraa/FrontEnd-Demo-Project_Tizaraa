@@ -1,10 +1,7 @@
 "use client";
 
-import Link from "next/link";
-
 import Icon from "./icon/Icon";
-import FlexBox from "./FlexBox";
-import { H2, H3, H4, H5, SemiSpan } from "./Typography";
+import { SectionHeadRow, ViewAllLink } from "./SectionHead";
 
 // ==============================================================
 export interface CategorySectionHeaderProps {
@@ -20,28 +17,13 @@ export default function CategorySectionHeader({
  seeMoreLink,
 }: CategorySectionHeaderProps) {
  return (
-  <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
-   <FlexBox alignItems="center">
-    {iconName && (
-     <Icon mr="0.5rem" color="primary">
-      {iconName}
-     </Icon>
-    )}
-    <H3 fontWeight="bold" lineHeight="``1">
-     {title}
-    </H3>
-   </FlexBox>
+  <SectionHeadRow>
+   <h2 className="section-title">
+    {iconName && <Icon color="primary">{iconName}</Icon>}
+    {title}
+   </h2>
 
-   {seeMoreLink && (
-    <Link href={seeMoreLink}>
-     <FlexBox alignItems="center" ml="0.5rem" color="text.muted">
-      <SemiSpan mr="0.5rem">View all</SemiSpan>
-      <Icon size="10px" defaultcolor="currentColor">
-       right-arrow
-      </Icon>
-     </FlexBox>
-    </Link>
-   )}
-  </FlexBox>
+   {seeMoreLink && <ViewAllLink href={seeMoreLink} />}
+  </SectionHeadRow>
  );
 }
