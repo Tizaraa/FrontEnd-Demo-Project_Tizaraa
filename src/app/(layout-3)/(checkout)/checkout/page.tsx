@@ -164,6 +164,7 @@ import { useState, useEffect } from "react";
 import authService from "services/authService";
 import NextImage from "@component/NextImage";
 import Watermark from "@component/watermark/Watermark";
+import StickySummary from "@sections/checkout/StickySummary";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 export default function Checkout() {
@@ -209,11 +210,13 @@ export default function Checkout() {
       )}
      </Grid>
      <Grid item lg={4} md={4} xs={12}>
-      {responseId ? (
-       <RfqCheckoutSummary responseId={Number(responseId)} />
-      ) : (
-       <CheckoutSummary deliveryCharge={deliveryCharge} />
-      )}
+      <StickySummary>
+       {responseId ? (
+        <RfqCheckoutSummary responseId={Number(responseId)} />
+       ) : (
+        <CheckoutSummary deliveryCharge={deliveryCharge} />
+       )}
+      </StickySummary>
      </Grid>
     </Grid>
    </main>

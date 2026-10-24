@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import tz from "../../theme/tizaraa";
 import Image from "next/image";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import Box from "@component/Box";
@@ -214,7 +215,8 @@ export default function OrderedItem() {
           style={{
            fontSize: "16px",
            fontWeight: 700,
-           color: "#E94560",
+           color: tz.color.ink,
+           fontVariantNumeric: "tabular-nums",
            marginTop: "4px",
           }}
          >

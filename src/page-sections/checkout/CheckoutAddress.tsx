@@ -18,6 +18,7 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import { CreditCardIcon, InfoIcon } from "lucide-react";
 import { CircularProgress, LinearProgress, Tooltip } from "@mui/material";
 import { useAppContext } from "@context/app-context";
+import tz from "../../theme/tizaraa";
 
 export default function CheckoutAddress({
   setDeliveryCharge,
@@ -222,15 +223,15 @@ export default function CheckoutAddress({
         position: "top-right",
         autoClose: 3000,
         style: {
-          background: "rgb(245, 124, 0)",
-          color: "#000",
+          background: tz.tone.warning.fill,
+          color: tz.color.ink,
           fontSize: "16px",
-          border: "2px solid #fff",
-          boxShadow: "0 0 10px rgba(255, 152, 0, 0.7)",
+          border: `2px solid ${tz.color.paper}`,
+          boxShadow: `0 0 0 4px ${tz.tone.warning.bg}`,
         },
-        icon: <FaExclamationTriangle style={{ color: "#000", fontSize: "20px" }} />, // Custom icon
+        icon: <FaExclamationTriangle style={{ color: tz.color.ink, fontSize: "20px" }} />, // Custom icon
         progressStyle: {
-          background: "#fff",
+          background: tz.color.paper,
         },
       });
       return;
@@ -276,15 +277,15 @@ export default function CheckoutAddress({
               flexDirection="column"
               mb="1rem"
               p="1rem"
-              border="1px solid #ddd"
+              border={`1px solid ${tz.color.line}`}
               borderRadius="8px"
-              backgroundColor="#f7f7f7"
+              backgroundColor={tz.color.mist}
             >
               <FlexBox alignItems="center" style={{ gap: "8px" }}>
                 <Tooltip title="100% advance payment is required for abroad products">
                   <InfoIcon
                     style={{
-                      color: "#E94560",
+                      color: tz.color.emberDeep,
                       fontSize: "18px",
                       cursor: "pointer",
                     }}
@@ -292,7 +293,7 @@ export default function CheckoutAddress({
                 </Tooltip>
                 <Typography
                   variant="h6"
-                  style={{ color: "#E94560", fontWeight: "600" }}
+                  style={{ color: tz.color.emberDeep, fontWeight: "600" }}
                 >
                   Advance Payment Details
                 </Typography>
@@ -301,7 +302,7 @@ export default function CheckoutAddress({
                 style={{
                   marginBottom: "1rem",
                   fontSize: "13px",
-                  color: "#333",
+                  color: tz.color.ink,
                 }}
               >
                 100% advance payment is required to proceed with your abroad order.
@@ -313,11 +314,11 @@ export default function CheckoutAddress({
                   <FlexBox
                     flexDirection="column"
                     p="1rem"
-                    border={`1px solid ${selectedPaymentOption === 100 ? "rgb(233, 69, 96)" : "#ddd"
+                    border={`1px solid ${selectedPaymentOption === 100 ? tz.color.emberDeep : tz.color.line
                       }`}
                     borderRadius="8px"
                     backgroundColor={
-                      selectedPaymentOption === 100 ? "rgb(233, 69, 96)" : "white"
+                      selectedPaymentOption === 100 ? tz.color.emberDeep : tz.color.paper
                     }
                     style={{
                       cursor:
@@ -339,7 +340,7 @@ export default function CheckoutAddress({
                           height: "2px",
                           backgroundColor: "rgba(255, 255, 255, 0.3)",
                           "& .MuiLinearProgress-bar": {
-                            backgroundColor: "white",
+                            backgroundColor: tz.color.paper,
                           },
                         }}
                       />
@@ -351,14 +352,14 @@ export default function CheckoutAddress({
                           size={20}
                           thickness={5}
                           style={{
-                            color: "white",
+                            color: tz.color.paper,
                             marginRight: "8px",
                           }}
                         />
                       ) : (
                         <CreditCardIcon
                           style={{
-                            color: selectedPaymentOption === 100 ? "white" : "#333",
+                            color: selectedPaymentOption === 100 ? tz.color.paper : tz.color.ink,
                             marginRight: "8px",
                             transition: "color 0.3s ease",
                           }}
@@ -367,7 +368,7 @@ export default function CheckoutAddress({
                       <Typography
                         style={{
                           fontWeight: "600",
-                          color: selectedPaymentOption === 100 ? "white" : "#333",
+                          color: selectedPaymentOption === 100 ? tz.color.paper : tz.color.ink,
                           transition: "color 0.3s ease",
                         }}
                       >
@@ -389,24 +390,24 @@ export default function CheckoutAddress({
                   flexDirection="column"
                   mb="1rem"
                   p="0.5rem"
-                  border="1px solid #ddd"
+                  border={`1px solid ${tz.color.line}`}
                   borderRadius="8px"
-                  backgroundColor="#f7eded"
+                  backgroundColor={tz.color.emberTint}
                 >
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={6}>
                       <FlexBox alignItems="center">
-                        <FaTruckFast style={{ fontSize: "24px", color: "#E94560" }} />
+                        <FaTruckFast style={{ fontSize: "24px", color: tz.color.emberDeep }} />
                         <label
                           htmlFor="expressDelivery"
                           style={{
                             marginLeft: "0.5rem",
                             fontSize: "14px",
                             fontWeight: "500",
-                            color: "#333",
+                            color: tz.color.ink,
                           }}
                         >
-                          <span style={{ color: "#E94560", fontWeight: "600" }}>
+                          <span style={{ color: tz.color.emberDeep, fontWeight: "600" }}>
                             Delivery Options
                           </span>
                         </label>
@@ -419,7 +420,7 @@ export default function CheckoutAddress({
                           onChange={handleExpressDeliveryChange}
                           type="checkbox"
                           id="expressDelivery"
-                          style={{ cursor: "pointer", accentColor: "#E94560" }}
+                          style={{ cursor: "pointer", accentColor: tz.color.emberDeep }}
                         />
                         <label
                           htmlFor="expressDelivery"
@@ -427,10 +428,10 @@ export default function CheckoutAddress({
                             marginLeft: "0.5rem",
                             fontSize: "14px",
                             fontWeight: "500",
-                            color: "#333",
+                            color: tz.color.ink,
                           }}
                         >
-                          <span style={{ color: "#E94560", fontWeight: "600" }}>
+                          <span style={{ color: tz.color.emberDeep, fontWeight: "600" }}>
                             Express Delivery
                           </span>
                         </label>
@@ -449,21 +450,21 @@ export default function CheckoutAddress({
           flexDirection="column"
           p="1.25rem"
           mb="1rem"
-          border="1px solid #4CAF50"
+          border={`1px solid ${tz.tone.success.fill}`}
           borderRadius="8px"
-          backgroundColor="#f0faf0"
+          backgroundColor={tz.tone.success.bg}
         >
           <FlexBox alignItems="center" style={{ gap: "8px", marginBottom: "0.5rem" }}>
-            <FaTruckFast style={{ fontSize: "22px", color: "#4CAF50" }} />
-            <Typography style={{ fontWeight: "700", color: "#2e7d32", fontSize: "15px" }}>
+            <FaTruckFast style={{ fontSize: "22px", color: tz.tone.success.fg }} />
+            <Typography style={{ fontWeight: "700", color: tz.tone.success.fg, fontSize: "15px" }}>
               Corporate Pickup — No Delivery Charge
             </Typography>
           </FlexBox>
-          <Typography style={{ fontSize: "13px", color: "#555", lineHeight: "1.6" }}>
+          <Typography style={{ fontSize: "13px", color: tz.color.inkSoft, lineHeight: "1.6" }}>
             This is a corporate order. You will collect your items directly from your
             company's designated pickup location. Shipping address is not required.
           </Typography>
-          <Typography style={{ fontSize: "13px", color: "#E94560", marginTop: "0.5rem", fontWeight: "600" }}>
+          <Typography style={{ fontSize: "13px", color: tz.color.emberDeep, marginTop: "0.5rem", fontWeight: "600" }}>
             Delivery charge: <strong>BDT 0</strong>
           </Typography>
         </FlexBox>
@@ -518,10 +519,10 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
   return (
     <Grid
       style={{
-        border: "0.5px solid #E94560",
+        border: `1px solid ${tz.color.ember}`,
         marginBottom: "1rem",
         borderRadius: "1rem",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        boxShadow: tz.elevation.raised,
       }}
     >
       <FlexBox my="0.5rem" padding="1px 14px">
@@ -544,8 +545,8 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
       </FlexBox>
 
       <FlexBox m="6px" textAlign="left" fontWeight="600">
-        <Chip p="0.35rem 1rem" bg="#4CAF50">
-          <Small color="white">{landmarkLabel}</Small>
+        <Chip p="0.35rem 1rem" bg={tz.tone.success.fill}>
+          <Small color={tz.color.paper}>{landmarkLabel}</Small>
         </Chip>
 
         <Typography className="pre" m="6px" textAlign="left">
