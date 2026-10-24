@@ -12,6 +12,7 @@ import { H3, SemiSpan } from "@component/Typography";
 import { ShopCard1Wrapper } from "./styles";
 import { height } from "styled-system";
 import { Button } from "@mui/material";
+import tz from "../../theme/tizaraa";
 
 // =====================================================
 type ShopCard1Props = {
@@ -123,14 +124,16 @@ export default function ShopCard1({
        marginTop: "0.25rem",
        marginBottom: "0.25rem",
        padding: "0.25rem 0.75rem",
-       borderRadius: "0.25rem",
+       borderRadius: `${tz.radius.sm}px`,
        display: "flex",
        alignItems: "center",
        justifyContent: "center",
-       fontWeight: "bold",
+       fontWeight: 600,
        textTransform: "none",
-       backgroundColor: "#E94560",
+       backgroundColor: tz.color.emberDeep,
        fontSize: "14px",
+       boxShadow: "none",
+       "&:hover": { backgroundColor: tz.color.emberDark, boxShadow: "none" },
       }}
      >
       <span
