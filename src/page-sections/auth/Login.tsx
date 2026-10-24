@@ -18,10 +18,21 @@ import FlexBox from "@component/FlexBox";
 import TextField from "@component/text-field";
 import { Button, IconButton } from "@component/buttons";
 import { H3, H5, H6, SemiSpan, Small, Span } from "@component/Typography";
-import { StyledRoot } from "./styles"; // Import your styled components
+import {
+ AuthCard,
+ AuthDivider,
+ AuthErrorText,
+ AuthFooter,
+ AuthSubtitle,
+ AuthSuccessNote,
+ AuthTextButton,
+ AuthTextLink,
+ AuthTitle,
+ SocialButton,
+} from "./styles";
+import tz from "../../theme/tizaraa";
 import authService from "services/authService";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import CommonHeader from "@component/header/CommonHeader";
 import BeatLoader from "react-spinners/BeatLoader";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 
@@ -162,33 +173,22 @@ export default function Login() {
 
  return (
   <>
-   <CommonHeader />
-   <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
-    <form className="content" onSubmit={handleSubmit} autoComplete="off">
-     <H3 textAlign="center" mb="0.5rem">
-      Welcome To Tizaraa
-     </H3>
+   <AuthCard>
+    <form onSubmit={handleSubmit} autoComplete="off">
+     <AuthTitle>Welcome To Tizaraa</AuthTitle>
 
-     <H5
-      fontWeight="600"
-      fontSize="13px"
-      color="gray.800"
-      textAlign="center"
-      mb="2.25rem"
-     >
-      Log in with email & password
-     </H5>
+     <AuthSubtitle>Log in with email & password</AuthSubtitle>
 
      {passwordWasReset && (
-      <Small color="green" display="block" textAlign="center" mb="1rem">
+      <AuthSuccessNote>
        Your password has been reset. Log in with your email and new password.
-      </Small>
+      </AuthSuccessNote>
      )}
 
      {/* Email Field */}
      <TextField
       fullwidth
-      mb="0.75rem"
+      mb="1rem"
       name="email"
       type="email"
       value={values.email}
@@ -206,7 +206,7 @@ export default function Login() {
 
      {/* Password Field */}
      <TextField
-      mb="1rem"
+      mb="0.5rem"
       fullwidth
       name="password"
       label="Password"
@@ -233,101 +233,53 @@ export default function Login() {
      />
 
      {/* Display any API errors */}
-     {apiError && (
-      <Small color="red" mb="1rem">
-       {apiError}
-      </Small>
-     )}
+     {apiError && <AuthErrorText>{apiError}</AuthErrorText>}
 
      {/* Forgot Password */}
-     <FlexBox justifyContent="end" bg="#fff">
-      <span
+     <FlexBox justifyContent="flex-end" mb="1.5rem">
+      <AuthTextButton
+       type="button"
        onClick={() => setModalOpen(true)} // Triggers the modal on click
-       style={{
-        padding: "10px",
-        marginTop: "-1.5rem",
-        minWidth: "auto",
-        marginLeft: "0.5rem",
-        marginRight: "-0.5rem",
-        textDecoration: "none", // Makes it look like a link
-        color: "#e94560", // Primary color for link
-        cursor: "pointer", // Makes it clickable
-        fontSize: "0.8rem", // Optional for text size
-        marginBottom: "10px",
-       }}
       >
        Forgot password?
-      </span>
+      </AuthTextButton>
      </FlexBox>
 
      {/* Submit Button */}
      <Button
-      mb="1.65rem"
+      size="medium"
       variant="contained"
       color="primary"
       type="submit"
       fullwidth
       disabled={loading}
      >
-      {loading ? <BeatLoader size={18} color="#e94560" /> : "Login"}
+      {loading ? <BeatLoader size={12} color={tz.color.slate} /> : "Login"}
      </Button>
 
-     {/* Google login */}
-     {/* <FlexBox
-            mb="0.75rem"
-            height="40px"
-            color="white"
-            bg="#3B5998"
-            borderRadius={5}
-            cursor="pointer"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Icon variant="small" defaultcolor="auto" mr="0.5rem">
-              facebook-filled-white
-            </Icon>
+     <AuthDivider>or</AuthDivider>
 
-            <Small fontWeight="600">Continue with Facebook</Small>
-          </FlexBox> */}
-     <FlexBox
-      mb="1.25rem"
-      height="40px"
-      color="white"
-      bg="#4285F4"
-      borderRadius={5}
-      cursor="pointer"
-      alignItems="center"
-      justifyContent="center"
-      onClick={handleGoogleLogin} // Trigger Google login
-     >
+     {/* Google login */}
+     <SocialButton type="button" onClick={handleGoogleLogin}>
       {isHasPayLoading ? (
-       <BeatLoader size={18} color="#0000FF" />
+       <BeatLoader size={12} color={tz.color.slate} />
       ) : (
        <>
-        <Icon variant="small" defaultcolor="auto" mr="0.5rem">
+        <Icon variant="small" defaultcolor="auto">
          google-1
         </Icon>
-        <Small fontWeight="600">Continue with Google</Small>
+        Continue with Google
        </>
       )}
-     </FlexBox>
+     </SocialButton>
 
      {/* Link to Signup */}
-     <FlexBox justifyContent="center" mb="">
-      <SemiSpan>Don’t have an account?</SemiSpan>
-      <Link href="/signup">
-       <H6
-        ml="0.5rem"
-        mb="1.5rem"
-        borderBottom="1px solid"
-        borderColor="gray.900"
-       >
-        Sign Up
-       </H6>
-      </Link>
-     </FlexBox>
+     <AuthFooter>
+      <span>Don’t have an account?</span>
+      <AuthTextLink href="/signup">Sign Up</AuthTextLink>
+     </AuthFooter>
     </form>
-   </StyledRoot>
+   </AuthCard>
    <ForgotPasswordModal
     isOpen={isModalOpen}
     onClose={() => setModalOpen(false)}

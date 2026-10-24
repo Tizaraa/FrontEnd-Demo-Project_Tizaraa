@@ -8,9 +8,16 @@ import BeatLoader from "react-spinners/BeatLoader";
 import FlexBox from "@component/FlexBox";
 import TextField from "@component/text-field";
 import { Button, IconButton } from "@component/buttons";
-import { H5, Small } from "@component/Typography";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import useResetCountdown, { formatCountdown } from "./useResetCountdown";
+import tz from "../../theme/tizaraa";
+
+const helperStyle = {
+ margin: "0 0 20px",
+ fontSize: "14px",
+ lineHeight: 1.55,
+ color: tz.color.slate,
+};
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -90,43 +97,69 @@ export default function ForgotPasswordModal({
    }}
   >
    <div
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="forgot-password-title"
     style={{
-     background: "#fff",
-     borderRadius: "8px",
-     padding: "20px",
-     width: "400px",
-     maxWidth: "90%",
-     boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.25)",
+     background: tz.color.paper,
+     border: `1px solid ${tz.color.line}`,
+     borderRadius: tz.radius.lg,
+     padding: "28px 24px 24px",
+     width: "420px",
+     maxWidth: "calc(100% - 32px)",
+     boxShadow: tz.elevation.overlay,
      position: "relative",
+     fontFamily: tz.font.body,
+     color: tz.color.inkSoft,
     }}
    >
     <IconButton
+     type="button"
+     aria-label="Close"
      onClick={handleClose}
      style={{
       position: "absolute",
-      top: "10px",
-      right: "10px",
-      backgroundColor: "#f1f1f1",
+      top: "12px",
+      right: "12px",
+      width: "36px",
+      height: "36px",
+      padding: 0,
+      backgroundColor: tz.color.mist,
+      color: tz.color.inkSoft,
       borderRadius: "50%",
-      padding: "5px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
      }}
     >
-     <span style={{ fontSize: "16px", fontWeight: "bold" }}>X</span>
+     <span aria-hidden="true" style={{ fontSize: "20px", lineHeight: 1 }}>
+      &times;
+     </span>
     </IconButton>
 
-    <H5 mb="1rem" fontSize="20px">
+    <h2
+     id="forgot-password-title"
+     style={{
+      margin: "0 40px 8px 0",
+      fontFamily: tz.font.display,
+      fontSize: "22px",
+      fontWeight: 600,
+      lineHeight: 1.25,
+      color: tz.color.ink,
+     }}
+    >
      Forgot your password?
-    </H5>
+    </h2>
 
     {!linkSent ? (
      <>
-      <Small mb="1rem" display="block">
+      <p style={helperStyle}>
        Enter your account email and we will send you a password reset link.
-      </Small>
+      </p>
       <TextField
        fullwidth
        type="email"
-       mb="1rem"
+       mb="1.5rem"
        name="email"
        label="Email"
        placeholder="Enter Your Email"
@@ -137,37 +170,57 @@ export default function ForgotPasswordModal({
         setEmailError("");
        }}
       />
-      <FlexBox justifyContent="flex-end" mt="1rem">
-       <Button
-        variant="contained"
-        color="primary"
-        disabled={loading}
-        onClick={handleSend}
-       >
-        {loading ? <BeatLoader size={18} color="#fff" /> : "Send Reset Link"}
-       </Button>
-      </FlexBox>
+      <Button
+       size="medium"
+       variant="contained"
+       color="primary"
+       fullwidth
+       disabled={loading}
+       onClick={handleSend}
+      >
+       {loading ? (
+        <BeatLoader size={12} color={tz.color.slate} />
+       ) : (
+        "Send Reset Link"
+       )}
+      </Button>
      </>
     ) : (
      <>
-      <Small mb="1rem" display="block">
+      <p style={helperStyle}>
        {expired
         ? "The reset link has expired. Send a new one to continue."
         : `We sent a reset link to ${email}. It is valid for 1 minute only.`}
-      </Small>
-      <FlexBox justifyContent="space-between" alignItems="center">
-       <Small color={expired ? "red" : undefined}>
+      </p>
+      <FlexBox
+       justifyContent="space-between"
+       alignItems="center"
+       flexWrap="wrap"
+       style={{ gap: "12px" }}
+      >
+       <span
+        style={{
+         fontSize: "13px",
+         fontWeight: 500,
+         fontVariantNumeric: "tabular-nums",
+         color: expired ? tz.tone.danger.fg : tz.tone.success.fg,
+        }}
+       >
         {expired
          ? "Link expired"
          : `Link expires in: ${formatCountdown(secondsLeft ?? 0)}`}
-       </Small>
+       </span>
        <Button
         variant="outlined"
         color="secondary"
         disabled={loading || !expired}
         onClick={handleSend}
        >
-        {loading ? <BeatLoader size={18} color="#E94560" /> : "Resend Link"}
+        {loading ? (
+         <BeatLoader size={12} color={tz.color.slate} />
+        ) : (
+         "Resend Link"
+        )}
        </Button>
       </FlexBox>
      </>
