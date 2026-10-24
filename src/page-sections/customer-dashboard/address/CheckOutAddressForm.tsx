@@ -716,7 +716,7 @@ export default function CheckOutAddressForm() {
         </Grid>
 
         {touched.selectedLandmark && errors.selectedLandmark && (
-         <Typography color="#ff3333" variant="body2" mt={1}>
+         <Typography color="var(--tz-danger)" variant="body2" mt={1}>
           {errors.selectedLandmark}
          </Typography>
         )}
@@ -813,14 +813,14 @@ export default function CheckOutAddressForm() {
            height: "18px",
            marginRight: "0.8rem",
            cursor: "pointer",
-           accentColor: "#E94560",
+           accentColor: "var(--tz-ember-deep)",
           }}
          />
          <label
           htmlFor="is_default"
           style={{
            fontWeight: "600",
-           color: "#2c3e50",
+           color: "var(--tz-ink)",
            fontSize: "0.9rem",
            cursor: "pointer",
           }}

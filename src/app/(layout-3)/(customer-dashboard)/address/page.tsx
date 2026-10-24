@@ -83,7 +83,7 @@
 
 //   return (
 //     <Fragment>
-//       <DashboardPageHeader title="My Addresses" iconName="pin_filled" button={<AddNewAddress />} />
+//       <DashboardPageHeader title="My addresses" iconName="pin_filled" button={<AddNewAddress />} />
 //       {/* <Card1 borderRadius={8}>
 //         <AddressForm />
 //       </Card1> */}
@@ -258,7 +258,7 @@
 
 //   return (
 //     <Fragment>
-//       <DashboardPageHeader title="My Addresses" iconName="pin_filled" button={<AddNewAddress />} />
+//       <DashboardPageHeader title="My addresses" iconName="pin_filled" button={<AddNewAddress />} />
 //       {loading ? (
 //         <LoaderWrapper>
 //           <Vortex />
@@ -342,9 +342,7 @@ import styled from "@emotion/styled";
 import toast from "react-hot-toast";
 import { Vortex } from "react-loader-spinner";
 import { DeleteIcon, EditIcon } from "lucide-react";
-import TableRow from "@component/TableRow";
 import Typography from "@component/Typography";
-import { IconButton } from "@component/buttons";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { AddNewAddress } from "@sections/customer-dashboard/address";
 import Address from "@models/address.model";
@@ -352,6 +350,7 @@ import authService from "services/authService";
 import ApiBaseUrl from "api/ApiBaseUrl";
 // import { motion } from "framer-motion";
 import Loader from "@component/loader";
+import EmptyOrders from "@sections/customer-dashboard/orders/EmptyOrders";
 
 // Styled Components
 // const LoaderWrapper = styled.div`
@@ -360,64 +359,86 @@ import Loader from "@component/loader";
 //   align-items: center;
 // `;
 
-const StyledTableRow = styled.div`
+const AddressGrid = styled.div`
+ display: grid;
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ gap: 16px;
+
+ @media (max-width: 820px) {
+  grid-template-columns: minmax(0, 1fr);
+ }
+`;
+
+const AddressCard = styled.article`
  display: flex;
+ flex-direction: column;
+ gap: 8px;
+ padding: 20px;
+ background: var(--tz-paper);
+ border: 1px solid var(--tz-line);
+ border-radius: var(--tz-radius-md);
+
+ .ac-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tz-ink);
+ }
+
+ .ac-missing {
+  color: var(--tz-slate);
+  font-weight: 400;
+  font-style: italic;
+ }
+
+ .ac-line {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--tz-ink-soft);
+  overflow-wrap: anywhere;
+ }
+
+ .ac-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--tz-line-soft);
+ }
+`;
+
+const ActionButton = styled.button`
+ display: inline-flex;
  align-items: center;
- padding: 0.75rem 1.125rem;
- margin: 1rem 0;
- background: white;
- border-radius: 8px;
- box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
- transition: all 0.2s ease;
- border-left: 3px solid transparent;
+ gap: 6px;
+ min-height: 36px;
+ padding: 0 12px;
+ border: 1px solid var(--tz-line);
+ border-radius: var(--tz-radius-sm);
+ background: var(--tz-paper);
+ color: var(--tz-ink);
+ font-family: inherit;
+ font-size: 14px;
+ font-weight: 500;
+ cursor: pointer;
+ transition: background-color var(--tz-motion-fast), border-color var(--tz-motion-fast),
+  color var(--tz-motion-fast);
 
  &:hover {
-  box-shadow: 0 4px 12px rgba(233, 69, 96, 0.15);
-  transform: translateY(-1px);
-  border-left: 3px solid #e94560;
- }
-`;
-
-const TableCell = styled(Typography)`
- margin: 0.375rem;
- padding: 0.375rem;
- font-size: 0.875rem;
- color: ${({ muted }) => (muted ? "#6B7280" : "#111827")};
- flex: ${({ flex }) => flex || "1"};
- &.highlight {
-  color: #e94560;
-  font-weight: 500;
- }
-`;
-
-const AddressTableCell = styled(TableCell)`
- flex: 1 1 260px !important;
- overflow: hidden;
- text-overflow: ellipsis;
- white-space: nowrap;
-`;
-
-const ActionCell = styled.div`
- display: flex;
- justify-content: center;
- align-items: center;
- gap: 0.5rem;
- flex: 0 0 120px;
-`;
-
-const StyledIconButton = styled(IconButton)`
- color: #6b7280;
- transition: all 0.2s ease;
- border-radius: 6px;
-
- &:hover {
-  background: rgba(69, 233, 110, 0.15);
-  color: green;
+  border-color: var(--tz-slate);
+  background: var(--tz-mist);
  }
 
- &.delete-btn:hover {
-  background: rgba(233, 69, 96, 0.08);
-  color: #e94560;
+ &.danger:hover {
+  border-color: var(--tz-danger);
+  background: var(--tz-danger-bg);
+  color: var(--tz-danger);
+ }
+
+ &:focus-visible {
+  outline: none;
+  box-shadow: var(--tz-focus-ring);
  }
 `;
 
@@ -428,44 +449,60 @@ const Backdrop = styled.div`
  z-index: 999;
  width: 100vw;
  height: 100vh;
- background-color: rgba(0, 0, 0, 0.4);
+ background-color: rgba(20, 21, 32, 0.45);
  display: flex;
  justify-content: center;
  align-items: center;
 `;
 
 const DialogBox = styled.div`
- background: white;
- padding: 24px 32px;
- border-radius: 12px;
+ background: var(--tz-paper);
+ padding: 24px;
+ border-radius: var(--tz-radius-lg);
  max-width: 400px;
  width: 90%;
- box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
- text-align: center;
-`;
+ box-shadow: var(--tz-elevation-raised);
 
-const ButtonGroup = styled.div`
- margin-top: 20px;
- display: flex;
- justify-content: space-around;
- gap: 16px;
-`;
-
-const DialogButton = styled.button<{ danger?: boolean }>`
- padding: 10px 20px;
- border: none;
- border-radius: 8px;
- font-weight: bold;
- cursor: pointer;
- background-color: ${({ danger }) => (danger ? "#e94560" : "#219426")};
- color: white;
-
- &:hover {
-  opacity: 0.9;
+ h3 {
+  margin: 0;
+  font-family: var(--tz-font-display);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--tz-ink);
  }
 `;
 
-// AddressItem Component
+const ButtonGroup = styled.div`
+ margin-top: 24px;
+ display: flex;
+ justify-content: flex-end;
+ gap: 12px;
+`;
+
+const DialogButton = styled.button<{ danger?: boolean }>`
+ min-height: 44px;
+ padding: 0 20px;
+ border: 1px solid ${({ danger }) => (danger ? "var(--tz-danger)" : "var(--tz-line)")};
+ border-radius: var(--tz-radius-md);
+ font-family: inherit;
+ font-size: 15px;
+ font-weight: 600;
+ cursor: pointer;
+ background-color: ${({ danger }) => (danger ? "var(--tz-danger)" : "var(--tz-paper)")};
+ color: ${({ danger }) => (danger ? "var(--tz-paper)" : "var(--tz-ink)")};
+
+ &:hover {
+  background-color: ${({ danger }) => (danger ? "var(--tz-danger)" : "var(--tz-mist)")};
+  opacity: ${({ danger }) => (danger ? 0.9 : 1)};
+ }
+
+ &:focus-visible {
+  outline: none;
+  box-shadow: var(--tz-focus-ring);
+ }
+`;
+
 function AddressItem({
  item,
  onDelete,
@@ -474,42 +511,39 @@ function AddressItem({
  onDelete: (id: string) => void;
 }) {
  return (
-  <StyledTableRow>
-   <TableCell
-    className={`pre ${!item.name ? "highlight" : ""}`}
-    textAlign="left"
-   >
-    {item.name || "No Name"}
-   </TableCell>
+  <AddressCard>
+   <p className="ac-name">
+    {item.name || <span className="ac-missing">No name</span>}
+   </p>
+   <p className="ac-line">{item.address}</p>
+   <p className="ac-line">
+    {item.phone || <span className="ac-missing">Phone not provided</span>}
+   </p>
 
-   <AddressTableCell textAlign="left">{item.address}</AddressTableCell>
-
-   <TableCell className="pre" textAlign="left">
-    {item.phone || <span className="highlight">Not provided</span>}
-   </TableCell>
-   <ActionCell>
+   <div className="ac-actions">
     <Link href={`/address/edit/${item.id}`}>
-     <StyledIconButton aria-label="edit">
-      <EditIcon fontSize="small" />
-     </StyledIconButton>
+     <ActionButton as="span">
+      <EditIcon size={16} aria-hidden="true" />
+      Edit
+     </ActionButton>
     </Link>
 
-    <StyledIconButton
-     aria-label="delete"
-     className="delete-btn"
+    <ActionButton
+     type="button"
+     className="danger"
      onClick={(e) => {
       e.stopPropagation();
       onDelete(item.id);
      }}
     >
-     <DeleteIcon fontSize="small" />
-    </StyledIconButton>
-   </ActionCell>
-  </StyledTableRow>
+     <DeleteIcon size={16} aria-hidden="true" />
+     Delete
+    </ActionButton>
+   </div>
+  </AddressCard>
  );
 }
 
-// Main Component
 export default function AddressList() {
  const [dialog, setDialog] = useState({
   message: "",
@@ -581,7 +615,7 @@ export default function AddressList() {
  return (
   <Fragment>
    <DashboardPageHeader
-    title="My Addresses"
+    title="My addresses"
     iconName="pin_filled"
     button={<AddNewAddress />}
    />
@@ -591,13 +625,18 @@ export default function AddressList() {
      <Loader />
     </Typography>
    ) : addresses?.length > 0 ? (
-    addresses.map((item) => (
-     <AddressItem key={item.id} item={item} onDelete={handleDelete} />
-    ))
+    <AddressGrid>
+     {addresses.map((item) => (
+      <AddressItem key={item.id} item={item} onDelete={handleDelete} />
+     ))}
+    </AddressGrid>
    ) : (
-    <Typography textAlign="center" m="20px">
-     No address found
-    </Typography>
+    <EmptyOrders
+     title="No saved addresses"
+     message="Add an address once and pick it at checkout next time."
+     actionLabel="Add new address"
+     actionHref="/address/create"
+    />
    )}
 
    {dialog.isLoading && (
@@ -609,11 +648,11 @@ export default function AddressList() {
      >
       <h3>{dialog.message}</h3>
       <ButtonGroup>
-       <DialogButton danger onClick={() => areYouSureDelete(true)}>
-        Yes, Delete
-       </DialogButton>
-       <DialogButton onClick={() => areYouSureDelete(false)}>
+       <DialogButton type="button" onClick={() => areYouSureDelete(false)}>
         Cancel
+       </DialogButton>
+       <DialogButton type="button" danger onClick={() => areYouSureDelete(true)}>
+        Delete
        </DialogButton>
       </ButtonGroup>
      </DialogBox>

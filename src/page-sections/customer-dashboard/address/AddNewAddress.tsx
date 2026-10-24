@@ -25,8 +25,8 @@ export default function AddNewAddress() {
  };
 
  return (
-  <Button px="2rem" color="primary" bg="primary.light" onClick={handleClick}>
-   {loading ? <BeatLoader size={18} color="#E94560" /> : "Add New Address"}
+  <Button variant="contained" color="primary" onClick={handleClick}>
+   {loading ? <BeatLoader size={14} color="#fff" /> : "Add new address"}
   </Button>
  );
 }

@@ -687,15 +687,15 @@ export default function Component({ params }: { params: { id: string } }) {
     maxWidth: "800px",
     margin: "0 auto",
     padding: "20px",
-    backgroundColor: "#f0f4f8",
+    backgroundColor: "var(--tz-line)",
     borderRadius: "10px",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
    }}
   >
    <h1
     style={{
-     color: "#2c3e50",
-     borderBottom: "2px solid #E94560",
+     color: "var(--tz-ink)",
+     borderBottom: "2px solid var(--tz-ember-deep)",
      paddingBottom: "10px",
      marginBottom: "20px",
      fontSize: "clamp(1.5rem, 4vw, 2rem)",
@@ -714,7 +714,7 @@ export default function Component({ params }: { params: { id: string } }) {
    >
     <h2
      style={{
-      color: "#E94560",
+      color: "var(--tz-ember-deep)",
       marginBottom: "15px",
       fontSize: "clamp(1.2rem, 3vw, 1.5rem)",
      }}
@@ -745,7 +745,7 @@ export default function Component({ params }: { params: { id: string } }) {
    >
     <h2
      style={{
-      color: "#E94560",
+      color: "var(--tz-ember-deep)",
       marginBottom: "15px",
       fontSize: "clamp(1.2rem, 3vw, 1.5rem)",
      }}
@@ -776,7 +776,7 @@ export default function Component({ params }: { params: { id: string } }) {
     >
      <h2
       style={{
-       color: "#E94560",
+       color: "var(--tz-ember-deep)",
        marginBottom: "15px",
        fontSize: "clamp(1.2rem, 3vw, 1.5rem)",
       }}
@@ -790,7 +790,7 @@ export default function Component({ params }: { params: { id: string } }) {
         display: "flex",
         flexDirection: "column",
         padding: "15px",
-        backgroundColor: "#f8f9fa",
+        backgroundColor: "var(--tz-mist)",
         borderRadius: "8px",
         marginBottom: "15px",
         boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -812,13 +812,13 @@ export default function Component({ params }: { params: { id: string } }) {
           height: "100px",
           borderRadius: "50%",
           marginRight: "20px",
-          border: "2px solid #E94560",
+          border: "2px solid var(--tz-ember-deep)",
          }}
         />
         <div style={{ flex: 1 }}>
          <h3
           style={{
-           color: "#E94560",
+           color: "var(--tz-ember-deep)",
            marginBottom: "10px",
            fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
           }}
@@ -836,7 +836,7 @@ export default function Component({ params }: { params: { id: string } }) {
            }}
            style={{
             padding: "10px 20px",
-            backgroundColor: "#E94560",
+            backgroundColor: "var(--tz-ember-deep)",
             color: "#fff",
             border: "none",
             borderRadius: "5px",
@@ -856,7 +856,7 @@ export default function Component({ params }: { params: { id: string } }) {
            }}
            style={{
             padding: "10px 20px",
-            backgroundColor: "#4CAF50",
+            backgroundColor: "var(--tz-success)",
             color: "#fff",
             border: "none",
             borderRadius: "5px",
@@ -911,7 +911,7 @@ export default function Component({ params }: { params: { id: string } }) {
         position: "absolute",
         top: "10px",
         right: "10px",
-        backgroundColor: "#E94560",
+        backgroundColor: "var(--tz-ember-deep)",
         color: "#fff",
         border: "none",
         borderRadius: "50%",
