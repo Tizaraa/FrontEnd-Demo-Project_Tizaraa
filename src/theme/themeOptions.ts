@@ -1,6 +1,7 @@
 import merge from "lodash/merge";
 import shadows from "./shadows/shadows";
 import { colors } from "./colors/colors";
+import tz from "./tizaraa";
 import { deviceSize } from "@utils/constants";
 import { Breakpoints, ThemeOption } from "./type";
 
@@ -22,9 +23,10 @@ const THEMES = {
 };
 
 const themesOptions = {
- [THEMES.DEFAULT]: { colors, shadows, breakpoints },
- [THEMES.GROCERY]: { shadows, breakpoints, colors },
+ [THEMES.DEFAULT]: { colors, shadows, breakpoints, tz },
+ [THEMES.GROCERY]: { shadows, breakpoints, colors, tz },
  [THEMES.FURNITURE]: {
+  tz,
   shadows,
   breakpoints,
   colors: {
@@ -33,6 +35,7 @@ const themesOptions = {
   },
  },
  [THEMES.HEALTH]: {
+  tz,
   shadows,
   breakpoints,
   colors: {
@@ -41,6 +44,7 @@ const themesOptions = {
   },
  },
  [THEMES.GIFT]: {
+  tz,
   shadows,
   breakpoints,
   colors: {

@@ -16,11 +16,12 @@ export default async function ProfileEditor() {
   <Fragment>
    <DashboardPageHeader
     iconName="user_filled"
-    title="Edit Profile"
+    title="Edit profile"
+    subtitle="Update your name, phone, birthday and photo"
     button={<BackToProfileButton />}
    />
 
-   <Card1 borderRadius={8}>
+   <Card1 borderRadius={12}>
     <ProfileEditForm />
    </Card1>
   </Fragment>

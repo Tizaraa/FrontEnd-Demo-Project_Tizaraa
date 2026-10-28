@@ -16,7 +16,7 @@ export default function PaymentMethodEditor({ params }: IDParams) {
    <DashboardPageHeader
     button={<BackToMethods />}
     iconName="credit-card_filled"
-    title={`${params.id === "add" ? "Add New" : "Edit"} Payment Method`}
+    title={`${params.id === "add" ? "Add new" : "Edit"} payment method`}
    />
 
    <Card1 borderRadius={8}>

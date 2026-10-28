@@ -149,11 +149,11 @@ export default function ReturnedOrderStatus({
   switch (step.status) {
    case "completed":
    case "active":
-    return { bg: "#E94560", color: "white" };
+    return { bg: "var(--tz-ember-deep)", color: "white" };
    case "pending":
-    return { bg: "gray.300", color: "#E94560" };
+    return { bg: "gray.300", color: "var(--tz-ember-deep)" };
    default:
-    return { bg: "gray.300", color: "#E94560" };
+    return { bg: "gray.300", color: "var(--tz-ember-deep)" };
   }
  };
 
@@ -161,7 +161,7 @@ export default function ReturnedOrderStatus({
   switch (step.status) {
    case "completed":
    case "active":
-    return "#E94560";
+    return "var(--tz-ember-deep)";
    case "pending":
     return "gray.500";
    default:
@@ -240,8 +240,8 @@ export default function ReturnedOrderStatus({
          }}
         >
          <Box
-          bg={isActive ? "#E94560" : "#E8E8E8"}
-          color={isActive ? "white" : "#666"}
+          bg={isActive ? "var(--tz-ember-deep)" : "var(--tz-line)"}
+          color={isActive ? "white" : "var(--tz-slate)"}
           px="14px"
           py="8px"
           borderRadius="6px"
@@ -266,7 +266,7 @@ export default function ReturnedOrderStatus({
            transform: "translateX(-50%)",
            borderLeft: "8px solid transparent",
            borderRight: "8px solid transparent",
-           borderTop: `8px solid ${isActive ? "#E94560" : "#E8E8E8"}`,
+           borderTop: `8px solid ${isActive ? "var(--tz-ember-deep)" : "var(--tz-line)"}`,
           }}
          />
         </Box>
@@ -283,8 +283,8 @@ export default function ReturnedOrderStatus({
            <Avatar
             size={22}
             bg="white"
-            color="#E94560"
-            border="1px solid #E94560"
+            color="var(--tz-ember-deep)"
+            border="1px solid var(--tz-ember-deep)"
            >
             <Icon size="12px" defaultcolor="currentColor">
              done
@@ -303,7 +303,7 @@ export default function ReturnedOrderStatus({
          bg={
           returnSteps[ind + 1].status === "active" ||
           returnSteps[ind + 1].status === "completed"
-           ? "#E94560"
+           ? "var(--tz-ember-deep)"
            : "gray.300"
          }
          alignSelf={width < breakpoint ? "stretch" : "center"}
@@ -323,7 +323,7 @@ export default function ReturnedOrderStatus({
     <Box
      p="0.75rem 1rem"
      bg="white"
-     border="1px solid #e5d1d0"
+     border="1px solid var(--tz-line)"
      borderRadius="8px"
      flex="1"
      minWidth="180px"
@@ -331,7 +331,7 @@ export default function ReturnedOrderStatus({
     >
      <Typography
       fontSize="11px"
-      color="#E94560"
+      color="var(--tz-ember-deep)"
       mb="0.25rem"
       fontWeight="500"
       textTransform="uppercase"
@@ -339,7 +339,7 @@ export default function ReturnedOrderStatus({
      >
       Estimated Returned Date
      </Typography>
-     <Typography fontSize="14px" fontWeight="600" color="#73877b">
+     <Typography fontSize="14px" fontWeight="600" color="var(--tz-slate)">
       {deliveredAt}
      </Typography>
     </Box>
@@ -348,16 +348,16 @@ export default function ReturnedOrderStatus({
     <Box
      p="0.75rem 1rem"
      bg="white"
-     border="1px solid #e5d1d0"
+     border="1px solid var(--tz-line)"
      borderRadius="8px"
      flex="2"
      minWidth="240px"
      transition="all 0.2s ease"
     >
-     <Typography fontSize="13px" color="#E94560" mb="0.25rem">
+     <Typography fontSize="13px" color="var(--tz-ember-deep)" mb="0.25rem">
       Return Status
      </Typography>
-     <Typography fontSize="13px" color="#73877b" lineHeight="1.5">
+     <Typography fontSize="13px" color="var(--tz-slate)" lineHeight="1.5">
       {return_status === 0 && "Your return was successful"}
       {return_status === 1 && "Your return has been confirmed"}
       {return_status === 2 &&

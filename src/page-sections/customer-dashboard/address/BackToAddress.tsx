@@ -26,7 +26,7 @@ export default function BackToAddress() {
 
  return (
   <Button px="2rem" color="primary" bg="primary.light" onClick={handleClick}>
-   {loading ? <BeatLoader size={18} color="#E94560" /> : "Back to Address"}
+   {loading ? <BeatLoader size={18} color="var(--tz-ember-deep)" /> : "Back to Address"}
   </Button>
  );
 }

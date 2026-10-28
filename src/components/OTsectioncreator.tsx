@@ -1,9 +1,7 @@
 import { ReactNode } from "react";
 import Box from "./Box";
 import Container from "./Container";
-import CategorySectionHeader from "./CategorySectionHeader";
-import FlexBox from "./FlexBox";
-import { H2, H3, H4, H5, SemiSpan } from "./Typography";
+import { SectionHeadRow } from "./SectionHead";
 
 interface OTsectioncreatorProps {
  title: string;
@@ -17,14 +15,12 @@ const OTsectioncreator: React.FC<OTsectioncreatorProps> = ({
  children,
 }) => {
  return (
-  <Box mb="3.75rem">
+  <Box mb="3rem">
    <Container pb="1rem">
-    <FlexBox justifyContent="space-between" alignItems="center">
-     <H3 fontWeight="bold" lineHeight="``1">
-      {title}
-     </H3>
-     {seeMoreLink}
-    </FlexBox>
+    <SectionHeadRow>
+     <h2 className="section-title">{title}</h2>
+     <div className="section-extras ot-see-more">{seeMoreLink}</div>
+    </SectionHeadRow>
     {children}
    </Container>
   </Box>

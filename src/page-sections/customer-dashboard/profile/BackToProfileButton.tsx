@@ -7,13 +7,8 @@ export default function BackToProfileButton() {
  const { push } = useRouter();
 
  return (
-  <Button
-   color="primary"
-   bg="primary.light"
-   px="2rem"
-   onClick={() => push("/profile")}
-  >
-   Back to Profile
+  <Button variant="outlined" color="secondary" onClick={() => push("/profile")}>
+   Back to profile
   </Button>
  );
 }

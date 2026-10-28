@@ -414,15 +414,15 @@
 //            height: "120px",
 //            boxShadow:
 //             paymentMethod === "1"
-//              ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
-//              : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
+//              ? `0 0 0 2px ${tz.color.ember}`
+//              : `0 0 0 1px ${tz.color.line}`,
 //            display: "flex",
 //            flexDirection: "column",
 //            alignItems: "center",
 //            justifyContent: "center",
 //            padding: "8px",
 //            background:
-//             paymentMethod === "1" ? "rgba(233, 69, 96, 0.05)" : "white",
+//             paymentMethod === "1" ? tz.color.emberTint : "white",
 //            transition: "all 0.3s ease",
 //            boxSizing: "border-box",
 //            borderRadius: "8px",
@@ -510,15 +510,15 @@
 //           height: "120px",
 //           boxShadow:
 //            paymentMethod === "4"
-//             ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
-//             : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
+//             ? `0 0 0 2px ${tz.color.ember}`
+//             : `0 0 0 1px ${tz.color.line}`,
 //           display: "flex",
 //           flexDirection: "column",
 //           alignItems: "center",
 //           justifyContent: "center",
 //           padding: "8px",
 //           background:
-//            paymentMethod === "4" ? "rgba(233, 69, 96, 0.05)" : "white",
+//            paymentMethod === "4" ? tz.color.emberTint : "white",
 //           transition: "all 0.3s ease",
 //           boxSizing: "border-box",
 //           borderRadius: "8px",
@@ -603,8 +603,8 @@
 //           height: "120px",
 //           boxShadow:
 //            paymentMethod === "2"
-//             ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
-//             : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
+//             ? `0 0 0 2px ${tz.color.ember}`
+//             : `0 0 0 1px ${tz.color.line}`,
 //           display: "flex",
 //           flexDirection: "column",
 //           alignItems: "center",
@@ -614,7 +614,7 @@
 //           pointerEvents: "none", // Disable interactions
 //           // background:
 //           //  paymentMethod === "2"
-//           //   ? "rgba(233, 69, 96, 0.05)"
+//           //   ? tz.color.emberTint
 //           //   : "white",
 //           transition: "all 0.3s ease",
 //           boxSizing: "border-box",
@@ -916,6 +916,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 import authService from "services/authService";
 import axios from "@lib/axiosClient";
 import { AxiosError } from "axios";
+import tz from "../../theme/tizaraa";
 
 export default function CorporatePaymentForm() {
  const { push } = useRouter();
@@ -1317,8 +1318,8 @@ export default function CorporatePaymentForm() {
      width="100%"
      style={{
       gap: "20px",
-      background: "#FFFFFF",
-      boxShadow: "0px 1px 3px rgba(3, 0, 71, 0.09)",
+      background: tz.color.paper,
+      boxShadow: tz.elevation.rest,
      }}
     >
      <div
@@ -1362,7 +1363,7 @@ export default function CorporatePaymentForm() {
           fontSize: "14px",
           fontWeight: "600",
           textAlign: "center",
-          color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
+          color: tz.color.inkSoft, // Matches disabled state
          }}
         >
          Cash on Delivery
@@ -1384,21 +1385,21 @@ export default function CorporatePaymentForm() {
           height: "120px",
           boxShadow:
            paymentMethod === "4"
-            ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
-            : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
+            ? `0 0 0 2px ${tz.color.ember}`
+            : `0 0 0 1px ${tz.color.line}`,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           padding: "8px",
           background:
-           paymentMethod === "4" ? "rgba(233, 69, 96, 0.05)" : "white",
+           paymentMethod === "4" ? tz.color.emberTint : tz.color.paper,
           transition: "all 0.3s ease",
           boxSizing: "border-box",
           borderRadius: "8px",
           border:
            paymentMethod === "4"
-            ? "1px solid #E94560"
+            ? `1px solid ${tz.color.emberDeep}`
             : "1px solid transparent",
           position: "relative",
          }}
@@ -1412,7 +1413,7 @@ export default function CorporatePaymentForm() {
             right: "4px",
             width: "18px",
             height: "18px",
-            backgroundColor: "#E94560",
+            backgroundColor: tz.color.emberDeep,
             borderRadius: "50%",
             display: "flex",
             alignItems: "center",
@@ -1428,7 +1429,7 @@ export default function CorporatePaymentForm() {
            >
             <path
              d="M1 4L3.5 6.5L9 1"
-             stroke="white"
+             stroke={tz.color.paper}
              strokeWidth="2"
              strokeLinecap="round"
              strokeLinejoin="round"
@@ -1454,7 +1455,7 @@ export default function CorporatePaymentForm() {
            fontSize: "14px",
            fontWeight: "600",
            textAlign: "center",
-           color: paymentMethod === "4" ? "#E94560" : "#333",
+           color: paymentMethod === "4" ? tz.color.emberDeep : tz.color.ink,
           }}
          >
           Buy with credit
@@ -1477,8 +1478,8 @@ export default function CorporatePaymentForm() {
           height: "120px",
           boxShadow:
            paymentMethod === "2"
-            ? "0 0 0 2px #E94560, 0px 4px 8px rgba(233, 69, 96, 0.2)"
-            : "0 0 1px 1px rgba(0, 0, 0, 0.1)",
+            ? `0 0 0 2px ${tz.color.ember}`
+            : `0 0 0 1px ${tz.color.line}`,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -1488,14 +1489,14 @@ export default function CorporatePaymentForm() {
           pointerEvents: "none", // Disable interactions
           // background:
           //  paymentMethod === "2"
-          //   ? "rgba(233, 69, 96, 0.05)"
+          //   ? tz.color.emberTint
           //   : "white",
           transition: "all 0.3s ease",
           boxSizing: "border-box",
           borderRadius: "8px",
           border:
            paymentMethod === "2"
-            ? "1px solid #E94560"
+            ? `1px solid ${tz.color.emberDeep}`
             : "1px solid transparent",
           position: "relative",
          }}
@@ -1509,7 +1510,7 @@ export default function CorporatePaymentForm() {
             right: "4px",
             width: "18px",
             height: "18px",
-            backgroundColor: "#E94560",
+            backgroundColor: tz.color.emberDeep,
             borderRadius: "50%",
             display: "flex",
             alignItems: "center",
@@ -1525,7 +1526,7 @@ export default function CorporatePaymentForm() {
            >
             <path
              d="M1 4L3.5 6.5L9 1"
-             stroke="white"
+             stroke={tz.color.paper}
              strokeWidth="2"
              strokeLinecap="round"
              strokeLinejoin="round"
@@ -1550,7 +1551,7 @@ export default function CorporatePaymentForm() {
            fontSize: "14px",
            fontWeight: "600",
            textAlign: "center",
-           color: paymentMethod === "2" ? "#E94560" : "#333",
+           color: paymentMethod === "2" ? tz.color.emberDeep : tz.color.ink,
           }}
          >
           Online Payment
@@ -1592,7 +1593,7 @@ export default function CorporatePaymentForm() {
          fontSize: "14px",
          fontWeight: "600",
          textAlign: "center",
-         color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
+         color: tz.color.inkSoft, // Matches disabled state
         }}
        >
         Nagad
@@ -1632,7 +1633,7 @@ export default function CorporatePaymentForm() {
          fontSize: "14px",
          fontWeight: "600",
          textAlign: "center",
-         color: "rgba(0, 0, 0, 0.7)", // Matches disabled state
+         color: tz.color.inkSoft, // Matches disabled state
         }}
        >
         Bkash
@@ -1722,7 +1723,7 @@ export default function CorporatePaymentForm() {
       onClick={handleClick}
      >
       {isHasPayLoading ? (
-       <BeatLoader size={18} color="#E94560" />
+       <BeatLoader size={18} color={tz.color.emberDeep} />
       ) : (
        "Back to Checkout Details"
       )}
@@ -1735,12 +1736,12 @@ export default function CorporatePaymentForm() {
       style={{
        color:
         isSubtotalZero || !paymentMethod || !isCheckboxChecked
-         ? "#999999"
-         : "#ffe1e6",
+         ? tz.color.slate
+         : tz.color.paper,
        backgroundColor:
         isSubtotalZero || !paymentMethod || !isCheckboxChecked
-         ? "#cccccc"
-         : "#e94560",
+         ? tz.color.lineSoft
+         : tz.color.emberDeep,
        cursor:
         isSubtotalZero || !paymentMethod || !isCheckboxChecked // Disable button if checkbox is unchecked
          ? "not-allowed"
@@ -1752,7 +1753,7 @@ export default function CorporatePaymentForm() {
        isSubtotalZero || !paymentMethod || !isCheckboxChecked // Disable button if checkbox is unchecked
       }
      >
-      {isHasLoading ? <BeatLoader size={18} color="white" /> : "Proceed to Pay"}
+      {isHasLoading ? <BeatLoader size={18} color={tz.color.paper} /> : "Proceed to Pay"}
      </Button>
     </Grid>
    </Grid>

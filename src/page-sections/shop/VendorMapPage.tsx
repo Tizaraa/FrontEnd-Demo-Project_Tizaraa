@@ -300,6 +300,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import tz from "../../theme/tizaraa";
 
 // Define the Vendor interface to match the API response (sellerDetails)
 interface Vendor {
@@ -614,13 +615,14 @@ const VendorMapPage: React.FC<VendorMapPageProps> = ({
       <button
        onClick={() => setShowOverlay(false)}
        style={{
-        padding: "10px 20px",
-        fontSize: "16px",
-        fontWeight: "bold",
-        backgroundColor: "#E94560",
-        color: "white",
+        padding: "12px 20px",
+        fontFamily: tz.type.button.fontFamily,
+        fontSize: tz.type.button.fontSize,
+        fontWeight: tz.type.button.fontWeight,
+        backgroundColor: tz.color.emberDeep,
+        color: tz.color.paper,
         border: "none",
-        borderRadius: "5px",
+        borderRadius: `${tz.radius.md}px`,
         cursor: "pointer",
         zIndex: 2,
         display: "flex",

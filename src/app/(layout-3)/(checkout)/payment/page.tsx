@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 
 // import tizaraa_watermark from "../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
 import Watermark from "@component/watermark/Watermark";
+import StickySummary from "@sections/checkout/StickySummary";
 import Image from "next/image";
 import NextImage from "@component/NextImage";
 import CorporatePaymentForm from "@sections/payment/CorporatePaymentForm";
@@ -65,7 +66,9 @@ export default function Checkout() {
      </Grid>
 
      <Grid item lg={4} md={4} xs={12}>
-      <PaymentSummary seller_type={seller_type} />
+      <StickySummary>
+       <PaymentSummary seller_type={seller_type} />
+      </StickySummary>
      </Grid>
     </Grid>
    </main>

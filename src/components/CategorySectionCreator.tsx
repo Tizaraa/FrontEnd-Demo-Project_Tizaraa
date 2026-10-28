@@ -20,7 +20,7 @@ export default function CategorySectionCreator({
  seeMoreLink,
 }: CategorySectionCreatorProps) {
  return (
-  <Box mb="3.75rem">
+  <Box mb="3rem">
    <Container pb="1rem">
     {title && (
      <CategorySectionHeader

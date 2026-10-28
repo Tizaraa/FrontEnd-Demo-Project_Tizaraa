@@ -10,7 +10,7 @@ import NewArrivalsProducts from "../../../public/assets/images/banners/New-arriv
 
 export default function Section8() {
  return (
-  <Container mb="70px">
+  <Container mb="3rem">
    {/* <Grid container >
         <Grid item xs={12} md={4}>
           <Link href="/">
@@ -24,7 +24,7 @@ export default function Section8() {
           </Link>
         </Grid>
       </Grid> */}
-   <Link href="/newarrivals/new_arrivals">
+   <Link href="/newarrivals/new_arrivals" style={{ display: "block", borderRadius: 12, overflow: "hidden" }}>
     <NextImage alt="newArrivalBanner" src={NewArrivalsProducts} priority />
    </Link>
   </Container>

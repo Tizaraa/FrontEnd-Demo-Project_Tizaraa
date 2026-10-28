@@ -281,13 +281,13 @@ export default function RfqProductList() {
      marginBottom: "1rem",
     }}
    >
-    <h1 style={{ fontSize: "1.875rem", fontWeight: "bold", color: "#1f2937" }}>
+    <h1 style={{ fontSize: "1.875rem", fontWeight: "bold", color: "var(--tz-ink)" }}>
      Request for Quotations
     </h1>
     <button
      onClick={() => router.push("/rfq/rfq-form")}
      style={{
-      backgroundColor: "#E94560",
+      backgroundColor: "var(--tz-ember-deep)",
       color: "white",
       padding: "0.7rem 1rem",
       borderRadius: "0.375rem",
@@ -297,8 +297,8 @@ export default function RfqProductList() {
       cursor: "pointer",
       transition: "background-color 0.2s",
      }}
-     onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#E94560")}
-     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#E94560")}
+     onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--tz-ember-deep)")}
+     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--tz-ember-deep)")}
     >
      <Plus style={{ marginRight: "0.5rem", height: "1rem", width: "1rem" }} />{" "}
      Create New RFQ
@@ -314,7 +314,7 @@ export default function RfqProductList() {
      style={{
       flex: 1,
       padding: "0.5rem",
-      border: "1px solid #d1d5db",
+      border: "1px solid var(--tz-line)",
       borderRadius: "0.375rem",
       fontSize: "0.875rem",
      }}
@@ -325,7 +325,7 @@ export default function RfqProductList() {
           style={{
             width: "180px",
             padding: "0.5rem",
-            border: "1px solid #d1d5db",
+            border: "1px solid var(--tz-line)",
             borderRadius: "0.375rem",
             backgroundColor: "white",
             fontSize: "0.875rem",
@@ -338,7 +338,7 @@ export default function RfqProductList() {
           onClick={toggleSortOrder}
           style={{
             padding: "0.5rem",
-            border: "1px solid #d1d5db",
+            border: "1px solid var(--tz-line)",
             borderRadius: "0.375rem",
             backgroundColor: "white",
             cursor: "pointer",
@@ -363,7 +363,7 @@ export default function RfqProductList() {
        key={rfq.id}
        style={{
         backgroundColor: "white",
-        border: "1px solid #e5e7eb",
+        border: "1px solid var(--tz-line)",
         borderRadius: "0.5rem",
         padding: "1.5rem",
         marginBottom: "1rem",
@@ -387,7 +387,7 @@ export default function RfqProductList() {
          style={{
           fontSize: "1.25rem",
           fontWeight: "600",
-          color: "#1f2937",
+          color: "var(--tz-ink)",
           marginBottom: "0.5rem",
          }}
         >
@@ -398,7 +398,7 @@ export default function RfqProductList() {
        <p
         style={{
          fontSize: "0.875rem",
-         color: "#4b5563",
+         color: "var(--tz-ink-soft)",
          marginBottom: "0.5rem",
         }}
        >
@@ -407,7 +407,7 @@ export default function RfqProductList() {
        <p
         style={{
          fontSize: "0.875rem",
-         color: "#4b5563",
+         color: "var(--tz-ink-soft)",
          marginBottom: "0.5rem",
         }}
        >
@@ -416,7 +416,7 @@ export default function RfqProductList() {
        <p
         style={{
          fontSize: "0.875rem",
-         color: "#4b5563",
+         color: "var(--tz-ink-soft)",
          marginBottom: "0.5rem",
         }}
        >
@@ -425,7 +425,7 @@ export default function RfqProductList() {
        <p
         style={{
          fontSize: "0.875rem",
-         color: "#4b5563",
+         color: "var(--tz-ink-soft)",
          marginBottom: "0.5rem",
         }}
        >
@@ -437,8 +437,8 @@ export default function RfqProductList() {
          fontWeight: "500",
          padding: "0.25rem 0.625rem",
          borderRadius: "9999px",
-         backgroundColor: rfq.status === 1 ? "#d1fae5" : "#FFFFC5",
-         color: rfq.status === 1 ? "#065f46" : "#FFBF00",
+         backgroundColor: rfq.status === 1 ? "var(--tz-success-bg)" : "var(--tz-warning-bg)",
+         color: rfq.status === 1 ? "var(--tz-success)" : "var(--tz-warning)",
         }}
        >
         {rfq.status === 1 ? "Approved" : "Pending"}
@@ -460,9 +460,9 @@ export default function RfqProductList() {
      disabled={currentPage === 1}
      style={{
       padding: "0.5rem 1rem",
-      border: "1px solid #d1d5db",
+      border: "1px solid var(--tz-line)",
       borderRadius: "0.375rem",
-      backgroundColor: "#E94560",
+      backgroundColor: "var(--tz-ember-deep)",
       color: "white",
       display: "flex",
       alignItems: "center",
@@ -475,7 +475,7 @@ export default function RfqProductList() {
      />{" "}
      Previous
     </button>
-    <span style={{ fontSize: "0.875rem", fontWeight: "500", color: "#4b5563" }}>
+    <span style={{ fontSize: "0.875rem", fontWeight: "500", color: "var(--tz-ink-soft)" }}>
      Page {currentPage} of {pageCount}
     </span>
     <button
@@ -483,9 +483,9 @@ export default function RfqProductList() {
      disabled={currentPage === pageCount}
      style={{
       padding: "0.5rem 1rem",
-      border: "1px solid #d1d5db",
+      border: "1px solid var(--tz-line)",
       borderRadius: "0.375rem",
-      backgroundColor: "#E94560",
+      backgroundColor: "var(--tz-ember-deep)",
       color: "white",
       display: "flex",
       alignItems: "center",

@@ -13,8 +13,8 @@ export const BadgeContainer = styled.div`
 export const StyledBadge = styled.span`
  font-size: 11px;
  padding: 1px 5px;
- color: #e94560;
+ color: ${({ theme }) => theme.tz.tone.brand.fg};
  font-weight: 600;
  border-radius: 6px;
- background: #ffe1e6;
+ background: ${({ theme }) => theme.tz.tone.brand.bg};
 `;

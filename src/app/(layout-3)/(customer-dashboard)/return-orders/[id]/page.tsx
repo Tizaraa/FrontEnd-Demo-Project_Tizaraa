@@ -72,15 +72,15 @@ export default function OrderDetails({ params }: IDParams) {
  const getColor = (status: string) => {
   switch (status) {
    case "Pending":
-    return "#FFC107"; // Yellow for Pending
+    return "var(--tz-warning)"; // Yellow for Pending
    case "Confirmed":
-    return "#2196F3"; // Blue for Processing
+    return "var(--tz-navy)"; // Blue for Processing
    case "Delivered":
-    return "#4CAF51"; // Green for Delivered
+    return "var(--tz-success)"; // Green for Delivered
    case "Cancelled":
-    return "#F44336"; // Red for Cancelled
+    return "var(--tz-danger)"; // Red for Cancelled
    default:
-    return "#9E9E9E"; // Grey for unknown status
+    return "var(--tz-slate)"; // Grey for unknown status
   }
  };
 
@@ -362,8 +362,8 @@ export default function OrderDetails({ params }: IDParams) {
       onClick={() => toggleSummary(order?.Order?.invoice_id)}
       style={{
        padding: "0.5rem 1rem",
-       backgroundColor: "#FFE1E6",
-       color: "#E94560",
+       backgroundColor: "var(--tz-ember-tint)",
+       color: "var(--tz-ember-deep)",
        borderRadius: "300px",
        textAlign: "center",
        height: "40px",
@@ -419,14 +419,14 @@ export default function OrderDetails({ params }: IDParams) {
 
       <FlexBox alignItems="center" mb="1rem">
        Payment Method:
-       <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+       <H6 my="0px" mx="1rem" backgroundColor="var(--tz-line)" p="2px">
         {order?.Order?.payment_method}
        </H6>
       </FlexBox>
 
       <FlexBox alignItems="center" mb="1rem">
        Payment Status:
-       <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+       <H6 my="0px" mx="1rem" backgroundColor="var(--tz-line)" p="2px">
         {order?.Order?.payment_status}
        </H6>
       </FlexBox>
@@ -439,7 +439,7 @@ export default function OrderDetails({ params }: IDParams) {
  return (
   <Fragment>
    <DashboardPageHeader
-    title="Return Order Details"
+    title="Return order details"
     iconName="truck"
     // button={<OrderListButton params={params} />}
    />
@@ -540,7 +540,7 @@ export default function OrderDetails({ params }: IDParams) {
               <Box m="6px">
                <Chip
                 p="0.25rem 1rem"
-                style={{ backgroundColor: "rgb(233, 69, 96)" }}
+                style={{ backgroundColor: "var(--tz-ember-deep)" }}
                >
                 <Small color="white">Return</Small>
                </Chip>
@@ -551,8 +551,8 @@ export default function OrderDetails({ params }: IDParams) {
                     <p
                       style={{
                         padding: "0.5rem 1rem",
-                        backgroundColor: "#FFE1E6",
-                        color: "#E94560",
+                        backgroundColor: "var(--tz-ember-tint)",
+                        color: "var(--tz-ember-deep)",
                         borderRadius: "300px",
                         textAlign: "center",
                         height: "40px",
@@ -590,55 +590,55 @@ export default function OrderDetails({ params }: IDParams) {
               key={ret.id}
               mt="10px"
               p="16px"
-              bg="#fff5f5"
+              bg="var(--tz-danger-bg)"
              >
-              <Typography fontWeight="700" fontSize="14px" color="#e94560" mb="12px">
+              <Typography fontWeight="700" fontSize="14px" color="var(--tz-ember-deep)" mb="12px">
                Return Request Details
               </Typography>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px" }}>
                <div>
-                <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
                  Return Type
                 </Typography>
-                <Typography fontSize="13px" fontWeight="600" color="#374151" mt="2px" style={{ textTransform: "capitalize" }}>
+                <Typography fontSize="13px" fontWeight="600" color="var(--tz-ink-soft)" mt="2px" style={{ textTransform: "capitalize" }}>
                  {(ret.return_type ?? "").replace("_", " ")}
                 </Typography>
                </div>
                <div>
-                <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
                  Status
                 </Typography>
-                <Typography fontSize="13px" fontWeight="600" color="#e94560" mt="2px" style={{ textTransform: "capitalize" }}>
+                <Typography fontSize="13px" fontWeight="600" color="var(--tz-ember-deep)" mt="2px" style={{ textTransform: "capitalize" }}>
                  {ret.return_status}
                 </Typography>
                </div>
               </div>
               <div style={{ marginTop: "12px" }}>
-               <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
+               <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
                 Return Reason
                </Typography>
-               <Typography fontSize="13px" color="#374151" mt="4px" lineHeight="1.6">
+               <Typography fontSize="13px" color="var(--tz-ink-soft)" mt="4px" lineHeight="1.6">
                 {ret.return_reason}
                </Typography>
               </div>
               {ret.refund_amount && (
                <div style={{ marginTop: "12px" }}>
-                <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
                  Refund Amount
                 </Typography>
-                <Typography fontSize="13px" fontWeight="700" color="#16a34a" mt="2px">
+                <Typography fontSize="13px" fontWeight="700" color="var(--tz-success)" mt="2px">
                  BDT {ret.refund_amount}
                 </Typography>
                </div>
               )}
               {ret.images?.length > 0 && (
                <div style={{ marginTop: "12px" }}>
-                <Typography fontSize="11px" color="#9ca3af" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>
+                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>
                  Submitted Photos
                 </Typography>
                 <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                  {ret.images.map((url: string, i: number) => (
-                  <img key={i} src={url} alt={`proof-${i}`} style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 6, border: "1px solid #fca5a5" }} />
+                  <img key={i} src={url} alt={`proof-${i}`} style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 6, border: "1px solid var(--tz-danger-bg)" }} />
                  ))}
                 </div>
                </div>
@@ -653,8 +653,8 @@ export default function OrderDetails({ params }: IDParams) {
               onClick={() => toggleSummary(shopName)}
               style={{
                padding: "0.5rem 1rem",
-               backgroundColor: "#FFE1E6",
-               color: "#E94560",
+               backgroundColor: "var(--tz-ember-tint)",
+               color: "var(--tz-ember-deep)",
                borderRadius: "300px",
                textAlign: "center",
                height: "40px",
@@ -713,7 +713,7 @@ export default function OrderDetails({ params }: IDParams) {
               mt="2rem"
               onClick={fetchInvoice} // Fetch invoice when button is clicked
             >
-              {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
+              {invoiceLoading ? <BeatLoader size={18} color="var(--tz-ember-deep)" /> : "Invoice"}
             </Button> */}
 
       {/* {order.Order.payment_status === "Unpaid" && (

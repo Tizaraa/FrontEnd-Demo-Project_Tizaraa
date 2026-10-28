@@ -1139,12 +1139,20 @@ import { useRouter } from "next/navigation";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 // STYLED COMPONENT
-import { StyledRoot } from "./styles";
-import CommonHeader from "@component/header/CommonHeader";
+import {
+ AuthCard,
+ AuthErrorText,
+ AuthFooter,
+ AuthTextLink,
+ AuthTitle,
+} from "./styles";
+import tz from "../../theme/tizaraa";
 
 import BeatLoader from "react-spinners/BeatLoader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+
+const requiredMark = { color: tz.tone.danger.fg };
 
 export default function Signup() {
  const router = useRouter();
@@ -1380,20 +1388,17 @@ export default function Signup() {
 
  return (
   <>
-   <CommonHeader></CommonHeader>
-   <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
-    <form className="content" onSubmit={handleSubmit} autoComplete="off">
-     <H3 textAlign="center" mb="0.5rem">
-      Create Your Account
-     </H3>
+   <AuthCard>
+    <form onSubmit={handleSubmit} autoComplete="off">
+     <AuthTitle style={{ marginBottom: 24 }}>Create Your Account</AuthTitle>
 
      <TextField
       fullwidth
       name="name"
-      mb="0.75rem"
+      mb="1rem"
       label={
        <>
-        Full Name <span style={{ color: "#e94560" }}>*</span>
+        Full Name <span style={requiredMark}>*</span>
        </>
       }
       onBlur={handleFieldBlur}
@@ -1405,7 +1410,7 @@ export default function Signup() {
 
      <TextField
       fullwidth
-      mb="0.75rem"
+      mb="1rem"
       name="email"
       type="email"
       onBlur={handleFieldBlur}
@@ -1414,7 +1419,7 @@ export default function Signup() {
       placeholder="Enter Your Email"
       label={
        <>
-        Email <span style={{ color: "#e94560" }}>*</span>
+        Email <span style={requiredMark}>*</span>
        </>
       }
       autoComplete="new-email"
@@ -1423,7 +1428,7 @@ export default function Signup() {
 
      <TextField
       fullwidth
-      mb="0.75rem"
+      mb="1rem"
       name="phone"
       type="tel" // Changed from "text" to "number"
       maxLength="11"
@@ -1433,7 +1438,7 @@ export default function Signup() {
       placeholder="Enter Your Phone Number"
       label={
        <>
-        Phone <span style={{ color: "#e94560" }}>*</span>
+        Phone <span style={requiredMark}>*</span>
        </>
       }
       errorText={shouldShowError("phone") && (errors.phone || apiError.phone)}
@@ -1448,11 +1453,11 @@ export default function Signup() {
 
      <TextField
       fullwidth
-      mb="0.75rem"
+      mb="1rem"
       name="password"
       label={
        <>
-        Password <span style={{ color: "#e94560" }}>*</span>
+        Password <span style={requiredMark}>*</span>
        </>
       }
       placeholder="Enter Your Password"
@@ -1482,15 +1487,21 @@ export default function Signup() {
       <div
        style={{
         display: "flex",
-        alignItems: "center",
-        marginTop: "0.5rem",
+        alignItems: "flex-start",
+        gap: "8px",
+        margin: "-0.25rem 0 1rem",
+        padding: "10px 12px",
+        borderRadius: tz.radius.sm,
+        background: tz.tone.warning.bg,
        }}
       >
        <FontAwesomeIcon
         icon={faCircleExclamation}
-        style={{ color: "#e94560", marginRight: "0.5rem" }}
+        style={{ color: tz.tone.warning.fg, marginTop: "3px" }}
        />
-       <span style={{ fontSize: "0.875rem", color: "#495057" }}>
+       <span
+        style={{ fontSize: "13px", lineHeight: 1.45, color: tz.color.inkSoft }}
+       >
         Password should be at least 8 characters, contain 1 uppercase, 1
         lowercase, 1 number, and 1 special character.
        </span>
@@ -1499,12 +1510,11 @@ export default function Signup() {
 
      <TextField
       fullwidth
-      mb="0.75rem"
-      mt="0.75rem"
+      mb="1rem"
       name="cpassword"
       label={
        <>
-        Confirm Password <span style={{ color: "#e94560" }}>*</span>
+        Confirm Password <span style={requiredMark}>*</span>
        </>
       }
       placeholder="Enter Your Confirm Password"
@@ -1529,64 +1539,54 @@ export default function Signup() {
      />
 
      <CheckBox
-      mb="1.75rem"
+      mt="0.5rem"
+      mb="0.5rem"
       name="agreement"
       color="secondary"
       onChange={handleChange}
       checked={values.agreement}
       label={
-       <FlexBox>
-        <SemiSpan>By signing up, you agree to</SemiSpan>
-        <a
+       <span style={{ fontSize: "14px", color: tz.color.inkSoft }}>
+        By signing up, you agree to{" "}
+        <AuthTextLink
          href="/terms-and-conditions"
          target="_blank"
          rel="noreferrer noopener"
         >
-         <H6 ml="0.5rem" borderBottom="1px solid" borderColor="gray.900">
-          Terms & Conditions
-         </H6>
-        </a>
-       </FlexBox>
+         Terms & Conditions
+        </AuthTextLink>
+       </span>
       }
       required
      />
 
      {/* Show agreement error in real-time */}
      {showRealTimeValidation.agreement && errors.agreement && (
-      <div
-       style={{
-        color: "#e94560",
-        fontSize: "0.875rem",
-        marginTop: "-1rem",
-        marginBottom: "1rem",
-       }}
-      >
+      <AuthErrorText>
        {typeof errors.agreement === "string" ? errors.agreement : null}
-      </div>
+      </AuthErrorText>
      )}
 
      <Button
-      mb="1.65rem"
-      mt="1.65rem"
+      mt="1.5rem"
+      size="medium"
       variant="contained"
       color="primary"
       type="submit"
       fullwidth
       disabled={isSubmitting}
      >
-      {isSubmitting ? <BeatLoader size={18} color="#fff" /> : "Create Account"}
+      {isSubmitting ? <BeatLoader size={12} color={tz.color.slate} /> : "Create Account"}
      </Button>
     </form>
 
-    <FlexBox justifyContent="center" bg="gray.200" py="19px">
-     <SemiSpan>Already have an account?</SemiSpan>
-     <Link href={{ pathname: "/login", query: { from: "signup" } }}>
-      <H6 ml="0.5rem" borderBottom="1px solid" borderColor="gray.900">
-       Log in
-      </H6>
-     </Link>
-    </FlexBox>
-   </StyledRoot>
+    <AuthFooter>
+     <span>Already have an account?</span>
+     <AuthTextLink href={{ pathname: "/login", query: { from: "signup" } }}>
+      Log in
+     </AuthTextLink>
+    </AuthFooter>
+   </AuthCard>
   </>
  );
 }

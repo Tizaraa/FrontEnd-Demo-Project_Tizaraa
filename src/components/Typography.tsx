@@ -62,11 +62,11 @@ const Typography = styled.div.withConfig({
 `;
 
 export const H1 = (props: CustomProps) => (
- <Typography as="h1" mb="0" mt="0" fontSize="30px" {...props} />
+ <Typography as="h1" mb="0" mt="0" fontSize="28px" {...props} />
 );
 
 export const H2 = (props: CustomProps) => (
- <Typography as="h2" mb="0" mt="0" fontSize="25px" {...props} />
+ <Typography as="h2" mb="0" mt="0" fontSize="24px" {...props} />
 );
 
 export const H3 = (props: CustomProps) => (

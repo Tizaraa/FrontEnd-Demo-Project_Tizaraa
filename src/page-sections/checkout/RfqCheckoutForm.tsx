@@ -15,6 +15,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import tz from "../../theme/tizaraa";
 
 interface RfqCheckoutFormProps {
  responseId: number; // Ensure responseId is a number
@@ -180,7 +181,7 @@ const RfqCheckoutForm: FC<RfqCheckoutFormProps> = ({ responseId }) => {
      my="2rem"
      onClick={handleAddNewAddress}
     >
-     {isLoading ? <BeatLoader size={18} color="#E94560" /> : "Add New Address"}
+     {isLoading ? <BeatLoader size={18} color={tz.color.emberDeep} /> : "Add New Address"}
     </Button>
    </FlexBox>
 

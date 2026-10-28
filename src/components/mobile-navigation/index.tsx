@@ -121,13 +121,17 @@ const Wrapper = styled.div`
  justify-content: space-around;
  height: ${layoutConstant.mobileNavHeight};
  background: ${getTheme("colors.body.paper")};
- box-shadow: 0px 1px 4px 3px rgba(0, 0, 0, 0.1);
+ border-top: 1px solid ${({ theme }) => theme.tz.color.line};
+ box-shadow: ${({ theme }) => theme.tz.elevation.raised};
  z-index: 999;
 
  .link {
+  position: relative;
   flex: 1 1 0;
   display: flex;
-  font-size: 13px;
+  min-height: 44px;
+  font-size: 12px;
+  font-weight: 500;
   align-items: center;
   flex-direction: column;
   justify-content: center;

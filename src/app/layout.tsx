@@ -1,5 +1,5 @@
 // import type { Metadata } from "next";
-// import { Open_Sans } from "next/font/google";
+// import { Anek_Bangla, Hind_Siliguri } from "next/font/google";
 // // THEME PROVIDER
 // import StyledComponentsRegistry from "@lib/registry";
 // // APP PROVIDER
@@ -26,7 +26,7 @@
 //   return (
 //     <html lang="en">
 //       <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
-//       <body className={openSans.className}>
+//       <body className={`${displayFont.variable} ${bodyFont.variable}`}>
 //         <StyledComponentsRegistry>
 //           <AppProvider>
 //             <StyledContext>{children}</StyledContext>
@@ -39,7 +39,7 @@
 //   );
 // }
 //import type { Metadata } from "next";
-// import { Open_Sans } from "next/font/google";
+// import { Anek_Bangla, Hind_Siliguri } from "next/font/google";
 // import StyledComponentsRegistry from "@lib/registry";
 // import { AppProvider } from "@context/app-context";
 // import StyledContext from "@context/StyledContext";
@@ -90,7 +90,7 @@
 //   return (
 //     <html lang="en">
 //       <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-//       <body className={openSans.className}>
+//       <body className={`${displayFont.variable} ${bodyFont.variable}`}>
 //         <StyledComponentsRegistry>
 //           <AppProvider>
 //             <StyledContext>{children}</StyledContext>
@@ -102,7 +102,7 @@
 //   );
 // }
 
-// import { Open_Sans } from "next/font/google";
+// import { Anek_Bangla, Hind_Siliguri } from "next/font/google";
 // import StyledComponentsRegistry from "@lib/registry";
 // import { AppProvider } from "@context/app-context";
 // import StyledContext from "@context/StyledContext";
@@ -153,7 +153,7 @@
 //   return (
 //     <html lang="en">
 //       <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-//       <body className={openSans.className}>
+//       <body className={`${displayFont.variable} ${bodyFont.variable}`}>
 //         <StyledComponentsRegistry>
 //           <AppProvider>
 //             <StyledContext>{children}</StyledContext>
@@ -165,7 +165,7 @@
 //   );
 // }
 
-import { Open_Sans } from "next/font/google";
+import { Anek_Bangla, Hind_Siliguri } from "next/font/google";
 import StyledComponentsRegistry from "@lib/registry";
 import { AppProvider } from "@context/app-context";
 import StyledContext from "@context/StyledContext";
@@ -176,14 +176,25 @@ import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
 import SetUser from "@context/app-context/SetUser";
 
-// Load font
-const openSans = Open_Sans({ subsets: ["latin"] });
+// Load fonts. Both cover Bangla and Latin; tokens read them via CSS variables
+const displayFont = Anek_Bangla({
+ subsets: ["bengali", "latin"],
+ weight: ["500", "600", "700"],
+ variable: "--font-display",
+ display: "swap",
+});
+const bodyFont = Hind_Siliguri({
+ subsets: ["bengali", "latin"],
+ weight: ["400", "500", "600"],
+ variable: "--font-body",
+ display: "swap",
+});
 
 // Default metadata
 const defaultMetadata = {
- title: "Tizaraa - The Best React eCommerce Template",
+ title: "Tizaraa - Online Shopping in Bangladesh",
  description:
-  "Tizaraa is a React Next.js E-commerce template. Build SEO friendly Online store, delivery app and Multi vendor store",
+  "Shop from trusted sellers across Bangladesh on Tizaraa, with fast delivery and secure payment.",
  authors: [{ name: "Tizaraa", url: "https://www.tizaraa.com" }],
  keywords: ["e-commerce", "e-commerce template", "next.js", "react", "tizaraa"],
  siteFavIcon: "/default-favicon.ico", // default favicon path
@@ -241,7 +252,7 @@ export default async function RootLayout({
     <link rel="icon" href={metadata.favicon} type="image/x-icon" />
     {/* <link rel="preload" href={metadata.favicon} /> */}
    </Head>
-   <body className={openSans.className}>
+   <body className={`${displayFont.variable} ${bodyFont.variable}`}>
     <StyledComponentsRegistry>
      <AppProvider>
       <SetUser /> 

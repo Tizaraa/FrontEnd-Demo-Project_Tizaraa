@@ -33,7 +33,11 @@ const Card = styled(Box).withConfig({
  ({ theme, hoverEffect = false, boxShadow = "small" }) => ({
   boxShadow: theme.shadows[boxShadow],
   backgroundColor: theme.colors.body.paper,
-  ...(hoverEffect && { "&:hover": { boxShadow: theme.shadows.large } }),
+  borderRadius: theme.tz.radius.md,
+  ...(hoverEffect && {
+   transition: `box-shadow ${theme.tz.motion.base}`,
+   "&:hover": { boxShadow: theme.shadows.large },
+  }),
  }),
  compose(border, color, space, layout)
 );

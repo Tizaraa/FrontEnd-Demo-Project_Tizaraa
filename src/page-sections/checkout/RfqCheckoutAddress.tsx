@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import tz from "../../theme/tizaraa";
 import axios from "axios";
 import { Fragment } from "react";
 import CheckBox from "@component/CheckBox";
@@ -160,10 +161,10 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
  return (
   <Grid
    style={{
-    border: "0.5px solid #E94560",
+    border: `1px solid ${tz.color.line}`,
     marginBottom: "1rem",
-    borderRadius: "1rem",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    borderRadius: `${tz.radius.md}px`,
+    boxShadow: tz.elevation.rest,
     // padding: "0.5rem 0.5rem"
    }}
   >

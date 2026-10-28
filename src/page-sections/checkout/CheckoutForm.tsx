@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import OrderedItem from "./OrderedItem";
 import { useAppContext } from "@context/app-context";
+import tz from "../../theme/tizaraa";
 
 export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  const { state } = useAppContext();
@@ -161,7 +162,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
       my="2rem"
       onClick={handleAddNewAddress}
      >
-      {isLoading ? <BeatLoader size={18} color="#E94560" /> : "Add New Address"}
+      {isLoading ? <BeatLoader size={18} color={tz.color.emberDeep} /> : "Add New Address"}
      </Button>
     </FlexBox>
    )}
@@ -187,7 +188,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
       fullwidth
       onClick={handleBackToCart}
      >
-      {isHasLoading ? <BeatLoader size={18} color="#E94560" /> : "Back to Cart"}
+      {isHasLoading ? <BeatLoader size={18} color={tz.color.emberDeep} /> : "Back to Cart"}
       {/* Back to Cart */}
      </Button>
     </Grid>
@@ -200,8 +201,8 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
       // color="primary"
       // bg="primary.light"
       style={{
-       color: "#ffe1e6",
-       backgroundColor: "#e94560",
+       color: tz.color.paper,
+       backgroundColor: tz.color.emberDeep,
        cursor: "pointer",
       }}
       type="button"
@@ -213,7 +214,7 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
       {/* Proceed to Pay
             const [isHasPayLoading, setIsHasPayLoading] = useState(false); */}
       {isHasPayLoading ? (
-       <BeatLoader size={18} color="white" />
+       <BeatLoader size={18} color={tz.color.paper} />
       ) : (
        "Proceed to Pay"
       )}

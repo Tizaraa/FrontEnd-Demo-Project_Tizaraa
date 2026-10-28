@@ -253,36 +253,26 @@
 import React, { Fragment, useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
-import TableRow from "@component/TableRow";
 
-import Box from "@component/Box";
-import Card from "@component/Card";
-import Avatar from "@component/avatar";
-import Grid from "@component/grid/Grid";
 import FlexBox from "@component/FlexBox";
-import Typography, { H3, H5, Small } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import { EditProfileButton } from "@sections/customer-dashboard/profile";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import authService from "services/authService";
-import Link from "next/link";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
- faEnvelope,
- faMars,
- faGenderless,
- faVenus,
- faPhone,
- faUser,
- faCalendar,
- faFemale,
-} from "@fortawesome/free-solid-svg-icons";
-import { marginBottom } from "styled-system";
 import CorporateCard from "@component/page/profile/corporeateCard";
 import { useDashboardCountsListener } from "utils/dashboardCounts";
+import ProfileIdentity from "@sections/customer-dashboard/profile/ProfileIdentity";
+import {
+ DashPanel,
+ DashPanelHead,
+ DetailList,
+ DetailItem,
+ StatGrid,
+ StatTile,
+ Tone,
+} from "@sections/customer-dashboard/ui";
 
 const LoaderWrapper = styled.div`
  display: flex;
@@ -412,200 +402,88 @@ export default function Profile() {
 
  if (loading) return <LoadingFallback />;
 
- const infoList = [
-  {
-   title: data.totalOrders,
-   subtitle: "All Orders",
-   color: "#1e3a8a",
-   link: "/orders",
-  },
-  {
-   title: data.pendingOrders,
-   subtitle: "Pending Orders",
-   color: "#f59e0b",
-   link: "/pending-orders",
-  },
-  {
-   title: data.deliveredOrders,
-   subtitle: "Delivered Orders",
-   color: "#15803d",
-   link: "/delivered-orders",
-  },
-  {
-   title: data.cancelOrders,
-   subtitle: "Cancelled Orders",
-   color: "#dc2626",
-   link: "/cancel-orders",
-  },
+ const infoList: { title: number; subtitle: string; tone: Tone; link: string }[] = [
+  { title: data.totalOrders, subtitle: "All orders", tone: "info", link: "/orders" },
+  { title: data.pendingOrders, subtitle: "Pending", tone: "warning", link: "/pending-orders" },
+  { title: data.deliveredOrders, subtitle: "Delivered", tone: "success", link: "/delivered-orders" },
+  { title: data.cancelOrders, subtitle: "Cancelled", tone: "danger", link: "/cancel-orders" },
  ];
+
+ const birthday = profile?.birth_date
+  ? new Date(profile.birth_date)
+     .toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+     })
+     .replace(/(\d{2} \w{3}) (\d{4})/, "$1, $2") // Add comma after month
+  : "Not added";
+
+ const gender =
+  profile?.gender === "male"
+   ? "Male"
+   : profile?.gender === "female"
+     ? "Female"
+     : "Not added";
 
  return (
   <Suspense fallback={<LoadingFallback />}>
    <Fragment>
     <DashboardPageHeader
-     title="My Profile"
+     title="My profile"
+     subtitle="Your account details and order summary"
      iconName="user_filled"
-     button={
-      <FlexBox style={{ gap: "1rem" }}>
-       <EditProfileButton />
-       {/* <Link href="/change-password">Change Password</Link> */}
-      </FlexBox>
-     }
+     button={<EditProfileButton />}
     />
 
-    <Grid container spacing={4} mb="2rem">
-     {/* Profile Card */}
-     <Grid item md={12} xs={12}>
-      {profile?.type === "Regular" ? (
-       <Card
-        p="2rem"
-        borderRadius="16px"
-        style={{
-         boxShadow: "0 8px 30px rgba(0, 0, 0, 0.08)",
-         height: "100%",
-         background: "linear-gradient(145deg, #ffffff, #f5f7fa)",
-         border: "1px solid rgba(230, 230, 230, 0.5)",
-         transition: "transform 0.3s ease, box-shadow 0.3s ease",
-         display: "flex",
-         flexDirection: "column",
-        }}
-       >
-        <FlexBox alignItems="center" mb="1.5rem" style={{ gap: "1.5rem" }}>
-         {/* Conditional rendering for Avatar or FontAwesome icon */}
-         {profile?.image ? (
-          <Avatar
-           size={100}
-           src={`${ApiBaseUrl.ImgUrl}${profile.image}`}
-           style={{
-            border: "3px solid #E94560",
-            boxShadow: "0 4px 15px rgba(233, 69, 96, 0.2)",
-            width: "90px",
-           }}
-          />
+    <FlexBox flexDirection="column" style={{ gap: "24px" }}>
+     {profile?.type === "Regular" ? (
+      <ProfileIdentity
+       name={profile?.name}
+       email={profile?.email}
+       phone={profile?.phone}
+       image={profile?.image}
+       typeLabel="Customer"
+      />
+     ) : (
+      <CorporateCard profile={profile} />
+     )}
+
+     <section aria-label="Order summary">
+      <StatGrid>
+       {infoList.map((item) => (
+        <StatTile
+         key={item.subtitle}
+         href={item.link}
+         value={item.title ?? 0}
+         label={item.subtitle}
+         tone={item.tone}
+        />
+       ))}
+      </StatGrid>
+     </section>
+
+     {profile?.type === "Regular" && (
+      <DashPanel>
+       <DashPanelHead title="Personal details" />
+       <DetailList>
+        <DetailItem label="Full name">{profile?.name || "Not added"}</DetailItem>
+        <DetailItem label="Email">
+         {profile?.email ? (
+          <a href={`mailto:${profile.email}`}>{profile.email}</a>
          ) : (
-          <div
-           style={{
-            width: "90px",
-
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #f5f7fa, #e4e8f0)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 4px 15px rgba(107, 114, 128, 0.2)",
-            border: "3px solid #6b7280",
-           }}
-          >
-           {profile?.gender === "male" ? (
-            <FontAwesomeIcon icon={faUser} size="3x" color="#1e3a8a" />
-           ) : profile?.gender === "female" ? (
-            <FontAwesomeIcon icon={faFemale} size="3x" color="#E94560" />
-           ) : (
-            <FontAwesomeIcon icon={faUser} size="3x" color="#6b7280" />
-           )}
-          </div>
+          "Not added"
          )}
-         <div>
-          <H5
-           style={{
-            fontSize: "1.5rem",
-            margin: 0,
-            background: "linear-gradient(90deg, #1e3a8a, #E94560)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            fontWeight: "700",
-           }}
-          >
-           {profile?.name || "No Name"}
-          </H5>
-
-          {/* Birth Date */}
-          <p
-           style={{
-            margin: "0.5rem 0",
-            color: "#6b7280",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-           }}
-          >
-           <FontAwesomeIcon icon={faCalendar} size="sm" color="#6b7280" />
-           <strong>Birthday:</strong>
-           {profile?.birth_date
-            ? new Date(profile.birth_date)
-               .toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-               })
-               .replace(/(\d{2} \w{3}) (\d{4})/, "$1, $2") // Add comma after month
-            : "N/A"}
-          </p>
-
-          {/* Gender */}
-          <p
-           style={{
-            margin: "0.5rem 0",
-            color: "#6b7280",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-           }}
-          >
-           {profile?.gender === "male" ? (
-            <FontAwesomeIcon icon={faMars} size="sm" color="#1e3a8a" />
-           ) : profile?.gender === "female" ? (
-            <FontAwesomeIcon icon={faVenus} size="sm" color="#E94560" />
-           ) : (
-            <FontAwesomeIcon icon={faGenderless} size="sm" color="#6b7280" />
-           )}
-           <strong>Gender:</strong>{" "}
-           {profile?.gender === "male"
-            ? "Male"
-            : profile?.gender === "female"
-              ? "Female"
-              : "N/A"}
-          </p>
-         </div>
-        </FlexBox>
-       </Card>
-      ) : (
-       <CorporateCard profile={profile} />
-      )}
-     </Grid>
-
-    </Grid>
-
-    <Grid container spacing={4} style={{ marginTop: "1rem" }}>
-     {infoList.map((item) => (
-      <Grid item md={3} sm={6} xs={12} key={item.subtitle}>
-       <Link href={item.link}>
-        <Card
-         p="1.5rem"
-         textAlign="center"
-         borderRadius="12px"
-         style={{
-          backgroundColor: `${item.color}10`,
-          cursor: "pointer",
-          border: `1px solid ${item.color}30`,
-          transition: "transform 0.2s ease, box-shadow 0.2s ease",
-         }}
-         onMouseEnter={(e) =>
-          (e.currentTarget.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.08)")
-         }
-         onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-        >
-         <H3 color={item.color} fontWeight="700" mb="0.5rem">
-          {item.title}
-         </H3>
-         <Small color="#374151" fontSize={"14px"}>
-          {item.subtitle}
-         </Small>
-        </Card>
-       </Link>
-      </Grid>
-     ))}
-    </Grid>
+        </DetailItem>
+        <DetailItem label="Phone">
+         {profile?.phone ? <a href={`tel:${profile.phone}`}>{profile.phone}</a> : "Not added"}
+        </DetailItem>
+        <DetailItem label="Birthday">{birthday}</DetailItem>
+        <DetailItem label="Gender">{gender}</DetailItem>
+       </DetailList>
+      </DashPanel>
+     )}
+    </FlexBox>
    </Fragment>
   </Suspense>
  );

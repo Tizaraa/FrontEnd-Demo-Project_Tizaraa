@@ -31,7 +31,7 @@ function CountrySkeleton() {
      height={64}
      mx="auto"
      borderRadius={8}
-     backgroundColor="#e0e0e0"
+     backgroundColor="gray.200"
      mb="12px"
     />
    </Box>
@@ -47,7 +47,7 @@ export default function Section12() {
  const countries: CountryItem[] = data?.country || [];
 
  return (
-  <Box mt="70px">
+  <Box mt="1rem">
    <CategorySectionCreator
     title="Find products by country"
     seeMoreLink="/countryList/CountryList"
@@ -59,8 +59,16 @@ export default function Section12() {
       countries.map((country) => (
        <Grid item lg={2} md={2} sm={4} xs={6} key={country.id}>
         <Link href={`/country/${encodeURIComponent(country.location_slug)}`}>
-         <Box textAlign="center" py="0.5rem">
-          <Box position="relative" width={100} height={64} mx="auto" mb="12px">
+         <Box
+          textAlign="center"
+          py="1rem"
+          px="0.5rem"
+          bg="body.paper"
+          border="1px solid"
+          borderColor="gray.400"
+          borderRadius={12}
+         >
+          <Box position="relative" width={88} height={56} mx="auto" mb="10px">
            <Image
             src={country.image}
             alt={`${country.location} flag`}
@@ -73,7 +81,7 @@ export default function Section12() {
           </Box>
 
           <H4
-           fontSize={{ xs: "14px", sm: "15px", md: "16px" }}
+           fontSize={{ xs: "13px", sm: "14px" }}
            fontWeight={600}
            lineHeight={1.3}
            mb={0}

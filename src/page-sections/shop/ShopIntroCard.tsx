@@ -608,6 +608,7 @@ import { ShopIntroWrapper } from "./styles";
 import { useState, useEffect } from "react";
 import { Vortex } from "react-loader-spinner";
 import styled from "@emotion/styled";
+import tz from "../../theme/tizaraa";
 import axios from "@lib/axiosClient";
 import useFetcher from "@hook/useFetcher";
 
@@ -679,7 +680,7 @@ const AddressClickable = styled(FlexBox)`
 `;
 
 const HeaderSection = styled.div`
- background: #e94560;
+ background: ${tz.color.navy};
  color: white;
  padding: 8px;
  text-align: center;

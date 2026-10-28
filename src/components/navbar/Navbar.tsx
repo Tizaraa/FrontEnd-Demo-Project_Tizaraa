@@ -137,7 +137,7 @@
 //     <StyledNavbar>
 //       <Container height="100%" display="flex" alignItems="center" justifyContent="space-between">
 //         <Categories open={navListOpen}>
-//           <Button width="278px" height="40px" bg="body.default" variant="text">
+//           <Button className="categories-btn" width="278px" height="40px" bg="body.default" variant="text">
 //             <Icon>categories</Icon>
 //             <Typography ml="10px" flex="1 1 0" fontWeight="600" textAlign="left" color="text.muted">
 //               Categories
@@ -156,6 +156,7 @@
 
 "use client";
 import { useState } from "react";
+import { useTheme } from "styled-components";
 import Box from "../Box";
 import Card from "../Card";
 import Badge from "../badge";
@@ -190,6 +191,7 @@ type NavbarProps = { navListOpen?: boolean };
 
 export default function Navbar({ navListOpen }: NavbarProps) {
  const pathname = usePathname(); // Get the current path using usePathname()
+ const theme = useTheme();
  const [loading, setLoading] = useState(false);
 
  // Check if the current path is "/location"
@@ -373,29 +375,12 @@ export default function Navbar({ navListOpen }: NavbarProps) {
      {navbarNavigations.map((navItem) => (
       <Button
        key={navItem.title}
+       className="nav-action"
        onClick={() => handleNavigation(navItem.url, navItem.extLink)}
        disabled={loading}
-       style={{
-        display: "flex",
-        alignItems: "center",
-        backgroundColor:
-         navItem.title === "International Products" ? "#E94560" : "#E94560", // Using primary color for both
-        border: "none",
-        borderRadius: "4px",
-        cursor: "pointer",
-        transition: "background-color 0.3s, transform 0.3s", // Added transform for hover effect
-        color: "white",
-        minWidth: "150px",
-        marginLeft: "15px",
-        opacity: loading ? 0.6 : 1,
-        padding: "10px 15px", // Adding padding for more space
-        boxShadow:
-         navItem.title === "International Products"
-          ? "0 4px 10px rgba(233, 69, 96, 0.5)"
-          : "none", // Subtle shadow for emphasis
-       }}
+       style={{ opacity: loading ? 0.6 : 1 }}
       >
-       <div style={{ marginRight: "8px" }}>
+       <div className="nav-action-icon">
         {navItem.title.includes("Seller") ? (
          <FaUser />
         ) : navItem.title === "International Products" ? (
@@ -405,10 +390,10 @@ export default function Navbar({ navListOpen }: NavbarProps) {
         )}
        </div>
 
-       <Typography style={{ fontWeight: "500" }}>{navItem.title}</Typography>
+       <Typography fontWeight="500">{navItem.title}</Typography>
       </Button>
      ))}
-     {loading && <BeatLoader size={18} color="#fff" />}
+     {loading && <BeatLoader size={10} color={theme.tz.color.ember} />}
     </FlexBox>
    </Container>
   </StyledNavbar>

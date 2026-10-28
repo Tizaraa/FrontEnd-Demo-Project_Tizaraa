@@ -69,15 +69,15 @@ export default function OrderDetails({ params }: IDParams) {
  const getColor = (status: string) => {
   switch (status) {
    case "Pending":
-    return "#FFC107"; // Yellow for Pending
+    return "var(--tz-warning)"; // Yellow for Pending
    case "Confirmed":
-    return "#2196F3"; // Blue for Processing
+    return "var(--tz-navy)"; // Blue for Processing
    case "Delivered":
-    return "#4CAF51"; // Green for Delivered
+    return "var(--tz-success)"; // Green for Delivered
    case "Cancelled":
-    return "#F44336"; // Red for Cancelled
+    return "var(--tz-danger)"; // Red for Cancelled
    default:
-    return "#9E9E9E"; // Grey for unknown status
+    return "var(--tz-slate)"; // Grey for unknown status
   }
  };
 
@@ -337,8 +337,8 @@ export default function OrderDetails({ params }: IDParams) {
        onClick={() => toggleSummary(order?.Order?.invoice_id)}
        style={{
         padding: "0.5rem 1rem",
-        backgroundColor: "#FFE1E6",
-        color: "#E94560",
+        backgroundColor: "var(--tz-ember-tint)",
+        color: "var(--tz-ember-deep)",
         borderRadius: "300px",
         textAlign: "center",
         height: "40px",
@@ -411,14 +411,14 @@ export default function OrderDetails({ params }: IDParams) {
 
       <FlexBox alignItems="center" mb="1rem">
        Payment Method:
-       <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+       <H6 my="0px" mx="1rem" backgroundColor="var(--tz-line)" p="2px">
         {order?.Order?.payment_method}
        </H6>
       </FlexBox>
 
       <FlexBox alignItems="center" mb="1rem">
        Payment Status:
-       <H6 my="0px" mx="1rem" backgroundColor="#cecbcb" p="2px">
+       <H6 my="0px" mx="1rem" backgroundColor="var(--tz-line)" p="2px">
         {order?.Order?.payment_status}
        </H6>
       </FlexBox>
@@ -431,7 +431,7 @@ export default function OrderDetails({ params }: IDParams) {
  return (
   <Fragment>
    <DashboardPageHeader
-    title="Cencelled Order Details"
+    title="Cancelled order details"
     iconName="delete"
     // button={<OrderListButton params={params} />}
    />
@@ -540,8 +540,8 @@ export default function OrderDetails({ params }: IDParams) {
                     <p
                       style={{
                         padding: "0.5rem 1rem",
-                        backgroundColor: "#FFE1E6",
-                        color: "#E94560",
+                        backgroundColor: "var(--tz-ember-tint)",
+                        color: "var(--tz-ember-deep)",
                         borderRadius: "300px",
                         textAlign: "center",
                         height: "40px",
@@ -561,8 +561,8 @@ export default function OrderDetails({ params }: IDParams) {
                       onClick={() => toggleSummary(shopName)}
                       style={{
                         padding: "0.5rem 1rem",
-                        backgroundColor: "#FFE1E6",
-                        color: "#E94560",
+                        backgroundColor: "var(--tz-ember-tint)",
+                        color: "var(--tz-ember-deep)",
                         borderRadius: "300px",
                         textAlign: "center",
                         height: "40px",
@@ -603,8 +603,8 @@ export default function OrderDetails({ params }: IDParams) {
              <Box
               mt="10px"
               p="12px 14px"
-              bg="#F7F9FC"
-              border="1px solid #E5E9F0"
+              bg="var(--tz-mist)"
+              border="1px solid var(--tz-line)"
               borderRadius="8px"
              >
               <FlexBox
@@ -613,13 +613,13 @@ export default function OrderDetails({ params }: IDParams) {
                flexWrap="wrap"
                style={{ gap: "8px" }}
               >
-               <Typography fontSize="13px" fontWeight="600" color="#2C3A4A">
+               <Typography fontSize="13px" fontWeight="600" color="var(--tz-ink)">
                 {order?.Order?.cancelled_item_count}{" "}
                 {order?.Order?.cancelled_item_count === 1 ? "item" : "items"}{" "}
                 cancelled
                </Typography>
                <FlexBox alignItems="center" style={{ gap: "12px" }}>
-                <Typography fontSize="14px" fontWeight="700" color="#e94560">
+                <Typography fontSize="14px" fontWeight="700" color="var(--tz-ember-deep)">
                  {currency(order?.Order?.cancelled_total || 0)}
                 </Typography>
                </FlexBox>
@@ -657,13 +657,13 @@ export default function OrderDetails({ params }: IDParams) {
                     </FlexBox>
                     <FlexBox alignItems="center" mb="1rem">
                       Payment Method:
-                      <H6 my="0px" mx="1rem" backgroundColor="rgba(255,225,230,1)" p="5px" px="10px" borderRadius="1rem" color="rgb(233, 69, 96)">
+                      <H6 my="0px" mx="1rem" backgroundColor="rgba(255,225,230,1)" p="5px" px="10px" borderRadius="1rem" color="var(--tz-ember-deep)">
                         {order?.Order?.payment_method || "N/A"}
                       </H6>
                     </FlexBox>
                     <FlexBox alignItems="center" mb="1rem">
                       Payment Status:
-                      <H6 my="0px" mx="1rem" backgroundColor="rgba(255,225,230,1)" p="5px" px="10px" borderRadius="1rem" color="rgb(233, 69, 96)">
+                      <H6 my="0px" mx="1rem" backgroundColor="rgba(255,225,230,1)" p="5px" px="10px" borderRadius="1rem" color="var(--tz-ember-deep)">
                         {order?.Order?.payment_status}
                       </H6>
                     </FlexBox>
@@ -696,7 +696,7 @@ export default function OrderDetails({ params }: IDParams) {
               mt="2rem"
               onClick={fetchInvoice} // Fetch invoice when button is clicked
             >
-              {invoiceLoading ? <BeatLoader size={18} color="#E94560" /> : "Invoice"}
+              {invoiceLoading ? <BeatLoader size={18} color="var(--tz-ember-deep)" /> : "Invoice"}
             </Button> */}
 
       {/* {order.Order.payment_status === "Unpaid" && (
