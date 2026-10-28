@@ -9,6 +9,7 @@ import "react-quill/dist/quill.snow.css";
 import authService from "services/authService";
 import { format } from "date-fns";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import tz from "../../../../../theme/tizaraa";
 
 // Dynamic import of react-quill for rich text editing
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -121,7 +122,7 @@ export default function RfqComment({
        width: "42px",
        height: "42px",
        borderRadius: "50%",
-       backgroundColor: "#E94560",
+       backgroundColor: "var(--tz-ember-deep)",
        display: "flex",
        alignItems: "center",
        justifyContent: "center",
@@ -134,7 +135,7 @@ export default function RfqComment({
        fontSize: "24px",
        fontWeight: "600",
        margin: 0,
-       color: "#E94560",
+       color: "var(--tz-ember-deep)",
       }}
      >
       RFQ Comments
@@ -144,7 +145,7 @@ export default function RfqComment({
 
    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
     {comments.length === 0 ? (
-     <p style={{ textAlign: "center", color: "#6b7280" }}>
+     <p style={{ textAlign: "center", color: "var(--tz-slate)" }}>
       No comments yet. Be the first to post a comment!
      </p>
     ) : (
@@ -154,7 +155,7 @@ export default function RfqComment({
        style={{
         display: "flex",
         gap: "16px",
-        backgroundColor: "#f8f9fa",
+        backgroundColor: "var(--tz-mist)",
         padding: "16px",
         borderRadius: "8px",
         boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
@@ -175,13 +176,13 @@ export default function RfqComment({
           width: "48px",
           height: "48px",
           borderRadius: "50%",
-          backgroundColor: "#E0E0E0",
+          backgroundColor: "var(--tz-line)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
          }}
         >
-         <User size={24} color="#757575" />
+         <User size={24} color={tz.color.slate} />
         </div>
        )}
        <div
@@ -197,12 +198,12 @@ export default function RfqComment({
           style={{
            fontWeight: "600",
            marginRight: "8px",
-           color: "#333",
+           color: "var(--tz-ink)",
           }}
          >
           {c.check === 1 ? c.name : c.shop_name}
          </span>
-         <span style={{ color: "#6b7280", fontSize: "14px" }}>
+         <span style={{ color: "var(--tz-slate)", fontSize: "14px" }}>
           {formatDate(c.created_at)}
          </span>
         </div>
@@ -227,7 +228,7 @@ export default function RfqComment({
     <div
      style={{
       marginTop: "32px",
-      border: "1px solid #e5e7eb",
+      border: "1px solid var(--tz-line)",
       borderRadius: "12px",
       overflow: "hidden",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -290,7 +291,7 @@ export default function RfqComment({
       disabled={!comment.trim()}
       style={{
        margin: "20px 0",
-       backgroundColor: !comment.trim() ? "#ccc" : "#E94560",
+       backgroundColor: !comment.trim() ? "var(--tz-line)" : "var(--tz-ember-deep)",
        color: "white",
        border: "none",
        padding: "10px 20px",

@@ -295,14 +295,14 @@ export default function AddressForm() {
      margin: "0 auto",
      background: "white",
      borderRadius: "20px",
-     boxShadow: "0 20px 40px rgba(233, 69, 96, 0.1)",
+     boxShadow: "0 20px 40px var(--tz-ember-tint)",
      overflow: "hidden",
     }}
    >
     {/* Header */}
     <div
      style={{
-      background: "linear-gradient(135deg, #E94560 0%, #d63851 100%)",
+      background: "linear-gradient(135deg, var(--tz-ember-deep) 0%, var(--tz-ember-deep) 100%)",
       padding: "1rem",
       color: "white",
       textAlign: "center",
@@ -350,7 +350,7 @@ export default function AddressForm() {
          background: "white",
          borderRadius: "16px",
          padding: "2rem",
-         border: "2px solid #f0f0f0",
+         border: "2px solid var(--tz-mist)",
          boxShadow: "0 8px 25px rgba(0,0,0,0.08)",
          transition: "all 0.3s ease",
         }}
@@ -361,14 +361,14 @@ export default function AddressForm() {
           alignItems: "center",
           marginBottom: "2rem",
           paddingBottom: "1rem",
-          borderBottom: "2px solid #f5f5f5",
+          borderBottom: "2px solid var(--tz-mist)",
          }}
         >
          <div
           style={{
            width: "4px",
            height: "2rem",
-           background: "linear-gradient(135deg, #E94560, #d63851)",
+           background: "linear-gradient(135deg, var(--tz-ember-deep), var(--tz-ember-deep))",
            borderRadius: "2px",
            marginRight: "1rem",
           }}
@@ -378,7 +378,7 @@ export default function AddressForm() {
            margin: 0,
            fontSize: "1.5rem",
            fontWeight: "600",
-           color: "#2c3e50",
+           color: "var(--tz-ink)",
           }}
          >
           Shipping Address
@@ -401,7 +401,7 @@ export default function AddressForm() {
              display: "block",
              marginBottom: "0.5rem",
              fontWeight: "600",
-             color: "#2c3e50",
+             color: "var(--tz-ink)",
              fontSize: "0.9rem",
             }}
            >
@@ -416,24 +416,24 @@ export default function AddressForm() {
             style={{
              width: "100%",
              padding: "1rem",
-             border: `2px solid ${touched.name && errors.name ? "#E94560" : "#e1e8ed"}`,
+             border: `2px solid ${touched.name && errors.name ? "var(--tz-ember-deep)" : "var(--tz-line)"}`,
              borderRadius: "12px",
              fontSize: "1rem",
              transition: "all 0.3s ease",
-             background: "#fafbfc",
+             background: "var(--tz-mist)",
              outline: "none",
              boxSizing: "border-box",
             }}
             onFocus={(e) => {
-             e.target.style.borderColor = "#E94560";
+             e.target.style.borderColor = "var(--tz-ember-deep)";
              e.target.style.background = "white";
-             e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)";
+             e.target.style.boxShadow = "0 0 0 3px var(--tz-ember-tint)";
             }}
            />
            {touched.name && errors.name && (
             <div
              style={{
-              color: "#E94560",
+              color: "var(--tz-ember-deep)",
               fontSize: "0.8rem",
               marginTop: "0.5rem",
               fontWeight: "500",
@@ -451,7 +451,7 @@ export default function AddressForm() {
              display: "block",
              marginBottom: "0.5rem",
              fontWeight: "600",
-             color: "#2c3e50",
+             color: "var(--tz-ink)",
              fontSize: "0.9rem",
             }}
            >
@@ -465,31 +465,31 @@ export default function AddressForm() {
             style={{
              width: "100%",
              padding: "1rem",
-             border: `2px solid ${touched.contact && errors.contact ? "#E94560" : "#e1e8ed"}`,
+             border: `2px solid ${touched.contact && errors.contact ? "var(--tz-ember-deep)" : "var(--tz-line)"}`,
              borderRadius: "12px",
              fontSize: "1rem",
              transition: "all 0.3s ease",
-             background: "#fafbfc",
+             background: "var(--tz-mist)",
              outline: "none",
              boxSizing: "border-box",
             }}
             onFocus={(e) => {
-             e.target.style.borderColor = "#E94560";
+             e.target.style.borderColor = "var(--tz-ember-deep)";
              e.target.style.background = "white";
-             e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)";
+             e.target.style.boxShadow = "0 0 0 3px var(--tz-ember-tint)";
             }}
             onBlur={(e) => {
              handleBlur(e);
              e.target.style.borderColor =
-              touched.contact && errors.contact ? "#E94560" : "#e1e8ed";
-             e.target.style.background = "#fafbfc";
+              touched.contact && errors.contact ? "var(--tz-ember-deep)" : "var(--tz-line)";
+             e.target.style.background = "var(--tz-mist)";
              e.target.style.boxShadow = "none";
             }}
            />
            {touched.contact && errors.contact && (
             <div
              style={{
-              color: "#E94560",
+              color: "var(--tz-ember-deep)",
               fontSize: "0.8rem",
               marginTop: "0.5rem",
               fontWeight: "500",
@@ -507,7 +507,7 @@ export default function AddressForm() {
              display: "block",
              marginBottom: "0.5rem",
              fontWeight: "600",
-             color: "#2c3e50",
+             color: "var(--tz-ink)",
              fontSize: "0.9rem",
             }}
            >
@@ -522,26 +522,26 @@ export default function AddressForm() {
             style={{
              width: "100%",
              padding: "1rem",
-             border: `2px solid ${touched.address && errors.address ? "#E94560" : "#e1e8ed"}`,
+             border: `2px solid ${touched.address && errors.address ? "var(--tz-ember-deep)" : "var(--tz-line)"}`,
              borderRadius: "12px",
              fontSize: "1rem",
              transition: "all 0.3s ease",
-             background: "#fafbfc",
+             background: "var(--tz-mist)",
              outline: "none",
              resize: "vertical",
              fontFamily: "inherit",
              boxSizing: "border-box",
             }}
             onFocus={(e) => {
-             e.target.style.borderColor = "#E94560";
+             e.target.style.borderColor = "var(--tz-ember-deep)";
              e.target.style.background = "white";
-             e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)";
+             e.target.style.boxShadow = "0 0 0 3px var(--tz-ember-tint)";
             }}
            />
            {touched.address && errors.address && (
             <div
              style={{
-              color: "#E94560",
+              color: "var(--tz-ember-deep)",
               fontSize: "0.8rem",
               marginTop: "0.5rem",
               fontWeight: "500",
@@ -559,7 +559,7 @@ export default function AddressForm() {
              display: "block",
              marginBottom: "0.5rem",
              fontWeight: "600",
-             color: "#2c3e50",
+             color: "var(--tz-ink)",
              fontSize: "0.9rem",
             }}
            >
@@ -574,31 +574,31 @@ export default function AddressForm() {
             style={{
              width: "100%",
              padding: "1rem",
-             border: `2px solid ${touched.postal_code && errors.postal_code ? "#E94560" : "#e1e8ed"}`,
+             border: `2px solid ${touched.postal_code && errors.postal_code ? "var(--tz-ember-deep)" : "var(--tz-line)"}`,
              borderRadius: "12px",
              fontSize: "1rem",
              transition: "all 0.3s ease",
-             background: "#fafbfc",
+             background: "var(--tz-mist)",
              outline: "none",
              boxSizing: "border-box",
             }}
             onFocus={(e) => {
-             e.target.style.borderColor = "#E94560";
+             e.target.style.borderColor = "var(--tz-ember-deep)";
              e.target.style.background = "white";
-             e.target.style.boxShadow = "0 0 0 3px rgba(233, 69, 96, 0.1)";
+             e.target.style.boxShadow = "0 0 0 3px var(--tz-ember-tint)";
             }}
             onBlur={(e) => {
              handleBlur(e);
              e.target.style.borderColor =
-              touched.postal_code && errors.postal_code ? "#E94560" : "#e1e8ed";
-             e.target.style.background = "#fafbfc";
+              touched.postal_code && errors.postal_code ? "var(--tz-ember-deep)" : "var(--tz-line)";
+             e.target.style.background = "var(--tz-mist)";
              e.target.style.boxShadow = "none";
             }}
            />
            {touched.postal_code && errors.postal_code && (
             <div
              style={{
-              color: "#E94560",
+              color: "var(--tz-ember-deep)",
               fontSize: "0.8rem",
               marginTop: "0.5rem",
               fontWeight: "500",
@@ -616,7 +616,7 @@ export default function AddressForm() {
              display: "block",
              marginBottom: "1rem",
              fontWeight: "600",
-             color: "#2c3e50",
+             color: "var(--tz-ink)",
              fontSize: "0.9rem",
             }}
            >
@@ -634,13 +634,13 @@ export default function AddressForm() {
              onClick={() => handleLandmarkSelect("Home", setFieldValue)}
              style={{
               padding: "0.8rem 1.5rem",
-              border: `2px solid ${selectedLandmark === 1 ? "#E94560" : "#e1e8ed"}`,
+              border: `2px solid ${selectedLandmark === 1 ? "var(--tz-ember-deep)" : "var(--tz-line)"}`,
               borderRadius: "25px",
               background:
                selectedLandmark === 1
-                ? "linear-gradient(135deg, #E94560, #d63851)"
+                ? "linear-gradient(135deg, var(--tz-ember-deep), var(--tz-ember-deep))"
                 : "white",
-              color: selectedLandmark === 1 ? "white" : "#2c3e50",
+              color: selectedLandmark === 1 ? "white" : "var(--tz-ink)",
               fontWeight: "600",
               cursor: "pointer",
               transition: "all 0.3s ease",
@@ -655,13 +655,13 @@ export default function AddressForm() {
              onClick={() => handleLandmarkSelect("Office", setFieldValue)}
              style={{
               padding: "0.8rem 1.5rem",
-              border: `2px solid ${selectedLandmark === 2 ? "#E94560" : "#e1e8ed"}`,
+              border: `2px solid ${selectedLandmark === 2 ? "var(--tz-ember-deep)" : "var(--tz-line)"}`,
               borderRadius: "25px",
               background:
                selectedLandmark === 2
-                ? "linear-gradient(135deg, #E94560, #d63851)"
+                ? "linear-gradient(135deg, var(--tz-ember-deep), var(--tz-ember-deep))"
                 : "white",
-              color: selectedLandmark === 2 ? "white" : "#2c3e50",
+              color: selectedLandmark === 2 ? "white" : "var(--tz-ink)",
               fontWeight: "600",
               cursor: "pointer",
               transition: "all 0.3s ease",
@@ -675,7 +675,7 @@ export default function AddressForm() {
            {touched.selectedLandmark && errors.selectedLandmark && (
             <div
              style={{
-              color: "#E94560",
+              color: "var(--tz-ember-deep)",
               fontSize: "0.8rem",
               marginTop: "0.5rem",
               fontWeight: "500",
@@ -698,14 +698,14 @@ export default function AddressForm() {
              height: "18px",
              marginRight: "0.8rem",
              cursor: "pointer",
-             accentColor: "#E94560",
+             accentColor: "var(--tz-ember-deep)",
             }}
            />
            <label
             htmlFor="is_default"
             style={{
              fontWeight: "600",
-             color: "#2c3e50",
+             color: "var(--tz-ink)",
              fontSize: "0.9rem",
              cursor: "pointer",
             }}
@@ -823,8 +823,8 @@ export default function AddressForm() {
          disabled={loading}
          style={{
           background: loading
-           ? "#ccc"
-           : "linear-gradient(135deg, #E94560, #d63851)",
+           ? "var(--tz-line)"
+           : "linear-gradient(135deg, var(--tz-ember-deep), var(--tz-ember-deep))",
           color: "white",
           border: "none",
           padding: "1rem 3rem",
@@ -834,7 +834,7 @@ export default function AddressForm() {
           cursor: loading ? "not-allowed" : "pointer",
           transition: "all 0.3s ease",
           outline: "none",
-          boxShadow: loading ? "none" : "0 8px 25px rgba(233, 69, 96, 0.3)",
+          boxShadow: loading ? "none" : "0 8px 25px var(--tz-ember-tint)",
           transform: loading ? "none" : "translateY(0)",
           minWidth: "200px",
           display: "flex",

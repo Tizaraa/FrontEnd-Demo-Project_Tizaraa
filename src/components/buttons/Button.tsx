@@ -40,7 +40,7 @@ type Props = ColorProps &
 const StyledButton = styled.button.withConfig({
  shouldForwardProp: (prop: string) => isValidProp(prop),
 })<Props>(
- ({ color, fullwidth }) =>
+ ({ theme, color, fullwidth }) =>
   systemCss({
    display: "flex",
    width: fullwidth ? "100%" : "unset",
@@ -55,9 +55,9 @@ const StyledButton = styled.button.withConfig({
    fontFamily: "inherit",
    color: color ? `${color}.main` : "body.text",
    background: "transparent",
-   transition: "all 150ms ease-in-out",
+   transition: `background-color ${theme.tz.motion.fast}, border-color ${theme.tz.motion.fast}, color ${theme.tz.motion.fast}, box-shadow ${theme.tz.motion.fast}`,
    lineHeight: 1,
-   "&:focus": { boxShadow: 3 },
+   "&:focus-visible": { boxShadow: theme.tz.focusRing },
    "&:disabled": {
     bg: "text.disabled",
     color: "text.hint",
@@ -90,9 +90,7 @@ const StyledButton = styled.button.withConfig({
      "&:enabled svg polyline, svg polygon": {
       color: color ? `${theme.colors[color]?.main} !important` : "text.primary",
      },
-     "&:focus": {
-      boxShadow: `0px 1px 4px 0px ${theme.colors[color ? color : ""]?.light}`,
-     },
+     "&:focus-visible": { boxShadow: theme.tz.focusRing },
      "&:hover:enabled": {
       bg: color && `${color}.main`,
       borderColor: color && `${color}.main`,
@@ -112,9 +110,8 @@ const StyledButton = styled.button.withConfig({
      border: "none",
      color: `${color}.text`,
      bg: `${color}.main`,
-     "&:focus": {
-      boxShadow: `0px 1px 4px 0px ${theme.colors[color ? color : ""]?.light}`,
-     },
+     "&:hover:enabled": { bg: color ? `${color}.dark` : undefined },
+     "&:focus-visible": { boxShadow: theme.tz.focusRing },
      "&:enabled svg path": {
       fill: color ? `${theme.colors[color]?.text} !important` : "text.primary",
      },
@@ -143,7 +140,7 @@ interface BtnProps extends Props {
 const Button = forwardRef<
  HTMLButtonElement,
  BtnProps & React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ children, size = "small", borderRadius = 5, ...props }, ref) => {
+>(({ children, size = "small", borderRadius = 12, ...props }, ref) => {
  return (
   <StyledButton ref={ref} size={size} borderRadius={borderRadius} {...props}>
    {children}

@@ -44,16 +44,16 @@ export default function ProductDescription({
     width: "100%",
     maxWidth: productPageTheme.maxWidth,
     boxSizing: "border-box",
-    padding: "20px",
+    padding: "24px",
     backgroundColor: productPageTheme.surface,
     border: `1px solid ${productPageTheme.border}`,
-    borderRadius: "10px",
+    borderRadius: productPageTheme.radius,
    }}
   >
    <h3
     style={{
      margin: "0 0 16px",
-     fontSize: "16px",
+     fontSize: "18px",
      fontWeight: 600,
      color: productPageTheme.heading,
     }}
@@ -64,7 +64,7 @@ export default function ProductDescription({
    <div
     className="product-description-content"
     style={{
-     fontSize: "14px",
+     fontSize: "15px",
      lineHeight: 1.7,
      color: productPageTheme.body,
     }}
@@ -75,8 +75,14 @@ export default function ProductDescription({
        /<table /g,
        `<table style="width: 100%; border-collapse: collapse;"`
       )
-      .replace(/<td /g, `<td style="padding: 8px; border: 1px solid #ddd;"`)
-      .replace(/<th /g, `<th style="padding: 8px; border: 1px solid #ddd;"`),
+      .replace(
+       /<td /g,
+       `<td style="padding: 8px; border: 1px solid ${productPageTheme.border};"`
+      )
+      .replace(
+       /<th /g,
+       `<th style="padding: 8px; border: 1px solid ${productPageTheme.border};"`
+      ),
     }}
    />
    {isLongDescription && (
@@ -84,13 +90,16 @@ export default function ProductDescription({
      style={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
     >
      <button
+      type="button"
+      aria-expanded={isExpanded}
       style={{
-       backgroundColor: productPageTheme.accent,
-       color: "white",
-       padding: "9px 22px",
-       borderRadius: "999px",
-       border: "none",
-       fontSize: "13px",
+       backgroundColor: productPageTheme.surface,
+       color: productPageTheme.accent,
+       padding: "10px 24px",
+       borderRadius: productPageTheme.radius,
+       border: `1px solid ${productPageTheme.border}`,
+       fontFamily: "inherit",
+       fontSize: "14px",
        fontWeight: 600,
        cursor: "pointer",
       }}

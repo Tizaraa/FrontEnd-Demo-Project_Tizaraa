@@ -13,10 +13,9 @@ import Icon from "@component/icon/Icon";
 import FlexBox from "@component/FlexBox";
 import TextField from "@component/text-field";
 import { Button, IconButton } from "@component/buttons";
-import { H3, H5, Small } from "@component/Typography";
-import CommonHeader from "@component/header/CommonHeader";
 import ApiBaseUrl from "api/ApiBaseUrl";
-import { StyledRoot } from "./styles";
+import { AuthCard, AuthSubtitle, AuthTitle } from "./styles";
+import tz from "../../theme/tizaraa";
 import useVisibility from "./useVisibility";
 import useResetCountdown, { formatCountdown } from "./useResetCountdown";
 
@@ -120,105 +119,95 @@ export default function ResetPassword() {
  );
 
  return (
-  <>
-   <CommonHeader />
-   <StyledRoot mx="auto" my="2rem" boxShadow="large" borderRadius={8}>
-    <div className="content" style={{ paddingBottom: "1.5rem" }}>
-     <H3 textAlign="center" mb="0.5rem">
-      Reset Your Password
-     </H3>
+  <AuthCard>
+   <AuthTitle>Reset Your Password</AuthTitle>
 
-     {linkState === "checking" && (
-      <FlexBox justifyContent="center" my="2rem">
-       <BeatLoader size={14} color="#e94560" />
-      </FlexBox>
-     )}
+   {linkState === "checking" && (
+    <FlexBox justifyContent="center" my="2rem">
+     <BeatLoader size={12} color={tz.color.emberDeep} />
+    </FlexBox>
+   )}
 
-     {expired && linkState !== "checking" && (
-      <>
-       <H5
-        fontWeight="600"
-        fontSize="13px"
-        color="gray.800"
-        textAlign="center"
-        mb="1.5rem"
-       >
-        This reset link is invalid or has expired. Links are valid for 1
-        minute only.
-       </H5>
-       <Link href="/login">
-        <Button variant="contained" color="primary" fullwidth>
-         Back to Login
-        </Button>
-       </Link>
-      </>
-     )}
+   {expired && linkState !== "checking" && (
+    <>
+     <AuthSubtitle>
+      This reset link is invalid or has expired. Links are valid for 1
+      minute only.
+     </AuthSubtitle>
+     <Link href="/login">
+      <Button size="medium" variant="contained" color="primary" fullwidth>
+       Back to Login
+      </Button>
+     </Link>
+    </>
+   )}
 
-     {linkState === "valid" && !expired && (
-      <form onSubmit={handleSubmit} autoComplete="off">
-       <H5
-        fontWeight="600"
-        fontSize="13px"
-        color="gray.800"
-        textAlign="center"
-        mb="0.5rem"
-       >
-        Choose a new password for {email}
-       </H5>
-       <Small
-        display="block"
-        textAlign="center"
-        color={(secondsLeft ?? 0) <= 10 ? "red" : "gray.700"}
-        mb="1.5rem"
-       >
-        Link expires in: {formatCountdown(secondsLeft ?? 0)}
-       </Small>
+   {linkState === "valid" && !expired && (
+    <form onSubmit={handleSubmit} autoComplete="off">
+     <AuthSubtitle style={{ marginBottom: 8 }}>
+      Choose a new password for {email}
+     </AuthSubtitle>
+     <p
+      style={{
+       margin: "0 0 24px",
+       textAlign: "center",
+       fontSize: 13,
+       fontVariantNumeric: "tabular-nums",
+       color:
+        (secondsLeft ?? 0) <= 10 ? tz.tone.danger.fg : tz.color.slate,
+      }}
+     >
+      Link expires in: {formatCountdown(secondsLeft ?? 0)}
+     </p>
 
-       <TextField
-        fullwidth
-        mb="0.75rem"
-        name="password"
-        label="New Password"
-        placeholder="Enter New Password"
-        autoComplete="new-password"
-        value={values.password}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        errorText={touched.password && errors.password}
-        type={newPasswordVisibility.passwordVisibility ? "text" : "password"}
-        endAdornment={eyeButton(newPasswordVisibility)}
-       />
+     <TextField
+      fullwidth
+      mb="1rem"
+      name="password"
+      label="New Password"
+      placeholder="Enter New Password"
+      autoComplete="new-password"
+      value={values.password}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      errorText={touched.password && errors.password}
+      type={newPasswordVisibility.passwordVisibility ? "text" : "password"}
+      endAdornment={eyeButton(newPasswordVisibility)}
+     />
 
-       <TextField
-        fullwidth
-        mb="1.5rem"
-        name="confirmPassword"
-        label="Confirm Password"
-        placeholder="Confirm New Password"
-        autoComplete="new-password"
-        value={values.confirmPassword}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        errorText={touched.confirmPassword && errors.confirmPassword}
-        type={
-         confirmPasswordVisibility.passwordVisibility ? "text" : "password"
-        }
-        endAdornment={eyeButton(confirmPasswordVisibility)}
-       />
+     <TextField
+      fullwidth
+      mb="1.5rem"
+      name="confirmPassword"
+      label="Confirm Password"
+      placeholder="Confirm New Password"
+      autoComplete="new-password"
+      value={values.confirmPassword}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      errorText={touched.confirmPassword && errors.confirmPassword}
+      type={
+       confirmPasswordVisibility.passwordVisibility ? "text" : "password"
+      }
+      endAdornment={eyeButton(confirmPasswordVisibility)}
+     />
 
-       <Button
-        variant="contained"
-        color="primary"
-        type="submit"
-        fullwidth
-        disabled={loading}
-       >
-        {loading ? <BeatLoader size={18} color="#e94560" /> : "Reset Password"}
-       </Button>
-      </form>
-     )}
-    </div>
-   </StyledRoot>
-  </>
+     <Button
+      size="medium"
+      variant="contained"
+      color="primary"
+      type="submit"
+      fullwidth
+      disabled={loading}
+     >
+      {loading ? (
+       <BeatLoader size={12} color={tz.color.slate} />
+      ) : (
+       "Reset Password"
+      )}
+     </Button>
+    </form>
+   )}
+  </AuthCard>
  );
 }

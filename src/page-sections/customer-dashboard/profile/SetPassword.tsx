@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import BeatLoader from "react-spinners/BeatLoader";
+import tz from "../../../theme/tizaraa";
 
 export default function SetPassword() {
  const [showPassword, setShowPassword] = useState(false);
@@ -122,39 +123,39 @@ export default function SetPassword() {
   formWrapper: {
    width: "100%",
    maxWidth: "600px",
-   backgroundColor: "#fff",
+   backgroundColor: tz.color.paper,
    borderRadius: "8px",
   },
   title: {
    fontSize: "24px",
    fontWeight: "500",
-   color: "#4a5568",
+   color: tz.color.inkSoft,
    marginBottom: "24px",
   },
   label: {
    display: "block",
-   color: "#4a5568",
+   color: tz.color.inkSoft,
    marginBottom: "8px",
    fontSize: "16px",
   },
   input: {
    width: "100%",
    height: "48px",
-   border: "1px solid #e2e8f0",
-   borderRadius: "4px",
+   border: `1px solid ${tz.color.line}`,
+   borderRadius: `${tz.radius.sm}px`,
    padding: "0 12px",
    fontSize: "16px",
-   color: "#4a5568",
+   color: tz.color.inkSoft,
   },
   button: {
    width: "100%",
    height: "48px",
-   backgroundColor: "#e94560",
-   color: "#fff",
+   backgroundColor: tz.color.emberDeep,
+   color: tz.color.paper,
    fontSize: "16px",
    fontWeight: "500",
    border: "none",
-   borderRadius: "4px",
+   borderRadius: `${tz.radius.md}px`,
    cursor: "pointer",
    marginTop: "16px",
   },
@@ -173,13 +174,13 @@ export default function SetPassword() {
   <div style={styles.container}>
    <div style={styles.formWrapper}>
     <h1 style={styles.title}>Reset your password</h1>
-    <p style={{ color: "#718096", marginBottom: "24px" }}>
+    <p style={{ color: tz.color.slate, marginBottom: "24px" }}>
      Please enter your new password below.
     </p>
     <form onSubmit={handleSubmit}>
      <div style={{ position: "relative", marginBottom: "24px" }}>
       <label htmlFor="password" style={styles.label}>
-       New password<span style={{ color: "#e53e3e" }}>*</span>
+       New password<span style={{ color: tz.tone.danger.fg }}>*</span>
       </label>
       <input
        id="password"
@@ -196,9 +197,9 @@ export default function SetPassword() {
        onClick={() => setShowPassword(!showPassword)}
       >
        {showPassword ? (
-        <EyeOff style={{ color: "#A0AEC0", width: "20px", height: "20px" }} />
+        <EyeOff style={{ color: tz.color.slate, width: "20px", height: "20px" }} />
        ) : (
-        <Eye style={{ color: "#A0AEC0", width: "20px", height: "20px" }} />
+        <Eye style={{ color: tz.color.slate, width: "20px", height: "20px" }} />
        )}
       </button>
      </div>
@@ -216,9 +217,9 @@ export default function SetPassword() {
         >
          <FontAwesomeIcon
           icon={faCircleExclamation}
-          style={{ color: "#e94560", marginRight: "0.5rem" }}
+          style={{ color: tz.color.emberDeep, marginRight: "0.5rem" }}
          />
-         <span style={{ fontSize: "0.875rem", color: "#495057" }}>{error}</span>
+         <span style={{ fontSize: "0.875rem", color: tz.color.inkSoft }}>{error}</span>
         </div>
        ))}
       </div>
@@ -226,7 +227,7 @@ export default function SetPassword() {
 
      <div style={{ position: "relative", marginBottom: "24px" }}>
       <label htmlFor="confirmPassword" style={styles.label}>
-       Confirm password<span style={{ color: "#e53e3e" }}>*</span>
+       Confirm password<span style={{ color: tz.tone.danger.fg }}>*</span>
       </label>
       <input
        id="confirmPassword"
@@ -243,9 +244,9 @@ export default function SetPassword() {
        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
       >
        {showConfirmPassword ? (
-        <EyeOff style={{ color: "#A0AEC0", width: "20px", height: "20px" }} />
+        <EyeOff style={{ color: tz.color.slate, width: "20px", height: "20px" }} />
        ) : (
-        <Eye style={{ color: "#A0AEC0", width: "20px", height: "20px" }} />
+        <Eye style={{ color: tz.color.slate, width: "20px", height: "20px" }} />
        )}
       </button>
      </div>
@@ -260,9 +261,9 @@ export default function SetPassword() {
        >
         <FontAwesomeIcon
          icon={faCircleExclamation}
-         style={{ color: "#e94560", marginRight: "0.5rem" }}
+         style={{ color: tz.color.emberDeep, marginRight: "0.5rem" }}
         />
-        <span style={{ fontSize: "0.875rem", color: "#495057" }}>
+        <span style={{ fontSize: "0.875rem", color: tz.color.inkSoft }}>
          {confirmPasswordError}
         </span>
        </div>
@@ -271,7 +272,7 @@ export default function SetPassword() {
 
      <button type="submit" style={styles.button}>
       {/* SUBMIT */}
-      {loading ? <BeatLoader size={18} color="#fff" /> : "Submit"}
+      {loading ? <BeatLoader size={18} color={tz.color.paper} /> : "Submit"}
      </button>
     </form>
    </div>

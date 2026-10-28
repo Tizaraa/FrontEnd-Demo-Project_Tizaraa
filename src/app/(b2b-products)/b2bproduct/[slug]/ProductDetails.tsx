@@ -76,7 +76,7 @@ const ShippingInfo: React.FC<{
  return (
   <div
    style={{
-    fontFamily: "__Open_Sans_9c011f, __Open_Sans_Fallback_9c011f",
+    fontFamily: "inherit",
     maxWidth: "400px",
     margin: "0 auto",
     padding: "20px",

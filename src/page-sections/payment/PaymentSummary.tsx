@@ -168,6 +168,7 @@ import ProductCard20 from "@component/product-cards/ProductCard20";
 import { Tooltip } from "@mui/material";
 import { Box } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import tz from "../../theme/tizaraa";
 export default function PaymentSummary({
  seller_type,
 }: {
@@ -304,9 +305,9 @@ export default function PaymentSummary({
       </Typography>
       <span
        style={{
-        backgroundColor: "#e8f8f0",
-        color: "#2e7d32",
-        border: "1px solid #4CAF50",
+        backgroundColor: tz.tone.success.bg,
+        color: tz.tone.success.fg,
+        border: `1px solid ${tz.tone.success.fill}`,
         borderRadius: "16px",
         padding: "3px 10px",
         fontSize: "12px",
@@ -326,7 +327,7 @@ export default function PaymentSummary({
 
      <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
       <Typography color="text.hint">Credit Balance After Purchase:</Typography>
-      <Typography fontWeight="700" color="#E94560">
+      <Typography fontWeight="700" color={tz.color.emberDeep}>
        {currency(
         (user?.credit_available ?? user?.credit_balance ?? 0) - displayTotal
        )}
@@ -345,8 +346,8 @@ export default function PaymentSummary({
        <Typography color="text.hint">Discount</Typography>
        <span
         style={{
-         backgroundColor: hasDiscount ? "#e8f8f0" : "#f0f2f5",
-         color: hasDiscount ? "#2e7d32" : "#7A8A99",
+         backgroundColor: hasDiscount ? tz.tone.success.bg : tz.color.mist,
+         color: hasDiscount ? tz.tone.success.fg : tz.color.slate,
          borderRadius: "10px",
          padding: "2px 8px",
          fontSize: "11px",
@@ -358,7 +359,7 @@ export default function PaymentSummary({
          : "0% OFF"}
        </span>
       </FlexBox>
-      <Typography fontWeight="600" color={hasDiscount ? "#2e7d32" : "inherit"}>
+      <Typography fontWeight="600" color={hasDiscount ? tz.tone.success.fg : "inherit"}>
        {hasDiscount ? `- ${currency(totalDiscount)}` : currency(0)}
       </Typography>
      </FlexBox>
@@ -384,15 +385,15 @@ export default function PaymentSummary({
         Total Net Payable via Credit
        </Typography>
       </Box>
-      <Typography fontSize="25px" fontWeight="600" lineHeight="1" color="#E94560">
+      <Typography className="price" fontSize="26px" fontWeight="700" lineHeight="1" color={tz.color.ink} style={{ fontFamily: tz.font.display }}>
        {currency(displayTotal)}
       </Typography>
      </FlexBox>
 
      <Box
       sx={{
-       backgroundColor: "#fdecea",
-       border: "1px solid #f5c6cb",
+       backgroundColor: tz.tone.danger.bg,
+       border: `1px solid ${tz.tone.danger.fill}`,
        borderRadius: "8px",
        padding: "0.75rem",
       }}
@@ -406,8 +407,8 @@ export default function PaymentSummary({
          width: "16px",
          height: "16px",
          borderRadius: "4px",
-         backgroundColor: "#2563eb",
-         color: "#fff",
+         backgroundColor: tz.color.navy,
+         color: tz.color.paper,
          fontSize: "11px",
          fontWeight: 700,
          fontStyle: "italic",
@@ -417,7 +418,7 @@ export default function PaymentSummary({
        >
         i
        </span>
-       <Typography fontWeight="700" fontSize="13px" color="#c0392b">
+       <Typography fontWeight="700" fontSize="13px" color={tz.tone.danger.fg}>
         Corporate Credit Purchase Policy
        </Typography>
       </FlexBox>
@@ -440,12 +441,12 @@ export default function PaymentSummary({
 
      {isAbroadProduct && (
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-       <Typography color="#E94560">
+       <Typography color={tz.color.emberDeep}>
         Pay Now ({selectedPaymentOption}%):
        </Typography>
        <FlexBox alignItems="flex-end">
         <Typography
-         color="#E94560"
+         color={tz.color.emberDeep}
          fontSize="18px"
          fontWeight="600"
          lineHeight="1"
@@ -467,7 +468,7 @@ export default function PaymentSummary({
            {currency(parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0"))}
           </Typography>
          )}
-         <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? "#3BB77E" : "inherit"}>
+         <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? tz.tone.success.fg : "inherit"}>
           {isFreeShipping ? "FREE" : currency(shippingCharge)}
          </Typography>
         </FlexBox>
@@ -488,8 +489,8 @@ export default function PaymentSummary({
          <Typography color="text.hint">Discount:</Typography>
          <span
           style={{
-           backgroundColor: hasDiscount ? "#e8f8f0" : "#f0f2f5",
-           color: hasDiscount ? "#2e7d32" : "#7A8A99",
+           backgroundColor: hasDiscount ? tz.tone.success.bg : tz.color.mist,
+           color: hasDiscount ? tz.tone.success.fg : tz.color.slate,
            borderRadius: "10px",
            padding: "2px 8px",
            fontSize: "11px",
@@ -507,7 +508,7 @@ export default function PaymentSummary({
           fontSize="18px"
           fontWeight="600"
           lineHeight="1"
-          color={hasDiscount ? "#2e7d32" : "inherit"}
+          color={hasDiscount ? tz.tone.success.fg : "inherit"}
          >
           {hasDiscount ? `- ${currency(totalDiscount)}` : currency(0)}
          </Typography>
@@ -519,11 +520,14 @@ export default function PaymentSummary({
      <Divider mb="1rem" />
 
      <Typography
-      fontSize="25px"
-      fontWeight="600"
+      className="price"
+      fontSize="26px"
+      fontWeight="700"
       lineHeight="1"
       textAlign="right"
       mb="1.5rem"
+      color={tz.color.ink}
+      style={{ fontFamily: tz.font.display }}
      >
       {currency(displayTotal)}
      </Typography>

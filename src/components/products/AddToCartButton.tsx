@@ -517,21 +517,23 @@ const AddToCartButton = ({
    {!cartItem ? (
     <Button
      mb="36px"
-     size="small"
+     size="large"
      color="primary"
      variant="contained"
+     className="add-to-cart-btn"
      onClick={handleAddToCart}
      disabled={isLoading}
     >
-     {isLoading ? <BeatLoader size={18} color="#fff" /> : "Add to Cart"}
+     {isLoading ? <BeatLoader size={12} color="currentColor" /> : "Add to Cart"}
     </Button>
    ) : (
     <FlexBox alignItems="center" mb="36px" style={{ gap: "10px" }}>
      <Button
-      p="9px"
-      size="small"
+      className="qty-btn"
+      size="none"
       color="primary"
       variant="outlined"
+      aria-label="Decrease quantity"
       onClick={() => handleCartAmountChange(cartItem.qty - 1)}
       disabled={cartItem.qty <= minQty}
      >
@@ -552,22 +554,15 @@ const AddToCartButton = ({
       min={minQty}
       max={qtyCeiling}
       onChange={(e) => handleInputChange(e, cartItem)}
-      style={{
-       textDecoration: "none",
-       borderRadius: "30px",
-       scrollBehavior: "unset",
-       border: "1px solid #E94560",
-       padding: "8px",
-       width: "60px",
-       textAlign: "center",
-      }}
+      aria-label="Quantity"
      />
 
      <Button
-      p="9px"
-      size="small"
+      className="qty-btn"
+      size="none"
       color="primary"
       variant="outlined"
+      aria-label="Increase quantity"
       onClick={() => handleCartAmountChange(cartItem.qty + 1)}
       disabled={cartItem.qty >= qtyCeiling}
      >
@@ -575,7 +570,7 @@ const AddToCartButton = ({
      </Button>
 
      {maxQty !== null && (
-      <span style={{ fontSize: "12px", color: "#7A8A99" }}>
+      <span className="qty-limit">
        Max {maxQty} per order
       </span>
      )}

@@ -524,6 +524,7 @@ import { toast } from "react-toastify";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { Box, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import tz from "../../theme/tizaraa";
 
 export default function CheckoutSummary({ deliveryCharge }) {
  const { state } = useAppContext();
@@ -767,15 +768,15 @@ export default function CheckoutSummary({ deliveryCharge }) {
     position: "top-right",
     autoClose: 3000,
     style: {
-     background: "rgb(245, 124, 0)",
-     color: "#000",
+     background: tz.tone.warning.fill,
+     color: tz.color.ink,
      fontSize: "16px",
-     border: "2px solid #fff",
-     boxShadow: "0 0 10px rgba(255, 152, 0, 0.7)",
+     border: `2px solid ${tz.color.paper}`,
+     boxShadow: `0 0 0 4px ${tz.tone.warning.bg}`,
     },
-    icon: <FaExclamationTriangle style={{ color: "#000", fontSize: "20px" }} />, // Custom icon
+    icon: <FaExclamationTriangle style={{ color: tz.color.ink, fontSize: "20px" }} />, // Custom icon
     progressStyle: {
-     background: "#fff",
+     background: tz.color.paper,
     },
    });
    return;
@@ -1015,7 +1016,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
        style={{
         flex: 1,
         padding: "0.6rem 0.75rem",
-        border: "1px solid #ddd",
+        border: `1px solid ${tz.color.line}`,
         borderRadius: "6px",
         fontSize: "14px",
        }}
@@ -1023,8 +1024,8 @@ export default function CheckoutSummary({ deliveryCharge }) {
       <button
        onClick={applyCorporatePromoCode}
        style={{
-        backgroundColor: "#0F3460",
-        color: "#fff",
+        backgroundColor: tz.color.navy,
+        color: tz.color.paper,
         padding: "0.6rem 1.25rem",
         border: "none",
         borderRadius: "6px",
@@ -1044,9 +1045,9 @@ export default function CheckoutSummary({ deliveryCharge }) {
          display: "inline-flex",
          alignItems: "center",
          gap: "6px",
-         backgroundColor: "#e8f8f0",
-         border: "1px solid #3BB77E",
-         color: "#3BB77E",
+         backgroundColor: tz.tone.success.bg,
+         border: `1px solid ${tz.tone.success.fill}`,
+         color: tz.tone.success.fg,
          borderRadius: "16px",
          padding: "4px 10px",
          fontSize: "13px",
@@ -1104,9 +1105,9 @@ export default function CheckoutSummary({ deliveryCharge }) {
       </Typography>
       <span
        style={{
-        backgroundColor: "#e8f8f0",
-        color: "#2e7d32",
-        border: "1px solid #4CAF50",
+        backgroundColor: tz.tone.success.bg,
+        color: tz.tone.success.fg,
+        border: `1px solid ${tz.tone.success.fill}`,
         borderRadius: "16px",
         padding: "3px 10px",
         fontSize: "12px",
@@ -1126,7 +1127,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
      <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
       <Typography color="text.hint">Credit Balance After Purchase:</Typography>
-      <Typography fontWeight="700" color="#E94560">
+      <Typography fontWeight="700" color={tz.color.emberDeep}>
        {currency(
         (user?.credit_available ?? user?.credit_balance ?? 0) -
          (savedTotalWithDelivery + savedTotalPrice - discount)
@@ -1146,8 +1147,8 @@ export default function CheckoutSummary({ deliveryCharge }) {
        <Typography color="text.hint">Discount</Typography>
        <span
         style={{
-         backgroundColor: hasDiscount ? "#e8f8f0" : "#f0f2f5",
-         color: hasDiscount ? "#2e7d32" : "#7A8A99",
+         backgroundColor: hasDiscount ? tz.tone.success.bg : tz.color.mist,
+         color: hasDiscount ? tz.tone.success.fg : tz.color.slate,
          borderRadius: "10px",
          padding: "2px 8px",
          fontSize: "11px",
@@ -1159,7 +1160,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
          : "0% OFF"}
        </span>
       </FlexBox>
-      <Typography fontWeight="600" color={hasDiscount ? "#2e7d32" : "inherit"}>
+      <Typography fontWeight="600" color={hasDiscount ? tz.tone.success.fg : "inherit"}>
        {hasDiscount ? `- ${currency(totalDiscount)}` : currency(0)}
       </Typography>
      </FlexBox>
@@ -1185,15 +1186,15 @@ export default function CheckoutSummary({ deliveryCharge }) {
         Total Net Payable via Credit
        </Typography>
       </Box>
-      <Typography fontSize="25px" fontWeight="600" lineHeight="1" color="#E94560">
+      <Typography className="price" fontSize="26px" fontWeight="700" lineHeight="1" color={tz.color.ink} style={{ fontFamily: tz.font.display }}>
        {currency((isFreeShipping ? 0 : savedTotalWithDelivery) + savedTotalPrice - discount)}
       </Typography>
      </FlexBox>
 
      <Box
       sx={{
-       backgroundColor: "#fdecea",
-       border: "1px solid #f5c6cb",
+       backgroundColor: tz.tone.danger.bg,
+       border: `1px solid ${tz.tone.danger.fill}`,
        borderRadius: "8px",
        padding: "0.75rem",
       }}
@@ -1207,8 +1208,8 @@ export default function CheckoutSummary({ deliveryCharge }) {
          width: "16px",
          height: "16px",
          borderRadius: "4px",
-         backgroundColor: "#2563eb",
-         color: "#fff",
+         backgroundColor: tz.color.navy,
+         color: tz.color.paper,
          fontSize: "11px",
          fontWeight: 700,
          fontStyle: "italic",
@@ -1218,7 +1219,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
        >
         i
        </span>
-       <Typography fontWeight="700" fontSize="13px" color="#c0392b">
+       <Typography fontWeight="700" fontSize="13px" color={tz.tone.danger.fg}>
         Corporate Credit Purchase Policy
        </Typography>
       </FlexBox>
@@ -1247,7 +1248,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
         style={{
          flex: 1,
          padding: "0.5rem",
-         border: "1px solid #ddd",
+         border: `1px solid ${tz.color.line}`,
          borderRadius: "4px",
          marginRight: "0.5rem",
          fontSize: "14px",
@@ -1256,8 +1257,8 @@ export default function CheckoutSummary({ deliveryCharge }) {
        <button
         onClick={applyPromoCode}
         style={{
-         backgroundColor: "#E94560",
-         color: "#fff",
+         backgroundColor: tz.color.emberDeep,
+         color: tz.color.paper,
          padding: "0.5rem 1rem",
          border: "none",
          borderRadius: "4px",
@@ -1277,9 +1278,9 @@ export default function CheckoutSummary({ deliveryCharge }) {
           display: "inline-flex",
           alignItems: "center",
           gap: "6px",
-          backgroundColor: "#e8f8f0",
-          border: "1px solid #3BB77E",
-          color: "#3BB77E",
+          backgroundColor: tz.tone.success.bg,
+          border: `1px solid ${tz.tone.success.fill}`,
+          color: tz.tone.success.fg,
           borderRadius: "16px",
           padding: "4px 10px",
           fontSize: "13px",
@@ -1321,12 +1322,12 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
      {hasAbroadProduct && (
       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-       <Typography color="#E94560">
+       <Typography color={tz.color.emberDeep}>
         Pay Now ({selectedPaymentOption}%):
        </Typography>
        <FlexBox alignItems="flex-end">
         <Typography
-         color="#E94560"
+         color={tz.color.emberDeep}
          fontSize="18px"
          fontWeight="600"
          lineHeight="1"
@@ -1349,7 +1350,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
            {currency(savedTotalWithDelivery)}
           </Typography>
          )}
-         <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? "#3BB77E" : "inherit"}>
+         <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? tz.tone.success.fg : "inherit"}>
           {isFreeShipping ? "FREE" : currency(savedTotalWithDelivery)}
          </Typography>
         </FlexBox>
@@ -1369,8 +1370,8 @@ export default function CheckoutSummary({ deliveryCharge }) {
          <Typography color="text.hint">Discount:</Typography>
          <span
           style={{
-           backgroundColor: hasDiscount ? "#e8f8f0" : "#f0f2f5",
-           color: hasDiscount ? "#2e7d32" : "#7A8A99",
+           backgroundColor: hasDiscount ? tz.tone.success.bg : tz.color.mist,
+           color: hasDiscount ? tz.tone.success.fg : tz.color.slate,
            borderRadius: "10px",
            padding: "2px 8px",
            fontSize: "11px",
@@ -1382,7 +1383,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
            : "0% OFF"}
          </span>
         </FlexBox>
-        <Typography fontWeight="700" color={hasDiscount ? "#2e7d32" : "inherit"}>
+        <Typography fontWeight="700" color={hasDiscount ? tz.tone.success.fg : "inherit"}>
          {hasDiscount ? `- ${currency(totalDiscount)}` : currency(0)}
         </Typography>
        </FlexBox>
@@ -1392,11 +1393,14 @@ export default function CheckoutSummary({ deliveryCharge }) {
      <Divider mb="1rem" />
 
      <Typography
-      fontSize="25px"
-      fontWeight="600"
+      className="price"
+      fontSize="26px"
+      fontWeight="700"
       lineHeight="1"
       textAlign="right"
       mb="1.5rem"
+      color={tz.color.ink}
+      style={{ fontFamily: tz.font.display }}
      >
       {hasAbroadProduct
        ? currency(otcAdvancePaymentAmount || 0)
@@ -1433,7 +1437,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
        >
         <InfoOutlinedIcon
          fontSize="small"
-         style={{ color: "#E94560" }}
+         style={{ color: tz.color.emberDeep }}
          sx={{ opacity: 0.7 }}
         />
        </Tooltip>

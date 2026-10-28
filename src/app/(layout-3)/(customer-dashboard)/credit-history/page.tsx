@@ -359,12 +359,12 @@ export default function CreditHistoryPage() {
       * { box-sizing: border-box; }
       body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 32px; color: #1F2937; background: #fff; }
       .top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
-      .top .shop-name { font-size: 26px; font-weight: 800; color: #E75B2A; margin: 0 0 6px 0; }
+      .top .shop-name { font-size: 26px; font-weight: 800; color: #C2400F; margin: 0 0 6px 0; }
       .top .line { font-size: 13px; color: #374151; margin: 2px 0; }
       .top .logo-block { text-align: right; }
       .top .logo-block img { height: 42px; }
       .top .tagline { font-size: 10px; color: #6B7280; letter-spacing: 0.5px; margin-top: 4px; }
-      .divider { border: none; border-top: 3px solid #E75B2A; margin: 16px 0 20px 0; }
+      .divider { border: none; border-top: 3px solid #C2400F; margin: 16px 0 20px 0; }
       .info-box {
        background: #F7F7F7; border-radius: 6px; padding: 16px 20px; display: flex;
        justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
@@ -373,18 +373,18 @@ export default function CreditHistoryPage() {
       .info-box .col p b { color: #111827; }
       .info-box .col.right { text-align: right; }
       table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
-      th { background: #E75B2A; color: #fff; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; padding: 10px 12px; text-align: left; }
+      th { background: #C2400F; color: #fff; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; padding: 10px 12px; text-align: left; }
       td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid #EDEFF2; }
       td.center, th.center { text-align: center; }
       td.right, th.right { text-align: right; }
       .chip {
        display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;
       }
-      .chip-primary { background: #E3EAF7; color: #1B3D8F; }
+      .chip-primary { background: #E3EAF7; color: #0E3460; }
       .chip-secondary { background: #EEF0F3; color: #4B566B; }
       .chip-success { background: #E3F6EC; color: #1FAE68; }
       .chip-warning { background: #FEF3E2; color: #D68910; }
-      .chip-error { background: #FDEAEC; color: #E75B2A; }
+      .chip-error { background: #FDEAEC; color: #C2400F; }
       .seller-total { text-align: right; font-size: 13px; font-weight: 700; margin: 10px 0 24px 0; }
       .table-wrap { position: relative; }
       .watermark {
@@ -399,7 +399,7 @@ export default function CreditHistoryPage() {
       }
       .totals-box p { display: flex; justify-content: space-between; gap: 24px; font-size: 13px; margin: 6px 0; color: #374151; }
       .totals-box p span:first-child { white-space: nowrap; }
-      .totals-box p.total { font-size: 15px; font-weight: 800; color: #E75B2A; border-top: 1px solid #E2E5EA; padding-top: 8px; margin-top: 10px; }
+      .totals-box p.total { font-size: 15px; font-weight: 800; color: #C2400F; border-top: 1px solid #E2E5EA; padding-top: 8px; margin-top: 10px; }
       .footer-note { text-align: center; font-size: 12px; color: #374151; margin: 12px 0 4px 0; }
       .footer-note.muted { color: #6B7280; }
       hr.thin { border: none; border-top: 1px solid #E2E5EA; margin: 24px 0 16px 0; }
@@ -533,7 +533,7 @@ export default function CreditHistoryPage() {
  if (notCorporate) {
   return (
    <Fragment>
-    <DashboardPageHeader title="Due Payment" iconName="credit-card" />
+    <DashboardPageHeader title="Due payment" iconName="credit-card" />
     <EmptyOrders
      title="This feature is for corporate customers"
      message="Your account isn't linked to a corporate shop, so the Due Payment dashboard isn't available."
@@ -545,7 +545,7 @@ export default function CreditHistoryPage() {
  return (
   <Fragment>
    <DashboardPageHeader
-    title="Due Payment"
+    title="Due payment"
     iconName="credit-card"
     button={
      <Link
@@ -555,8 +555,8 @@ export default function CreditHistoryPage() {
        alignItems: "center",
        padding: "10px 18px",
        borderRadius: "8px",
-       border: "1px solid #E94560",
-       backgroundColor: "#E94560",
+       border: "1px solid var(--tz-ember-deep)",
+       backgroundColor: "var(--tz-ember-deep)",
        color: "#fff",
        fontSize: "13px",
        fontWeight: 600,
@@ -576,7 +576,7 @@ export default function CreditHistoryPage() {
 
    {/* Top: current-period credit usage / remaining */}
    {credit && (
-    <Card p="1.5rem" mb="1.5rem" borderRadius="8px" border="1px solid #DAE1E7">
+    <Card p="1.5rem" mb="1.5rem" borderRadius="8px" border="1px solid var(--tz-line)">
      {/* Header: employee/corporate management label + shop name + export */}
      <FlexBox
       justifyContent="space-between"
@@ -613,8 +613,8 @@ export default function CreditHistoryPage() {
          gap: "8px",
          padding: "10px 16px",
          borderRadius: "8px",
-         border: "1px solid #E94560",
-         backgroundColor: "#E94560",
+         border: "1px solid var(--tz-ember-deep)",
+         backgroundColor: "var(--tz-ember-deep)",
          color: "#fff",
          fontSize: "13px",
          fontWeight: 600,
@@ -634,7 +634,7 @@ export default function CreditHistoryPage() {
           top: "calc(100% + 6px)",
           minWidth: "170px",
           backgroundColor: "#fff",
-          border: "1px solid #DAE1E7",
+          border: "1px solid var(--tz-line)",
           borderRadius: "8px",
           boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
           overflow: "hidden",
@@ -667,7 +667,7 @@ export default function CreditHistoryPage() {
            width: "100%",
            padding: "10px 14px",
            border: "none",
-           borderTop: "1px solid #EDEFF2",
+           borderTop: "1px solid var(--tz-line)",
            background: "none",
            fontSize: "13px",
            textAlign: "left",
@@ -689,7 +689,7 @@ export default function CreditHistoryPage() {
         borderRadius="8px"
         style={{
          backgroundColor: "rgba(15, 52, 96, 0.06)",
-         borderLeft: "4px solid #0F3460",
+         borderLeft: "4px solid var(--tz-navy)",
          width: "100%",
          height: "100%",
          boxSizing: "border-box",
@@ -708,7 +708,7 @@ export default function CreditHistoryPage() {
         borderRadius="8px"
         style={{
          backgroundColor: "rgba(78, 151, 253, 0.08)",
-         borderLeft: "4px solid #4E97FD",
+         borderLeft: "4px solid var(--tz-navy)",
          width: "100%",
          height: "100%",
          boxSizing: "border-box",
@@ -729,7 +729,7 @@ export default function CreditHistoryPage() {
         borderRadius="8px"
         style={{
          backgroundColor: "rgba(51, 208, 103, 0.1)",
-         borderLeft: "4px solid #33D067",
+         borderLeft: "4px solid var(--tz-success)",
          width: "100%",
          height: "100%",
          boxSizing: "border-box",
@@ -750,7 +750,7 @@ export default function CreditHistoryPage() {
         borderRadius="8px"
         style={{
          backgroundColor: "rgba(255, 205, 78, 0.2)",
-         borderLeft: "4px solid #FFCD4E",
+         borderLeft: "4px solid var(--tz-warning)",
          width: "100%",
          height: "100%",
          boxSizing: "border-box",
@@ -769,7 +769,7 @@ export default function CreditHistoryPage() {
         borderRadius="8px"
         style={{
          backgroundColor: "rgba(51, 208, 103, 0.1)",
-         borderLeft: "4px solid #33D067",
+         borderLeft: "4px solid var(--tz-success)",
          width: "100%",
          height: "100%",
          boxSizing: "border-box",
@@ -789,8 +789,8 @@ export default function CreditHistoryPage() {
         p="0.75rem 1rem"
         borderRadius="8px"
         style={{
-         backgroundColor: "rgba(233, 69, 96, 0.08)",
-         borderLeft: "4px solid #E94560",
+         backgroundColor: "var(--tz-ember-tint)",
+         borderLeft: "4px solid var(--tz-ember-deep)",
          width: "100%",
          height: "100%",
          boxSizing: "border-box",
@@ -819,7 +819,7 @@ export default function CreditHistoryPage() {
    )}
 
    {/* Current month purchases, filterable by month / date range / product / status */}
-   <Card p="1.5rem" mb="1.5rem" borderRadius="8px" border="1px solid #DAE1E7">
+   <Card p="1.5rem" mb="1.5rem" borderRadius="8px" border="1px solid var(--tz-line)">
     <FlexBox flexWrap="wrap" mb="1.25rem" style={{ gap: "10px" }}>
      <FlexBox alignItems="center" style={{ gap: "6px" }}>
       <Small color="text.muted" style={{ whiteSpace: "nowrap" }}>Month:</Small>
@@ -832,7 +832,7 @@ export default function CreditHistoryPage() {
         setPurchaseDateFrom("");
         setPurchaseDateTo("");
        }}
-       style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid #DAE1E7", fontSize: "13px" }}
+       style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--tz-line)", fontSize: "13px" }}
       />
      </FlexBox>
 
@@ -843,7 +843,7 @@ export default function CreditHistoryPage() {
        value={purchaseDateFrom}
        max={purchaseDateTo || undefined}
        onChange={(e) => setPurchaseDateFrom(e.target.value)}
-       style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid #DAE1E7", fontSize: "13px" }}
+       style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--tz-line)", fontSize: "13px" }}
       />
       <Small color="text.muted">to</Small>
       <input
@@ -851,14 +851,14 @@ export default function CreditHistoryPage() {
        value={purchaseDateTo}
        min={purchaseDateFrom || undefined}
        onChange={(e) => setPurchaseDateTo(e.target.value)}
-       style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid #DAE1E7", fontSize: "13px" }}
+       style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--tz-line)", fontSize: "13px" }}
       />
      </FlexBox>
 
      <select
       value={productFilter}
       onChange={(e) => setProductFilter(e.target.value)}
-      style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid #DAE1E7", fontSize: "13px" }}
+      style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--tz-line)", fontSize: "13px" }}
      >
       <option value="all">All Products</option>
       {productOptions.map((name) => (
@@ -869,7 +869,7 @@ export default function CreditHistoryPage() {
      <select
       value={statusFilter}
       onChange={(e) => setStatusFilter(e.target.value)}
-      style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid #DAE1E7", fontSize: "13px" }}
+      style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--tz-line)", fontSize: "13px" }}
      >
       <option value="all">Order Status: All</option>
       <option value="pending">Pending</option>
@@ -884,7 +884,7 @@ export default function CreditHistoryPage() {
         padding: "8px 18px",
         borderRadius: "8px",
         border: "none",
-        backgroundColor: "#E94560",
+        backgroundColor: "var(--tz-ember-deep)",
         color: "#fff",
         fontSize: "13px",
         fontWeight: 600,
@@ -899,9 +899,9 @@ export default function CreditHistoryPage() {
        style={{
         padding: "8px 18px",
         borderRadius: "8px",
-        border: "1px solid #DAE1E7",
+        border: "1px solid var(--tz-line)",
         backgroundColor: "#fff",
-        color: "#4B566B",
+        color: "var(--tz-ink-soft)",
         fontSize: "13px",
         fontWeight: 600,
         cursor: "pointer",
@@ -913,13 +913,13 @@ export default function CreditHistoryPage() {
     </FlexBox>
 
     {/* Tabs: Purchase History (current filter) / Returned Products Log */}
-    <FlexBox mb="1.25rem" style={{ gap: "24px", borderBottom: "1px solid #EDEFF2" }}>
+    <FlexBox mb="1.25rem" style={{ gap: "24px", borderBottom: "1px solid var(--tz-line)" }}>
      <Box
       onClick={() => setActiveProductTab("purchase")}
       style={{
        cursor: "pointer",
        padding: "0 0 10px 0",
-       borderBottom: activeProductTab === "purchase" ? "2px solid #1B3D8F" : "2px solid transparent",
+       borderBottom: activeProductTab === "purchase" ? "2px solid var(--tz-navy)" : "2px solid transparent",
       }}
      >
       <Small
@@ -934,7 +934,7 @@ export default function CreditHistoryPage() {
       style={{
        cursor: "pointer",
        padding: "0 0 10px 0",
-       borderBottom: activeProductTab === "returned" ? "2px solid #1B3D8F" : "2px solid transparent",
+       borderBottom: activeProductTab === "returned" ? "2px solid var(--tz-navy)" : "2px solid transparent",
       }}
      >
       <Small
@@ -986,7 +986,7 @@ export default function CreditHistoryPage() {
           flexWrap: "nowrap",
           minWidth: "860px",
           borderRadius: 0,
-          borderBottom: "1px solid #EDEFF2",
+          borderBottom: "1px solid var(--tz-line)",
          }}
         >
          <Typography my="0px" mx="6px" fontSize="14px" style={{ whiteSpace: "nowrap", flex: "0 0 150px" }}>#{order.order_number}</Typography>
@@ -1044,7 +1044,7 @@ export default function CreditHistoryPage() {
          flexWrap: "nowrap",
          minWidth: "700px",
          borderRadius: 0,
-         borderBottom: "1px solid #EDEFF2",
+         borderBottom: "1px solid var(--tz-line)",
         }}
        >
         <Typography my="0px" mx="6px" fontSize="14px" style={{ whiteSpace: "nowrap" }}>{item.product_name.trim()}</Typography>

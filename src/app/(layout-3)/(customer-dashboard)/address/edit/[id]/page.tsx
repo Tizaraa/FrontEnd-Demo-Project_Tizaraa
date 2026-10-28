@@ -11,7 +11,7 @@ export default function EditAddress({ params }: { params: { id: string } }) {
   <Fragment>
    <DashboardPageHeader
     iconName="pin_filled"
-    title="Edit Address"
+    title="Edit address"
     button={<BackToAddress />}
    />
 

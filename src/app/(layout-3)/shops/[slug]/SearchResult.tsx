@@ -441,95 +441,69 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import Box from "@component/Box";
-import Card from "@component/Card";
-import Select from "@component/Select";
 import Icon from "@component/icon/Icon";
 import Grid from "@component/grid/Grid";
-import FlexBox from "@component/FlexBox";
-import { Button, IconButton } from "@component/buttons";
-import Sidenav from "@component/sidenav/Sidenav";
-import Typography, { H5, Paragraph } from "@component/Typography";
 
 import ProductGridView from "@component/products/ProductCard1List";
 import ProductListView from "@component/products/ProductCard9List";
-import ProductFilterCard from "@component/products/ProductFilterCard";
 import useWindowSize from "@hook/useWindowSize";
-import { Vortex } from "react-loader-spinner";
-import styled from "@emotion/styled";
-import ApiBaseUrl from "api/ApiBaseUrl";
+import styled from "styled-components";
 import ShopProductFilterCard from "@component/products/ShopProductFilterCard";
-import BeatLoader from "react-spinners/BeatLoader";
+import {
+ ListingEmpty,
+ ListingLoadMore,
+ ListingSkeleton,
+ ListingToolbar,
+} from "@component/listing/Listing";
 
 // import tizaraa_watermark from "../../../../../../public/assets/images/tizaraa_watermark/TizaraaSeal.png.png"
 import Watermark from "@component/watermark/Watermark";
-import Image from "next/image";
-import NextImage from "@component/NextImage";
-import Loader from "@component/loader";
 import axios from "@lib/axiosClient";
 
 // Styled components for the search box
-const SearchContainer = styled(Box)`
+const SearchContainer = styled.div`
  position: relative;
- flex: 1 1 0;
- max-width: 300px;
- min-width: 200px;
- margin-right: 1rem;
+ max-width: 360px;
+ margin-bottom: 16px;
 `;
 
 const SearchInput = styled.input`
  width: 100%;
- padding: 12px 16px 12px 48px;
- border: 2px solid #e1e5e9;
- border-radius: 12px;
+ height: 44px;
+ padding: 0 16px 0 44px;
+ border: 1px solid ${({ theme }) => theme.tz.color.line};
+ border-radius: ${({ theme }) => theme.tz.radius.sm}px;
  font-size: 14px;
  font-family: inherit;
- background-color: #ffffff;
- transition: all 0.3s ease;
+ color: ${({ theme }) => theme.tz.color.ink};
+ background-color: ${({ theme }) => theme.tz.color.paper};
+ transition: border-color ${({ theme }) => theme.tz.motion.fast},
+  box-shadow ${({ theme }) => theme.tz.motion.fast};
  outline: none;
 
  &::placeholder {
-  color: #6c757d;
+  color: ${({ theme }) => theme.tz.color.slate};
   font-weight: 400;
  }
 
- &:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-  background-color: #ffffff;
+ &:hover {
+  border-color: ${({ theme }) => theme.tz.color.slate};
  }
 
- &:hover {
-  border-color: #ced4da;
+ &:focus-visible {
+  border-color: ${({ theme }) => theme.tz.color.ember};
+  box-shadow: ${({ theme }) => theme.tz.focusRing};
  }
 `;
 
 const SearchIcon = styled(Icon)`
  position: absolute;
- left: 16px;
+ left: 14px;
  top: 50%;
  transform: translateY(-50%);
- color: #6c757d;
+ color: ${({ theme }) => theme.tz.color.slate};
  z-index: 2;
  pointer-events: none;
-`;
-
-const LoaderWrapper = styled.div`
- display: flex;
- flex-direction: column;
- justify-content: center;
- align-items: center;
- margin-top: 5rem;
-`;
-
-const LoadingProductsPlaceholder = styled.div`
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: center;
- padding: 4rem 2rem;
- gap: 1rem;
- color: #6c757d;
 `;
 
 const productsPerPage = 10;
@@ -644,32 +618,14 @@ export default function SearchResult({ sortOptions, slug }) {
   setCurrentPage((prevPage) => prevPage + 1);
  };
 
- const PrimaryLoader = `${ApiBaseUrl.ImgUrl}frontend/loader/loader.gif`;
-
  const renderProductView = () => {
   if (currentPage === 1 && loading) {
-   return (
-    <LoadingProductsPlaceholder>
-     <LoaderWrapper>
-      <img
-       src={PrimaryLoader}
-       alt="Loading"
-       style={{ height: "50px", width: "50px" }}
-      />
-      <Paragraph style={{ marginTop: "8px" }}>Loading products...</Paragraph>
-     </LoaderWrapper>
-    </LoadingProductsPlaceholder>
-   );
+   return <ListingSkeleton />;
   }
 
   if (products.length === 0 && !loading) {
    return (
-    <LoadingProductsPlaceholder>
-     <Icon variant="large" color="inherit">
-      search_off
-     </Icon>
-     <H5>No products found in this shop matching your search.</H5>
-    </LoadingProductsPlaceholder>
+    <ListingEmpty message="No products found in this shop matching your search." />
    );
   }
 
@@ -684,27 +640,9 @@ export default function SearchResult({ sortOptions, slug }) {
       onPageChange={handleLoadMore}
      />
      {loading && currentPage > 1 && (
-      <LoaderWrapper>
-       <Vortex
-        visible={true}
-        height="60"
-        width="60"
-        ariaLabel="vortex-loading"
-        wrapperStyle={{}}
-        wrapperClass="vortex-wrapper"
-        colors={[
-         "#007bff",
-         "#6610f2",
-         "#28a745",
-         "#ffc107",
-         "#fd7e14",
-         "#dc3545",
-        ]}
-       />
-       <Paragraph style={{ marginTop: "8px" }}>
-        Loading more products...
-       </Paragraph>
-      </LoaderWrapper>
+      <div style={{ marginTop: 16 }}>
+       <ListingSkeleton count={4} />
+      </div>
      )}
     </>
    );
@@ -720,31 +658,24 @@ export default function SearchResult({ sortOptions, slug }) {
      onPageChange={() => {}}
     />
     {loading && currentPage > 1 && (
-     <LoaderWrapper>
-      <Vortex
-       visible={true}
-       height="60"
-       width="60"
-       ariaLabel="vortex-loading"
-       wrapperStyle={{}}
-       wrapperClass="vortex-wrapper"
-       colors={[
-        "#007bff",
-        "#6610f2",
-        "#28a745",
-        "#ffc107",
-        "#fd7e14",
-        "#dc3545",
-       ]}
-      />
-      <Paragraph style={{ marginTop: "8px" }}>
-       Loading more products...
-      </Paragraph>
-     </LoaderWrapper>
+     <div style={{ marginTop: 16 }}>
+      <ListingSkeleton count={4} />
+     </div>
     )}
    </>
   );
  };
+
+ const filterCard = (
+  <ShopProductFilterCard
+   onBrandChange={handleBrandChange}
+   onCategoryChange={handleCategoryChange}
+   onCountryChange={handleCountryChange} // Pass country handler
+   onProvinceChange={handleProvinceChange}
+   slug={slug}
+   pageType="shop"
+  />
+ );
 
  return (
   <>
@@ -756,161 +687,52 @@ export default function SearchResult({ sortOptions, slug }) {
      background: "none",
     }}
    >
-    <FlexBox
-     as={Card}
-     mb={["10px", "15px"]}
-     p={["0.75rem", "1.25rem"]}
-     elevation={5}
-     flexWrap="wrap"
-     borderRadius={8}
-     alignItems="center"
-     justifyContent="space-between"
-    >
-     <div>
-      <H5 fontSize={["14px", "16px"]}>
-       Searching for {decodeURIComponent(slug)}
-      </H5>
-      <Paragraph
-       color="text.muted"
-       mr={["0.5rem", "1rem"]}
-       fontSize={["12px", "14px"]}
-      >
-       {totalProducts} results found
-      </Paragraph>
-     </div>
-
-     <SearchContainer mr={["1rem", "1.75rem"]}>
-      <SearchIcon variant="small">search</SearchIcon>
-      <SearchInput
-       type="text"
-       placeholder="Search products..."
-       value={searchTerm}
-       onChange={(e) => {
-        setSearchTerm(e.target.value);
-        setCurrentPage(1); // Reset page
-       }}
-      />
-     </SearchContainer>
-
-     <FlexBox
-      alignItems="center"
-      flexWrap="wrap"
-      justifyContent={["flex-start", "flex-end"]}
-      // gap="0.75rem"
-      mt={["0.75rem", "0"]}
-      width={["100%", "auto"]}
-     >
-      <Paragraph
-       color="text.muted"
-       mr={["0.5rem", "1rem"]}
-       fontSize={["12px", "14px"]}
-      >
-       Sort by:
-      </Paragraph>
-
-      {/* <Box flex="1 1 0" mr="1.75rem" minWidth="150px">
-            <Select
-              placeholder="Sort by"
-              options={sortOptions}
-              defaultValue={sortOptions.find(
-                (option) => option.value === selectedSortOption
-              )}
-              onChange={handleSortChange}
-            />
-          </Box> */}
-      <Box flex="1 1 0" mr={["1rem", "1.75rem"]} minWidth="120px">
-       <Select
-        placeholder="Sort by"
-        options={sortOptions}
-        defaultValue={sortOptions.find(
-         (option) => option.value === selectedSortOption
-        )}
-        onChange={handleSortChange}
-        styles={{
-         menu: (provided) => ({
-          ...provided,
-          zIndex: 1000,
-         }),
-        }}
-       />
-      </Box>
-
-      <Paragraph
-       color="text.muted"
-       mr={["0.25rem", "0.5rem"]}
-       fontSize={["12px", "14px"]}
-      >
-       View:
-      </Paragraph>
-
-      <IconButton onClick={() => setView("grid")}>
-       <Icon variant="small" color={view === "grid" ? "primary" : "inherit"}>
-        grid
-       </Icon>
-      </IconButton>
-
-      <IconButton onClick={() => setView("list")}>
-       <Icon variant="small" color={view === "list" ? "primary" : "inherit"}>
-        menu
-       </Icon>
-      </IconButton>
-
-      {isTablet && (
-       <Sidenav
-        position="left"
-        scroll={true}
-        handle={
-         <IconButton>
-          <Icon>options</Icon>
-         </IconButton>
-        }
-       >
-        <ShopProductFilterCard
-         onBrandChange={handleBrandChange}
-         onCategoryChange={handleCategoryChange}
-         onCountryChange={handleCountryChange} // Pass country handler
-         onProvinceChange={handleProvinceChange}
-         slug={slug}
-         pageType="shop"
-        />
-       </Sidenav>
-      )}
-     </FlexBox>
-    </FlexBox>
+    <ListingToolbar
+     title="All products"
+     count={totalProducts}
+     sortOptions={sortOptions}
+     sortValue={selectedSortOption}
+     onSortChange={handleSortChange}
+     view={view}
+     onViewChange={setView}
+     mobileFilter={isTablet ? filterCard : undefined}
+    />
 
     <Grid container spacing={6}>
      {!isTablet && (
       <Grid item lg={3} xs={12}>
-       <ShopProductFilterCard
-        onBrandChange={handleBrandChange}
-        onCategoryChange={handleCategoryChange}
-        onCountryChange={handleCountryChange} // Pass country handler
-        onProvinceChange={handleProvinceChange}
-        slug={slug}
-        pageType="shop"
-       />
+       {filterCard}
       </Grid>
      )}
 
      <Grid item lg={9} xs={12}>
+      <SearchContainer>
+       <SearchIcon variant="small">search</SearchIcon>
+       <SearchInput
+        type="text"
+        placeholder="Search products..."
+        aria-label="Search products in this shop"
+        value={searchTerm}
+        onChange={(e) => {
+         setSearchTerm(e.target.value);
+         setCurrentPage(1); // Reset page
+        }}
+       />
+      </SearchContainer>
+
       {renderProductView()}
 
-      {!loading &&
-       products.length > 0 &&
-       currentPage * productsPerPage < totalProducts && (
-        <FlexBox justifyContent="center" alignItems="center" mt="32px">
-         <Button
-          onClick={() => {
-           if (!loading) handleLoadMore(); // No argument passed
-          }}
-          variant="contained"
-          color="primary"
-          disabled={loading}
-         >
-          Show More
-         </Button>
-        </FlexBox>
-       )}
+      <ListingLoadMore
+       onClick={() => {
+        if (!loading) handleLoadMore();
+       }}
+       loading={loading}
+       visible={
+        !loading &&
+        products.length > 0 &&
+        currentPage * productsPerPage < totalProducts
+       }
+      />
      </Grid>
     </Grid>
    </main>

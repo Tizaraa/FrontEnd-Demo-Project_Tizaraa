@@ -61,7 +61,7 @@
 //     width: "100%",
 //     padding: "0.5rem",
 //     fontSize: "1rem",
-//     border: "1px solid #E5E7EB",
+//     border: `1px solid ${tz.color.line}`,
 //     borderRadius: "0.375rem",
 //     marginBottom: "1rem",
 //   } as CSSProperties,
@@ -296,6 +296,7 @@ import SetPassword from "./SetPassword";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import tz from "../../../theme/tizaraa";
 
 const styles = {
  container: {
@@ -312,7 +313,7 @@ const styles = {
   display: "flex",
   flexDirection: "column",
   gap: "1.5rem",
-  background: "#fff",
+  background: tz.color.paper,
   borderRadius: "1rem",
   // boxShadow: "0 10px 25px rgba(0, 0, 0, 0.08)",
   // padding: "2.5rem",
@@ -327,7 +328,7 @@ const styles = {
   width: "5rem",
   height: "5rem",
   borderRadius: "50%",
-  backgroundColor: "rgba(233, 69, 96, 0.1)",
+  backgroundColor: tz.color.emberTint,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -335,7 +336,7 @@ const styles = {
  icon: {
   width: "2.5rem",
   height: "2.5rem",
-  color: "rgb(233, 69, 96)",
+  color: tz.color.emberDeep,
  } as CSSProperties,
  textContent: {
   textAlign: "center",
@@ -347,13 +348,13 @@ const styles = {
  title: {
   fontSize: "1.5rem",
   fontWeight: 600,
-  color: "#111827",
+  color: tz.color.ink,
   lineHeight: "1.3",
   margin: 0,
  } as CSSProperties,
  subtitle: {
   fontSize: "1rem",
-  color: "#6B7280",
+  color: tz.color.slate,
   lineHeight: "1.5",
   margin: 0,
  } as CSSProperties,
@@ -373,18 +374,18 @@ const styles = {
   width: "100%",
   padding: "0.875rem 1rem",
   fontSize: "1rem",
-  border: "1px solid #E5E7EB",
-  borderRadius: "0.5rem",
-  backgroundColor: "#f9fafb",
+  border: `1px solid ${tz.color.line}`,
+  borderRadius: `${tz.radius.sm}px`,
+  backgroundColor: tz.color.paper,
   transition: "all 0.2s ease",
  } as CSSProperties,
  inputFocus: {
   outline: "none",
-  borderColor: "rgb(233, 69, 96)",
-  boxShadow: "0 0 0 3px rgba(233, 69, 96, 0.2)",
+  borderColor: tz.color.emberDeep,
+  boxShadow: tz.focusRing,
  } as CSSProperties,
  errorMessage: {
-  color: "#ef4444",
+  color: tz.tone.danger.fg,
   fontSize: "0.875rem",
   marginTop: "-0.5rem",
  } as CSSProperties,
@@ -394,11 +395,11 @@ const styles = {
   marginTop: "0.5rem",
  } as CSSProperties,
  timerActive: {
-  color: "rgb(233, 69, 96)",
+  color: tz.color.emberDeep,
   fontWeight: 500,
  } as CSSProperties,
  timerExpired: {
-  color: "#ef4444",
+  color: tz.tone.danger.fg,
   fontWeight: 500,
  } as CSSProperties,
  methodButton: {
@@ -408,20 +409,20 @@ const styles = {
   gap: "0.75rem",
   padding: "0.875rem 1rem",
   borderRadius: "0.5rem",
-  border: "1px solid #E5E7EB",
-  backgroundColor: "#fff",
-  color: "#111827",
+  border: `1px solid ${tz.color.line}`,
+  backgroundColor: tz.color.paper,
+  color: tz.color.ink,
   fontWeight: 500,
   cursor: "pointer",
   transition: "all 0.2s ease",
  } as CSSProperties,
  methodButtonHover: {
-  borderColor: "rgb(233, 69, 96)",
-  backgroundColor: "rgba(233, 69, 96, 0.03)",
+  borderColor: tz.color.emberDeep,
+  backgroundColor: tz.color.emberTint,
  } as CSSProperties,
  submitButton: {
-  backgroundColor: "rgb(233, 69, 96)",
-  color: "#fff",
+  backgroundColor: tz.color.emberDeep,
+  color: tz.color.paper,
   fontWeight: 500,
   padding: "0.875rem 1rem",
   borderRadius: "0.5rem",
@@ -431,12 +432,12 @@ const styles = {
   marginTop: "0.5rem",
  } as CSSProperties,
  submitButtonHover: {
-  backgroundColor: "rgba(233, 69, 96, 0.9)",
+  backgroundColor: tz.color.emberDark,
   transform: "translateY(-1px)",
  } as CSSProperties,
  submitButtonDisabled: {
-  backgroundColor: "#E5E7EB",
-  color: "#9CA3AF",
+  backgroundColor: tz.color.line,
+  color: tz.color.slate,
   cursor: "not-allowed",
  } as CSSProperties,
 };
@@ -620,12 +621,12 @@ export default function SetPasswordForm() {
         disabled={!isTimerActive || timer === 0}
         onMouseEnter={(e) => {
          if (isTimerActive && timer > 0) {
-          e.currentTarget.style.backgroundColor = "rgba(233, 69, 96, 0.9)";
+          e.currentTarget.style.backgroundColor = tz.color.emberDark;
          }
         }}
         onMouseLeave={(e) => {
          e.currentTarget.style.backgroundColor =
-          !isTimerActive || timer === 0 ? "#E5E7EB" : "rgb(233, 69, 96)";
+          !isTimerActive || timer === 0 ? tz.color.line : tz.color.emberDeep;
         }}
        >
         Verify Code
@@ -659,30 +660,30 @@ export default function SetPasswordForm() {
         style={styles.methodButton}
         onClick={handleVerifyThroughEmail}
         onMouseEnter={(e) => {
-         e.currentTarget.style.borderColor = "rgb(233, 69, 96)";
-         e.currentTarget.style.backgroundColor = "rgba(233, 69, 96, 0.03)";
+         e.currentTarget.style.borderColor = tz.color.emberDeep;
+         e.currentTarget.style.backgroundColor = tz.color.emberTint;
         }}
         onMouseLeave={(e) => {
-         e.currentTarget.style.borderColor = "#E5E7EB";
-         e.currentTarget.style.backgroundColor = "#fff";
+         e.currentTarget.style.borderColor = tz.color.line;
+         e.currentTarget.style.backgroundColor = tz.color.paper;
         }}
        >
-        <Mail size={20} color="rgb(233, 69, 96)" />
+        <Mail size={20} color={tz.color.emberDeep} />
         Verify via Email
        </button>
        <button
         style={styles.methodButton}
         onClick={handleVerifyThroughPhone}
         onMouseEnter={(e) => {
-         e.currentTarget.style.borderColor = "rgb(233, 69, 96)";
-         e.currentTarget.style.backgroundColor = "rgba(233, 69, 96, 0.03)";
+         e.currentTarget.style.borderColor = tz.color.emberDeep;
+         e.currentTarget.style.backgroundColor = tz.color.emberTint;
         }}
         onMouseLeave={(e) => {
-         e.currentTarget.style.borderColor = "#E5E7EB";
-         e.currentTarget.style.backgroundColor = "#fff";
+         e.currentTarget.style.borderColor = tz.color.line;
+         e.currentTarget.style.backgroundColor = tz.color.paper;
         }}
        >
-        <Smartphone size={20} color="rgb(233, 69, 96)" />
+        <Smartphone size={20} color={tz.color.emberDeep} />
         Verify via Phone
        </button>
       </div>

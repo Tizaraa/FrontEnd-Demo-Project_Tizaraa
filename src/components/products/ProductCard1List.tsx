@@ -209,13 +209,9 @@
 
 "use client";
 
-import { useMediaQuery, useTheme } from "@mui/material";
-import FlexBox from "@component/FlexBox";
-import Grid from "@component/grid/Grid";
 import { ProductCard1 } from "@component/product-cards";
-import { Paragraph, SemiSpan } from "@component/Typography";
+import { ListingEmpty, ListingGrid } from "@component/listing/Listing";
 import Product from "@models/product.model";
-import { Button } from "@component/buttons";
 import ApiBaseUrl from "api/ApiBaseUrl";
 
 type Props = {
@@ -226,104 +222,35 @@ type Props = {
  onPageChange: (page: number) => void;
 };
 
-export default function ProductGridView({
- products,
- totalProducts,
- currentPage,
- productsPerPage,
- onPageChange,
-}: Props) {
- const theme = useTheme();
- const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
-
- const startProduct = (currentPage - 1) * productsPerPage + 1;
- const endProduct = Math.min(currentPage * productsPerPage, totalProducts);
+export default function ProductGridView({ products }: Props) {
+ if (!products?.length) {
+  return (
+   <ListingEmpty
+    title="No products found for this selection"
+    message="Try adjusting your filters or explore other categories."
+   />
+  );
+ }
 
  return (
-  <div>
-   <Grid container spacing={isLargeScreen ? 6 : 2}>
-    {products?.length > 0 ? (
-     products.map((item) => (
-      <Grid item key={item.id} xs={6} sm={4} md={4} lg={4}>
-       <ProductCard1
-        id={item?.id || ""}
-        slug={item?.slug || ""}
-        price={item?.original_price || item?.price || 0}
-        discountPrice={item?.original_price && item.original_price !== item.price ? (item?.price || 0) : (item?.discount_price || 0)}
-        productStock={item?.product_stock || 0}
-        title={item?.title || "No Title"}
-        off={item?.discount || 0}
-        images={
-         item?.images?.map((image) => `${ApiBaseUrl.ImgUrl}${image}`) || []
-        }
-        imgUrl={item?.thumbnail ? (item.thumbnail.startsWith("http") ? item.thumbnail : `${ApiBaseUrl.ImgUrl}${item.thumbnail}`) : ""}
-        rating={item?.rating || 0}
-       />
-      </Grid>
-     ))
-    ) : (
-     <FlexBox justifyContent="center" alignItems="center" width="100%">
-      <div
-       style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        padding: "20px",
-        borderRadius: "8px",
-       }}
-      >
-       <span
-        style={{
-         fontSize: "3em",
-         color: "#ff6f61",
-         marginBottom: "16px",
-        }}
-       >
-        🛒
-       </span>
-       <Paragraph
-        style={{
-         fontSize: "1.25em",
-         color: "#333",
-         fontFamily: '"Roboto", "Arial", sans-serif',
-         fontWeight: 500,
-         margin: "0 0 16px 0",
-         lineHeight: "1.5",
-        }}
-       >
-        No products found for this selection.
-       </Paragraph>
-       <p
-        style={{
-         fontSize: "1em",
-         color: "#666",
-         fontFamily: '"Roboto", "Arial", sans-serif',
-         margin: "0 0 20px 0",
-        }}
-       >
-        Try adjusting your filters or explore other categories!
-       </p>
-      </div>
-     </FlexBox>
-    )}
-   </Grid>
-
-   {/* Uncomment if you want "Show More" button */}
-   {/* 
-      <FlexBox justifyContent="center" alignItems="center" mt="32px">
-        {endProduct < totalProducts && products.length !== totalProducts && (
-          <Button
-            onClick={() => onPageChange(currentPage + 1)}
-            variant="contained"
-            color="primary"
-          >
-            Show More
-          </Button>
-        )}
-      </FlexBox> 
-      */}
-  </div>
+  <ListingGrid>
+   {products.map((item) => (
+    <ProductCard1
+     key={item.id}
+     id={item?.id || ""}
+     slug={item?.slug || ""}
+     price={item?.original_price || item?.price || 0}
+     discountPrice={item?.original_price && item.original_price !== item.price ? (item?.price || 0) : (item?.discount_price || 0)}
+     productStock={item?.product_stock || 0}
+     title={item?.title || "No Title"}
+     off={item?.discount || 0}
+     images={
+      item?.images?.map((image) => `${ApiBaseUrl.ImgUrl}${image}`) || []
+     }
+     imgUrl={item?.thumbnail ? (item.thumbnail.startsWith("http") ? item.thumbnail : `${ApiBaseUrl.ImgUrl}${item.thumbnail}`) : ""}
+     rating={item?.rating || 0}
+    />
+   ))}
+  </ListingGrid>
  );
 }

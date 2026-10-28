@@ -25,8 +25,13 @@ export const StyledMiniCart = styled.div`
  }
 
  .no-spin-button:focus {
-  border-color: transparent; /* Hides the selected border color */
-  outline: none; /* Removes the outline when focused */
+  outline: none;
+  border-color: ${({ theme }) => theme.tz.color.ember} !important;
+ }
+
+ .cart-item img {
+  border-radius: ${({ theme }) => theme.tz.radius.sm}px;
+  object-fit: cover;
  }
 
  .cart-item {
@@ -66,6 +71,7 @@ export const StyledMiniCart = styled.div`
  }
 
  .actions {
-  margin: 1rem 1rem 0.75rem;
+  padding: 1rem 1rem 0.75rem;
+  border-top: 1px solid ${({ theme }) => theme.tz.color.line};
  }
 `;

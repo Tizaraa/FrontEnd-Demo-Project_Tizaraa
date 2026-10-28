@@ -20,7 +20,7 @@ export default async function TicketList() {
 
  return (
   <Fragment>
-   <DashboardPageHeader title="Support Ticket" iconName="support" />
+   <DashboardPageHeader title="Support tickets" iconName="support" />
 
    {ticketList.map((item) => (
     <Link href={`/support-tickets/${item.slug}`} key={item.id}>

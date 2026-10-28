@@ -738,6 +738,7 @@ import DOMPurify from "dompurify";
 import ResponsiveCategory from "./ResponsiveCategory";
 import ProductIntro from "@component/products/ProductIntro";
 import { productPageTheme as theme } from "@component/products/productPageTheme";
+import tz from "../../../../theme/tizaraa";
 import RelatedProducts from "@component/products/RelatedProducts";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { SemiSpan } from "@component/Typography";
@@ -808,12 +809,12 @@ const ShippingInfo: React.FC<{
       width: "28px",
       height: "28px",
       flexShrink: 0,
-      backgroundColor: active ? theme.accent : "#C7CCD4",
+      backgroundColor: active ? theme.accentTint : tz.color.lineSoft,
       borderRadius: "50%",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      color: "white",
+      color: theme.accent,
       fontSize: "13px",
     });
     const textStyle: React.CSSProperties = {
@@ -825,13 +826,13 @@ const ShippingInfo: React.FC<{
     return (
       <div
         style={{
-          fontFamily: "__Open_Sans_9c011f, __Open_Sans_Fallback_9c011f",
+          fontFamily: "inherit",
           maxWidth: "400px",
           margin: "0 auto",
           padding: "4px 18px 18px",
           boxSizing: "border-box",
-          backgroundColor: "#FAFBFC",
-          borderRadius: "10px",
+          backgroundColor: tz.color.mist,
+          borderRadius: theme.radius,
           border: `1px solid ${theme.border}`,
         }}
       >
@@ -883,7 +884,7 @@ const ShippingInfo: React.FC<{
                 style={{
                   display: "inline-block",
                   padding: "8px",
-                  backgroundColor: "#fff",
+                  backgroundColor: theme.surface,
                   border: `1px solid ${theme.border}`,
                   borderRadius: theme.radiusSmall,
                   marginBottom: "10px",
@@ -892,7 +893,7 @@ const ShippingInfo: React.FC<{
                 <QRCodeSVG
                   value={infoPageUrl}
                   size={110}
-                  bgColor="#ffffff"
+                  bgColor={theme.surface}
                   fgColor={theme.heading}
                   level="M"
                 />
@@ -952,7 +953,7 @@ const ShippingInfo: React.FC<{
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    color: "white",
+                    color: tz.color.paper,
                     fontSize: "14px",
                     fontWeight: "bold",
                     textAlign: "center",
@@ -972,8 +973,8 @@ const ShippingInfo: React.FC<{
               >
                 {sellerShopName}
                 <br />
-                <span style={{ color: "#6B7280", fontWeight: 400 }}>
-                  <span style={{ color: "#28a745", marginRight: "5px" }}>✓</span>{" "}
+                <span style={{ color: theme.muted, fontWeight: 400 }}>
+                  <span style={{ color: tz.tone.success.fg, marginRight: "5px" }}>✓</span>{" "}
                   Verified Seller
                 </span>
               </span>
@@ -982,13 +983,13 @@ const ShippingInfo: React.FC<{
               <a
                 href={`/shops/${shopUrl}`}
                 style={{
-                  color: "#fff",
+                  color: tz.color.paper,
                   backgroundColor: theme.accent,
                   textDecoration: "none",
                   cursor: "pointer",
                   display: "inline-block",
                   padding: "7px 14px",
-                  borderRadius: "999px",
+                  borderRadius: theme.radiusSmall,
                   fontSize: "13px",
                   fontWeight: 600,
                   whiteSpace: "nowrap",
@@ -1067,7 +1068,7 @@ const WarrantyPolicyView: React.FC<{ policy: WarrantyPolicy }> = ({ policy }) =>
         padding: "20px",
         backgroundColor: theme.surface,
         border: `1px solid ${theme.border}`,
-        borderRadius: "10px",
+        borderRadius: theme.radius,
       }}
     >
       {sections.map((section) => (
@@ -1083,9 +1084,9 @@ const WarrantyPolicyView: React.FC<{ policy: WarrantyPolicy }> = ({ policy }) =>
                   style={{
                     fontSize: "13px",
                     fontWeight: 600,
-                    color: "#E94560",
-                    background: "#FDECEF",
-                    border: "1px solid #F8D4DA",
+                    color: tz.tone.info.fg,
+                    background: tz.tone.info.bg,
+                    border: "none",
                     borderRadius: "999px",
                     padding: "3px 10px",
                   }}
@@ -1109,7 +1110,7 @@ const WarrantyPolicyView: React.FC<{ policy: WarrantyPolicy }> = ({ policy }) =>
                 margin: 0,
                 paddingLeft: "18px",
                 fontSize: "14px",
-                color: "#444",
+                color: theme.body,
                 lineHeight: 1.8,
               }}
             >

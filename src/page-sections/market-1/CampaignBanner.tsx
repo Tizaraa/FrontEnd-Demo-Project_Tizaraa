@@ -38,8 +38,12 @@ export default function CampaignBanner() {
  if (!banner) return null;
 
  return (
-  <Container mb="50px">
-   <Link href={`/campaign/campaign?type=${slug}`} target="_blank">
+  <Container mb="3rem">
+   <Link
+    href={`/campaign/campaign?type=${slug}`}
+    target="_blank"
+    style={{ display: "block", borderRadius: 12, overflow: "hidden" }}
+   >
     <NextImage
      alt="Campaign Banner"
      src={banner}

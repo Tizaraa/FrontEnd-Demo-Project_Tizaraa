@@ -22,6 +22,150 @@ import NextImage from "@component/NextImage";
 import Watermark from "@component/watermark/Watermark";
 import axios from "@lib/axiosClient";
 import { AxiosError } from "axios";
+import styled from "styled-components";
+import { ListingEmpty } from "@component/listing/Listing";
+
+const CartBar = styled.div`
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ margin-bottom: 16px;
+ padding: 12px 16px;
+ background: ${({ theme }) => theme.tz.color.paper};
+ border: 1px solid ${({ theme }) => theme.tz.color.line};
+ border-radius: ${({ theme }) => theme.tz.radius.md}px;
+
+ .cb-select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+
+ .cb-count {
+  font-weight: 400;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+`;
+
+// Sticky on desktop so the total and the checkout button stay in view
+const SummaryColumn = styled.div`
+ position: sticky;
+ top: 96px;
+ display: flex;
+ flex-direction: column;
+ gap: 16px;
+
+ @media (max-width: 1024px) {
+  position: static;
+ }
+`;
+
+const Panel = styled.section`
+ padding: 20px;
+ background: ${({ theme }) => theme.tz.color.paper};
+ border: 1px solid ${({ theme }) => theme.tz.color.line};
+ border-radius: ${({ theme }) => theme.tz.radius.md}px;
+
+ .panel-title {
+  margin: 0 0 16px;
+  font-family: ${({ theme }) => theme.tz.font.display};
+  font-size: 18px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+
+ .promo-row {
+  display: flex;
+  gap: 8px;
+ }
+
+ .promo-input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 14px;
+  color: ${({ theme }) => theme.tz.color.ink};
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: ${({ theme }) => theme.tz.radius.sm}px;
+
+  &:focus {
+   outline: none;
+   border-color: ${({ theme }) => theme.tz.color.ember};
+   box-shadow: ${({ theme }) => theme.tz.focusRing};
+  }
+ }
+
+ .promo-apply {
+  height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: ${({ theme }) => theme.tz.radius.sm}px;
+  background: ${({ theme }) => theme.tz.color.navy};
+  color: ${({ theme }) => theme.tz.color.paper};
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+ }
+
+ .promo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 4px 6px 4px 12px;
+  border-radius: ${({ theme }) => theme.tz.radius.pill}px;
+  background: ${({ theme }) => theme.tz.tone.success.bg};
+  color: ${({ theme }) => theme.tz.tone.success.fg};
+  font-size: 13px;
+  font-weight: 600;
+
+  button {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 22px;
+   height: 22px;
+   border: 0;
+   border-radius: 50%;
+   background: transparent;
+   color: inherit;
+   font-size: 16px;
+   line-height: 1;
+   cursor: pointer;
+  }
+ }
+
+ .sum-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-top: 16px;
+  border-top: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
+ }
+
+ .sum-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+
+ .sum-total {
+  font-family: ${({ theme }) => theme.tz.font.display};
+  font-size: 24px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.tz.color.ink};
+  font-variant-numeric: tabular-nums;
+ }
+`;
 
 export default function Cart() {
  const { state, dispatch } = useAppContext();
@@ -283,37 +427,53 @@ export default function Cart() {
   <>
    <Watermark offsetY="-25%" />
    <main style={{ position: "relative", background: "none" }}>
+    {state.cart.length === 0 ? (
+     <ListingEmpty
+      title="Your cart is empty"
+      message="Products you add to your cart will show up here."
+     >
+      <Link href="/">
+       <Button variant="contained" color="primary" mt="12px">
+        Continue shopping
+       </Button>
+      </Link>
+     </ListingEmpty>
+    ) : (
     <Grid container spacing={6}>
      <Grid item lg={8} md={8} xs={12}>
-      <Card1 mb="1.5rem">
-       <FlexBox alignItems="center" justifyContent="space-between">
-        <FlexBox alignItems="center">
-         <CheckBox checked={selectAll} onChange={handleSelectAll} />
-         <Typography ml="0.5rem">Select All</Typography>
-        </FlexBox>
-        <Button
-         size="small"
-         color="primary"
-         variant="outlined"
-         disabled={
-          state.selectedProducts.length === 0 ||
-          state.cart.length === 0 ||
-          totalPrice === 0 ||
-          isDeleting
-         }
-         onClick={handleDeleteSelected}
-        >
-         {isDeleting ? (
-          <BeatLoader size={18} color="#E94560" />
-         ) : (
-          <>
-           <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} />
-           Remove All
-          </>
-         )}
-        </Button>
-       </FlexBox>
-      </Card1>
+      <CartBar>
+       <div className="cb-select">
+        <CheckBox
+         checked={selectAll}
+         onChange={handleSelectAll}
+         label="Select all"
+        />
+        <span className="cb-count">
+         ({state.selectedProducts.length}/{state.cart.length})
+        </span>
+       </div>
+       <Button
+        size="small"
+        color="primary"
+        variant="outlined"
+        disabled={
+         state.selectedProducts.length === 0 ||
+         state.cart.length === 0 ||
+         totalPrice === 0 ||
+         isDeleting
+        }
+        onClick={handleDeleteSelected}
+       >
+        {isDeleting ? (
+         <BeatLoader size={10} color="currentColor" />
+        ) : (
+         <>
+          <DeleteIcon style={{ marginRight: "6px", fontSize: "18px" }} />
+          Remove selected
+         </>
+        )}
+       </Button>
+      </CartBar>
 
       {state.cart.map((item) => (
        <ProductCard7
@@ -344,101 +504,70 @@ export default function Cart() {
      </Grid>
 
      <Grid item lg={4} md={4} xs={12}>
-      {isCorporate && (
-       <Card1 mb="1.5rem">
-        <Typography fontWeight="700" mb="0.75rem">
-         Apply Coupon or Promo Code
-        </Typography>
-        <FlexBox alignItems="center" style={{ gap: "0.5rem" }}>
-         <input
-          type="text"
-          placeholder="Enter Promo Code (e.g. CORP10)"
-          value={promoCode}
-          onChange={(e) => setPromoCode(e.target.value)}
-          style={{
-           flex: 1,
-           padding: "0.6rem 0.75rem",
-           border: "1px solid #ddd",
-           borderRadius: "6px",
-           fontSize: "14px",
-          }}
-         />
-         <button
-          onClick={applyPromoCode}
-          style={{
-           backgroundColor: "#0F3460",
-           color: "#fff",
-           padding: "0.6rem 1.25rem",
-           border: "none",
-           borderRadius: "6px",
-           cursor: "pointer",
-           fontSize: "14px",
-           fontWeight: 600,
-          }}
-         >
-          Apply
-         </button>
-        </FlexBox>
+      <SummaryColumn>
+       {isCorporate && (
+        <Panel>
+         <h2 className="panel-title">Promo code</h2>
+         <div className="promo-row">
+          <input
+           type="text"
+           className="promo-input"
+           aria-label="Promo code"
+           placeholder="Enter promo code (e.g. CORP10)"
+           value={promoCode}
+           onChange={(e) => setPromoCode(e.target.value)}
+          />
+          <button type="button" className="promo-apply" onClick={applyPromoCode}>
+           Apply
+          </button>
+         </div>
 
-        {appliedPromoCode && (
-         <FlexBox alignItems="center" mt="0.75rem" style={{ gap: "0.5rem" }}>
-          <span
-           style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            backgroundColor: "#e8f8f0",
-            border: "1px solid #3BB77E",
-            color: "#3BB77E",
-            borderRadius: "16px",
-            padding: "4px 10px",
-            fontSize: "13px",
-            fontWeight: 600,
-           }}
-          >
-           🏷️ {appliedPromoCode}
-           {isFreeShipping && " · Free Shipping"}
-           <span
+         {appliedPromoCode && (
+          <span className="promo-chip">
+           {appliedPromoCode}
+           {isFreeShipping && " · Free shipping"}
+           <button
+            type="button"
+            aria-label="Remove promo code"
             onClick={removeAppliedPromo}
-            style={{ cursor: "pointer", marginLeft: "4px", fontWeight: 700 }}
            >
-            ×
-           </span>
+            &times;
+           </button>
           </span>
-         </FlexBox>
-        )}
-       </Card1>
-      )}
+         )}
+        </Panel>
+       )}
 
-      <Card1>
-       <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-        <Typography color="gray.600">Total:</Typography>
-        <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-         {currency(totalPrice)}
-        </Typography>
-       </FlexBox>
-       <Divider mb="1rem" />
-       <Button
-        variant="contained"
-        color="primary"
-        fullwidth
-        onClick={handleCheckout}
-        disabled={
-         isLoading ||
-         state.selectedProducts.length === 0 ||
-         state.cart.length === 0 ||
-         totalPrice === 0
-        }
-       >
-        {isLoading ? (
-         <BeatLoader size={18} color="#E94560" />
-        ) : (
-         "PROCEED TO CHECKOUT"
-        )}
-       </Button>
-      </Card1>
+       <Panel>
+        <h2 className="panel-title">Order summary</h2>
+        <div className="sum-row">
+         <span className="sum-label">Total</span>
+         <span className="sum-total">{currency(totalPrice)}</span>
+        </div>
+        <Button
+         variant="contained"
+         color="primary"
+         size="large"
+         fullwidth
+         onClick={handleCheckout}
+         disabled={
+          isLoading ||
+          state.selectedProducts.length === 0 ||
+          state.cart.length === 0 ||
+          totalPrice === 0
+         }
+        >
+         {isLoading ? (
+          <BeatLoader size={10} color="currentColor" />
+         ) : (
+          "Proceed to checkout"
+         )}
+        </Button>
+       </Panel>
+      </SummaryColumn>
      </Grid>
     </Grid>
+    )}
    </main>
   </>
  );

@@ -342,27 +342,20 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Box from "@component/Box";
-import Card from "@component/Card";
 import Grid from "@component/grid/Grid";
-import FlexBox from "@component/FlexBox";
-import Select from "@component/Select";
-import Icon from "@component/icon/Icon";
-import { Button, IconButton } from "@component/buttons";
-import Sidenav from "@component/sidenav/Sidenav";
 import ProductGridView from "@component/products/ProductCard1List";
 import ProductListView from "@component/products/ProductCard9List";
 import CampaignProductFilter from "@component/products/CampaignProductFilter";
 import useWindowSize from "@hook/useWindowSize";
-import Typography, { H5, Paragraph } from "@component/Typography";
-import BeatLoader from "react-spinners/BeatLoader";
-import NextImage from "@component/NextImage";
 import Watermark from "@component/watermark/Watermark";
-import ApiBaseUrl from "api/ApiBaseUrl";
+import {
+ ListingEmpty,
+ ListingLoadMore,
+ ListingSkeleton,
+ ListingToolbar,
+} from "@component/listing/Listing";
 
 const productsPerPage = 10;
-
-const PrimaryLoader = `${ApiBaseUrl.ImgUrl}frontend/loader/loader.gif`;
 
 interface CampaignProps {
  sortOptions: { label: string; value: string }[];
@@ -542,10 +535,7 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
  if (campaignLoading) {
   return (
    <main style={{ position: "relative", background: "none" }}>
-    <FlexBox justifyContent="center" alignItems="center" minHeight="400px">
-     <BeatLoader size={18} color="#e94560" />
-     <Paragraph ml="1rem">Loading campaign...</Paragraph>
-    </FlexBox>
+    <ListingSkeleton />
    </main>
   );
  }
@@ -554,15 +544,24 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
  if (!activeCampaign) {
   return (
    <main style={{ position: "relative", background: "none" }}>
-    <Card p="2rem" textAlign="center">
-     <H5 mb="1rem">No Active Campaign</H5>
-     <Paragraph color="text.muted">
-      No active campaign found for type: {campaignTypeFromUrl}
-     </Paragraph>
-    </Card>
+    <ListingEmpty
+     title="No Active Campaign"
+     message={`No active campaign found for type: ${campaignTypeFromUrl}`}
+    />
    </main>
   );
  }
+
+ const filterCard = (
+  <CampaignProductFilter
+   onBrandChange={handleBrandChange}
+   onCategoryChange={handleCategoryChange}
+   onCountryChange={handleCountryChange}
+   onProvinceChange={handleProvinceChange}
+   slug={activeCampaign.type}
+   pageType="campaign"
+  />
+ );
 
  // ===== Render =====
  return (
@@ -572,167 +571,53 @@ export default function Campaign({ sortOptions, slug }: CampaignProps) {
    <main style={{ position: "relative", background: "none" }}>
     {/* Campaign Banner/Info */}
 
-    <FlexBox
-     as={Card}
-     mb={["10px", "15px"]}
-     p={["0.75rem", "1.25rem"]}
-     elevation={5}
-     flexWrap="wrap"
-     borderRadius={8}
-     alignItems="center"
-     justifyContent="space-between"
-    >
-     <div>
-      <H5 fontSize={["14px", "16px"]}>{getCampaignDisplayName()} Products</H5>
-      <Paragraph color="text.muted" fontSize={["12px", "14px"]}>
-       {totalProducts} results found
-      </Paragraph>
-     </div>
-
-     <FlexBox
-      alignItems="center"
-      flexWrap="wrap"
-      justifyContent={["flex-start", "flex-end"]}
-      mt={["0.75rem", "0"]}
-      width={["100%", "auto"]}
-     >
-      <Paragraph
-       color="text.muted"
-       mr={["0.5rem", "1rem"]}
-       fontSize={["12px", "14px"]}
-      >
-       Sort by:
-      </Paragraph>
-      <Box flex="1 1 0" mr={["1rem", "1.75rem"]} minWidth="120px">
-       <Select
-        placeholder="Sort by"
-        options={sortOptions}
-        defaultValue={sortOptions.find(
-         (opt) => opt.value === selectedSortOption
-        )}
-        onChange={handleSortChange}
-        styles={{ menu: (provided) => ({ ...provided, zIndex: 1000 }) }}
-       />
-      </Box>
-
-      <Paragraph
-       color="text.muted"
-       mr={["0.25rem", "0.5rem"]}
-       fontSize={["12px", "14px"]}
-      >
-       View:
-      </Paragraph>
-      <IconButton onClick={() => setView("grid")}>
-       <Icon variant="small" color={view === "grid" ? "primary" : "inherit"}>
-        grid
-       </Icon>
-      </IconButton>
-      <IconButton onClick={() => setView("list")}>
-       <Icon variant="small" color={view === "list" ? "primary" : "inherit"}>
-        menu
-       </Icon>
-      </IconButton>
-
-      {isTablet && (
-       <Sidenav
-        position="left"
-        scroll
-        handle={
-         <IconButton>
-          <Icon>options</Icon>
-         </IconButton>
-        }
-       >
-        <CampaignProductFilter
-         onBrandChange={handleBrandChange}
-         onCategoryChange={handleCategoryChange}
-         onCountryChange={handleCountryChange}
-         onProvinceChange={handleProvinceChange}
-         slug={activeCampaign.type}
-         pageType="campaign"
-        />
-       </Sidenav>
-      )}
-     </FlexBox>
-    </FlexBox>
+    <ListingToolbar
+     title={getCampaignDisplayName()}
+     count={totalProducts}
+     sortOptions={sortOptions}
+     sortValue={selectedSortOption}
+     onSortChange={handleSortChange}
+     view={view}
+     onViewChange={setView}
+     mobileFilter={isTablet ? filterCard : undefined}
+    />
 
     <Grid container spacing={6}>
      {!isTablet && (
       <Grid item lg={3} xs={12}>
-       <CampaignProductFilter
-        onBrandChange={handleBrandChange}
-        onCategoryChange={handleCategoryChange}
-        onCountryChange={handleCountryChange}
-        onProvinceChange={handleProvinceChange}
-        slug={activeCampaign.type}
-        pageType="campaign"
-       />
+       {filterCard}
       </Grid>
      )}
 
      <Grid item lg={9} xs={12}>
       {currentPage === 1 && loading ? (
-       <FlexBox justifyContent="center" alignItems="center" minHeight="400px">
-        {/* <BeatLoader size={18} color="#e94560" /> */}
-        <img
-         src={PrimaryLoader}
-         alt="Loading"
-         style={{ width: 60, height: 60 }}
-        />
-       </FlexBox>
+       <ListingSkeleton />
       ) : products.length === 0 ? (
-       <Card p="2rem" textAlign="center">
-        <Paragraph color="text.muted">
-         No products found for this campaign.
-        </Paragraph>
-       </Card>
-      ) : view === "grid" ? (
-       <>
-        <ProductGridView
-         products={products}
-         totalProducts={totalProducts}
-         currentPage={currentPage}
-         productsPerPage={productsPerPage}
-         onPageChange={handleLoadMore}
-        />
-        <FlexBox justifyContent="center" alignItems="center" mt="32px">
-         <Button
-          onClick={handleLoadMore}
-          variant="contained"
-          color="primary"
-          disabled={loading}
-          style={{
-           display:
-            currentPage * productsPerPage < totalProducts ? "block" : "none",
-          }}
-         >
-          {loading ? <BeatLoader size={18} color="#fff" /> : "Show More"}
-         </Button>
-        </FlexBox>
-       </>
+       <ListingEmpty message="No products found for this campaign." />
       ) : (
        <>
-        <ProductListView
-         products={products}
-         totalProducts={totalProducts}
-         currentPage={currentPage}
-         productsPerPage={productsPerPage}
-         onPageChange={handleLoadMore}
+        {view === "grid" ? (
+         <ProductGridView
+          products={products}
+          totalProducts={totalProducts}
+          currentPage={currentPage}
+          productsPerPage={productsPerPage}
+          onPageChange={handleLoadMore}
+         />
+        ) : (
+         <ProductListView
+          products={products}
+          totalProducts={totalProducts}
+          currentPage={currentPage}
+          productsPerPage={productsPerPage}
+          onPageChange={handleLoadMore}
+         />
+        )}
+        <ListingLoadMore
+         onClick={handleLoadMore}
+         loading={loading}
+         visible={currentPage * productsPerPage < totalProducts}
         />
-        <FlexBox justifyContent="center" alignItems="center" mt="32px">
-         <Button
-          onClick={handleLoadMore}
-          variant="contained"
-          color="primary"
-          disabled={loading}
-          style={{
-           display:
-            currentPage * productsPerPage < totalProducts ? "block" : "none",
-          }}
-         >
-          {loading ? <BeatLoader size={18} color="#e94560" /> : "Show More"}
-         </Button>
-        </FlexBox>
        </>
       )}
      </Grid>

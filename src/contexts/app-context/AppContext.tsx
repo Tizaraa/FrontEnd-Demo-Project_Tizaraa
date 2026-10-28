@@ -309,6 +309,7 @@ import {
  useState,
 } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import axios from "lib/axiosClient";
 
 // TYPES
 interface InitialState {
@@ -634,7 +635,28 @@ export function AppProvider({ children }: PropsWithChildren) {
    "selectedProducts",
    JSON.stringify(state.selectedProducts)
   );
- }, [state.cart, state.selectedProducts]);
+
+  // Sync cart items to backend Redis cart whenever cart updates
+  if (isMounted) {
+   const timer = setTimeout(() => {
+    const payloadItems = (state.cart || [])
+     .filter((item: any) => item && (item.productId || item.id) && item.qty > 0)
+     .map((item: any) => ({
+      product_id: Number(item.productId || item.id),
+      quantity: Number(item.qty || 1),
+      variant_id: item.variantId ? Number(item.variantId) : null,
+     }));
+
+    axios
+     .post("cart/sync", { items: payloadItems })
+     .catch((err: any) => {
+      // Keep UI functional even if local backend is offline in dev
+     });
+   }, 300);
+
+   return () => clearTimeout(timer);
+  }
+ }, [state.cart, state.selectedProducts, isMounted]);
 
  return (
   <AppContext.Provider value={contextValue}>

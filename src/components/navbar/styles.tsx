@@ -3,9 +3,42 @@ import styled from "styled-components";
 
 const StyledNavbar = styled.div`
  position: relative;
- height: 60px;
+ height: 56px;
  background: ${getTheme("colors.body.paper")};
- box-shadow: ${getTheme("shadows.regular")};
+ border-bottom: 1px solid ${({ theme }) => theme.tz.color.line};
+
+ .categories-btn {
+  border-radius: ${({ theme }) => theme.tz.radius.sm}px;
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  &:hover {
+   background: ${({ theme }) => theme.tz.color.lineSoft};
+  }
+ }
+
+ .nav-action {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-left: 4px;
+  padding: 0 14px;
+  border-radius: ${({ theme }) => theme.tz.radius.sm}px;
+  background: transparent;
+  color: ${({ theme }) => theme.tz.color.inkSoft};
+  font-size: 14px;
+  transition: background-color ${({ theme }) => theme.tz.motion.fast},
+   color ${({ theme }) => theme.tz.motion.fast};
+
+  &:hover:enabled {
+   background: ${({ theme }) => theme.tz.color.emberTint};
+   color: ${({ theme }) => theme.tz.color.emberDeep};
+  }
+ }
+
+ .nav-action-icon {
+  display: flex;
+  margin-right: 8px;
+  color: ${({ theme }) => theme.tz.color.ember};
+ }
 
  .nav-link {
   font-size: 14px;

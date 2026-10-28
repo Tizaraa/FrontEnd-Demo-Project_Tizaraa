@@ -24,7 +24,7 @@ function Dialog({ message, onDialog }) {
      padding: "50px",
     }}
    >
-    <h3 style={{ color: "#111" }}>{message}</h3>
+    <h3 style={{ color: "var(--tz-ink)" }}>{message}</h3>
     <div
      style={{
       display: "flex",

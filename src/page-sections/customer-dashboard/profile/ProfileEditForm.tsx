@@ -605,192 +605,135 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Vortex } from "react-loader-spinner";
 
-// Tailwind CSS styles with two-column grid
+// Form styles on brand tokens (--tz-* variables from globalStyles.ts), two-column grid
 const styles = `
-  .form-container {
-    border-radius: 1.5rem;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
   .form-title {
-    font-size: 2.25rem;
-    font-weight: 800;
-    color: #1F2A44;
-    text-align: center;
-    margin-bottom: 2rem;
-    background: linear-gradient(to right, #E94560, #E94560);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    margin: 0 0 24px;
+    font-family: var(--tz-font-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--tz-ink);
   }
   .input-wrapper {
-    position: relative;
-    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 20px;
   }
-  .input-field {
-    width: 100%;
-    padding: 1rem;
-    border: 2px solid transparent;
-    border-radius: 0.75rem;
-    background: rgba(255, 255, 255, 0.8);
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  .input-field:focus {
-    outline: none;
-    border-color: #E94560;
-    background: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
-  }
+  /* Label sits above its field */
   .input-label {
-    position: absolute;
-    top: -0.75rem;
-    left: 1rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #E94560;
-    background: white;
-    padding: 0 0.5rem;
-    transition: all 0.3s ease;
+    order: -1;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--tz-ink-soft);
   }
-  .input-field:placeholder-shown + .input-label {
-    top: 1rem;
-    font-size: 1rem;
-    color: #6B7280;
-    font-weight: 400;
-  }
-  .input-field:focus + .input-label,
-  .input-field:not(:placeholder-shown) + .input-label {
-    top: -0.75rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #E94560;
-  }
-  .error-text {
-    color: #DC2626;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-    animation: fadeIn 0.3s ease;
-  }
-  .select-field {
-    width: 100%;
-    padding: 1rem;
-    border: 2px solid transparent;
-    border-radius: 0.75rem;
-    background: rgba(255, 255, 255, 0.8);
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23E94560' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1.5rem;
-  }
-  .select-field:focus {
-    outline: none;
-    border-color: #E94560;
-    background: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
-  }
+  .input-field,
+  .select-field,
   .file-input {
     width: 100%;
-    padding: 1rem;
-    border: 2px solid transparent;
-    border-radius: 0.75rem;
-    background: rgba(255, 255, 255, 0.8);
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 1px solid var(--tz-line);
+    border-radius: var(--tz-radius-sm);
+    background: var(--tz-paper);
+    color: var(--tz-ink);
+    font-family: inherit;
+    font-size: 15px;
+    transition: border-color var(--tz-motion-fast), box-shadow var(--tz-motion-fast);
   }
+  .input-field:hover,
+  .select-field:hover,
+  .file-input:hover {
+    border-color: var(--tz-slate);
+  }
+  .input-field:focus,
+  .select-field:focus,
   .file-input:focus {
     outline: none;
-    border-color: #E94560;
-    background: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+    border-color: var(--tz-ember);
+    box-shadow: var(--tz-focus-ring);
+  }
+  .select-field {
+    appearance: none;
+    padding-right: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%235E6678' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px;
+  }
+  .file-input {
+    cursor: pointer;
+  }
+  .error-text {
+    margin: 0;
+    color: var(--tz-danger);
+    font-size: 13px;
+  }
+  .submit-button,
+  .cancel-button {
+    min-height: 48px;
+    padding: 0 24px;
+    border-radius: var(--tz-radius-md);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--tz-motion-fast), border-color var(--tz-motion-fast);
   }
   .submit-button {
-    width: 100%;
-    padding: 1rem;
-    background: linear-gradient(to right, #E94560, #E94560);
-    color: white;
-    font-weight: 700;
-    font-size: 1.125rem;
-    border-radius: 0.75rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    border: 1px solid var(--tz-ember-deep);
+    background: var(--tz-ember-deep);
+    color: var(--tz-paper);
   }
-  .submit-button:hover {
-    background: linear-gradient(to right, #D43A53, #E94560);
-    transform: translateY(-2px);
+  .submit-button:hover:enabled {
+    background: var(--tz-ember-dark);
+    border-color: var(--tz-ember-dark);
   }
   .submit-button:disabled {
-    background: linear-gradient(to right, #F3A8B6, #FBCFA8);
+    opacity: 0.6;
     cursor: not-allowed;
-    transform: none;
   }
   .cancel-button {
-    width: 100%;
-    padding: 1rem;
-    background: #6B7280;
-    color: white;
-    font-weight: 700;
-    font-size: 1.125rem;
-    border-radius: 0.75rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    border: 1px solid var(--tz-line);
+    background: var(--tz-paper);
+    color: var(--tz-ink);
   }
   .cancel-button:hover {
-    background: #4B5563;
-    transform: translateY(-2px);
+    border-color: var(--tz-slate);
+    background: var(--tz-mist);
+  }
+  .submit-button:focus-visible,
+  .cancel-button:focus-visible {
+    outline: none;
+    box-shadow: var(--tz-focus-ring);
   }
   .button-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+    padding-top: 20px;
+    border-top: 1px solid var(--tz-line-soft);
   }
   .loader-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 60vh;
-    background: linear-gradient(135deg, #E94560, #F28C38);
-    border-radius: 1rem;
+    min-height: 40vh;
   }
   .grid-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-bottom: .5rem;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    gap: 0 24px;
   }
   @media (max-width: 640px) {
-    .form-container {
-      margin: 1rem;
-      padding: 1.5rem;
-    }
-    .form-title {
-      font-size: 1.875rem;
-    }
     .grid-container {
       grid-template-columns: 1fr;
     }
-    .input-field, .select-field, .file-input {
-      padding: 0.875rem;
-    }
     .button-grid {
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
+      flex-direction: column-reverse;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .input-field, .select-field, .file-input, .submit-button, .cancel-button {
+      transition: none;
     }
   }
 `;
@@ -908,7 +851,7 @@ export default function ProfileEditForm() {
   <>
    <style>{styles}</style>
    <div className="form-container">
-    <h2 className="form-title">Edit Profile</h2>
+    <h2 className="form-title">Personal details</h2>
     <Formik
      onSubmit={handleFormSubmit}
      initialValues={INITIAL_VALUES}
@@ -985,7 +928,7 @@ export default function ProfileEditForm() {
           placeholder=" "
          />
          <label htmlFor="birth_date" className="input-label">
-          Birth Date
+          Birth date
          </label>
          {touched.birth_date && errors.birth_date && (
           <p className="error-text">{errors.birth_date}</p>
@@ -1031,7 +974,7 @@ export default function ProfileEditForm() {
          onBlur={handleBlur}
         />
         <label htmlFor="image" className="input-label">
-         Upload Image
+         Profile photo
         </label>
        </div>
 
@@ -1040,7 +983,7 @@ export default function ProfileEditForm() {
          Cancel
         </button>
         <button type="submit" className="submit-button" disabled={isSubmitting}>
-         {isSubmitting ? "Saving..." : "Save Changes"}
+         {isSubmitting ? "Saving..." : "Save changes"}
         </button>
        </div>
       </form>

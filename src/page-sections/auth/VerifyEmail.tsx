@@ -2026,7 +2026,7 @@
 // Test
 "use client";
 import { Button } from "@component/buttons";
-import { Input, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -2034,7 +2034,38 @@ import { toast } from "react-toastify";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import BeatLoader from "react-spinners/BeatLoader";
 import axios from "axios";
-import CommonHeader from "@component/header/CommonHeader";
+import {
+ AuthCard,
+ AuthErrorText,
+ AuthInput,
+ AuthLabel,
+ AuthSubtitle,
+ AuthTextButton,
+ AuthTextLink,
+ AuthTitle,
+} from "./styles";
+import tz from "../../theme/tizaraa";
+
+// Single 6-digit OTP field: tall, centred, tabular figures
+const otpFieldSx = {
+ "& .MuiOutlinedInput-root": {
+  height: 52,
+  borderRadius: `${tz.radius.sm}px`,
+  backgroundColor: tz.color.paper,
+  "& fieldset": { borderColor: tz.color.line },
+  "&:hover fieldset": { borderColor: tz.color.slate },
+  "&.Mui-focused fieldset": { borderColor: tz.color.ember, borderWidth: 1 },
+  "&.Mui-focused": { boxShadow: `0 0 0 3px ${tz.color.emberTint}` },
+ },
+ "& .MuiOutlinedInput-input": {
+  textAlign: "center",
+  fontSize: 20,
+  fontWeight: 600,
+  letterSpacing: "0.4em",
+  fontVariantNumeric: "tabular-nums",
+  color: tz.color.ink,
+ },
+};
 
 // Every OTP-page call is for the account just registered, identified by its token.
 const registerAuthHeader = () => ({
@@ -2238,310 +2269,193 @@ export default function VerifyEmail() {
  }, [resendTimer]);
 
  return (
-  <>
-   <CommonHeader></CommonHeader>
+  <AuthCard>
+   <AuthTitle>Verify your Phone Number</AuthTitle>
 
-   <div
-    style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
-   >
-    {/* Main Content */}
-    <main
-     style={{
-      flex: 1,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: "2rem 1rem",
+   <AuthSubtitle>
+    To verify your account, we have sent a One Time Password (OTP) to your
+    phone number. Please check your phone. Thank you!
+   </AuthSubtitle>
+
+   <div style={{ marginBottom: 20 }}>
+    <AuthLabel htmlFor="otp">Enter OTP</AuthLabel>
+    {/* Conditionally show expiry message */}
+    {showExpiryMessage && (
+     <AuthErrorText style={{ margin: "0 0 8px" }}>
+      Your OTP Already Expired! Please Click Resend OTP Button
+     </AuthErrorText>
+    )}
+    <TextField
+     id="otp"
+     type="text"
+     fullWidth
+     value={otp}
+     onChange={(e) => {
+      const newOtp = e.target.value;
+
+      // Allow only digits and limit the length to 6
+      if (/^\d{0,6}$/.test(newOtp)) {
+       setOtp(newOtp);
+      }
      }}
+     sx={otpFieldSx}
+    />
+
+    {/* Show error message only if OTP is not exactly 6 digits */}
+    {otp.length !== 6 && (
+     <AuthErrorText>OTP must be a 6-digit number.</AuthErrorText>
+    )}
+   </div>
+
+   <Button
+    size="medium"
+    variant="contained"
+    color="primary"
+    fullwidth
+    onClick={handleSubmit}
+   >
+    {/* Verify account */}
+    {loading ? <BeatLoader size={12} color={tz.color.paper} /> : "Verify account"}
+   </Button>
+
+   {/* Resend OTP Link */}
+   <div
+    style={{
+     display: "flex",
+     flexWrap: "wrap",
+     justifyContent: "space-between",
+     alignItems: "center",
+     gap: 12,
+     marginTop: 20,
+     fontSize: 14,
+    }}
+   >
+    {resendTimer > 0 ? (
+     <span
+      style={{ color: tz.color.slate, fontVariantNumeric: "tabular-nums" }}
+     >
+      OTP expires in {Math.floor(resendTimer / 60)}:
+      {String(resendTimer % 60).padStart(2, "0")}
+     </span>
+    ) : (
+     <AuthTextLink href="#" onClick={handleResendOtp}>
+      Resend OTP
+     </AuthTextLink>
+    )}
+    <AuthTextButton type="button" onClick={toggleModal}>
+     Change Phone Number
+    </AuthTextButton>
+   </div>
+
+   {/* Modal for changing phone number */}
+   {isModalOpen && (
+    <div
+     style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0, 0, 0, 0.4)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "flex-start",
+      padding: "0 16px",
+      zIndex: 1000,
+     }}
+     onClick={toggleModal}
     >
-     {/* Card */}
      <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="change-phone-title"
       style={{
        width: "100%",
-       maxWidth: "500px",
-       margin: "50px auto",
-       border: "1px solid #d1d5db",
-       borderRadius: "8px",
-       padding: "1.5rem",
-       display: "flex",
-       flexDirection: "column",
-       gap: "1rem",
+       maxWidth: "440px",
+       marginTop: "130px",
+       backgroundColor: tz.color.paper,
+       border: `1px solid ${tz.color.line}`,
+       borderRadius: tz.radius.lg,
+       padding: "28px 24px 24px",
+       boxShadow: tz.elevation.overlay,
+       position: "relative",
       }}
+      onClick={(e) => e.stopPropagation()}
      >
-      <h1 style={{ fontSize: "1.5rem", fontWeight: "400" }}>
-       Verify your Phone Number
-      </h1>
-
-      <p style={{ fontSize: "0.875rem" }}>
-       To verify your account, we have sent a One Time Password (OTP) to your
-       phone number. Please check your phone. Thank you!
-      </p>
-
-      <div
+      <span
+       role="button"
+       aria-label="Close"
        style={{
+        position: "absolute",
+        top: "12px",
+        right: "12px",
+        width: "36px",
+        height: "36px",
         display: "flex",
-        flexDirection: "column",
-        gap: "0.5rem",
-       }}
-      >
-       <label htmlFor="otp" style={{ fontSize: "0.875rem", fontWeight: "500" }}>
-        Enter OTP &nbsp;
-       </label>
-       {/* Conditionally show expiry message */}
-       {showExpiryMessage && (
-        <span style={{ color: "red", fontWeight: "400", fontStyle: "italic" }}>
-         - Your OTP Already Expired! Please Click Resend OTP Button
-        </span>
-       )}
-       <TextField
-        id="otp"
-        type="text"
-        value={otp}
-        onChange={(e) => {
-         const newOtp = e.target.value;
-
-         // Allow only digits and limit the length to 6
-         if (/^\d{0,6}$/.test(newOtp)) {
-          setOtp(newOtp);
-         }
-        }}
-        style={{
-         transition: "border-color 0.3s, box-shadow 0.3s",
-         marginBottom: "5px",
-        }}
-       />
-
-       {/* Show error message only if OTP is not exactly 6 digits */}
-       {otp.length !== 6 && (
-        <span
-         style={{
-          marginBottom: "12px",
-          marginTop: "-12px",
-          color: "red",
-         }}
-        >
-         OTP must be a 6-digit number.
-        </span>
-       )}
-      </div>
-
-      <Button
-       style={{
-        width: "100%",
-        backgroundColor: "#e94560",
-        color: "white",
-        fontWeight: "600",
-        fontSize: "0.875rem",
-        height: "2rem",
-        borderRadius: "4px",
-        textAlign: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "50%",
+        backgroundColor: tz.color.mist,
+        fontSize: "20px",
+        lineHeight: 1,
+        color: tz.color.inkSoft,
         cursor: "pointer",
        }}
-       onClick={handleSubmit}
+       onClick={toggleModal}
       >
-       {/* Verify account */}
-       {loading ? <BeatLoader size={18} color="#fff" /> : "Verify account"}
-      </Button>
+       &times;
+      </span>
 
-      {/* Resend OTP Link */}
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-       <div
-        style={{
-         fontSize: "0.875rem",
-         display: "flex",
-         justifyContent: "space-between",
-        }}
+      <h2
+       id="change-phone-title"
+       style={{
+        margin: "0 0 20px",
+        fontFamily: tz.font.display,
+        fontSize: "22px",
+        fontWeight: 600,
+        lineHeight: 1.25,
+        color: tz.color.ink,
+        textAlign: "center",
+       }}
+      >
+       Change Phone Number
+      </h2>
+
+      <form onSubmit={handleChangePhoneNumber}>
+       <div style={{ marginBottom: "16px" }}>
+        <AuthLabel htmlFor="currentPhone">Current Phone Number</AuthLabel>
+        <AuthInput
+         type="text"
+         id="currentPhone"
+         value={currentPhoneNumber || "Loading..."}
+         readOnly
+        />
+       </div>
+
+       <div style={{ marginBottom: "20px" }}>
+        <AuthLabel htmlFor="newPhone">New Phone Number</AuthLabel>
+        <AuthInput
+         type="text"
+         id="newPhone"
+         value={newPhoneNumber}
+         onChange={handlePhoneNumberChange}
+        />
+        {errorMessage && <AuthErrorText>{errorMessage}</AuthErrorText>}
+       </div>
+
+       <Button
+        type="submit"
+        size="medium"
+        variant="contained"
+        color="primary"
+        fullwidth
        >
-        {resendTimer > 0 ? (
-         <span style={{ color: "#2563eb" }}>
-          OTP expires in {Math.floor(resendTimer / 60)}:
-          {String(resendTimer % 60).padStart(2, "0")}
-         </span>
-        ) : (
-         <Link
-          href="#"
-          onClick={handleResendOtp}
-          style={{
-           fontSize: "0.875rem",
-           color: "#2563eb",
-           textDecoration: "none",
-           cursor: "pointer",
-           display: "block",
-          }}
-         >
-          Resend OTP
-         </Link>
-        )}
-       </div>
-       <div>
-        <button
-         onClick={toggleModal}
-         style={{
-          fontSize: "0.875rem",
-          color: "#2563eb",
-          cursor: "pointer",
-          background: "none",
-          border: "none",
-         }}
-        >
-         Change Phone Number
-        </button>
-       </div>
-      </div>
-
-      {/* Modal for changing phone number */}
-      {isModalOpen && (
-       <div
-        style={{
-         position: "fixed",
-         top: 0,
-         left: 0,
-         width: "100%",
-         height: "100%",
-         backgroundColor: "rgba(0, 0, 0, 0.4)",
-         display: "flex",
-         justifyContent: "center",
-         zIndex: 1000,
-        }}
-        onClick={toggleModal}
-       >
-        <div
-         style={{
-          width: "90%",
-          maxWidth: "500px",
-          height: "400px",
-          marginTop: "130px",
-          backgroundColor: "#ffffff",
-          borderRadius: "12px",
-          padding: "20px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          position: "relative",
-         }}
-         onClick={(e) => e.stopPropagation()}
-        >
-         <span
-          style={{
-           position: "absolute",
-           top: "12px",
-           right: "12px",
-           fontSize: "1.5rem",
-           color: "#6b7280",
-           cursor: "pointer",
-          }}
-          onClick={toggleModal}
-         >
-          &times;
-         </span>
-
-         <h2
-          style={{
-           fontSize: "1.25rem",
-           fontWeight: "bold",
-           marginBottom: "12px",
-           color: "#1f2937",
-           textAlign: "center",
-          }}
-         >
-          Change Phone Number
-         </h2>
-
-         <form onSubmit={handleChangePhoneNumber}>
-          <div style={{ marginBottom: "16px" }}>
-           <label
-            htmlFor="currentPhone"
-            style={{
-             display: "block",
-             fontSize: "0.875rem",
-             fontWeight: "500",
-             color: "#374151",
-             marginBottom: "6px",
-            }}
-           >
-            Current Phone Number
-           </label>
-           <input
-            type="text"
-            id="currentPhone"
-            value={currentPhoneNumber || "Loading..."}
-            readOnly
-            style={{
-             width: "100%",
-             padding: "12px 16px",
-             border: "1px solid #d1d5db",
-             borderRadius: "8px",
-             backgroundColor: "#f9fafb",
-             color: "#4b5563",
-             fontSize: "0.875rem",
-             outline: "none",
-            }}
-           />
-          </div>
-
-          <div style={{ marginBottom: "16px" }}>
-           <label
-            htmlFor="newPhone"
-            style={{
-             display: "block",
-             fontSize: "0.875rem",
-             fontWeight: "500",
-             color: "#374151",
-             marginBottom: "6px",
-            }}
-           >
-            New Phone Number
-           </label>
-           <input
-            type="text"
-            id="newPhone"
-            value={newPhoneNumber}
-            onChange={handlePhoneNumberChange}
-            style={{
-             width: "100%",
-             padding: "12px 16px",
-             border: "1px solid #d1d5db",
-             borderRadius: "8px",
-             backgroundColor: "#ffffff",
-             fontSize: "0.875rem",
-             color: "#111827",
-             outline: "none",
-            }}
-           />
-           {errorMessage && (
-            <p
-             style={{
-              color: "red",
-              fontSize: "0.875rem",
-              marginTop: "6px",
-             }}
-            >
-             {errorMessage}
-            </p>
-           )}
-          </div>
-
-          <button
-           type="submit"
-           style={{
-            width: "100%",
-            padding: "12px",
-            backgroundColor: "#e94560",
-            color: "white",
-            fontSize: "0.875rem",
-            fontWeight: "600",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-           }}
-          >
-           Submit
-          </button>
-         </form>
-        </div>
-       </div>
-      )}
+        Submit
+       </Button>
+      </form>
      </div>
-    </main>
-   </div>
-  </>
+    </div>
+   )}
+  </AuthCard>
  );
 }

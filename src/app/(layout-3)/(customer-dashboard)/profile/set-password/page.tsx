@@ -18,11 +18,12 @@ export default async function ProfileEditor() {
   <Fragment>
    <DashboardPageHeader
     iconName="user_filled"
-    title="Edit Profile"
+    title="Change password"
+    subtitle="Verify with a code, then set a new password"
     button={<BackToProfileButton />}
    />
 
-   <Card1 borderRadius={8}>
+   <Card1 borderRadius={12}>
     <SetPasswordForm />
     {/* <SetPassword></SetPassword> */}
    </Card1>

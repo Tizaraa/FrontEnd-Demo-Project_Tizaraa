@@ -4,7 +4,7 @@ import Divider from "@component/Divider";
 import FlexBox from "@component/FlexBox";
 import Typography, { H6 } from "@component/Typography";
 
-const GREEN = "#2e7d32";
+const GREEN = "var(--tz-success)";
 
 const formatStatus = (s?: string | null): string =>
  s
@@ -31,18 +31,18 @@ const SummaryLine = ({
  badge?: string;
 }) => {
  const accent =
-  tone === "green" ? GREEN : tone === "muted" ? "#7A8A99" : "#E94560";
+  tone === "green" ? GREEN : tone === "muted" ? "var(--tz-slate)" : "var(--tz-ember-deep)";
  return (
   <FlexBox justifyContent="space-between" alignItems="center" mb="0.4rem">
    <FlexBox alignItems="center" style={{ gap: "8px" }}>
-    <Typography fontSize="14px" color={negative ? "#2C3A4A" : "text.hint"}>
+    <Typography fontSize="14px" color={negative ? "var(--tz-ink)" : "text.hint"}>
      {label}
     </Typography>
     {badge && (
      <span
       style={{
-       backgroundColor: tone === "muted" ? "#f0f2f5" : "#e8f8f0",
-       color: tone === "muted" ? "#7A8A99" : GREEN,
+       backgroundColor: tone === "muted" ? "var(--tz-mist)" : "var(--tz-success-bg)",
+       color: tone === "muted" ? "var(--tz-slate)" : GREEN,
        borderRadius: "10px",
        padding: "2px 8px",
        fontSize: "11px",
@@ -98,8 +98,8 @@ export default function OrderTotalSummary({ order, details, shopName }: Props) {
    p="16px 20px"
    mt="0.75rem"
    borderRadius={8}
-   bg="#FBFCFE"
-   border="1px solid #EDF1F6"
+   bg="var(--tz-mist)"
+   border="1px solid var(--tz-line)"
   >
    <Typography fontWeight="600" fontSize="15px" mb="0.75rem">
     Total Summary
@@ -161,7 +161,7 @@ export default function OrderTotalSummary({ order, details, shopName }: Props) {
       p="3px 10px"
       backgroundColor="rgba(255,225,230,1)"
       borderRadius="1rem"
-      color="rgb(233, 69, 96)"
+      color="var(--tz-ember-deep)"
       fontSize="12px"
      >
       {formatStatus(order?.Order?.payment_method) || "N/A"}
@@ -176,7 +176,7 @@ export default function OrderTotalSummary({ order, details, shopName }: Props) {
       p="3px 10px"
       backgroundColor="rgba(255,225,230,1)"
       borderRadius="1rem"
-      color="rgb(233, 69, 96)"
+      color="var(--tz-ember-deep)"
       fontSize="12px"
      >
       {formatStatus(order?.Order?.payment_status) || "N/A"}
