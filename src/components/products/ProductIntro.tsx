@@ -40,6 +40,7 @@ type ProductIntroProps = {
  };
  campaignBannerImage?: string;
  campaignSlug?: string;
+ isCorporateShop?: boolean;
 };
 
 export default function ProductIntro({
@@ -67,6 +68,7 @@ export default function ProductIntro({
  sizeColor,
  campaignBannerImage,
  campaignSlug,
+ isCorporateShop = false,
 }: ProductIntroProps) {
  const param = useParams();
  const { state } = useAppContext();
@@ -188,6 +190,7 @@ export default function ProductIntro({
        selectedColor={selectedColor}
        selectedSize={selectedSize}
        selectedPrice={selectedPrice}
+       isCorporateShop={isCorporateShop}
        />
       </Box>
      )}

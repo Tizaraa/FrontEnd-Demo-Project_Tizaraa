@@ -1409,6 +1409,7 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
               sizeColor={sizeColor}
               campaignBannerImage={campaignBannerImage}
               campaignSlug={campaignSlug}
+              isCorporateShop={isCorporateShop}
             />
 
             {/* Short description summary — sits under the intro so the left
