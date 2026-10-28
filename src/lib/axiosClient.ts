@@ -15,11 +15,23 @@ const axios = Axios.create({
  axios.interceptors.request.use(
   (config) => {
    const token = authService.getToken();
- 
+
    if (token) {
     config.headers.Authorization = `Bearer ${token}`;
    }
- 
+
+   // Attach persistent guest token for unauthenticated cart sessions
+   if (typeof window !== "undefined") {
+    let guestToken = localStorage.getItem("guest_token");
+    if (!guestToken) {
+     guestToken = "gst_" + Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+     localStorage.setItem("guest_token", guestToken);
+    }
+    if (guestToken) {
+     config.headers["X-Guest-Token"] = guestToken;
+    }
+   }
+
    // Endpoints to redirect to local API
    const localEndpoints = [
     "user/profile",
@@ -48,10 +60,12 @@ const axios = Axios.create({
     "seller/products/",
     "shop-filter/",
     "cart/product/info/",
+    "cart/sync",
     "cart/add",
     "cart/clear",
     "cart/update/",
     "cart/remove/",
+    "cart",
     "pay-via-ajax",
     "checkout/order",
     "checkout/check/pricing",
