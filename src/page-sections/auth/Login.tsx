@@ -16,6 +16,7 @@ import Icon from "@component/icon/Icon";
 import Divider from "@component/Divider";
 import FlexBox from "@component/FlexBox";
 import TextField from "@component/text-field";
+import CheckBox from "@component/CheckBox";
 import { Button, IconButton } from "@component/buttons";
 import { H3, H5, H6, SemiSpan, Small, Span } from "@component/Typography";
 import {
@@ -36,6 +37,9 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 import BeatLoader from "react-spinners/BeatLoader";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 
+// Separate from the seller/admin keys used by the seller panel
+const REMEMBER_EMAIL_KEY = "customer_remember_email";
+
 
 export default function Login() {
  const { state, dispatch } = useAppContext(); // Accessing app context for auth
@@ -45,6 +49,7 @@ export default function Login() {
  const [apiError, setApiError] = useState<string | null>(null); // State for API errors
  const [isModalOpen, setModalOpen] = useState(false);
  const [isHasPayLoading, setIsHasPayLoading] = useState(false);
+ const [rememberMe, setRememberMe] = useState(false);
 
  const searchParams = useSearchParams();
  const fromSignup = searchParams.get("from") === "signup";
@@ -129,6 +134,13 @@ export default function Login() {
     localStorage.setItem("token", data.token);
     localStorage.setItem("userInfo", JSON.stringify(data.user));
 
+    // "Remember me" — only the email is kept, never the password
+    if (rememberMe) {
+     localStorage.setItem(REMEMBER_EMAIL_KEY, values.email);
+    } else {
+     localStorage.removeItem(REMEMBER_EMAIL_KEY);
+    }
+
     dispatch({
      type: "LOGIN",
      payload: { authToken: data.token, userInfo: data.user },
@@ -164,12 +176,28 @@ export default function Login() {
   authService.googleLogin();
  };
 
- const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
-  useFormik({
-   initialValues,
-   onSubmit: handleFormSubmit,
-   validationSchema: formSchema,
-  });
+ const {
+  values,
+  errors,
+  touched,
+  handleBlur,
+  handleChange,
+  handleSubmit,
+  setFieldValue,
+ } = useFormik({
+  initialValues,
+  onSubmit: handleFormSubmit,
+  validationSchema: formSchema,
+ });
+
+ // Pre-fill the email saved on the last remembered login
+ useEffect(() => {
+  const savedEmail = localStorage.getItem(REMEMBER_EMAIL_KEY);
+  if (savedEmail) {
+   setFieldValue("email", savedEmail);
+   setRememberMe(true);
+  }
+ }, []);
 
  return (
   <>
@@ -235,8 +263,17 @@ export default function Login() {
      {/* Display any API errors */}
      {apiError && <AuthErrorText>{apiError}</AuthErrorText>}
 
-     {/* Forgot Password */}
-     <FlexBox justifyContent="flex-end" mb="1.5rem">
+     {/* Remember me + Forgot Password */}
+     <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
+      <CheckBox
+       id="remember-me"
+       name="remember"
+       color="primary"
+       size={16}
+       label={<Small color="text.muted">Remember me</Small>}
+       checked={rememberMe}
+       onChange={(e) => setRememberMe(e.target.checked)}
+      />
       <AuthTextButton
        type="button"
        onClick={() => setModalOpen(true)} // Triggers the modal on click
