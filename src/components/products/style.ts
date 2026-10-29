@@ -6,6 +6,11 @@ export const Styledbutton = styled.div`
   height: 48px;
  }
 
+ /* Stock Out / loading — show the "not allowed" cursor on hover */
+ .add-to-cart-btn:disabled {
+  cursor: not-allowed;
+ }
+
  .qty-btn {
   width: 44px;
   height: 44px;

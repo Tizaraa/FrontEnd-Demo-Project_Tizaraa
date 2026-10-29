@@ -285,6 +285,7 @@ type AddToCartButtonProps = {
  selectedPrice?: number | any;
  currentQuantity?: number;
  setCurrentQuantity?: (quantity: number) => void;
+ isCorporateShop?: boolean;
 };
 
 const AddToCartButton = ({
@@ -307,6 +308,7 @@ const AddToCartButton = ({
  selectedPrice,
  currentQuantity,
  setCurrentQuantity,
+ isCorporateShop = false,
 }: AddToCartButtonProps) => {
  const { state, dispatch } = useAppContext();
  const [quantity, setQuantity] = useState(1);
@@ -356,6 +358,9 @@ const AddToCartButton = ({
 
  // Highest quantity the buyer may pick: capped by both stock and the seller's max
  const qtyCeiling = maxQty === null ? productStock : Math.min(maxQty, productStock);
+
+ // Corporate shop products can't be added once the DB stock hits zero
+ const isStockOut = isCorporateShop && Number(productStock) <= 0;
 
  const handleCartAmountChange = (amount: number): boolean => {
   if (amount > productStock) {
@@ -522,9 +527,15 @@ const AddToCartButton = ({
      variant="contained"
      className="add-to-cart-btn"
      onClick={handleAddToCart}
-     disabled={isLoading}
+     disabled={isLoading || isStockOut}
     >
-     {isLoading ? <BeatLoader size={12} color="currentColor" /> : "Add to Cart"}
+     {isLoading ? (
+      <BeatLoader size={12} color="currentColor" />
+     ) : isStockOut ? (
+      "Stock Out"
+     ) : (
+      "Add to Cart"
+     )}
     </Button>
    ) : (
     <FlexBox alignItems="center" mb="36px" style={{ gap: "10px" }}>
