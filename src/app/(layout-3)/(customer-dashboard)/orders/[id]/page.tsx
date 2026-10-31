@@ -31,6 +31,7 @@ import {
  faCaretUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { Chip } from "@component/Chip";
+import CorporatePickupToken from "@component/orders/CorporatePickupToken";
 import authService from "services/authService";
 import { useRouter } from "next/navigation";
 import { Tooltip } from "@mui/material";
@@ -165,6 +166,10 @@ export default function OrderDetails({ params }: IDParams) {
       city_id: raw.city_name,
       province_id: raw.province_name,
       phone: raw.buyer_phone,
+      buyer_name: raw.buyer_name ?? null,
+      // When the seller marked it packed — printed on the pickup token
+      packed_at:
+       (raw.timeline ?? []).find((t: { status: string }) => t.status === "processing")?.at ?? null,
       refunded_total: raw.refunded_total ?? 0,
       original_total: raw.original_total ?? raw.total_amount,
       original_subtotal: raw.original_subtotal ?? raw.subtotal,
@@ -824,6 +829,26 @@ export default function OrderDetails({ params }: IDParams) {
                 <Small color="white">{getStatusLabel(details?.status)}</Small>
                </Chip>
               </Box>
+
+              {/* Pickup token — only once the seller has marked the corporate order packed */}
+              {order?.Order?.payment_method === "corporate_credit" &&
+               details?.status === "Processing" && (
+                <Box m="6px">
+                 <CorporatePickupToken
+                  invoiceNo={order.Order.invoice_id}
+                  buyerName={order.Order.buyer_name}
+                  packedAt={order.Order.packed_at}
+                  orderTotal={order.Order.amount}
+                  items={details.order_items
+                   .filter((item) => !item.item_cancelled_at)
+                   .map((item) => ({
+                    name: item.product_name,
+                    quantity: item.quantity,
+                    total: item.total_price ?? item.price * item.quantity,
+                   }))}
+                 />
+                </Box>
+               )}
              </div>
 
 
