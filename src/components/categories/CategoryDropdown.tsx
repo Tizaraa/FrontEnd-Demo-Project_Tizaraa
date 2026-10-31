@@ -119,9 +119,11 @@ type CategoryDropdownProps = {
 };
 // =========================================
 
-const CACHE_KEY = "navigations";
+// Bump the key when the cached shape or lifetime changes, so old copies are ignored
+const CACHE_KEY = "navigations_v2";
 const CACHE_TIMESTAMP_KEY = `${CACHE_KEY}_timestamp`;
-const CACHE_EXPIRY_MS = 24 * 60 * 60 * 1000;
+// Image URLs in this data are signed for 60 minutes; keep the copy well under that
+const CACHE_EXPIRY_MS = 30 * 60 * 1000;
 // const CACHE_EXPIRY_MS = 1 * 60 * 1000;
 
 export default function CategoryDropdown({
@@ -135,6 +137,10 @@ export default function CategoryDropdown({
  useEffect(() => {
   const fetchNavigations = async () => {
    try {
+    // Drop the old 24-hour copy (about 300 KB) left by the previous key
+    localStorage.removeItem("navigations");
+    localStorage.removeItem("navigations_timestamp");
+
     const cachedData = localStorage.getItem(CACHE_KEY);
     const cachedTimestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
 
