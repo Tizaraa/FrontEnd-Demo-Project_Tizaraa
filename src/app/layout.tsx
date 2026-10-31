@@ -165,7 +165,7 @@
 //   );
 // }
 
-import { Anek_Bangla, Hind_Siliguri } from "next/font/google";
+import localFont from "next/font/local";
 import StyledComponentsRegistry from "@lib/registry";
 import { AppProvider } from "@context/app-context";
 import StyledContext from "@context/StyledContext";
@@ -177,15 +177,22 @@ import Head from "next/head";
 import SetUser from "@context/app-context/SetUser";
 
 // Load fonts. Both cover Bangla and Latin; tokens read them via CSS variables
-const displayFont = Anek_Bangla({
- subsets: ["bengali", "latin"],
- weight: ["500", "600", "700"],
+// Self-hosted from src/fonts so the build does not fetch from Google Fonts
+const displayFont = localFont({
+ src: [
+  { path: "../fonts/AnekBangla-500.woff", weight: "500", style: "normal" },
+  { path: "../fonts/AnekBangla-600.woff", weight: "600", style: "normal" },
+  { path: "../fonts/AnekBangla-700.woff", weight: "700", style: "normal" },
+ ],
  variable: "--font-display",
  display: "swap",
 });
-const bodyFont = Hind_Siliguri({
- subsets: ["bengali", "latin"],
- weight: ["400", "500", "600"],
+const bodyFont = localFont({
+ src: [
+  { path: "../fonts/HindSiliguri-400.woff", weight: "400", style: "normal" },
+  { path: "../fonts/HindSiliguri-500.woff", weight: "500", style: "normal" },
+  { path: "../fonts/HindSiliguri-600.woff", weight: "600", style: "normal" },
+ ],
  variable: "--font-body",
  display: "swap",
 });
