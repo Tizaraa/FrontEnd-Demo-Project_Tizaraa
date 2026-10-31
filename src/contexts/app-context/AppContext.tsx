@@ -307,9 +307,15 @@ import {
  PropsWithChildren,
  useEffect,
  useState,
+ useRef,
+ useCallback,
 } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "lib/axiosClient";
+import authService from "services/authService";
+
+// Whose cart this browser holds: the logged-in token, or "guest"
+const currentCartOwner = (): string => authService.getToken() || "guest";
 
 // TYPES
 interface InitialState {
@@ -606,7 +612,112 @@ export function AppProvider({ children }: PropsWithChildren) {
  //   }
  // }, [storedCart]);
 
- const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch]);
+ // Cart sync across devices: the server copy wins, so a browser with an old
+ // localStorage cart never overwrites what another browser added.
+ const [cartReady, setCartReady] = useState(false);
+ const cartRef = useRef<any[]>(state.cart);
+ cartRef.current = state.cart;
+ // True only while a cart change made by the user has not reached the server yet
+ const cartDirty = useRef(false);
+
+ // Components get this dispatch, so only their cart changes are pushed to the server
+ const trackedDispatch = useCallback((action: ActionType) => {
+  if (action.type === "CHANGE_CART_AMOUNT" || action.type === "SET_CART") {
+   cartDirty.current = true;
+  }
+  dispatch(action);
+ }, []);
+
+ const contextValue = useMemo(
+  () => ({ state, dispatch: trackedDispatch }),
+  [state, trackedDispatch]
+ );
+
+ const pushCart = useCallback((cart: any[]) => {
+  const pushed = JSON.stringify(cart);
+  const payloadItems = cart
+   .filter((item: any) => item && (item.productId || item.id) && item.qty > 0)
+   .map((item: any) => ({
+    product_id: Number(item.productId || item.id),
+    quantity: Number(item.qty || 1),
+    variant_id: item.variantId ? Number(item.variantId) : null,
+   }));
+
+  axios
+   .post("cart/sync", { items: payloadItems, snapshot: cart })
+   .then(() => {
+    // A newer change may have happened meanwhile; that one still needs pushing
+    if (JSON.stringify(cartRef.current || []) === pushed) cartDirty.current = false;
+   })
+   .catch((err: any) => {
+    // Keep UI functional even if local backend is offline in dev
+   });
+ }, []);
+
+ const pullServerCart = useCallback(async () => {
+  const owner = currentCartOwner();
+  const ownerChanged = localStorage.getItem("cart_owner") !== owner;
+
+  // A pending change of the user's own wins; it is pushed next
+  if (cartDirty.current && !ownerChanged) return;
+
+  try {
+   const { data } = await axios.get("cart/snapshot");
+   const serverCart: any[] | null = Array.isArray(data?.items) ? data.items : null;
+   const localCart: any[] = cartRef.current || [];
+
+   // The user changed the cart while we waited; their pending sync wins
+   if (cartDirty.current && !ownerChanged) return;
+
+   let nextCart = localCart;
+   if (serverCart && ownerChanged) {
+    // Login or logout: keep this browser's items and add the account's items
+    nextCart = [
+     ...serverCart,
+     ...localCart.filter((item) => !serverCart.some((s) => s.id === item.id)),
+    ];
+   } else if (serverCart) {
+    nextCart = serverCart;
+   }
+
+   localStorage.setItem("cart_owner", owner);
+   if (JSON.stringify(nextCart) !== JSON.stringify(localCart)) {
+    dispatch({ type: "SET_CART", payload: nextCart });
+   }
+   // First sync from this account, or a login/logout merge: the server needs the result
+   if (JSON.stringify(nextCart) !== JSON.stringify(serverCart ?? [])) {
+    cartDirty.current = true;
+    pushCart(nextCart);
+   }
+  } catch (err) {
+   // Keep UI functional even if local backend is offline in dev
+  } finally {
+   setCartReady(true);
+  }
+ }, [pushCart]);
+
+ // Refresh from the server on load, when the tab regains focus, and after login/logout.
+ // Waits for isMounted so the localStorage cart is restored before the first pull.
+ useEffect(() => {
+  if (!isMounted) return;
+  pullServerCart();
+
+  const onFocus = () => pullServerCart();
+  const onVisible = () => {
+   if (document.visibilityState === "visible") pullServerCart();
+  };
+  const ownerWatch = setInterval(() => {
+   if (localStorage.getItem("cart_owner") !== currentCartOwner()) pullServerCart();
+  }, 2000);
+
+  window.addEventListener("focus", onFocus);
+  document.addEventListener("visibilitychange", onVisible);
+  return () => {
+   window.removeEventListener("focus", onFocus);
+   document.removeEventListener("visibilitychange", onVisible);
+   clearInterval(ownerWatch);
+  };
+ }, [isMounted, pullServerCart]);
 
  useEffect(() => {
   setIsMounted(true);
@@ -636,27 +747,20 @@ export function AppProvider({ children }: PropsWithChildren) {
    JSON.stringify(state.selectedProducts)
   );
 
-  // Sync cart items to backend Redis cart whenever cart updates
-  if (isMounted) {
+  // Sync cart items to backend Redis cart when the user changed them
+  if (isMounted && cartReady && cartDirty.current) {
    const timer = setTimeout(() => {
-    const payloadItems = (state.cart || [])
-     .filter((item: any) => item && (item.productId || item.id) && item.qty > 0)
-     .map((item: any) => ({
-      product_id: Number(item.productId || item.id),
-      quantity: Number(item.qty || 1),
-      variant_id: item.variantId ? Number(item.variantId) : null,
-     }));
-
-    axios
-     .post("cart/sync", { items: payloadItems })
-     .catch((err: any) => {
-      // Keep UI functional even if local backend is offline in dev
-     });
+    // Login/logout since the last pull: merge with the new owner's cart first
+    if (localStorage.getItem("cart_owner") !== currentCartOwner()) {
+     pullServerCart();
+     return;
+    }
+    pushCart(state.cart || []);
    }, 300);
 
    return () => clearTimeout(timer);
   }
- }, [state.cart, state.selectedProducts, isMounted]);
+ }, [state.cart, state.selectedProducts, isMounted, cartReady, pullServerCart, pushCart]);
 
  return (
   <AppContext.Provider value={contextValue}>
