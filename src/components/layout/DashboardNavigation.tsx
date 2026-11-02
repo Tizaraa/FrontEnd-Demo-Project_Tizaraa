@@ -383,7 +383,7 @@ export default function DashboardNavigation() {
 
   try {
    const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
-   setIsCorporateEmployee(userInfo?.type === "employee");
+   setIsCorporateEmployee(userInfo?.type === "employee" || Boolean(userInfo?.shop_slug));
    setUser({ name: userInfo?.name, email: userInfo?.email, image: userInfo?.image });
   } catch {
    setIsCorporateEmployee(false);
@@ -424,13 +424,14 @@ export default function DashboardNavigation() {
      iconName: "truck",
      count: returnOrderCount,
     },
-    {
-     href: "/credit-history",
-     title: "Credit History",
-     iconName: "credit-card",
-    },
     ...(isCorporateEmployee
-     ? []
+     ? [
+        {
+         href: "/credit-history",
+         title: "Credit History",
+         iconName: "credit-card",
+        },
+       ]
      : [{ href: "/rfq", title: "RFQ", iconName: "request", count: rfqCount }]),
     // { href: "/wish-list", title: "Wishlist", iconName: "heart", count: 19 },
     // { href: "/support-tickets", title: "Support Tickets", iconName: "customer-service", count: 1 },

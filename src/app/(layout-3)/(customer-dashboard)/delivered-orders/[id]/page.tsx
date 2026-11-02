@@ -74,8 +74,15 @@ export default function OrderDetails({ params }: IDParams) {
  const [getEstimateDate, setEstimateDate] = useState(null);
  const [invoiceLoading, setInvoiceLoading] = useState(false); // Loading state for invoice
  const [invoiceError, setInvoiceError] = useState(""); // Error message for invoice
+ const [invoiceUrl, setInvoiceUrl] = useState<string | null>(null); // Blob URL of the loaded invoice PDF
+
+ // Release the PDF blob when leaving the page.
+ useEffect(() => () => {
+  if (invoiceUrl) URL.revokeObjectURL(invoiceUrl);
+ }, [invoiceUrl]);
  const [onlinePaymentError, setOnlinePaymentError] = useState("");
  const [onlinePaymentLoading, setOnlinePaymentLoading] = useState(false);
+ const [returnDetails, setReturnDetails] = useState<any[]>([]);
  const [orderSuccess, setOrderSuccess] = useState(false);
  const [fetched, setFetched] = useState(false);
  const router = useRouter();
@@ -181,6 +188,7 @@ export default function OrderDetails({ params }: IDParams) {
       city_id: raw.city_name,
       province_id: raw.province_name,
       phone: raw.buyer_phone,
+      timeline: raw.timeline ?? [],
       refunded_total: raw.refunded_total ?? 0,
       original_total: raw.original_total ?? raw.total_amount,
       returned_item_count: raw.returned_item_count ?? 0,
@@ -196,6 +204,7 @@ export default function OrderDetails({ params }: IDParams) {
         total: raw.total_amount,
         promocodeStatus: (raw.discount_amount > 0 || raw.promo_code) ? 1 : 0,
         isAbroad: false,
+        timeline: raw.timeline ?? [],
         order_items: orderItems,
        },
       },
@@ -205,6 +214,20 @@ export default function OrderDetails({ params }: IDParams) {
     setOrder(adapted);
     setStatus(adapted.Order.status);
     setEstimateDate(adapted.Order.deliveredAt);
+
+    if (raw.returns && raw.returns.length > 0) {
+     setReturnDetails(raw.returns);
+    } else {
+     const returnStatuses = ["return_requested", "returned", "return_approved", "return_received", "refunded"];
+     if (returnStatuses.includes(raw.order_status)) {
+      try {
+       const returnRes = await axios.get(`orders/${params.id}/returns`);
+       setReturnDetails(returnRes.data?.data ?? []);
+      } catch {
+       // non-critical — silently ignore
+      }
+     }
+    }
    } catch (error) {
     console.error("Error fetching order details:", error);
    } finally {
@@ -238,10 +261,6 @@ export default function OrderDetails({ params }: IDParams) {
    return;
   }
 
-  // Open the tab synchronously (within the click's call stack) so browsers
-  // don't treat it as a blocked popup once the async request resolves.
-  const invoiceTab = window.open("", "_blank");
-
   try {
    const response = await axios.get(
     `get-invoice?id=${params.id}`,
@@ -254,13 +273,14 @@ export default function OrderDetails({ params }: IDParams) {
    );
    const pdfBlobUrl = URL.createObjectURL(response.data);
 
-   if (invoiceTab) {
-    invoiceTab.location.href = pdfBlobUrl;
-   }
+   // Shown inline under the Invoice button; free the previous PDF first.
+   setInvoiceUrl(prev => {
+    if (prev) URL.revokeObjectURL(prev);
+    return pdfBlobUrl;
+   });
   } catch (error) {
    console.error("Error fetching invoice data:", error);
    setInvoiceError("Failed to load invoice. Please try again."); // Set error message for user
-   invoiceTab?.close();
   } finally {
    setInvoiceLoading(false); // Stop loading state
   }
@@ -567,30 +587,6 @@ export default function OrderDetails({ params }: IDParams) {
                </Chip>
               </Box>
              </div>
-
-             {/* Invoice belongs beside the shop it bills for, not at the foot of
-                 the page under the address — and a failure has to show next to the
-                 button that caused it. */}
-             <Box m="6px" textAlign="right">
-              <Button
-               px="1.5rem"
-               color="primary"
-               bg="primary.light"
-               onClick={fetchInvoice}
-              >
-               {invoiceLoading ? (
-                <BeatLoader size={14} color="var(--tz-ember-deep)" />
-               ) : (
-                "Invoice"
-               )}
-              </Button>
-
-              {invoiceError && (
-               <Typography color="red" fontSize="12px" mt="4px">
-                {invoiceError}
-               </Typography>
-              )}
-             </Box>
             </div>
 
             {details?.order_items?.map((item, ind) => (
@@ -614,7 +610,10 @@ export default function OrderDetails({ params }: IDParams) {
             <OrderStatus
              orderStatus={details.status}
              deliveredAt={details.delivered_at}
+             returnStatus={returnDetails[0]?.return_status ?? null}
+             returnRecord={returnDetails[0] ?? null}
              isCorporate={order?.Order?.payment_method === "corporate_credit"}
+             timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
             />
 
             <FlexBox mt="1rem" justifyContent="center">
@@ -676,25 +675,22 @@ export default function OrderDetails({ params }: IDParams) {
       phone={order.Order.phone}
      />
 
-     {/* Invoice now sits in the shop header above; only payment is left here. */}
      <div style={{ display: "flex", gap: "20px" }}>
-      {/* {order.Order.payment_status === "Unpaid" && (
-             <Button
-             px="2rem"
-             color="success" // Or another green variant available in your theme
-             bg="success.light" // Or a specific green shade
-             mt="2rem"
-             onClick={handleOnlinePayment}
-             disabled={onlinePaymentLoading}
-           >
-             {onlinePaymentLoading ? (
-               <BeatLoader size={18} color="rgba(51,208,103,0.79)" />
-             ) : (
-               "Online Payment"
-             )}
-           </Button>
-           
-            )} */}
+      {/* =========== Invoice ==========
+          Only once the order is delivered — there is nothing to invoice while it is
+          still pending, and a cancelled order has no delivery to bill for. */}
+      {order.Order.isDelivered && (
+       <Button
+        px="2rem"
+        color="primary"
+        bg="primary.light"
+        mt="2rem"
+        onClick={fetchInvoice}
+       >
+        {invoiceLoading ? <BeatLoader size={18} color="var(--tz-ember-deep)" /> : "Invoice"}
+       </Button>
+      )}
+
       {order.Order.payment_status === "Unpaid" &&
        !["Delivered", "Cancelled", "Return"].includes(order.Order.status) && (
         <Button
@@ -713,6 +709,16 @@ export default function OrderDetails({ params }: IDParams) {
         </Button>
        )}
      </div>
+
+     {invoiceError && <Typography color="red">{invoiceError}</Typography>}
+
+     {invoiceUrl && (
+      <iframe
+       src={invoiceUrl}
+       title={`Invoice ${order.Order.invoice_id ?? params.id}`}
+       style={{ width: "100%", maxWidth: "600px", height: "800px", border: "none", marginTop: "1.5rem" }}
+      />
+     )}
 
     </Grid>
 

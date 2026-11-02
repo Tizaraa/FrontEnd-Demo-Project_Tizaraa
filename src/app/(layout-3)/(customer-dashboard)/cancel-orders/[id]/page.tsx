@@ -149,6 +149,7 @@ export default function OrderDetails({ params }: IDParams) {
       city_id: raw.city_name,
       province_id: raw.province_name,
       phone: raw.buyer_phone,
+      timeline: raw.timeline ?? [],
       refunded_total: raw.refunded_total ?? 0,
       original_total: raw.original_total ?? raw.total_amount,
       returned_item_count: raw.returned_item_count ?? 0,
@@ -166,6 +167,7 @@ export default function OrderDetails({ params }: IDParams) {
         total: raw.original_total ?? raw.total_amount,
         promocodeStatus: (raw.discount_amount > 0 || raw.promo_code) ? 1 : 0,
         isAbroad: false,
+        timeline: raw.timeline ?? [],
         order_items: orderItems,
        },
       },
@@ -620,14 +622,29 @@ export default function OrderDetails({ params }: IDParams) {
                </Typography>
                <FlexBox alignItems="center" style={{ gap: "12px" }}>
                 <Typography fontSize="14px" fontWeight="700" color="var(--tz-ember-deep)">
-                 {currency(order?.Order?.cancelled_total || 0)}
+                 {currency(
+                  (Number(order?.Order?.cancelled_total) > 0 ? Number(order?.Order?.cancelled_total) : null) ??
+                  (Number(details?.total) > 0 ? Number(details?.total) : null) ??
+                  (Number(details?.sub_total) > 0 ? Number(details?.sub_total) : null) ??
+                  (details?.order_items ?? []).reduce(
+                   (sum: number, it: any) => sum + Number(it.price || 0) * Number(it.quantity || 1),
+                   0
+                  )
+                 )}
                 </Typography>
                </FlexBox>
               </FlexBox>
              </Box>
             )}
 
-            {/* <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} /> */}
+            <Box mt="16px">
+             <OrderStatus
+              orderStatus={details?.status ?? getStatus}
+              deliveredAt={getEstimateDate}
+              isCorporate={order?.Order?.payment_method === "corporate_credit"}
+              timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
+             />
+            </Box>
 
             {/* {openSummaries[shopName] && (
                   <Box p="20px" borderRadius={8} mt="1rem">

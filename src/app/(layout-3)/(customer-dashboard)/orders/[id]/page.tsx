@@ -46,6 +46,12 @@ export default function OrderDetails({ params }: IDParams) {
  const [getEstimateDate, setEstimateDate] = useState(null);
  const [invoiceLoading, setInvoiceLoading] = useState(false); // Loading state for invoice
  const [invoiceError, setInvoiceError] = useState(""); // Error message for invoice
+ const [invoiceUrl, setInvoiceUrl] = useState<string | null>(null); // Blob URL of the loaded invoice PDF
+
+ // Release the PDF blob when leaving the page.
+ useEffect(() => () => {
+  if (invoiceUrl) URL.revokeObjectURL(invoiceUrl);
+ }, [invoiceUrl]);
  const [onlinePaymentError, setOnlinePaymentError] = useState("");
  const [onlinePaymentLoading, setOnlinePaymentLoading] = useState(false);
  const [orderSuccess, setOrderSuccess] = useState(false);
@@ -170,6 +176,7 @@ export default function OrderDetails({ params }: IDParams) {
       // When the seller marked it packed — printed on the pickup token
       packed_at:
        (raw.timeline ?? []).find((t: { status: string }) => t.status === "processing")?.at ?? null,
+      timeline: raw.timeline ?? [],
       refunded_total: raw.refunded_total ?? 0,
       original_total: raw.original_total ?? raw.total_amount,
       original_subtotal: raw.original_subtotal ?? raw.subtotal,
@@ -192,6 +199,7 @@ export default function OrderDetails({ params }: IDParams) {
         total: isCancelled ? raw.original_total ?? raw.total_amount : raw.total_amount,
         promocodeStatus: (raw.discount_amount > 0 || raw.promo_code) ? 1 : 0,
         isAbroad: false,
+        timeline: raw.timeline ?? [],
         order_items: orderItems,
        },
       },
@@ -203,13 +211,17 @@ export default function OrderDetails({ params }: IDParams) {
     setEstimateDate(adapted.Order.deliveredAt);
 
     // Fetch return details if order is in a return flow
-    const returnStatuses = ["return_requested", "returned", "return_approved", "return_received", "refunded"];
-    if (returnStatuses.includes(raw.order_status)) {
-     try {
-      const returnRes = await axios.get(`orders/${params.id}/returns`);
-      setReturnDetails(returnRes.data?.data ?? []);
-     } catch {
-      // non-critical — silently ignore
+    if (raw.returns && raw.returns.length > 0) {
+     setReturnDetails(raw.returns);
+    } else {
+     const returnStatuses = ["return_requested", "returned", "return_approved", "return_received", "refunded"];
+     if (returnStatuses.includes(raw.order_status)) {
+      try {
+       const returnRes = await axios.get(`orders/${params.id}/returns`);
+       setReturnDetails(returnRes.data?.data ?? []);
+      } catch {
+       // non-critical — silently ignore
+      }
      }
     }
    } catch (error) {
@@ -244,10 +256,6 @@ export default function OrderDetails({ params }: IDParams) {
    return;
   }
 
-  // Open the tab synchronously (within the click's call stack) so browsers
-  // don't treat it as a blocked popup once the async request resolves.
-  const invoiceTab = window.open("", "_blank");
-
   try {
    const response = await axios.get(
     `get-invoice?id=${params.id}`,
@@ -260,13 +268,14 @@ export default function OrderDetails({ params }: IDParams) {
    );
    const pdfBlobUrl = URL.createObjectURL(response.data);
 
-   if (invoiceTab) {
-    invoiceTab.location.href = pdfBlobUrl;
-   }
+   // Shown inline under the Invoice button; free the previous PDF first.
+   setInvoiceUrl(prev => {
+    if (prev) URL.revokeObjectURL(prev);
+    return pdfBlobUrl;
+   });
   } catch (error) {
    console.error("Error fetching invoice data:", error);
    setInvoiceError("Failed to load invoice. Please try again."); // Set error message for user
-   invoiceTab?.close();
   } finally {
    setInvoiceLoading(false); // Stop loading state
   }
@@ -895,8 +904,9 @@ export default function OrderDetails({ params }: IDParams) {
               orderStatus={details.status}
               deliveredAt={details.delivered_at}
               returnStatus={returnDetails[0]?.return_status ?? null}
+              returnRecord={returnDetails[0] ?? null}
               isCorporate={order?.Order?.payment_method === "corporate_credit"}
-              hideReturnFlow
+              timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
              />
             </Box>
 
@@ -1080,8 +1090,15 @@ export default function OrderDetails({ params }: IDParams) {
           } */}
      </div>
 
-     {/* Invoice opens in a new tab; no inline preview needed */}
      {invoiceError && <Typography color="red">{invoiceError}</Typography>}
+
+     {invoiceUrl && (
+      <iframe
+       src={invoiceUrl}
+       title={`Invoice ${order.Order.invoice_id ?? params.id}`}
+       style={{ width: "100%", maxWidth: "600px", height: "800px", border: "none", marginTop: "1.5rem" }}
+      />
+     )}
     </Grid>
 
     {/* <Grid item lg={6} md={6} xs={12}>
