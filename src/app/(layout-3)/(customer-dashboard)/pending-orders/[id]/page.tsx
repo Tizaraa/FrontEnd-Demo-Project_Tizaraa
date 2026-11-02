@@ -171,6 +171,7 @@ export default function OrderDetails({ params }: IDParams) {
       // When the seller marked it packed — printed on the pickup token
       packed_at:
        (raw.timeline ?? []).find((t: { status: string }) => t.status === "processing")?.at ?? null,
+      timeline: raw.timeline ?? [],
       refunded_total: raw.refunded_total ?? 0,
       original_total: raw.original_total ?? raw.total_amount,
       original_subtotal: raw.original_subtotal ?? raw.subtotal,
@@ -187,6 +188,7 @@ export default function OrderDetails({ params }: IDParams) {
         total: raw.total_amount,
         promocodeStatus: (raw.discount_amount > 0 || raw.promo_code) ? 1 : 0,
         isAbroad: false,
+        timeline: raw.timeline ?? [],
         order_items: orderItems,
        },
       },
@@ -617,9 +619,10 @@ export default function OrderDetails({ params }: IDParams) {
             ))}
 
             <OrderStatus
-             orderStatus={getStatus}
-             deliveredAt={getEstimateDate}
+             orderStatus={details.status ?? getStatus}
+             deliveredAt={details.delivered_at ?? getEstimateDate}
              isCorporate={order?.Order?.payment_method === "corporate_credit"}
+             timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
             />
 
             <FlexBox mt="1rem" justifyContent="center">

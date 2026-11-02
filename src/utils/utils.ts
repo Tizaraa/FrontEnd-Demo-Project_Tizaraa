@@ -83,14 +83,12 @@ export function DiscountPercentage(price: number, discount: number) {
 export function currency(
  price: number,
  fraction: number = 2,
- currencyCode: string = "BDT" // default is BDT for Bangladeshi Taka
+ currencyCode: string = "BDT"
 ) {
- const formatCurrency = new Intl.NumberFormat(undefined, {
-  currency: currencyCode,
-  style: "currency",
-  maximumFractionDigits: fraction,
+ const val = Number(price || 0);
+ const formatted = val.toLocaleString("en-US", {
   minimumFractionDigits: fraction,
+  maximumFractionDigits: fraction,
  });
-
- return formatCurrency.format(price);
+ return `৳ ${formatted}`;
 }

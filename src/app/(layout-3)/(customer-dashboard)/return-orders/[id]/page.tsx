@@ -13,6 +13,7 @@ import Typography, { H5, H6, Paragraph, Small } from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import {
+ OrderStatus,
  ShippingAddressCard,
  WriteReview,
  OrderListButton,
@@ -153,6 +154,7 @@ export default function OrderDetails({ params }: IDParams) {
       city_id: raw.city_name,
       province_id: raw.province_name,
       phone: raw.buyer_phone,
+      timeline: raw.timeline ?? [],
       refunded_total: raw.refunded_total ?? 0,
       original_total: raw.original_total ?? raw.total_amount,
       original_subtotal: raw.original_subtotal ?? raw.subtotal,
@@ -169,6 +171,7 @@ export default function OrderDetails({ params }: IDParams) {
         total: raw.total_amount,
         promocodeStatus: (raw.discount_amount > 0 || raw.promo_code) ? 1 : 0,
         isAbroad: false,
+        timeline: raw.timeline ?? [],
         order_items: orderItems,
        },
       },
@@ -179,11 +182,15 @@ export default function OrderDetails({ params }: IDParams) {
     setStatus(adapted.Order.status);
     setEstimateDate(adapted.Order.deliveredAt);
 
-    try {
-     const returnRes = await axios.get(`orders/${params.id}/returns`);
-     setReturnDetails(returnRes.data?.data ?? []);
-    } catch {
-     // non-critical — silently ignore
+    if (raw.returns && raw.returns.length > 0) {
+     setReturnDetails(raw.returns);
+    } else {
+     try {
+      const returnRes = await axios.get(`orders/${params.id}/returns`);
+      setReturnDetails(returnRes.data?.data ?? []);
+     } catch {
+      // non-critical — silently ignore
+     }
     }
    } catch (error) {
     console.error("Error fetching order details:", error);
@@ -582,6 +589,15 @@ export default function OrderDetails({ params }: IDParams) {
               isCorporate={order?.Order?.payment_method === "corporate_credit"}
              />
             ))}
+
+            <OrderStatus
+             orderStatus={details.status ?? getStatus}
+             deliveredAt={details.delivered_at ?? getEstimateDate}
+             returnStatus={returnDetails[0]?.return_status ?? null}
+             returnRecord={returnDetails[0] ?? null}
+             isCorporate={order?.Order?.payment_method === "corporate_credit"}
+             timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
+            />
 
 
 
