@@ -175,7 +175,9 @@
 import React, { Suspense } from "react";
 import { Metadata } from "next";
 import ProductDetails from "./ProductDetails";
+import { notFound } from "next/navigation";
 import ApiBaseUrl from "api/ApiBaseUrl";
+import { fetchProductDetail } from "@lib/customerApiServer";
 import ResponsiveCategory from "./ResponsiveCategory";
 import Watermark from "@component/watermark/Watermark";
 import NextImage from "@component/NextImage";
@@ -185,32 +187,16 @@ import LoadingSkeleton from "./loading"; // Import your loading component direct
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-// Fetch product data
+// Fetch product data (one API call per request, shared with generateMetadata).
+// A real 404 renders the not-found page with a 404 status. A rate limit or
+// outage returns null: ProductDetails then loads the product from the browser,
+// and if that also fails it shows a retry instead of "No products found".
 async function fetchProductData(slug: string) {
-  try {
-    // Decode the slug to handle URL-encoded characters
-    const decodedSlug = decodeURIComponent(slug);
+  const result = await fetchProductDetail(slug);
 
-    const response = await fetch(`${ApiBaseUrl.localApiUrl}frontend/product/details/${decodedSlug}`, {
-      cache: 'no-store', // Use no-store to align with page-level revalidate: 0
-    });
+  if (result.status === "not_found") notFound();
 
-    if (!response.ok) {
-      console.error(`Failed to fetch product: ${response.status} ${response.statusText}`);
-      return null;
-    }
-
-    const data = await response.json();
-    if (data?.productsingledetails?.product_id) {
-      return data;
-    } else {
-      console.error("Product data structure invalid:", data);
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching product data:", error);
-    return null;
-  }
+  return result.status === "ok" ? result.data : null;
 }
 
 
