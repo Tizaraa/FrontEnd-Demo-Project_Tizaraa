@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { Metadata } from "next";
-import ApiBaseUrl from "api/ApiBaseUrl";
+import { notFound } from "next/navigation";
+import { fetchProductDetail } from "@lib/customerApiServer";
 import Watermark from "@component/watermark/Watermark";
 import LoadingSkeleton from "../loading";
 import ProductInfoView from "./ProductInfoView";
@@ -8,29 +9,9 @@ import ProductInfoView from "./ProductInfoView";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-async function fetchProductData(slug: string) {
-  try {
-    const decodedSlug = decodeURIComponent(slug);
-
-    const response = await fetch(
-      `${ApiBaseUrl.localApiUrl}frontend/product/details/${decodedSlug}`,
-      { cache: "no-store" }
-    );
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = await response.json();
-    if (data?.productsingledetails?.product_id) {
-      return data;
-    }
-    return null;
-  } catch (error) {
-    console.error("Error fetching product data:", error);
-    return null;
-  }
-}
+// Shared with generateMetadata (one API call per request). A rate limit or an
+// outage is not the same as a missing product, so the result says which it was.
+const fetchProductData = fetchProductDetail;
 
 export async function generateMetadata({
   params,
@@ -38,7 +19,11 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const productData = await fetchProductData(slug);
+  const result = await fetchProductData(slug);
+
+  if (result.status === "not_found") notFound();
+
+  const productData = result.status === "ok" ? result.data : null;
 
   if (productData?.productsingledetails?.product_name) {
     return {
@@ -60,17 +45,24 @@ interface Props {
 }
 
 async function ProductInfoContent({ slug }: { slug: string }) {
-  const productData = await fetchProductData(slug);
+  const result = await fetchProductData(slug);
 
-  if (!productData) {
+  if (result.status === "not_found") notFound();
+
+  if (result.status !== "ok") {
+    const message =
+      result.status === "rate_limited"
+        ? `Too many requests right now. Please refresh in ${result.retryAfter} seconds.`
+        : "We couldn't load this product right now. Please refresh the page.";
+
     return (
       <div style={{ padding: "40px", textAlign: "center" }}>
-        <p>Product not found.</p>
+        <p>{message}</p>
       </div>
     );
   }
 
-  return <ProductInfoView productData={productData} />;
+  return <ProductInfoView productData={result.data} />;
 }
 
 export default async function ProductInfoPage({ params }: Props) {

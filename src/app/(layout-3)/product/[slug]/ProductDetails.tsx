@@ -755,11 +755,27 @@ import { H5 } from "@component/Typography";
 import ProductReview from "@component/products/ProductReview";
 import ProductDescription from "@component/products/ProductDescription";
 import axios from "@lib/axiosClient";
+import { isAxiosError } from "axios";
+import { Button } from "@component/buttons";
 
 interface Props {
   params: { slug: string };
   fallbackData: any;
 }
+
+type LoadState = "loading" | "ready" | "not_found" | "rate_limited" | "error";
+
+const MAX_FETCH_RETRIES = 2;
+const MAX_RETRY_DELAY_SECONDS = 10;
+
+/** The route param is URL-encoded and can be malformed; never let decoding throw. */
+const safeDecodeSlug = (slug: string): string => {
+  try {
+    return decodeURIComponent(slug);
+  } catch {
+    return slug;
+  }
+};
 
 const ShippingInfo: React.FC<{
   isDesktop: boolean;
@@ -1237,32 +1253,73 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
 
   // Replace useFetcher with direct state management to avoid caching
   const [productData, setProductData] = useState(fallbackData);
-  const [isLoading, setIsLoading] = useState(!fallbackData);
+  const [loadState, setLoadState] = useState<LoadState>(fallbackData ? "ready" : "loading");
+  const [reloadKey, setReloadKey] = useState(0);
 
 
   const [isDesktop, setIsDesktop] = useState(true);
 
-  // Fetch product data on slug change (no caching)
+  // Fetch product data on slug change (no caching). It also runs when the
+  // server render could not load the product (rate limit, outage).
   useEffect(() => {
-    const fetchProductData = async () => {
+    const decodedSlug = safeDecodeSlug(slug);
+
+    // Only fetch if we don't have fallback data or slug changed (or Retry was pressed)
+    if (reloadKey === 0 && fallbackData && productData?.productsingledetails?.slug === decodedSlug) {
+      return;
+    }
+
+    const controller = new AbortController();
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const fetchProductData = async (attempt: number) => {
+      setLoadState("loading");
       try {
-        setIsLoading(true);
-        const response = await axios.get(`${ApiBaseUrl.localApiUrl}frontend/product/details/${slug}`);
-        setProductData(response.data);
-        console.log("Product data fetched for slug:", slug);
+        const response = await axios.get(
+          `${ApiBaseUrl.localApiUrl}frontend/product/details/${encodeURIComponent(decodedSlug)}`,
+          { signal: controller.signal }
+        );
+        if (response.data?.productsingledetails) {
+          setProductData(response.data);
+          setLoadState("ready");
+        } else {
+          setProductData(null);
+          setLoadState("not_found");
+        }
       } catch (err) {
-        console.error("Error fetching product data:", err);
-        setProductData(null);
-      } finally {
-        setIsLoading(false);
+        // Slug changed or component unmounted: a newer request owns the state.
+        if (controller.signal.aborted) return;
+
+        const status = isAxiosError(err) ? err.response?.status : undefined;
+
+        if (status === 404) {
+          setProductData(null);
+          setLoadState("not_found");
+          return;
+        }
+
+        // 429, 5xx and network errors are temporary: retry a few times, honouring
+        // the API's retry_after (in the body; CORS hides the Retry-After header).
+        const retryable = status === undefined || status === 429 || status >= 500;
+        if (retryable && attempt < MAX_FETCH_RETRIES) {
+          const hinted = isAxiosError(err) ? Number(err.response?.data?.retry_after) : NaN;
+          const delaySeconds =
+            status === 429 && hinted > 0 ? Math.min(hinted, MAX_RETRY_DELAY_SECONDS) : 2 ** attempt;
+          retryTimer = setTimeout(() => fetchProductData(attempt + 1), delaySeconds * 1000);
+          return;
+        }
+
+        setLoadState(status === 429 ? "rate_limited" : "error");
       }
     };
 
-    // Only fetch if we don't have fallback data or slug changed
-    if (!fallbackData || productData?.productsingledetails?.slug !== slug) {
-      fetchProductData();
-    }
-  }, [slug]);
+    fetchProductData(0);
+
+    return () => {
+      controller.abort();
+      if (retryTimer) clearTimeout(retryTimer);
+    };
+  }, [slug, reloadKey]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -1286,7 +1343,23 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
     }
   }, [productData]);
 
-  if (isLoading) return <Loading />;
+  if (loadState === "loading") return <Loading />;
+
+  // A temporary failure is not "no product": say so and let the user retry.
+  if (loadState === "rate_limited" || loadState === "error") {
+    return (
+      <FlexBox flexDirection="column" justifyContent="center" alignItems="center" width="100%" py="2rem" style={{ gap: "1rem" }}>
+        <SemiSpan>
+          {loadState === "rate_limited"
+            ? "Too many requests right now. Please try again in a few seconds."
+            : "We couldn't load this product right now."}
+        </SemiSpan>
+        <Button variant="outlined" color="primary" onClick={() => setReloadKey((k) => k + 1)}>
+          Try again
+        </Button>
+      </FlexBox>
+    );
+  }
 
   if (!productData || !productData.productsingledetails) {
     return (
