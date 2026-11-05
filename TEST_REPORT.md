@@ -134,6 +134,22 @@ Different files import different instances. If a component imports `axios.ts` in
 
 ---
 
+### 16. Product Page Shows "No products found." for Existing Products
+**Status:** Resolved (2026-11-05)
+**Files:** `src/app/(layout-3)/product/[slug]/page.tsx`, `info/page.tsx`, `ProductDetails.tsx`, `src/lib/customerApiServer.ts`
+
+The customer API returned `429 Too Many Requests`. All visitors shared one bucket of 60 requests/min, because the API did not trust the proxy and SSR calls all come from one server IP. The page treated every failed fetch as "no product".
+
+Fix:
+- SSR calls go through `customerApiGet()`. It sends `X-SSR-Key` (`SSR_API_KEY`, server-only env) and `X-Client-IP`, so the API limits each visitor separately.
+- A real 404 renders `not-found`.
+- A 429 or outage hands off to the browser fetch. That fetch retries with backoff, honouring `retry_after`, and then shows "Try again" instead of "No products found".
+- Slugs are encoded safely, stale requests are aborted, and `generateMetadata` and the page share one API call.
+
+Backend side: `tizaraa-customer-api` (trusted proxies, named limiters).
+
+---
+
 ## MEDIUM SEVERITY ISSUES
 
 ### 10. Dead Code / Backup Files in Production Source Tree
@@ -221,6 +237,7 @@ No Jest, Vitest, Playwright, or Cypress is installed. The codebase has **zero au
 | 13 | Medium | `setTimeout` for `localStorage` read in payment page — race condition | `payment/page.tsx` |
 | 14 | Medium | No ESLint config — no linting enforced across 770+ TypeScript files | Root |
 | 15 | Medium | No automated test suite — zero tests for 95 pages and 175+ components | Entire project |
+| 16 | High (Resolved) | "No products found." on existing products when the API rate-limited (429) | `product/[slug]/*`, `customerApiServer.ts` |
 
 ---
 
