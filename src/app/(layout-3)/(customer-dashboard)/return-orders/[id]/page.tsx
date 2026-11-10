@@ -35,6 +35,7 @@ import authService from "services/authService";
 import { useRouter } from "next/navigation";
 import { backgroundColor } from "styled-system";
 import Loader from "@component/loader";
+import ReturnRequestCard from "@sections/customer-dashboard/orders/ReturnRequestCard";
 // import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 // const LoaderWrapper = styled.div`
@@ -139,6 +140,9 @@ export default function OrderDetails({ params }: IDParams) {
       productType: "Local",
       status: formatStatus(raw.order_status),
       payment_method: raw.payment_method,
+      // corporate shop or company-credit order (API flag); retail otherwise
+      is_corporate: Boolean(raw.is_corporate),
+      buyer_name: raw.buyer_name ?? null,
       payment_status: raw.payment_status,
       discount_amount: raw.discount_amount,
       promo_code: raw.promo_code,
@@ -590,6 +594,7 @@ export default function OrderDetails({ params }: IDParams) {
              />
             ))}
 
+            <Box mx="16px" mt="8px">
             <OrderStatus
              orderStatus={details.status ?? getStatus}
              deliveredAt={details.delivered_at ?? getEstimateDate}
@@ -598,109 +603,25 @@ export default function OrderDetails({ params }: IDParams) {
              isCorporate={order?.Order?.payment_method === "corporate_credit"}
              timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
             />
+            </Box>
 
 
 
-            {returnDetails.length > 0 && returnDetails.map((ret: any) => (
-             <Box
-              key={ret.id}
-              mt="10px"
-              p="16px"
-              bg="var(--tz-danger-bg)"
-             >
-              <Typography fontWeight="700" fontSize="14px" color="var(--tz-ember-deep)" mb="12px">
-               Return Request Details
-              </Typography>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px" }}>
-               <div>
-                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                 Return Type
-                </Typography>
-                <Typography fontSize="13px" fontWeight="600" color="var(--tz-ink-soft)" mt="2px" style={{ textTransform: "capitalize" }}>
-                 {(ret.return_type ?? "").replace("_", " ")}
-                </Typography>
-               </div>
-               <div>
-                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                 Status
-                </Typography>
-                <Typography fontSize="13px" fontWeight="600" color="var(--tz-ember-deep)" mt="2px" style={{ textTransform: "capitalize" }}>
-                 {ret.return_status}
-                </Typography>
-               </div>
-              </div>
-              <div style={{ marginTop: "12px" }}>
-               <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                Return Reason
-               </Typography>
-               <Typography fontSize="13px" color="var(--tz-ink-soft)" mt="4px" lineHeight="1.6">
-                {ret.return_reason}
-               </Typography>
-              </div>
-              {ret.refund_amount && (
-               <div style={{ marginTop: "12px" }}>
-                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                 Refund Amount
-                </Typography>
-                <Typography fontSize="13px" fontWeight="700" color="var(--tz-success)" mt="2px">
-                 BDT {ret.refund_amount}
-                </Typography>
-               </div>
-              )}
-              {ret.images?.length > 0 && (
-               <div style={{ marginTop: "12px" }}>
-                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>
-                 Submitted Photos
-                </Typography>
-                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                 {ret.images.map((url: string, i: number) => (
-                  <img key={i} src={url} alt={`proof-${i}`} style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 6, border: "1px solid var(--tz-danger-bg)" }} />
-                 ))}
-                </div>
-               </div>
-              )}
-             </Box>
-            ))}
+            {returnDetails.length > 0 &&
+             returnDetails.map((ret: any) => (
+              <Box key={ret.id} mx="16px" mt="16px">
+               <ReturnRequestCard ret={ret} />
+              </Box>
+             ))}
 
-            <FlexBox mt="1rem" justifyContent="center">
-             <Button
-              variant="text"
-              color="primary"
-              onClick={() => toggleSummary(shopName)}
-              style={{
-               padding: "0.5rem 1rem",
-               backgroundColor: "var(--tz-ember-tint)",
-               color: "var(--tz-ember-deep)",
-               borderRadius: "300px",
-               textAlign: "center",
-               height: "40px",
-               minWidth: "200px",
-              }}
-             >
-              {openSummaries[shopName] ? (
-               <>
-                Total Summary{" "}
-                <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "8px" }} />
-               </>
-              ) : (
-               <>
-                Total Summary{" "}
-                <FontAwesomeIcon
-                 icon={faCaretDown}
-                 style={{ marginLeft: "8px" }}
-                />
-               </>
-              )}
-             </Button>
-            </FlexBox>
-
-            {openSummaries[shopName] && (
+            {/* Payment summary folds/unfolds itself (header button) */}
+            <Box mx="16px" mt="16px">
              <OrderTotalSummary
               order={order}
               details={details}
               shopName={shopName}
              />
-            )}
+            </Box>
            </Box>
           );
          })
@@ -717,6 +638,8 @@ export default function OrderDetails({ params }: IDParams) {
       city={order.Order.city_id}
       province={order.Order.province_id}
       phone={order.Order.phone}
+      name={order.Order.buyer_name}
+      delivered={Boolean(order.Order.isDelivered)}
      />
 
      <div style={{ display: "flex", gap: "20px" }}>

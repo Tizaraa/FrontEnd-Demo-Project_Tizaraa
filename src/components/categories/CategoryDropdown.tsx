@@ -199,6 +199,27 @@ export default function CategoryDropdown({
   fetchNavigations();
  }, []);
 
+ // Category pictures come from the home "categories" API (same slugs as the
+ // navigation); used as small thumbnails in the level-1 list.
+ const [thumbs, setThumbs] = useState<Record<string, string>>({});
+ useEffect(() => {
+  let alive = true;
+  fetch(`${ApiBaseUrl.localApiUrl}frontend/home/categorie/all`)
+   .then((r) => (r.ok ? r.json() : []))
+   .then((list) => {
+    if (!alive || !Array.isArray(list)) return;
+    const map: Record<string, string> = {};
+    list.forEach((c: any) => {
+     if (c?.categorie_name_slug && c?.categorie_image) map[c.categorie_name_slug] = c.categorie_image;
+    });
+    setThumbs(map);
+   })
+   .catch(() => {});
+  return () => {
+   alive = false;
+  };
+ }, []);
+
  const megaMenu = { MegaMenu1, MegaMenu2 };
 
  if (loading) return <div>Loading...</div>;
@@ -214,6 +235,7 @@ export default function CategoryDropdown({
       key={item.title}
       href={item.href}
       icon={item.icon}
+      image={thumbs[item.href] ?? null}
       title={item.title}
       caret={!!item.menuData}
      >

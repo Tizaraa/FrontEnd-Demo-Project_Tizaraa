@@ -1,13 +1,41 @@
 import styled from "styled-components";
 import { getTheme } from "@utils/utils";
+import { menuIn, menuShadow, thinScrollbar } from "../styles";
 
 export const StyledMegaMenu1 = styled.div`
  display: none;
  position: absolute;
  left: 94%;
  right: auto;
- top: 0;
+ top: -1px;
  z-index: 99;
+ animation: ${menuIn} 200ms cubic-bezier(0.2, 0, 0, 1);
+
+ @media (prefers-reduced-motion: reduce) {
+  animation: none;
+ }
+
+ /* Level 2 list panel */
+ .mega-panel {
+  box-sizing: border-box;
+  position: relative;
+  margin-left: 1.5rem;
+  height: 450px;
+  padding: 4px 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-radius: 16px;
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  background: ${({ theme }) => theme.tz.color.paper};
+  box-shadow: ${menuShadow};
+  ${thinScrollbar}
+ }
+
+ /* Square off the side that meets the level 3 panel */
+ .mega-panel.is-joined {
+  border-radius: 16px 0 0 16px;
+  border-right-color: ${({ theme }) => theme.tz.color.lineSoft};
+ }
 
  .title-link,
  .child-link {

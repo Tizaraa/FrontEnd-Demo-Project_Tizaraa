@@ -436,6 +436,397 @@ import { useState, useEffect } from "react";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import { useRouter } from "next/navigation";
 import tz from "../../theme/tizaraa";
+import styled, { keyframes } from "styled-components";
+
+// "Only N left" below this many units
+const LOW_STOCK = 10;
+
+const piRise = keyframes`
+ from { opacity: 0; transform: translateY(8px); }
+ to { opacity: 1; transform: none; }
+`;
+const piPrice = keyframes`
+ from { opacity: 0; transform: translateY(6px) scale(0.98); }
+ to { opacity: 1; transform: none; }
+`;
+const piPing = keyframes`
+ 0% { opacity: 0.6; transform: scale(1); }
+ 80%, 100% { opacity: 0; transform: scale(2.4); }
+`;
+
+// Product info column: brand, title, rating/share, price box, spec tiles,
+// variant pills, warranty chips, stock pill. Children rise in one by one.
+const Info = styled.div`
+ margin-bottom: 8px;
+
+ & > * {
+  animation: ${piRise} 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+ }
+ & > *:nth-child(2) { animation-delay: 40ms; }
+ & > *:nth-child(3) { animation-delay: 80ms; }
+ & > *:nth-child(4) { animation-delay: 120ms; }
+ & > *:nth-child(5) { animation-delay: 160ms; }
+ & > *:nth-child(n + 6) { animation-delay: 200ms; }
+
+ .pi-brand {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.tz.color.navyTint};
+  color: ${({ theme }) => theme.tz.color.navy};
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+ }
+ .pi-title {
+  margin: 0 0 10px;
+  font-family: ${({ theme }) => theme.tz.font.display};
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+
+ .pi-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed ${({ theme }) => theme.tz.color.line};
+ }
+ .pi-rating,
+ .pi-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: ${({ theme }) => theme.tz.color.slate};
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+ }
+ /* rating chip: gold stars (partial fill), score, divider, count, arrow */
+ .pi-rating {
+  margin-left: 0;
+  padding: 6px 12px 6px 10px;
+  border: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
+  border-radius: 999px;
+  background: #fffaf0;
+ }
+ .pi-stars {
+  display: inline-flex;
+  gap: 2px;
+ }
+ .pi-star {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+ }
+ .pi-star svg {
+  position: absolute;
+  inset: 0;
+  width: 16px;
+  height: 16px;
+  fill: #e8dcc4;
+ }
+ .pi-star .pi-star-fill {
+  fill: #ffb400;
+  clip-path: inset(0 calc(100% - var(--f)) 0 0);
+ }
+ .pi-score {
+  font-size: 14px;
+  font-weight: 800;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+ .pi-sep {
+  width: 1px;
+  height: 14px;
+  background: ${({ theme }) => theme.tz.color.line};
+ }
+ .pi-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.tz.color.inkSoft};
+ }
+ .pi-go {
+  color: ${({ theme }) => theme.tz.color.slate};
+  transition: transform 200ms ease;
+ }
+ .pi-rating:hover .pi-go {
+  transform: translateX(2px);
+ }
+ .pi-rating:hover {
+  border-color: #f3d48f;
+  background: #fff4dc;
+ }
+ .pi-share:hover {
+  border-color: ${({ theme }) => theme.tz.color.ember};
+  background: ${({ theme }) => theme.tz.color.emberTint};
+  color: ${({ theme }) => theme.tz.color.emberDeep};
+ }
+ .pi-share {
+  margin-left: 0;
+  padding: 7px 14px;
+  background: ${({ theme }) => theme.tz.color.paper};
+  color: ${({ theme }) => theme.tz.color.inkSoft};
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: 999px;
+  font-weight: 700;
+ }
+ .pi-share svg {
+  width: 16px;
+  height: 16px;
+ }
+ .pi-rating:focus-visible,
+ .pi-share:focus-visible,
+ .pi-opt:focus-visible,
+ .pi-copy:focus-visible {
+  outline: none;
+  box-shadow: ${({ theme }) => theme.tz.focusRing};
+ }
+
+ .pi-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, ${({ theme }) => theme.tz.color.emberTint} 0%, #fff7f3 100%);
+ }
+ .pi-now {
+  font-family: ${({ theme }) => theme.tz.font.display};
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: ${({ theme }) => theme.tz.color.emberDeep};
+  animation: ${piPrice} 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+ }
+ .pi-was {
+  font-size: 16px;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+ .pi-off {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.tz.color.emberDeep};
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+ }
+ .pi-save {
+  flex-basis: 100%;
+  font-size: 13px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.tz.tone.success.fg};
+ }
+
+ .pi-campaign {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 14px;
+  background: none;
+  cursor: pointer;
+ }
+ .pi-campaign img {
+  display: block;
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  transition: transform 300ms ease;
+ }
+ .pi-campaign:hover img {
+  transform: scale(1.02);
+ }
+
+ .pi-specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  margin: 16px 0 0;
+ }
+ .pi-specs > div {
+  padding: 10px 12px;
+  border: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
+  border-radius: 12px;
+  background: ${({ theme }) => theme.tz.color.paper};
+ }
+ .pi-specs dt {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+ .pi-specs dd {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 3px 0 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.tz.color.ink};
+  overflow-wrap: anywhere;
+ }
+ .pi-copy {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 6px;
+  background: ${({ theme }) => theme.tz.color.mist};
+  color: ${({ theme }) => theme.tz.color.slate};
+  font-size: 12px;
+  cursor: pointer;
+ }
+ .pi-copy:hover {
+  background: ${({ theme }) => theme.tz.color.emberTint};
+  color: ${({ theme }) => theme.tz.color.emberDeep};
+ }
+
+ .pi-group {
+  margin-top: 18px;
+ }
+ .pi-label {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+ .pi-label b {
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+ .pi-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+ }
+ .pi-opt {
+  position: relative;
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 1.5px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: 12px;
+  background: ${({ theme }) => theme.tz.color.paper};
+  color: ${({ theme }) => theme.tz.color.ink};
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, transform 150ms ease;
+ }
+ .pi-opt:hover {
+  border-color: #f6b9a3;
+  transform: translateY(-1px);
+ }
+ .pi-opt.is-on {
+  border-color: ${({ theme }) => theme.tz.color.ember};
+  background: ${({ theme }) => theme.tz.color.emberTint};
+  color: ${({ theme }) => theme.tz.color.emberDeep};
+  padding-right: 30px;
+ }
+ .pi-opt.is-on::after {
+  content: "✓";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 800;
+ }
+
+ .pi-warranty {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+ }
+ .pi-wchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.tz.tone.info.bg};
+  color: ${({ theme }) => theme.tz.tone.info.fg};
+  font-size: 13px;
+ }
+
+ .pi-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+ }
+ .pi-stock i {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+ }
+ .pi-stock.is-in {
+  background: ${({ theme }) => theme.tz.tone.success.bg};
+  color: ${({ theme }) => theme.tz.tone.success.fg};
+ }
+ .pi-stock.is-low {
+  background: ${({ theme }) => theme.tz.tone.warning.bg};
+  color: ${({ theme }) => theme.tz.tone.warning.fg};
+ }
+ .pi-stock.is-low i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: currentColor;
+  animation: ${piPing} 1.8s ease-out infinite;
+ }
+ .pi-stock.is-out {
+  background: ${({ theme }) => theme.tz.tone.danger.bg};
+  color: ${({ theme }) => theme.tz.tone.danger.fg};
+ }
+
+ @media (max-width: 767px) {
+  .pi-title {
+   font-size: 21px;
+  }
+  .pi-now {
+   font-size: 26px;
+  }
+ }
+
+ @media (prefers-reduced-motion: reduce) {
+  & > *,
+  .pi-now,
+  .pi-stock.is-low i::after {
+   animation: none !important;
+  }
+  .pi-opt,
+  .pi-campaign img {
+   transition: none;
+  }
+ }
+`;
 
 type ProductDetailsProps = {
  title: string;
@@ -499,6 +890,7 @@ const ProductDetails = ({
  const [selectedSize, setSelectedSize] = useState<string | null>(null);
  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
  const [copySuccess, setCopySuccess] = useState(false);
+ const [codeCopied, setCodeCopied] = useState(false);
 
  const [availableSizes, setAvailableSizes] = useState<
   { size: string; price: string; qty: string }[]
@@ -684,317 +1076,264 @@ const ProductDetails = ({
 
  return (
   <Box>
-   <H1
-    fontSize={isDesktop ? "28px" : "20px"}
-    lineHeight="1.25"
-    mb="12px"
-    color={tz.color.ink}
-   >
-    {title}
-   </H1>
+   <Info>
+    {brandName && <span className="pi-brand">{brandName}</span>}
+    <h1 className="pi-title">{title}</h1>
 
-   <FlexBox alignItems="center" justifyContent="space-between" mb="16px">
-    <FlexBox alignItems="center" style={{ gap: "8px" }}>
-     <Rating value={rating > 0 ? rating : 0} outof={5} color="warn" readOnly />
-     {reviewCount !== undefined && (
-      <SemiSpan style={{ fontSize: "13px", color: tz.color.slate }}>
-       ({reviewCount})
-      </SemiSpan>
-     )}
-    </FlexBox>
-    <Box
-     onClick={() => setIsShareModalOpen(true)}
-     style={{
-      cursor: "pointer",
-      padding: "4px",
-      display: "flex",
-      alignItems: "center",
-      gap: "8px",
-      background: "none",
-      color: tz.color.slate,
-      fontSize: "14px",
-     }}
-    >
-     <ShareIcon />
-     <span style={{ textDecoration: "underline" }}>Share</span>
-    </Box>
-   </FlexBox>
+    <div className="pi-meta">
+     <button
+      type="button"
+      className="pi-rating"
+      onClick={() => {
+       // open the Review tab below and scroll to it
+       window.dispatchEvent(new CustomEvent("tz:product-tab", { detail: "review" }));
+       document.getElementById("pdp-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }}
+     >
+      <span className="pi-stars" aria-label={`Rated ${Number(rating || 0).toFixed(1)} out of 5`}>
+       {[1, 2, 3, 4, 5].map((n) => {
+        // fraction of this star that is filled (0..1)
+        const f = Math.max(0, Math.min(1, (rating || 0) - (n - 1)));
+        return (
+         <span key={n} className="pi-star" style={{ ["--f" as any]: `${f * 100}%` }} aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+           <path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z" />
+          </svg>
+          <svg viewBox="0 0 24 24" className="pi-star-fill">
+           <path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z" />
+          </svg>
+         </span>
+        );
+       })}
+      </span>
+      {rating > 0 && <b className="pi-score">{Number(rating).toFixed(1)}</b>}
+      <span className="pi-sep" aria-hidden="true" />
+      <span className="pi-count">
+       {reviewCount ? `${reviewCount} review${reviewCount === 1 ? "" : "s"}` : "No reviews yet"}
+      </span>
+      <svg className="pi-go" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+       <path d="m9 18 6-6-6-6" />
+      </svg>
+     </button>
+     <button type="button" className="pi-share" onClick={() => setIsShareModalOpen(true)} aria-label="Share this product">
+      <ShareIcon />
+      <span>Share</span>
+     </button>
+    </div>
 
-   <Box mb="24px">
-    {price !== 0 && (
-     <FlexBox alignItems="center" flexWrap="wrap" style={{ gap: "10px" }}>
-      <H5
-       className="price"
-       color={tz.color.ink}
-       mb="4px"
-       lineHeight="1.1"
-       fontWeight={700}
-       fontFamily={tz.font.display}
-       fontSize={isDesktop ? "28px" : "22px"}
-      >
-       {selectedColor || selectedSize ? (
-        discountPrice && updatedPrice !== price ? (
-         <>
-          {currency(updatedPrice)}
-          <span
-           style={{
-            textDecoration: "line-through",
-            color: tz.color.slate,
-            fontFamily: tz.font.body,
-            fontWeight: 400,
-            marginRight: "10px",
-            marginLeft: "10px",
-            fontSize: isDesktop ? "16px" : "13px",
-           }}
-          >
-           {currency(price)}
-          </span>
-         </>
-        ) : (
-         currency(updatedPrice)
-        )
-       ) : (
-        <>
-         {currency(discountPrice || price)}
-         {discountPrice && (
-          <span
-           style={{
-            textDecoration: "line-through",
-            color: tz.color.slate,
-            fontFamily: tz.font.body,
-            fontWeight: 400,
-            marginRight: "10px",
-            marginLeft: "10px",
-            fontSize: isDesktop ? "16px" : "13px",
-           }}
-          >
-           {currency(price)}
-          </span>
-         )}
-        </>
-       )}
-      </H5>
-
-      {/* {!!discountPrice && price !== discountPrice && (
-              <Chip
-                bg="primary.main"
-                color="white"
-                px="6px"
-                py="0.28rem"
-                fontWeight="600"
-                fontSize={isDesktop ? "12px" : "10px"}
-                textAlign="center"
-              >
-                {Math.floor(((price - discountPrice) / price) * 100)}% off
-              </Chip>
-            )} */}
-
-      {!!discountPrice && discountPrice < price && (
-       <Chip
-        bg={tz.color.emberDeep}
-        color={tz.color.paper}
-        px="10px"
-        py="4px"
-        fontWeight="600"
-        fontSize={isDesktop ? "13px" : "12px"}
-        textAlign="center"
-       >
-        {Math.round(((price - discountPrice) / price) * 100)}% off
-       </Chip>
-      )}
-     </FlexBox>
-    )}
+    {price !== 0 && (() => {
+     // Same price rules as before: variant price when one is picked,
+     // otherwise discount price with the regular price struck through
+     const variantPicked = Boolean(selectedColor || selectedSize);
+     const mainPrice = variantPicked ? updatedPrice : discountPrice || price;
+     const oldPrice = variantPicked
+      ? discountPrice && updatedPrice !== price
+        ? price
+        : null
+      : discountPrice
+      ? price
+      : null;
+     const pct = !!discountPrice && discountPrice < price ? Math.round(((price - discountPrice) / price) * 100) : 0;
+     return (
+      <div className="pi-price">
+       <span key={mainPrice} className="pi-now price">
+        {currency(mainPrice)}
+       </span>
+       {oldPrice ? <s className="pi-was">{currency(oldPrice)}</s> : null}
+       {pct > 0 && <span className="pi-off">−{pct}%</span>}
+       {pct > 0 && oldPrice ? <span className="pi-save">You save {currency(Number(oldPrice) - Number(mainPrice))}</span> : null}
+      </div>
+     );
+    })()}
 
     {campaignBannerImage && (
-     <Box
-      mb="5px"
-      mt="5px"
-      cursor="pointer"
+     <button
+      type="button"
+      className="pi-campaign"
       onClick={() => {
        router.push(`/campaign/campaign?type=${campaignSlug}`);
       }}
      >
-      <img
-       src={`${ApiBaseUrl.ImgUrl}/${campaignBannerImage}`}
-       alt="Campaign Banner"
-       style={{
-        width: "100%",
-        maxHeight: "250px",
-        objectFit: "cover",
-        borderRadius: "10px",
-       }}
-      />
-     </Box>
+      <img src={`${ApiBaseUrl.ImgUrl}/${campaignBannerImage}`} alt="Campaign Banner" />
+     </button>
     )}
 
-    <Typography style={{ ...specRowStyle, marginTop: "16px" }}>
-     Brand: <span style={specValueStyle}>{brandName || "N/A"}</span>
-    </Typography>
-
-    {productCode && (
-     <Typography style={specRowStyle}>
-      Product Code: <span style={specValueStyle}>{productCode}</span>
-     </Typography>
-    )}
-
-    {unitOfMeasure && (
-     <Typography style={specRowStyle}>
-      Unit of Measure:{" "}
-      <span style={specValueStyle}>
-       {unitOfMeasure.name}
-       {unitOfMeasure.symbol ? ` (${unitOfMeasure.symbol})` : ""}
-      </span>
-     </Typography>
-    )}
+    <dl className="pi-specs">
+     <div>
+      <dt>Brand</dt>
+      <dd>{brandName || "N/A"}</dd>
+     </div>
+     {productCode && (
+      <div>
+       <dt>Product code</dt>
+       <dd>
+        {productCode}
+        <button
+         type="button"
+         className="pi-copy"
+         aria-label="Copy product code"
+         onClick={async () => {
+          try {
+           await navigator.clipboard.writeText(productCode);
+           setCodeCopied(true);
+           setTimeout(() => setCodeCopied(false), 1500);
+          } catch {
+           /* clipboard blocked: nothing to do */
+          }
+         }}
+        >
+         {codeCopied ? "✓" : (
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+           <rect x="9" y="9" width="13" height="13" rx="2" />
+           <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+         )}
+        </button>
+       </dd>
+      </div>
+     )}
+     {unitOfMeasure && (
+      <div>
+       <dt>Unit</dt>
+       <dd>
+        {unitOfMeasure.name}
+        {unitOfMeasure.symbol ? ` (${unitOfMeasure.symbol})` : ""}
+       </dd>
+      </div>
+     )}
+    </dl>
 
     {sizeColor?.colorwithsize && (() => {
      const colors = Object.keys(sizeColor.colorwithsize);
      const onlyDefaultColor = colors.length === 1 && colors[0] === "Default";
      const colorLabel = sizeColor.colorGroupName || "Color";
-     const sizeLabel  = sizeColor.sizeGroupName  || "Size";
+     const sizeLabel = sizeColor.sizeGroupName || "Size";
      return (
       <div>
        {!onlyDefaultColor && (
-        <>
-         <h3 style={optionLabelStyle}>
-          Available {colorLabel}s
-         </h3>
-         <FlexBox>
+        <div className="pi-group">
+         <p className="pi-label">
+          {colorLabel}: <b>{selectedColor}</b>
+         </p>
+         <div className="pi-opts" role="radiogroup" aria-label={colorLabel}>
           {colors.map((color) => (
            <button
             key={color}
-            style={optionStyle(selectedColor === color)}
+            type="button"
+            role="radio"
+            aria-checked={selectedColor === color}
+            className={`pi-opt${selectedColor === color ? " is-on" : ""}`}
             onClick={() => handleColorSelection(color)}
            >
             {color}
            </button>
           ))}
-         </FlexBox>
-        </>
+         </div>
+        </div>
        )}
-
        {selectedColor && (
-        <>
-         <h3 style={optionLabelStyle}>
-          Available {sizeLabel}s
-         </h3>
-         <FlexBox>
+        <div className="pi-group">
+         <p className="pi-label">
+          {sizeLabel}: <b>{selectedSize}</b>
+         </p>
+         <div className="pi-opts" role="radiogroup" aria-label={sizeLabel}>
           {sizeColor.colorwithsize[selectedColor].map((item, index) => (
            <button
             key={index}
-            style={optionStyle(selectedSize === item.size)}
+            type="button"
+            role="radio"
+            aria-checked={selectedSize === item.size}
+            className={`pi-opt${selectedSize === item.size ? " is-on" : ""}`}
             onClick={() => handleSizeSelection(item.size)}
            >
             {item.size}
            </button>
           ))}
-         </FlexBox>
-        </>
+         </div>
+        </div>
        )}
       </div>
      );
     })()}
 
     {sizeColor?.color && (
-     <div>
-      <h3 style={optionLabelStyle}>
-       Available Colors
-      </h3>
-      <FlexBox>
+     <div className="pi-group">
+      <p className="pi-label">
+       Color: <b>{selectedColor}</b>
+      </p>
+      <div className="pi-opts" role="radiogroup" aria-label="Color">
        {sizeColor.color.map((item, index) => (
         <button
          key={index}
-         style={optionStyle(selectedColor === item.color)}
+         type="button"
+         role="radio"
+         aria-checked={selectedColor === item.color}
+         className={`pi-opt${selectedColor === item.color ? " is-on" : ""}`}
          onClick={() => handleColorSelection(item.color)}
         >
          {item.color}
         </button>
        ))}
-      </FlexBox>
+      </div>
      </div>
     )}
 
     {sizeColor?.size && (
-     <div>
-      <h3 style={optionLabelStyle}>Available Sizes</h3>
-      <FlexBox>
+     <div className="pi-group">
+      <p className="pi-label">
+       Size: <b>{selectedSize}</b>
+      </p>
+      <div className="pi-opts" role="radiogroup" aria-label="Size">
        {sizeColor.size.map((item, index) => (
         <button
          key={index}
-         style={optionStyle(selectedSize === item.size)}
+         type="button"
+         role="radio"
+         aria-checked={selectedSize === item.size}
+         className={`pi-opt${selectedSize === item.size ? " is-on" : ""}`}
          onClick={() => handleSizeSelection(item.size)}
         >
          {item.size}
         </button>
        ))}
-      </FlexBox>
+      </div>
      </div>
     )}
 
-    <Typography
-     style={{ fontSize: isDesktop ? "15px" : "13px", marginTop: "16px" }}
-    >
-     {/* A missing warranty is not a fact worth a row — an "N/A" chip read as if
-         the seller had answered the question. */}
-     {[
-      { label: "Warranty", value: warranty },
-      { label: "Replacement warranty", value: replacewarranty },
-     ]
-      .filter(({ value }) => Boolean(value))
-      .map(({ label, value }) => (
-      <div
-       key={label}
-       style={{
-        display: "flex",
-        alignItems: "baseline",
-        flexWrap: "wrap",
-        gap: "8px",
-        marginTop: "8px",
-       }}
-      >
-       <span style={{ color: tz.color.slate }}>{label}:</span>
-       <span
-        style={{
-         backgroundColor: tz.tone.info.bg,
-         color: tz.tone.info.fg,
-         fontWeight: 500,
-         padding: "3px 10px",
-         borderRadius: "999px",
-         fontSize: isDesktop ? "13px" : "12px",
-         lineHeight: 1.5,
-        }}
-       >
-        {value}
-       </span>
-      </div>
-     ))}
-    </Typography>
+    {/* A missing warranty is not a fact worth a row — an "N/A" chip read as if
+        the seller had answered the question. */}
+    {(warranty || replacewarranty) && (
+     <div className="pi-warranty">
+      {[
+       { label: "Warranty", value: warranty },
+       { label: "Replacement warranty", value: replacewarranty },
+      ]
+       .filter(({ value }) => Boolean(value))
+       .map(({ label, value }) => (
+        <span key={label} className="pi-wchip">
+         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+         </svg>
+         {label}: <b>{value}</b>
+        </span>
+       ))}
+     </div>
+    )}
 
     {price !== 0 && (
-     <SemiSpan
-      style={{
-       fontSize: isDesktop ? "15px" : "13px",
-       fontWeight: 600,
-       display: "inline-flex",
-       alignItems: "center",
-       gap: "8px",
-       marginTop: "18px",
-       color: productStock > 0 ? tz.tone.success.fg : tz.tone.danger.fg,
-      }}
+     <span
+      className={`pi-stock ${productStock <= 0 ? "is-out" : productStock <= LOW_STOCK ? "is-low" : "is-in"}`}
+      aria-live="polite"
      >
-      <span
-       aria-hidden="true"
-       style={{
-        width: "8px",
-        height: "8px",
-        borderRadius: "50%",
-        background: productStock > 0 ? tz.tone.success.fill : tz.tone.danger.fill,
-       }}
-      />
-      {productStock > 0 ? `${productStock} Products Available` : "Stock Out"}
-     </SemiSpan>
+      <i aria-hidden="true" />
+      {productStock <= 0
+       ? "Stock Out"
+       : productStock <= LOW_STOCK
+       ? `Only ${productStock} left — order soon`
+       : `In stock · ${productStock} available`}
+     </span>
     )}
-   </Box>
+   </Info>
 
    {/* Share Modal */}
    {isShareModalOpen && (

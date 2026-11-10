@@ -1,8 +1,25 @@
+"use client";
+
 import { PropsWithChildren } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { AuthCardWall } from "@sections/auth/Login";
 import tz from "../../theme/tizaraa";
 
 export default function Layout({ children }: PropsWithChildren) {
+ const pathname = usePathname();
+
+ // Login and signup draw their own floating card (logo included), so skip the
+ // shell here. The animated wall is rendered once at this level so it stays
+ // mounted and identical when switching between the two pages.
+ if (pathname === "/login" || pathname === "/signup")
+  return (
+   <>
+    <AuthCardWall />
+    {children}
+   </>
+  );
+
  return (
   <div
    style={{

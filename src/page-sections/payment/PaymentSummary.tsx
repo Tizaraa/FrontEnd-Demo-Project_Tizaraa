@@ -169,6 +169,7 @@ import { Tooltip } from "@mui/material";
 import { Box } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import tz from "../../theme/tizaraa";
+import { SummaryBox } from "../checkout/checkoutStyles";
 export default function PaymentSummary({
  seller_type,
 }: {
@@ -430,109 +431,57 @@ export default function PaymentSummary({
     </>
    ) : (
     <>
-     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-      <Typography color="text.hint">Subtotal:</Typography>
-      <FlexBox alignItems="flex-end">
-       <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-        {currency(originalSubtotal)}
-       </Typography>
-      </FlexBox>
-     </FlexBox>
-
-     {isAbroadProduct && (
-      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-       <Typography color={tz.color.emberDeep}>
-        Pay Now ({selectedPaymentOption}%):
-       </Typography>
-       <FlexBox alignItems="flex-end">
-        <Typography
-         color={tz.color.emberDeep}
-         fontSize="18px"
-         fontWeight="600"
-         lineHeight="1"
-        >
-         {currency(newTotal)}
-        </Typography>
-       </FlexBox>
-      </FlexBox>
-     )}
-
-     {!isAbroadProduct && (
-      <>
-       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-        <Typography color="text.hint">Shipping:</Typography>
-
-        <FlexBox alignItems="flex-end" style={{ gap: "0.5rem" }}>
-         {isFreeShipping && (
-          <Typography fontSize="14px" color="text.muted" style={{ textDecoration: "line-through" }}>
-           {currency(parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0"))}
-          </Typography>
-         )}
-         <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? tz.tone.success.fg : "inherit"}>
+     <SummaryBox>
+     <h3 className="sm-title">Order summary</h3>
+     <div className="sm-lines" style={{ marginTop: 0, paddingTop: 0, borderTop: 0 }}>
+      <div className="sm-line">
+       <span>Subtotal</span>
+       <b>{currency(originalSubtotal)}</b>
+      </div>
+      {isAbroadProduct && (
+       <div className="sm-line">
+        <span className="is-brand">Pay now ({selectedPaymentOption}%)</span>
+        <b className="is-brand">{currency(newTotal)}</b>
+       </div>
+      )}
+      {!isAbroadProduct && (
+       <>
+        <div className="sm-line">
+         <span>Shipping</span>
+         <b className={isFreeShipping ? "is-good" : undefined}>
+          {isFreeShipping && <s>{currency(parseFloat(sessionStorage.getItem("savedTotalWithDelivery") || "0"))}</s>}
           {isFreeShipping ? "FREE" : currency(shippingCharge)}
-         </Typography>
-        </FlexBox>
-       </FlexBox>
-
-       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-        <Typography color="text.hint">Vat:</Typography>
-
-        <FlexBox alignItems="flex-end">
-         <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          -
-         </Typography>
-        </FlexBox>
-       </FlexBox>
-
-       <FlexBox justifyContent="space-between" alignItems="center" mb="1rem">
-        <FlexBox alignItems="center" style={{ gap: "8px" }}>
-         <Typography color="text.hint">Discount:</Typography>
-         <span
-          style={{
-           backgroundColor: hasDiscount ? tz.tone.success.bg : tz.color.mist,
-           color: hasDiscount ? tz.tone.success.fg : tz.color.slate,
-           borderRadius: "10px",
-           padding: "2px 8px",
-           fontSize: "11px",
-           fontWeight: 700,
-          }}
-         >
-          {hasDiscount
-           ? `${Math.round(discountPercent)}% OFF`
-           : "0% OFF"}
-         </span>
-        </FlexBox>
-
-        <FlexBox alignItems="flex-end">
-         <Typography
-          fontSize="18px"
-          fontWeight="600"
-          lineHeight="1"
-          color={hasDiscount ? tz.tone.success.fg : "inherit"}
-         >
-          {hasDiscount ? `- ${currency(totalDiscount)}` : currency(0)}
-         </Typography>
-        </FlexBox>
-       </FlexBox>
-      </>
-     )}
-
-     <Divider mb="1rem" />
-
-     <Typography
-      className="price"
-      fontSize="26px"
-      fontWeight="700"
-      lineHeight="1"
-      textAlign="right"
-      mb="1.5rem"
-      color={tz.color.ink}
-      style={{ fontFamily: tz.font.display }}
-     >
-      {currency(displayTotal)}
-     </Typography>
-
-     <Divider mb="1rem" />
+         </b>
+        </div>
+        <div className="sm-line">
+         <span>VAT</span>
+         <b>-</b>
+        </div>
+        {/* discount only when there is one */}
+        {hasDiscount && (
+         <div className="sm-line">
+          <span>
+           Discount
+           <span className="sm-badge">{Math.round(discountPercent)}% OFF</span>
+          </span>
+          <b className="is-good">- {currency(totalDiscount)}</b>
+         </div>
+        )}
+       </>
+      )}
+     </div>
+     <div className="sm-total">
+      <span>Total</span>
+      <strong key={displayTotal}>{currency(displayTotal)}</strong>
+     </div>
+     <p className="sm-secure">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+       <rect x="3" y="11" width="18" height="11" rx="2" />
+       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
+      Secure checkout
+     </p>
+     </SummaryBox>
 
      {isAbroadProduct && (
       <Typography fontSize="13px" color="text.primary" textAlign="justify">

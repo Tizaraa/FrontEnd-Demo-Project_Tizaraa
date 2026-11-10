@@ -358,267 +358,191 @@ export default function MiniCart({ toggleSidenav = () => {} }: MiniCartProps) {
    toggleSidenav(); // Adjust the delay time as needed (e.g., 1000ms = 1 second)
   }, 1000);
  };
+ const selectedCount = state.cart.filter((item) => state.selectedProducts.includes(item.id)).length;
+ const imgOf = (item: any) =>
+  item.imgUrl?.startsWith("http")
+   ? item.imgUrl
+   : item.imgUrl
+   ? `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
+   : "/assets/images/products/iphone-xi.png";
+
  return (
   <StyledMiniCart>
+   {/* Header */}
+   <div className="mc-head">
+    <span className="mc-head-icon" aria-hidden="true">
+     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" />
+     </svg>
+    </span>
+    <h2>Your cart</h2>
+    <span className="mc-count">
+     {state.cart.length} item{state.cart.length !== 1 ? "s" : ""}
+    </span>
+    <button type="button" className="mc-close" aria-label="Close cart" onClick={toggleSidenav}>
+     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
+      <path d="M18 6 6 18M6 6l12 12" />
+     </svg>
+    </button>
+   </div>
+
    <div className={`cart-list ${state.cart.length === 0 ? "no-scroll" : ""}`}>
-    <FlexBox alignItems="center" m="0px 20px" height="74px">
-     <Icon size="1.75rem">bag</Icon>
-     <Typography fontWeight={600} fontSize="16px" ml="0.5rem">
-      {state.cart.length} item{state.cart.length !== 1 ? "s" : ""}
-     </Typography>
-    </FlexBox>
-
-    <Divider />
-
-    <FlexBox
-     alignItems="center"
-     justifyContent="space-between"
-     m="0px 16px"
-     height="50px"
-    >
-     <FlexBox alignItems="center">
-      <CheckBox checked={selectAll} onChange={handleSelectAll} />
-      <Typography ml="0.5rem">Select All</Typography>
-     </FlexBox>
-     <Button
-      size="small"
-      color="primary"
-      variant="outlined"
-      disabled={
-       state.selectedProducts.length === 0 ||
-       state.cart.length === 0 ||
-       totalPrice === 0 ||
-       isDeleting
-      }
-      onClick={handleDeleteSelected}
-      className={`delete-button ${isDeleting ? "deleting" : ""}`}
-     >
-      {isDeleting ? (
-       <BeatLoader size={12} color={theme.tz.color.ember} />
-      ) : (
-       <>
-        <DeleteIcon style={{ marginRight: "8px", fontSize: "18px" }} /> Remove
-        All
-       </>
-      )}
-     </Button>
-    </FlexBox>
-
-    {state.cart.length === 0 && (
-     <FlexBox
-      alignItems="center"
-      flexDirection="column"
-      justifyContent="center"
-      height="calc(100% - 80px)"
-     >
-      <Image
-       src="/assets/images/logos/shopping-bag.svg"
-       width={90}
-       height={90}
-       alt="empty cart"
-      />
-      <Paragraph
-       mt="1rem"
-       color="text.muted"
-       textAlign="center"
-       maxWidth="200px"
+    {state.cart.length > 0 && (
+     <div className="mc-bar">
+      <label className="mc-all">
+       <CheckBox checked={selectAll} onChange={handleSelectAll} />
+       <span>
+        Select all
+        <small>
+         {selectedCount} of {state.cart.length} selected
+        </small>
+       </span>
+      </label>
+      <button
+       type="button"
+       className="mc-remove"
+       disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0 || isDeleting}
+       onClick={handleDeleteSelected}
       >
-       No Product Found
-      </Paragraph>
-     </FlexBox>
+       {isDeleting ? (
+        <BeatLoader size={8} color={theme.tz.tone.danger.fg} />
+       ) : (
+        <>
+         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
+         </svg>
+         Remove selected
+        </>
+       )}
+      </button>
+     </div>
     )}
 
-    {state.cart.map((item) => (
-     <Fragment key={item.id}>
-      <div className="cart-item">
-       <CheckBox
-        checked={state.selectedProducts.includes(item.id)}
-        onChange={() => handleProductSelect(item.id)}
-       />
-       <FlexBox
-        style={{
-         display: "flex",
-         flexDirection: "column",
-         gap: "10px",
-        }}
-        alignItems="center"
-        flexDirection="column"
-       >
-        <Button
-         size="none"
-         padding="5px"
-         color="primary"
-         variant="outlined"
-         borderRadius="300px"
-         borderColor="primary.light"
-         onClick={handleCartAmountChange(item.qty + 1, item)}
-        >
-         <Icon variant="small">plus</Icon>
-        </Button>
+    {state.cart.length === 0 && (
+     <div className="mc-empty">
+      <span className="mc-empty-art" aria-hidden="true">
+       <Image src="/assets/images/logos/shopping-bag.svg" width={70} height={70} alt="" />
+      </span>
+      <strong>Your cart is empty</strong>
+      <p>Find something you like and add it here.</p>
+      <Link href="/" className="mc-btn mc-btn--solid" onClick={toggleSidenav}>
+       Start shopping
+      </Link>
+     </div>
+    )}
 
-        <input
-         className="no-spin-button"
-         type="number"
-         value={item.qty}
-         min={1}
-         onChange={(e) => handleInputChange(e, item)}
-         style={{
-          textDecoration: "none",
-          borderRadius: "30px",
-          scrollBehavior: "unset",
-          border: `1px solid ${theme.tz.color.line}`,
-          padding: "8px",
-          width: "50px",
-          textAlign: "center",
-         }}
-        />
-
-        <Button
-         size="none"
-         padding="5px"
-         color="primary"
-         variant="outlined"
-         borderRadius="300px"
-         borderColor="primary.light"
-         onClick={handleCartAmountChange(item.qty - 1, item)}
-         disabled={item.qty === 1}
-        >
-         <Icon variant="small">minus</Icon>
-        </Button>
-       </FlexBox>
-
-       <Link href={`/product/${item.slug}`}>
-        <Image
-         width={76}
-         height={76}
-         style={{ marginInline: "1rem" }}
-         alt={item.name}
-         src={
-          item.imgUrl?.startsWith("http")
-           ? item.imgUrl
-           : item.imgUrl
-           ? `${ApiBaseUrl.ImgUrl}${item.imgUrl}`
-           : "/assets/images/products/iphone-xi.png"
-         }
-        />
-       </Link>
-
-       <div className="product-details">
-        <Link href={`/product/${item.slug}`}>
-         <H5 className="title" fontSize="14px">
-          {item.name}
-         </H5>
+    <ul className="mc-items">
+     {state.cart.map((item, i) => {
+      const picked = state.selectedProducts.includes(item.id);
+      const unit = item.discountPrice ?? item.price;
+      const variant = [
+       item.selectedColor && `Color: ${item.selectedColor}`,
+       item.selectedSize && `Size: ${item.selectedSize}`,
+       item.selectedSpecification && `Spec: ${item.selectedSpecification}`,
+      ].filter(Boolean) as string[];
+      return (
+       <li key={item.id} className={`cart-item${picked ? " is-picked" : ""}`} style={{ ["--i" as any]: i }}>
+        <CheckBox checked={picked} onChange={() => handleProductSelect(item.id)} />
+        <Link href={`/product/${item.slug}`} className="mc-thumb">
+         <Image width={72} height={72} alt={item.name} src={imgOf(item)} />
         </Link>
-
-        <Tiny color="text.muted">
-         {item.discountPrice ? (
-          <>
-           <del style={{ color: theme.tz.color.slate, marginRight: "4px" }}>
-            {currency(item.price, 0)}
-           </del>
-           {currency(item.discountPrice, 0)}
-          </>
-         ) : (
-          currency(item.price, 0)
-         )}{" "}
-         x {item.qty}
-        </Tiny>
-
-        <Typography
-         fontWeight={600}
-         fontSize="14px"
-         color="primary.main"
-         mt="4px"
-        >
-         {currency(item.qty * (item.discountPrice ?? item.price))}
-        </Typography>
-
-        {(item.selectedSize ||
-         item.selectedColor ||
-         item.selectedSpecification) && (
-         <Tiny color="text.muted" fontWeight={600} fontSize="12px" mt="4px">
-          {item.selectedSize && item.selectedColor && item.selectedSpecification
-           ? `Size: ${item.selectedSize}, Color: ${item.selectedColor}, Specification: ${item.selectedSpecification}`
-           : item.selectedSize
-             ? `Size: ${item.selectedSize}`
-             : item.selectedColor
-               ? `Color: ${item.selectedColor}`
-               : item.selectedSpecification
-                 ? `Specification: ${item.selectedSpecification}`
-                 : ""}
-         </Tiny>
-        )}
-       </div>
-
-       <Button
-        size="none"
-        padding="5px"
-        color="primary"
-        variant="outlined"
-        borderRadius="300px"
-        borderColor="primary.light"
-        onClick={handleCartAmountChange(0, item)}
-       >
-        <Icon variant="small">close</Icon>
-       </Button>
-      </div>
-      <Divider />
-     </Fragment>
-    ))}
+        <div className="product-details">
+         <Link href={`/product/${item.slug}`} className="title">
+          {item.name}
+         </Link>
+         {variant.length > 0 && (
+          <div className="mc-chips">
+           {variant.map((v) => (
+            <span key={v}>{v}</span>
+           ))}
+          </div>
+         )}
+         <div className="mc-unit">
+          {item.discountPrice ? <del>{currency(item.price, 0)}</del> : null}
+          {currency(unit, 0)} each
+         </div>
+         <div className="mc-row">
+          <div className="mc-stepper" role="group" aria-label={`Quantity of ${item.name}`}>
+           <button
+            type="button"
+            aria-label="Decrease quantity"
+            onClick={handleCartAmountChange(item.qty - 1, item)}
+            disabled={item.qty === 1}
+           >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" aria-hidden="true">
+             <path d="M5 12h14" />
+            </svg>
+           </button>
+           <input
+            className="no-spin-button"
+            type="number"
+            value={item.qty}
+            min={1}
+            aria-label="Quantity"
+            onChange={(e) => handleInputChange(e, item)}
+           />
+           <button type="button" aria-label="Increase quantity" onClick={handleCartAmountChange(item.qty + 1, item)}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" aria-hidden="true">
+             <path d="M12 5v14M5 12h14" />
+            </svg>
+           </button>
+          </div>
+          <strong key={item.qty} className="mc-line">
+           {currency(item.qty * unit)}
+          </strong>
+         </div>
+        </div>
+        <button type="button" className="mc-del" aria-label={`Remove ${item.name}`} onClick={handleCartAmountChange(0, item)}>
+         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6" />
+         </svg>
+        </button>
+       </li>
+      );
+     })}
+    </ul>
    </div>
 
    {state.cart.length > 0 && (
     <div className="actions">
-     <Button
-      fullwidth
-      color="primary"
-      variant="contained"
+     <div className="mc-sum">
+      <span>
+       Subtotal
+       <small>
+        {selectedCount} selected
+       </small>
+      </span>
+      <strong key={totalPrice}>{currency(totalPrice)}</strong>
+     </div>
+     <button
+      type="button"
+      className="mc-btn mc-btn--solid mc-btn--block"
       onClick={handleCheckout}
-      disabled={
-       state.selectedProducts.length === 0 ||
-       state.cart.length === 0 ||
-       totalPrice === 0 ||
-       loading
-      }
+      disabled={state.selectedProducts.length === 0 || state.cart.length === 0 || totalPrice === 0 || loading}
      >
       {loading ? (
-       <BeatLoader size={12} color={theme.tz.color.ember} />
+       <BeatLoader size={10} color="#fff" />
       ) : (
-       <Typography fontWeight={600}>
-        Proceed to checkout ({currency(getTotalPrice())})
-       </Typography>
+       <>
+        Checkout · {currency(getTotalPrice())}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+         <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+       </>
       )}
-     </Button>
-
-     <Button
-      fullwidth
-      color="primary"
-      variant="outlined"
-      mt="1rem"
-      onClick={handleViewCart}
-      disabled={viewCartLoading}
-     >
-      {viewCartLoading ? (
-       <BeatLoader size={12} color={theme.tz.color.ember} />
-      ) : (
-       <Typography fontWeight={600}>View Cart</Typography>
-      )}
-     </Button>
+     </button>
+     <button type="button" className="mc-btn mc-btn--block" onClick={handleViewCart} disabled={viewCartLoading}>
+      {viewCartLoading ? <BeatLoader size={10} color={theme.tz.color.ember} /> : "View cart"}
+     </button>
+     <p className="mc-secure">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+       <rect x="3" y="11" width="18" height="11" rx="2" />
+       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
+      Secure checkout
+     </p>
     </div>
    )}
-   <style jsx>{`
-    .delete-button {
-     transition: all 0.3s ease;
-    }
-    .delete-button.deleting {
-     opacity: 0.5;
-     pointer-events: none;
-    }
-    .delete-button:hover {
-     background-color: ${theme.tz.tone.danger.fill};
-     color: white;
-    }
-   `}</style>
   </StyledMiniCart>
  );
 }

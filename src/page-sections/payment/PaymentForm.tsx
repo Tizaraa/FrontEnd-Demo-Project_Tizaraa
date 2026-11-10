@@ -289,6 +289,8 @@ import BkashImage from "../../../public/assets/images/payment/Bkash.png";
 import BeatLoader from "react-spinners/BeatLoader";
 import authService from "services/authService";
 import tz from "../../theme/tizaraa";
+import { currency } from "@utils/utils";
+import { PayShell } from "./payStyles";
 
 export default function PaymentForm() {
  const { push } = useRouter();
@@ -466,478 +468,143 @@ export default function PaymentForm() {
  //   (product: any) => product.productType === "Abroad"
  // );
 
+ const methods = [
+  ...(!hasAbroadProduct
+   ? [{ key: "cod", title: "Cash on Delivery", desc: "Pay in cash when your order arrives.", img: cashOnDeliveryImage, soon: false }]
+   : []),
+  { key: "Online Payment", title: "Online Payment", desc: "Card, mobile banking or net banking via SSLCommerz.", img: onlinePayment, soon: false },
+  { key: "nagad", title: "Nagad", desc: "Pay with your Nagad wallet.", img: NagadImage, soon: true },
+  { key: "bkash", title: "bKash", desc: "Pay with your bKash wallet.", img: BkashImage, soon: true },
+ ];
+ const amountText = totalFromNewTotal > 0 ? currency(totalFromNewTotal) : "";
+ const missing = !paymentMethod
+  ? "Choose a payment method to continue"
+  : !isCheckboxChecked
+  ? "Accept the terms to continue"
+  : isSubtotalZero
+  ? "Your order total is empty"
+  : "";
+ const canPay = !isSubtotalZero && !!paymentMethod && isCheckboxChecked;
+
  return (
-  <Fragment>
-   <FlexBox>
-    <Card1
-     mb="2rem"
-     display="flex"
-     flexDirection="column" // Default direction
-     marginRight="2px"
-     width="100%"
-     style={{
-      gap: "20px",
-      background: tz.color.paper,
-      boxShadow: tz.elevation.rest,
-     }}
-    >
-     <div
-      style={{
-       display: "flex",
-       flexWrap: "wrap",
-       gap: "10px", // Adds consistent spacing between elements
-      }}
-     >
-      {/* Cash on Delivery */}
-      {!hasAbroadProduct && (
-       <PaymentCheckBox
-        mb="1.5rem"
-        color="secondary"
-        name="cod"
-        onChange={handlePaymentMethodChange}
-        checked={paymentMethod === "cod"}
-        label={
-         <div
-          style={{
-           width: "100px",
-           height: "120px",
-           boxShadow:
-            paymentMethod === "cod"
-             ? `0 0 0 2px ${tz.color.ember}`
-             : `0 0 0 1px ${tz.color.line}`,
-           display: "flex",
-           flexDirection: "column",
-           alignItems: "center",
-           justifyContent: "center",
-           padding: "8px",
-           background:
-            paymentMethod === "cod" ? tz.color.emberTint : tz.color.paper,
-           transition: "all 0.3s ease",
-           boxSizing: "border-box",
-           borderRadius: "8px",
-           border:
-            paymentMethod === "cod"
-             ? `1px solid ${tz.color.emberDeep}`
-             : "1px solid transparent",
-           position: "relative",
-          }}
-         >
-          {/* More visible check indicator */}
-          {paymentMethod === "cod" && (
-           <div
-            style={{
-             position: "absolute",
-             top: "4px",
-             right: "4px",
-             width: "18px",
-             height: "18px",
-             backgroundColor: tz.color.emberDeep,
-             borderRadius: "50%",
-             display: "flex",
-             alignItems: "center",
-             justifyContent: "center",
-            }}
-           >
-            <svg
-             width="10"
-             height="8"
-             viewBox="0 0 10 8"
-             fill="none"
-             style={{
-              marginLeft: "1px", // slight visual adjustment
-             }}
-            >
-             <path
-              d="M1 4L3.5 6.5L9 1"
-              stroke={tz.color.paper}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-             />
-            </svg>
-           </div>
-          )}
+  <PayShell>
+   <section className="py-card" aria-label="Payment method">
+    <h3 className="py-title">
+     <span className="py-title-icon" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+       <rect x="2" y="5" width="20" height="14" rx="2" />
+       <path d="M2 10h20" />
+      </svg>
+     </span>
+     Choose payment method
+    </h3>
 
-          <PaymentImage
-           alt="Cash on Delivery"
-           src={cashOnDeliveryImage}
-           style={{
-            width: "60px",
-            height: "60px",
-            marginBottom: "8px",
-            filter: paymentMethod === "cod" ? "none" : "grayscale(20%)",
-            opacity: paymentMethod === "cod" ? 1 : 0.8,
-           }}
-           priority
-          />
-          <span
-           style={{
-            fontSize: "14px",
-            fontWeight: "600",
-            textAlign: "center",
-            color: paymentMethod === "cod" ? tz.color.emberDeep : tz.color.ink,
-           }}
-          >
-           Cash on Delivery
-          </span>
-         </div>
-        }
-       />
-      )}
-
-      {/* Online Payment */}
-      <PaymentCheckBox
-       mb="1.5rem"
-       color="secondary"
-       name="Online Payment"
-       onChange={handlePaymentMethodChange}
-       checked={paymentMethod === "Online Payment"}
-       label={
-        <div
-         style={{
-          width: "100px",
-          height: "120px",
-          boxShadow:
-           paymentMethod === "Online Payment"
-            ? `0 0 0 2px ${tz.color.ember}`
-            : `0 0 0 1px ${tz.color.line}`,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "8px",
-          background:
-           paymentMethod === "Online Payment"
-            ? tz.color.emberTint
-            : tz.color.paper,
-          transition: "all 0.3s ease",
-          boxSizing: "border-box",
-          borderRadius: "8px",
-          border:
-           paymentMethod === "Online Payment"
-            ? `1px solid ${tz.color.emberDeep}`
-            : "1px solid transparent",
-          position: "relative",
-         }}
+    <div className="py-list" role="radiogroup" aria-label="Payment method">
+     {methods.map((m, i) => {
+      const on = paymentMethod === m.key;
+      return (
+       <div key={m.key} className="py-opt-wrap" style={{ ["--i" as any]: i }}>
+        <button
+         type="button"
+         role="radio"
+         aria-checked={on}
+         aria-disabled={m.soon}
+         disabled={m.soon}
+         className={`py-opt${on ? " is-on" : ""}${m.soon ? " is-soon" : ""}`}
+         onClick={() =>
+          handlePaymentMethodChange({ target: { name: m.key } } as unknown as ChangeEvent<HTMLInputElement>)
+         }
         >
-         {/* Check indicator */}
-         {paymentMethod === "Online Payment" && (
-          <div
-           style={{
-            position: "absolute",
-            top: "4px",
-            right: "4px",
-            width: "18px",
-            height: "18px",
-            backgroundColor: tz.color.emberDeep,
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-           }}
-          >
-           <svg
-            width="10"
-            height="8"
-            viewBox="0 0 10 8"
-            fill="none"
-            style={{ marginLeft: "1px" }}
-           >
-            <path
-             d="M1 4L3.5 6.5L9 1"
-             stroke={tz.color.paper}
-             strokeWidth="2"
-             strokeLinecap="round"
-             strokeLinejoin="round"
-            />
-           </svg>
-          </div>
-         )}
-
-         <PaymentImage
-          alt="Online Payment"
-          src={onlinePayment}
-          style={{
-           width: "60px",
-           height: "60px",
-           marginBottom: "8px",
-           filter:
-            paymentMethod === "Online Payment" ? "none" : "grayscale(20%)",
-           opacity: paymentMethod === "Online Payment" ? 1 : 0.8,
-          }}
-          priority
-         />
-         <span
-          style={{
-           fontSize: "14px",
-           fontWeight: "600",
-           textAlign: "center",
-           color: paymentMethod === "Online Payment" ? tz.color.emberDeep : tz.color.ink,
-          }}
-         >
-          Online Payment
+         <span className="py-logo">
+          <PaymentImage alt={m.title} src={m.img} style={{ width: "40px", height: "40px", objectFit: "contain" }} />
          </span>
+         <span className="py-text">
+          <strong>
+           {m.title}
+           {m.soon && <em>Coming soon</em>}
+          </strong>
+          <small>{m.desc}</small>
+         </span>
+         <span className="py-radio" aria-hidden="true">
+          <i />
+         </span>
+        </button>
+        <div className={`py-note${on ? " is-open" : ""}`}>
+         <div>
+          <p>
+           {m.key === "cod"
+            ? `Pay ${amountText || "the total"} in cash when your order arrives.`
+            : "You'll be taken to a secure payment page to finish."}
+          </p>
+         </div>
         </div>
-       }
-      />
+       </div>
+      );
+     })}
+    </div>
+   </section>
 
-      {/* Disabled Payment Options (Nagad) */}
-      <div
-       style={{
-        width: "100px", // Ensures equal width for all items
-        height: "120px",
-        // border: "1px solid rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "8px",
-        background: "rgba(0, 0, 0, 0.5)", // Disabled background
-        pointerEvents: "none", // Disable interactions
-        boxSizing: "border-box", // Include padding in size
-        borderRadius: "4px",
-       }}
-      >
-       <PaymentImage
-        alt="Nagad Payment"
-        src={NagadImage}
-        style={{
-         width: "60px",
-         height: "60px",
-         marginBottom: "8px",
-         filter: "grayscale(100%) opacity(50%)",
-        }}
-        priority
-       />
-       <span
-        style={{
-         fontSize: "14px",
-         fontWeight: "600",
-         textAlign: "center",
-         color: tz.color.inkSoft, // Matches disabled state
-        }}
-       >
-        Nagad
-       </span>
-      </div>
+   <label className={`py-agree${isCheckboxChecked ? " is-on" : ""}`}>
+    <input type="checkbox" checked={isCheckboxChecked} onChange={handleCheckboxChange} />
+    <span className="py-check" aria-hidden="true">
+     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 6 9 17l-5-5" />
+     </svg>
+    </span>
+    <span>
+     I agree to the{" "}
+     <Link href="/terms-and-conditions" target="_blank">
+      Terms &amp; Conditions
+     </Link>
+     ,{" "}
+     <Link href="/return-and-refund-policy" target="_blank">
+      Return &amp; Refund Policy
+     </Link>{" "}
+     and{" "}
+     <Link href="/privacy-policy" target="_blank">
+      Privacy Policy
+     </Link>
+     .
+    </span>
+   </label>
 
-      {/* Disabled Payment Options (Bkash) */}
-      <div
-       style={{
-        width: "100px", // Ensures equal width for all items
-        height: "120px",
-        // border: "1px solid rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "8px",
-        background: "rgba(0, 0, 0, 0.5)", // Disabled background
-        pointerEvents: "none", // Disable interactions
-        boxSizing: "border-box", // Include padding in size
-        borderRadius: "4px",
-       }}
-      >
-       <PaymentImage
-        alt="Bkash Payment"
-        src={BkashImage}
-        style={{
-         width: "60px",
-         height: "60px",
-         marginBottom: "8px",
-         filter: "grayscale(100%) opacity(50%)",
-        }}
-        priority
-       />
-       <span
-        style={{
-         fontSize: "14px",
-         fontWeight: "600",
-         textAlign: "center",
-         color: tz.color.inkSoft, // Matches disabled state
-        }}
-       >
-        Bkash
-       </span>
-      </div>
-     </div>
-    </Card1>
-   </FlexBox>
-
-   {/* <div style={{marginBottom: "20px"}}>
-      <CheckBox
-              mb="20px"
-              name="agreement"
-              color="secondary"
-              label={
-                <FlexBox>
-                  <SemiSpan style={{fontSize: "11px"}}>By proceeding to checkout, you agree to our</SemiSpan>
-                  <a
-                    href="/terms-and-conditions"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    <H6
-                      ml="0.5rem"
-                      borderBottom="1px solid"
-                      borderColor="gray.900"
-                      fontSize="11px"
-                    >
-                      Terms & Conditions,
-                    </H6>
-                  </a>
-                  <a
-                    href="/return-and-refund-policy"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    <H6
-                      ml="0.5rem"
-                      borderBottom="1px solid"
-                      borderColor="gray.900"
-                      fontSize="11px"
-                    >
-                      Return & Refund Policy,
-                    </H6>
-                  </a>
-                  <a
-                    href="/privacy-policy"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    <H6
-                      ml="0.5rem"
-                      borderBottom="1px solid"
-                      borderColor="gray.900"
-                      fontSize="11px"
-                    >
-                      Privacy Policy
-                    </H6>
-                  </a>
-                </FlexBox>
-              }
-              onChange={handleCheckboxChange} // Update checkbox state
-              required
-            />
-
-      </div> */}
-
-   <div style={{ marginBottom: "20px" }}>
-    <CheckBox
-     name="agreement"
-     color="secondary"
-     label={
-      <FlexBox
-       flexWrap="wrap"
-       alignItems="center"
-       style={{
-        fontSize: "11px",
-        lineHeight: "1.4",
-       }}
-      >
-       <SemiSpan>By proceeding to checkout, you agree to our</SemiSpan>
-       <Box display="inline-flex" flexWrap="wrap">
-        <a
-         href="/terms-and-conditions"
-         target="_blank"
-         rel="noreferrer noopener"
-         style={{ whiteSpace: "nowrap" }}
-        >
-         <H6
-          ml="0.5rem"
-          borderBottom="1px solid"
-          borderColor="gray.900"
-          fontSize="11px"
-          display="inline"
-         >
-          Terms & Conditions,
-         </H6>
-        </a>
-        <a
-         href="/return-and-refund-policy"
-         target="_blank"
-         rel="noreferrer noopener"
-         style={{ whiteSpace: "nowrap" }}
-        >
-         <H6
-          ml="0.5rem"
-          borderBottom="1px solid"
-          borderColor="gray.900"
-          fontSize="11px"
-          display="inline"
-         >
-          Return & Refund Policy,
-         </H6>
-        </a>
-        <a
-         href="/privacy-policy"
-         target="_blank"
-         rel="noreferrer noopener"
-         style={{ whiteSpace: "nowrap" }}
-        >
-         <H6
-          ml="0.5rem"
-          borderBottom="1px solid"
-          borderColor="gray.900"
-          fontSize="11px"
-          display="inline"
-         >
-          Privacy Policy
-         </H6>
-        </a>
-       </Box>
-      </FlexBox>
-     }
-     onChange={handleCheckboxChange}
-     required
-    />
+   <div className="py-actions">
+    <button type="button" className="py-btn" onClick={handleClick} disabled={isHasPayLoading}>
+     {isHasPayLoading ? (
+      <BeatLoader size={10} color={tz.color.emberDeep} />
+     ) : (
+      <>
+       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M19 12H5M11 18l-6-6 6-6" />
+       </svg>
+       Back to details
+      </>
+     )}
+    </button>
+    <button type="button" className="py-btn py-btn--solid" onClick={orderSubmit} disabled={!canPay || isHasLoading}>
+     {isHasLoading ? (
+      <BeatLoader size={10} color={tz.color.paper} />
+     ) : !paymentMethod ? (
+      "Choose a payment method"
+     ) : paymentMethod === "cod" ? (
+      <>Place order{amountText && ` · ${amountText}`}</>
+     ) : (
+      <>
+       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="3" y="11" width="18" height="11" rx="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+       </svg>
+       Pay securely{amountText && ` · ${amountText}`}
+      </>
+     )}
+    </button>
    </div>
-
-   <Grid container spacing={7}>
-    <Grid item sm={6} xs={12}>
-     <Button
-      color="primary"
-      bg="primary.light"
-      type="button"
-      fullwidth
-      onClick={handleClick}
-     >
-      {isHasPayLoading ? (
-       <BeatLoader size={18} color={tz.color.emberDeep} />
-      ) : (
-       "Back to Checkout Details"
-      )}
-     </Button>
-    </Grid>
-
-    <Grid item sm={6} xs={12}>
-     <Button
-      onClick={orderSubmit}
-      style={{
-       color:
-        isSubtotalZero || !paymentMethod || !isCheckboxChecked
-         ? tz.color.slate
-         : tz.color.paper,
-       backgroundColor:
-        isSubtotalZero || !paymentMethod || !isCheckboxChecked
-         ? tz.color.lineSoft
-         : tz.color.emberDeep,
-       cursor:
-        isSubtotalZero || !paymentMethod || !isCheckboxChecked // Disable button if checkbox is unchecked
-         ? "not-allowed"
-         : "pointer",
-      }}
-      type="button"
-      fullwidth
-      disabled={
-       isSubtotalZero || !paymentMethod || !isCheckboxChecked // Disable button if checkbox is unchecked
-      }
-     >
-      {isHasLoading ? <BeatLoader size={18} color={tz.color.paper} /> : "Proceed to Pay"}
-     </Button>
-    </Grid>
-   </Grid>
-  </Fragment>
+   {missing && (
+    <p className="py-missing" aria-live="polite">
+     {missing}
+    </p>
+   )}
+  </PayShell>
  );
 }
 

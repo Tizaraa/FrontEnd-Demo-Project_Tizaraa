@@ -534,11 +534,23 @@ const AddToCartButton = ({
      ) : isStockOut ? (
       "Stock Out"
      ) : (
-      "Add to Cart"
+      <>
+       <svg className="atc-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" />
+       </svg>
+       Add to Cart
+      </>
      )}
     </Button>
    ) : (
-    <FlexBox alignItems="center" mb="36px" style={{ gap: "10px" }}>
+    <FlexBox alignItems="center" mb="36px" flexWrap="wrap" style={{ gap: "10px 14px" }}>
+     <span className="in-cart" aria-live="polite">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+       <path d="M20 6 9 17l-5-5" />
+      </svg>
+      In your cart
+     </span>
+     <div className="qty-group">
      <Button
       className="qty-btn"
       size="none"
@@ -579,6 +591,7 @@ const AddToCartButton = ({
      >
       <Icon variant="small">plus</Icon>
      </Button>
+     </div>
 
      {maxQty !== null && (
       <span className="qty-limit">

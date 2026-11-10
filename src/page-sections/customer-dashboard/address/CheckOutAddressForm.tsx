@@ -469,6 +469,7 @@ import { FC, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import * as yup from "yup";
 import { Formik } from "formik";
+import AddressFormView from "./AddressFormView";
 import Select from "@component/Select";
 import Grid from "@component/grid/Grid";
 import { Card1 } from "@component/Card1";
@@ -624,222 +625,29 @@ export default function CheckOutAddressForm() {
  };
 
  return (
-  <Formik
-   initialValues={initialValues}
-   validationSchema={checkoutSchema}
-   onSubmit={handleFormSubmit}
-  >
-   {({
-    values,
-    errors,
-    touched,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    setFieldValue,
-   }) => (
-    <form onSubmit={handleSubmit}>
-     <Card1 mb="2rem">
-      <Typography fontWeight="600" mb="1rem">
-       Shipping Address
-      </Typography>
-
-      <Grid container spacing={7}>
-       <Grid item sm={6} xs={12}>
-        <TextField
-         fullwidth
-         mb="1rem"
-         label="Full Name"
-         name="name"
-         onBlur={handleBlur}
-         onChange={handleChange}
-         value={values.name}
-         errorText={touched.name && errors.name}
-        />
-
-        <TextField
-         fullwidth
-         mb="1rem"
-         label="Phone Number"
-         onBlur={handleBlur}
-         onChange={handleChange}
-         name="contact"
-         value={values.phone}
-         errorText={touched.contact && errors.contact}
-        />
-
-        <TextArea
-         fullwidth
-         label="Address"
-         onBlur={handleBlur} // Marks the field as touched
-         onChange={handleChange} // Updates the field value
-         name="address"
-         value={values.address} // Field value
-         errorText={touched.address && errors.address ? errors.address : ""} // Show error if touched and has error
-        />
-
-        <TextField
-         fullwidth
-         mb="1rem"
-         label="Postal Code (Optional)"
-         onBlur={handleBlur}
-         onChange={handleChange}
-         name="postal_code"
-         value={values.postal_code}
-         errorText={touched.postal_code && errors.postal_code}
-        />
-
-        <Typography fontWeight="600" mb="0.5rem">
-         Select a label for effective delivery:
-        </Typography>
-        <Grid container spacing={2} justifyContent="flex-start">
-         <Grid item>
-          <Button
-           type="button"
-           variant={selectedLandmark === 1 ? "contained" : "outlined"}
-           color="primary"
-           onClick={() => handleLandmarkSelect("Home", setFieldValue)}
-          >
-           Home
-          </Button>
-         </Grid>
-         <Grid item>
-          <Button
-           type="button"
-           variant={selectedLandmark === 2 ? "contained" : "outlined"}
-           color="primary"
-           onClick={() => handleLandmarkSelect("Office", setFieldValue)}
-          >
-           Office
-          </Button>
-         </Grid>
-        </Grid>
-
-        {touched.selectedLandmark && errors.selectedLandmark && (
-         <Typography color="var(--tz-danger)" variant="body2" mt={1}>
-          {errors.selectedLandmark}
-         </Typography>
-        )}
-       </Grid>
-
-       <Grid item sm={6} xs={12}>
-        <Select
-         mb="1rem"
-         label="Country"
-         options={[{ value: "BD", label: "Bangladesh" }]}
-         value={{ value: "BD", label: "Bangladesh" }}
-         errorText={touched.country && errors.country}
-         onChange={() =>
-          setFieldValue("country", {
-           value: "BD",
-           label: "Bangladesh",
-          })
-         }
-        />
-
-        <Select
-         mb="1rem"
-         label="Province / Region"
-         options={province.map((prov) => ({
-          value: prov.id,
-          label: prov.province,
-         }))}
-         value={
-          values.province
-           ? {
-              value: values.province,
-              label: province.find((prov) => prov.id == values.province)
-               ?.province,
-             }
-           : null
-         }
-         errorText={touched.province && errors.province}
-         onChange={(e: { value: number; label: string }) =>
-          handleProvinceChange(e.value, setFieldValue)
-         }
-        />
-
-        <Select
-         mb="1rem"
-         label="City"
-         options={city.map((c: any) => ({
-          value: c.id,
-          label: c.city,
-         }))}
-         value={
-          values.city
-           ? {
-              value: values.city,
-              label: city.find((c) => c.id == values.city)?.city,
-             }
-           : null
-         }
-         errorText={touched.city && errors.city}
-         onChange={(e: { value: number; label: string }) =>
-          handleCityChange(e.value, setFieldValue)
-         }
-        />
-
-        <Select
-         mb="1rem"
-         label="Area"
-         options={area.map((a: any) => ({
-          value: a.id,
-          label: a.area,
-         }))}
-         value={
-          values.area
-           ? {
-              value: values.area,
-              label: area.find((a) => a.id == values.area)?.area,
-             }
-           : null
-         }
-         errorText={touched.area && errors.area}
-         onChange={(selectedArea: { value: number; label: string }) =>
-          setFieldValue("area", selectedArea.value)
-         }
-        />
-        {/* Default Address Checkbox */}
-        <div style={{ marginTop: "1rem", display: "flex", alignItems: "center" }}>
-         <input
-          type="checkbox"
-          id="is_default"
-          name="is_default"
-          checked={values.is_default || false}
-          onChange={handleChange}
-          style={{
-           width: "18px",
-           height: "18px",
-           marginRight: "0.8rem",
-           cursor: "pointer",
-           accentColor: "var(--tz-ember-deep)",
-          }}
-         />
-         <label
-          htmlFor="is_default"
-          style={{
-           fontWeight: "600",
-           color: "var(--tz-ink)",
-           fontSize: "0.9rem",
-           cursor: "pointer",
-          }}
-         >
-          Set as default address
-         </label>
-        </div>
-
-       </Grid>
-      </Grid>
-     </Card1>
-
-     <Grid container spacing={7}>
-      <Grid item sm={6} xs={12}>
-       <Button type="submit" variant="contained" color="primary">
-        {loading ? <BeatLoader size={18} color="#fff" /> : "Save"}
-       </Button>
-      </Grid>
-     </Grid>
+  <Formik initialValues={initialValues} validationSchema={checkoutSchema} onSubmit={handleFormSubmit}>
+   {(f) => (
+    <form onSubmit={f.handleSubmit} noValidate>
+     <AddressFormView
+      values={f.values}
+      errors={f.errors}
+      touched={f.touched}
+      submitCount={f.submitCount}
+      handleChange={f.handleChange}
+      handleBlur={f.handleBlur}
+      setFieldValue={f.setFieldValue}
+      province={province}
+      city={city}
+      area={area}
+      onProvince={(id) => handleProvinceChange(id, f.setFieldValue)}
+      onCity={(id) => handleCityChange(id, f.setFieldValue)}
+      landmark={selectedLandmark}
+      onLandmark={(v) => handleLandmarkSelect(v === 1 ? "Home" : "Office", f.setFieldValue)}
+      landmarkError={f.submitCount > 0 && f.errors.selectedLandmark ? "Please choose Home or Office" : null}
+      loading={f.isSubmitting}
+      submitLabel="Save & continue"
+      onCancel={() => router.push("/checkout")}
+     />
     </form>
    )}
   </Formik>
