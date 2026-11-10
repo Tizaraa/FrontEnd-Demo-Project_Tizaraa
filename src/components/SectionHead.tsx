@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import styled from "styled-components";
-import Icon from "./icon/Icon";
 
 // Shared look for home section headers: title on the left, extras and "View all" on the right
 
@@ -73,7 +72,21 @@ const StyledViewAll = styled(Link)`
   color: ${({ theme }) => theme.tz.color.emberDark};
 
   .view-all-arrow {
-   transform: translateX(3px);
+   transform: translateX(4px);
+  }
+ }
+ &:focus-visible {
+  outline: none;
+  border-radius: 4px;
+  box-shadow: ${({ theme }) => theme.tz.focusRing};
+ }
+
+ ${({ theme }) => theme.tz.media.reducedMotion} {
+  .view-all-arrow {
+   transition: none;
+  }
+  &:hover .view-all-arrow {
+   transform: none;
   }
  }
 `;
@@ -83,9 +96,9 @@ export function ViewAllLink({ href }: { href: string }) {
   <StyledViewAll href={href}>
    View all
    <span className="view-all-arrow">
-    <Icon size="11px" defaultcolor="currentColor">
-     right-arrow
-    </Icon>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+     <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
    </span>
   </StyledViewAll>
  );

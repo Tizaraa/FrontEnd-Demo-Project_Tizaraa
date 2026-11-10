@@ -170,6 +170,9 @@ export default function OrderDetails({ params }: IDParams) {
       productType: "Local",
       status: formatStatus(raw.order_status),
       payment_method: raw.payment_method,
+      // corporate shop or company-credit order (API flag); retail otherwise
+      is_corporate: Boolean(raw.is_corporate),
+      buyer_name: raw.buyer_name ?? null,
       payment_status: raw.payment_status,
       discount_amount: raw.discount_amount,
       promo_code: raw.promo_code,
@@ -616,45 +619,14 @@ export default function OrderDetails({ params }: IDParams) {
              timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
             />
 
-            <FlexBox mt="1rem" justifyContent="center">
-             <Button
-              variant="text"
-              color="primary"
-              onClick={() => toggleSummary(shopName)}
-              style={{
-               padding: "0.5rem 1rem",
-               backgroundColor: "var(--tz-ember-tint)",
-               color: "var(--tz-ember-deep)",
-               borderRadius: "300px",
-               textAlign: "center",
-               height: "40px",
-               minWidth: "200px",
-              }}
-             >
-              {openSummaries[shopName] ? (
-               <>
-                Total Summary{" "}
-                <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "8px" }} />
-               </>
-              ) : (
-               <>
-                Total Summary{" "}
-                <FontAwesomeIcon
-                 icon={faCaretDown}
-                 style={{ marginLeft: "8px" }}
-                />
-               </>
-              )}
-             </Button>
-            </FlexBox>
-
-            {openSummaries[shopName] && (
+            {/* Payment summary folds/unfolds itself (header button) */}
+            <Box mt="1rem">
              <OrderTotalSummary
               order={order}
               details={details}
               shopName={shopName}
              />
-            )}
+            </Box>
            </Box>
           );
          })
@@ -673,6 +645,8 @@ export default function OrderDetails({ params }: IDParams) {
       city={order.Order.city_id}
       province={order.Order.province_id}
       phone={order.Order.phone}
+      name={order.Order.buyer_name}
+      delivered={Boolean(order.Order.isDelivered)}
      />
 
      <div style={{ display: "flex", gap: "20px" }}>
@@ -680,15 +654,37 @@ export default function OrderDetails({ params }: IDParams) {
           Only once the order is delivered — there is nothing to invoice while it is
           still pending, and a cancelled order has no delivery to bill for. */}
       {order.Order.isDelivered && (
-       <Button
-        px="2rem"
-        color="primary"
-        bg="primary.light"
-        mt="2rem"
+       <button
+        type="button"
         onClick={fetchInvoice}
+        disabled={invoiceLoading}
+        style={{
+         display: "inline-flex",
+         alignItems: "center",
+         gap: 8,
+         minHeight: 44,
+         marginTop: "1.5rem",
+         padding: "0 22px",
+         border: "1px solid var(--tz-ember-deep)",
+         borderRadius: 999,
+         background: "var(--tz-ember-deep)",
+         color: "#fff",
+         fontFamily: "inherit",
+         fontSize: 14,
+         fontWeight: 700,
+         cursor: invoiceLoading ? "progress" : "pointer",
+         boxShadow: "0 6px 14px rgba(194, 64, 15, 0.24)",
+        }}
        >
-        {invoiceLoading ? <BeatLoader size={18} color="var(--tz-ember-deep)" /> : "Invoice"}
-       </Button>
+        {invoiceLoading ? (
+         <BeatLoader size={8} color="#fff" />
+        ) : (
+         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+         </svg>
+        )}
+        Invoice
+       </button>
       )}
 
       {order.Order.payment_status === "Unpaid" &&

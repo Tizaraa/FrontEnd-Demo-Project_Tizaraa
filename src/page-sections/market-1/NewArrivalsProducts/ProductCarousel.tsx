@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import Box from "@component/Box";
+import styled from "styled-components";
 import { Carousel } from "@component/carousel";
 import CategorySectionCreator from "@component/CategorySectionCreator";
 import useWindowSize from "@hook/useWindowSize";
@@ -10,6 +11,52 @@ import ApiBaseUrl from "../../../api/ApiBaseUrl";
 // ──────────────────────────────────────────────
 // Skeleton Card (one product placeholder)
 // ──────────────────────────────────────────────
+// Round white prev/next buttons for the home product rails
+const RailWrap = styled(Box)`
+  .tz-rail-arrow.arrow-button {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid ${({ theme }) => theme.tz.color.line};
+    border-radius: 50%;
+    color: ${({ theme }) => theme.tz.color.navy};
+    background: ${({ theme }) => theme.tz.color.paper};
+    box-shadow: ${({ theme }) => theme.tz.elevation.raised};
+    transition: color ${({ theme }) => theme.tz.motion.fast},
+      border-color ${({ theme }) => theme.tz.motion.fast},
+      box-shadow ${({ theme }) => theme.tz.motion.base},
+      transform ${({ theme }) => theme.tz.motion.base};
+  }
+  .tz-rail-arrow.arrow-button:hover:not(:disabled) {
+    color: ${({ theme }) => theme.tz.color.emberDeep};
+    border-color: #f6b9a3;
+    background: ${({ theme }) => theme.tz.color.paper};
+    box-shadow: ${({ theme }) => theme.tz.elevation.overlay};
+  }
+  .tz-rail-arrow.arrow-button:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.92);
+  }
+  .tz-rail-arrow.arrow-button:focus-visible {
+    outline: none;
+    box-shadow: ${({ theme }) => theme.tz.focusRing};
+  }
+  .tz-rail-arrow.arrow-button:disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  ${({ theme }) => theme.tz.media.reducedMotion} {
+    .tz-rail-arrow.arrow-button {
+      transition: none;
+    }
+    .tz-rail-arrow.arrow-button:active:not(:disabled) {
+      transform: translateY(-50%);
+    }
+  }
+`;
+
 export function ProductSkeleton() {
   return (
     <Box py="0.25rem" height="100%">
@@ -66,7 +113,7 @@ export default function ProductCarousel({
 
   return (
     <CategorySectionCreator title={title} seeMoreLink={seeMoreLink}>
-      <Box
+      <RailWrap
         my="-0.25rem"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
@@ -76,6 +123,7 @@ export default function ProductCarousel({
           visibleSlides={visibleSlides}
           currentSlide={currentSlide}
           hideArrowOnMobile
+          arrowButtonClass="tz-rail-arrow"
         >
           {productsToShow.map((item, index) => {
             // Loading state → show skeleton
@@ -101,7 +149,7 @@ export default function ProductCarousel({
             );
           })}
         </Carousel>
-      </Box>
+      </RailWrap>
     </CategorySectionCreator>
   );
 }

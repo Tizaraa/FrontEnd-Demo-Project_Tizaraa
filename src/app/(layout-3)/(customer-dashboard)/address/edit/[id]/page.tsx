@@ -15,9 +15,9 @@ export default function EditAddress({ params }: { params: { id: string } }) {
     button={<BackToAddress />}
    />
 
-   <Card1 borderRadius={8}>
+   <>
     <EditAddressForm addressId={params.id} />
-   </Card1>
+   </>
   </Fragment>
  );
 }

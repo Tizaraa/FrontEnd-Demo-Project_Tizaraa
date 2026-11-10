@@ -473,39 +473,8 @@ export default function Layout({ children }: PropsWithChildren) {
    <Box mb={isMobile ? "24px" : "14px"} px={{ xs: 2, sm: 0 }}>
     <Grid container spacing={6}>
      <Grid item lg={8} md={8} xs={12}>
-      {isMobile ? (
-       <MobileStepperContainer>
-        <MobileStepperTrack>
-         <MobileBackgroundLine />
-         <MobileProgressLine progress={progressPercentage} />
-         {stepperList.map((step, index) => (
-          <MobileStep
-           key={step.title}
-           active={selectedStep === index}
-           completed={selectedStep > index}
-           disabled={step.disabled}
-           onClick={() => handleMobileStepClick(index, step.disabled)}
-          >
-           <MobileStepNumber
-            active={selectedStep === index}
-            completed={selectedStep > index}
-           >
-            {index + 1}
-           </MobileStepNumber>
-           <MobileStepTitle active={selectedStep === index}>
-            {step.title}
-           </MobileStepTitle>
-          </MobileStep>
-         ))}
-        </MobileStepperTrack>
-       </MobileStepperContainer>
-      ) : (
-       <Stepper
-        stepperList={stepperList}
-        selectedStep={selectedStep}
-        onChange={handleStepChange}
-       />
-      )}
+      {/* one stepper for all sizes; it compacts itself on small screens */}
+      <Stepper stepperList={stepperList} selectedStep={selectedStep} onChange={handleStepChange} />
      </Grid>
     </Grid>
    </Box>

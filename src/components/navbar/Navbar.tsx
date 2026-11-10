@@ -350,19 +350,15 @@ export default function Navbar({ navListOpen }: NavbarProps) {
      {/* Render Categories only if the current page is not '/location' */}
      {!isLocationPage && (
       <Categories open={navListOpen}>
-       <Button width="278px" height="40px" bg="body.default" variant="text">
-        <Icon>categories</Icon>
-        <Typography
-         ml="10px"
-         flex="1 1 0"
-         fontWeight="600"
-         textAlign="left"
-         color="text.muted"
-        >
-         Categories
+       <Button className="nav-cat" width="278px" height="42px" variant="text">
+        <span className="nav-cat-icon">
+         <Icon size="18px" defaultcolor="currentColor">categories</Icon>
+        </span>
+        <Typography ml="10px" flex="1 1 0" fontWeight="700" textAlign="left" color="inherit">
+         All Categories
         </Typography>
         {!isHomePage && (
-         <Icon className="dropdown-icon" variant="small">
+         <Icon className="dropdown-icon" variant="small" defaultcolor="currentColor">
           chevron-right
          </Icon>
         )}
@@ -375,7 +371,7 @@ export default function Navbar({ navListOpen }: NavbarProps) {
      {navbarNavigations.map((navItem) => (
       <Button
        key={navItem.title}
-       className="nav-action"
+       className={`nav-action${navItem.title === "Become A Seller" ? " nav-action--cta" : ""}`}
        onClick={() => handleNavigation(navItem.url, navItem.extLink)}
        disabled={loading}
        style={{ opacity: loading ? 0.6 : 1 }}
@@ -390,7 +386,7 @@ export default function Navbar({ navListOpen }: NavbarProps) {
         )}
        </div>
 
-       <Typography fontWeight="500">{navItem.title}</Typography>
+       <Typography fontWeight="600" color="inherit">{navItem.title}</Typography>
       </Button>
      ))}
      {loading && <BeatLoader size={10} color={theme.tz.color.ember} />}

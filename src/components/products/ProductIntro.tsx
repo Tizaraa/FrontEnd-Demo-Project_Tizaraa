@@ -164,7 +164,7 @@ export default function ProductIntro({
           /> */}
 
      {selectedPrice === 0 ? (
-      <Box mt="1.5rem">
+      <Box mt="1.5rem" id="pdp-buy">
        <Link href="/rfq">
         <Button variant="contained" color="primary" size="large">
          Request for Quote
@@ -172,7 +172,7 @@ export default function ProductIntro({
        </Link>
       </Box>
      ) : (
-      <Box mt="1.5rem">
+      <Box mt="1.5rem" id="pdp-buy">
        <AddToCartButton
        productId={productId}
        variantId={""}

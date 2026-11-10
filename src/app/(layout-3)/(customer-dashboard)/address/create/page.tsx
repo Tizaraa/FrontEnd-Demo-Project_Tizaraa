@@ -17,9 +17,9 @@ export default function CreateAddress() {
     button={<BackToAddress />}
    />
 
-   <Card1 borderRadius={8}>
+   <>
     <AddressForm />
-   </Card1>
+   </>
   </Fragment>
  );
 }

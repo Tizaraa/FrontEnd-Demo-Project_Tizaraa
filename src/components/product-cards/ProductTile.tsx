@@ -31,15 +31,14 @@ const Tile = styled.article<{ $row?: boolean }>`
  overflow: hidden;
  background: ${({ theme }) => theme.tz.color.paper};
  border: 1px solid ${({ theme }) => theme.tz.color.line};
- border-radius: ${({ theme }) => theme.tz.radius.md}px;
- transition: box-shadow ${({ theme }) => theme.tz.motion.base},
-  transform ${({ theme }) => theme.tz.motion.base},
-  border-color ${({ theme }) => theme.tz.motion.base};
+ border-radius: 16px;
+ transition: box-shadow 220ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+  border-color 180ms ease;
 
  &:hover {
-  border-color: transparent;
-  box-shadow: ${({ theme }) => theme.tz.elevation.raised};
-  transform: translateY(-2px);
+  border-color: #f6b9a3;
+  box-shadow: 0 14px 30px rgba(14, 52, 96, 0.1);
+  transform: translateY(-4px);
  }
 
  .tile-media {
@@ -49,13 +48,13 @@ const Tile = styled.article<{ $row?: boolean }>`
   overflow: hidden;
 
   img {
-   object-fit: cover;
-   transition: transform ${({ theme }) => theme.tz.motion.slow};
+   object-fit: contain;
+   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
   }
  }
 
  &:hover .tile-media img {
-  transform: scale(1.03);
+  transform: scale(1.05);
  }
 
  .tile-badge {
@@ -63,12 +62,14 @@ const Tile = styled.article<{ $row?: boolean }>`
   top: 10px;
   left: 10px;
   z-index: 1;
-  padding: 3px 8px;
+  padding: 3px 9px;
   border-radius: ${({ theme }) => theme.tz.radius.pill}px;
+  /* emberDeep keeps the white text readable (plain ember is 3.6:1) */
   background: ${({ theme }) => theme.tz.color.emberDeep};
+  box-shadow: 0 4px 10px rgba(194, 64, 15, 0.25);
   color: #ffffff;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.3;
   font-variant-numeric: tabular-nums;
  }
@@ -89,7 +90,7 @@ const Tile = styled.article<{ $row?: boolean }>`
   min-height: calc(2 * 1.4em);
   margin: 0;
   font-family: ${({ theme }) => theme.tz.font.body};
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 500;
   line-height: 1.4;
   letter-spacing: 0;
@@ -109,6 +110,10 @@ const Tile = styled.article<{ $row?: boolean }>`
   font-size: 16px;
   font-weight: 700;
   color: ${({ theme }) => theme.tz.color.ink};
+ }
+
+ .tile-price-now.is-deal {
+  color: ${({ theme }) => theme.tz.color.emberDeep};
  }
 
  .tile-price-was {
@@ -168,6 +173,18 @@ const Tile = styled.article<{ $row?: boolean }>`
    }
   }
  `}
+
+ ${({ theme }) => theme.tz.media.reducedMotion} {
+  transition: none;
+
+  &:hover,
+  &:hover .tile-media img {
+   transform: none;
+  }
+  .tile-media img {
+   transition: none;
+  }
+ }
 `;
 
 export default function ProductTile({
@@ -190,7 +207,7 @@ export default function ProductTile({
   <Link href={href} style={{ display: "block", height: "100%" }}>
    <Tile $row={layout === "row"}>
     {hasDiscount && discountPercent > 0 && (
-     <span className="tile-badge">{discountPercent}% off</span>
+     <span className="tile-badge">−{discountPercent}%</span>
     )}
 
     <div className="tile-media">
@@ -224,7 +241,9 @@ export default function ProductTile({
        <span className="tile-rfq">Request a quote</span>
       ) : (
        <>
-        <span className="tile-price-now">{currency(now)}</span>
+        <span className={hasDiscount ? "tile-price-now is-deal" : "tile-price-now"}>
+         {currency(now)}
+        </span>
         {hasDiscount && (
          <span className="tile-price-was">{currency(was)}</span>
         )}
@@ -262,6 +281,12 @@ const SkeletonTile = styled(Tile)`
   }
   to {
    background-position: -200% 0;
+  }
+ }
+
+ ${({ theme }) => theme.tz.media.reducedMotion} {
+  .bone {
+   animation: none;
   }
  }
 `;

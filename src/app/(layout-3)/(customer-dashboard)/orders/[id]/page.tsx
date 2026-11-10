@@ -37,6 +37,495 @@ import { useRouter } from "next/navigation";
 import { Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Loader from "@component/loader";
+import styled, { keyframes } from "styled-components";
+import toast from "react-hot-toast";
+
+const odRise = keyframes`
+ from { opacity: 0; transform: translateY(10px); }
+ to { opacity: 1; transform: none; }
+`;
+const odShimmer = keyframes`
+ from { background-position: -600px 0; }
+ to { background-position: 600px 0; }
+`;
+const odSpin = keyframes`
+ to { transform: rotate(360deg); }
+`;
+
+// Order detail layout: summary hero, then items + tracker (left) and the
+// payment summary + address (right, sticky on desktop).
+const OD = styled.div`
+ display: flex;
+ flex-direction: column;
+ gap: 20px;
+
+ .od-hero,
+ .od-card {
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: 18px;
+  background: ${({ theme }) => theme.tz.color.paper};
+  animation: ${odRise} 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+ }
+
+ /* hero */
+ .od-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  background:
+   radial-gradient(70% 140% at 100% 0%, ${({ theme }) => theme.tz.color.emberTint} 0%, transparent 60%),
+   ${({ theme }) => theme.tz.color.paper};
+ }
+ .od-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--tone);
+ }
+ .od-hero-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+ }
+ .od-id small {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+ .od-id-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 2px;
+ }
+ .od-id h2 {
+  margin: 0;
+  font-family: ${({ theme }) => theme.tz.font.display};
+  font-size: 22px;
+  font-weight: 800;
+  color: ${({ theme }) => theme.tz.color.ink};
+  overflow-wrap: anywhere;
+ }
+ .od-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 12%, white);
+ }
+ .od-status i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+ }
+ .od-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+ }
+
+ .od-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 18px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px dashed ${({ theme }) => theme.tz.color.line};
+ }
+ .od-facts div {
+  min-width: 0;
+ }
+ .od-facts dt {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+ .od-facts dd {
+  margin: 3px 0 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+ .od-facts--plain {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+ }
+ .od-money {
+  color: ${({ theme }) => theme.tz.color.emberDeep} !important;
+ }
+ .od-good {
+  color: ${({ theme }) => theme.tz.tone.success.fg} !important;
+ }
+ .od-error {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: ${({ theme }) => theme.tz.tone.danger.fg};
+ }
+
+ /* buttons */
+ .od-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1.5px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: 999px;
+  background: ${({ theme }) => theme.tz.color.paper};
+  color: ${({ theme }) => theme.tz.color.ink};
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+ }
+ .od-btn svg {
+  width: 16px;
+  height: 16px;
+ }
+ .od-btn:hover {
+  border-color: ${({ theme }) => theme.tz.color.navy};
+  background: ${({ theme }) => theme.tz.color.navyTint};
+ }
+ .od-btn--solid {
+  border-color: ${({ theme }) => theme.tz.color.emberDeep};
+  background: ${({ theme }) => theme.tz.color.emberDeep};
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(194, 64, 15, 0.24);
+ }
+ .od-btn--solid:hover:enabled,
+ a.od-btn--solid:hover {
+  border-color: ${({ theme }) => theme.tz.color.emberDark};
+  background: ${({ theme }) => theme.tz.color.emberDark};
+  transform: translateY(-1px);
+ }
+ .od-btn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+ }
+ .od-btn:focus-visible,
+ .od-icon-btn:focus-visible {
+  outline: none;
+  box-shadow: ${({ theme }) => theme.tz.focusRing};
+ }
+ .od-icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: 10px;
+  background: ${({ theme }) => theme.tz.color.paper};
+  color: ${({ theme }) => theme.tz.color.slate};
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease;
+ }
+ .od-icon-btn svg {
+  width: 15px;
+  height: 15px;
+ }
+ .od-icon-btn:hover {
+  border-color: ${({ theme }) => theme.tz.color.ember};
+  color: ${({ theme }) => theme.tz.color.emberDeep};
+ }
+ .od-spin {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: ${odSpin} 700ms linear infinite;
+ }
+
+ /* grid */
+ /* one column, same reading order as the other order pages:
+    items -> status -> returns -> payment + address -> invoice */
+ .od-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+ }
+ .od-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+ }
+ /* payment summary and address stacked full width, like the delivered page */
+ .od-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+ }
+ .od-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+ }
+
+ /* items card */
+ .od-card {
+  padding: 20px 22px;
+  animation-delay: 80ms;
+ }
+ .od-shop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
+ }
+ .od-shop-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: ${({ theme }) => theme.tz.color.navyTint};
+  color: ${({ theme }) => theme.tz.color.navy};
+ }
+ .od-shop-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-right: auto;
+ }
+ .od-shop-name small {
+  font-size: 11.5px;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+ .od-shop-name strong {
+  font-size: 16px;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+ .od-chip {
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 12%, white);
+ }
+ .od-note {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: ${({ theme }) => theme.tz.tone.warning.bg};
+  font-size: 13px;
+  color: ${({ theme }) => theme.tz.tone.warning.fg};
+ }
+ .od-items {
+  --ir-pad: 0; /* the card already has side padding */
+  display: flex;
+  flex-direction: column;
+ }
+
+ /* return card */
+ .od-return-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+ }
+ .od-return-head h3 {
+  margin: 0;
+  font-family: ${({ theme }) => theme.tz.font.display};
+  font-size: 16px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+ .od-reason,
+ .od-photos {
+  margin-top: 14px;
+ }
+ .od-reason small,
+ .od-photos small {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+ .od-reason p {
+  margin: 0;
+  padding: 10px 14px;
+  border-left: 3px solid ${({ theme }) => theme.tz.color.ember};
+  border-radius: 0 10px 10px 0;
+  background: ${({ theme }) => theme.tz.color.mist};
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: ${({ theme }) => theme.tz.color.inkSoft};
+ }
+ .od-photos > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+ }
+ .od-photos img {
+  display: block;
+  width: 76px;
+  height: 76px;
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 200ms ease;
+ }
+ .od-photos a:hover img {
+  transform: scale(1.05);
+ }
+
+ /* loading / error */
+ .od-skel {
+  border-radius: 18px;
+  background: linear-gradient(90deg, ${({ theme }) => theme.tz.color.mist} 0%, ${({ theme }) => theme.tz.color.lineSoft} 50%, ${({ theme }) => theme.tz.color.mist} 100%);
+  background-size: 1200px 100%;
+  animation: ${odShimmer} 1.3s linear infinite;
+ }
+ .od-fail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid ${({ theme }) => theme.tz.tone.danger.bg};
+  border-radius: 18px;
+  background: ${({ theme }) => theme.tz.color.paper};
+ }
+ .od-fail strong {
+  display: block;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+ .od-fail span {
+  font-size: 14px;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+
+ @media (max-width: 560px) {
+  .od-hero,
+  .od-card {
+   padding: 16px;
+  }
+  .od-id h2 {
+   font-size: 18px;
+  }
+  .od-hero-actions {
+   width: 100%;
+  }
+  .od-hero-actions .od-btn {
+   flex: 1;
+   justify-content: center;
+  }
+ }
+
+ @media (prefers-reduced-motion: reduce) {
+  .od-hero,
+  .od-card,
+  .od-skel {
+   animation: none;
+  }
+  .od-btn,
+  .od-photos img {
+   transition: none;
+  }
+ }
+`;
+
+const InvoiceDialog = styled.div`
+ position: fixed;
+ inset: 0;
+ z-index: 1000;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ padding: 16px;
+ background: rgba(20, 21, 32, 0.5);
+ backdrop-filter: blur(4px);
+ -webkit-backdrop-filter: blur(4px);
+
+ .iv-box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 820px;
+  height: min(90vh, 1000px);
+  overflow: hidden;
+  border-radius: 18px;
+  background: ${({ theme }) => theme.tz.color.paper};
+  box-shadow: 0 24px 60px rgba(20, 21, 32, 0.3);
+  animation: ${odRise} 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+ }
+ .iv-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
+ }
+ .iv-head > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+ }
+ .iv-head .od-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.tz.color.emberDeep};
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+ }
+ .iv-head .od-icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: 10px;
+  background: ${({ theme }) => theme.tz.color.paper};
+  cursor: pointer;
+ }
+ .iv-head .od-icon-btn svg {
+  width: 16px;
+  height: 16px;
+ }
+ iframe {
+  flex: 1;
+  width: 100%;
+  border: 0;
+ }
+
+ @media (prefers-reduced-motion: reduce) {
+  .iv-box {
+   animation: none;
+  }
+ }
+`;
 // import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 export default function OrderDetails({ params }: IDParams) {
@@ -57,6 +546,7 @@ export default function OrderDetails({ params }: IDParams) {
  const [orderSuccess, setOrderSuccess] = useState(false);
  const [fetched, setFetched] = useState(false);
  const [returnDetails, setReturnDetails] = useState<any[]>([]);
+ const [attempt, setAttempt] = useState(0); // bump to retry the order fetch
  const router = useRouter();
 
  const [openSummaries, setOpenSummaries] = useState<{
@@ -157,6 +647,8 @@ export default function OrderDetails({ params }: IDParams) {
       productType: "Local",
       status: formatStatus(raw.order_status),
       payment_method: raw.payment_method,
+      // corporate shop or company-credit order (API flag); retail otherwise
+      is_corporate: Boolean(raw.is_corporate),
       payment_status: raw.payment_status,
       discount_amount: raw.discount_amount,
       promo_code: raw.promo_code,
@@ -244,7 +736,7 @@ export default function OrderDetails({ params }: IDParams) {
    setOrderSuccess(true);
    localStorage.removeItem("orderSuccess");
   }
- }, [fetched, params.id, router]);
+ }, [fetched, params.id, router, attempt]);
 
  const fetchInvoice = async () => {
   setInvoiceLoading(true); // Start loading state for invoice
@@ -325,14 +817,42 @@ export default function OrderDetails({ params }: IDParams) {
 
  if (loading) {
   return (
-   <Typography>
-    <Loader />
-   </Typography>
+   <OD aria-busy="true" aria-label="Loading order">
+    <div className="od-skel" style={{ height: 150 }} />
+    <div className="od-grid">
+     <div className="od-main">
+      <div className="od-skel" style={{ height: 220 }} />
+      <div className="od-skel" style={{ height: 180 }} />
+     </div>
+     <div className="od-side">
+      <div className="od-skel" style={{ height: 260 }} />
+     </div>
+    </div>
+   </OD>
   );
  }
 
  if (!order) {
-  return <Typography color="red">Failed to fetch order details</Typography>;
+  return (
+   <OD>
+    <div className="od-fail" role="alert">
+     <div>
+      <strong>We couldn't load this order</strong>
+      <span>Check your connection and try again.</span>
+     </div>
+     <button
+      type="button"
+      className="od-btn od-btn--solid"
+      onClick={() => {
+       setLoading(true);
+       setAttempt((a) => a + 1);
+      }}
+     >
+      Try again
+     </button>
+    </div>
+   </OD>
+  );
  }
 
  let abroadProduct = null;
@@ -729,6 +1249,22 @@ export default function OrderDetails({ params }: IDParams) {
   );
  }
 
+ const shops = Object.entries(order?.Order?.items ?? {}) as [string, any][];
+ const itemCount = shops.reduce((n, [, d]) => n + (d?.order_items?.length ?? 0), 0);
+ const statusLabel = getStatusLabel(order.Order.status);
+ const statusColor = getColor(order.Order.status);
+ const isCorporateOrder = order?.Order?.payment_method === "corporate_credit";
+ const fmt = (d?: string | null) => (d ? format(new Date(d), "dd MMM yyyy, hh:mm a") : "N/A");
+
+ const copyId = async () => {
+  try {
+   await navigator.clipboard.writeText(String(order.Order.invoice_id));
+   toast.success("Order ID copied");
+  } catch {
+   toast.error("Couldn't copy");
+  }
+ };
+
  return (
   <Fragment>
    <DashboardPageHeader
@@ -737,149 +1273,121 @@ export default function OrderDetails({ params }: IDParams) {
     button={<OrderListButton params={params} />}
    />
 
-   {/* <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} /> */}
+   <OD>
+    {/* ---------- Summary ---------- */}
+    <section className="od-hero" style={{ ["--tone" as any]: statusColor }}>
+     <div className="od-hero-top">
+      <div className="od-id">
+       <small>Order</small>
+       <div className="od-id-row">
+        <h2>#{order.Order.invoice_id}</h2>
+        <button type="button" className="od-icon-btn" onClick={copyId} aria-label="Copy order ID" title="Copy order ID">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="13" height="13" rx="2" />
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+         </svg>
+        </button>
+        <span className="od-status">
+         <i aria-hidden="true" />
+         {statusLabel}
+        </span>
+       </div>
+      </div>
+      <div className="od-hero-actions">
+       <a className="od-btn" href="/support-tickets">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+         <circle cx="12" cy="12" r="10" />
+         <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01" />
+        </svg>
+        Need help?
+       </a>
+      </div>
+     </div>
 
-   <Card p="0px" mb="30px" overflow="hidden" borderRadius={8}>
-    <TableRow bg="gray.200" p="12px" boxShadow="none" borderRadius={0}>
-     <FlexBox className="pre" m="6px" alignItems="center">
-      <Typography fontSize="14px" color="text.muted" mr="4px">
-       Order ID:
-      </Typography>
-      <Typography fontSize="14px">#{order.Order.invoice_id}</Typography>
-     </FlexBox>
+     <dl className="od-facts">
+      <div>
+       <dt>Placed on</dt>
+       <dd>{fmt(order.Order.createdAt)}</dd>
+      </div>
+      {order.Order.isDelivered && (
+       <div>
+        <dt>Delivered on</dt>
+        <dd>{fmt(order.Order.deliveredAt)}</dd>
+       </div>
+      )}
+      <div>
+       <dt>Items</dt>
+       <dd>{itemCount}</dd>
+      </div>
+      <div>
+       <dt>Total</dt>
+       <dd className="od-money">{currency(order.Order.amount || 0)}</dd>
+      </div>
+      <div>
+       <dt>Payment</dt>
+       <dd>{formatStatus(order.Order.payment_method) || "N/A"}</dd>
+      </div>
+     </dl>
+     {invoiceError && <p className="od-error">{invoiceError}</p>}
+    </section>
 
-     <FlexBox className="pre" m="6px" alignItems="center">
-      <Typography fontSize="14px" color="text.muted" mr="4px">
-       Placed on:
-      </Typography>
-      <Typography fontSize="14px">
-       {order.Order.createdAt
-        ? format(new Date(order.Order.createdAt), "dd MMM, yyyy, hh:mm a")
-        : "N/A"}
-      </Typography>
-     </FlexBox>
+    <div className="od-grid">
+     {/* ---------- Left: items, status, returns ---------- */}
+     <div className="od-main">
+      {abroadProduct && <section className="od-card">{abroadProduct}</section>}
 
-     {order.Order.isDelivered && (
-      <FlexBox className="pre" m="6px" alignItems="center">
-       <Typography fontSize="14px" color="text.muted" mr="4px">
-        Delivered on:
-       </Typography>
-       <Typography fontSize="14px">
-        {order.Order.deliveredAt
-         ? format(new Date(order.Order.deliveredAt), "dd MMM, yyyy, hh:mm a")
-         : "N/A"}
-       </Typography>
-      </FlexBox>
-     )}
-    </TableRow>
-
-    {/* <Box py="0.5rem">
-          {order.Order.items && order.Order.items.length > 0 ? (
-            order.Order.items.map((item, ind) => (
-              <WriteReview key={ind} item={item} />
-            ))
-          ) : (
-            <Typography>No items in this order.</Typography>
-          )}
-        </Box> */}
-
-    {abroadProduct}
-
-    {order?.Order?.productType !== "Abroad" && (
-     <Box py="0.5rem">
-      {order?.Order?.items && Object.keys(order.Order.items).length > 0
-       ? Object.entries(order.Order.items).map(([shopName, shopDetails]) => {
-          const details = shopDetails as {
-           delivered_at: string | null;
-           return_deadline?: string | null;
-           order_items: any[];
-           delivery_charge: number | null;
-           promocodeStatus: number | null;
-           sub_total: number | null;
-           total: number | null;
-           status: string | null;
-           isAbroad: boolean; // Add a flag for checking if the product is from abroad
-          };
-
-          console.log("Check from ORDERS:: ", details.status);
-
-          return (
-           <Box key={shopName} my="1rem">
-            <div
-             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexDirection: "row",
-              alignItems: "center",
-              flexWrap: "wrap",
-             }}
-            >
-             <div
-              style={{
-               display: "flex",
-               alignItems: "center",
-               gap: "0",
-              }}
-             >
-              <Typography
-               fontWeight="bold"
-               fontSize="18px"
-               mb="1rem"
-               p="1rem"
-               style={{ margin: "0" }}
-              >
-               <FontAwesomeIcon icon={faStore} size="1x" color="black" />{" "}
-               {shopName}
-              </Typography>
-
-              {/* status  */}
-              <Box m="6px">
-               <Chip p="0.25rem 1rem" bg={getColor(details?.status)}>
-                <Small color="white">{getStatusLabel(details?.status)}</Small>
-               </Chip>
-              </Box>
-
-              {/* Pickup token — only once the seller has marked the corporate order packed */}
-              {order?.Order?.payment_method === "corporate_credit" &&
-               details?.status === "Processing" && (
-                <Box m="6px">
-                 <CorporatePickupToken
-                  invoiceNo={order.Order.invoice_id}
-                  buyerName={order.Order.buyer_name}
-                  packedAt={order.Order.packed_at}
-                  orderTotal={order.Order.amount}
-                  items={details.order_items
-                   .filter((item) => !item.item_cancelled_at)
-                   .map((item) => ({
-                    name: item.product_name,
-                    quantity: item.quantity,
-                    total: item.total_price ?? item.price * item.quantity,
-                   }))}
-                 />
-                </Box>
-               )}
-             </div>
-
-
+      {order?.Order?.productType !== "Abroad" &&
+       shops.map(([shopName, shopDetails]) => {
+        const details = shopDetails as {
+         delivered_at: string | null;
+         return_deadline?: string | null;
+         order_items: any[];
+         delivery_charge: number | null;
+         promocodeStatus: number | null;
+         sub_total: number | null;
+         total: number | null;
+         status: string | null;
+         isAbroad: boolean; // Add a flag for checking if the product is from abroad
+        };
+        return (
+         <Fragment key={shopName}>
+          <section className="od-card">
+           <header className="od-shop">
+            <span className="od-shop-icon" aria-hidden="true">
+             <FontAwesomeIcon icon={faStore} />
+            </span>
+            <div className="od-shop-name">
+             <small>Sold by</small>
+             <strong>{shopName}</strong>
             </div>
+            <span className="od-chip" style={{ ["--tone" as any]: getColor(details?.status) }}>
+             {getStatusLabel(details?.status)}
+            </span>
+            {/* Pickup token — only once the seller has marked the corporate order packed */}
+            {isCorporateOrder && details?.status === "Processing" && (
+             <CorporatePickupToken
+              invoiceNo={order.Order.invoice_id}
+              buyerName={order.Order.buyer_name}
+              packedAt={order.Order.packed_at}
+              orderTotal={order.Order.amount}
+              items={details.order_items
+               .filter((item) => !item.item_cancelled_at)
+               .map((item) => ({
+                name: item.product_name,
+                quantity: item.quantity,
+                total: item.total_price ?? item.price * item.quantity,
+               }))}
+             />
+            )}
+           </header>
 
-            {order?.Order?.payment_method === "corporate_credit" &&
-             details?.status === "Pending" && (
-              <Box
-               mx="1rem"
-               mb="1rem"
-               p="10px 14px"
-               bg="var(--tz-warning-bg)"
-               border="1px solid var(--tz-warning-bg)"
-               borderRadius="8px"
-              >
-               <Typography fontSize="13px" color="var(--tz-warning)">
-                Note: As a corporate employee, you can only cancel this
-                product while the order is still Pending.
-               </Typography>
-              </Box>
-             )}
+           {isCorporateOrder && details?.status === "Pending" && (
+            <p className="od-note">
+             Note: As a corporate employee, you can only cancel this product while the order is still Pending.
+            </p>
+           )}
 
+           <div className="od-items">
             {details?.order_items?.map((item, ind) => (
              <WriteReview
               key={ind}
@@ -893,303 +1401,131 @@ export default function OrderDetails({ params }: IDParams) {
               return_status={item.return_status}
               delivered_at={details.delivered_at}
               return_deadline={details.return_deadline}
-              isCorporate={order?.Order?.payment_method === "corporate_credit"}
+              isCorporate={isCorporateOrder}
              />
             ))}
-            {/* <OrderStatus orderStatus={getStatus} deliveredAt={getEstimateDate} /> */}
+           </div>
+          </section>
 
+          <OrderStatus
+           orderStatus={details.status}
+           deliveredAt={details.delivered_at}
+           returnStatus={returnDetails[0]?.return_status ?? null}
+           returnRecord={returnDetails[0] ?? null}
+           isCorporate={isCorporateOrder}
+           timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
+          />
+         </Fragment>
+        );
+       })}
 
-            <Box mt="10px" p="10px" borderRadius="8px">
-            <OrderStatus
-              orderStatus={details.status}
-              deliveredAt={details.delivered_at}
-              returnStatus={returnDetails[0]?.return_status ?? null}
-              returnRecord={returnDetails[0] ?? null}
-              isCorporate={order?.Order?.payment_method === "corporate_credit"}
-              timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
-             />
-            </Box>
-
-            {/* Return details card */}
-            {returnDetails.length > 0 && returnDetails.map((ret: any) => (
-             <Box
-              key={ret.id}
-              mt="10px"
-              p="16px"
-              border="1px solid var(--tz-danger-bg)"
-              borderRadius="8px"
-              bg="var(--tz-danger-bg)"
-             >
-              <Typography fontWeight="700" fontSize="14px" color="var(--tz-ember-deep)" mb="12px">
-               Return Request Details
-              </Typography>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px" }}>
-               <div>
-                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                 Return Type
-                </Typography>
-                <Typography fontSize="13px" fontWeight="600" color="var(--tz-ink-soft)" mt="2px" style={{ textTransform: "capitalize" }}>
-                 {(ret.return_type ?? "").replace("_", " ")}
-                </Typography>
-               </div>
-               <div>
-                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                 Status
-                </Typography>
-                <Typography fontSize="13px" fontWeight="600" color="var(--tz-ember-deep)" mt="2px" style={{ textTransform: "capitalize" }}>
-                 {ret.return_status}
-                </Typography>
-               </div>
-              </div>
-              <div style={{ marginTop: "12px" }}>
-               <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                Return Reason
-               </Typography>
-               <Typography fontSize="13px" color="var(--tz-ink-soft)" mt="4px" lineHeight="1.6">
-                {ret.return_reason}
-               </Typography>
-              </div>
-              {ret.refund_amount && (
-               <div style={{ marginTop: "12px" }}>
-                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                 Refund Amount
-                </Typography>
-                <Typography fontSize="13px" fontWeight="700" color="var(--tz-success)" mt="2px">
-                 BDT {ret.refund_amount}
-                </Typography>
-               </div>
-              )}
-              {ret.images?.length > 0 && (
-               <div style={{ marginTop: "12px" }}>
-                <Typography fontSize="11px" color="var(--tz-slate)" fontWeight="600" style={{ textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>
-                 Submitted Photos
-                </Typography>
-                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                 {ret.images.map((url: string, i: number) => (
-                  <img key={i} src={url} alt={`proof-${i}`} style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 6, border: "1px solid var(--tz-danger-bg)" }} />
-                 ))}
-                </div>
-               </div>
-              )}
-             </Box>
-            ))}
-
-            <FlexBox mt="1rem" justifyContent="center">
-             <Button
-              variant="text"
-              color="primary"
-              onClick={() => toggleSummary(shopName)}
-              style={{
-               padding: "0.5rem 1rem",
-               backgroundColor: "var(--tz-ember-tint)",
-               color: "var(--tz-ember-deep)",
-               borderRadius: "300px",
-               textAlign: "center",
-               height: "40px",
-               minWidth: "200px",
-              }}
-             >
-              {openSummaries[shopName] ? (
-               <>
-                Total Summary{" "}
-                <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "8px" }} />
-               </>
-              ) : (
-               <>
-                Total Summary{" "}
-                <FontAwesomeIcon icon={faCaretDown} style={{ marginLeft: "8px" }} />
-               </>
-              )}
-             </Button>
-            </FlexBox>
-
-            {openSummaries[shopName] && (
-             <OrderTotalSummary
-              order={order}
-              details={details}
-              shopName={shopName}
-             />
-            )}
-           </Box>
-          );
-         })
-       : null}
-     </Box>
-    )}
-   </Card>
-
-   <Grid container spacing={6}>
-    <Grid item lg={6} md={6} xs={12}>
-     {/* <Card p="20px 30px" borderRadius={8}>
-            <H5 mt="0px" mb="14px">
-              Shipping Address
-            </H5>
-            <Paragraph fontSize="14px" my="0px">
-              {order.Order.address}
-            </Paragraph>
-          </Card> */}
-
-     <ShippingAddressCard
-      address={order.Order.address}
-      area={order.Order.area_id}
-      city={order.Order.city_id}
-      province={order.Order.province_id}
-      phone={order.Order.phone}
-     />
-
-     <div style={{ display: "flex", gap: "20px" }}>
-      {/* =========== Invoice ==========
-          Only once the order is delivered — there is nothing to invoice while it is
-          still pending, and a cancelled order has no delivery to bill for. */}
-      {order.Order.isDelivered && (
-       <Button
-        px="2rem"
-        color="primary"
-        bg="primary.light"
-        mt="2rem"
-        onClick={fetchInvoice}
-       >
-        {invoiceLoading ? <BeatLoader size={18} color="var(--tz-ember-deep)" /> : "Invoice"}
-       </Button>
-      )}
-
-      {/* {order.Order.payment_status === "Unpaid" && (
-             <Button
-             px="2rem"
-             color="success" // Or another green variant available in your theme
-             bg="success.light" // Or a specific green shade
-             mt="2rem"
-             onClick={handleOnlinePayment}
-             disabled={onlinePaymentLoading}
-           >
-             {onlinePaymentLoading ? (
-               <BeatLoader size={18} color="rgba(51,208,103,0.79)" />
-             ) : (
-               "Online Payment"
-             )}
-           </Button>
-           
-            )} */}
-      {/* {order.Order.payment_status === "Unpaid" && 
-            !["Delivered", "Cancelled", "Return"].includes(order.Order.status) && (
-              <Button
-                px="2rem"
-                color="success" // Or another green variant available in your theme
-                bg="success.light" // Or a specific green shade
-                mt="2rem"
-                onClick={handleOnlinePayment}
-                disabled={onlinePaymentLoading}
-              >
-                {onlinePaymentLoading ? (
-                  <BeatLoader size={18} color="rgba(51,208,103,0.79)" />
-                ) : (
-                  "Online Payment"
-                )}
-              </Button>
-            )
-          } */}
+      {/* Return details card */}
+      {returnDetails.map((ret: any) => (
+       <section key={ret.id} className="od-card od-return">
+        <header className="od-return-head">
+         <h3>Return request</h3>
+         <span className="od-chip" style={{ ["--tone" as any]: "var(--tz-ember-deep)" }}>
+          {formatStatus(ret.return_status)}
+         </span>
+        </header>
+        <dl className="od-facts od-facts--plain">
+         <div>
+          <dt>Return type</dt>
+          <dd>{formatStatus(ret.return_type)}</dd>
+         </div>
+         {ret.refund_amount && (
+          <div>
+           <dt>Refund amount</dt>
+           <dd className="od-good">BDT {ret.refund_amount}</dd>
+          </div>
+         )}
+        </dl>
+        {ret.return_reason && (
+         <div className="od-reason">
+          <small>Reason</small>
+          <p>{ret.return_reason}</p>
+         </div>
+        )}
+        {ret.images?.length > 0 && (
+         <div className="od-photos">
+          <small>Submitted photos</small>
+          <div>
+           {ret.images.map((url: string, i: number) => (
+            <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+             <img src={url} alt={`Return photo ${i + 1}`} loading="lazy" />
+            </a>
+           ))}
+          </div>
+         </div>
+        )}
+       </section>
+      ))}
      </div>
 
-     {invoiceError && <Typography color="red">{invoiceError}</Typography>}
-
-     {invoiceUrl && (
-      <iframe
-       src={invoiceUrl}
-       title={`Invoice ${order.Order.invoice_id ?? params.id}`}
-       style={{ width: "100%", maxWidth: "600px", height: "800px", border: "none", marginTop: "1.5rem" }}
+     {/* ---------- Right: money + address ---------- */}
+     <aside className="od-side">
+      {order?.Order?.productType !== "Abroad" &&
+       shops.map(([shopName, details]) => (
+        <OrderTotalSummary key={shopName} order={order} details={details} shopName={shopName} />
+       ))}
+      <ShippingAddressCard
+       address={order.Order.address}
+       area={order.Order.area_id}
+       city={order.Order.city_id}
+       province={order.Order.province_id}
+       phone={order.Order.phone}
+       name={order.Order.buyer_name}
+       delivered={Boolean(order.Order.isDelivered)}
       />
+     </aside>
+
+     {/* Invoice only once the order is delivered — there is nothing to invoice while it is
+         still pending, and a cancelled order has no delivery to bill for. */}
+     {order.Order.isDelivered && (
+      <div className="od-bottom">
+       <button type="button" className="od-btn od-btn--solid" onClick={fetchInvoice} disabled={invoiceLoading}>
+        {invoiceLoading ? (
+         <span className="od-spin" aria-hidden="true" />
+        ) : (
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+         </svg>
+        )}
+        Invoice
+       </button>
+      </div>
      )}
-    </Grid>
+    </div>
+   </OD>
 
-    {/* <Grid item lg={6} md={6} xs={12}>
-          <Card p="20px 30px" borderRadius={8}>
-            <H5 mt="0px" mb="14px">
-              Total Summary
-            </H5>
-
-            <FlexBox
-              justifyContent="space-between"
-              alignItems="center"
-              mb="0.5rem"
-            >
-              <Typography fontSize="14px" color="text.hint">
-                Subtotal:
-              </Typography>
-              <H6 my="0px">{currency(order.Order.amount)}</H6>
-            </FlexBox>
-
-            <FlexBox
-              justifyContent="space-between"
-              alignItems="center"
-              mb="0.5rem"
-            >
-              <Typography fontSize="14px" color="text.hint">
-                Shipping fee:
-              </Typography>
-              <H6 my="0px">{currency(order.Order.shippingAddress)}</H6>
-            </FlexBox>
-
-            <FlexBox
-              justifyContent="space-between"
-              alignItems="center"
-              mb="0.5rem"
-            >
-              <Typography fontSize="14px" color="text.hint">
-                Discount:
-              </Typography>
-              <H6 my="0px" color={order?.Order?.promo_code && (order?.Order?.discount_amount ?? 0) === 0 ? "var(--tz-success)" : undefined}>
-                {order?.Order?.promo_code && (order?.Order?.discount_amount ?? 0) === 0
-                  ? "Free Shipping"
-                  : currency(order?.Order?.discount_amount || 0)}
-              </H6>
-            </FlexBox>
-
-            <Divider mb="0.5rem" />
-
-            <FlexBox
-              justifyContent="space-between"
-              alignItems="center"
-              mb="1rem"
-            >
-              <H6 my="0px">Total</H6>
-              <H6 my="0px">
-                {currency(
-                  Number(order.Order.amount) +
-                    Number(order.Order.shippingAddress)
-                )}
-              </H6>
-            </FlexBox>
-
-            <FlexBox
-              alignItems="center"
-              mb="1rem"
-            >
-              Payment Method:
-              <H6 my="0px" mx="1rem">
-                {order.Order.payment_method || "N/A"}
-              </H6>
-            </FlexBox>
-            <FlexBox
-              alignItems="center"
-              mb="1rem"
-            >
-              Payment Status:
-              <H6 my="0px" mx="1rem">
-                {order.Order.payment_status || "N/A"}
-              </H6>
-            </FlexBox>
-            <FlexBox
-              alignItems="center"
-              mb="1rem"
-            >
-              Order Status:
-              <H6 my="0px" mx="1rem">
-                {order.Order.status}
-              </H6>
-            </FlexBox>
-          </Card>
-        </Grid> */}
-   </Grid>
+   {/* Invoice viewer */}
+   {invoiceUrl && (
+    <InvoiceDialog
+     role="dialog"
+     aria-modal="true"
+     aria-label={`Invoice ${order.Order.invoice_id ?? params.id}`}
+     onClick={(e) => {
+      if (e.target === e.currentTarget) setInvoiceUrl(null);
+     }}
+    >
+     <div className="iv-box">
+      <div className="iv-head">
+       <strong>Invoice #{order.Order.invoice_id}</strong>
+       <div>
+        <a className="od-btn od-btn--solid" href={invoiceUrl} download={`invoice-${order.Order.invoice_id ?? params.id}.pdf`}>
+         Download
+        </a>
+        <button type="button" className="od-icon-btn" onClick={() => setInvoiceUrl(null)} aria-label="Close invoice">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12" />
+         </svg>
+        </button>
+       </div>
+      </div>
+      <iframe src={invoiceUrl} title={`Invoice ${order.Order.invoice_id ?? params.id}`} />
+     </div>
+    </InvoiceDialog>
+   )}
   </Fragment>
  );
 }

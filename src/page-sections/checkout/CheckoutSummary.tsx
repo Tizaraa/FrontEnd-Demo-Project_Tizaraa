@@ -525,6 +525,7 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import { Box, Tooltip } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import tz from "../../theme/tizaraa";
+import { SummaryBox } from "./checkoutStyles";
 
 export default function CheckoutSummary({ deliveryCharge }) {
  const { state } = useAppContext();
@@ -1233,181 +1234,117 @@ export default function CheckoutSummary({ deliveryCharge }) {
     </>
    ) : (
     <>
+     <SummaryBox>
+     <h3 className="sm-title">Order summary</h3>
      {/* Separates the promo field from the totals below — without it "Subtotal"
          reads as part of the promotion block. */}
-     <FlexBox flexDirection="column" mb="1.25rem">
-      <Typography fontWeight="600" mb="0.5rem">
-       Promotion
-      </Typography>
-      <FlexBox justifyContent="space-between" alignItems="center">
-       <input
-        type="text"
-        placeholder="Enter Store/Tizaraa Code"
-        value={promoCode}
-        onChange={handlePromoCodeChange}
-        style={{
-         flex: 1,
-         padding: "0.5rem",
-         border: `1px solid ${tz.color.line}`,
-         borderRadius: "4px",
-         marginRight: "0.5rem",
-         fontSize: "14px",
-        }}
-       />
+     <label className="sm-label" htmlFor="sm-promo">
+      Promo code
+     </label>
+     <div className="sm-promo">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+       <path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z" />
+       <circle cx="7.5" cy="7.5" r="1" />
+      </svg>
+      <input
+       id="sm-promo"
+       type="text"
+       placeholder="Enter Store/Tizaraa Code"
+       value={promoCode}
+       onChange={handlePromoCodeChange}
+       onKeyDown={(e) => {
+        if (e.key === "Enter") applyPromoCode();
+       }}
+      />
+      <button type="button" onClick={applyPromoCode}>
+       Apply
+      </button>
+     </div>
+     {/* Applied promo badge */}
+     {appliedPromoCode && (
+      <span className="sm-applied">
+       🏷️ {appliedPromoCode}
+       {isFreeShipping && " · Free Shipping"}
        <button
-        onClick={applyPromoCode}
-        style={{
-         backgroundColor: tz.color.emberDeep,
-         color: tz.color.paper,
-         padding: "0.5rem 1rem",
-         border: "none",
-         borderRadius: "4px",
-         cursor: "pointer",
-         fontSize: "14px",
+        type="button"
+        aria-label="Remove promo code"
+        onClick={() => {
+         setAppliedPromoCode("");
+         setIsFreeShipping(false);
+         setDiscount(0);
+         setPromoCode("");
+         setNewTotal(savedTotalPrice + savedTotalWithDelivery);
+         sessionStorage.setItem("discount", "0");
+         sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
+         sessionStorage.removeItem("promoCode");
+         sessionStorage.setItem("isFreeShipping", "0");
         }}
        >
-        APPLY
+        ×
        </button>
-      </FlexBox>
+      </span>
+     )}
 
-      {/* Applied promo badge */}
-      {appliedPromoCode && (
-       <FlexBox alignItems="center" mt="0.5rem" style={{ gap: "0.5rem" }}>
-        <span
-         style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "6px",
-          backgroundColor: tz.tone.success.bg,
-          border: `1px solid ${tz.tone.success.fill}`,
-          color: tz.tone.success.fg,
-          borderRadius: "16px",
-          padding: "4px 10px",
-          fontSize: "13px",
-          fontWeight: 600,
-         }}
-        >
-         🏷️ {appliedPromoCode}
-         {isFreeShipping && " · Free Shipping"}
-         <span
-          onClick={() => {
-           setAppliedPromoCode("");
-           setIsFreeShipping(false);
-           setDiscount(0);
-           setPromoCode("");
-           setNewTotal(savedTotalPrice + savedTotalWithDelivery);
-           sessionStorage.setItem("discount", "0");
-           sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
-           sessionStorage.removeItem("promoCode");
-           sessionStorage.setItem("isFreeShipping", "0");
-          }}
-          style={{ cursor: "pointer", marginLeft: "4px", fontWeight: 700 }}
-         >
-          ×
-         </span>
-        </span>
-       </FlexBox>
+     <div className="sm-lines">
+      <div className="sm-line">
+       <span>Subtotal</span>
+       <b>{currency(originalSubtotal)}</b>
+      </div>
+      {hasAbroadProduct && (
+       <div className="sm-line">
+        <span className="is-brand">Pay now ({selectedPaymentOption}%)</span>
+        <b className="is-brand">{otcAdvancePaymentAmount !== null ? currency(otcAdvancePaymentAmount) : "BDT 0.00"}</b>
+       </div>
       )}
-     </FlexBox>
-
-     <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-      <Typography color="text.hint">Subtotal:</Typography>
-      <FlexBox alignItems="flex-end">
-       <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-        {currency(originalSubtotal)}
-        {/* {currency(Math.ceil(savedTotalPrice))} */}
-       </Typography>
-      </FlexBox>
-     </FlexBox>
-
-     {hasAbroadProduct && (
-      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-       <Typography color={tz.color.emberDeep}>
-        Pay Now ({selectedPaymentOption}%):
-       </Typography>
-       <FlexBox alignItems="flex-end">
-        <Typography
-         color={tz.color.emberDeep}
-         fontSize="18px"
-         fontWeight="600"
-         lineHeight="1"
-        >
-         {otcAdvancePaymentAmount !== null
-          ? currency(otcAdvancePaymentAmount)
-          : "BDT 0.00"}
-        </Typography>
-       </FlexBox>
-      </FlexBox>
-     )}
-
-     {!hasAbroadProduct && (
-      <>
-       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-        <Typography color="text.hint">Shipping:</Typography>
-        <FlexBox alignItems="flex-end" style={{ gap: "0.5rem" }}>
-         {isFreeShipping && (
-          <Typography fontSize="14px" color="text.muted" style={{ textDecoration: "line-through" }}>
-           {currency(savedTotalWithDelivery)}
-          </Typography>
-         )}
-         <Typography fontSize="18px" fontWeight="600" lineHeight="1" color={isFreeShipping ? tz.tone.success.fg : "inherit"}>
+      {!hasAbroadProduct && (
+       <>
+        <div className="sm-line">
+         <span>Shipping</span>
+         <b key={savedTotalWithDelivery} className={isFreeShipping ? "is-good" : undefined}>
+          {isFreeShipping && <s>{currency(savedTotalWithDelivery)}</s>}
           {isFreeShipping ? "FREE" : currency(savedTotalWithDelivery)}
-         </Typography>
-        </FlexBox>
-       </FlexBox>
+         </b>
+        </div>
+        <div className="sm-line">
+         <span>VAT</span>
+         <b>BDT 0.00</b>
+        </div>
+        {/* discount only when there is one */}
+        {hasDiscount && (
+         <div className="sm-line">
+          <span>
+           Discount
+           <span className="sm-badge">{Math.round(discountPercent)}% OFF</span>
+          </span>
+          <b className="is-good">- {currency(totalDiscount)}</b>
+         </div>
+        )}
+       </>
+      )}
+     </div>
 
-       <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
-        <Typography color="text.hint">VAT:</Typography>
-        <FlexBox alignItems="flex-end">
-         <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          BDT 0.00
-         </Typography>
-        </FlexBox>
-       </FlexBox>
-
-       <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
-        <FlexBox alignItems="center" style={{ gap: "8px" }}>
-         <Typography color="text.hint">Discount:</Typography>
-         <span
-          style={{
-           backgroundColor: hasDiscount ? tz.tone.success.bg : tz.color.mist,
-           color: hasDiscount ? tz.tone.success.fg : tz.color.slate,
-           borderRadius: "10px",
-           padding: "2px 8px",
-           fontSize: "11px",
-           fontWeight: 700,
-          }}
-         >
-          {hasDiscount
-           ? `${Math.round(discountPercent)}% OFF`
-           : "0% OFF"}
-         </span>
-        </FlexBox>
-        <Typography fontWeight="700" color={hasDiscount ? tz.tone.success.fg : "inherit"}>
-         {hasDiscount ? `- ${currency(totalDiscount)}` : currency(0)}
-        </Typography>
-       </FlexBox>
-      </>
-     )}
-
-     <Divider mb="1rem" />
-
-     <Typography
-      className="price"
-      fontSize="26px"
-      fontWeight="700"
-      lineHeight="1"
-      textAlign="right"
-      mb="1.5rem"
-      color={tz.color.ink}
-      style={{ fontFamily: tz.font.display }}
-     >
-      {hasAbroadProduct
-       ? currency(otcAdvancePaymentAmount || 0)
-       : currency((isFreeShipping ? 0 : savedTotalWithDelivery) + savedTotalPrice - discount)}
-     </Typography>
-
-     <Divider mb="1rem" />
+     <div className="sm-total">
+      <span>Total</span>
+      <strong
+       key={
+        hasAbroadProduct
+         ? otcAdvancePaymentAmount || 0
+         : (isFreeShipping ? 0 : savedTotalWithDelivery) + savedTotalPrice - discount
+       }
+      >
+       {hasAbroadProduct
+        ? currency(otcAdvancePaymentAmount || 0)
+        : currency((isFreeShipping ? 0 : savedTotalWithDelivery) + savedTotalPrice - discount)}
+      </strong>
+     </div>
+     <p className="sm-secure">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+       <rect x="3" y="11" width="18" height="11" rx="2" />
+       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
+      Secure checkout
+     </p>
+     </SummaryBox>
     </>
    )}
 

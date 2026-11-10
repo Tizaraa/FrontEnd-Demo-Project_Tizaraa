@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Box from "@component/Box";
-import Card from "@component/Card";
-import Grid from "@component/grid/Grid";
 import NextImage from "@component/NextImage";
 import { StyledMegaMenu1 } from "./styles";
 import { MegaMenu1Props } from "./type";
@@ -17,52 +15,42 @@ export default function MegaMenu1({
 }: MegaMenu1Props) {
  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
  const [subCategoryData, setSubCategoryData] = useState<any | null>(null);
+ // Last hovered level 2 row: kept highlighted and named in the level 3 header
+ const [activeCategory, setActiveCategory] = useState<any | null>(null);
 
  // Function to set SubCategory data
  const handleCategoryHover = (category: any) => {
   setHoveredCategory(category.title);
   setSubCategoryData(category.subCategories);
+  setActiveCategory(category);
  };
 
  return categories ? (
   <StyledMegaMenu1 className="mega-menu">
-   <Card
-    ml="1rem"
-    minWidth={minWidth}
-    boxShadow="regular"
-    overflow="hidden"
-    borderRadius={8}
+   <div
+    className={subCategoryData ? "mega-panel is-joined" : "mega-panel"}
+    style={{ minWidth }}
    >
-    <Box style={{ position: "relative", height: "450px" }}>
-     {categories.map((item, ind) => (
-      <Grid item md={3} key={ind}>
-       <div
-        style={{ position: "relative" }}
-        onMouseEnter={() => handleCategoryHover(item)} // Set hover state and subcategory data
-        onMouseLeave={() => setHoveredCategory(null)} // Clear hover state
-       >
-        {/* <div className="category-dropdown-link">
-                  <Link href={`/category/${item.href}`}>
-                    <div style={{ display: 'flex',  alignItems: 'center', padding: '8px 0', textDecoration: 'none' }}>
-                      <span>{item.title}</span>
-                      <Icon variant="small">chevron-right</Icon>
-                    </div>
-                  </Link>
-                </div> */}
-
-        <StyledCategoryMenuItem>
-         <Link href={`/category/${item.href}`}>
-          <div className="category-dropdown-link">
-           {/* {icon && <Icon variant="small">{icon}</Icon>} */}
-           <span className="title">{item.title}</span>
-           <Icon variant="small">chevron-right</Icon>
-          </div>
-         </Link>
-        </StyledCategoryMenuItem>
-       </div>
-      </Grid>
-     ))}
-    </Box>
+    {categories.map((item, ind) => (
+     <div
+      key={ind}
+      onMouseEnter={() => handleCategoryHover(item)} // Set hover state and subcategory data
+      onMouseLeave={() => setHoveredCategory(null)} // Clear hover state
+     >
+      <StyledCategoryMenuItem
+       className={activeCategory === item ? "is-active" : undefined}
+      >
+       <Link href={`/category/${item.href}`}>
+        <div className="category-dropdown-link">
+         <span className="title">{item.title}</span>
+         <Icon className="chev" variant="small">
+          chevron-right
+         </Icon>
+        </div>
+       </Link>
+      </StyledCategoryMenuItem>
+     </div>
+    ))}
 
     {rightImage && (
      <Link href={rightImage.href}>
@@ -88,10 +76,15 @@ export default function MegaMenu1({
       </Box>
      </Link>
     )}
-   </Card>
+   </div>
 
    {/* Render the SubCategoryMenu only when there is subCategoryData */}
-   {subCategoryData && <SubCategoryMenu subCategories={subCategoryData} />}
+   {subCategoryData && (
+    <SubCategoryMenu
+     subCategories={subCategoryData}
+     parent={activeCategory}
+    />
+   )}
   </StyledMegaMenu1>
  ) : null;
 }

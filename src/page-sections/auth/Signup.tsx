@@ -1140,12 +1140,18 @@ import ApiBaseUrl from "api/ApiBaseUrl";
 
 // STYLED COMPONENT
 import {
- AuthCard,
+ AuthBrand,
  AuthErrorText,
- AuthFooter,
+ AuthAltCta,
+ AuthAltLabel,
+ AuthPage,
+ AuthPane,
+ AuthShell,
+ AuthSubtitle,
  AuthTextLink,
  AuthTitle,
 } from "./styles";
+import { FeatureShowcase, useAuthSwap } from "./Login";
 import tz from "../../theme/tizaraa";
 
 import BeatLoader from "react-spinners/BeatLoader";
@@ -1156,6 +1162,7 @@ const requiredMark = { color: tz.tone.danger.fg };
 
 export default function Signup() {
  const router = useRouter();
+ const { swap, swapTo } = useAuthSwap();
  const [isPasswordValid, setIsPasswordValid] = useState(false);
 
  const {
@@ -1388,9 +1395,21 @@ export default function Signup() {
 
  return (
   <>
-   <AuthCard>
+   <AuthPage data-wall="left" data-swap={swap}>
+    {/* The animated shop wall behind the card comes from (auth)/layout.tsx */}
+    <AuthShell>
+    <FeatureShowcase />
+
+    <AuthPane>
     <form onSubmit={handleSubmit} autoComplete="off">
-     <AuthTitle style={{ marginBottom: 24 }}>Create Your Account</AuthTitle>
+     <AuthBrand href="/" aria-label="Tizaraa home">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/assets/images/tizaraa_logo.png" alt="Tizaraa" width={200} height={90} />
+     </AuthBrand>
+
+     <AuthTitle>Create your account</AuthTitle>
+
+     <AuthSubtitle>Join Tizaraa and start shopping in a minute</AuthSubtitle>
 
      <TextField
       fullwidth
@@ -1576,17 +1595,29 @@ export default function Signup() {
       fullwidth
       disabled={isSubmitting}
      >
-      {isSubmitting ? <BeatLoader size={12} color={tz.color.slate} /> : "Create Account"}
+      {isSubmitting ? (
+       <BeatLoader size={12} color={tz.color.slate} />
+      ) : (
+       <span className="btn-label">
+        Create Account
+        <span className="btn-arrow" aria-hidden="true">→</span>
+       </span>
+      )}
      </Button>
-    </form>
 
-    <AuthFooter>
-     <span>Already have an account?</span>
-     <AuthTextLink href={{ pathname: "/login", query: { from: "signup" } }}>
+     {/* Separate, clearly-a-button choice for existing customers */}
+     <AuthAltLabel>Already have an account?</AuthAltLabel>
+     <AuthAltCta
+      href={{ pathname: "/login", query: { from: "signup" } }}
+      onClick={(e) => swapTo(e, "/login?from=signup")}
+     >
       Log in
-     </AuthTextLink>
-    </AuthFooter>
-   </AuthCard>
+      <span className="link-arrow" aria-hidden="true">→</span>
+     </AuthAltCta>
+    </form>
+    </AuthPane>
+    </AuthShell>
+   </AuthPage>
   </>
  );
 }

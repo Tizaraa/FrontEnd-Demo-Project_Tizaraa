@@ -15,22 +15,97 @@ const StyledNavbar = styled.div`
   }
  }
 
+ /* All Categories: solid navy, icon tile, arrow turns on hover */
+ .nav-cat {
+  padding: 0 14px 0 6px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, ${({ theme }) => theme.tz.color.navy}, #164a85);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(14, 52, 96, 0.22);
+  transition: box-shadow 200ms ease, transform 200ms ease;
+
+  &:hover {
+   transform: translateY(-1px);
+   box-shadow: 0 8px 18px rgba(14, 52, 96, 0.28);
+  }
+  .dropdown-icon {
+   color: rgba(255, 255, 255, 0.8);
+   transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  &:hover .dropdown-icon {
+   transform: rotate(90deg);
+  }
+ }
+ .nav-cat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.tz.color.ember};
+  color: #fff;
+ }
+
  .nav-action {
+  position: relative;
   display: flex;
   align-items: center;
   height: 40px;
   margin-left: 4px;
   padding: 0 14px;
-  border-radius: ${({ theme }) => theme.tz.radius.sm}px;
+  border-radius: 10px;
   background: transparent;
   color: ${({ theme }) => theme.tz.color.inkSoft};
   font-size: 14px;
-  transition: background-color ${({ theme }) => theme.tz.motion.fast},
-   color ${({ theme }) => theme.tz.motion.fast};
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+
+  /* underline grows from the centre */
+  &::after {
+   content: "";
+   position: absolute;
+   left: 14px;
+   right: 14px;
+   bottom: 4px;
+   height: 2px;
+   border-radius: 2px;
+   background: ${({ theme }) => theme.tz.color.ember};
+   transform: scaleX(0);
+   transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
 
   &:hover:enabled {
-   background: ${({ theme }) => theme.tz.color.emberTint};
    color: ${({ theme }) => theme.tz.color.emberDeep};
+  }
+  &:hover:enabled::after {
+   transform: scaleX(1);
+  }
+  &:hover:enabled .nav-action-icon {
+   transform: translateY(-2px);
+  }
+  &:focus-visible {
+   outline: none;
+   box-shadow: ${({ theme }) => theme.tz.focusRing};
+  }
+ }
+
+ /* Become A Seller: outlined ember pill */
+ .nav-action--cta {
+  margin-right: 6px;
+  border: 1.5px solid ${({ theme }) => theme.tz.color.ember};
+  border-radius: 999px;
+  color: ${({ theme }) => theme.tz.color.emberDeep};
+
+  &::after {
+   display: none;
+  }
+  &:hover:enabled {
+   background: ${({ theme }) => theme.tz.color.emberDeep};
+   border-color: ${({ theme }) => theme.tz.color.emberDeep};
+   color: #fff;
+  }
+  &:hover:enabled .nav-action-icon {
+   color: #fff;
   }
  }
 
@@ -38,6 +113,17 @@ const StyledNavbar = styled.div`
   display: flex;
   margin-right: 8px;
   color: ${({ theme }) => theme.tz.color.ember};
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms ease;
+ }
+
+ @media (prefers-reduced-motion: reduce) {
+  .nav-cat,
+  .nav-cat .dropdown-icon,
+  .nav-action,
+  .nav-action::after,
+  .nav-action-icon {
+   transition: none;
+  }
  }
 
  .nav-link {

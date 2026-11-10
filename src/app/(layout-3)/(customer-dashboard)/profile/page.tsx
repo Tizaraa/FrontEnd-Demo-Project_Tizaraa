@@ -253,89 +253,104 @@
 import React, { Fragment, useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
+import styled from "styled-components";
 
-import FlexBox from "@component/FlexBox";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
-import { EditProfileButton } from "@sections/customer-dashboard/profile";
-import { Vortex } from "react-loader-spinner";
-import styled from "@emotion/styled";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import authService from "services/authService";
 import CorporateCard from "@component/page/profile/corporeateCard";
 import { useDashboardCountsListener } from "utils/dashboardCounts";
-import ProfileIdentity from "@sections/customer-dashboard/profile/ProfileIdentity";
 import {
- DashPanel,
- DashPanelHead,
- DetailList,
- DetailItem,
+ ProfileHero,
+ RecentOrders,
+ QuickActions,
+ CountUp,
+ ActionLink,
+ PIcon,
+ P_ICON,
+} from "@sections/customer-dashboard/profile/ProfileIdentity";
+import {
  StatGrid,
  StatTile,
  Tone,
 } from "@sections/customer-dashboard/ui";
 
-const LoaderWrapper = styled.div`
+// Customer profile page.
+// - Retail customers (any `type` other than "employee") get the retail
+//   dashboard: hero with contact icons + completeness, order stats, recent
+//   orders, quick actions, personal details and saved address.
+// - Corporate employees (`type === "employee"`) keep the credit card view.
+// The API sends `type` as "employee" or the user's role (e.g. "buyer"); the
+// page used to check for "Regular", which never arrives, so every retail
+// customer was shown the corporate card.
+
+const Stack = styled.div`
  display: flex;
- justify-content: center;
- align-items: center;
- min-height: 60vh;
+ flex-direction: column;
+ gap: 20px;
 `;
 
-function LoadingFallback() {
+const Shimmer = styled.div<{ $h: number }>`
+ height: ${({ $h }) => $h}px;
+ border-radius: 18px;
+ background: ${({ theme }) => theme.tz.color.mist};
+`;
+
+const ErrorBox = styled.div`
+ display: flex;
+ flex-wrap: wrap;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ padding: 20px;
+ border: 1px solid ${({ theme }) => theme.tz.tone.danger.bg};
+ border-radius: 18px;
+ background: ${({ theme }) => theme.tz.color.paper};
+
+ strong {
+  display: block;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+ span {
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+ button {
+  height: 40px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  font-weight: 700;
+  color: #fff;
+  background: ${({ theme }) => theme.tz.color.emberDeep};
+  cursor: pointer;
+ }
+`;
+
+function LoadingSkeleton() {
  return (
-  <LoaderWrapper>
-   <Vortex />
-  </LoaderWrapper>
+  <Stack aria-busy="true" aria-label="Loading your profile">
+   <Shimmer $h={170} />
+   <Shimmer $h={96} />
+   <Shimmer $h={200} />
+  </Stack>
  );
 }
-type profileType = {
- id: number;
- name: string;
- email: string;
- phone: any;
- gender: any;
- birth_date: any;
- status: number;
- image: any;
- type: string;
- credit_balance?: string;
- credit_pending?: string;
- due_amount?: string;
- employee_id?: any;
- employee_code?: any;
- nid?: any;
- designation?: any;
- employee_status?: any;
- company_name?: any;
- shop_slug?: string;
- created_at?: string;
- updated_at?: string;
-};
 
 export default function Profile() {
  const router = useRouter();
- const [user, setUser] = useState(null);
- const [profile, setProfile] = useState({
-  name: "",
-  email: "",
-  phone: "",
-  birth_date: "",
-  gender: "",
-  image: "",
-  type: "",
- });
+ const searchParams = useSearchParams();
+ const [profile, setProfile] = useState<any>(null);
+ const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+ const [canChangePassword, setCanChangePassword] = useState(true);
  const [data, setData] = useState({
   totalOrders: 0,
-  confirmedOrders: 0,
   pendingOrders: 0,
   deliveredOrders: 0,
   cancelOrders: 0,
-  totalShipments: 0,
-  totalDeliveries: 0,
-  customerAddresses: [],
+  returnOrders: 0,
+  addresses: 0,
  });
- const [loading, setLoading] = useState(true);
- const searchParams = useSearchParams();
+ const [countsLoaded, setCountsLoaded] = useState(false);
 
  useEffect(() => {
   const token = searchParams.get("token");
@@ -345,50 +360,48 @@ export default function Profile() {
    localStorage.setItem("userInfo", userFromURL);
    router.push("/profile");
   }
-
   if (!authService.isAuthenticated()) {
    router.push("/login");
-  } else {
-   authService.getUser().then((userData) => {
-    setUser(userData);
-    console.log("userData", userData);
-
-    setLoading(false);
-   });
+   return;
+  }
+  // Accounts created with Google (status 2) have no password to change
+  try {
+   const info = JSON.parse(localStorage.getItem("userInfo") || "null");
+   setCanChangePassword(info?.status !== 2);
+  } catch {
+   // keep the default
   }
  }, [router, searchParams]);
 
- const fetchProfileData = async () => {
+ const fetchProfileData = async (fresh = false) => {
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
   try {
-   const token = localStorage.getItem("token");
-   const profileResponse = await axios.get(
-    `${ApiBaseUrl.localApiUrl}user/profile`,
-    {
-     headers: { Authorization: `Bearer ${token}` },
-    }
-   );
-   setProfile(profileResponse.data.profile as profileType);
-   setUser(profileResponse.data.profile); // Also update user state
-
-   console.log("profileResponse", profileResponse.data.profile);
-
-   const historyResponse = await axios.get(
-    `${ApiBaseUrl.localApiUrl}user/profile/history`,
-    { headers: { Authorization: `Bearer ${token}` } }
-   );
-   const profileData = historyResponse.data;
-   setData({
-    totalOrders: profileData.totalorder,
-    confirmedOrders: profileData.conformitem,
-    pendingOrders: profileData.pending,
-    deliveredOrders: profileData.deliveryitem,
-    cancelOrders: profileData.cancelitem,
-    totalShipments: profileData.shipeditem,
-    totalDeliveries: profileData.deliveryitem,
-    customerAddresses: profileData.customeraddress,
-   });
+   const profileResponse = await axios.get(`${ApiBaseUrl.localApiUrl}user/profile`, { headers });
+   setProfile(profileResponse.data.profile);
+   setStatus("ready");
   } catch (error) {
-   console.error("Error fetching profile data:", error);
+   console.error("Error fetching profile:", error);
+   setStatus("error");
+   return;
+  }
+  try {
+   const historyResponse = await axios.get(`${ApiBaseUrl.localApiUrl}user/profile/history`, {
+    headers,
+    params: fresh ? { fresh: 1 } : undefined,
+   });
+   const h = historyResponse.data;
+   setData({
+    totalOrders: h.totalorder ?? 0,
+    pendingOrders: h.pending ?? 0,
+    deliveredOrders: h.deliveryitem ?? 0,
+    cancelOrders: h.cancelitem ?? 0,
+    returnOrders: h.returnlitem ?? 0,
+    addresses: h.customeraddress ?? 0,
+   });
+   setCountsLoaded(true);
+  } catch (error) {
+   console.error("Error fetching order counts:", error);
   }
  };
 
@@ -398,92 +411,80 @@ export default function Profile() {
 
  // Re-fetch the moment something elsewhere (cancelling an item, submitting a
  // return, etc.) reports the counts as stale, instead of only on a hard reload.
- useDashboardCountsListener(fetchProfileData);
+ useDashboardCountsListener(() => fetchProfileData(true));
 
- if (loading) return <LoadingFallback />;
+ const isCorporate = profile?.type === "employee";
 
- const infoList: { title: number; subtitle: string; tone: Tone; link: string }[] = [
-  { title: data.totalOrders, subtitle: "All orders", tone: "info", link: "/orders" },
-  { title: data.pendingOrders, subtitle: "Pending", tone: "warning", link: "/pending-orders" },
-  { title: data.deliveredOrders, subtitle: "Delivered", tone: "success", link: "/delivered-orders" },
-  { title: data.cancelOrders, subtitle: "Cancelled", tone: "danger", link: "/cancel-orders" },
+ const stats: { value: number; label: string; tone: Tone; link: string; icon: string }[] = [
+  { value: data.totalOrders, label: "All orders", tone: "info", link: "/orders", icon: P_ICON.bag },
+  { value: data.pendingOrders, label: "Pending", tone: "warning", link: "/pending-orders", icon: P_ICON.clock },
+  { value: data.deliveredOrders, label: "Delivered", tone: "success", link: "/delivered-orders", icon: P_ICON.check },
+  { value: data.cancelOrders, label: "Cancelled", tone: "danger", link: "/cancel-orders", icon: P_ICON.cross },
  ];
 
- const birthday = profile?.birth_date
-  ? new Date(profile.birth_date)
-     .toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-     })
-     .replace(/(\d{2} \w{3}) (\d{4})/, "$1, $2") // Add comma after month
-  : "Not added";
-
- const gender =
-  profile?.gender === "male"
-   ? "Male"
-   : profile?.gender === "female"
-     ? "Female"
-     : "Not added";
-
  return (
-  <Suspense fallback={<LoadingFallback />}>
+  <Suspense fallback={<LoadingSkeleton />}>
    <Fragment>
     <DashboardPageHeader
      title="My profile"
-     subtitle="Your account details and order summary"
+     subtitle="Your account, orders and saved details in one place"
      iconName="user_filled"
-     button={<EditProfileButton />}
     />
 
-    <FlexBox flexDirection="column" style={{ gap: "24px" }}>
-     {profile?.type === "Regular" ? (
-      <ProfileIdentity
-       name={profile?.name}
-       email={profile?.email}
-       phone={profile?.phone}
-       image={profile?.image}
-       typeLabel="Customer"
-      />
-     ) : (
+    {status === "loading" ? (
+     <LoadingSkeleton />
+    ) : status === "error" ? (
+     <ErrorBox role="alert">
+      <span>
+       <strong>We couldn&apos;t load your profile</strong>
+       Please check your connection and try again.
+      </span>
+      <button
+       type="button"
+       onClick={() => {
+        setStatus("loading");
+        fetchProfileData();
+       }}
+      >
+       Try again
+      </button>
+     </ErrorBox>
+    ) : isCorporate ? (
+     <Stack>
       <CorporateCard profile={profile} />
-     )}
-
-     <section aria-label="Order summary">
       <StatGrid>
-       {infoList.map((item) => (
+       {stats.map((s) => (
         <StatTile
-         key={item.subtitle}
-         href={item.link}
-         value={item.title ?? 0}
-         label={item.subtitle}
-         tone={item.tone}
+         key={s.label}
+         href={s.link}
+         value={<CountUp value={s.value} />}
+         label={s.label}
+         tone={s.tone}
+         icon={<PIcon d={s.icon} size={18} />}
         />
        ))}
       </StatGrid>
-     </section>
+      <RecentOrders delay={120} />
+     </Stack>
+    ) : (
+     <Stack>
+      <ProfileHero profile={profile} canChangePassword={canChangePassword} />
 
-     {profile?.type === "Regular" && (
-      <DashPanel>
-       <DashPanelHead title="Personal details" />
-       <DetailList>
-        <DetailItem label="Full name">{profile?.name || "Not added"}</DetailItem>
-        <DetailItem label="Email">
-         {profile?.email ? (
-          <a href={`mailto:${profile.email}`}>{profile.email}</a>
-         ) : (
-          "Not added"
-         )}
-        </DetailItem>
-        <DetailItem label="Phone">
-         {profile?.phone ? <a href={`tel:${profile.phone}`}>{profile.phone}</a> : "Not added"}
-        </DetailItem>
-        <DetailItem label="Birthday">{birthday}</DetailItem>
-        <DetailItem label="Gender">{gender}</DetailItem>
-       </DetailList>
-      </DashPanel>
-     )}
-    </FlexBox>
+      {/* Order counts live in the sidebar; quick actions come straight after the hero */}
+      <QuickActions
+       canChangePassword={canChangePassword}
+       delay={80}
+       counts={
+        countsLoaded
+         ? { orders: data.totalOrders, returns: data.returnOrders, addresses: data.addresses }
+         : null
+       }
+      />
+      <RecentOrders delay={140} />
+
+      {/* Personal details now live in the hero (email, phone, birthday, gender) */}
+     </Stack>
+    )}
    </Fragment>
   </Suspense>
  );

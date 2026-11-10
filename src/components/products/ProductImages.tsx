@@ -416,6 +416,145 @@ import Avatar from "@component/avatar";
 import Box from "@component/Box";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import tz from "../../theme/tizaraa";
+import styled, { keyframes } from "styled-components";
+
+const gFade = keyframes`
+ from { opacity: 0; transform: scale(0.985); }
+ to { opacity: 1; transform: none; }
+`;
+
+// Gallery shell: soft stage for the main photo, counter, arrows, thumb strip
+const Gallery = styled.div`
+ .pg-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  max-height: 460px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
+  border-radius: 20px;
+  background: radial-gradient(80% 80% at 50% 40%, #fff 0%, ${({ theme }) => theme.tz.color.mist} 100%);
+  cursor: zoom-in;
+ }
+ .pg-stage img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  animation: ${gFade} 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+ }
+ .pg-count {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(20, 21, 32, 0.08);
+  font-size: 12px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.tz.color.inkSoft};
+  pointer-events: none;
+ }
+ .pg-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin-top: -19px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 12px rgba(20, 21, 32, 0.12);
+  color: ${({ theme }) => theme.tz.color.ink};
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 180ms ease, transform 180ms ease;
+ }
+ .pg-nav--prev {
+  left: 10px;
+ }
+ .pg-nav--next {
+  right: 10px;
+ }
+ .pg-stage:hover .pg-nav,
+ .pg-nav:focus-visible {
+  opacity: 1;
+ }
+ .pg-nav:hover {
+  transform: scale(1.08);
+ }
+ .pg-nav:focus-visible {
+  outline: none;
+  box-shadow: ${({ theme }) => theme.tz.focusRing};
+ }
+
+ .pg-thumbs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 4px 2px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+ }
+ .pg-thumb {
+  flex: 0 0 auto;
+  width: 68px;
+  height: 68px;
+  padding: 3px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  background: ${({ theme }) => theme.tz.color.mist};
+  cursor: pointer;
+  transition: border-color 160ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1), opacity 160ms ease;
+  opacity: 0.7;
+ }
+ .pg-thumb img {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+ }
+ .pg-thumb:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+ }
+ .pg-thumb.is-on {
+  border-color: ${({ theme }) => theme.tz.color.ember};
+  opacity: 1;
+ }
+ .pg-thumb:focus-visible {
+  outline: none;
+  box-shadow: ${({ theme }) => theme.tz.focusRing};
+ }
+
+ @media (max-width: 767px) {
+  .pg-stage {
+   cursor: default;
+  }
+  .pg-nav {
+   opacity: 1;
+   width: 34px;
+   height: 34px;
+  }
+ }
+ @media (prefers-reduced-motion: reduce) {
+  .pg-stage img {
+   animation: none;
+  }
+  .pg-nav,
+  .pg-thumb {
+   transition: none;
+  }
+ }
+`;
 
 type ProductImagesProps = {
  images: string[];
@@ -504,28 +643,35 @@ const ProductImages = ({ images }: ProductImagesProps) => {
   Math.min(cursorPosition.y - lensHeight / 2, imgDimensions.height - lensHeight)
  );
 
+ const count = images?.length ?? 0;
+ const go = (step: number) => () => setSelectedImage((i) => (i + step + count) % count);
+
  return (
-  <div>
-   <Box
-    position="relative"
+  <Gallery>
+   <div
+    className="pg-stage"
     onMouseMove={handleMouseMove}
     onMouseEnter={handleMouseEnter}
     onMouseLeave={handleMouseLeave}
    >
-    <FlexBox
-     mb="15px"
-     overflow="hidden"
-     borderRadius={16}
-     justifyContent="center"
-    >
-     <Image
-      // width={200}
-      // height={200}
-      src={currentImageUrl}
-      style={{ display: "block", height: "350px" }}
-     />
-    </FlexBox>
-
+    {currentImageUrl && <img key={currentImageUrl} src={currentImageUrl} alt={`Product photo ${selectedImage + 1}`} />}
+    {count > 1 && (
+     <>
+      <span className="pg-count">
+       {selectedImage + 1} / {count}
+      </span>
+      <button type="button" className="pg-nav pg-nav--prev" aria-label="Previous photo" onClick={go(-1)} onMouseEnter={handleMouseLeave}>
+       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="m15 18-6-6 6-6" />
+       </svg>
+      </button>
+      <button type="button" className="pg-nav pg-nav--next" aria-label="Next photo" onClick={go(1)} onMouseEnter={handleMouseLeave}>
+       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="m9 18 6-6-6-6" />
+       </svg>
+      </button>
+     </>
+    )}
     {/* Magnifying Lens (desktop only) */}
     {!isMobile &&
      showMagnifier &&
@@ -541,14 +687,13 @@ const ProductImages = ({ images }: ProductImagesProps) => {
         height: `${lensHeight}px`,
         pointerEvents: "none",
         border: `1px solid ${tz.color.line}`,
-        backgroundColor: "rgba(255, 255, 255, 0.4)",
-        cursor: "zoom-in",
+        borderRadius: "8px",
+        backgroundColor: "rgba(255, 255, 255, 0.35)",
         transition: "top 0.05s ease-out, left 0.05s ease-out",
        }}
       />
      )}
-   </Box>
-
+   </div>
    {/* Magnifier Portal (desktop only) */}
    {!isMobile &&
     isClient &&
@@ -579,32 +724,27 @@ const ProductImages = ({ images }: ProductImagesProps) => {
     )}
 
    {/* Thumbnails */}
-   <FlexBox overflow="auto">
-    {images.map((url, ind) => {
-     const imageUrl = url?.startsWith("http") ? url : `${ApiBaseUrl.ImgUrl}${url}`;
-     return (
-      <Box
-       key={ind}
-       size={70}
-       bg="white"
-       minWidth={70}
-       display="flex"
-       cursor="pointer"
-       border="1px solid"
-       borderRadius="10px"
-       alignItems="center"
-       justifyContent="center"
-       ml={ind === 0 ? "auto" : ""}
-       mr={ind === images.length - 1 ? "auto" : "10px"}
-       borderColor={selectedImage === ind ? "primary.main" : "gray.400"}
-       onClick={handleImageClick(ind)}
-      >
-       <Avatar src={imageUrl} borderRadius="10px" size={65} />
-      </Box>
-     );
-    })}
-   </FlexBox>
-  </div>
+   {count > 1 && (
+    <div className="pg-thumbs" role="tablist" aria-label="Product photos">
+     {images.map((url, ind) => {
+      const imageUrl = url?.startsWith("http") ? url : `${ApiBaseUrl.ImgUrl}${url}`;
+      return (
+       <button
+        key={ind}
+        type="button"
+        role="tab"
+        aria-selected={selectedImage === ind}
+        aria-label={`Photo ${ind + 1}`}
+        className={`pg-thumb${selectedImage === ind ? " is-on" : ""}`}
+        onClick={handleImageClick(ind)}
+       >
+        <img src={imageUrl} alt="" loading="lazy" />
+       </button>
+      );
+     })}
+    </div>
+   )}
+  </Gallery>
  );
 };
 

@@ -147,7 +147,25 @@ const Tile = styled(Link)<{ $tone: Tone }>`
  border-radius: ${({ theme }) => theme.tz.radius.md}px;
  text-decoration: none;
  transition: box-shadow ${({ theme }) => theme.tz.motion.fast},
-  border-color ${({ theme }) => theme.tz.motion.fast};
+  border-color ${({ theme }) => theme.tz.motion.fast},
+  transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+
+ .st-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+ }
+
+ .st-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  color: ${({ theme, $tone }) => theme.tz.tone[$tone].fg};
+  background: ${({ theme, $tone }) => theme.tz.tone[$tone].bg};
+ }
 
  .st-value {
   font-family: ${({ theme }) => theme.tz.font.display};
@@ -165,6 +183,7 @@ const Tile = styled(Link)<{ $tone: Tone }>`
 
  &:hover {
   box-shadow: ${({ theme }) => theme.tz.elevation.raised};
+  transform: translateY(-2px);
  }
 
  &:focus-visible {
@@ -174,23 +193,37 @@ const Tile = styled(Link)<{ $tone: Tone }>`
 
  ${({ theme }) => theme.tz.media.reducedMotion} {
   transition: none;
+
+  &:hover {
+   transform: none;
+  }
  }
 `;
 
+// `icon` is optional (the profile page passes one); other pages are unchanged
 export function StatTile({
  href,
  value,
  label,
  tone,
+ icon,
 }: {
  href: string;
  value: ReactNode;
  label: string;
  tone: Tone;
+ icon?: ReactNode;
 }) {
  return (
   <Tile href={href} $tone={tone}>
-   <span className="st-value">{value}</span>
+   {icon ? (
+    <span className="st-head">
+     <span className="st-value">{value}</span>
+     <span className="st-icon">{icon}</span>
+    </span>
+   ) : (
+    <span className="st-value">{value}</span>
+   )}
    <span className="st-label">{label}</span>
   </Tile>
  );
