@@ -68,172 +68,75 @@ export default function OrderedItem() {
   syncProducts();
  }, [state.cart]);
 
- return (
-  <div
-   style={{
-    padding: "20px",
-    backgroundColor: "white",
-    borderRadius: "8px",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-   }}
-  >
-   {selectedProducts.length > 0 ? (
-    selectedProducts.map((product) => (
-     <div
-      key={product.productId}
-      style={{
-       display: "flex",
-       alignItems: "center",
-       padding: "16px",
-       borderBottom: "1px solid #eee",
-       gap: "16px",
-      }}
-     >
-      <div
-       style={{
-        width: "48px",
-        height: "48px",
-        backgroundColor: "#f1f1f1",
-        borderRadius: "4px",
-        overflow: "hidden",
-       }}
-      >
-       <Image
-        src={
-         product.imgUrl
-          ? product.imgUrl.startsWith("http") ||
-            product.imgUrl.startsWith(ApiBaseUrl.ImgUrl)
-            ? product.imgUrl
-            : `${ApiBaseUrl.ImgUrl}${product.imgUrl}`
-          : "/placeholder.svg"
-        }
-        alt={product.name}
-        width={48}
-        height={48}
-        style={{ objectFit: "cover" }}
-       />
-      </div>
-      <div style={{ flex: 1 }}>
-       <h3
-        style={{
-         margin: 0,
-         fontSize: "16px",
-         fontWeight: 500,
-        }}
-       >
-        {product.name}
-       </h3>
-       <p
-        style={{
-         margin: "4px 0 0 0",
-         fontSize: "14px",
-         color: "#666",
-        }}
-       >
-        Quantity: {product.qty}
-       </p>
-       {product.shopname && (
-        <p
-         style={{
-          margin: "4px 0 0 0",
-          fontSize: "14px",
-          color: "#333",
-         }}
-        >
-         Shop: {product.shopname} ({product.brand})
-        </p>
-       )}
-       {product.delivereyType && (
-        <p
-         style={{
-          margin: "4px 0 0 0",
-          fontSize: "14px",
-          color: "#666",
-         }}
-        >
-         Delivery: {product.delivereyType}
-        </p>
-       )}
+ const imgOf = (product: SelectedProduct) =>
+  product.imgUrl
+   ? product.imgUrl.startsWith("http") || product.imgUrl.startsWith(ApiBaseUrl.ImgUrl)
+     ? product.imgUrl
+     : `${ApiBaseUrl.ImgUrl}${product.imgUrl}`
+   : "/placeholder.svg";
 
-       <Box display="flex">
-        {product.selectedColor && (
-         <p
-          style={{
-           margin: "4px 8px 0 0", // Added right margin for spacing
-           fontSize: "14px",
-           color: "#666",
-          }}
-         >
-          Color: {product.selectedColor}
-         </p>
-        )}
-        {product.selectedSize && (
-         <p
-          style={{
-           margin: "4px 0 0 0",
-           fontSize: "14px",
-           color: "#666",
-          }}
-         >
-          Size: {product.selectedSize}
-         </p>
-        )}
-       </Box>
-      </div>
-      {/* <div
-              style={{
-                fontSize: "16px",
-                fontWeight: 500,
-              }}
-            >
-              BDT {product.price.toLocaleString()}
-            </div> */}
-      {(() => {
-       const hasDiscount =
-        !!product.discountPrice && product.discountPrice < product.price;
-       const unitPrice = hasDiscount
-        ? (product.discountPrice as number)
-        : product.price ?? 0;
-       const lineTotal = unitPrice * product.qty;
-       return (
-        <div style={{ textAlign: "right" }}>
-         <div style={{ fontSize: "14px", color: "#666" }}>
-          {hasDiscount && (
-           <span
-            style={{
-             textDecoration: "line-through",
-             color: "#aaa",
-             marginRight: "6px",
-            }}
-           >
-            BDT {product.price.toLocaleString()}
-           </span>
-          )}
-          BDT {unitPrice.toLocaleString()} x {product.qty}
-         </div>
-         <div
-          style={{
-           fontSize: "16px",
-           fontWeight: 700,
-           color: tz.color.ink,
-           fontVariantNumeric: "tabular-nums",
-           marginTop: "4px",
-          }}
-         >
-          BDT{" "}
-          {lineTotal.toLocaleString(undefined, {
-           minimumFractionDigits: 2,
-           maximumFractionDigits: 2,
-          })}
-         </div>
+ return (
+  <section className="co-card co-items" aria-label="Your items">
+   <h3 className="co-card-title">
+    <span className="co-card-icon" aria-hidden="true">
+     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" />
+     </svg>
+    </span>
+    Your items
+    <span className="co-pill">{selectedProducts.length}</span>
+   </h3>
+   {selectedProducts.length > 0 ? (
+    <ul className="co-item-list">
+     {selectedProducts.map((product) => {
+      const hasDiscount = !!product.discountPrice && product.discountPrice < product.price;
+      const unitPrice = hasDiscount ? (product.discountPrice as number) : product.price ?? 0;
+      const lineTotal = unitPrice * product.qty;
+      const chips = [
+       product.selectedColor && `Color: ${product.selectedColor}`,
+       product.selectedSize && `Size: ${product.selectedSize}`,
+       product.delivereyType && `Delivery: ${product.delivereyType}`,
+      ].filter(Boolean) as string[];
+      return (
+       <li key={product.productId} className="co-item">
+        <span className="co-item-img">
+         <Image src={imgOf(product)} alt={product.name} width={60} height={60} style={{ objectFit: "cover" }} />
+         {product.qty > 1 && <b>×{product.qty}</b>}
+        </span>
+        <div className="co-item-info">
+         <strong>{product.name}</strong>
+         <small>
+          Qty {product.qty} ·{" "}
+          {hasDiscount && <del>BDT {product.price.toLocaleString()}</del>} BDT {unitPrice.toLocaleString()} each
+         </small>
+         {product.shopname && (
+          <small>
+           Shop: {product.shopname}
+           {product.brand ? ` (${product.brand})` : ""}
+          </small>
+         )}
+         {chips.length > 0 && (
+          <span className="co-chips">
+           {chips.map((c) => (
+            <span key={c}>{c}</span>
+           ))}
+          </span>
+         )}
         </div>
-       );
-      })()}
-     </div>
-    ))
+        <span className="co-item-total">
+         BDT{" "}
+         {lineTotal.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+         })}
+        </span>
+       </li>
+      );
+     })}
+    </ul>
    ) : (
-    <p>No items in the cart.</p>
+    <p className="co-muted">No items in the cart.</p>
    )}
-  </div>
+  </section>
  );
 }

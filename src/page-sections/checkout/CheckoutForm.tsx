@@ -9,12 +9,13 @@ import Typography from "@component/Typography";
 import Grid from "@component/grid/Grid";
 import authService from "services/authService";
 import Address from "@models/address.model";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import OrderedItem from "./OrderedItem";
 import { useAppContext } from "@context/app-context";
 import tz from "../../theme/tizaraa";
+import { CheckoutShell } from "./checkoutStyles";
 
 export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
  const { state } = useAppContext();
@@ -148,79 +149,66 @@ export default function CheckoutForm({ setDeliveryCharge, totalPrice }) {
   }
  };
 
+ const isCorporateFlow = seller_type.toLocaleLowerCase() === "corporate";
+
  return (
-  <>
-   <ToastContainer autoClose={4000} />
+  <CheckoutShell>
+   {/* toasts render in the app-wide <AppToaster /> (lib/registry) */}
+   <section className="co-card" aria-label={isCorporateFlow ? "Pickup" : "Delivery address"}>
+    {!isCorporateFlow && (
+     <div className="co-head">
+      <h3 className="co-card-title">
+       <span className="co-card-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" />
+         <circle cx="12" cy="10" r="3" />
+        </svg>
+       </span>
+       Delivery address
+      </h3>
+      <button type="button" className="co-add" onClick={handleAddNewAddress} disabled={isLoading}>
+       {isLoading ? <BeatLoader size={8} color={tz.color.emberDeep} /> : <>＋ Add new address</>}
+      </button>
+     </div>
+    )}
+    {ShowAddress && (
+     <CheckoutAddress
+      seller_type={seller_type}
+      setDeliveryCharge={setDeliveryCharge}
+      selectedAddress={selectedAddress}
+      setSelectedAddress={setSelectedAddress}
+     />
+    )}
+   </section>
 
-   {seller_type.toLocaleLowerCase() !== "corporate" && (
-    <FlexBox style={flexBoxStyle}>
-     <Typography>Billing and Shipping</Typography>
-     <Button
-      px="2rem"
-      color="primary"
-      bg="primary.light"
-      my="2rem"
-      onClick={handleAddNewAddress}
-     >
-      {isLoading ? <BeatLoader size={18} color={tz.color.emberDeep} /> : "Add New Address"}
-     </Button>
-    </FlexBox>
-   )}
-
-   {/* <CheckoutAddress /> */}
-   {ShowAddress && (
-    <CheckoutAddress
-     seller_type={seller_type}
-     setDeliveryCharge={setDeliveryCharge}
-     selectedAddress={selectedAddress}
-     setSelectedAddress={setSelectedAddress}
-    />
-   )}
    <OrderedItem></OrderedItem>
 
-   <Grid container spacing={7} style={{ marginTop: "2px" }}>
-    <Grid item sm={6} xs={12}>
-     <Button
-      //variant="outlined"
-      color="primary"
-      bg="primary.light"
-      type="button"
-      fullwidth
-      onClick={handleBackToCart}
-     >
-      {isHasLoading ? <BeatLoader size={18} color={tz.color.emberDeep} /> : "Back to Cart"}
-      {/* Back to Cart */}
-     </Button>
-    </Grid>
-
-    <Grid item sm={6} xs={12}>
-     {/* <ExpressedDelivery onChange={handleExpressedDeliveryChange} /> */}
-
-     <Button
-      //variant="outlined"
-      // color="primary"
-      // bg="primary.light"
-      style={{
-       color: tz.color.paper,
-       backgroundColor: tz.color.emberDeep,
-       cursor: "pointer",
-      }}
-      type="button"
-      fullwidth
-      onClick={handlePayment}
-      // disabled={!hasAddress || !isAddressChecked || totalPrice === 0}
-      disabled={totalPrice === 0}
-     >
-      {/* Proceed to Pay
-            const [isHasPayLoading, setIsHasPayLoading] = useState(false); */}
-      {isHasPayLoading ? (
-       <BeatLoader size={18} color={tz.color.paper} />
-      ) : (
-       "Proceed to Pay"
-      )}
-     </Button>
-    </Grid>
-   </Grid>
-  </>
+   <div className="co-actions">
+    <button type="button" className="co-btn" onClick={handleBackToCart} disabled={isHasLoading}>
+     {isHasLoading ? (
+      <BeatLoader size={10} color={tz.color.emberDeep} />
+     ) : (
+      <>
+       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M19 12H5M11 18l-6-6 6-6" />
+       </svg>
+       Back to cart
+      </>
+     )}
+    </button>
+    <button type="button" className="co-btn co-btn--solid" onClick={handlePayment} disabled={totalPrice === 0 || isHasPayLoading}>
+     {isHasPayLoading ? (
+      <BeatLoader size={10} color={tz.color.paper} />
+     ) : (
+      <>
+       Proceed to pay
+       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M5 12h14M13 6l6 6-6 6" />
+       </svg>
+      </>
+     )}
+    </button>
+   </div>
+  </CheckoutShell>
  );
 }

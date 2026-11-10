@@ -152,6 +152,8 @@ export default function OrderDetails({ params }: IDParams) {
       productType: "Local",
       status: formatStatus(raw.order_status),
       payment_method: raw.payment_method,
+      // corporate shop or company-credit order (API flag); retail otherwise
+      is_corporate: Boolean(raw.is_corporate),
       payment_status: raw.payment_status,
       discount_amount: raw.discount_amount,
       promo_code: raw.promo_code,
@@ -625,45 +627,14 @@ export default function OrderDetails({ params }: IDParams) {
              timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
             />
 
-            <FlexBox mt="1rem" justifyContent="center">
-             <Button
-              variant="text"
-              color="primary"
-              onClick={() => toggleSummary(shopName)}
-              style={{
-               padding: "0.5rem 1rem",
-               backgroundColor: "var(--tz-ember-tint)",
-               color: "var(--tz-ember-deep)",
-               borderRadius: "300px",
-               textAlign: "center",
-               height: "40px",
-               minWidth: "200px",
-              }}
-             >
-              {openSummaries[shopName] ? (
-               <>
-                Total Summary{" "}
-                <FontAwesomeIcon icon={faCaretUp} style={{ marginLeft: "8px" }} />
-               </>
-              ) : (
-               <>
-                Total Summary{" "}
-                <FontAwesomeIcon
-                 icon={faCaretDown}
-                 style={{ marginLeft: "8px" }}
-                />
-               </>
-              )}
-             </Button>
-            </FlexBox>
-
-            {openSummaries[shopName] && (
+            {/* Payment summary folds/unfolds itself (header button) */}
+            <Box mt="1rem">
              <OrderTotalSummary
               order={order}
               details={details}
               shopName={shopName}
              />
-            )}
+            </Box>
            </Box>
           );
          })
@@ -680,6 +651,8 @@ export default function OrderDetails({ params }: IDParams) {
       city={order.Order.city_id}
       province={order.Order.province_id}
       phone={order.Order.phone}
+      name={order.Order.buyer_name}
+      delivered={Boolean(order.Order.isDelivered)}
      />
 
      <div style={{ display: "flex", gap: "20px" }}>

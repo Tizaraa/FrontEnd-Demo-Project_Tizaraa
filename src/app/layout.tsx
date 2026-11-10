@@ -169,12 +169,11 @@ import localFont from "next/font/local";
 import StyledComponentsRegistry from "@lib/registry";
 import { AppProvider } from "@context/app-context";
 import StyledContext from "@context/StyledContext";
-import { ToastContainer } from "react-toastify";
-import toast, { Toaster } from "react-hot-toast";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
 import SetUser from "@context/app-context/SetUser";
+import { AppToaster } from "@lib/registry";
 
 // Load fonts. Both cover Bangla and Latin; tokens read them via CSS variables
 // Self-hosted from src/fonts so the build does not fetch from Google Fonts
@@ -264,8 +263,8 @@ export default async function RootLayout({
      <AppProvider>
       <SetUser /> 
       <StyledContext>{children}</StyledContext>
-      <ToastContainer />
-      <Toaster position="top-right" />
+      {/* One place for every pop-up message (see AppToaster in lib/registry) */}
+      <AppToaster />
      </AppProvider>
     </StyledComponentsRegistry>
    </body>

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { PromoBannerLink } from "./Section8";
 
 import Grid from "@component/grid/Grid";
 import Container from "@component/Container";
@@ -23,9 +26,9 @@ export default function FlashSaleBanner() {
           </Link>
         </Grid>
       </Grid> */}
-   <Link href="/flashsale/flash_sale" style={{ display: "block", borderRadius: 12, overflow: "hidden" }}>
+   <PromoBannerLink href="/flashsale/flash_sale">
     <NextImage alt="flashSaleBanner" src={FlasSaleBanner} priority />
-   </Link>
+   </PromoBannerLink>
   </Container>
  );
 }

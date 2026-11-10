@@ -39,6 +39,17 @@ export default function Topbar() {
   // console.log(navigator.language);
  }, []);
 
+ // Rotating centre message; stays on the first one for reduced motion
+ const [tick, setTick] = useState(0);
+ useEffect(() => {
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  // Skip ticks while the tab is hidden so a background tab does no work
+  const id = window.setInterval(() => {
+   if (document.visibilityState === "visible") setTick((t) => (t + 1) % TICKER.length);
+  }, 4000);
+  return () => window.clearInterval(id);
+ }, []);
+
  return (
   <StyledTopbar>
    <Container
@@ -47,7 +58,7 @@ export default function Topbar() {
     alignItems="center"
     height="100%"
    >
-    <FlexBox className="topbar-left">
+    <FlexBox className="topbar-left" alignItems="center">
      <div className="logo">
       <a href="/" style={{ display: "block" }}>
        <img
@@ -57,30 +68,23 @@ export default function Topbar() {
        />
       </a>
      </div>
-     <FlexBox alignItems="center">
-      <a
-       href="tel:+8801792223444"
-       style={{ textDecoration: "none", color: "inherit" }}
-      >
-       <FlexBox alignItems="center">
-        <Icon size="14px">phone-call</Icon>
-        <span>+8801792223444</span>
-       </FlexBox>
-      </a>
-
-      <FlexBox alignItems="center" ml="20px">
-       <a
-        href="mailto:info@tizaraa.com"
-        style={{ textDecoration: "none", color: "inherit" }}
-       >
-        <FlexBox alignItems="center">
-         <Icon size="14px">mail</Icon>
-         <span>info@tizaraa.com</span>
-        </FlexBox>
-       </a>
-      </FlexBox>
-     </FlexBox>
+     <a href="tel:+8801792223444" className="tb-link">
+      <Icon size="14px">phone-call</Icon>
+      <span>+8801792223444</span>
+     </a>
+     <span className="tb-sep" aria-hidden="true" />
+     <a href="mailto:info@tizaraa.com" className="tb-link">
+      <Icon size="14px">mail</Icon>
+      <span>info@tizaraa.com</span>
+     </a>
     </FlexBox>
+
+    <div className="tb-ticker" aria-live="polite">
+     <span key={tick} className="tb-ticker-msg">
+      <i className="tb-ticker-dot" aria-hidden="true" />
+      {TICKER[tick]}
+     </span>
+    </div>
 
     <FlexBox className="topbar-right" alignItems="center">
      {/* <GoogleTranslate></GoogleTranslate> */}
@@ -104,6 +108,13 @@ export default function Topbar() {
   </StyledTopbar>
  );
 }
+
+// Top bar centre messages: edit freely
+const TICKER = [
+ "Welcome to Tizaraa",
+ "Open your shop on Tizaraa and start selling",
+ "Need help? Call +8801792223444",
+];
 
 const languageList = [
  {

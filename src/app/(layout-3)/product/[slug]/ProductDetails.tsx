@@ -757,6 +757,368 @@ import ProductDescription from "@component/products/ProductDescription";
 import axios from "@lib/axiosClient";
 import { isAxiosError } from "axios";
 import { Button } from "@component/buttons";
+import sc, { keyframes as scKeyframes } from "styled-components";
+import { currency } from "@utils/utils";
+
+const sRise = scKeyframes`
+ from { opacity: 0; transform: translateY(10px); }
+ to { opacity: 1; transform: none; }
+`;
+const sFade = scKeyframes`
+ from { opacity: 0; transform: translateY(6px); }
+ to { opacity: 1; transform: none; }
+`;
+const sUp = scKeyframes`
+ from { transform: translateY(110%); }
+ to { transform: none; }
+`;
+
+// Right-hand panel: seller first, then shipping / payments / returns rows,
+// QR folded behind a button.
+const SidePanel = sc.aside`
+ display: flex;
+ flex-direction: column;
+ gap: 14px;
+ animation: ${sRise} 460ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+
+ .sp-seller {
+  padding: 16px;
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: 18px;
+  background: radial-gradient(90% 140% at 0% 0%, ${({ theme }) => theme.tz.color.emberTint} 0%, transparent 60%), ${({ theme }) => theme.tz.color.paper};
+ }
+ .sp-cap {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+ .sp-seller-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+ }
+ .sp-logo {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.tz.color.emberDeep};
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(14, 52, 96, 0.12);
+ }
+ .sp-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+ }
+ .sp-name {
+  min-width: 0;
+  margin-right: auto;
+ }
+ .sp-name strong {
+  display: block;
+  overflow: hidden;
+  font-size: 14.5px;
+  color: ${({ theme }) => theme.tz.color.ink};
+  text-overflow: ellipsis;
+  white-space: nowrap;
+ }
+ .sp-name span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.tz.tone.success.fg};
+ }
+ .sp-visit {
+  display: block;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 12px;
+  background: ${({ theme }) => theme.tz.color.emberDeep};
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 160ms ease, transform 160ms ease;
+ }
+ .sp-visit:hover {
+  background: ${({ theme }) => theme.tz.color.emberDark};
+  transform: translateY(-1px);
+ }
+
+ .sp-list {
+  padding: 6px 16px;
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: 18px;
+  background: ${({ theme }) => theme.tz.color.paper};
+ }
+ .sp-row {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+ }
+ .sp-row + .sp-row {
+  border-top: 1px dashed ${({ theme }) => theme.tz.color.line};
+ }
+ .sp-ico {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 11px;
+ }
+ .sp-ico svg {
+  width: 18px;
+  height: 18px;
+ }
+ .sp-row strong {
+  display: block;
+  font-size: 13.5px;
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+ .sp-row p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: ${({ theme }) => theme.tz.color.inkSoft};
+ }
+
+ .sp-qr-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: 14px;
+  background: ${({ theme }) => theme.tz.color.paper};
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.tz.color.inkSoft};
+  text-align: left;
+  cursor: pointer;
+ }
+ .sp-qr-btn svg:last-child {
+  margin-left: auto;
+  transition: transform 240ms ease;
+ }
+ .sp-qr-btn[aria-expanded="true"] svg:last-child {
+  transform: rotate(180deg);
+ }
+ .sp-qr-btn:hover {
+  border-color: ${({ theme }) => theme.tz.color.slate};
+ }
+ .sp-qr {
+  padding: 14px;
+  border: 1px solid ${({ theme }) => theme.tz.color.line};
+  border-radius: 14px;
+  background: ${({ theme }) => theme.tz.color.paper};
+  text-align: center;
+  animation: ${sFade} 240ms ease both;
+ }
+ .sp-qr p {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+ .sp-visit:focus-visible,
+ .sp-qr-btn:focus-visible {
+  outline: none;
+  box-shadow: ${({ theme }) => theme.tz.focusRing};
+ }
+
+ @media (prefers-reduced-motion: reduce) {
+  animation: none;
+  .sp-qr {
+   animation: none;
+  }
+  .sp-visit,
+  .sp-qr-btn svg:last-child {
+   transition: none;
+  }
+ }
+`;
+
+// Description / Shipping / Reviews / Warranty tabs with a sliding underline
+const TabsBox = sc.section`
+ scroll-margin-top: 90px;
+ margin-bottom: 40px;
+ border: 1px solid ${({ theme }) => theme.tz.color.line};
+ border-radius: 20px;
+ background: ${({ theme }) => theme.tz.color.paper};
+ overflow: hidden;
+
+ .tb-bar {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  padding: 0 12px;
+  overflow-x: auto;
+  border-bottom: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
+  scrollbar-width: none;
+ }
+ .tb-tab {
+  position: relative;
+  flex-shrink: 0;
+  padding: 16px 14px;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.tz.color.slate};
+  cursor: pointer;
+  transition: color 160ms ease;
+ }
+ .tb-tab:hover {
+  color: ${({ theme }) => theme.tz.color.ink};
+ }
+ .tb-tab[aria-selected="true"] {
+  color: ${({ theme }) => theme.tz.color.emberDeep};
+ }
+ .tb-tab:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px ${({ theme }) => theme.tz.color.ember};
+ }
+ .tb-ink {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: ${({ theme }) => theme.tz.color.ember};
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), width 300ms cubic-bezier(0.22, 1, 0.36, 1);
+ }
+ .tb-panel {
+  padding: 22px 24px 26px;
+  animation: ${sFade} 280ms ease both;
+ }
+
+ @media (max-width: 767px) {
+  border-radius: 16px;
+  .tb-panel {
+   padding: 18px 16px 20px;
+  }
+ }
+ @media (prefers-reduced-motion: reduce) {
+  .tb-ink {
+   transition: none;
+  }
+  .tb-panel {
+   animation: none;
+  }
+ }
+`;
+
+// Phone-only bar that appears once the main Add to Cart scrolls away
+const BuyBar = sc.div`
+ position: fixed;
+ right: 0;
+ bottom: 0;
+ left: 0;
+ z-index: 900;
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+ border-top: 1px solid ${({ theme }) => theme.tz.color.line};
+ background: rgba(255, 255, 255, 0.96);
+ backdrop-filter: blur(10px);
+ -webkit-backdrop-filter: blur(10px);
+ box-shadow: 0 -8px 24px rgba(14, 52, 96, 0.1);
+ animation: ${sUp} 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+
+ .bb-price {
+  min-width: 0;
+  margin-right: auto;
+ }
+ .bb-price small {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  color: ${({ theme }) => theme.tz.color.slate};
+  text-overflow: ellipsis;
+  white-space: nowrap;
+ }
+ .bb-price strong {
+  font-size: 19px;
+  font-weight: 800;
+  color: ${({ theme }) => theme.tz.color.emberDeep};
+ }
+ .bb-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, ${({ theme }) => theme.tz.color.ember}, ${({ theme }) => theme.tz.color.emberDeep});
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+ }
+ .bb-btn:disabled {
+  background: ${({ theme }) => theme.tz.color.lineSoft};
+  color: ${({ theme }) => theme.tz.color.slate};
+ }
+ @media (prefers-reduced-motion: reduce) {
+  animation: none;
+ }
+`;
+
+function MobileBuyBar({ title, price, stock }: { title: string; price: number; stock: number }) {
+ const [show, setShow] = useState(false);
+ useEffect(() => {
+  const target = document.getElementById("pdp-buy");
+  if (!target || typeof IntersectionObserver === "undefined") return;
+  const io = new IntersectionObserver(([e]) => setShow(!e.isIntersecting && e.boundingClientRect.top < 0), { threshold: 0 });
+  io.observe(target);
+  return () => io.disconnect();
+ }, []);
+ if (!show) return null;
+ const toBuy = () => {
+  const box = document.getElementById("pdp-buy");
+  box?.scrollIntoView({ behavior: "smooth", block: "center" });
+  // reuse the real button so all cart rules stay in one place
+  const btn = box?.querySelector<HTMLButtonElement>(".add-to-cart-btn");
+  if (btn && !btn.disabled) setTimeout(() => btn.click(), 350);
+ };
+ return (
+  <BuyBar role="region" aria-label="Quick buy">
+   <div className="bb-price">
+    <small>{title}</small>
+    {price > 0 && <strong>{currency(price)}</strong>}
+   </div>
+   {price === 0 ? (
+    <a className="bb-btn" href="/rfq">
+     Request for Quote
+    </a>
+   ) : (
+    <button type="button" className="bb-btn" onClick={toBuy} disabled={stock <= 0}>
+     {stock <= 0 ? "Stock Out" : "Add to Cart"}
+    </button>
+   )}
+  </BuyBar>
+ );
+}
+
 
 interface Props {
   params: { slug: string };
@@ -802,221 +1164,98 @@ const ShippingInfo: React.FC<{
       }
     }, [slug]);
 
-    // One set of styles for the four info blocks, so the card reads as one list
-    // instead of four hand-tuned ones.
-    const sectionStyle: React.CSSProperties = {
-      padding: "14px 0",
-      borderTop: `1px solid ${theme.border}`,
-    };
-    const headingStyle: React.CSSProperties = {
-      fontSize: "11px",
-      fontWeight: 700,
-      letterSpacing: "0.06em",
-      textTransform: "uppercase",
-      margin: "0 0 8px",
-      color: theme.muted,
-    };
-    const rowStyle: React.CSSProperties = {
-      display: "flex",
-      alignItems: "center",
-      gap: "10px",
-    };
-    const iconStyle = (active = true): React.CSSProperties => ({
-      width: "28px",
-      height: "28px",
-      flexShrink: 0,
-      backgroundColor: active ? theme.accentTint : tz.color.lineSoft,
-      borderRadius: "50%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      color: theme.accent,
-      fontSize: "13px",
-    });
-    const textStyle: React.CSSProperties = {
-      fontSize: "13.5px",
-      color: theme.body,
-      lineHeight: 1.5,
-    };
+    const [showQr, setShowQr] = useState(false);
+    const rows = [
+      {
+        key: "ship",
+        title: "Shipping",
+        text: isCorporateShop
+          ? "Delivered directly by Tizaraa's Corporate seller."
+          : "Delivered directly by the seller.",
+        icon: "M1 3h15v13H1zM16 8h4l3 3v5h-7zM5.5 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM18.5 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z",
+        tone: [tz.tone.info.bg, tz.tone.info.fg],
+      },
+      {
+        key: "pay",
+        title: "Payments",
+        text: isCorporateShop
+          ? "Payment is made through Corporate credit."
+          : "Payment is made through Tizaraa's secure checkout.",
+        icon: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
+        tone: [tz.tone.success.bg, tz.tone.success.fg],
+      },
+      {
+        key: "ret",
+        title: "Returns & Refunds",
+        text: "To return a product, employees must visit the seller directly returns are processed according to the seller's own policy.",
+        icon: "M9 14 4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3",
+        tone: [tz.tone.warning.bg, tz.tone.warning.fg],
+      },
+    ];
+    const initial = (sellerShopName || "T").trim().charAt(0).toUpperCase();
 
     return (
-      <div
-        style={{
-          fontFamily: "inherit",
-          maxWidth: "400px",
-          margin: "0 auto",
-          padding: "4px 18px 18px",
-          boxSizing: "border-box",
-          backgroundColor: tz.color.mist,
-          borderRadius: theme.radius,
-          border: `1px solid ${theme.border}`,
-        }}
-      >
-        <div style={{ ...sectionStyle, borderTop: "none" }}>
-          <h2 style={headingStyle}>Shipping</h2>
-          <div style={rowStyle}>
-            <span style={iconStyle()}>🚚</span>
-            <span style={textStyle}>
-              {isCorporateShop
-                ? "Delivered directly by Tizaraa's Corporate seller."
-                : "Delivered directly by the seller."}
+      <SidePanel aria-label="Seller and delivery">
+        <div className="sp-seller">
+          <p className="sp-cap">Sold by</p>
+          <div className="sp-seller-row">
+            <span className="sp-logo">
+              {sellerShopLogo ? <img src={sellerShopLogo} alt="" /> : initial}
             </span>
-          </div>
-        </div>
-
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Payments</h2>
-          <div style={rowStyle}>
-            <span style={iconStyle()}>🎧</span>
-            <span style={textStyle}>
-              {isCorporateShop
-                ? "Payment is made through Corporate credit."
-                : "Payment is made through Tizaraa's secure checkout."}
-            </span>
-          </div>
-        </div>
-
-        <div style={sectionStyle}>
-          <h2 style={headingStyle}>Returns & Refunds</h2>
-          <div style={rowStyle}>
-            <span style={iconStyle()}>💳</span>
-            <span style={textStyle}>
-              To return a product, employees must visit the seller directly
-              
-              returns are processed according to the seller&apos;s own policy.
-            </span>
-          </div>
-        </div>
-
-        {infoPageUrl && (
-          <div style={{ ...sectionStyle, textAlign: "center" }}>
-            <a
-              href={infoPageUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: "inline-block" }}
-            >
-              <div
-                style={{
-                  display: "inline-block",
-                  padding: "8px",
-                  backgroundColor: theme.surface,
-                  border: `1px solid ${theme.border}`,
-                  borderRadius: theme.radiusSmall,
-                  marginBottom: "10px",
-                }}
-              >
-                <QRCodeSVG
-                  value={infoPageUrl}
-                  size={110}
-                  bgColor={theme.surface}
-                  fgColor={theme.heading}
-                  level="M"
-                />
-              </div>
-            </a>
-            <p style={{ ...textStyle, fontSize: "12.5px", margin: 0 }}>
-              Scan this QR code on your phone to view full product details
-            </p>
-          </div>
-        )}
-
-        <div
-          style={{
-            backgroundColor: theme.surface,
-            border: `1px solid ${theme.border}`,
-            borderRadius: theme.radiusSmall,
-            padding: "12px",
-            marginTop: "14px",
-          }}
-        >
-          <h3 style={headingStyle}>Sold By</h3>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "10px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              {sellerShopLogo ? (
-                <img
-                  src={sellerShopLogo}
-                  alt="Seller Shop Logo"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    marginRight: "10px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    flexShrink: 0,
-                  }}
-                />
-              ) : (
-                <span
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    marginRight: "10px",
-                    backgroundColor: theme.accent,
-                    borderRadius: "50%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    color: tz.color.paper,
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
-                >
-                  T
-                </span>
-              )}
-
-              <span
-                style={{
-                  fontSize: "13.5px",
-                  color: theme.heading,
-                  fontWeight: 600,
-                  lineHeight: 1.5,
-                }}
-              >
-                {sellerShopName}
-                <br />
-                <span style={{ color: theme.muted, fontWeight: 400 }}>
-                  <span style={{ color: tz.tone.success.fg, marginRight: "5px" }}>✓</span>{" "}
-                  Verified Seller
-                </span>
+            <div className="sp-name">
+              <strong title={sellerShopName}>{sellerShopName}</strong>
+              <span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Verified Seller
               </span>
             </div>
-            <div>
-              <a
-                href={`/shops/${shopUrl}`}
-                style={{
-                  color: tz.color.paper,
-                  backgroundColor: theme.accent,
-                  textDecoration: "none",
-                  cursor: "pointer",
-                  display: "inline-block",
-                  padding: "7px 14px",
-                  borderRadius: theme.radiusSmall,
-                  fontSize: "13px",
-                  fontWeight: 600,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Visit Profile
-              </a>
-            </div>
           </div>
+          <a className="sp-visit" href={`/shops/${shopUrl}`}>
+            Visit shop
+          </a>
         </div>
-      </div>
+
+        <div className="sp-list">
+          {rows.map((r) => (
+            <div key={r.key} className="sp-row">
+              <span className="sp-ico" style={{ background: r.tone[0], color: r.tone[1] }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d={r.icon} />
+                </svg>
+              </span>
+              <div>
+                <strong>{r.title}</strong>
+                <p>{r.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {infoPageUrl && !showInTab && (
+          <>
+            <button type="button" className="sp-qr-btn" aria-expanded={showQr} onClick={() => setShowQr((v) => !v)}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="5" y="2" width="14" height="20" rx="2" />
+                <path d="M12 18h.01" />
+              </svg>
+              Open on your phone
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+            {showQr && (
+              <div className="sp-qr">
+                <a href={infoPageUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block" }}>
+                  <QRCodeSVG value={infoPageUrl} size={130} bgColor={theme.surface} fgColor={theme.heading} level="M" />
+                </a>
+                <p>Scan this QR code on your phone to view full product details</p>
+              </div>
+            )}
+          </>
+        )}
+      </SidePanel>
     );
   };
 
@@ -1160,91 +1399,72 @@ const ProductView: React.FC<{
   isDesktop: boolean;
 }> = ({ description, productId, warrantyPolicy, shippingProps, isDesktop }) => {
   const [selectedOption, setSelectedOption] = useState("description");
-  const handleOptionClick = (opt: any) => () => setSelectedOption(opt);
+  const barRef = React.useRef<HTMLDivElement>(null);
+  const [ink, setInk] = useState({ x: 0, w: 0 });
+
+  const tabs = [
+    { key: "description", label: "Description" },
+    // shipping tab only when shippingProps is provided (mobile only)
+    ...(shippingProps ? [{ key: "shipping", label: "Shipping & Returns" }] : []),
+    { key: "review", label: "Reviews" },
+    ...(hasWarrantyPolicy(warrantyPolicy) ? [{ key: "warranty", label: "Warranty Policy" }] : []),
+  ];
+
+  // slide the underline under the active tab
+  React.useLayoutEffect(() => {
+    const el = barRef.current?.querySelector<HTMLElement>('[aria-selected="true"]');
+    if (el) setInk({ x: el.offsetLeft, w: el.offsetWidth });
+  }, [selectedOption, tabs.length, isDesktop]);
+
+  // "N reviews" link in the product info opens the Reviews tab
+  useEffect(() => {
+    const open = (e: Event) => {
+      const key = (e as CustomEvent).detail;
+      if (typeof key === "string") setSelectedOption(key);
+    };
+    window.addEventListener("tz:product-tab", open);
+    return () => window.removeEventListener("tz:product-tab", open);
+  }, []);
 
   return (
-    <>
-      <FlexBox borderBottom="1px solid" borderColor="gray.400" mt="5px" mb="26px">
-        <H5
-          mr="25px"
-          p="4px 10px"
-          className="cursor-pointer"
-          borderColor="primary.main"
-          onClick={handleOptionClick("description")}
-          borderBottom={selectedOption === "description" ? "2px solid" : ""}
-          color={selectedOption === "description" ? "primary.main" : "text.muted"}
-          fontSize="14px"
-        >
-          Description
-        </H5>
-
-        {/* Add shipping tab only when shippingProps is provided (mobile only) */}
-        {shippingProps && (
-          <H5
-            mr="25px"
-            p="4px 10px"
-            className="cursor-pointer"
-            borderColor="primary.main"
-            onClick={handleOptionClick("shipping")}
-            borderBottom={selectedOption === "shipping" ? "2px solid" : ""}
-            color={selectedOption === "shipping" ? "primary.main" : "text.muted"}
-            fontSize="14px"
+    <TabsBox id="pdp-tabs" aria-label="Product information">
+      <div className="tb-bar" role="tablist" ref={barRef}>
+        {tabs.map((t) => (
+          <button
+            key={t.key}
+            type="button"
+            role="tab"
+            id={`tab-${t.key}`}
+            aria-selected={selectedOption === t.key}
+            aria-controls={`panel-${t.key}`}
+            className="tb-tab"
+            onClick={() => setSelectedOption(t.key)}
           >
-            Shipping & Returns
-          </H5>
-        )}
+            {t.label}
+          </button>
+        ))}
+        <span className="tb-ink" aria-hidden="true" style={{ width: ink.w, transform: `translateX(${ink.x}px)` }} />
+      </div>
 
-        <H5
-          mr="25px"
-          p="4px 10px"
-          className="cursor-pointer"
-          borderColor="primary.main"
-          onClick={handleOptionClick("review")}
-          borderBottom={selectedOption === "review" ? "2px solid" : ""}
-          color={selectedOption === "review" ? "primary.main" : "text.muted"}
-          fontSize="14px"
-        >
-          Review
-        </H5>
-
-        {hasWarrantyPolicy(warrantyPolicy) && (
-          <H5
-            p="4px 10px"
-            className="cursor-pointer"
-            borderColor="primary.main"
-            onClick={handleOptionClick("warranty")}
-            borderBottom={selectedOption === "warranty" ? "2px solid" : ""}
-            color={selectedOption === "warranty" ? "primary.main" : "text.muted"}
-            fontSize="14px"
-          >
-            Warranty Policy
-          </H5>
-        )}
-      </FlexBox>
-
-      <Box mb="50px">
-        {selectedOption === "description" && (
-          <ProductDescription description={description} />
-        )}
+      <div key={selectedOption} className="tb-panel" role="tabpanel" id={`panel-${selectedOption}`} aria-labelledby={`tab-${selectedOption}`}>
+        {selectedOption === "description" && <ProductDescription description={description} />}
         {selectedOption === "shipping" && shippingProps && (
-          <div>
-            <ShippingInfo
-              isDesktop={isDesktop}
-              sellerShopName={shippingProps.sellerShopName}
-              sellerShopLogo={shippingProps.sellerShopLogo}
-              shopUrl={shippingProps.shopUrl}
-              slug={shippingProps.slug}
-              isCorporateShop={shippingProps.isCorporateShop}
-              showInTab={true}
-            />
-          </div>
+          <ShippingInfo
+            isDesktop={isDesktop}
+            sellerShopName={shippingProps.sellerShopName}
+            sellerShopLogo={shippingProps.sellerShopLogo}
+            shopUrl={shippingProps.shopUrl}
+            slug={shippingProps.slug}
+            isCorporateShop={shippingProps.isCorporateShop}
+            showInTab={true}
+          />
         )}
         {selectedOption === "review" && <ProductReview productId={productId} />}
         {selectedOption === "warranty" && hasWarrantyPolicy(warrantyPolicy) && (
           <WarrantyPolicyView policy={warrantyPolicy!} />
         )}
-      </Box>
-    </>
+      </div>
+    </TabsBox>
   );
 };
 
@@ -1491,9 +1711,13 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
               <div
                 style={{
                   marginTop: "20px",
+                  padding: "14px 16px",
                   fontSize: "14px",
                   color: theme.body,
-                  lineHeight: 1.6,
+                  lineHeight: 1.65,
+                  background: tz.color.mist,
+                  borderLeft: `3px solid ${tz.color.ember}`,
+                  borderRadius: "0 14px 14px 0",
                 }}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(shortDescription) }}
               />
@@ -1529,6 +1753,14 @@ const ProductDetails: React.FC<Props> = ({ params, fallbackData }) => {
 
           <RelatedProducts productId={product.product_id} />
         </div>
+
+        {!isDesktop && (
+          <MobileBuyBar
+            title={product.product_name}
+            price={Number(product.discount_price || product.selling_price || 0)}
+            stock={Number(product.product_stock ?? 0)}
+          />
+        )}
       </Fragment>
     </>
   );

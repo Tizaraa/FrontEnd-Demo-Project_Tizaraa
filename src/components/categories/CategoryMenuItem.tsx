@@ -6,6 +6,8 @@ import { StyledCategoryMenuItem } from "./styles";
 type CategoryMenuItemProps = {
  href: string;
  icon?: string;
+ /** small category picture shown before the name */
+ image?: string | null;
  title: string;
  caret?: boolean;
  children: any;
@@ -13,15 +15,22 @@ type CategoryMenuItemProps = {
 // ===============================================================
 
 export default function CategoryMenuItem(props: CategoryMenuItemProps) {
- const { href, icon, title, caret = true, children } = props;
+ const { href, icon, image, title, caret = true, children } = props;
 
  return (
   <StyledCategoryMenuItem>
    <Link href={`/category/${href}`}>
     <div className="category-dropdown-link">
      {/* {icon && <Icon variant="small">{icon}</Icon>} */}
+     <span className="cat-thumb" aria-hidden="true">
+      {image ? <img src={image} alt="" loading="lazy" /> : (title || "?").trim().charAt(0)}
+     </span>
      <span className="title">{title}</span>
-     {caret && <Icon variant="small">chevron-right</Icon>}
+     {caret && (
+      <Icon className="chev" variant="small">
+       chevron-right
+      </Icon>
+     )}
     </div>
    </Link>
 

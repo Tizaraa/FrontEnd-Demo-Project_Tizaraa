@@ -386,59 +386,22 @@ export default function CheckoutAddress({
           return (
             <>
               {seller_type.toLocaleLowerCase() !== "corporate" && (
-                <FlexBox
-                  flexDirection="column"
-                  mb="1rem"
-                  p="0.5rem"
-                  border={`1px solid ${tz.color.line}`}
-                  borderRadius="8px"
-                  backgroundColor={tz.color.emberTint}
-                >
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={6}>
-                      <FlexBox alignItems="center">
-                        <FaTruckFast style={{ fontSize: "24px", color: tz.color.emberDeep }} />
-                        <label
-                          htmlFor="expressDelivery"
-                          style={{
-                            marginLeft: "0.5rem",
-                            fontSize: "14px",
-                            fontWeight: "500",
-                            color: tz.color.ink,
-                          }}
-                        >
-                          <span style={{ color: tz.color.emberDeep, fontWeight: "600" }}>
-                            Delivery Options
-                          </span>
-                        </label>
-                      </FlexBox>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FlexBox alignItems="center" justifyContent="flex-end">
-                        <input
-                          checked={expressDelivery}
-                          onChange={handleExpressDeliveryChange}
-                          type="checkbox"
-                          id="expressDelivery"
-                          style={{ cursor: "pointer", accentColor: tz.color.emberDeep }}
-                        />
-                        <label
-                          htmlFor="expressDelivery"
-                          style={{
-                            marginLeft: "0.5rem",
-                            fontSize: "14px",
-                            fontWeight: "500",
-                            color: tz.color.ink,
-                          }}
-                        >
-                          <span style={{ color: tz.color.emberDeep, fontWeight: "600" }}>
-                            Express Delivery
-                          </span>
-                        </label>
-                      </FlexBox>
-                    </Grid>
-                  </Grid>
-                </FlexBox>
+                <label className={`co-express${expressDelivery ? " is-on" : ""}`} htmlFor="expressDelivery">
+                  <span className="co-express-icon" aria-hidden="true">
+                    <FaTruckFast />
+                  </span>
+                  <span className="co-express-text">
+                    <strong>Express delivery</strong>
+                    <small>Get your order faster. Select an address first.</small>
+                  </span>
+                  <input
+                    checked={expressDelivery}
+                    onChange={handleExpressDeliveryChange}
+                    type="checkbox"
+                    id="expressDelivery"
+                  />
+                  <span className="co-switch" aria-hidden="true" />
+                </label>
               )}
             </>
           );
@@ -469,18 +432,23 @@ export default function CheckoutAddress({
           </Typography>
         </FlexBox>
       ) : addresses?.length > 0 ? (
-        addresses.map((item, i) => (
-          <AddressItem
-            key={i}
-            item={item}
-            isSelected={!!selectedAddress && selectedAddress.id === item.id}
-            onSelect={handleSelect}
-          />
-        ))
+        <div className="co-addr-list" role="radiogroup" aria-label="Delivery address">
+          {addresses.map((item, i) => (
+            <AddressItem
+              key={i}
+              index={i}
+              item={item}
+              isSelected={!!selectedAddress && selectedAddress.id === item.id}
+              onSelect={handleSelect}
+            />
+          ))}
+        </div>
       ) : (
-        <FlexBox justifyContent="center" alignItems="center" width="100%">
-          <SemiSpan>No addresses found</SemiSpan>
-        </FlexBox>
+        <a className="co-addr-empty" href="/address/checkoutAddress">
+          <span aria-hidden="true">＋</span>
+          <strong>Add your first address</strong>
+          <small>We need it to deliver your order.</small>
+        </a>
       )}
     </Fragment>
   );
@@ -490,19 +458,34 @@ interface AddressItemProps {
   item: Address;
   isSelected: boolean;
   onSelect: (item: Address, isAutoSelect?: boolean) => void;
+  index?: number;
 }
 
-function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
-  const handleCheckboxChange = () => {
-    onSelect(item);
-  };
+const ADDR_ICON: Record<string, string> = {
+  Home: "m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z",
+  Office: "M4 21V3h11v18M15 9h5v12M8 7h3M8 11h3M8 15h3",
+  "Pickup Point": "M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0zM12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+};
 
+// Street, area, city, division, postcode — skipping blanks and parts the
+// street line already contains.
+function fullAddressOf(item: any): string {
+  const street = String(item?.address ?? "").trim();
+  const extra: string[] = [];
+  for (const raw of [item?.area?.area, item?.city?.city, item?.province?.province, item?.postal_code]) {
+    const p = String(raw ?? "").trim();
+    if (!p) continue;
+    if ([street, ...extra].some((x) => x.toLowerCase().includes(p.toLowerCase()))) continue;
+    extra.push(p);
+  }
+  return [street, ...extra].filter(Boolean).join(", ");
+}
+
+function AddressItem({ item, isSelected, onSelect, index = 0 }: AddressItemProps) {
   const landmarkMap: { [key: string]: string } = {
-    // integer keys (legacy UAT)
     "1": "Home",
     "2": "Office",
     "3": "Pickup Point",
-    // string keys (local API)
     "home": "Home",
     "office": "Office",
     "pickup_point": "Pickup Point",
@@ -516,43 +499,119 @@ function AddressItem({ item, isSelected, onSelect }: AddressItemProps) {
     item.landmark ??
     "Other";
 
+  // Pickup points are always on and can't be unticked (unchanged rule)
+  const isPickup = Number(item.landmark) === 3;
+  const checked = isPickup || isSelected;
+  const line = fullAddressOf(item);
+  const [showInfo, setShowInfo] = useState(false);
+  const shortLine = [(item as any).area?.area, (item as any).city?.city]
+    .map((v) => String(v ?? "").trim())
+    .filter(Boolean)
+    .join(", ");
+  const facts = [
+    { k: "Division", v: (item as any).province?.province },
+    { k: "City", v: (item as any).city?.city },
+    { k: "Area", v: (item as any).area?.area },
+    { k: "Postcode", v: (item as any).postal_code },
+    { k: "Type", v: landmarkLabel },
+  ].filter((f) => f.v !== null && f.v !== undefined && String(f.v).trim() !== "");
+  const choose = () => {
+    if (!isPickup) onSelect(item);
+  };
+
   return (
-    <Grid
-      style={{
-        border: `1px solid ${tz.color.ember}`,
-        marginBottom: "1rem",
-        borderRadius: "1rem",
-        boxShadow: tz.elevation.raised,
+    <div
+      className={`co-addr${checked ? " is-on" : ""}${isPickup ? " is-pickup" : ""}`}
+      style={{ ["--i" as any]: index }}
+      role="radio"
+      aria-checked={checked}
+      tabIndex={isPickup ? -1 : 0}
+      onClick={choose}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          choose();
+        }
       }}
     >
-      <FlexBox my="0.5rem" padding="1px 14px">
-        <CheckBox
-          checked={Number(item.landmark) === 3 || isSelected}
-          onChange={() => {
-            if (Number(item.landmark) !== 3) {
-              onSelect(item);
-            }
-          }}
-        />
-        <FlexBox fontWeight="600">
-          <Typography className="pre" m="6px" textAlign="left">
-            {item.name || "No Name"}
-          </Typography>
-          <Typography className="pre" m="6px" textAlign="left">
-            {item.phone}
-          </Typography>
-        </FlexBox>
-      </FlexBox>
-
-      <FlexBox m="6px" textAlign="left" fontWeight="600">
-        <Chip p="0.35rem 1rem" bg={tz.tone.success.fill}>
-          <Small color={tz.color.paper}>{landmarkLabel}</Small>
-        </Chip>
-
-        <Typography className="pre" m="6px" textAlign="left">
-          {item.address}
-        </Typography>
-      </FlexBox>
-    </Grid>
+      <span className="co-radio" aria-hidden="true">
+        <i />
+      </span>
+      <div className="co-addr-body">
+        <div className="co-addr-top">
+          <strong>{item.name || "No Name"}</strong>
+          <span className="co-tag">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d={ADDR_ICON[landmarkLabel] ?? ADDR_ICON["Pickup Point"]} />
+            </svg>
+            {landmarkLabel}
+          </span>
+          {(item as any).is_default && <span className="co-tag co-tag--def">Default</span>}
+          {checked && (
+            <span className="co-here">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+              Delivering here
+            </span>
+          )}
+        </div>
+        {/* compact: one short line; everything else sits behind "Details" */}
+        <p className="co-short" title={line}>
+          {shortLine || line || "Address not provided"}
+        </p>
+        {(
+          <>
+            <button
+              type="button"
+              className="co-more"
+              aria-expanded={showInfo}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowInfo((v) => !v);
+              }}
+              onKeyDown={(e) => e.stopPropagation()}
+            >
+              {showInfo ? "Hide details" : "Details"}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+            <div className={`co-facts-wrap${showInfo ? " is-open" : ""}`}>
+              <div>
+          <p className="co-line">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <span>{line || "Address not provided"}</span>
+          </p>
+          {item.phone && (
+            <p className="co-line">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z" />
+              </svg>
+              <span>{item.phone}</span>
+            </p>
+          )}
+              <dl className="co-facts">
+                {facts.map((f) => (
+                  <div key={f.k}>
+                    <dt>{f.k}</dt>
+                    <dd>{String(f.v)}</dd>
+                  </div>
+                ))}
+              </dl>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+      {!isPickup && (
+        <a className="co-edit" href={`/address/edit/${item.id}`} onClick={(e) => e.stopPropagation()}>
+          Edit
+        </a>
+      )}
+    </div>
   );
 }

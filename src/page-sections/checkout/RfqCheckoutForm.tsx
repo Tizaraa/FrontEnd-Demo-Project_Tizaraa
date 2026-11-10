@@ -12,7 +12,7 @@ import Grid from "@component/grid/Grid";
 import authService from "services/authService";
 import BeatLoader from "react-spinners/BeatLoader";
 
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import tz from "../../theme/tizaraa";
@@ -170,7 +170,7 @@ const RfqCheckoutForm: FC<RfqCheckoutFormProps> = ({ responseId }) => {
 
  return (
   <>
-   <ToastContainer autoClose={4000} />
+   {/* toasts render in the app-wide <AppToaster /> (lib/registry) */}
 
    <FlexBox style={flexBoxStyle}>
     <Typography>Billing and Shipping</Typography>

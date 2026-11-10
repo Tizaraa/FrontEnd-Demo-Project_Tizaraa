@@ -151,7 +151,19 @@ const customStyles = {
   fontSize: 14,
   boxShadow: state.isFocused ? tz.focusRing : "none",
  }),
- input: (styles) => ({ ...styles, height: 30 }),
+ // The typing field inside the control must stay invisible: the site-wide
+ // :focus-visible ring otherwise draws a second orange box inside the select.
+ input: (styles) => ({
+  ...styles,
+  height: 30,
+  "& input, & input:focus, & input:focus-visible": {
+   boxShadow: "none !important",
+   outline: "none !important",
+   border: "0 !important",
+   borderRadius: "0 !important",
+   background: "transparent !important",
+  },
+ }),
  singleValue: (styles) => ({ ...styles, color: tz.color.ink }),
  placeholder: (styles) => ({ ...styles, color: tz.color.slate }),
  indicatorSeparator: () => ({ display: "none" }),
