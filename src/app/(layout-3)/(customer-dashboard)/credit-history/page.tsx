@@ -2252,7 +2252,7 @@ export default function CreditHistoryPage() {
          <table className="ch-table">
           <thead>
            <tr>
-            <th>Order</th>
+            <th className="is-left">Order</th>
             <th className="is-left">Product</th>
             <th className="ctr">Qty</th>
             <th className="num">Amount</th>
@@ -2263,7 +2263,7 @@ export default function CreditHistoryPage() {
           <tbody>
            {purchaseItems.map(({ order, item }, idx) => (
             <tr key={`${order.id}-${item.product_id}-${idx}`}>
-             <td className="ch-order">#{order.order_number}</td>
+             <td className="ch-order is-left">#{order.order_number}</td>
              <td className="ch-prod is-left">{item.product_name.trim()}</td>
              <td className="ctr">{item.quantity}</td>
              <td className="num">{currency(item.total_price)}</td>
@@ -2317,7 +2317,7 @@ export default function CreditHistoryPage() {
          <thead>
           <tr>
            <th className="is-left">Product</th>
-           <th>Order #</th>
+           <th className="is-left">Order #</th>
            <th className="ctr">Qty</th>
            <th>Returned at</th>
           </tr>
@@ -2326,7 +2326,7 @@ export default function CreditHistoryPage() {
           {returnedItems.map(({ order, item }, idx) => (
            <tr key={`${order.id}-${item.product_id}-return-${idx}`}>
             <td className="ch-prod is-left">{item.product_name.trim()}</td>
-            <td className="ch-order">#{order.order_number}</td>
+            <td className="ch-order is-left">#{order.order_number}</td>
             <td className="ctr">{item.quantity}</td>
             <td className="nowrap">{fmtDateTime(item.returned_at)}</td>
            </tr>
