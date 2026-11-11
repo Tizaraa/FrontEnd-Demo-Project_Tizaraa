@@ -164,6 +164,7 @@ export default function DashboardPageHeader({
     {isTablet && (
      <Sidenav
       position="left"
+      scroll
       handle={
        <button type="button" className="dph-menu" aria-label="Open account menu">
         <Icon variant="small">menu</Icon>

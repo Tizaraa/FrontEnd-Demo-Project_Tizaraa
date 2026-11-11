@@ -472,7 +472,7 @@ export default function Layout({ children }: PropsWithChildren) {
    {pathname !== "/cart" && (
    <Box mb={isMobile ? "24px" : "14px"} px={{ xs: 2, sm: 0 }}>
     <Grid container spacing={6}>
-     <Grid item lg={8} md={8} xs={12}>
+     <Grid item xs={12}>
       {/* one stepper for all sizes; it compacts itself on small screens */}
       <Stepper stepperList={stepperList} selectedStep={selectedStep} onChange={handleStepChange} />
      </Grid>

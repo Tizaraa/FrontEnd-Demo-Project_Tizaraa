@@ -451,6 +451,16 @@ const ReviewBox = styled.div`
   .rv-photos {
    gap: 6px;
   }
+  /* bigger tap targets on phones */
+  .rv-close {
+   width: 40px;
+   height: 40px;
+  }
+  .rv-photo button {
+   width: 28px;
+   height: 28px;
+   line-height: 28px;
+  }
  }
 
  @media (prefers-reduced-motion: reduce) {
@@ -674,6 +684,9 @@ const ItemRow = styled.div`
   }
   .ir-deadline {
    width: 100%;
+  }
+  .ir-btn {
+   min-height: 40px;
   }
  }
 
@@ -1235,7 +1248,7 @@ export default function WriteReview({
          alt={item.product_name}
          size={48}
         />
-        <Box>
+        <Box style={{ minWidth: 0 }}>
          <Typography fontSize="1.05rem" fontWeight="700" color="var(--tz-navy)">
           Your review
          </Typography>

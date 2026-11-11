@@ -647,6 +647,12 @@ export default function CheckOutAddressForm() {
       loading={f.isSubmitting}
       submitLabel="Save & continue"
       onCancel={() => router.push("/checkout")}
+      onClear={() => {
+       f.resetForm();
+       setSelectedLandmark(0);
+       setCity([]);
+       setArea([]);
+      }}
      />
     </form>
    )}

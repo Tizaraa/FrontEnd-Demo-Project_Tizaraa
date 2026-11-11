@@ -2025,6 +2025,7 @@
 
 // Test
 "use client";
+import { postLoginPath } from "@utils/corporateRedirect";
 import { Button } from "@component/buttons";
 import { TextField } from "@mui/material";
 import Link from "next/link";
@@ -2199,8 +2200,8 @@ export default function VerifyEmail() {
 
     console.log("Success:", data);
     toast.success("Logged in successfully");
-    // Redirect to the home page
-    router.push("/");
+    // Active corporate employee → their corporate shop, otherwise home / remembered page
+    router.push(postLoginPath(data.user));
    } else {
     console.log("Error:", data);
     toast.error(

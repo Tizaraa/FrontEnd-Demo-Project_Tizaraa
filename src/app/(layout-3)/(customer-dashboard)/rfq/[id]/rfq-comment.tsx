@@ -188,6 +188,7 @@ export default function RfqComment({
        <div
         style={{
          flex: 1,
+         minWidth: 0,
          maxWidth: "100%",
          padding: "16px",
          boxSizing: "border-box",

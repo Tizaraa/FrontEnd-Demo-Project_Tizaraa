@@ -30,6 +30,7 @@ export interface AddressFormViewProps {
  loading?: boolean;
  submitLabel: string;
  onCancel: () => void;
+ onClear?: () => void;
 }
 
 const rise = keyframes`
@@ -430,11 +431,58 @@ const Wrap = styled.div`
   transition: width 300ms ease;
  }
 
+ .af-pv-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+ }
+ .af-side-clear-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 9px 14px;
+  background: #FFF5F5;
+  border: 1px dashed #FFA8A8;
+  border-radius: 12px;
+  color: #E03131;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 160ms ease;
+ }
+ .af-side-clear-btn:hover {
+  background: #FFE3E3;
+  border-color: #FA5252;
+  color: #C92A2A;
+  transform: translateY(-1px);
+ }
+
  /* actions */
  .af-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: 10px;
+ }
+ .af-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+ }
+ .af-btn--clear {
+  border-color: #FEE2E2;
+  background: #FFF5F5;
+  color: #DC2626;
+ }
+ .af-btn--clear:hover:enabled {
+  border-color: #FCA5A5;
+  background: #FEE2E2;
+  color: #B91C1C;
  }
  .af-btn {
   display: inline-flex;
@@ -539,11 +587,32 @@ const I = {
  phone:
   "M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z",
  check: "M20 6 9 17l-5-5",
+ rotateCcw: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0-5v5h5",
+ trash: "M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6",
 };
 
 export default function AddressFormView(p: AddressFormViewProps) {
  const { values, errors, touched, submitCount, handleChange, handleBlur, setFieldValue } = p;
  const rootRef = useRef<HTMLDivElement>(null);
+
+ const handleClearAll = () => {
+  if (p.onClear) {
+   p.onClear();
+  } else {
+   setFieldValue("name", "");
+   setFieldValue("contact", "");
+   setFieldValue("address", "");
+   setFieldValue("province", "");
+   setFieldValue("city", "");
+   setFieldValue("area", "");
+   setFieldValue("postal_code", "");
+   setFieldValue("is_default", false);
+   setFieldValue("selectedLandmark", 0);
+   if (p.onLandmark) {
+    p.onLandmark(0 as any);
+   }
+  }
+ };
 
  // after a failed save, bring the first problem into view
  useEffect(() => {
@@ -731,20 +800,34 @@ export default function AddressFormView(p: AddressFormViewProps) {
     </section>
 
     <div className="af-actions">
-     <button type="button" className="af-btn" onClick={p.onCancel} disabled={p.loading}>
-      Cancel
+     <button type="button" className="af-btn af-btn--clear" onClick={handleClearAll} disabled={p.loading || done === 0} title="Clear all fields">
+      <Ico d={I.rotateCcw} size={15} />
+      Clear all
      </button>
-     <button type="submit" className="af-btn af-btn--solid" disabled={p.loading}>
-      {p.loading && <span className="af-spin" aria-hidden="true" />}
-      {p.loading ? "Saving..." : p.submitLabel}
-     </button>
+     <div className="af-actions-right">
+      <button type="button" className="af-btn" onClick={p.onCancel} disabled={p.loading}>
+       Cancel
+      </button>
+      <button type="submit" className="af-btn af-btn--solid" disabled={p.loading}>
+       {p.loading && <span className="af-spin" aria-hidden="true" />}
+       {p.loading ? "Saving..." : p.submitLabel}
+      </button>
+     </div>
     </div>
    </div>
 
    {/* live preview */}
    <aside className="af-side" aria-label="Preview">
     <div className="af-preview">
-     <small>Preview</small>
+     <div className="af-pv-head">
+      <small>Preview</small>
+      {done > 0 && (
+       <button type="button" className="af-clear-link" onClick={handleClearAll} title="Clear all fields">
+        <Ico d={I.trash} size={12} />
+        <span>Clear</span>
+       </button>
+      )}
+     </div>
      <div className="af-pv-top">
       <strong>{values.name?.trim() || <span className="af-pv-empty">Your name</span>}</strong>
       {typeLabel && <span className="af-pv-tag">{typeLabel}</span>}
@@ -765,6 +848,12 @@ export default function AddressFormView(p: AddressFormViewProps) {
       <i style={{ width: `${(done / required.length) * 100}%` }} />
      </div>
     </div>
+    {done > 0 && (
+     <button type="button" className="af-side-clear-btn" onClick={handleClearAll} title="Clear all fields">
+      <Ico d={I.rotateCcw} size={14} />
+      <span>Clear all fields</span>
+     </button>
+    )}
    </aside>
   </Wrap>
  );

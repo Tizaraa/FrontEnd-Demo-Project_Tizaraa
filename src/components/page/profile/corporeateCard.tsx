@@ -759,51 +759,11 @@ const Wrap = styled.div`
   transform: translateX(3px);
  }
 
- /* quick actions */
- .cp-quick {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
- }
- .cp-q {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 16px 8px;
-  border: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
-  border-radius: 16px;
-  background: #fff;
-  color: ${({ theme }) => theme.tz.color.ink};
-  font-size: 13.5px;
-  font-weight: 700;
-  text-align: center;
-  text-decoration: none;
-  transition: border-color 160ms ease, transform 200ms ease, box-shadow 200ms ease;
- }
- .cp-q:hover {
-  border-color: ${({ theme }) => theme.tz.color.ember};
-  transform: translateY(-3px);
-  box-shadow: 0 10px 22px rgba(240, 80, 35, 0.12);
- }
- .cp-q span {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  transition: transform 220ms ease;
- }
- .cp-q:hover span {
-  transform: scale(1.08) rotate(-4deg);
- }
-
  .cp-edit:focus-visible,
  .cp-contact:focus-visible,
  .cp-w-link:focus-visible,
  .cp-ready:focus-visible,
  .cp-shop:focus-visible,
- .cp-q:focus-visible,
  .cp-copy:focus-visible {
   outline: none;
   box-shadow: ${({ theme }) => theme.tz.focusRing};
@@ -816,9 +776,6 @@ const Wrap = styled.div`
   }
   .cp-w-amount {
    font-size: 28px;
-  }
-  .cp-quick {
-   grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .cp-shop {
    flex-wrap: wrap;
@@ -852,8 +809,6 @@ const Wrap = styled.div`
   .cp-contact,
   .cp-fact,
   .cp-shop,
-  .cp-q,
-  .cp-q span,
   .cp-w-link svg,
   .cp-shop-go svg {
    transition: none;
@@ -988,7 +943,7 @@ const CorporateCard = ({ profile }) => {
  const [hoverBar, setHoverBar] = useState<number | null>(null);
 
  const csvOf = (m: typeof thisMonth) => {
-  const rows = [["Order", "Date", "Status", "Amount (BDT)"]].concat(
+  const rows = [["Order", "Date", "Status", "Amount (৳)"]].concat(
    m.list.map((o) => [
     o.order_number ?? `#${o.id}`,
     o.created_at ? new Date(o.created_at).toLocaleDateString("en-GB") : "",
@@ -1323,22 +1278,6 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#5e6678}.r
     </Link>
    )}
 
-   {/* quick actions */}
-   <nav className="cp-quick" aria-label="Quick actions">
-    {[
-     { href: "/orders", label: "My orders", icon: I.bag, fg: "#0e3460", bg: "#e8edf4" },
-     { href: "/credit-history", label: "Credit history", icon: I.card, fg: "#1b7a4b", bg: "#e6f4ec" },
-     ...(profile?.shop_slug ? [{ href: `/shops/${profile.shop_slug}`, label: "Corporate shop", icon: I.store, fg: "#c2400f", bg: "#fdeee7" }] : []),
-     { href: "/support-tickets", label: "Support", icon: I.help, fg: "#3a3f4e", bg: "#eef0f4" },
-    ].map((q) => (
-     <Link key={q.label} className="cp-q" href={q.href}>
-      <span style={{ color: q.fg, background: q.bg }}>
-       <Ico d={q.icon} size={20} />
-      </span>
-      {q.label}
-     </Link>
-    ))}
-   </nav>
   </Wrap>
  );
 };

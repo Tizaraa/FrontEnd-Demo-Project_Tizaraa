@@ -49,7 +49,7 @@ export const pickupTokenFor = (invoiceNo: string): string => {
 };
 
 const bdt = (n: number) =>
-  `BDT ${Number(n || 0).toLocaleString("en-US", {
+  `৳ ${Number(n || 0).toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;

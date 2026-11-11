@@ -17,7 +17,7 @@ import { buildStatusBuckets, normalizeStatus, rowDisplayTotal, statusLabel } fro
 // action. A coloured stripe and icon tile show the status at a glance.
 // Motion: fade-up once (staggered) and hover lift; nothing loops.
 const columns =
- "minmax(0, 1.5fr) minmax(0, 0.5fr) minmax(0, 0.9fr) minmax(0, 0.9fr) minmax(0, 1.4fr) 92px"; // fixed action column so header and cards line up
+ "minmax(0, 1.4fr) minmax(0, 0.6fr) minmax(0, 1.1fr) minmax(0, 0.9fr) minmax(0, 1.3fr) 96px"; // fixed action column so header and cards line up
 
 const cardIn = keyframes`
  from { opacity: 0; transform: translateY(10px); }
@@ -73,6 +73,7 @@ const Card = styled(Link)<{ $tone: Tone }>`
  .oc-order {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   min-width: 0;
  }
@@ -111,18 +112,44 @@ const Card = styled(Link)<{ $tone: Tone }>`
   color: ${({ theme }) => theme.tz.color.inkSoft};
  }
 
+ .oc-items {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  justify-self: center;
+  font-weight: 600;
+ }
+
+ .oc-pay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  justify-self: center;
+  font-weight: 500;
+ }
+
  .oc-total {
   font-family: ${({ theme }) => theme.tz.font.display};
   font-size: 16px;
   font-weight: 700;
   color: ${({ theme }) => theme.tz.color.ink};
   font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  justify-self: center;
  }
 
  .oc-status {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
  }
 
  .oc-dot {
@@ -136,9 +163,10 @@ const Card = styled(Link)<{ $tone: Tone }>`
  }
 
  .oc-action {
-  justify-self: end;
+  justify-self: center;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
   padding: 6px 12px;
   border: 1.5px solid ${({ theme }) => theme.tz.color.line};
@@ -175,11 +203,14 @@ const Card = styled(Link)<{ $tone: Tone }>`
 
   .oc-order {
    grid-column: 1;
+   justify-content: flex-start;
   }
   .oc-total {
    grid-column: 2;
    grid-row: 1;
    text-align: right;
+   justify-self: end;
+   display: block;
   }
   .oc-items,
   .oc-pay {
@@ -187,13 +218,18 @@ const Card = styled(Link)<{ $tone: Tone }>`
   }
   .oc-items {
    grid-column: 1;
+   text-align: left;
+   justify-self: start;
   }
   .oc-pay {
    grid-column: 2;
    text-align: right;
+   justify-self: end;
   }
   .oc-status {
    grid-column: 1;
+   justify-content: flex-start;
+   justify-self: start;
   }
   .oc-action {
    grid-column: 2;
@@ -217,13 +253,18 @@ const Card = styled(Link)<{ $tone: Tone }>`
 const Head = styled.div`
  display: grid;
  grid-template-columns: ${columns};
+ align-items: center;
  gap: 14px;
- padding: 0 19px 8px 23px;
+ padding: 0 18px 8px 22px;
  font-size: 12px;
  font-weight: 700;
  letter-spacing: 0.04em;
  text-transform: uppercase;
  color: ${({ theme }) => theme.tz.color.slate};
+
+ .head-center {
+  text-align: center;
+ }
 
  @media (max-width: 768px) {
   display: none;
@@ -286,12 +327,12 @@ export function statusTone(status: string): Tone {
 export function OrderListHead() {
  return (
   <Head aria-hidden="true">
-   <span>Order</span>
-   <span>Items</span>
-   <span>Payment</span>
-   <span>Total</span>
-   <span>Status</span>
-   <span />
+   <span className="head-center">Order</span>
+   <span className="head-center">Items</span>
+   <span className="head-center">Payment</span>
+   <span className="head-center">Total</span>
+   <span className="head-center">Status</span>
+   <span className="head-center">Action</span>
   </Head>
  );
 }

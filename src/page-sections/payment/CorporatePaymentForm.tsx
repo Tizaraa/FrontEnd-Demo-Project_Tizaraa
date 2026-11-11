@@ -893,6 +893,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, Fragment, useState } from "react";
+import styled from "styled-components";
 import Box from "@component/Box";
 import Grid from "@component/grid/Grid";
 import { Card1 } from "@component/Card1";
@@ -917,6 +918,28 @@ import authService from "services/authService";
 import axios from "@lib/axiosClient";
 import { AxiosError } from "axios";
 import tz from "../../theme/tizaraa";
+
+const CorporatePaymentGrid = styled.div`
+ display: grid;
+ grid-template-columns: repeat(5, minmax(0, 1fr));
+ gap: 12px;
+ width: 100%;
+
+ @media (max-width: 768px) {
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+ }
+
+ > div {
+  width: 100% !important;
+  margin-bottom: 0 !important;
+ }
+
+ label {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+ }
+`;
 
 export default function CorporatePaymentForm() {
  const { push } = useRouter();
@@ -1322,19 +1345,13 @@ export default function CorporatePaymentForm() {
       boxShadow: tz.elevation.rest,
      }}
     >
-     <div
-      style={{
-       display: "flex",
-       flexWrap: "wrap",
-       gap: "10px", // Adds consistent spacing between elements
-      }}
-     >
+     <CorporatePaymentGrid>
       {/* Cash on Delivery — corporate orders settle on credit, so it is shown
           greyed out alongside the other unavailable methods */}
       {!hasAbroadProduct && (
        <div
         style={{
-         width: "100px",
+         width: "100%",
          height: "120px",
          display: "flex",
          flexDirection: "column",
@@ -1344,7 +1361,7 @@ export default function CorporatePaymentForm() {
          background: "rgba(0, 0, 0, 0.5)", // Disabled background
          pointerEvents: "none", // Disable interactions
          boxSizing: "border-box",
-         borderRadius: "4px",
+         borderRadius: "8px",
         }}
        >
         <PaymentImage
@@ -1373,7 +1390,6 @@ export default function CorporatePaymentForm() {
 
       {/* Buy with credit */}
       <PaymentCheckBox
-       mb="1.5rem"
        color="secondary"
        name="4"
        onChange={handlePaymentMethodChange}
@@ -1381,7 +1397,7 @@ export default function CorporatePaymentForm() {
        label={
         <div
          style={{
-          width: "100px",
+          width: "100%",
           height: "120px",
           boxShadow:
            paymentMethod === "4"
@@ -1466,7 +1482,6 @@ export default function CorporatePaymentForm() {
 
       {/* Online Payment */}
       <PaymentCheckBox
-       mb="1.5rem"
        color="secondary"
        name="2"
        //  onChange={handlePaymentMethodChange}
@@ -1474,7 +1489,7 @@ export default function CorporatePaymentForm() {
        label={
         <div
          style={{
-          width: "100px",
+          width: "100%",
           height: "120px",
           boxShadow:
            paymentMethod === "2"
@@ -1487,10 +1502,6 @@ export default function CorporatePaymentForm() {
           padding: "8px",
           background: "rgba(0, 0, 0, 0.5)", // Disabled background
           pointerEvents: "none", // Disable interactions
-          // background:
-          //  paymentMethod === "2"
-          //   ? tz.color.emberTint
-          //   : "white",
           transition: "all 0.3s ease",
           boxSizing: "border-box",
           borderRadius: "8px",
@@ -1563,9 +1574,8 @@ export default function CorporatePaymentForm() {
       {/* Disabled Payment Options (Nagad) */}
       <div
        style={{
-        width: "100px", // Ensures equal width for all items
+        width: "100%",
         height: "120px",
-        // border: "1px solid rgba(0, 0, 0, 0.5)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -1574,7 +1584,7 @@ export default function CorporatePaymentForm() {
         background: "rgba(0, 0, 0, 0.5)", // Disabled background
         pointerEvents: "none", // Disable interactions
         boxSizing: "border-box", // Include padding in size
-        borderRadius: "4px",
+        borderRadius: "8px",
        }}
       >
        <PaymentImage
@@ -1603,9 +1613,8 @@ export default function CorporatePaymentForm() {
       {/* Disabled Payment Options (Bkash) */}
       <div
        style={{
-        width: "100px", // Ensures equal width for all items
+        width: "100%",
         height: "120px",
-        // border: "1px solid rgba(0, 0, 0, 0.5)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -1614,7 +1623,7 @@ export default function CorporatePaymentForm() {
         background: "rgba(0, 0, 0, 0.5)", // Disabled background
         pointerEvents: "none", // Disable interactions
         boxSizing: "border-box", // Include padding in size
-        borderRadius: "4px",
+        borderRadius: "8px",
        }}
       >
        <PaymentImage
@@ -1639,7 +1648,7 @@ export default function CorporatePaymentForm() {
         Bkash
        </span>
       </div>
-     </div>
+     </CorporatePaymentGrid>
     </Card1>
    </FlexBox>
    <div style={{ marginBottom: "20px" }}>

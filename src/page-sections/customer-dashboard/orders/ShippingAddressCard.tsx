@@ -190,6 +190,11 @@ const Card = styled.section`
   outline: none;
   box-shadow: ${({ theme }) => theme.tz.focusRing};
  }
+ @media (max-width: 560px) {
+  .sa-btn {
+   min-height: 40px;
+  }
+ }
 
  .sa-sr {
   position: absolute;

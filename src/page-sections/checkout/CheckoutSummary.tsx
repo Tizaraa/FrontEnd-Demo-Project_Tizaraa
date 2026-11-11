@@ -485,7 +485,7 @@
 //         <Typography color="text.hint">VAT:</Typography>
 //         <FlexBox alignItems="flex-end">
 //           <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-//             BDT 0.00
+//             ৳ 0.00
 //           </Typography>
 //         </FlexBox>
 //       </FlexBox>
@@ -547,20 +547,28 @@ export default function CheckoutSummary({ deliveryCharge }) {
  const isCorporate = sellerType.toLowerCase() === "corporate";
 
  useEffect(() => {
-  const storedSellerType = localStorage.getItem("seller_type") || "";
+  const storedSellerType = (localStorage.getItem("seller_type") || "").toLowerCase();
   setSellerType(storedSellerType);
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}") || null;
   setUser(userInfo);
 
-  // A promo may already be applied from the Cart page for corporate orders
-  const storedPromoCode = sessionStorage.getItem("promoCode") || "";
-  const storedDiscount = parseFloat(sessionStorage.getItem("discount") || "0");
-  const storedFreeShipping = sessionStorage.getItem("isFreeShipping") === "1";
-  if (storedPromoCode && storedDiscount > 0) {
-   setAppliedPromoCode(storedPromoCode);
-   setDiscount(storedDiscount);
-   setIsFreeShipping(storedFreeShipping);
+  if (storedSellerType === "corporate") {
+   sessionStorage.removeItem("promoCode");
+   sessionStorage.removeItem("discount");
+   sessionStorage.removeItem("isFreeShipping");
+   setAppliedPromoCode("");
+   setDiscount(0);
+   setIsFreeShipping(false);
+  } else {
+   const storedPromoCode = sessionStorage.getItem("promoCode") || "";
+   const storedDiscount = parseFloat(sessionStorage.getItem("discount") || "0");
+   const storedFreeShipping = sessionStorage.getItem("isFreeShipping") === "1";
+   if (storedPromoCode && storedDiscount > 0) {
+    setAppliedPromoCode(storedPromoCode);
+    setDiscount(storedDiscount);
+    setIsFreeShipping(storedFreeShipping);
+   }
   }
  }, []);
 
@@ -704,16 +712,14 @@ export default function CheckoutSummary({ deliveryCharge }) {
    totalWithDelivery.toString()
   );
 
-  // Reset discount and newTotal — but keep a corporate promo discount that
-  // was already applied on the Cart page (corporate checkout has no promo
-  // input of its own, so state alone can't be trusted to still hold it).
+  // Reset discount and newTotal — promos are for retail only (never corporate).
   const currentSellerType = (
    localStorage.getItem("seller_type") || ""
   ).toLowerCase();
   const preAppliedDiscount = parseFloat(
    sessionStorage.getItem("discount") || "0"
   );
-  if (currentSellerType === "corporate" && preAppliedDiscount > 0) {
+  if (currentSellerType !== "corporate" && preAppliedDiscount > 0) {
    setDiscount(preAppliedDiscount);
   } else {
    setDiscount(0);
@@ -914,78 +920,6 @@ export default function CheckoutSummary({ deliveryCharge }) {
  // Get selectedPaymentOption from sessionStorage for Pay Now (Advance)
  const selectedPaymentOption = sessionStorage.getItem("selectedPaymentOption");
 
- // Corporate checkout has no delivery address, so the promo code can be
- // applied straight from the product list without the address check used
- // by applyPromoCode() above.
- const applyCorporatePromoCode = async () => {
-  if (!promoCode) {
-   toast.warning("Please Enter a Promo Code !");
-   return;
-  }
-
-  const selectedItems = state.cart.filter((item) =>
-   state.selectedProducts.includes(item.id)
-  );
-
-  const requestBody = {
-   code: promoCode,
-   products: selectedItems.map((item) => {
-    const price = item.discountPrice ?? item.price;
-    return {
-     price,
-     qty: item.qty,
-     total_amount: price * item.qty,
-     name: item.name,
-     imgUrl: item.imgUrl,
-     productStock: item.productStock,
-     id: item.id,
-     discountPrice: item.discountPrice,
-     slug: item.slug,
-     productId: item.productId,
-     sellerId: item.sellerId,
-     productType: item.productType || "General",
-    };
-   }),
-  };
-
-  try {
-   const { default: axiosClient } = await import("@lib/axiosClient");
-   const response = await axiosClient.post("promo/apply", requestBody);
-   const data = response.data;
-
-   toast.success(data.message);
-   const discountValue = parseFloat(data.discount);
-   const freeShipping = !!data.free_shipping;
-
-   setDiscount(discountValue);
-   setIsFreeShipping(freeShipping);
-   setAppliedPromoCode(promoCode);
-
-   const finalPrice =
-    savedTotalPrice + (freeShipping ? 0 : savedTotalWithDelivery) - discountValue;
-   setNewTotal(finalPrice);
-
-   sessionStorage.setItem("discount", discountValue.toString());
-   sessionStorage.setItem("newTotal", finalPrice.toString());
-   sessionStorage.setItem("promoCode", promoCode);
-   sessionStorage.setItem("isFreeShipping", freeShipping ? "1" : "0");
-  } catch (error: any) {
-   const message =
-    error?.response?.data?.message ||
-    error?.message ||
-    "Invalid promo code.";
-   toast.error(message);
-
-   setDiscount(0);
-   setIsFreeShipping(false);
-   setAppliedPromoCode("");
-   setPromoCode("");
-   sessionStorage.setItem("discount", "0");
-   sessionStorage.setItem("promoCode", "");
-   sessionStorage.setItem("isFreeShipping", "0");
-  }
- };
-
  // Subtotal is shown at the original (pre-discount) price; product-level
  // discounts (price - discountPrice) are folded into the Discount line along
  // with any promo discount. Totals below are unchanged (they already use the
@@ -1003,82 +937,6 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
  return (
   <>
-   {isCorporate && (
-    <Card1 mb="1.5rem">
-     <Typography fontWeight="700" mb="0.75rem">
-      Apply Coupon or Promo Code
-     </Typography>
-     <FlexBox alignItems="center" style={{ gap: "0.5rem" }}>
-      <input
-       type="text"
-       placeholder="Enter Promo Code (e.g. CORP10)"
-       value={promoCode}
-       onChange={handlePromoCodeChange}
-       style={{
-        flex: 1,
-        padding: "0.6rem 0.75rem",
-        border: `1px solid ${tz.color.line}`,
-        borderRadius: "6px",
-        fontSize: "14px",
-       }}
-      />
-      <button
-       onClick={applyCorporatePromoCode}
-       style={{
-        backgroundColor: tz.color.navy,
-        color: tz.color.paper,
-        padding: "0.6rem 1.25rem",
-        border: "none",
-        borderRadius: "6px",
-        cursor: "pointer",
-        fontSize: "14px",
-        fontWeight: 600,
-       }}
-      >
-       Apply
-      </button>
-     </FlexBox>
-
-     {appliedPromoCode && (
-      <FlexBox alignItems="center" mt="0.75rem" style={{ gap: "0.5rem" }}>
-       <span
-        style={{
-         display: "inline-flex",
-         alignItems: "center",
-         gap: "6px",
-         backgroundColor: tz.tone.success.bg,
-         border: `1px solid ${tz.tone.success.fill}`,
-         color: tz.tone.success.fg,
-         borderRadius: "16px",
-         padding: "4px 10px",
-         fontSize: "13px",
-         fontWeight: 600,
-        }}
-       >
-        🏷️ {appliedPromoCode}
-        {isFreeShipping && " · Free Shipping"}
-        <span
-         onClick={() => {
-          setAppliedPromoCode("");
-          setIsFreeShipping(false);
-          setDiscount(0);
-          setPromoCode("");
-          setNewTotal(savedTotalPrice + savedTotalWithDelivery);
-          sessionStorage.setItem("discount", "0");
-          sessionStorage.setItem("newTotal", (savedTotalPrice + savedTotalWithDelivery).toString());
-          sessionStorage.removeItem("promoCode");
-          sessionStorage.setItem("isFreeShipping", "0");
-         }}
-         style={{ cursor: "pointer", marginLeft: "4px", fontWeight: 700 }}
-        >
-         ×
-        </span>
-       </span>
-      </FlexBox>
-     )}
-    </Card1>
-   )}
-
    <Card1>
    {state.cart.map((item) => (
     <ProductCard20
@@ -1175,7 +1033,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
 
      <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
       <Typography color="text.hint">Estimated Tax / VAT (0%)</Typography>
-      <Typography fontWeight="600">BDT 0.00</Typography>
+      <Typography fontWeight="600">৳ 0.00</Typography>
      </FlexBox>
 
      <Divider mb="1rem" />
@@ -1239,7 +1097,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
      {/* Separates the promo field from the totals below — without it "Subtotal"
          reads as part of the promotion block. */}
      <label className="sm-label" htmlFor="sm-promo">
-      Promo code
+      Apply Coupon or Promo Code
      </label>
      <div className="sm-promo">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -1249,7 +1107,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
       <input
        id="sm-promo"
        type="text"
-       placeholder="Enter Store/Tizaraa Code"
+       placeholder="Enter Promo Code"
        value={promoCode}
        onChange={handlePromoCodeChange}
        onKeyDown={(e) => {
@@ -1293,7 +1151,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
       {hasAbroadProduct && (
        <div className="sm-line">
         <span className="is-brand">Pay now ({selectedPaymentOption}%)</span>
-        <b className="is-brand">{otcAdvancePaymentAmount !== null ? currency(otcAdvancePaymentAmount) : "BDT 0.00"}</b>
+        <b className="is-brand">{otcAdvancePaymentAmount !== null ? currency(otcAdvancePaymentAmount) : "৳ 0.00"}</b>
        </div>
       )}
       {!hasAbroadProduct && (
@@ -1307,7 +1165,7 @@ export default function CheckoutSummary({ deliveryCharge }) {
         </div>
         <div className="sm-line">
          <span>VAT</span>
-         <b>BDT 0.00</b>
+         <b>৳ 0.00</b>
         </div>
         {/* discount only when there is one */}
         {hasDiscount && (

@@ -149,20 +149,18 @@ export const StyledFooter = styled.footer`
 
  .footer-verified {
   max-width: 300px;
-  padding: 12px 14px;
-  border: 1px solid var(--f-line);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
+  margin-top: 28px;
 
   dl {
    display: grid;
    gap: 6px;
-   margin: 8px 0 0;
+   margin: 0;
   }
   dl > div {
    display: flex;
+   flex-wrap: wrap;
    justify-content: space-between;
-   gap: 12px;
+   gap: 0 12px;
    font-size: 12.5px;
   }
   dt {
@@ -170,22 +168,12 @@ export const StyledFooter = styled.footer`
   }
   dd {
    margin: 0;
+   overflow-wrap: anywhere;
    font-weight: 600;
    color: #fff;
    font-variant-numeric: tabular-nums;
   }
  }
- .verified-title {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #6ee7a8;
- }
-
  /* Column headings (buttons so they work as mobile accordions) */
  .footer-heading {
   position: relative;
@@ -273,14 +261,10 @@ export const StyledFooter = styled.footer`
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 10px;
-  padding: 10px 12px;
-  border: 1px solid var(--f-line);
-  border-radius: 14px;
+  margin-bottom: 14px;
   font-weight: 600;
   color: #fff;
-  background: rgba(255, 255, 255, 0.04);
-  transition: border-color 200ms, background-color 200ms, transform 220ms var(--f-ease);
+  transition: color 200ms;
 
   small {
    display: block;
@@ -290,19 +274,15 @@ export const StyledFooter = styled.footer`
   }
  }
  .contact-card:hover {
-  border-color: var(--f-ember);
-  background: rgba(240, 80, 35, 0.1);
-  transform: translateY(-2px);
+  color: var(--f-ember);
  }
  .contact-icon {
   display: grid;
   flex-shrink: 0;
   place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 20px;
+  height: 20px;
   color: var(--f-ember);
-  background: rgba(240, 80, 35, 0.14);
  }
 
  /* ---------- Payment row ---------- */
@@ -450,7 +430,27 @@ export const StyledFooter = styled.footer`
    display: none;
    padding-bottom: 12px;
   }
+  /* 40px tap targets for accordion links and legal links */
+  .footer-col-links .footer-link {
+   padding: 10px 0;
+  }
+  .footer-bar-inner nav a {
+   display: inline-block;
+   padding: 10px 4px;
+  }
   .footer-col.is-open .footer-col-links {
+   display: block;
+  }
+  .footer-col .footer-verified {
+   margin-top: 4px;
+   padding-bottom: 16px;
+  }
+  .footer-col .footer-verified .footer-heading {
+   margin: 0 0 12px;
+   padding: 0 0 10px;
+   cursor: default;
+  }
+  .footer-col .footer-verified .footer-heading::after {
    display: block;
   }
 

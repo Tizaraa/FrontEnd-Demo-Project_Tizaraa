@@ -374,7 +374,7 @@ export default function PaymentSummary({
 
      <FlexBox justifyContent="space-between" alignItems="center" mb="1.5rem">
       <Typography color="text.hint">Estimated Tax / VAT (0%)</Typography>
-      <Typography fontWeight="600">BDT 0.00</Typography>
+      <Typography fontWeight="600">৳ 0.00</Typography>
      </FlexBox>
 
      <Divider mb="1rem" />

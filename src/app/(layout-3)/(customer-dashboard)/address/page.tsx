@@ -503,6 +503,7 @@ const AddressCard = styled.article`
 
  .ac-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
   margin-top: auto;
@@ -620,6 +621,10 @@ const ActionButton = styled.button`
  &:focus-visible {
   outline: none;
   box-shadow: var(--tz-focus-ring);
+ }
+
+ @media (max-width: 650px) {
+  min-height: 40px;
  }
 `;
 

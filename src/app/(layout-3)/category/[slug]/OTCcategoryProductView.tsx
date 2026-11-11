@@ -194,7 +194,7 @@ const OTCcategoryProductView = ({ slug }: { slug: string }) => {
            {product.Price.DiscountPrice > 0 ? (
             <>
              <H4 fontWeight="600" fontSize="14px" color="text.muted">
-              BDT <del>{product.Price.OriginalPrice}</del>
+              ৳ <del>{product.Price.OriginalPrice}</del>
              </H4>
              <Box marginTop="4px">
               <H4 fontWeight="600" fontSize="14px" color="primary.main">
