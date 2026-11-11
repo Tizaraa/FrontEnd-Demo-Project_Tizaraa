@@ -2252,8 +2252,8 @@ export default function CreditHistoryPage() {
          <table className="ch-table">
           <thead>
            <tr>
-            <th className="is-left">Order</th>
-            <th className="is-left">Product</th>
+            <th>Order</th>
+            <th>Product</th>
             <th className="ctr">Qty</th>
             <th className="num">Amount</th>
             <th>Date</th>
@@ -2316,7 +2316,7 @@ export default function CreditHistoryPage() {
         <table className="ch-table">
          <thead>
           <tr>
-           <th className="is-left">Product</th>
+           <th>Product</th>
            <th className="is-left">Order #</th>
            <th className="ctr">Qty</th>
            <th>Returned at</th>

@@ -293,9 +293,10 @@ const Tx = styled.div`
  .tx-order {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
   min-width: 0;
+  text-align: left;
  }
  .tx-order b {
   overflow: hidden;
