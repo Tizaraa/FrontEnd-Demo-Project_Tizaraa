@@ -425,7 +425,7 @@
 //                   </Link>
 //                   <p className="text-sm mb-2">
 //                   <span style={{ color: '#e74c3c', fontWeight: '500' }}>
-//   BDT {parseFloat(relatedProduct.Price.ConvertedPriceWithoutSign)}
+//   ৳ {parseFloat(relatedProduct.Price.ConvertedPriceWithoutSign)}
 // </span>
 
 // </p>
@@ -1399,7 +1399,7 @@ const ProductPage = () => {
           </Link>
           <p className="text-sm mb-2">
            <span style={{ color: "#e74c3c", fontWeight: "500" }}>
-            BDT {parseFloat(relatedProduct.Price.ConvertedPriceWithoutSign)}
+            ৳ {parseFloat(relatedProduct.Price.ConvertedPriceWithoutSign)}
            </span>
           </p>
          </Card>

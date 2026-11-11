@@ -644,6 +644,10 @@ export default function OrderStatus({
 }: OrderStatusProps) {
  const normStatus = normalize(orderStatus);
 
+ // Corporate (company credit) orders show no status tracker: employees see it
+ // only on retail orders. The corporate stepper below is kept but unreachable.
+ if (isCorporate) return null;
+
  // ---------------- Corporate: Pending -> Packed -> Delivered ----------------
  if (isCorporate) {
   const statusMap: { [key: string]: number } = {

@@ -705,7 +705,7 @@ export default function OrderDetails({ params }: IDParams) {
             </Paragraph>
           </Card> */}
 
-     <div style={{ display: "flex", gap: "20px" }}>
+     <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
       {/* <Button
               px="2rem"
               color="primary"

@@ -276,6 +276,8 @@ export default function RfqProductList() {
    <header
     style={{
      display: "flex",
+     flexWrap: "wrap",
+     gap: "0.75rem",
      justifyContent: "space-between",
      alignItems: "center",
      marginBottom: "1rem",
@@ -459,6 +461,7 @@ export default function RfqProductList() {
      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
      disabled={currentPage === 1}
      style={{
+      minHeight: "40px",
       padding: "0.5rem 1rem",
       border: "1px solid var(--tz-line)",
       borderRadius: "0.375rem",
@@ -482,6 +485,7 @@ export default function RfqProductList() {
      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
      disabled={currentPage === pageCount}
      style={{
+      minHeight: "40px",
       padding: "0.5rem 1rem",
       border: "1px solid var(--tz-line)",
       borderRadius: "0.375rem",

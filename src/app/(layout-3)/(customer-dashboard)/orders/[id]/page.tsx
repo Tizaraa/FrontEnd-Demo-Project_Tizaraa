@@ -312,6 +312,7 @@ const OD = styled.div`
   color: ${({ theme }) => theme.tz.color.slate};
  }
  .od-shop-name strong {
+  overflow-wrap: anywhere;
   font-size: 16px;
   color: ${({ theme }) => theme.tz.color.ink};
  }
@@ -340,6 +341,7 @@ const OD = styled.div`
  /* return card */
  .od-return-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
@@ -395,6 +397,18 @@ const OD = styled.div`
  }
 
  /* loading / error */
+ .od-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+
+  img {
+   width: 80px;
+   height: 80px;
+   object-fit: contain;
+  }
+ }
  .od-skel {
   border-radius: 18px;
   background: linear-gradient(90deg, ${({ theme }) => theme.tz.color.mist} 0%, ${({ theme }) => theme.tz.color.lineSoft} 50%, ${({ theme }) => theme.tz.color.mist} 100%);
@@ -435,6 +449,15 @@ const OD = styled.div`
   .od-hero-actions .od-btn {
    flex: 1;
    justify-content: center;
+  }
+  /* tap targets: copy-ID button and the corporate "Download Token" button
+     (its 28px height is an inline style, hence !important) */
+  .od-icon-btn {
+   width: 40px;
+   height: 40px;
+  }
+  .od-shop > button {
+   height: 40px !important;
   }
  }
 
@@ -485,8 +508,13 @@ const InvoiceDialog = styled.div`
  }
  .iv-head > div {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 8px;
+ }
+ .iv-head strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
  }
  .iv-head .od-btn {
   display: inline-flex;
@@ -518,6 +546,16 @@ const InvoiceDialog = styled.div`
   flex: 1;
   width: 100%;
   border: 0;
+ }
+
+ @media (max-width: 560px) {
+  .iv-head .od-icon-btn {
+   width: 40px;
+   height: 40px;
+  }
+  .iv-head .od-btn {
+   min-height: 40px;
+  }
  }
 
  @media (prefers-reduced-motion: reduce) {
@@ -818,15 +856,8 @@ export default function OrderDetails({ params }: IDParams) {
  if (loading) {
   return (
    <OD aria-busy="true" aria-label="Loading order">
-    <div className="od-skel" style={{ height: 150 }} />
-    <div className="od-grid">
-     <div className="od-main">
-      <div className="od-skel" style={{ height: 220 }} />
-      <div className="od-skel" style={{ height: 180 }} />
-     </div>
-     <div className="od-side">
-      <div className="od-skel" style={{ height: 260 }} />
-     </div>
+    <div className="od-loading">
+     <img src={PrimaryLoader} alt="Loading" width={80} height={80} />
     </div>
    </OD>
   );
@@ -1293,15 +1324,6 @@ export default function OrderDetails({ params }: IDParams) {
         </span>
        </div>
       </div>
-      <div className="od-hero-actions">
-       <a className="od-btn" href="/support-tickets">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-         <circle cx="12" cy="12" r="10" />
-         <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01" />
-        </svg>
-        Need help?
-       </a>
-      </div>
      </div>
 
      <dl className="od-facts">
@@ -1436,7 +1458,7 @@ export default function OrderDetails({ params }: IDParams) {
          {ret.refund_amount && (
           <div>
            <dt>Refund amount</dt>
-           <dd className="od-good">BDT {ret.refund_amount}</dd>
+           <dd className="od-good">৳ {ret.refund_amount}</dd>
           </div>
          )}
         </dl>

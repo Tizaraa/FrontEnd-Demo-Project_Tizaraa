@@ -1,5 +1,6 @@
 "use client";
 
+import { postLoginPath } from "@utils/corporateRedirect";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -1230,14 +1231,9 @@ export default function Login() {
 
     toast.success("User logged in successfully!");
 
-    // ✅ Check for redirect URL
-    const redirectPath = sessionStorage.getItem("redirectAfterLogin");
-    if (redirectPath) {
-     sessionStorage.removeItem("redirectAfterLogin");
-     router.push(redirectPath); // Redirect back to the product page
-    } else {
-     router.push("/"); // Default home page
-    }
+    // Active corporate employee → straight into their corporate shop;
+    // otherwise the page remembered before login, otherwise home.
+    router.push(postLoginPath(data.user));
    } else {
     toast.error("Failed login. Please check your email or password.");
    }

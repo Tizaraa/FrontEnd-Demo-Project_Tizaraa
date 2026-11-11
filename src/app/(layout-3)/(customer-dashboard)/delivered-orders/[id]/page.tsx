@@ -649,7 +649,7 @@ export default function OrderDetails({ params }: IDParams) {
       delivered={Boolean(order.Order.isDelivered)}
      />
 
-     <div style={{ display: "flex", gap: "20px" }}>
+     <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
       {/* =========== Invoice ==========
           Only once the order is delivered — there is nothing to invoice while it is
           still pending, and a cancelled order has no delivery to bill for. */}

@@ -183,14 +183,24 @@ export default function Cart() {
  const [isFreeShipping, setIsFreeShipping] = useState(false);
 
  useEffect(() => {
-  setSellerType(localStorage.getItem("seller_type") || "");
+  const currentSellerType = (localStorage.getItem("seller_type") || "").toLowerCase();
+  setSellerType(currentSellerType);
 
-  const storedPromoCode = sessionStorage.getItem("promoCode") || "";
-  const storedDiscount = parseFloat(sessionStorage.getItem("discount") || "0");
-  if (storedPromoCode && storedDiscount > 0) {
-   setAppliedPromoCode(storedPromoCode);
-   setPromoDiscount(storedDiscount);
-   setIsFreeShipping(sessionStorage.getItem("isFreeShipping") === "1");
+  if (currentSellerType === "corporate") {
+   sessionStorage.removeItem("promoCode");
+   sessionStorage.removeItem("discount");
+   sessionStorage.removeItem("isFreeShipping");
+   setAppliedPromoCode("");
+   setPromoDiscount(0);
+   setIsFreeShipping(false);
+  } else {
+   const storedPromoCode = sessionStorage.getItem("promoCode") || "";
+   const storedDiscount = parseFloat(sessionStorage.getItem("discount") || "0");
+   if (storedPromoCode && storedDiscount > 0) {
+    setAppliedPromoCode(storedPromoCode);
+    setPromoDiscount(storedDiscount);
+    setIsFreeShipping(sessionStorage.getItem("isFreeShipping") === "1");
+   }
   }
  }, []);
 
@@ -303,7 +313,7 @@ export default function Cart() {
       : null;
      const effectivePrice = newDiscountPrice ?? newPrice;
      if ((item.discountPrice ?? item.price) !== effectivePrice) {
-      toast(`Price updated for "${item.name}" to BDT ${effectivePrice}`);
+      toast(`Price updated for "${item.name}" to ৳ ${effectivePrice}`);
      }
      return {
       ...item,
@@ -505,15 +515,15 @@ export default function Cart() {
 
      <Grid item lg={4} md={4} xs={12}>
       <SummaryColumn>
-       {isCorporate && (
+       {!isCorporate && (
         <Panel>
-         <h2 className="panel-title">Promo code</h2>
+         <h2 className="panel-title">Apply Coupon or Promo Code</h2>
          <div className="promo-row">
           <input
            type="text"
            className="promo-input"
            aria-label="Promo code"
-           placeholder="Enter promo code (e.g. CORP10)"
+           placeholder="Enter promo code"
            value={promoCode}
            onChange={(e) => setPromoCode(e.target.value)}
           />

@@ -837,6 +837,10 @@ const Page = styled.div`
   .rp-actions .rp-btn {
    flex: 1;
   }
+  .rp-ph button {
+   width: 28px;
+   height: 28px;
+  }
  }
 
  @media (prefers-reduced-motion: reduce) {

@@ -1050,6 +1050,13 @@ const Page = styled.div`
    flex: 1;
   }
  }
+ /* small phones: two date inputs side by side get too narrow to read */
+ @media (max-width: 420px) {
+  .ch-range {
+   grid-template-columns: minmax(0, 1fr);
+   gap: 6px;
+  }
+ }
 
  /* tabs */
  .ch-tabs {
@@ -1103,9 +1110,11 @@ const Page = styled.div`
  }
 
  /* table */
+ /* Horizontal scroll only; the page scrolls vertically. Very long lists
+    (.is-long) get a capped height with a thin scrollbar instead. */
  .ch-scroll {
-  max-height: 520px;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   border: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
   border-radius: 14px;
   /* scroll hint: soft edge shadows appear only when there is more to scroll */
@@ -1113,6 +1122,27 @@ const Page = styled.div`
    linear-gradient(to left, #fff 30%, rgba(255, 255, 255, 0)) right center / 40px 100% no-repeat local,
    radial-gradient(farthest-side at 0 50%, rgba(14, 52, 96, 0.16), transparent) left center / 14px 100% no-repeat scroll,
    radial-gradient(farthest-side at 100% 50%, rgba(14, 52, 96, 0.16), transparent) right center / 14px 100% no-repeat scroll;
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => theme.tz.color.line} transparent;
+ }
+ .ch-scroll.is-long {
+  max-height: 640px;
+  overflow-y: auto;
+ }
+ .ch-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+ }
+ .ch-scroll::-webkit-scrollbar-track {
+  background: transparent;
+ }
+ .ch-scroll::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.tz.color.line} padding-box;
+ }
+ .ch-scroll::-webkit-scrollbar-thumb:hover {
+  background: ${({ theme }) => theme.tz.color.slate} padding-box;
  }
  .ch-table {
   width: 100%;
@@ -1131,15 +1161,28 @@ const Page = styled.div`
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  text-align: left;
+  text-align: center;
+  vertical-align: middle;
   text-transform: uppercase;
   white-space: nowrap;
  }
  .ch-table td {
-  padding: 13px 14px;
+  height: 54px;
+  padding: 12px 14px;
   border-bottom: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
   color: ${({ theme }) => theme.tz.color.inkSoft};
+  text-align: center;
   vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+ }
+ /* Product names are long free text: left-aligned for readability.
+    Everything else (order #, qty, amount, date, status) is centered. */
+ .ch-table th.is-left,
+ .ch-table td.is-left {
+  text-align: left;
+ }
+ .ch-table tbody tr:last-child td {
+  border-bottom: none;
  }
  .ch-table tbody tr {
   animation: ${fadeIn} 360ms ease both;
@@ -1149,7 +1192,7 @@ const Page = styled.div`
   background: ${({ theme }) => theme.tz.color.mist};
  }
  .ch-table .num {
-  text-align: right;
+  text-align: center;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
  }
@@ -1168,6 +1211,9 @@ const Page = styled.div`
   background: #fff;
   color: ${({ theme }) => theme.tz.color.ink};
   font-weight: 800;
+ }
+ .ch-table tfoot td.ch-tlabel {
+  text-align: left;
  }
  .ch-order {
   font-weight: 800;
@@ -1217,6 +1263,7 @@ const Page = styled.div`
  }
  .ch-rcard-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
@@ -2201,12 +2248,12 @@ export default function CreditHistoryPage() {
        emptyState("purchase")
       ) : (
        <>
-        <div className="ch-scroll">
+        <div className={`ch-scroll${purchaseItems.length > 12 ? " is-long" : ""}`}>
          <table className="ch-table">
           <thead>
            <tr>
             <th>Order</th>
-            <th>Product</th>
+            <th className="is-left">Product</th>
             <th className="ctr">Qty</th>
             <th className="num">Amount</th>
             <th>Date</th>
@@ -2217,7 +2264,7 @@ export default function CreditHistoryPage() {
            {purchaseItems.map(({ order, item }, idx) => (
             <tr key={`${order.id}-${item.product_id}-${idx}`}>
              <td className="ch-order">#{order.order_number}</td>
-             <td className="ch-prod">{item.product_name.trim()}</td>
+             <td className="ch-prod is-left">{item.product_name.trim()}</td>
              <td className="ctr">{item.quantity}</td>
              <td className="num">{currency(item.total_price)}</td>
              <td className="nowrap">{fmtDateTime(order.created_at)}</td>
@@ -2227,7 +2274,7 @@ export default function CreditHistoryPage() {
           </tbody>
           <tfoot>
            <tr>
-            <td colSpan={3}>Total for this period</td>
+            <td className="ch-tlabel" colSpan={3}>Total for this period</td>
             <td className="num">{currency(purchaseTotal)}</td>
             <td colSpan={2} />
            </tr>
@@ -2265,11 +2312,11 @@ export default function CreditHistoryPage() {
       emptyState("returned")
      ) : (
       <>
-       <div className="ch-scroll">
+       <div className={`ch-scroll${returnedItems.length > 12 ? " is-long" : ""}`}>
         <table className="ch-table">
          <thead>
           <tr>
-           <th>Product</th>
+           <th className="is-left">Product</th>
            <th>Order #</th>
            <th className="ctr">Qty</th>
            <th>Returned at</th>
@@ -2278,7 +2325,7 @@ export default function CreditHistoryPage() {
          <tbody>
           {returnedItems.map(({ order, item }, idx) => (
            <tr key={`${order.id}-${item.product_id}-return-${idx}`}>
-            <td className="ch-prod">{item.product_name.trim()}</td>
+            <td className="ch-prod is-left">{item.product_name.trim()}</td>
             <td className="ch-order">#{order.order_number}</td>
             <td className="ctr">{item.quantity}</td>
             <td className="nowrap">{fmtDateTime(item.returned_at)}</td>

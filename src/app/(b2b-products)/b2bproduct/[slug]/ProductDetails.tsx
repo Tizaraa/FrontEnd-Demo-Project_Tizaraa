@@ -226,7 +226,7 @@ const ShippingInfo: React.FC<{
             fontSize: "14px",
            }}
           >
-           Base Rate (First 1 kg): <strong>60 BDT</strong>
+           Base Rate (First 1 kg): <strong>৳ 60</strong>
           </li>
           <li
            style={{
@@ -235,7 +235,7 @@ const ShippingInfo: React.FC<{
             fontSize: "14px",
            }}
           >
-           Additional Weight (Per kg): <strong>25 BDT/kg</strong>
+           Additional Weight (Per kg): <strong>৳ 25/kg</strong>
           </li>
          </ul>
          <div style={{ marginTop: "15px", fontSize: "12px", color: "#E94560" }}>

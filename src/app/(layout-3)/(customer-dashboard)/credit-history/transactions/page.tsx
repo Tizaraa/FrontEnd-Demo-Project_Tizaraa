@@ -245,6 +245,20 @@ const Tx = styled.div`
  }
  .c { text-align: center; }
  .r { text-align: right; }
+ /* Every column is short (order #, date, count, amount, badge, chevron),
+    so header + row cells are all centered. */
+ .tx-head > *,
+ .tx-main > * {
+  text-align: center;
+ }
+ .tx-main {
+  min-height: 56px;
+ }
+ .tx-main .tx-date,
+ .tx-main .c,
+ .tx-foot b {
+  font-variant-numeric: tabular-nums;
+ }
  .tx-list {
   margin: 6px 0 0;
   padding: 0;
@@ -279,6 +293,7 @@ const Tx = styled.div`
  .tx-order {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   min-width: 0;
  }
@@ -395,7 +410,9 @@ const Tx = styled.div`
    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
  }
- @media (max-width: 720px) {
+ /* The 6-column row needs ~726px; switch to stacked rows before it
+    overflows (covers 768px tablets, where the sidebar is already gone) */
+ @media (max-width: 820px) {
   .tx-head {
    display: none;
   }
@@ -412,7 +429,9 @@ const Tx = styled.div`
   }
   .tx-order {
    grid-column: 1 / -1;
+   justify-content: flex-start;
   }
+  .tx-main > *,
   .c,
   .r {
    text-align: left;
@@ -425,6 +444,24 @@ const Tx = styled.div`
   }
   .tx-open {
    margin-left: 14px;
+  }
+ }
+ @media (max-width: 720px) {
+  /* 4 status tabs are wider than a phone: scroll sideways instead of overflowing */
+  .tx-tabs {
+   max-width: 100%;
+   overflow-x: auto;
+  }
+  .tx-tab {
+   flex-shrink: 0;
+   min-height: 40px;
+   white-space: nowrap;
+  }
+  .tx-items li {
+   grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+  .tx-items li > span:first-child {
+   overflow-wrap: anywhere;
   }
  }
 

@@ -674,6 +674,9 @@ const OrderRows = styled.ul`
   .or-side {
    grid-column: 2;
   }
+  .or-track {
+   height: 40px;
+  }
  }
 `;
 
@@ -912,7 +915,6 @@ const QUICK: QuickItem[] = [
  // Wishlist API is not built yet (WishlistController is a TODO), so no count
  { label: "Wishlist", href: "/wish-list", icon: P_ICON.heart, fg: "#c0262d", bg: "#fdecec", sub: "Saved items" },
  { label: "Password", href: "/profile/set-password", icon: P_ICON.lock, fg: "#c2400f", bg: "#fdeee7", password: true, sub: "Keep it secure" },
- { label: "Support", href: "/support-tickets", icon: P_ICON.ticket, fg: "#3a3f4e", bg: "#eef0f4", sub: "Get help" },
 ];
 
 export function QuickActions({

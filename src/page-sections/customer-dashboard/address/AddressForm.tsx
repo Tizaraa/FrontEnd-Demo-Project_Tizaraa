@@ -306,6 +306,12 @@ export default function AddressForm() {
       loading={f.isSubmitting}
       submitLabel="Save address"
       onCancel={() => router.push("/address")}
+      onClear={() => {
+       f.resetForm();
+       setSelectedLandmark(0);
+       setCity([]);
+       setArea([]);
+      }}
      />
     </form>
    )}

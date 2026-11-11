@@ -54,17 +54,17 @@ export default function ShippingAndDeliveryPage() {
         <div className="charge-card">
          <h3 className="charge-title">Inside Dhaka</h3>
          <ul className="charge-list">
-          <li>Standard delivery charge: BDT 60</li>
+          <li>Standard delivery charge: ৳ 60</li>
           <li>
-           For products over 1kg, add BDT 25 for each additional kilogram
+           For products over 1kg, add ৳ 25 for each additional kilogram
           </li>
          </ul>
         </div>
         <div className="charge-card">
          <h3 className="charge-title">Outside Dhaka</h3>
          <ul className="charge-list">
-          <li>Standard delivery charge: BDT 120</li>
-          <li>For products over 1kg, add BDT 25 per additional kilogram</li>
+          <li>Standard delivery charge: ৳ 120</li>
+          <li>For products over 1kg, add ৳ 25 per additional kilogram</li>
          </ul>
         </div>
        </div>
@@ -72,7 +72,7 @@ export default function ShippingAndDeliveryPage() {
         <p className="charge-example-text">
          <span className="example-icon">📦</span> <strong>Example</strong>: If
          your order weighs 3kg and is being shipped outside Dhaka, the delivery
-         charge would be: 120 + (2kg × 25) = BDT 170
+         charge would be: 120 + (2kg × 25) = ৳ 170
         </p>
        </div>
       </div>

@@ -212,6 +212,24 @@ export default function EditAddressForm({ addressId }: { addressId: string }) {
       loading={f.isSubmitting}
       submitLabel="Update address"
       onCancel={() => router.push("/address")}
+      onClear={() => {
+       f.resetForm({
+        values: {
+         name: "",
+         contact: "",
+         address: "",
+         province: "",
+         city: "",
+         area: "",
+         postal_code: "",
+         is_default: false,
+         selectedLandmark: 0,
+        },
+       });
+       setSelectedLandmark(0);
+       setCity([]);
+       setArea([]);
+      }}
      />
     </form>
    )}
