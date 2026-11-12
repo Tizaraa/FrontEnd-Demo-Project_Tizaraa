@@ -139,6 +139,7 @@ const dropIn = keyframes`
 
 const Wrap = styled.div`
  position: relative;
+ z-index: 10;
  flex: 1 1 0;
  width: 100%;
  max-width: 680px;
@@ -294,7 +295,7 @@ const Wrap = styled.div`
   top: calc(100% + 8px);
   left: 0;
   right: 0;
-  z-index: 99;
+  z-index: 1000;
   margin: 0;
   padding: 6px;
   list-style: none;

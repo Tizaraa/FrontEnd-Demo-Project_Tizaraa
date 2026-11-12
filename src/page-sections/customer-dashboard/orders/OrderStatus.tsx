@@ -455,6 +455,13 @@ const Wrap = styled.section<{ $tone: string }>`
   line-height: 1.45;
   color: ${({ theme }) => theme.tz.color.inkSoft};
  }
+ .tr-h-actor {
+  font-weight: 600;
+  color: ${({ theme }) => theme.tz.color.inkSoft};
+ }
+ .tr-h-note {
+  font-style: italic;
+ }
  .tr-h-step.is-todo .tr-h-desc {
   color: ${({ theme }) => theme.tz.color.slate};
  }
@@ -573,7 +580,9 @@ function Tracker({
        <span className="tr-h-label">{s.label}</span>
        <span className={`tr-tag ${TAG[s.state][0]}`}>{TAG[s.state][1]}</span>
        {s.state !== "todo" && s.date && <span className="tr-h-date">{s.date}</span>}
+       {s.state !== "todo" && s.actor && <span className="tr-h-date tr-h-actor">by {s.actor}</span>}
        <span className="tr-h-desc">{s.desc}</span>
+       {s.state !== "todo" && s.notes && <span className="tr-h-desc tr-h-note">“{s.notes}”</span>}
       </li>
      ))}
     </ol>
@@ -644,89 +653,80 @@ export default function OrderStatus({
 }: OrderStatusProps) {
  const normStatus = normalize(orderStatus);
 
- // Corporate (company credit) orders show no status tracker: employees see it
- // only on retail orders. The corporate stepper below is kept but unreachable.
- if (isCorporate) return null;
-
  // ---------------- Corporate: Pending -> Packed -> Delivered ----------------
+ // Each step carries the history event that reached it: when, who (seller /
+ // customer / admin) and any note, so the buyer sees what the shop did and when.
  if (isCorporate) {
-  const statusMap: { [key: string]: number } = {
-   pending: 0,
-   confirmed: 1,
-   processing: 2,
-   packed: 2,
-   ready_for_pickup: 3,
-   shipped: 3,
-   delivered: 4,
-   canceled: 5,
-   cancelled: 5,
-   return: 6,
-  };
-  const numericStatus = statusMap[normStatus] ?? 0;
-  const getCorporateStatusIndex = (status: number) => {
-   switch (status) {
-    case 0: // Pending
-    case 1: // Confirmed
-     return 0; // First step ("Pending") active
-    case 2: // Processing / Packed
-    case 3: // Shipped
-     return 1; // Second step ("Packed") active
-    case 4: // Delivered
-     return 2; // Third step ("Delivered") active
-    default:
-     return -1;
-   }
-  };
-  const corporateStatusIndex = getCorporateStatusIndex(numericStatus);
-  const getCorporateDescription = () => {
-   switch (numericStatus) {
-    case 0:
-     return "Your order is pending confirmation from the shop";
-    case 1:
-     return "Your order has been confirmed and will be packed soon";
-    case 2:
-    case 3:
-     return "Your order is packed and ready to collect from the shop";
-    case 4:
-     return "Your order has been delivered successfully";
-    case 5:
-     return "This order has been cancelled.";
-    default:
-     return "Order status information";
-   }
-  };
+  // Returned corporate orders show no order flow (return tab)
+  if (returnStatus || returnRecord || normStatus.includes("return") || normStatus.includes("refund")) return null;
+
+  const PACKED = ["processing", "packed", "ready_for_pickup", "shipped"];
+  const CANCELLED = ["cancelled", "canceled"];
+  const evStatus = (t: TimelineEvent) => normalize(t.to_status || t.status);
+  const events = timeline ?? [];
+  const findFirst = (statuses: string[]) => events.find((t) => statuses.includes(evStatus(t))) ?? null;
+
+  const isCancelled = CANCELLED.includes(normStatus);
+  // 0 = pending (incl. confirmed), 1 = packed, 2 = delivered
+  // Returned / refunded orders were collected first, so they sit at Delivered
+  const afterDelivery = normStatus === "delivered" || normStatus.includes("return") || normStatus.includes("refund");
+  const currentIdx = afterDelivery ? 2 : PACKED.includes(normStatus) ? 1 : 0;
+
+  const confirmEvt = findFirst(["confirmed"]);
   const corporateSteps = [
-   { key: "pending", icon: "bag", label: "Pending", desc: "Order placed and waiting for the shop" },
-   { key: "packed", icon: "box", label: "Packed", desc: "Packed and ready to collect from the shop" },
-   { key: "delivered", icon: "home", label: "Delivered", desc: "Collected / delivered" },
+   {
+    key: "pending",
+    icon: "bag",
+    label: "Pending",
+    activeDesc: confirmEvt ? "Order placed and confirmed by the shop" : "Order placed and waiting for the shop",
+    todoDesc: "Order placed",
+    evt: findFirst(["pending"]),
+   },
+   {
+    key: "packed",
+    icon: "box",
+    label: "Packed",
+    activeDesc: "Packed by the shop and ready to collect",
+    todoDesc: "Waiting for the shop to pack your order",
+    evt: findFirst(PACKED),
+   },
+   {
+    key: "delivered",
+    icon: "home",
+    label: "Delivered",
+    activeDesc: "Collected from the shop",
+    todoDesc: "Waiting for you to collect it from the shop",
+    evt:
+     findFirst(["delivered"]) ??
+     (deliveredAt ? { to_status: "delivered", created_at: deliveredAt, changed_by_role: "seller" } : null),
+   },
   ];
+
+  // Cancelled: keep only steps that really happened, then the red step
+  const wasPacked = Boolean(corporateSteps[1].evt);
+  const base = isCancelled
+   ? corporateSteps.filter((st) => st.key === "pending" || (wasPacked && st.key === "packed"))
+   : corporateSteps;
   const last = corporateSteps.length - 1;
-  const steps: ViewStep[] = corporateSteps.map((s, i) => ({
-   ...s,
-   state:
-    corporateStatusIndex < 0
-     ? "todo"
-     : i < corporateStatusIndex || (i === corporateStatusIndex && corporateStatusIndex === last)
-     ? "done"
-     : i === corporateStatusIndex
-     ? "current"
-     : "todo",
-   desc: i === corporateStatusIndex ? getCorporateDescription() : s.desc,
-  }));
-  if (numericStatus === 5) {
-   // Cancelled: show only what really happened — Pending, (Packed if it got
-   // that far), then the red Cancelled step. No Delivered.
-   const wasPacked = (timeline ?? []).some((t) =>
-    ["processing", "packed", "ready_for_pickup", "shipped"].includes(normalize(t.to_status || t.status))
-   );
-   const cancelEvt: any = (timeline ?? []).find((t) => ["cancelled", "canceled"].includes(normalize(t.to_status)));
-   const kept = steps.filter((st) => st.key === "pending" || (wasPacked && st.key === "packed"));
-   kept.forEach((st) => {
-    st.state = "done";
-    st.desc = st.key === "pending" ? "Order placed and waiting for the shop" : "Packed and ready to collect from the shop";
-   });
-   steps.length = 0;
-   steps.push(...kept, {
+
+  const steps: ViewStep[] = base.map((st, i) => {
+   const reached = isCancelled || i <= currentIdx;
+   const e: any = reached ? st.evt : null;
+   return {
+    key: st.key,
+    label: st.label,
+    icon: st.icon,
+    state: !reached ? "todo" : isCancelled || i < currentIdx || i === last ? "done" : "current",
+    date: e ? formatTimelineDate(e.created_at || e.at) : "",
+    actor: actorOf(e, "seller"),
+    notes: e?.notes ?? null,
+    desc: reached ? st.activeDesc : st.todoDesc,
+   };
+  });
+
+  if (isCancelled) {
+   const cancelEvt: any = findFirst(CANCELLED);
+   steps.push({
     key: "cancelled",
     label: "Cancelled",
     icon: "x",
@@ -734,15 +734,16 @@ export default function OrderStatus({
     date: cancelEvt ? formatTimelineDate(cancelEvt.created_at || cancelEvt.at) : "",
     actor: actorOf(cancelEvt, "customer"),
     notes: cancelEvt?.notes ?? null,
-    desc: getCorporateDescription(),
+    desc: "This order has been cancelled.",
    });
   }
+
   return (
    <Tracker
     title="Order status"
     steps={steps}
     horizontal
-    tone={numericStatus === 5 ? "danger" : corporateStatusIndex === last ? "success" : "brand"}
+    tone={isCancelled ? "danger" : currentIdx === last ? "success" : "brand"}
    />
   );
  }

@@ -142,6 +142,11 @@ const Wrap = styled.div`
   border-color: ${({ theme }) => theme.tz.color.ember};
   color: ${({ theme }) => theme.tz.color.emberDeep};
  }
+ .cp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+ }
  .cp-edit {
   display: inline-flex;
   align-items: center;
@@ -834,6 +839,7 @@ const I = {
  arrow: "M5 12h14M13 6l6 6-6 6",
  copy: "M9 9h13v13H9zM5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1",
  edit: "M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z",
+ lock: "M6 11h12v9H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3",
  box: "M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8",
  bag: "M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0",
  card: "M2 5h20v14H2zM2 10h20",
@@ -1064,10 +1070,16 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#5e6678}.r
       )}
      </div>
     </div>
-    <Link className="cp-edit" href="/profile/edit">
-     <Ico d={I.edit} size={15} />
-     Edit profile
-    </Link>
+    <div className="cp-actions">
+     <Link className="cp-edit" href="/profile/edit">
+      <Ico d={I.edit} size={15} />
+      Edit profile
+     </Link>
+     <Link className="cp-edit" href="/profile/set-password">
+      <Ico d={I.lock} size={15} />
+      Change password
+     </Link>
+    </div>
    </section>
 
    {/* company credit */}
