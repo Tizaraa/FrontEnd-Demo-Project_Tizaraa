@@ -290,7 +290,7 @@
 
 "use client";
 import { Button } from "@component/buttons";
-import { Shield, Mail, Smartphone } from "lucide-react";
+import { Shield, Mail } from "lucide-react";
 import { useState, CSSProperties, useEffect, useRef } from "react";
 import SetPassword from "./SetPassword";
 import axios from "axios";
@@ -618,7 +618,6 @@ export default function SetPasswordForm() {
  };
 
  const handleVerifyThroughEmail = () => sendCode("email");
- const handleVerifyThroughPhone = () => sendCode("phone");
 
  const handleOtpSubmit = async () => {
   if (otp.length !== 6) {
@@ -761,7 +760,7 @@ export default function SetPasswordForm() {
          onClick={() => { setIsOtpPage(false); setOtp(""); setError(""); }}
          style={{ background: "none", border: "none", padding: 0, font: "inherit", color: tz.color.slate, textDecoration: "underline", cursor: "pointer" }}
         >
-         Use another method
+         Back
         </button>
        </p>
       </div>
@@ -776,7 +775,7 @@ export default function SetPasswordForm() {
       <div style={styles.textContent}>
        <h1 style={styles.title}>Secure Your Account</h1>
        <p style={styles.subtitle}>
-        Verify your identity to reset your password
+        We'll email you a 6-digit code to confirm it's you
        </p>
       </div>
       <div style={styles.buttonContainer}>
@@ -794,23 +793,7 @@ export default function SetPasswordForm() {
         }}
        >
         <Mail size={20} color={tz.color.emberDeep} />
-        {sending === "email" ? "Sending code…" : "Verify via Email"}
-       </button>
-       <button
-        style={styles.methodButton}
-        onClick={handleVerifyThroughPhone}
-        disabled={sending !== null}
-        onMouseEnter={(e) => {
-         e.currentTarget.style.borderColor = tz.color.emberDeep;
-         e.currentTarget.style.backgroundColor = tz.color.emberTint;
-        }}
-        onMouseLeave={(e) => {
-         e.currentTarget.style.borderColor = tz.color.line;
-         e.currentTarget.style.backgroundColor = tz.color.paper;
-        }}
-       >
-        <Smartphone size={20} color={tz.color.emberDeep} />
-        {sending === "phone" ? "Sending code…" : "Verify via Phone"}
+        {sending === "email" ? "Sending code…" : "Send code to my email"}
        </button>
       </div>
      </>
