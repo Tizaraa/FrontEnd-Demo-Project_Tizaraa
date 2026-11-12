@@ -15,7 +15,7 @@ export const StyledBox = styled("div").withConfig({
  paddingTop: fixed ? componentHeight : 0,
 
  "& .hold": {
-  zIndex: 5,
+  zIndex: 1100,
   boxShadow: "none",
   position: "relative",
  },

@@ -428,7 +428,7 @@ export default function CheckoutAddress({
             company's designated pickup location. Shipping address is not required.
           </Typography>
           <Typography style={{ fontSize: "13px", color: tz.color.emberDeep, marginTop: "0.5rem", fontWeight: "600" }}>
-            Delivery charge: <strong>BDT 0</strong>
+            Delivery charge: <strong>৳ 0</strong>
           </Typography>
         </FlexBox>
       ) : addresses?.length > 0 ? (

@@ -33,8 +33,9 @@ const rise = keyframes`
 const Track = styled.ol`
  display: flex;
  align-items: center;
+ width: 100%;
  margin: 0;
- padding: 16px 22px;
+ padding: 18px 24px;
  list-style: none;
  background: ${({ theme }) => theme.tz.color.paper};
  border: 1px solid ${({ theme }) => theme.tz.color.line};
@@ -53,7 +54,7 @@ const Track = styled.ol`
   flex: 1 1 auto;
   min-width: 24px;
   height: 4px;
-  margin: 0 14px;
+  margin: 0 16px;
   overflow: hidden;
   border-radius: 4px;
   background: ${({ theme }) => theme.tz.color.lineSoft};
@@ -100,16 +101,16 @@ const Track = styled.ol`
   isolation: isolate;
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
   border-radius: 50%;
   color: ${({ theme }) => theme.tz.color.slate};
   background: ${({ theme }) => theme.tz.color.lineSoft};
  }
  .step-dot svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
  }
  .step-text {
   display: flex;
@@ -118,20 +119,20 @@ const Track = styled.ol`
   line-height: 1.25;
  }
  .step-text small {
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: ${({ theme }) => theme.tz.color.slate};
  }
  .step-text strong {
-  font-size: 15px;
+  font-size: 15.5px;
   font-weight: 700;
   color: ${({ theme }) => theme.tz.color.slate};
   white-space: nowrap;
  }
  .step-text span {
-  font-size: 12px;
+  font-size: 12.5px;
   color: ${({ theme }) => theme.tz.color.slate};
   white-space: nowrap;
  }

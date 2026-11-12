@@ -155,7 +155,7 @@ export default function ProductInfoView({ productData }: Props) {
 
         <div style={{ display: "flex", alignItems: "baseline", gap: "10px" }}>
           <span style={{ fontSize: "22px", fontWeight: 700, color: theme.accent }}>
-            BDT {Number(product.discount_price || product.selling_price).toFixed(2)}
+            ৳ {Number(product.discount_price || product.selling_price).toFixed(2)}
           </span>
           {product.discount_price && product.discount_price < product.selling_price && (
             <span
@@ -165,7 +165,7 @@ export default function ProductInfoView({ productData }: Props) {
                 textDecoration: "line-through",
               }}
             >
-              BDT {Number(product.selling_price).toFixed(2)}
+              ৳ {Number(product.selling_price).toFixed(2)}
             </span>
           )}
         </div>

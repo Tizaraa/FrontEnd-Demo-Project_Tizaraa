@@ -259,21 +259,14 @@ import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import authService from "services/authService";
 import CorporateCard from "@component/page/profile/corporeateCard";
+import Loader from "@component/loader";
 import { useDashboardCountsListener } from "utils/dashboardCounts";
 import {
  ProfileHero,
  RecentOrders,
  QuickActions,
- CountUp,
  ActionLink,
- PIcon,
- P_ICON,
 } from "@sections/customer-dashboard/profile/ProfileIdentity";
-import {
- StatGrid,
- StatTile,
- Tone,
-} from "@sections/customer-dashboard/ui";
 
 // Customer profile page.
 // - Retail customers (any `type` other than "employee") get the retail
@@ -288,12 +281,6 @@ const Stack = styled.div`
  display: flex;
  flex-direction: column;
  gap: 20px;
-`;
-
-const Shimmer = styled.div<{ $h: number }>`
- height: ${({ $h }) => $h}px;
- border-radius: 18px;
- background: ${({ theme }) => theme.tz.color.mist};
 `;
 
 const ErrorBox = styled.div`
@@ -326,14 +313,9 @@ const ErrorBox = styled.div`
  }
 `;
 
+// Same Tizaraa loader for retail users and corporate employees
 function LoadingSkeleton() {
- return (
-  <Stack aria-busy="true" aria-label="Loading your profile">
-   <Shimmer $h={170} />
-   <Shimmer $h={96} />
-   <Shimmer $h={200} />
-  </Stack>
- );
+ return <Loader />;
 }
 
 export default function Profile() {
@@ -415,13 +397,6 @@ export default function Profile() {
 
  const isCorporate = profile?.type === "employee";
 
- const stats: { value: number; label: string; tone: Tone; link: string; icon: string }[] = [
-  { value: data.totalOrders, label: "All orders", tone: "info", link: "/orders", icon: P_ICON.bag },
-  { value: data.pendingOrders, label: "Pending", tone: "warning", link: "/pending-orders", icon: P_ICON.clock },
-  { value: data.deliveredOrders, label: "Delivered", tone: "success", link: "/delivered-orders", icon: P_ICON.check },
-  { value: data.cancelOrders, label: "Cancelled", tone: "danger", link: "/cancel-orders", icon: P_ICON.cross },
- ];
-
  return (
   <Suspense fallback={<LoadingSkeleton />}>
    <Fragment>
@@ -452,18 +427,6 @@ export default function Profile() {
     ) : isCorporate ? (
      <Stack>
       <CorporateCard profile={profile} />
-      <StatGrid>
-       {stats.map((s) => (
-        <StatTile
-         key={s.label}
-         href={s.link}
-         value={<CountUp value={s.value} />}
-         label={s.label}
-         tone={s.tone}
-         icon={<PIcon d={s.icon} size={18} />}
-        />
-       ))}
-      </StatGrid>
       <RecentOrders delay={120} />
      </Stack>
     ) : (

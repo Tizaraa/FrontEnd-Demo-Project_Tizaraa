@@ -184,6 +184,7 @@ export default function OrderDetails({ params }: IDParams) {
        [sellerName]: {
         delivered_at: raw.delivered_at ?? null,
         return_deadline: raw.return_deadline ?? null,
+        server_time: raw.server_time ?? null,
         status: formatStatus(raw.order_status),
         delivery_charge: raw.shipping_amount,
         sub_total: raw.subtotal,
@@ -517,6 +518,7 @@ export default function OrderDetails({ params }: IDParams) {
           const details = shopDetails as {
            delivered_at: string | null;
            return_deadline?: string | null;
+           server_time?: string | null;
            order_items: any[];
            delivery_charge: number | null;
            promocodeStatus: number | null;
@@ -616,6 +618,7 @@ export default function OrderDetails({ params }: IDParams) {
               return_status={item.return_status}
               delivered_at={details.delivered_at}
               return_deadline={details.return_deadline}
+              server_time={details.server_time}
               isCorporate={order?.Order?.payment_method === "corporate_credit"}
              />
             ))}
@@ -643,8 +646,9 @@ export default function OrderDetails({ params }: IDParams) {
     )}
    </Card>
 
+   {/* Full width: the second column is commented out, so half width left an empty gap */}
    <Grid container spacing={6}>
-    <Grid item lg={6} md={6} xs={12}>
+    <Grid item lg={12} md={12} xs={12}>
      <ShippingAddressCard
       address={order.Order.address}
       area={order.Order.area_id}
@@ -655,7 +659,7 @@ export default function OrderDetails({ params }: IDParams) {
       delivered={Boolean(order.Order.isDelivered)}
      />
 
-     <div style={{ display: "flex", gap: "20px" }}>
+     <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
       {/* ============= Invoice ============= */}
       {/* <Button
               px="2rem"

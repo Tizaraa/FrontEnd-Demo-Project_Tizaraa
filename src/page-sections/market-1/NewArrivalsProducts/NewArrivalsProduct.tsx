@@ -147,7 +147,7 @@ export default function NewArrivalsProduct() {
           {item.discount_price != null && (
            <FlexBox flexDirection="column" mt="0.25rem">
             <H4 fontWeight="600" fontSize="14px" color="text.muted">
-             BDT <del>{item.selling_price}</del>
+             ৳ <del>{item.selling_price}</del>
             </H4>
             <Box>
              <H4 fontWeight="600" fontSize="14px" color="primary.main">

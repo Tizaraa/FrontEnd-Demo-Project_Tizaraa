@@ -188,6 +188,7 @@ export default function RfqComment({
        <div
         style={{
          flex: 1,
+         minWidth: 0,
          maxWidth: "100%",
          padding: "16px",
          boxSizing: "border-box",
@@ -217,7 +218,7 @@ export default function RfqComment({
           overflowX: "auto",
          }}
         >
-         <div dangerouslySetInnerHTML={{ __html: c.message_content }}></div>
+         <div style={{ whiteSpace: "pre-wrap" }}>{c.message_content}</div>
         </div>
        </div>
       </div>

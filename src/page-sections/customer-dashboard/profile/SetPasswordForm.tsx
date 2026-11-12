@@ -600,6 +600,8 @@ export default function SetPasswordForm() {
       <div style={styles.inputContainer}>
        <input
         type="text"
+        inputMode="numeric"
+        autoComplete="one-time-code"
         value={otp}
         onChange={handleOtpChange}
         style={{

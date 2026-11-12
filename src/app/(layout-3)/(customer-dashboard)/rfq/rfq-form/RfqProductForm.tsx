@@ -556,6 +556,7 @@ export default function RfqProductForm() {
      <label style={labelStyle}>Quantity</label>
      <input
       type="number"
+      inputMode="numeric"
       value={quantity}
       onChange={handleQuantity}
       min="1"

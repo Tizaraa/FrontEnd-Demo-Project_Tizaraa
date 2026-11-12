@@ -296,6 +296,7 @@ export default function Footer1() {
        across Dhaka, Chittagong and all of Bangladesh, with cash on delivery.
       </p>
 
+      <h3 className="footer-heading as-title">Follow us</h3>
       <div className="footer-social">
        {iconList.map((item, ind) => (
         <a href={item.url} target="_blank" rel="noopener noreferrer" key={ind} aria-label={item.iconName}>
@@ -304,22 +305,6 @@ export default function Footer1() {
        ))}
       </div>
 
-      <div className="footer-verified">
-       <span className="verified-title">
-        <Ico d={ICON.check} size={16} />
-        Verified business
-       </span>
-       <dl>
-        <div>
-         <dt>DBID</dt>
-         <dd>144381902</dd>
-        </div>
-        <div>
-         <dt>Trade License</dt>
-         <dd>TRAD/DNCC/010245/2024</dd>
-        </div>
-       </dl>
-      </div>
      </div>
 
      {/* Link groups */}
@@ -341,6 +326,21 @@ export default function Footer1() {
          <FooterAnchor link={l} key={l.name} />
         ))}
        </div>
+       {g.title === "Earn With Tizaraa" && (
+        <div className="footer-verified">
+         <h3 className="footer-heading as-title">Verified business</h3>
+         <dl>
+          <div>
+           <dt>DBID</dt>
+           <dd>144381902</dd>
+          </div>
+          <div>
+           <dt>Trade License</dt>
+           <dd>TRAD/DNCC/010245/2024</dd>
+          </div>
+         </dl>
+        </div>
+       )}
       </div>
      ))}
 

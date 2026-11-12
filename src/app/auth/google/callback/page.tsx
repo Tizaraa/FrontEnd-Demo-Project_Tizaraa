@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { useAppContext } from "contexts/app-context/AppContext";
+import { fetchProfileUser, postLoginPath, type CorporateLoginUser } from "@utils/corporateRedirect";
 
 export default function GoogleCallbackPage() {
   const router = useRouter();
@@ -19,21 +20,25 @@ export default function GoogleCallbackPage() {
       return;
     }
 
-    const userInfo = { name, email };
-
     Cookies.set("token", token, { expires: 7 });
     localStorage.setItem("token", token);
-    localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
-    dispatch({ type: "LOGIN", payload: { authToken: token, userInfo } });
+    // Google only sends name + email back. Load the full profile so a
+    // corporate employee lands in their shop (and the menu knows they are
+    // corporate). If that call fails, sign-in still completes as before.
+    let cancelled = false;
+    (async () => {
+      const profile = await fetchProfileUser<CorporateLoginUser & { name?: string; email?: string }>(token);
+      if (cancelled) return;
+      const userInfo = profile ?? { name, email };
 
-    const redirectPath = sessionStorage.getItem("redirectAfterLogin");
-    if (redirectPath) {
-      sessionStorage.removeItem("redirectAfterLogin");
-      router.replace(redirectPath);
-    } else {
-      router.replace("/");
-    }
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      dispatch({ type: "LOGIN", payload: { authToken: token, userInfo } });
+
+      router.replace(postLoginPath(profile));
+    })();
+
+    return () => { cancelled = true; };
   }, [params, dispatch, router]);
 
   return (

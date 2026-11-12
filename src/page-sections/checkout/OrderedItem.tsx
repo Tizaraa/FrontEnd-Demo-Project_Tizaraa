@@ -76,14 +76,17 @@ export default function OrderedItem() {
    : "/placeholder.svg";
 
  return (
-  <section className="co-card co-items" aria-label="Your items">
+  <section
+   className="co-card co-items"
+   aria-label={selectedProducts.length === 1 ? "Your item" : "Your items"}
+  >
    <h3 className="co-card-title">
     <span className="co-card-icon" aria-hidden="true">
      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" />
      </svg>
     </span>
-    Your items
+    Your {selectedProducts.length === 1 ? "item" : "items"}
     <span className="co-pill">{selectedProducts.length}</span>
    </h3>
    {selectedProducts.length > 0 ? (
@@ -107,7 +110,7 @@ export default function OrderedItem() {
          <strong>{product.name}</strong>
          <small>
           Qty {product.qty} ·{" "}
-          {hasDiscount && <del>BDT {product.price.toLocaleString()}</del>} BDT {unitPrice.toLocaleString()} each
+          {hasDiscount && <del>৳ {product.price.toLocaleString()}</del>} ৳ {unitPrice.toLocaleString()} each
          </small>
          {product.shopname && (
           <small>
@@ -124,7 +127,7 @@ export default function OrderedItem() {
          )}
         </div>
         <span className="co-item-total">
-         BDT{" "}
+         ৳{" "}
          {lineTotal.toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,

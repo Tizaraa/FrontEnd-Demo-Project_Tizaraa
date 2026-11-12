@@ -76,13 +76,23 @@ export default function CorporateInvitePage({ params }: { params: { token: strin
         const data = response.data?.data;
         
         if (data?.token) {
+          // Keep the corporate fields with the user (same shape as the login
+          // response) so the dashboard menu shows the corporate section.
+          const userInfo = {
+            ...data.user,
+            type: "employee",
+            employee_status: data.employee_status,
+            company_name: data.company_name,
+            shop_slug: data.shop_slug,
+          };
+
           Cookies.set("token", data.token, { expires: 7 });
           localStorage.setItem("token", data.token);
-          localStorage.setItem("userInfo", JSON.stringify(data.user));
+          localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
           dispatch({
             type: "LOGIN",
-            payload: { authToken: data.token, userInfo: data.user },
+            payload: { authToken: data.token, userInfo },
           });
 
           if (data.employee_status === "active") {

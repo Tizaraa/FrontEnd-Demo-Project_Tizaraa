@@ -799,6 +799,8 @@ export default function Component({ params }: { params: { id: string } }) {
        <div
         style={{
          display: "flex",
+         flexWrap: "wrap",
+         rowGap: "12px",
          alignItems: "center",
          width: "100%",
          marginBottom: "10px",
@@ -915,8 +917,8 @@ export default function Component({ params }: { params: { id: string } }) {
         color: "#fff",
         border: "none",
         borderRadius: "50%",
-        width: "30px",
-        height: "30px",
+        width: "40px",
+        height: "40px",
         cursor: "pointer",
         fontSize: "20px",
         textAlign: "center",

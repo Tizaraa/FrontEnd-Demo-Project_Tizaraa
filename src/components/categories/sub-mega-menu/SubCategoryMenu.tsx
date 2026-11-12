@@ -133,7 +133,7 @@ const Panel = styled.div`
  position: absolute;
  left: 100%;
  top: 0;
- z-index: 9999;
+ z-index: 100;
  width: 645px;
  height: 450px;
  display: flex;

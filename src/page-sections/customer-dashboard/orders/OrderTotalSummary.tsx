@@ -323,6 +323,12 @@ const Card = styled.section`
   border-radius: 14px;
   background: ${({ theme }) => theme.tz.color.mist};
  }
+ /* phones: the method pill drops under the amount instead of overflowing */
+ @media (max-width: 480px) {
+  .ts-status {
+   flex-wrap: wrap;
+  }
+ }
  .ts-status.is-paid {
   background: ${({ theme }) => theme.tz.tone.success.bg};
  }

@@ -89,7 +89,7 @@ const CategoryRelatedProducts = ({ products }) => {
          ) : (
           <FlexBox flexDirection="column">
            <H4 fontWeight="600" fontSize="14px" color="text.muted">
-            BDT <del>{currency(item.selling_price)}</del>
+            <del>{currency(item.selling_price)}</del>
            </H4>
            <H4 fontWeight="600" fontSize="14px" color="primary.main">
             {currency(item.discount_price)}

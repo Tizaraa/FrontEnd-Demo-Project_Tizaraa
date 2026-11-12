@@ -5,7 +5,7 @@ import Link from "next/link";
 import styled, { keyframes } from "styled-components";
 import toast from "react-hot-toast";
 import axios from "@lib/axiosClient";
-import { currency } from "@utils/utils";
+import { currency, escapeHtml as esc } from "@utils/utils";
 import { UserAvatar } from "@sections/customer-dashboard/ui";
 
 // Profile for corporate employees: identity, company credit "wallet" with a
@@ -141,6 +141,11 @@ const Wrap = styled.div`
  .cp-contact:hover {
   border-color: ${({ theme }) => theme.tz.color.ember};
   color: ${({ theme }) => theme.tz.color.emberDeep};
+ }
+ .cp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
  }
  .cp-edit {
   display: inline-flex;
@@ -759,51 +764,11 @@ const Wrap = styled.div`
   transform: translateX(3px);
  }
 
- /* quick actions */
- .cp-quick {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
- }
- .cp-q {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 16px 8px;
-  border: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
-  border-radius: 16px;
-  background: #fff;
-  color: ${({ theme }) => theme.tz.color.ink};
-  font-size: 13.5px;
-  font-weight: 700;
-  text-align: center;
-  text-decoration: none;
-  transition: border-color 160ms ease, transform 200ms ease, box-shadow 200ms ease;
- }
- .cp-q:hover {
-  border-color: ${({ theme }) => theme.tz.color.ember};
-  transform: translateY(-3px);
-  box-shadow: 0 10px 22px rgba(240, 80, 35, 0.12);
- }
- .cp-q span {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  transition: transform 220ms ease;
- }
- .cp-q:hover span {
-  transform: scale(1.08) rotate(-4deg);
- }
-
  .cp-edit:focus-visible,
  .cp-contact:focus-visible,
  .cp-w-link:focus-visible,
  .cp-ready:focus-visible,
  .cp-shop:focus-visible,
- .cp-q:focus-visible,
  .cp-copy:focus-visible {
   outline: none;
   box-shadow: ${({ theme }) => theme.tz.focusRing};
@@ -816,9 +781,6 @@ const Wrap = styled.div`
   }
   .cp-w-amount {
    font-size: 28px;
-  }
-  .cp-quick {
-   grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .cp-shop {
    flex-wrap: wrap;
@@ -852,8 +814,6 @@ const Wrap = styled.div`
   .cp-contact,
   .cp-fact,
   .cp-shop,
-  .cp-q,
-  .cp-q span,
   .cp-w-link svg,
   .cp-shop-go svg {
    transition: none;
@@ -879,6 +839,7 @@ const I = {
  arrow: "M5 12h14M13 6l6 6-6 6",
  copy: "M9 9h13v13H9zM5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1",
  edit: "M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z",
+ lock: "M6 11h12v9H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3",
  box: "M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8",
  bag: "M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0",
  card: "M2 5h20v14H2zM2 10h20",
@@ -988,7 +949,7 @@ const CorporateCard = ({ profile }) => {
  const [hoverBar, setHoverBar] = useState<number | null>(null);
 
  const csvOf = (m: typeof thisMonth) => {
-  const rows = [["Order", "Date", "Status", "Amount (BDT)"]].concat(
+  const rows = [["Order", "Date", "Status", "Amount (৳)"]].concat(
    m.list.map((o) => [
     o.order_number ?? `#${o.id}`,
     o.created_at ? new Date(o.created_at).toLocaleDateString("en-GB") : "",
@@ -1009,7 +970,6 @@ const CorporateCard = ({ profile }) => {
   URL.revokeObjectURL(url);
  };
  const printStatement = () => {
-  const esc = (v: any) => String(v ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c] as string));
   const title = `${stmtMonth.date.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}`;
   const rows = stmtMonth.list
    .map(
@@ -1109,10 +1069,16 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#5e6678}.r
       )}
      </div>
     </div>
-    <Link className="cp-edit" href="/profile/edit">
-     <Ico d={I.edit} size={15} />
-     Edit profile
-    </Link>
+    <div className="cp-actions">
+     <Link className="cp-edit" href="/profile/edit">
+      <Ico d={I.edit} size={15} />
+      Edit profile
+     </Link>
+     <Link className="cp-edit" href="/profile/set-password">
+      <Ico d={I.lock} size={15} />
+      Change password
+     </Link>
+    </div>
    </section>
 
    {/* company credit */}
@@ -1323,22 +1289,6 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#5e6678}.r
     </Link>
    )}
 
-   {/* quick actions */}
-   <nav className="cp-quick" aria-label="Quick actions">
-    {[
-     { href: "/orders", label: "My orders", icon: I.bag, fg: "#0e3460", bg: "#e8edf4" },
-     { href: "/credit-history", label: "Credit history", icon: I.card, fg: "#1b7a4b", bg: "#e6f4ec" },
-     ...(profile?.shop_slug ? [{ href: `/shops/${profile.shop_slug}`, label: "Corporate shop", icon: I.store, fg: "#c2400f", bg: "#fdeee7" }] : []),
-     { href: "/support-tickets", label: "Support", icon: I.help, fg: "#3a3f4e", bg: "#eef0f4" },
-    ].map((q) => (
-     <Link key={q.label} className="cp-q" href={q.href}>
-      <span style={{ color: q.fg, background: q.bg }}>
-       <Ico d={q.icon} size={20} />
-      </span>
-      {q.label}
-     </Link>
-    ))}
-   </nav>
   </Wrap>
  );
 };
