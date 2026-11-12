@@ -218,7 +218,7 @@ export default function RfqComment({
           overflowX: "auto",
          }}
         >
-         <div dangerouslySetInnerHTML={{ __html: c.message_content }}></div>
+         <div style={{ whiteSpace: "pre-wrap" }}>{c.message_content}</div>
         </div>
        </div>
       </div>
