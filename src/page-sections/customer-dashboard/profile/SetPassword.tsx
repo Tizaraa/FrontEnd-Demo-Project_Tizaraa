@@ -6,8 +6,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import BeatLoader from "react-spinners/BeatLoader";
 import tz from "../../../theme/tizaraa";
+import ApiBaseUrl from "api/ApiBaseUrl";
+import { toast } from "react-toastify";
 
-export default function SetPassword() {
+export default function SetPassword({
+ resetToken,
+ method = "email",
+}: {
+ resetToken: string;
+ method?: "email" | "phone";
+}) {
  const [showPassword, setShowPassword] = useState(false);
  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
  const [password, setPassword] = useState("");
@@ -77,41 +85,51 @@ export default function SetPassword() {
 
  const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
+
+  if (errorMessages.length > 0 || !password) {
+   toast.error("Please choose a stronger password.");
+   return;
+  }
+  if (password !== confirmPassword) {
+   setConfirmPasswordError("Password do not match.");
+   return;
+  }
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+   toast.error("Please log in again to change your password.");
+   return;
+  }
+
   setLoading(true);
+  try {
+   const response = await axios.post(
+    `${ApiBaseUrl.localApiUrl}password/reset`,
+    {
+     reset_token: resetToken,
+     method,
+     password,
+     password_confirmation: confirmPassword,
+    },
+    { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
+   );
 
-  if (!confirmPasswordError && password === confirmPassword) {
-   try {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-     console.error("Authentication token not found!");
-     return;
-    }
-
-    // Call the password reset API
-    const response = await axios.post(
-     "https://frontend.tizaraa.shop/api/password/reset",
-     {
-      password: password,
-      cpassword: confirmPassword,
-     },
-     {
-      headers: {
-       Authorization: `Bearer ${token}`,
-      },
-     }
-    );
-
-    console.log("API response:", response.data);
-    alert("Password reset successful");
-    // Optionally, redirect to a success page or handle success UI here
-    router.push("/profile");
-   } catch (error) {
-    console.error("Error resetting password:", error);
-    alert("Failed to reset password. Please try again.");
+   toast.success(response.data?.message || "Password changed successfully.");
+   router.push("/profile");
+  } catch (error: any) {
+   const data = error?.response?.data;
+   const first = data?.errors ? Object.values(data.errors)[0] : null;
+   const msg =
+    (Array.isArray(first) && first[0]) ||
+    data?.message ||
+    "Failed to change password. Please try again.";
+   toast.error(String(msg));
+   // An expired or used token can't be retried — start the flow again.
+   if (data?.errors?.reset_token) {
+    setTimeout(() => window.location.reload(), 1500);
    }
-  } else {
-   alert("Passwords do not match.");
+  } finally {
+   setLoading(false);
   }
  };
 
