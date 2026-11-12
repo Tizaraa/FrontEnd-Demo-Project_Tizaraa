@@ -663,6 +663,11 @@ const ItemRow = styled.div`
   font-size: 12px;
   color: ${({ theme }) => theme.tz.color.slate};
  }
+ .ir-deadline--live {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: ${({ theme }) => theme.tz.color.emberDeep};
+ }
 
  &.is-off .ir-thumb {
   opacity: 0.5;
@@ -738,11 +743,16 @@ export default function WriteReview({
  const [isModalOpen, setIsModalOpen] = useState(false);
  const [isCorporateReturnOpen, setIsCorporateReturnOpen] = useState(false);
  const [returnWindowLeft, setReturnWindowLeft] = useState<string | null>(null);
+ const [returnWindowClosed, setReturnWindowClosed] = useState(false);
+ // The API sends return_deadline only for corporate shop / company-credit orders
+ // (same rule the seller panel and engine use), so it marks a counter return.
+ const isCounterReturn = isCorporate || Boolean(return_deadline);
+ const showCorporateCountdown = isCounterReturn && status === "Delivered" && Boolean(return_deadline);
 
  // Corporate returns close at the admin-set cutoff after delivery. The API sends
  // that moment as return_deadline, so the countdown matches what the shop enforces.
  useEffect(() => {
-  if (!isCorporateReturnOpen || !return_deadline) {
+  if (!showCorporateCountdown) {
    setReturnWindowLeft(null);
    return;
   }
@@ -753,6 +763,7 @@ export default function WriteReview({
    const diffMs = deadline.getTime() - Date.now();
    if (diffMs <= 0) {
     setReturnWindowLeft("Return window has closed");
+    setReturnWindowClosed(true);
     return;
    }
    const hours = Math.floor(diffMs / (1000 * 60 * 60));
@@ -766,7 +777,7 @@ export default function WriteReview({
   tick();
   const interval = setInterval(tick, 1000);
   return () => clearInterval(interval);
- }, [isCorporateReturnOpen, return_deadline]);
+ }, [showCorporateCountdown, return_deadline]);
  const [rating, setRating] = useState(0);
  const [hoverRating, setHoverRating] = useState(0);
  const [comments, setComments] = useState("");
@@ -1040,13 +1051,14 @@ export default function WriteReview({
         {reviewMode === "submit" ? "Write review" : "Your review"}
        </button>
       )}
-      {/* return policy — corporate shop orders can't be returned by the buyer;
-          only the seller handles returns for them */}
-      {!isCorporate && status === "Delivered" && cancel_status !== 6 && order_days_gone !== 3 && !isItemReturned && !isItemCancelled && (
+      {/* return — retail opens the online request; corporate shows how to
+          return at the shop, until the cutoff (11:59 PM on delivery day) */}
+      {status === "Delivered" && cancel_status !== 6 && !isItemReturned && !isItemCancelled &&
+       (isCounterReturn ? Boolean(return_deadline) && !returnWindowClosed : order_days_gone !== 3) && (
        <button
         type="button"
         className="ir-btn"
-        onClick={isCorporate ? () => setIsCorporateReturnOpen(true) : handleReturnClick}
+        onClick={isCounterReturn ? () => setIsCorporateReturnOpen(true) : handleReturnClick}
        >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
          <path d="M9 14 4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3" />
@@ -1069,7 +1081,19 @@ export default function WriteReview({
        </button>
       )}
      </div>
-     {status === "Delivered" && !isCorporate && return_deadline && !isItemReturned && !isItemCancelled && cancel_status !== 6 && (
+     {showCorporateCountdown && !returnWindowClosed && !isItemReturned && !isItemCancelled && cancel_status !== 6 && returnWindowLeft && (
+      <span className="ir-deadline ir-deadline--live">
+       Return at the shop by{" "}
+       {new Date(return_deadline).toLocaleTimeString("en-GB", {
+        timeZone: "Asia/Dhaka",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+       })}{" "}
+       · {returnWindowLeft}
+      </span>
+     )}
+     {status === "Delivered" && !isCounterReturn && return_deadline && !isItemReturned && !isItemCancelled && cancel_status !== 6 && (
       <span className="ir-deadline">
        Return available until {format(new Date(return_deadline), "dd MMM yyyy")}
       </span>
@@ -1513,8 +1537,8 @@ export default function WriteReview({
        <br />
        2. Give the seller your Order ID, shown at the top of this page.
        <br />
-       3. The seller confirms the return and your credit is restored on the
-       spot.
+       3. The seller confirms the return and refunds you on the spot
+       {isCorporate ? " (your company credit is restored)" : ""}.
       </Typography>
      </Box>
 
