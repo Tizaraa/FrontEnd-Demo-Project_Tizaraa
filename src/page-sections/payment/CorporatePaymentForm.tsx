@@ -1759,7 +1759,7 @@ export default function CorporatePaymentForm() {
       type="button"
       fullwidth
       disabled={
-       isSubtotalZero || !paymentMethod || !isCheckboxChecked // Disable button if checkbox is unchecked
+       isSubtotalZero || !paymentMethod || !isCheckboxChecked || isHasLoading // Disable button if checkbox is unchecked
       }
      >
       {isHasLoading ? <BeatLoader size={18} color={tz.color.paper} /> : "Proceed to Pay"}

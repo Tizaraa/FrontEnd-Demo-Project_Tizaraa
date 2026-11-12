@@ -92,3 +92,8 @@ export function currency(
  });
  return `৳ ${formatted}`;
 }
+
+// Escape text before it goes into HTML built by hand (print windows use document.write,
+// same-origin, so seller-written text must never be parsed as markup).
+export const escapeHtml = (v: unknown) =>
+ String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));

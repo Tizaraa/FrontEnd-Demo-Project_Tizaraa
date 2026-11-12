@@ -28,7 +28,7 @@ import Typography from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import EmptyOrders from "@sections/customer-dashboard/orders/EmptyOrders";
 import Loader from "@component/loader";
-import { currency } from "@utils/utils";
+import { currency, escapeHtml as esc } from "@utils/utils";
 
 // ==============================================================
 // Types — mirror the real API response shapes exactly (see
@@ -1605,12 +1605,12 @@ export default function CreditHistoryPage() {
     return `
      <tr>
       <td>${idx + 1}</td>
-      <td>#${order.order_number}</td>
-      <td>${item.product_name.trim()}</td>
-      <td class="center">${item.quantity}</td>
+      <td>#${esc(order.order_number)}</td>
+      <td>${esc(item.product_name.trim())}</td>
+      <td class="center">${esc(item.quantity)}</td>
       <td>${fmtDateTime(order.created_at)}</td>
       <td class="center">
-       <span class="chip chip-${statusColor}">${ORDER_STATUS_LABEL[order.order_status] ?? order.order_status}</span>
+       <span class="chip chip-${statusColor}">${esc(ORDER_STATUS_LABEL[order.order_status] ?? order.order_status)}</span>
       </td>
       <td class="right">${currency(item.total_price)}</td>
      </tr>`;
@@ -1620,7 +1620,7 @@ export default function CreditHistoryPage() {
   win.document.write(`
    <html>
     <head>
-     <title>Due Payment Report - ${credit.company_name ?? ""}</title>
+     <title>Due Payment Report - ${esc(credit.company_name)}</title>
      <style>
       * { box-sizing: border-box; }
       body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 32px; color: #1F2937; background: #fff; }
@@ -1681,8 +1681,8 @@ export default function CreditHistoryPage() {
     <body>
      <div class="top">
       <div>
-       <h1 class="shop-name">${credit.company_name ?? "Corporate Shop"}</h1>
-       <p class="line">Report No : ${reportId}</p>
+       <h1 class="shop-name">${esc(credit.company_name ?? "Corporate Shop")}</h1>
+       <p class="line">Report No : ${esc(reportId)}</p>
        <p class="line">Corporate Customer Management</p>
       </div>
       <div class="logo-block">
@@ -1695,15 +1695,15 @@ export default function CreditHistoryPage() {
 
      <div class="info-box">
       <div class="col">
-       <p><b>Name:</b> ${employeeProfile.name ?? "—"}</p>
-       <p><b>Department:</b> ${credit.department ?? "—"}</p>
-       <p><b>Designation:</b> ${credit.designation ?? "—"}</p>
+       <p><b>Name:</b> ${esc(employeeProfile.name ?? "—")}</p>
+       <p><b>Department:</b> ${esc(credit.department ?? "—")}</p>
+       <p><b>Designation:</b> ${esc(credit.designation ?? "—")}</p>
        <p><b>Report Date:</b> ${format(new Date(), "dd MMMM, yyyy")}</p>
       </div>
       <div class="col right">
-       <p><b>Order ID:</b> ${reportId}</p>
-       <p><b>Email:</b> ${employeeProfile.email ?? "—"}</p>
-       <p><b>Payment Due Date:</b> ${credit.current_period?.due_date ?? "—"}</p>
+       <p><b>Order ID:</b> ${esc(reportId)}</p>
+       <p><b>Email:</b> ${esc(employeeProfile.email ?? "—")}</p>
+       <p><b>Payment Due Date:</b> ${esc(credit.current_period?.due_date ?? "—")}</p>
       </div>
      </div>
 
