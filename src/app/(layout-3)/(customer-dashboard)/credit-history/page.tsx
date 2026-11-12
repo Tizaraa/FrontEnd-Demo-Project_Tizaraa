@@ -28,7 +28,7 @@ import Typography from "@component/Typography";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import EmptyOrders from "@sections/customer-dashboard/orders/EmptyOrders";
 import Loader from "@component/loader";
-import { currency } from "@utils/utils";
+import { currency, escapeHtml as esc } from "@utils/utils";
 
 // ==============================================================
 // Types — mirror the real API response shapes exactly (see
@@ -1598,8 +1598,6 @@ export default function CreditHistoryPage() {
   const logoUrl = `${origin}/assets/images/invoice/tizaraa-logo.png`;
   const watermarkUrl = `${origin}/assets/images/invoice/tizaraa-watermark.png`;
   const reportId = `DPR-${credit.company_name ? credit.company_name.slice(0, 3).toUpperCase() : "TZR"}-${format(new Date(), "yyyyMMdd")}`;
-  // The print window is same-origin, so seller-written text (product names) must not be parsed as HTML.
-  const esc = (v: unknown) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
 
   const rowsHtml = purchaseItems
    .map(({ order, item }, idx) => {

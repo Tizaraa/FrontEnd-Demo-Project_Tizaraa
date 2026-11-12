@@ -5,7 +5,7 @@ import Link from "next/link";
 import styled, { keyframes } from "styled-components";
 import toast from "react-hot-toast";
 import axios from "@lib/axiosClient";
-import { currency } from "@utils/utils";
+import { currency, escapeHtml as esc } from "@utils/utils";
 import { UserAvatar } from "@sections/customer-dashboard/ui";
 
 // Profile for corporate employees: identity, company credit "wallet" with a
@@ -970,7 +970,6 @@ const CorporateCard = ({ profile }) => {
   URL.revokeObjectURL(url);
  };
  const printStatement = () => {
-  const esc = (v: any) => String(v ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c] as string));
   const title = `${stmtMonth.date.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}`;
   const rows = stmtMonth.list
    .map(
