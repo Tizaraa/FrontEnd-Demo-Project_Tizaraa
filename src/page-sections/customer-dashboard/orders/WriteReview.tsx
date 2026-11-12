@@ -725,6 +725,7 @@ export default function WriteReview({
  return_status,
  delivered_at,
  return_deadline = null,
+ server_time = null,
  isCorporate = false,
 }: {
  item: any;
@@ -737,6 +738,7 @@ export default function WriteReview({
  return_status: any;
  delivered_at: any;
  return_deadline?: string | null;
+ server_time?: string | null;
  isCorporate?: boolean;
 }) {
  const [showOrderStatus, setShowOrderStatus] = useState(false);
@@ -758,9 +760,13 @@ export default function WriteReview({
   }
 
   const deadline = new Date(return_deadline);
+  // Count against the server's clock, not the device's: a phone set to the wrong
+  // time would otherwise show the wrong hours left. Offset is fixed at load time.
+  const serverMs = server_time ? new Date(server_time).getTime() : NaN;
+  const clockOffset = Number.isFinite(serverMs) ? serverMs - Date.now() : 0;
 
   const tick = () => {
-   const diffMs = deadline.getTime() - Date.now();
+   const diffMs = deadline.getTime() - (Date.now() + clockOffset);
    if (diffMs <= 0) {
     setReturnWindowLeft("Return window has closed");
     setReturnWindowClosed(true);
@@ -777,7 +783,7 @@ export default function WriteReview({
   tick();
   const interval = setInterval(tick, 1000);
   return () => clearInterval(interval);
- }, [showCorporateCountdown, return_deadline]);
+ }, [showCorporateCountdown, return_deadline, server_time]);
  const [rating, setRating] = useState(0);
  const [hoverRating, setHoverRating] = useState(0);
  const [comments, setComments] = useState("");
