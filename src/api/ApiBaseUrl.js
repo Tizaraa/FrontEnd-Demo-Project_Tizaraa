@@ -8,7 +8,7 @@ const ApiBaseUrl = {
  // UAT
  baseUrl1: `https://frontend.tizaraa.com/api/`,
  baseUrl: `https://uat-client.tizaraa.shop/api/`,
- localApiUrl: `https://customer-api.tizaraa.shop/api/v1/`,
+ localApiUrl: `tizaraanew-customer-bb34ew-66468a-194-238-19-102.traefik.me`,
  ImgUrl: `https://minio.tizaraa.shop/tizaraa/`,
 
  // localApiUrl: `http://127.0.0.1:8000/api/v1/`,
