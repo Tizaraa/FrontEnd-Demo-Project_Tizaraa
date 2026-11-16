@@ -89,7 +89,7 @@ const StyledNavbar = styled.div`
   }
  }
 
- /* Become A Seller: outlined ember pill */
+ /* navbar action buttons: outlined ember pill */
  .nav-action--cta {
   margin-right: 6px;
   border: 1.5px solid ${({ theme }) => theme.tz.color.ember};

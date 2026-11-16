@@ -163,6 +163,7 @@ import Link from "next/link";
 import Image from "@component/Image";
 import Container from "@component/Container";
 import { StyledFooter } from "./styles";
+import ApiBaseUrl from "api/ApiBaseUrl";
 
 export const aboutLinks = [
  { name: "Order Tracking", url: "/orderTracking" },
@@ -243,7 +244,7 @@ const GROUPS: { title: string; links: FooterLink[] }[] = [
  { title: "Tizaraa", links: customerCareLinks },
  {
   title: "Earn With Tizaraa",
-  links: customerCareLink.map((name) => ({ name, url: "https://seller.tizaraa.shop/", external: true })),
+  links: customerCareLink.map((name) => ({ name, url: `${ApiBaseUrl.sellerUrl}/seller/register`, external: true })),
  },
 ];
 

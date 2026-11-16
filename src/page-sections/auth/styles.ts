@@ -776,6 +776,173 @@ export const AuthAltCta = styled(Link)`
  }
 `;
 
+export const RoleMenuWrapper = styled.div`
+ position: relative;
+ z-index: 2; /* rows are animated (own stacking context), so later rows would paint over the menu */
+ width: 100%;
+`;
+
+export const AuthAltCtaButton = styled.button`
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 8px;
+ width: 100%;
+ height: 50px;
+ border: 1.5px solid ${({ theme }) => theme.tz.color.ember};
+ border-radius: ${({ theme }) => theme.tz.radius.pill}px;
+ background: ${({ theme }) => theme.tz.color.paper};
+ font-family: inherit;
+ font-size: 15px;
+ font-weight: 700;
+ color: ${({ theme }) => theme.tz.color.emberDeep};
+ text-decoration: none;
+ cursor: pointer;
+ transition: background-color 200ms, transform 220ms cubic-bezier(0.2, 0, 0, 1),
+  box-shadow 220ms cubic-bezier(0.2, 0, 0, 1);
+
+ .dropdown-chevron {
+  display: inline-block;
+  font-size: 14px;
+  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
+ }
+
+ &.open .dropdown-chevron,
+ &[data-open="true"] .dropdown-chevron {
+  transform: rotate(180deg);
+ }
+
+ &:hover {
+  background: ${({ theme }) => theme.tz.color.emberTint};
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(240, 80, 35, 0.18);
+ }
+
+ &:active {
+  transform: scale(0.98);
+ }
+
+ &:focus-visible {
+  outline: none;
+  box-shadow: ${({ theme }) => theme.tz.focusRing};
+ }
+
+ @media (prefers-reduced-motion: reduce) {
+  transition: none;
+  &:hover {
+   transform: none;
+  }
+ }
+`;
+
+export const RoleDropdownMenu = styled.div`
+ position: absolute;
+ bottom: calc(100% + 8px); /* open upward: the auth shell clips overflow at the bottom */
+ left: 0;
+ right: 0;
+ z-index: 60;
+ display: flex;
+ flex-direction: column;
+ gap: 6px;
+ padding: 8px;
+ background: #ffffff;
+ border: 1.5px solid #e3e6ec;
+ border-radius: 16px;
+ box-shadow: 0 16px 36px rgba(14, 52, 96, 0.18), 0 4px 12px rgba(0, 0, 0, 0.06);
+ animation: roleDropdownIn 200ms cubic-bezier(0.2, 0, 0, 1) forwards;
+
+ @keyframes roleDropdownIn {
+  from {
+   opacity: 0;
+   transform: translateY(8px) scale(0.98);
+  }
+  to {
+   opacity: 1;
+   transform: translateY(0) scale(1);
+  }
+ }
+`;
+
+export const RoleOption = styled.button`
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ width: 100%;
+ padding: 10px 14px;
+ border: 1px solid transparent;
+ border-radius: 12px;
+ background: transparent;
+ text-align: left;
+ cursor: pointer;
+ transition: background-color 160ms, border-color 160ms, transform 140ms ease;
+
+ &:hover {
+  background: #fff8f5;
+  border-color: #ffd8cc;
+
+  .ro-icon {
+   transform: scale(1.1);
+  }
+  .ro-title {
+   color: #f15024;
+  }
+  .ro-arrow {
+   transform: translateX(4px);
+   color: #f15024;
+  }
+ }
+
+ .ro-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  font-size: 18px;
+  transition: transform 160ms ease;
+ }
+
+ &.ro-customer .ro-icon {
+  background: #ebf3ff;
+ }
+ &.ro-seller .ro-icon {
+  background: #fff0eb;
+ }
+ &.ro-corporate .ro-icon {
+  background: #f3f0ff;
+ }
+
+ .ro-body {
+  flex: 1;
+  min-width: 0;
+ }
+
+ .ro-title {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #141520;
+  transition: color 150ms;
+ }
+
+ .ro-desc {
+  display: block;
+  font-size: 11.5px;
+  color: #5e6678;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+ }
+
+ .ro-arrow {
+  font-size: 14px;
+  font-weight: 700;
+  color: #9aa2b1;
+  transition: transform 150ms, color 150ms;
+ }
+`;
+
 export const AuthLegal = styled.p`
  max-width: 360px;
  margin: 18px auto 0;
