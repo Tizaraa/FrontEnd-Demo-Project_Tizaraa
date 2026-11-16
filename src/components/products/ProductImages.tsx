@@ -446,6 +446,11 @@ const Gallery = styled.div`
   object-fit: contain;
   animation: ${gFade} 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
  }
+ /* retail: fill the stage so the full product shows big, never cropped */
+ .pg-stage.pg-fill img {
+  width: 100%;
+  height: 100%;
+ }
  .pg-count {
   position: absolute;
   left: 12px;
@@ -558,6 +563,7 @@ const Gallery = styled.div`
 
 type ProductImagesProps = {
  images: string[];
+ isCorporateShop?: boolean;
 };
 
 // --- Magnifier Settings ---
@@ -568,7 +574,7 @@ const MAGNIFIER_GAP = 10; // Gap in pixels between image and magnifier
 
 const MOBILE_BREAKPOINT = 768; // px — disable magnifier below this
 
-const ProductImages = ({ images }: ProductImagesProps) => {
+const ProductImages = ({ images, isCorporateShop = false }: ProductImagesProps) => {
  const [selectedImage, setSelectedImage] = useState(0);
 
  // --- State for Magnifier ---
@@ -649,7 +655,7 @@ const ProductImages = ({ images }: ProductImagesProps) => {
  return (
   <Gallery>
    <div
-    className="pg-stage"
+    className={isCorporateShop ? "pg-stage" : "pg-stage pg-fill"}
     onMouseMove={handleMouseMove}
     onMouseEnter={handleMouseEnter}
     onMouseLeave={handleMouseLeave}

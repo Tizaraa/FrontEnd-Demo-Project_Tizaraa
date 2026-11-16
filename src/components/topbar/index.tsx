@@ -1,5 +1,6 @@
 "use client";
 
+import ApiBaseUrl from "api/ApiBaseUrl";
 import { useEffect, useState } from "react";
 import Menu from "../Menu";
 import Image from "../Image";
@@ -120,7 +121,7 @@ const languageList = [
  {
   title: "Become A Seller",
   icon: <FaUser />,
-  url: "https://seller.tizaraa.com",
+  url: `${ApiBaseUrl.sellerUrl}/seller/register`,
  },
  { title: "Find Seller", icon: <FaLocationPin />, url: "/shops" },
 ];

@@ -545,7 +545,7 @@ export default function DashboardNavigation() {
          <path d="M4 21a8 8 0 0 1 16 0" />
         </svg>
        )}
-       {isCorporateEmployee ? "Corporate" : "Customer"}
+       {isCorporateEmployee ? "Corporate Employee" : "Customer User"}
       </span>
      </div>
     </NavUser>

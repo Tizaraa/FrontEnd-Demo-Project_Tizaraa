@@ -1,3 +1,5 @@
+import ApiBaseUrl from "api/ApiBaseUrl";
+
 // const navbarNavigations = [
 // {
 //   title: "Home",
@@ -120,15 +122,16 @@
 // export default navbarNavigations;
 
 const navbarNavigations = [
+ { title: "User Registration", url: "/signup", extLink: false },
  // { title: "International Products", url: "/OtCategory/otc-189", extLink: true },
  {
-  title: "Become A Seller",
-  url: "https://seller.tizaraa.shop",
+  title: "Seller Registration",
+  url: `${ApiBaseUrl.sellerUrl}/seller/register`,
   extLink: true,
  },
  {
-  title: "Become A Corporate Seller",
-  url: "https://tizaraa-seller.tizaraa.shop/seller/corporate/apply",
+  title: "Corporate Seller Registration",
+  url: `${ApiBaseUrl.sellerUrl}/seller/corporate/apply`,
   extLink: true,
  },
  { title: "Find Shop", url: "/shops", extLink: false },

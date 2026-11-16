@@ -568,19 +568,7 @@ export default function OrderDetails({ params }: IDParams) {
               {order?.Order?.payment_method === "corporate_credit" &&
                details?.status === "Processing" && (
                 <Box m="6px">
-                 <CorporatePickupToken
-                  invoiceNo={order.Order.invoice_id}
-                  buyerName={order.Order.buyer_name}
-                  packedAt={order.Order.packed_at}
-                  orderTotal={order.Order.amount}
-                  items={details.order_items
-                   .filter((item) => !item.item_cancelled_at)
-                   .map((item) => ({
-                    name: item.product_name,
-                    quantity: item.quantity,
-                    total: item.total_price ?? item.price * item.quantity,
-                   }))}
-                 />
+                 <CorporatePickupToken orderId={params.id} invoiceNo={order.Order.invoice_id} />
                 </Box>
                )}
              </div>

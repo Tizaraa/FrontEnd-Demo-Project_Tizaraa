@@ -317,6 +317,29 @@ import authService from "services/authService";
 // Whose cart this browser holds: the logged-in token, or "guest"
 const currentCartOwner = (): string => authService.getToken() || "guest";
 
+// Cart lines keep the price from when they were added; replace it with the DB price.
+// shortcut: variant lines are skipped (pricing API ignores variants), extend the API to price them.
+const withLivePrices = async (cart: any[]): Promise<any[]> => {
+ const lines = cart.filter((item) => item?.productId && !item.variantId);
+ if (!authService.getToken() || lines.length === 0) return cart;
+ try {
+  const { data } = await axios.post("checkout/check/pricing", { orders: lines });
+  const products: any[] = data?.products || [];
+  return cart.map((item) => {
+   if (item.variantId) return item;
+   const p = products.find((d) => String(d.product_id) === String(item.productId));
+   if (!p || p.price == null) return item;
+   return {
+    ...item,
+    price: parseFloat(p.price),
+    discountPrice: p.discount_price ? parseFloat(p.discount_price) : null,
+   };
+  });
+ } catch {
+  return cart; // offline/expired token: keep old prices, order placement re-prices server-side
+ }
+};
+
 // TYPES
 interface InitialState {
  cart: any[];
@@ -451,8 +474,11 @@ const updateCartItem = (cart: any[], cartItem: any) => {
   return updatedCart;
  }
 
+ // Removing an item that is not in the cart: nothing to do (else a qty-0 ghost line is added)
+ if (cartItem.qty < 1) return cart;
+
  // If the item is new, add it to the cart with the calculated price
- return [...cart, { ...cartItem, qty: cartItem.qty, price: calculatedPrice }];
+ return [...cart,{ ...cartItem, qty: cartItem.qty, price: calculatedPrice }];
 };
 
 const updateBuyNowItem = (cartItem: any) => {
@@ -679,6 +705,10 @@ export function AppProvider({ children }: PropsWithChildren) {
    } else if (serverCart) {
     nextCart = serverCart;
    }
+
+   // Drop qty-0 ghost lines saved by older builds
+   nextCart = await withLivePrices(nextCart.filter((item) => item?.qty > 0));
+   if (cartDirty.current && !ownerChanged) return;
 
    localStorage.setItem("cart_owner", owner);
    if (JSON.stringify(nextCart) !== JSON.stringify(localCart)) {
