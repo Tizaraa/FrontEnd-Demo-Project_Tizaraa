@@ -371,13 +371,13 @@ export default function Navbar({ navListOpen }: NavbarProps) {
      {navbarNavigations.map((navItem) => (
       <Button
        key={navItem.title}
-       className={`nav-action${navItem.title === "Become A Seller" ? " nav-action--cta" : ""}`}
+       className="nav-action nav-action--cta"
        onClick={() => handleNavigation(navItem.url, navItem.extLink)}
        disabled={loading}
        style={{ opacity: loading ? 0.6 : 1 }}
       >
        <div className="nav-action-icon">
-        {navItem.title.includes("Seller") ? (
+        {navItem.title.includes("Registration") ? (
          <FaUser />
         ) : navItem.title === "International Products" ? (
          <FaGlobe />
@@ -661,7 +661,7 @@ export default function Navbar({ navListOpen }: NavbarProps) {
 //               }}
 //             >
 //               <div style={{ marginRight: "8px" }}>
-//                 {navItem.title === "Become A Seller" ? (
+//                 {navItem.title === "Seller Registration" ? (
 //                   <FaUser />
 //                 ) : navItem.title === "International Products" ? (
 //                   <FaGlobe />

@@ -1286,6 +1286,7 @@ export default function OrderDetails({ params }: IDParams) {
  const statusLabel = getStatusLabel(order.Order.status);
  const statusColor = getColor(order.Order.status);
  const isCorporateOrder = order?.Order?.payment_method === "corporate_credit";
+ const isCorporateInvoice = isCorporateOrder || Boolean(order?.Order?.is_corporate);
  const fmt = (d?: string | null) => (d ? format(new Date(d), "dd MMM yyyy, hh:mm a") : "N/A");
 
  const copyId = async () => {
@@ -1389,19 +1390,7 @@ export default function OrderDetails({ params }: IDParams) {
             </span>
             {/* Pickup token — only once the seller has marked the corporate order packed */}
             {isCorporateOrder && details?.status === "Processing" && (
-             <CorporatePickupToken
-              invoiceNo={order.Order.invoice_id}
-              buyerName={order.Order.buyer_name}
-              packedAt={order.Order.packed_at}
-              orderTotal={order.Order.amount}
-              items={details.order_items
-               .filter((item) => !item.item_cancelled_at)
-               .map((item) => ({
-                name: item.product_name,
-                quantity: item.quantity,
-                total: item.total_price ?? item.price * item.quantity,
-               }))}
-             />
+             <CorporatePickupToken orderId={params.id} invoiceNo={order.Order.invoice_id} />
             )}
            </header>
 
@@ -1520,11 +1509,20 @@ export default function OrderDetails({ params }: IDParams) {
        </button>
       </div>
      )}
+
+     {/* Retail: invoice shown inline under the button, same as the Delivered order page */}
+     {invoiceUrl && !isCorporateInvoice && (
+      <iframe
+       src={invoiceUrl}
+       title={`Invoice ${order.Order.invoice_id ?? params.id}`}
+       style={{ width: "100%", maxWidth: "600px", height: "800px", border: "none", marginTop: "1.5rem" }}
+      />
+     )}
     </div>
    </OD>
 
-   {/* Invoice viewer */}
-   {invoiceUrl && (
+   {/* Invoice viewer — corporate shop / employee orders only */}
+   {invoiceUrl && isCorporateInvoice && (
     <InvoiceDialog
      role="dialog"
      aria-modal="true"

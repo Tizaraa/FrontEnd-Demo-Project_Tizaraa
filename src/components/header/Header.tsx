@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
 
-import Login from "@sections/auth/Login";
 
 import Image from "@component/Image";
 import Icon from "@component/icon/Icon";
@@ -15,7 +14,6 @@ import Categories from "@component/categories/Categories";
 import { SearchInputWithCategory } from "@component/search-box";
 import { useAppContext } from "@context/app-context";
 import StyledHeader from "./styles";
-import UserLoginDialog from "./LoginDialog";
 import authService from "services/authService";
 import ApiBaseUrl from "api/ApiBaseUrl";
 import Menu from "@component/Menu";
@@ -177,13 +175,13 @@ export default function Header({ isFixed, className }: HeaderProps) {
    </button>
   </Menu>
  ) : (
-  <button type="button" className="hd-action" aria-label="Sign in or register">
+  <button type="button" className="hd-action" aria-label="Sign in or register" onClick={() => router.push("/login")}>
    <span className="hd-icon">
     <Icon size="20px">user</Icon>
    </span>
    <span className="hd-text">
     <small>Welcome</small>
-    <strong>Sign in / Register</strong>
+    <strong>User Sign in / Register</strong>
    </span>
   </button>
  );
@@ -242,15 +240,7 @@ export default function Header({ isFixed, className }: HeaderProps) {
     </FlexBox>
 
     <FlexBox className="header-right" alignItems="center">
-     {isLoggedIn ? (
-      LOGIN_HANDLE
-     ) : (
-      <UserLoginDialog handle={LOGIN_HANDLE}>
-       <div>
-        <Login />
-       </div>
-      </UserLoginDialog>
-     )}
+     {LOGIN_HANDLE}
 
      {WISHLIST}
 

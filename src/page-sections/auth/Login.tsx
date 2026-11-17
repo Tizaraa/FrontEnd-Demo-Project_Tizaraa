@@ -43,6 +43,10 @@ import {
  AuthTitle,
  SocialButton,
  AUTH_SWAP_MS,
+ RoleMenuWrapper,
+ AuthAltCtaButton,
+ RoleDropdownMenu,
+ RoleOption,
 } from "./styles";
 import tz from "../../theme/tizaraa";
 import authService from "services/authService";
@@ -1123,6 +1127,10 @@ const ShieldIcon = () => (
  </svg>
 );
 
+export function getSellerBaseUrl(): string {
+ return ApiBaseUrl.sellerUrl;
+}
+
 export default function Login() {
  const { state, dispatch } = useAppContext(); // Accessing app context for auth
  const router = useRouter();
@@ -1132,6 +1140,8 @@ export default function Login() {
  const [isModalOpen, setModalOpen] = useState(false);
  const [isHasPayLoading, setIsHasPayLoading] = useState(false);
  const [rememberMe, setRememberMe] = useState(false);
+ const [createAccountOpen, setCreateAccountOpen] = useState(false);
+ const dropdownRef = useRef<HTMLDivElement>(null);
  const { swap, swapTo } = useAuthSwap();
 
  const searchParams = useSearchParams();
@@ -1146,6 +1156,39 @@ export default function Login() {
   }
  }, [passwordWasReset]);
 
+ // Close role dropdown when clicking outside or pressing Escape
+ useEffect(() => {
+  const handleClickOutside = (e: MouseEvent) => {
+   if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+    setCreateAccountOpen(false);
+   }
+  };
+  const handleKeydown = (e: KeyboardEvent) => {
+   if (e.key === "Escape") setCreateAccountOpen(false);
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  document.addEventListener("keydown", handleKeydown);
+  return () => {
+   document.removeEventListener("mousedown", handleClickOutside);
+   document.removeEventListener("keydown", handleKeydown);
+  };
+ }, []);
+
+ const handleRoleSignup = (role: "customer" | "seller" | "corporate", e?: React.MouseEvent) => {
+  setCreateAccountOpen(false);
+  const sellerBase = getSellerBaseUrl();
+  if (role === "customer") {
+   try {
+    sessionStorage.setItem("tz_auth_swap", "1");
+   } catch {}
+   router.push("/signup");
+  } else if (role === "seller") {
+   window.location.href = `${sellerBase}/seller/register`;
+  } else if (role === "corporate") {
+   window.location.href = `${sellerBase}/seller/corporate/apply`;
+  }
+ };
+
  const initialValues = { email: "", password: "" };
 
  // Form validation schema
@@ -1153,6 +1196,8 @@ export default function Login() {
   email: yup
    .string()
    .email("Email format is Invalid")
+   // stricter than yup .email(): requires a dot + TLD (rejects "a@b")
+   .matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Email format is Invalid")
    .required("Email is required"),
   password: yup.string().required("Password is required"),
  });
@@ -1213,16 +1258,37 @@ export default function Login() {
    const data = response.data;
 
    if (data.token && response.status === 200) {
-    Cookies.set("token", data.token, { expires: 7 });
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("userInfo", JSON.stringify(data.user));
-
     // "Remember me" — only the email is kept, never the password
     if (rememberMe) {
      localStorage.setItem(REMEMBER_EMAIL_KEY, values.email);
     } else {
      localStorage.removeItem(REMEMBER_EMAIL_KEY);
     }
+
+    const role = (data.user?.role || data.user?.type || "").toLowerCase();
+
+    // Seller account -> automatic redirect to seller panel via SSO
+    if (role === "seller") {
+     toast.success("Welcome back! Redirecting to seller panel...");
+     const sellerBase = getSellerBaseUrl();
+     const ssoUrl = `${sellerBase}/seller/sso?token=${encodeURIComponent(data.token)}&remember=${rememberMe ? "1" : "0"}`;
+     window.location.href = ssoUrl;
+     return;
+    }
+
+    // Admin account -> automatic redirect to admin panel
+    if (role === "admin") {
+     toast.success("Welcome Admin! Redirecting to admin panel...");
+     const sellerBase = getSellerBaseUrl();
+     const ssoUrl = `${sellerBase}/seller/sso?token=${encodeURIComponent(data.token)}&admin=1&remember=${rememberMe ? "1" : "0"}`;
+     window.location.href = ssoUrl;
+     return;
+    }
+
+    // Customer / Corporate Employee -> continue to customer storefront
+    Cookies.set("token", data.token, { expires: 7 });
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("userInfo", JSON.stringify(data.user));
 
     dispatch({
      type: "LOGIN",
@@ -1237,9 +1303,11 @@ export default function Login() {
    } else {
     toast.error("Failed login. Please check your email or password.");
    }
-  } catch (error) {
+  } catch (error: any) {
    console.error("Login error:", error);
-   toast.error("Failed to login. Please try again later.");
+   const msg = error?.response?.data?.message || "Failed to login. Please try again later.";
+   toast.error(msg);
+   setApiError(msg);
   } finally {
    setLoading(false);
   }
@@ -1403,13 +1471,69 @@ export default function Login() {
        )}
       </SocialButton>
 
-      {/* Link to Signup */}
-      {/* Separate, clearly-a-button choice for new customers */}
+      {/* Role-based Account Creation */}
       <AuthAltLabel>New to Tizaraa?</AuthAltLabel>
-      <AuthAltCta href="/signup" onClick={(e) => swapTo(e, "/signup")}>
-       Create an account
-       <span className="link-arrow" aria-hidden="true">→</span>
-      </AuthAltCta>
+      <AuthAltCtaButton
+       type="button"
+       style={{ marginBottom: 12 }}
+       onClick={() => handleRoleSignup("customer")}
+      >
+       Create customer account
+      </AuthAltCtaButton>
+      <RoleMenuWrapper ref={dropdownRef}>
+       <AuthAltCtaButton
+        type="button"
+        className={createAccountOpen ? "open" : ""}
+        onClick={() => setCreateAccountOpen((v) => !v)}
+        aria-expanded={createAccountOpen}
+        aria-haspopup="true"
+       >
+        <span>Seller Registration</span>
+        <span className="dropdown-chevron" aria-hidden="true">
+         ▾
+        </span>
+       </AuthAltCtaButton>
+
+       {createAccountOpen && (
+        <RoleDropdownMenu role="menu" aria-label="Select seller registration type">
+         <RoleOption
+          type="button"
+          className="ro-seller"
+          role="menuitem"
+          onClick={(e) => handleRoleSignup("seller", e)}
+         >
+          <span className="ro-icon" aria-hidden="true">
+           🏪
+          </span>
+          <span className="ro-body">
+           <span className="ro-title">Seller Registration</span>
+           <span className="ro-desc">Sell products, manage orders & POS terminal</span>
+          </span>
+          <span className="ro-arrow" aria-hidden="true">
+           →
+          </span>
+         </RoleOption>
+
+         <RoleOption
+          type="button"
+          className="ro-corporate"
+          role="menuitem"
+          onClick={(e) => handleRoleSignup("corporate", e)}
+         >
+          <span className="ro-icon" aria-hidden="true">
+           🏢
+          </span>
+          <span className="ro-body">
+           <span className="ro-title">Corporate Seller Registration</span>
+           <span className="ro-desc">Corporate B2B store, employee credit & bulk RFQ</span>
+          </span>
+          <span className="ro-arrow" aria-hidden="true">
+           →
+          </span>
+         </RoleOption>
+        </RoleDropdownMenu>
+       )}
+      </RoleMenuWrapper>
 
       <AuthLegal>
        By continuing, you agree to Tizaraa’s{" "}

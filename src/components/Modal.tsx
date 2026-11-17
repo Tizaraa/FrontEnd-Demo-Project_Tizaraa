@@ -10,7 +10,7 @@ const StyledModal = styled(FlexBox).withConfig({
  shouldForwardProp: (prop: string) => isValidProp(prop),
 })<{ open?: boolean }>(({ open }) => ({
  inset: 0,
- zIndex: 999,
+ zIndex: 1600, // above sticky header (1500) and sidenav (1501)
  height: "100%",
  position: "fixed",
  alignItems: "center",
@@ -22,6 +22,7 @@ const StyledModal = styled(FlexBox).withConfig({
  "& .container": {
   top: "50%",
   width: "100%",
+  maxHeight: "100%",
   overflow: "auto",
   position: "relative",
   transform: "translateY(-50%)",

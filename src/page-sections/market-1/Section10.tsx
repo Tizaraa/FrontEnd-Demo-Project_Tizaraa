@@ -34,7 +34,7 @@ const CategoryGrid = styled.div`
   align-items: center;
   gap: 10px;
   height: 100%;
-  padding: 10px 10px 12px;
+  padding: 8px 8px 12px;
   border: 1px solid ${({ theme }) => theme.tz.color.line};
   border-radius: 16px;
   background: ${({ theme }) => theme.tz.color.paper};
@@ -57,16 +57,17 @@ const CategoryGrid = styled.div`
  }
  .cat-media img {
   padding: 10%;
+  /* photo's white background melts into the tint, no white frame */
+  mix-blend-mode: multiply;
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
  }
 
  .cat-name {
   display: -webkit-box;
-  min-height: calc(2 * 1.35em);
   margin: 0;
   overflow: hidden;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.35;
   text-align: center;
   color: ${({ theme }) => theme.tz.color.ink};
@@ -95,22 +96,31 @@ const CategoryGrid = styled.div`
  a:focus-visible .cat-media {
   filter: saturate(1.25) brightness(0.98);
  }
+ /* hover pill over the image bottom — takes no layout space */
  .cat-cta {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-top: -4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.tz.color.paper};
+  box-shadow: 0 4px 12px rgba(14, 52, 96, 0.12);
   font-size: 12px;
   font-weight: 800;
+  white-space: nowrap;
   color: ${({ theme }) => theme.tz.color.emberDeep};
   opacity: 0;
-  transform: translateY(-4px);
+  transform: translate(-50%, 4px);
   transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
  }
  a:hover .cat-cta,
  a:focus-visible .cat-cta {
   opacity: 1;
-  transform: none;
+  transform: translate(-50%, 0);
  }
  a:hover .cat-media img,
  a:focus-visible .cat-media img {
@@ -206,12 +216,12 @@ export default function Section10() {
          style={{ objectFit: "contain" }}
          priority={false}
         />
+        <span className="cat-cta" aria-hidden="true">
+         Shop now →
+        </span>
        </div>
 
        <p className="cat-name">{item.categorie_name}</p>
-       <span className="cat-cta" aria-hidden="true">
-        Shop now →
-       </span>
       </div>
      </Link>
     ))}
