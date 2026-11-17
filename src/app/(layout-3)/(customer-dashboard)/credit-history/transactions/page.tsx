@@ -572,7 +572,8 @@ export default function TransactionHistoryPage() {
   if (to) params.to = to;
   const res = await axios.get(`corporate/${slug}/orders`, { params });
   const orders: CorporateOrder[] = res.data?.data ?? [];
-  return orders.filter((order) => VISIBLE_STATUSES.includes(order.order_status));
+  // A credit statement: cash-on-delivery orders never used credit
+  return orders.filter((order) => order.payment_method !== "cod" && VISIBLE_STATUSES.includes(order.order_status));
  };
 
  useEffect(() => {
