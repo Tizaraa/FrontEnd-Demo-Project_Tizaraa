@@ -1450,7 +1450,8 @@ export default function CreditHistoryPage() {
   if (from) params.from = from;
   if (to) params.to = to;
   const res = await axios.get(`corporate/${slug}/orders`, { params });
-  return res.data?.data ?? [];
+  // A credit statement: cash-on-delivery orders never used credit
+  return (res.data?.data ?? []).filter((o: CorporateOrder) => o.payment_method !== "cod");
  };
 
  // Initial load: profile -> shop_slug -> credit summary + this month's purchases

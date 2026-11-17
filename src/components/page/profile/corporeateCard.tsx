@@ -933,7 +933,8 @@ const CorporateCard = ({ profile }) => {
   return { key: `${d.getFullYear()}-${d.getMonth()}`, date: d, label: d.toLocaleDateString("en-GB", { month: "short" }), total: 0, count: 0, list: [] as any[] };
  });
  (orders ?? []).forEach((o) => {
-  if (stOf(o) === "cancelled" || stOf(o) === "canceled" || !o.created_at) return;
+  // cash-on-delivery orders are listed too but are not credit spending
+  if (o.payment_method === "cod" || stOf(o) === "cancelled" || stOf(o) === "canceled" || !o.created_at) return;
   const d = new Date(o.created_at);
   const m = months.find((x) => x.key === `${d.getFullYear()}-${d.getMonth()}`);
   if (m) {
