@@ -172,8 +172,10 @@ import tz from "../../theme/tizaraa";
 import { SummaryBox } from "../checkout/checkoutStyles";
 export default function PaymentSummary({
  seller_type,
+ isCod = false,
 }: {
  seller_type: string;
+ isCod?: boolean;
 }) {
  const { state } = useAppContext();
  const [totalPrice, setTotalPrice] = useState(0);
@@ -315,10 +317,12 @@ export default function PaymentSummary({
         fontWeight: 700,
        }}
       >
-       Corporate Credit Active
+       {isCod ? "Cash on Delivery" : "Corporate Credit Active"}
       </span>
      </FlexBox>
 
+     {!isCod && (
+     <>
      <FlexBox justifyContent="space-between" alignItems="center" mb="0.5rem">
       <Typography color="text.hint">Available Corporate Credit:</Typography>
       <Typography fontWeight="700">
@@ -334,6 +338,8 @@ export default function PaymentSummary({
        )}
       </Typography>
      </FlexBox>
+     </>
+     )}
 
      <Divider mb="1rem" />
 
@@ -383,7 +389,7 @@ export default function PaymentSummary({
       <Box>
        <Typography fontWeight="700">Total Amount</Typography>
        <Typography fontSize="12px" color="text.hint">
-        Total Net Payable via Credit
+        {isCod ? "Pay in cash when you receive it" : "Total Net Payable via Credit"}
        </Typography>
       </Box>
       <Typography className="price" fontSize="26px" fontWeight="700" lineHeight="1" color={tz.color.ink} style={{ fontFamily: tz.font.display }}>
@@ -391,6 +397,7 @@ export default function PaymentSummary({
       </Typography>
      </FlexBox>
 
+     {!isCod && (
      <Box
       sx={{
        backgroundColor: tz.tone.danger.bg,
@@ -428,6 +435,7 @@ export default function PaymentSummary({
        account line. No manual cash or debit card is required at checkout.
       </Typography>
      </Box>
+     )}
     </>
    ) : (
     <>

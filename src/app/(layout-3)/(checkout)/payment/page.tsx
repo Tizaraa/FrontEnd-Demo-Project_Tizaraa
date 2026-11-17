@@ -18,6 +18,7 @@ import CorporatePaymentForm from "@sections/payment/CorporatePaymentForm";
 export default function Checkout() {
  const [isLoggedIn, setIsLoggedIn] = useState(false);
  const [seller_type, setSellerType] = useState("");
+ const [corporateMethod, setCorporateMethod] = useState("");
  const router = useRouter();
 
  useEffect(() => {
@@ -59,7 +60,7 @@ export default function Checkout() {
     <Grid container flexWrap="wrap-reverse" spacing={6}>
      <Grid item lg={8} md={8} xs={12}>
       {seller_type.toLocaleLowerCase() === "corporate" ? (
-       <CorporatePaymentForm />
+       <CorporatePaymentForm onMethodChange={setCorporateMethod} />
       ) : (
        <PaymentForm />
       )}
@@ -67,7 +68,7 @@ export default function Checkout() {
 
      <Grid item lg={4} md={4} xs={12}>
       <StickySummary>
-       <PaymentSummary seller_type={seller_type} />
+       <PaymentSummary seller_type={seller_type} isCod={corporateMethod === "cod"} />
       </StickySummary>
      </Grid>
     </Grid>

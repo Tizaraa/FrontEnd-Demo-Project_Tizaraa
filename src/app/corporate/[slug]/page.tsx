@@ -24,6 +24,7 @@ interface Order {
   order_number: string;
   status: string;
   total_amount: number;
+  payment_method?: string;
   created_at: string;
 }
 
@@ -228,7 +229,7 @@ export default function CorporateDashboard({ params }: { params: { slug: string 
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ borderBottom: "2px solid #f1f5f9" }}>
-                  {["Order #", "Date", "Status", "Total"].map((h) => (
+                  {["Order #", "Date", "Status", "Payment", "Total"].map((h) => (
                     <th key={h} style={{ textAlign: "left", padding: "0.5rem 0.75rem", color: "#64748b", fontSize: "0.8rem", fontWeight: 600, textTransform: "uppercase" }}>
                       {h}
                     </th>
@@ -258,6 +259,12 @@ export default function CorporateDashboard({ params }: { params: { slug: string 
                       >
                         {order.status}
                       </span>
+                    </td>
+                    <td style={{ padding: "0.75rem", fontSize: "0.85rem", color: "#64748b" }}>
+                      {order.payment_method === "cod" ? "Cash on delivery" : "Credit"}
+                    </td>
+                    <td style={{ padding: "0.75rem", fontSize: "0.85rem", color: "#64748b" }}>
+                      {order.payment_method === "cod" ? "Cash on Delivery" : "Credit"}
                     </td>
                     <td style={{ padding: "0.75rem", fontSize: "0.9rem", fontWeight: 600, color: "#1e293b" }}>
                       ৳{Number(order.total_amount).toLocaleString()}

@@ -941,10 +941,19 @@ const CorporatePaymentGrid = styled.div`
  }
 `;
 
-export default function CorporatePaymentForm() {
+export default function CorporatePaymentForm({
+ onMethodChange,
+}: {
+ onMethodChange?: (method: string) => void;
+}) {
  const { push } = useRouter();
  const { state, dispatch } = useAppContext();
- const [paymentMethod, setPaymentMethod] = useState<string>("");
+ const [paymentMethod, setPaymentMethodState] = useState<string>("");
+ // The order summary beside this form shows credit lines only for "Buy with credit".
+ const setPaymentMethod = (method: string) => {
+  setPaymentMethodState(method);
+  onMethodChange?.(method);
+ };
  const [isHasLoading, setIsHasLoading] = useState(false);
  const [isHasPayLoading, setIsHasPayLoading] = useState(false);
  const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -1133,8 +1142,9 @@ export default function CorporatePaymentForm() {
     toast.error("Error initiating online payment payment!");
     setIsHasLoading(false);
    }
-  } else if (paymentMethod === "4") {
-   // ===== BUY WITH CREDIT (corporate checkout) =====
+  } else if (paymentMethod === "4" || paymentMethod === "cod") {
+   // ===== BUY WITH CREDIT / CASH ON DELIVERY (corporate checkout) =====
+   const isCod = paymentMethod === "cod";
    try {
     const shopSlug = localStorage.getItem("shop_slug");
     if (!shopSlug) {
@@ -1156,17 +1166,20 @@ export default function CorporatePaymentForm() {
      };
     });
 
-    const orderResponse = await axios.post(`corporate/${shopSlug}/checkout`, {
+    await axios.post(`corporate/${shopSlug}/checkout`, {
      total_amount: savedTotalPrice,
      items,
+     payment_method: isCod ? "cod" : "corporate_credit",
     });
 
-    // Deduct credit balance locally
+    // Deduct credit balance locally (cash on delivery never touches credit)
     // credit_balance only drops on delivery, so just the spendable amount moves now.
-    userinfo.credit_available =
-     Number(userinfo?.credit_available ?? userinfo?.credit_balance) -
-     savedTotalPrice;
-    localStorage.setItem("userInfo", JSON.stringify(userinfo));
+    if (!isCod) {
+     userinfo.credit_available =
+      Number(userinfo?.credit_available ?? userinfo?.credit_balance) -
+      savedTotalPrice;
+     localStorage.setItem("userInfo", JSON.stringify(userinfo));
+    }
 
     // Clear cart & storage
     cart.forEach((item) => {
@@ -1195,96 +1208,6 @@ export default function CorporatePaymentForm() {
    } finally {
     setIsHasLoading(false);
    }
-  } else {
-   // ===== CASH ON DELIVERY =====
-   try {
-    const orderResponse = await axios.post(`checkout/order`, {
-     user_id: userinfo?.id,
-     name: userShippingdata?.shipping_name || userShippingdata?.name,
-     phone: userShippingdata?.shipping_contact || userShippingdata?.phone,
-     email: userinfo?.email,
-     province_id:
-      userShippingdata?.shipping_province || userShippingdata?.province_id,
-     city_id: userShippingdata?.shipping_city || userShippingdata?.city_id,
-     area_id: userShippingdata?.shipping_area || userShippingdata?.area_id,
-     house_level:
-      userShippingdata?.selectedLandmark || userShippingdata?.landmark,
-     address: userShippingdata?.shipping_address1 || userShippingdata?.address,
-     delivery_charge: savedShipping || 0,
-     delivery_type: expressDelivery,
-     total_ammount: total_ammount,
-     payment_type: paymentMethod,
-     seller_id: cartData[0]?.sellerId,
-     payment_method: paymentMethod,
-     productType: productType,
-     promocode: promocode_price > 0 ? promocode : null,
-     promocode_price: promocode_price > 0 ? promocode_price : null,
-    });
-
-    if (orderResponse.data?.message?.status !== "success") {
-     toast.error("Error placing cash on delivery order!");
-     return;
-    }
-
-    let orderId = orderResponse.data?.message?.orderid;
-    localStorage.setItem("orderId", orderId);
-    localStorage.setItem("orderSuccess", "true");
-
-    await Promise.all(
-     cart.map(async (cartdata) => {
-      const single_amount = Number(
-       cartdata.selectedColor && cartdata.selectedSize
-        ? cartdata.sizeColor?.colorwithsize?.[cartdata.selectedColor]?.find(
-           (s) => s.size === cartdata.selectedSize
-          )?.price ||
-           cartdata.discountPrice ||
-           cartdata.price
-        : cartdata.discountPrice || cartdata.price
-      );
-      try {
-       await axios.post(`checkout/order-items`, {
-        orders: [{
-         delivery_charge: savedShipping,
-         user_id: userinfo.id,
-         seller_id: cartdata.sellerId,
-         order_id: orderId,
-         product_id: cartdata.productId,
-         color: cartdata.selectedColor,
-         attribute: cartdata.selectedSpecification,
-         size: cartdata.selectedSize,
-         qty: cartdata.qty,
-         note1: "lorem10",
-         single_amount: single_amount,
-         total_amount: single_amount * cartdata.qty,
-        }],
-       });
-      } catch (err) {
-       // item-level errors don't abort the whole order
-      }
-     })
-    );
-
-    localStorage.removeItem("orderId");
-    localStorage.removeItem("selectedProducts");
-    sessionStorage.removeItem("selectedProducts");
-    sessionStorage.removeItem("cartItems");
-    sessionStorage.removeItem("paymentMethod");
-    sessionStorage.removeItem("savedTotalPrice");
-    sessionStorage.removeItem("savedTotalWithDelivery");
-    cart.forEach((item) => {
-     dispatch({ type: "CHANGE_CART_AMOUNT", payload: { ...item, qty: 0 } });
-    });
-    router.push("/orders?status=success&message=Order placed successfully");
-   } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-     toast.error(
-      error.response?.data?.message || "Error placing cash on delivery order!"
-     );
-    }
-    setIsHasLoading(false);
-   } finally {
-    setIsHasLoading(false);
-   }
   }
  };
 
@@ -1292,11 +1215,10 @@ export default function CorporatePaymentForm() {
 
  useEffect(() => {
   // Retrieve the selected payment method from localStorage on component mount.
-  // Credit is the only method a corporate order can use, so anything left over
-  // from an earlier cart (cash on delivery, for one) is dropped rather than
-  // silently restored onto a form that no longer offers it.
+  // Corporate orders take credit ("4") or cash on delivery ("cod"); anything left
+  // over from an earlier cart is dropped rather than restored onto this form.
   const storedPaymentMethod = sessionStorage.getItem("paymentMethod");
-  if (storedPaymentMethod === "4") {
+  if (storedPaymentMethod === "4" || storedPaymentMethod === "cod") {
    setPaymentMethod(storedPaymentMethod);
   } else if (storedPaymentMethod) {
    sessionStorage.removeItem("paymentMethod");
@@ -1346,46 +1268,98 @@ export default function CorporatePaymentForm() {
      }}
     >
      <CorporatePaymentGrid>
-      {/* Cash on Delivery — corporate orders settle on credit, so it is shown
-          greyed out alongside the other unavailable methods */}
+      {/* Cash on Delivery — paid at handover, never charged to credit */}
       {!hasAbroadProduct && (
-       <div
-        style={{
-         width: "100%",
-         height: "120px",
-         display: "flex",
-         flexDirection: "column",
-         alignItems: "center",
-         justifyContent: "center",
-         padding: "8px",
-         background: "rgba(0, 0, 0, 0.5)", // Disabled background
-         pointerEvents: "none", // Disable interactions
-         boxSizing: "border-box",
-         borderRadius: "8px",
-        }}
-       >
-        <PaymentImage
-         alt="Cash on Delivery"
-         src={cashOnDeliveryImage}
+      <PaymentCheckBox
+       color="secondary"
+       name="cod"
+       onChange={handlePaymentMethodChange}
+       checked={paymentMethod === "cod"}
+       label={
+        <div
          style={{
-          width: "60px",
-          height: "60px",
-          marginBottom: "8px",
-          filter: "grayscale(100%) opacity(50%)",
-         }}
-         priority
-        />
-        <span
-         style={{
-          fontSize: "14px",
-          fontWeight: "600",
-          textAlign: "center",
-          color: tz.color.inkSoft, // Matches disabled state
+          width: "100%",
+          height: "120px",
+          boxShadow:
+           paymentMethod === "cod"
+            ? `0 0 0 2px ${tz.color.ember}`
+            : `0 0 0 1px ${tz.color.line}`,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "8px",
+          background:
+           paymentMethod === "cod" ? tz.color.emberTint : tz.color.paper,
+          transition: "all 0.3s ease",
+          boxSizing: "border-box",
+          borderRadius: "8px",
+          border:
+           paymentMethod === "cod"
+            ? `1px solid ${tz.color.emberDeep}`
+            : "1px solid transparent",
+          position: "relative",
          }}
         >
-         Cash on Delivery
-        </span>
-       </div>
+         {/* Check indicator */}
+         {paymentMethod === "cod" && (
+          <div
+           style={{
+            position: "absolute",
+            top: "4px",
+            right: "4px",
+            width: "18px",
+            height: "18px",
+            backgroundColor: tz.color.emberDeep,
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+           }}
+          >
+           <svg
+            width="10"
+            height="8"
+            viewBox="0 0 10 8"
+            fill="none"
+            style={{ marginLeft: "1px" }}
+           >
+            <path
+             d="M1 4L3.5 6.5L9 1"
+             stroke={tz.color.paper}
+             strokeWidth="2"
+             strokeLinecap="round"
+             strokeLinejoin="round"
+            />
+           </svg>
+          </div>
+         )}
+
+         <PaymentImage
+          alt="Cash on Delivery"
+          src={cashOnDeliveryImage}
+          style={{
+           width: "60px",
+           height: "60px",
+           marginBottom: "8px",
+           filter: paymentMethod === "cod" ? "none" : "grayscale(20%)",
+           opacity: paymentMethod === "cod" ? 1 : 0.8,
+          }}
+          priority
+         />
+         <span
+          style={{
+           fontSize: "14px",
+           fontWeight: "600",
+           textAlign: "center",
+           color: paymentMethod === "cod" ? tz.color.emberDeep : tz.color.ink,
+          }}
+         >
+          Cash on Delivery
+         </span>
+        </div>
+       }
+      />
       )}
 
       {/* Buy with credit */}
