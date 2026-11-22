@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
+import ApiBaseUrl from "api/ApiBaseUrl";
 import { useAppContext } from "contexts/app-context/AppContext";
 import { fetchProfileUser, postLoginPath, type CorporateLoginUser } from "@utils/corporateRedirect";
 
@@ -28,8 +29,18 @@ export default function GoogleCallbackPage() {
     // corporate). If that call fails, sign-in still completes as before.
     let cancelled = false;
     (async () => {
-      const profile = await fetchProfileUser<CorporateLoginUser & { name?: string; email?: string }>(token);
+      const profile = await fetchProfileUser<CorporateLoginUser & { name?: string; email?: string; role?: string; type?: string }>(token);
       if (cancelled) return;
+
+      // Seller/admin -> seller panel via SSO, same as email login in Login.tsx
+      const role = (profile?.role || profile?.type || "").toLowerCase();
+      if (role === "seller" || role === "admin") {
+        Cookies.remove("token");
+        localStorage.removeItem("token");
+        window.location.href = `${ApiBaseUrl.sellerUrl}/seller/sso?token=${encodeURIComponent(token)}${role === "admin" ? "&admin=1" : ""}&remember=0`;
+        return;
+      }
+
       const userInfo = profile ?? { name, email };
 
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
