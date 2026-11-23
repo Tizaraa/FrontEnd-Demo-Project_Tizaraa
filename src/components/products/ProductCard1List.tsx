@@ -249,6 +249,10 @@ export default function ProductGridView({ products }: Props) {
      }
      imgUrl={item?.thumbnail ? (item.thumbnail.startsWith("http") ? item.thumbnail : `${ApiBaseUrl.ImgUrl}${item.thumbnail}`) : ""}
      rating={item?.rating || 0}
+     sellerId={item?.seller_id}
+     minOrderQty={item?.min_order_qty}
+     maxOrderQty={item?.max_order_qty}
+     hasVariants={item?.has_variants}
     />
    ))}
   </ListingGrid>

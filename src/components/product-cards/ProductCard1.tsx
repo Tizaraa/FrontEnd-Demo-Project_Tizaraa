@@ -382,6 +382,7 @@
 "use client";
 import { CardProps } from "@component/Card";
 import ProductTile from "./ProductTile";
+import CardCartControl from "./CardCartControl";
 
 // Grid card for the listing pages. Keeps its original props and price rules,
 // and renders through the shared ProductTile.
@@ -401,9 +402,13 @@ interface ProductCard1Props extends CardProps {
  productId?: string | number;
  sellerId?: string | number;
  sizecolorwithprice?: any;
+ minOrderQty?: number;
+ maxOrderQty?: number | null;
+ hasVariants?: boolean;
 }
 
 export default function ProductCard1({
+ id,
  off,
  slug,
  title,
@@ -411,6 +416,11 @@ export default function ProductCard1({
  imgUrl,
  rating,
  discountPrice,
+ productStock,
+ sellerId,
+ minOrderQty,
+ maxOrderQty,
+ hasVariants,
 }: ProductCard1Props) {
  const offerPrice =
   discountPrice && discountPrice > 0 && discountPrice < price
@@ -418,6 +428,7 @@ export default function ProductCard1({
    : off && off > 0 && off < price
    ? Number((price - off).toFixed(2))
    : null;
+ const isRfq = price === 0 && off === 0;
 
  return (
   <ProductTile
@@ -427,7 +438,25 @@ export default function ProductCard1({
    rating={rating}
    price={offerPrice ?? price}
    originalPrice={offerPrice ? price : undefined}
-   isRfq={price === 0 && off === 0}
+   isRfq={isRfq}
+   footer={
+    // Only listings whose API sends the seller (and so the cart fields) get the control
+    sellerId !== undefined && sellerId !== null && id && !isRfq ? (
+     <CardCartControl
+      productId={id}
+      sellerId={sellerId}
+      slug={slug}
+      title={title}
+      imgUrl={imgUrl}
+      price={offerPrice ?? price}
+      discountPrice={discountPrice}
+      productStock={productStock}
+      minOrderQty={minOrderQty}
+      maxOrderQty={maxOrderQty}
+      hasVariants={hasVariants}
+     />
+    ) : undefined
+   }
   />
  );
 }

@@ -36,6 +36,26 @@ const StyledNavbar = styled.div`
    transform: rotate(90deg);
   }
  }
+ /* Corporate Shop shortcut: a link styled like the All Categories button */
+ .nav-corp {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 42px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+
+  /* it is a link, not a menu: nudge the arrow instead of turning it down */
+  &:hover .dropdown-icon {
+   transform: translateX(3px);
+  }
+  &:focus-visible {
+   outline: none;
+   box-shadow: ${({ theme }) => theme.tz.focusRing};
+  }
+ }
  .nav-cat-icon {
   display: inline-flex;
   align-items: center;
