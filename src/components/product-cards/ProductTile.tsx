@@ -21,6 +21,9 @@ type ProductTileProps = {
  // OT images come from a third-party CDN that rejects referrers
  externalImage?: boolean;
  layout?: "grid" | "row";
+ // Controls under the price (e.g. add to cart). Kept outside the link so a
+ // click on them does not open the product page.
+ footer?: React.ReactNode;
 };
 
 const Tile = styled.article<{ $row?: boolean }>`
@@ -55,6 +58,30 @@ const Tile = styled.article<{ $row?: boolean }>`
 
  &:hover .tile-media img {
   transform: scale(1.05);
+ }
+
+ /* The whole card opens the product: the name link stretches over the tile.
+    The footer sits above that layer so its buttons stay clickable. */
+ .tile-link {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+
+  &::after {
+   content: "";
+   position: absolute;
+   inset: 0;
+   z-index: 1;
+   border-radius: inherit;
+  }
+  &:focus-visible::after {
+   box-shadow: ${({ theme }) => theme.tz.focusRing};
+  }
+ }
+
+ .tile-footer {
+  position: relative;
+  z-index: 2;
  }
 
  .tile-badge {
@@ -197,6 +224,7 @@ export default function ProductTile({
  isRfq,
  externalImage,
  layout = "grid",
+ footer,
 }: ProductTileProps) {
  const now = Number(price);
  const was = Number(originalPrice);
@@ -204,8 +232,7 @@ export default function ProductTile({
  const discountPercent = hasDiscount ? Math.floor(((was - now) / was) * 100) : 0;
 
  return (
-  <Link href={href} style={{ display: "block", height: "100%" }}>
-   <Tile $row={layout === "row"}>
+  <Tile $row={layout === "row"}>
     {hasDiscount && discountPercent > 0 && (
      <span className="tile-badge">−{discountPercent}%</span>
     )}
@@ -229,7 +256,9 @@ export default function ProductTile({
 
     <div className="tile-body">
      <h3 className="tile-name" title={name}>
-      {name}
+      <Link href={href} className="tile-link">
+       {name}
+      </Link>
      </h3>
 
      {rating > 0 && (
@@ -250,9 +279,10 @@ export default function ProductTile({
        </>
       )}
      </div>
+
+     {footer && <div className="tile-footer">{footer}</div>}
     </div>
    </Tile>
-  </Link>
  );
 }
 

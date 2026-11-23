@@ -279,6 +279,7 @@ import Icon from "@component/icon/Icon";
 import authService from "services/authService";
 import { toast } from "react-hot-toast";
 import { useDashboardCountsListener } from "utils/dashboardCounts";
+import { corporateHomeFor } from "utils/corporateRedirect";
 import { UserAvatar } from "@sections/customer-dashboard/ui";
 
 // STYLED COMPONENTS
@@ -327,6 +328,8 @@ export default function DashboardNavigation() {
  const [rfqCount, setRfqCount] = useState(0); // State for RFQ count
  // Corporate employees buy on company credit and have no RFQ flow (yet)
  const [isCorporateEmployee, setIsCorporateEmployee] = useState(false);
+ // Link to the employee's own corporate shop; null for everyone else
+ const [corporateShopHref, setCorporateShopHref] = useState<string | null>(null);
 
  // Request guards so many open tabs don't flood the API:
  //  - one request at a time (a forced refresh during one queues a single re-run)
@@ -439,9 +442,11 @@ export default function DashboardNavigation() {
   try {
    const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
    setIsCorporateEmployee(userInfo?.type === "employee" || Boolean(userInfo?.shop_slug));
+   setCorporateShopHref(corporateHomeFor(userInfo));
    setUser({ name: userInfo?.name, email: userInfo?.email, image: userInfo?.image });
   } catch {
    setIsCorporateEmployee(false);
+   setCorporateShopHref(null);
   }
  }, [pathname]); // Add pathname as a dependency to re-check when route changes
 
@@ -517,6 +522,9 @@ export default function DashboardNavigation() {
      iconName: "pin",
      count: addressCount,
     }, // Use addressCount here
+    ...(corporateShopHref
+     ? [{ href: corporateShopHref, title: "Corporate Shop", iconName: "shop" }]
+     : []),
     // { href: "/payment-methods", title: "Payment Methods", iconName: "credit-card", count: 4 },
    ],
   },

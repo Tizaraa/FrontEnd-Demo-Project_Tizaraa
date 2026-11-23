@@ -155,7 +155,9 @@
 // }
 
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { corporateHomeFor } from "utils/corporateRedirect";
 import { useTheme } from "styled-components";
 import Box from "../Box";
 import Card from "../Card";
@@ -170,7 +172,7 @@ import Typography, { Span } from "../Typography";
 import Categories from "../categories/Categories";
 import StyledNavbar from "./styles";
 import navbarNavigations from "@data/navbarNavigations";
-import { FaGlobe, FaUser } from "react-icons/fa";
+import { FaGlobe, FaStore, FaUser } from "react-icons/fa";
 import { FaLocationPin } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import BeatLoader from "react-spinners/BeatLoader";
@@ -197,6 +199,17 @@ export default function Navbar({ navListOpen }: NavbarProps) {
  // Check if the current path is "/location"
  const isLocationPage = pathname === "/location";
  const isHomePage = pathname === "/";
+
+ // Active corporate employees get a shortcut to their own shop; null hides it.
+ // Re-read on route change so it follows login and logout.
+ const [corporateShopHref, setCorporateShopHref] = useState<string | null>(null);
+ useEffect(() => {
+  try {
+   setCorporateShopHref(corporateHomeFor(JSON.parse(localStorage.getItem("userInfo") || "{}")));
+  } catch {
+   setCorporateShopHref(null);
+  }
+ }, [pathname]);
 
  const handleNavigation = async (url: string, extLink: boolean) => {
   setLoading(true);
@@ -341,7 +354,7 @@ export default function Navbar({ navListOpen }: NavbarProps) {
    >
     <FlexBox
      style={{
-      gap: "32px",
+      gap: "12px",
       display: "flex",
       alignItems: "center",
       flexGrow: 1,
@@ -364,6 +377,18 @@ export default function Navbar({ navListOpen }: NavbarProps) {
         )}
        </Button>
       </Categories>
+     )}
+
+     {corporateShopHref && (
+      <Link href={corporateShopHref} className="nav-cat nav-corp">
+       <span className="nav-cat-icon">
+        <FaStore size={15} aria-hidden="true" />
+       </span>
+       Corporate Shop
+       <Icon className="dropdown-icon" variant="small" defaultcolor="currentColor">
+        chevron-right
+       </Icon>
+      </Link>
      )}
     </FlexBox>
 

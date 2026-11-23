@@ -727,6 +727,7 @@ export default function WriteReview({
  return_deadline = null,
  server_time = null,
  isCorporate = false,
+ isCorporateShop = false,
 }: {
  item: any;
  shopName: string;
@@ -740,6 +741,8 @@ export default function WriteReview({
  return_deadline?: string | null;
  server_time?: string | null;
  isCorporate?: boolean;
+ // Any corporate-shop order (company credit or cash on delivery)
+ isCorporateShop?: boolean;
 }) {
  const [showOrderStatus, setShowOrderStatus] = useState(false);
  const [isModalOpen, setIsModalOpen] = useState(false);
@@ -814,10 +817,11 @@ export default function WriteReview({
 
  // Buyers may only pull an item until the seller starts preparing the order; the
  // engine enforces this too, this just avoids offering a button that will 422.
+ // Corporate-shop orders (credit or cash on delivery) can only be cancelled while Pending.
  const canCancelItem =
   !isItemCancelled &&
   !isItemReturned &&
-  ["Pending", "Confirmed"].includes(status);
+  (isCorporateShop || isCorporate ? ["Pending"] : ["Pending", "Confirmed"]).includes(status);
 
  useEffect(() => {
   // Server data is authoritative; only fall back to the localStorage cache

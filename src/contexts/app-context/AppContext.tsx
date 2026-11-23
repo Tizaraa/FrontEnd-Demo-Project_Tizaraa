@@ -528,7 +528,18 @@ const reducer = (state: InitialState, action: ActionType) => {
 
   case "CHANGE_CART_AMOUNT": {
    const newCart = updateCartItem(state.cart, action.payload);
-   return { ...state, cart: newCart };
+   // A line just added to the cart starts selected (ready to check out);
+   // a line that left the cart is dropped from the selection too.
+   const lineId = action.payload?.id;
+   const wasIn = state.cart.some((item) => item.id === lineId);
+   const isIn = Array.isArray(newCart) && newCart.some((item) => item.id === lineId);
+   let selectedProducts = state.selectedProducts;
+   if (!wasIn && isIn && !selectedProducts.includes(lineId)) {
+    selectedProducts = [...selectedProducts, lineId];
+   } else if (wasIn && !isIn) {
+    selectedProducts = selectedProducts.filter((id) => id !== lineId);
+   }
+   return { ...state, cart: newCart, selectedProducts };
   }
 
   case "SET_CART":
@@ -555,10 +566,13 @@ const reducer = (state: InitialState, action: ActionType) => {
    };
 
   case "LOGOUT":
+   // The cart belongs to the user who logged out; their server cart is kept
    return {
     ...state,
     authToken: null,
     userInfo: null,
+    cart: [],
+    selectedProducts: [],
    };
 
   case "UPDATE_USER_INFO":
@@ -568,6 +582,7 @@ const reducer = (state: InitialState, action: ActionType) => {
    };
 
   case "SELECT_PRODUCT":
+   if (state.selectedProducts.includes(action.payload)) return state;
    return {
     ...state,
     selectedProducts: [...state.selectedProducts, action.payload],
@@ -684,6 +699,21 @@ export function AppProvider({ children }: PropsWithChildren) {
   const owner = currentCartOwner();
   const ownerChanged = localStorage.getItem("cart_owner") !== owner;
 
+  // Logged out (from any logout button, or the token was removed): drop the
+  // previous user's cart locally. Nothing is pushed, so their server cart stays
+  // and comes back on their next login.
+  if (owner === "guest") {
+   if (ownerChanged) {
+    cartDirty.current = false;
+    dispatch({ type: "LOGOUT" });
+    localStorage.setItem("cart_owner", owner);
+    sessionStorage.removeItem("cartItems");
+    sessionStorage.removeItem("selectedProducts");
+   }
+   setCartReady(true);
+   return;
+  }
+
   // A pending change of the user's own wins; it is pushed next
   if (cartDirty.current && !ownerChanged) return;
 
@@ -757,10 +787,10 @@ export function AppProvider({ children }: PropsWithChildren) {
    localStorage.getItem("selectedProducts") || "[]"
   );
 
+  // Restore as-is: going through CHANGE_CART_AMOUNT would mark every line as
+  // newly added and select it, overriding the saved selection below.
   if (storedCart.length > 0) {
-   storedCart.forEach((item) => {
-    dispatch({ type: "CHANGE_CART_AMOUNT", payload: item });
-   });
+   dispatch({ type: "SET_CART", payload: storedCart.filter((item: any) => item?.qty > 0) });
   }
 
   if (storedSelectedProducts.length > 0) {
