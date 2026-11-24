@@ -148,30 +148,64 @@ export const StyledFooter = styled.footer`
  }
 
  .footer-verified {
-  max-width: 300px;
-  margin-top: 28px;
+  max-width: 320px;
+  margin-top: 24px;
 
-  dl {
-   display: grid;
+  .footer-heading {
+   justify-content: flex-start;
    gap: 6px;
+  }
+
+  .verified-shield {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   color: var(--f-ember);
+   flex-shrink: 0;
+  }
+
+  .verified-cards {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
    margin: 0;
   }
-  dl > div {
+
+  .verified-card {
    display: flex;
-   flex-wrap: wrap;
-   justify-content: space-between;
-   gap: 0 12px;
-   font-size: 12.5px;
+   flex-direction: column;
+   gap: 2px;
+   padding: 7px 12px;
+   background: rgba(255, 255, 255, 0.04);
+   border: 1px solid rgba(255, 255, 255, 0.09);
+   border-radius: 8px;
+   transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+
+   &:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.18);
+    transform: translateY(-1px);
+   }
   }
+
   dt {
-   color: rgba(255, 255, 255, 0.55);
+   font-size: 10.5px;
+   font-weight: 600;
+   text-transform: uppercase;
+   letter-spacing: 0.5px;
+   color: rgba(255, 255, 255, 0.6);
+   line-height: 1.2;
   }
+
   dd {
    margin: 0;
-   overflow-wrap: anywhere;
+   font-size: 12.5px;
    font-weight: 600;
-   color: #fff;
+   color: #ffffff;
+   letter-spacing: 0.3px;
    font-variant-numeric: tabular-nums;
+   line-height: 1.3;
+   word-break: break-all;
   }
  }
  /* Column headings (buttons so they work as mobile accordions) */

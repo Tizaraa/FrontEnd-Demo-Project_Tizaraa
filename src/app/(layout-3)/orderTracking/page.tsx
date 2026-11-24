@@ -42,46 +42,68 @@ export default function TrackPage() {
   }
  }, [isModalOpen]);
 
- const handleTrack = async () => {
-  if (trackingId.trim() === "") {
-   setError("⚠️ Please enter a tracking ID.");
-   setTrackingData(null);
-   setIsModalOpen(true);
-   return;
-  }
-
-  setIsLoading(true);
-  setError(null);
-
-  try {
-   const response = await fetch(
-    `${ApiBaseUrl.baseUrl}track/order/${trackingId}`,
-    {
-     method: "GET",
-     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${authtoken}`,
-     },
+  const handleTrack = async () => {
+    const cleanId = trackingId.trim();
+    if (!cleanId) {
+      setError("⚠️ Please enter a tracking ID or Order Number.");
+      setTrackingData(null);
+      setIsModalOpen(true);
+      return;
     }
-   );
-   const data = await response.json();
 
-   if (data.status) {
-    setTrackingData(data.data);
+    setIsLoading(true);
     setError(null);
-   } else {
-    setError("Order not found. Please check your tracking ID.");
-    setTrackingData(null);
-   }
-  } catch (err) {
-   setError("Failed to fetch tracking information. Please try again later.");
-   setTrackingData(null);
-  } finally {
-   setIsLoading(false);
-   setIsModalOpen(true);
-  }
- };
 
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+    if (authtoken) {
+      headers.Authorization = `Bearer ${authtoken}`;
+    }
+
+    const candidateUrls = [
+      `${ApiBaseUrl.localApiUrl}track/order/${encodeURIComponent(cleanId)}`,
+      `${ApiBaseUrl.baseUrl}track/order/${encodeURIComponent(cleanId)}`,
+    ];
+
+    let fetchedData = null;
+    let fetchErrorMessage = null;
+
+    for (const url of candidateUrls) {
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          headers,
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.status && data.data) {
+            fetchedData = data.data;
+            break;
+          } else if (data.message) {
+            fetchErrorMessage = data.message;
+          }
+        } else if (response.status === 404) {
+          const data = await response.json().catch(() => null);
+          fetchErrorMessage = data?.message || "Order not found. Please verify your tracking ID or Order number.";
+        }
+      } catch {
+        // try next candidate
+      }
+    }
+
+    if (fetchedData) {
+      setTrackingData(fetchedData);
+      setError(null);
+    } else {
+      setError(fetchErrorMessage || "Order not found. Please check your tracking ID or Order number.");
+      setTrackingData(null);
+    }
+
+    setIsLoading(false);
+    setIsModalOpen(true);
+  };
  const closeModal = () => {
   setIsModalOpen(false);
  };
@@ -119,26 +141,83 @@ export default function TrackPage() {
    <div className="tracking-section">
     <div className="container">
      <div className="tracking-card">
-      <div>
-       <h2 className="tracking-title">Track your Order</h2>
-       <p>
-        Enter your order ID below to get real-time updates on your package.
+      <div className="tracking-header-icon">
+       <svg viewBox="0 0 24 24" className="icon-pulse">
+        <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.7 1.3 3 3 3s3-1.3 3-3h6c0 1.7 1.3 3 3 3s3-1.3 3-3h2v-5l-3-4zM6 18.5c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm9-3.5H8.2c-.5-.6-1.2-1-2-1H3V6h12v9zm3 3.5c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zM17 12V9.5h2.5l2 2.5H17z" />
+       </svg>
+      </div>
+      <div className="tracking-text-group">
+       <span className="tracking-badge">LIVE TRACKING</span>
+       <h1 className="tracking-title">Track your Order</h1>
+       <p className="tracking-subtitle">
+        Enter your order ID below to get real-time delivery status & updates on your package.
        </p>
       </div>
-      <input
-       type="text"
-       placeholder="Enter Order ID"
-       value={trackingId}
-       onChange={(e) => setTrackingId(e.target.value)}
-       className={`tracking-input ${trackingId ? "input-focus" : ""}`}
-      />
-      <button
-       onClick={handleTrack}
-       className="track-button"
-       disabled={isLoading}
-      >
-       {isLoading ? "Tracking..." : "Track Now"}
-      </button>
+
+      <div className="tracking-form-group">
+       <div className="input-wrapper">
+        <svg className="search-icon" viewBox="0 0 24 24">
+         <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+        </svg>
+        <input
+         type="text"
+         placeholder="e.g. 10429 or TZ-98421"
+         value={trackingId}
+         onChange={(e) => setTrackingId(e.target.value)}
+         onKeyDown={(e) => {
+          if (e.key === "Enter") handleTrack();
+         }}
+         className={`tracking-input ${trackingId ? "input-active" : ""}`}
+        />
+        {trackingId && (
+         <button
+          type="button"
+          className="clear-input-btn"
+          onClick={() => setTrackingId("")}
+          aria-label="Clear input"
+         >
+          &times;
+         </button>
+        )}
+       </div>
+
+       <button
+        onClick={handleTrack}
+        className="track-button"
+        disabled={isLoading}
+       >
+        {isLoading ? (
+         <>
+          <span className="button-spinner"></span>
+          <span>Searching...</span>
+         </>
+        ) : (
+         <>
+          <span>Track Now</span>
+          <svg className="btn-arrow" viewBox="0 0 24 24">
+           <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          </svg>
+         </>
+        )}
+       </button>
+      </div>
+
+      <div className="tracking-features-pill">
+       <div className="feature-item">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <span>Real-time Status</span>
+       </div>
+       <span className="pill-dot">•</span>
+       <div className="feature-item">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14.5h-2v-2h2v2zm0-4.5h-2V7h2v5z"/></svg>
+        <span>Instant Updates</span>
+       </div>
+       <span className="pill-dot">•</span>
+       <div className="feature-item">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        <span>Secure Tracking</span>
+       </div>
+      </div>
      </div>
     </div>
    </div>
