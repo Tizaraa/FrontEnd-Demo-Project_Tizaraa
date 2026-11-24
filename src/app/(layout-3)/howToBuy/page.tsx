@@ -1,220 +1,265 @@
-import React from "react";
+"use client";
 
-const Tizaraa: React.FC = () => {
- const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-   maxWidth: "1200px",
-   margin: "0 auto",
-   padding: "0 15px",
-  },
-  menuBar: {
-   display: "flex",
-   justifyContent: "space-between",
-   alignItems: "center",
-   padding: "10px 0",
-   borderBottom: "1px solid #ddd",
-  },
-  logo: {
-   display: "flex",
-   alignItems: "center",
-  },
-  logoImage: {
-   height: "50px",
-   marginRight: "10px",
-  },
-  searchForm: {
-   display: "flex",
-   alignItems: "center",
-   gap: "10px",
-  },
-  searchInput: {
-   padding: "8px",
-   border: "1px solid #ddd",
-   borderRadius: "4px",
-  },
-  menu: {
-   listStyle: "none",
-   display: "flex",
-   gap: "15px",
-   padding: 0,
-   margin: 0,
-  },
-  menuItem: {
-   textDecoration: "none",
-   color: "#333",
-   fontWeight: "bold",
-  },
-  banner: {
-   backgroundImage:
-    "url(/assets/images/footer_image/About-Tizaraa-Top-Banner_1.jpg)",
-   backgroundPosition: "center center",
-   backgroundSize: "cover",
-   height: "400px",
-   display: "flex",
-   justifyContent: "center",
-   alignItems: "center",
-  },
-  bannerText: {
-   fontSize: "2rem",
-   color: "#fff",
-   backgroundColor: "rgba(0, 0, 0, 0.5)",
-   padding: "10px 20px",
-   borderRadius: "8px",
-  },
-  howToBuy: {
-   padding: "30px 0",
-  },
-  sectionTitle: {
-   fontSize: "1.5rem",
-   fontWeight: "bold",
-   marginBottom: "20px",
-  },
-  list: {
-   listStyle: "none",
-   padding: 0,
-   margin: 0,
-  },
-  listItem0: {
-   marginBottom: "20px",
-   backgroundColor: "rgb(255, 227, 193)",
-   padding: "5px 20px",
-   borderRadius: "5px",
-  },
-  listItem1: {
-   marginBottom: "20px",
-   backgroundColor: "rgb(248, 208, 161)",
-   padding: "5px 20px",
-   borderRadius: "5px",
-  },
-  listItemTitle: {
-   fontSize: "1.50rem",
-   fontWeight: "bold",
-   marginBottom: "0",
-   marginTop: "5px",
-  },
+import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import "./HowToBuy.css";
 
-  listItemText: {
-   fontSize: "1rem",
-   color: "#555",
-  },
-  footer: {
-   backgroundColor: "#333",
-   color: "#fff",
-   padding: "20px 0",
-   textAlign: "center",
-  },
-  footerLink: {
-   color: "#fff",
-   textDecoration: "none",
-  },
- };
+interface StepItem {
+  number: string;
+  icon: string;
+  titleEn: string;
+  titleBn: string;
+  descEn: string;
+  descBn: string;
+}
 
- return (
-  <>
-   {/* Banner */}
-   <div style={styles.banner}>
-    <div style={styles.bannerText}>How to Buy</div>
-   </div>
+const stepsData: StepItem[] = [
+  {
+    number: "Step 01",
+    icon: "👤",
+    titleEn: "Sign In or Create an Account",
+    titleBn: "সাইন ইন অথবা নতুন অ্যাকাউন্ট তৈরি করুন",
+    descEn:
+      "If you don't already have an account on Tizaraa, sign up in seconds. If you're already registered, simply log in to your account.",
+    descBn:
+      "যদি আপনার টিজারা অ্যাকাউন্ট না থাকে, তবে মাত্র কয়েক সেকেন্ডে সাইন আপ করে নিন। আর অ্যাকাউন্ট থাকলে সহজে লগ ইন করুন।",
+  },
+  {
+    number: "Step 02",
+    icon: "🔍",
+    titleEn: "Search & Browse Products",
+    titleBn: "পণ্য খুঁজুন এবং ব্রাউজ করুন",
+    descEn:
+      "Use our smart search bar, explore featured categories, or filter by price and brand to discover authentic products.",
+    descBn:
+      "স্মার্ট সার্চ বার ব্যবহার করুন, বিভিন্ন ক্যাটাগরি ঘুরে দেখুন অথবা ব্র্যান্ড ও দাম অনুযায়ী পছন্দের আসল পণ্য খুঁজে নিন।",
+  },
+  {
+    number: "Step 03",
+    icon: "📋",
+    titleEn: "Inspect Product Details & Specs",
+    titleBn: "পণ্যের বিস্তারিত তথ্য ও বিবরণ যাচাই করুন",
+    descEn:
+      "Review customer reviews, warranty policies, specifications, and seller ratings before deciding on your purchase.",
+    descBn:
+      "ক্রয় করার আগে পণ্যের বিবরণ, স্পেসিফিকেশন, ওয়ারেন্টি শর্তাবলী ও সেলারের রেটিং ভালো করে দেখে নিন।",
+  },
+  {
+    number: "Step 04",
+    icon: "🛒",
+    titleEn: "Add to Cart or Buy Now",
+    titleBn: "কার্টে যুক্ত করুন বা সরাসরি কিনুন",
+    descEn:
+      "Select your preferred variant, color, or size, then click 'Add to Cart' or proceed directly with 'Buy Now'.",
+    descBn:
+      "আপনার পছন্দের সাইজ, রঙ বা ভ্যারিয়েন্ট সিলেক্ট করে 'Add to Cart' চাপুন অথবা সরাসরি কিনতে 'Buy Now' ক্লিক করুন।",
+  },
+  {
+    number: "Step 05",
+    icon: "🛍️",
+    titleEn: "Review Your Shopping Cart",
+    titleBn: "শপিং কার্ট পর্যবেক্ষণ করুন",
+    descEn:
+      "Open your cart to adjust quantities, apply discount coupon codes, and review your estimated pricing.",
+    descBn:
+      "কার্ট ওপেন করে পণ্যের পরিমাণ প্রয়োজনমতো পরিবর্তন করুন, ডিসকাউন্ট ভাউচার কোড অ্যাপ্লাই করুন ও মোট মূল্য যাচাই করুন।",
+  },
+  {
+    number: "Step 06",
+    icon: "📍",
+    titleEn: "Provide Delivery Address",
+    titleBn: "ডেলিভারি ঠিকানা প্রদান করুন",
+    descEn:
+      "Enter your accurate shipping address and active phone number for seamless, timely doorstep delivery across Bangladesh.",
+    descBn:
+      "সঠিক হোম ডেলিভারির জন্য আপনার সম্পূর্ণ ডেলিভারি ঠিকানা এবং সচল মোবাইল নম্বর প্রদান করুন।",
+  },
+  {
+    number: "Step 07",
+    icon: "💳",
+    titleEn: "Choose Secure Payment Method",
+    titleBn: "নিরাপদ পেমেন্ট পদ্ধতি নির্বাচন করুন",
+    descEn:
+      "Pay securely using Cash on Delivery (COD), bKash, Nagad, Credit/Debit cards, or internet banking.",
+    descBn:
+      "ক্যাশ অন ডেলিভারি (সিওডি), বিকাশ, নগদ, ভিসা/মাস্টারকার্ড অথবা ইন্টারনেট ব্যাংকিংয়ের মাধ্যমে নিরাপদে মূল্য পরিশোধ করুন।",
+  },
+  {
+    number: "Step 08",
+    icon: "✅",
+    titleEn: "Confirm & Place Order",
+    titleBn: "অর্ডার নিশ্চিত করুন",
+    descEn:
+      "Review order summary including delivery charges, then click 'Place Order' to finalize your purchase.",
+    descBn:
+      "ডেলিভারি চার্জসহ চূড়ান্ত মূল্য দেখে 'Place Order' বাটনে ক্লিক করে আপনার অর্ডারটি সম্পন্ন করুন।",
+  },
+  {
+    number: "Step 09",
+    icon: "📦",
+    titleEn: "Live Real-Time Order Tracking",
+    titleBn: "অর্ডারের রিয়েল-টাইম ট্র্যাকিং",
+    descEn:
+      "Receive instant SMS and email confirmation with your unique Order ID. Track shipment progress real-time at /orderTracking.",
+    descBn:
+      "তাৎক্ষণিক SMS ও ইমেইলে ট্র্যাকিং আইডি পেয়ে যাবেন। আমাদের /orderTracking পেজে যেকোনো সময় পার্সেলের লাইভ আপডেট জানুন।",
+  },
+];
 
-   {/* How to Buy Section */}
-   <div style={styles.howToBuy}>
-    <div style={styles.container}>
-     <h2 style={styles.sectionTitle}>Buying process</h2>
-     <ul style={styles.list}>
-      <li style={styles.listItem}>
-       <iframe
-        width="100%"
-        height="300px"
-        src="https://www.youtube.com/embed/BwK5RRfs-mg?si=6aOtgmJKc-tVETEK"
-        title="YouTube video player"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-       ></iframe>
-      </li>
-      <li style={styles.listItem0}>
-       <h5 style={styles.listItemTitle}>Sign In or Create an Account</h5>
-       <p style={styles.listItemText}>
-        If you don't already have an account on Tizaraa, you'll need to sign up.
-        If you're already a registered user, log in to your account.
-       </p>
-      </li>
-      <li style={styles.listItem1}>
-       <h5 style={styles.listItemTitle}>Browse Products</h5>
-       <p style={styles.listItemText}>
-        Use the search bar or navigate through categories to find the products
-        you're interested in.
-       </p>
-      </li>
-      <li style={styles.listItem0}>
-       <h5 style={styles.listItemTitle}>Product Details:</h5>
-       <p style={styles.listItemText}>
-        Click on a product to view more details. Check the product description,
-        specifications, and seller information.
-       </p>
-      </li>
-      <li style={styles.listItem1}>
-       <h5 style={styles.listItemTitle}>Add to Cart</h5>
-       <p style={styles.listItemText}>
-        Once you've decided on a product, click on the "Add to Cart" or "Buy
-        Now" button.
-       </p>
-      </li>
-      <li style={styles.listItem0}>
-       <h5 style={styles.listItemTitle}>Shopping Cart</h5>
-       <p style={styles.listItemText}>
-        Review the items in your shopping cart. You can edit quantities or
-        remove items if needed.
-       </p>
-      </li>
-      <li style={styles.listItem1}>
-       <h5 style={styles.listItemTitle}>Checkout</h5>
-       <p style={styles.listItemText}>
-        Click on the "Checkout" button. You may be asked to confirm your
-        shipping address and select a payment method.
-       </p>
-      </li>
-      <li style={styles.listItem0}>
-       <h5 style={styles.listItemTitle}>Payment</h5>
-       <p style={styles.listItemText}>
-        Choose a payment method (credit/debit card, digital wallet, etc.) and
-        enter the required information.
-       </p>
-      </li>
-      <li style={styles.listItem1}>
-       <h5 style={styles.listItemTitle}>Review Order</h5>
-       <p style={styles.listItemText}>
-        Double-check your order details, including the items, quantities, and
-        total cost.
-       </p>
-      </li>
-      <li style={styles.listItem0}>
-       <h5 style={styles.listItemTitle}>Place Order:</h5>
-       <p style={styles.listItemText}>
-        Click on the "Place Order" or "Complete Purchase" button to finalize
-        your transaction.
-       </p>
-      </li>
-      <li style={styles.listItem1}>
-       <h5 style={styles.listItemTitle}>Confirmation</h5>
-       <p style={styles.listItemText}>
-        Once your order is successfully placed, you should receive an order
-        confirmation email. This email will include details about your purchase
-        and estimated delivery times.
-       </p>
-      </li>
-      <li style={styles.listItem0}>
-       <h5 style={styles.listItemTitle}>Track Your Order</h5>
-       <p style={styles.listItemText}>
-        If applicable, use the provided tracking information to monitor the
-        status and location of your shipment.
-       </p>
-      </li>
-     </ul>
+export default function HowToBuyPage() {
+  const [lang, setLang] = useState<"en" | "bn">("en");
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const root = wrapperRef.current;
+    if (!root) return;
+
+    root.classList.add("reveal-ready");
+    const reveal = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-in");
+            reveal.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.08 }
+    );
+
+    root
+      .querySelectorAll(".video-showcase-card, .step-card, .howtobuy-contact-banner")
+      .forEach((el) => reveal.observe(el));
+
+    return () => {
+      reveal.disconnect();
+    };
+  }, [lang]);
+
+  return (
+    <div className="howtobuy-page-wrapper" ref={wrapperRef}>
+      {/* Hero Banner */}
+      <header className="howtobuy-hero">
+        <div className="hero-content">
+
+          <h1 className="hero-title">
+            {lang === "en" ? (
+              <>
+                How to Buy on <span className="title-accent">Tizaraa</span>
+              </>
+            ) : (
+              <>
+                টিজারা থেকে <span className="title-accent">পণ্য কেনার নিয়ম</span>
+              </>
+            )}
+          </h1>
+
+          <p className="hero-subtitle">
+            {lang === "en"
+              ? "Follow our simple step-by-step shopping guide for a smooth, fast, and 100% secure online shopping experience."
+              : "খুব সহজে, দ্রুত এবং শতভাগ নিরাপদে টিজারা থেকে পছন্দের পণ্য অর্ডার করার বিস্তারিত গাইডলাইন।"}
+          </p>
+
+          {/* Language Switcher Tabs */}
+          <div className="lang-switcher">
+            <button
+              type="button"
+              className={`lang-btn ${lang === "en" ? "active" : ""}`}
+              onClick={() => setLang("en")}
+            >
+              🇬🇧 English
+            </button>
+            <button
+              type="button"
+              className={`lang-btn ${lang === "bn" ? "active" : ""}`}
+              onClick={() => setLang("bn")}
+            >
+              🇧🇩 বাংলা
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container main-content-container">
+        {/* Video Tutorial Card */}
+        <section className="video-showcase-card">
+          <div className="video-header">
+            <div className="video-header-left">
+              <div className="video-icon-badge">▶</div>
+              <div>
+                <h3 className="video-title">
+                  {lang === "en" ? "Video Tutorial & Buying Process" : "ভিডিও টিউটোরিয়াল ও কেনাকাটার নিয়ম"}
+                </h3>
+                <p className="video-subtitle">
+                  {lang === "en"
+                    ? "Watch our quick visual walkthrough to master ordering on Tizaraa"
+                    : "ভিডিও দেখে সহজে বুঝে নিন কীভাবে অর্ডার সম্পন্ন করবেন"}
+                </p>
+              </div>
+            </div>
+            <div className="video-tag">
+              <span>HD Video Guide</span>
+            </div>
+          </div>
+
+          <div className="video-wrapper">
+            <iframe
+              src="https://www.youtube.com/embed/BwK5RRfs-mg?si=6aOtgmJKc-tVETEK"
+              title="How to Buy on Tizaraa Video Guide"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </section>
+
+        {/* Section Headline */}
+        <div className="section-headline">
+          <h2>{lang === "en" ? "Step-by-Step Purchasing Guide" : "ধাপে ধাপে পণ্য কেনার নির্দেশিকা"}</h2>
+          <p>
+            {lang === "en"
+              ? "Everything you need to know from product search to doorstep delivery"
+              : "পণ্য খোঁজা থেকে শুরু করে হোম ডেলিভারি পর্যন্ত সম্পূর্ণ নিয়মাবলি"}
+          </p>
+        </div>
+
+        {/* 9-Step Interactive Grid */}
+        <div className="steps-grid">
+          {stepsData.map((step) => (
+            <article key={step.number} className="step-card">
+              <div className="step-card-header">
+                <span className="step-number-pill">{step.number}</span>
+                <div className="step-icon-bubble">{step.icon}</div>
+              </div>
+              <h3 className="step-title">{lang === "en" ? step.titleEn : step.titleBn}</h3>
+              <p className="step-desc">{lang === "en" ? step.descEn : step.descBn}</p>
+            </article>
+          ))}
+        </div>
+
+        {/* Contact / Help Banner */}
+        <section className="howtobuy-contact-banner">
+          <div className="contact-banner-content">
+            <h3>{lang === "en" ? "Need help with placing an order?" : "অর্ডার করতে কোনো সমস্যা হচ্ছে?"}</h3>
+            <p>
+              {lang === "en"
+                ? "Our customer care team is available Sat - Thu (9 AM - 6 PM) to assist you."
+                : "আমাদের সাপোর্ট টিম শনি থেকে বৃহস্পতি (সকাল ৯টা - সন্ধ্যা ৬টা) আপনাকে সাহায্য করতে প্রস্তুত।"}
+            </p>
+          </div>
+          <div className="contact-banner-actions">
+            <a href="tel:+8801792223444" className="banner-call-btn">
+              <span>📞 01792223444</span>
+            </a>
+            <Link href="/helpCenter" className="banner-secondary-btn">
+              {lang === "en" ? "Visit Help Center" : "হেল্প সেন্টার"}
+            </Link>
+            <Link href="/orderTracking" className="banner-secondary-btn">
+              {lang === "en" ? "Track Order" : "অর্ডার ট্র্যাক"}
+            </Link>
+          </div>
+        </section>
+      </main>
     </div>
-   </div>
-  </>
- );
-};
-
-export default Tizaraa;
+  );
+}

@@ -1,5 +1,6 @@
 "use client";
 import { Fragment, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { format } from "date-fns";
 import { currency } from "@utils/utils";
 import axios from "@lib/axiosClient";
@@ -541,6 +542,16 @@ const InvoiceDialog = styled.div`
  .iv-head .od-icon-btn svg {
   width: 16px;
   height: 16px;
+ }
+ /* rendered in a portal, so the page wrapper's hover/focus rules don't reach here */
+ .iv-head .od-icon-btn:hover {
+  border-color: ${({ theme }) => theme.tz.color.ember};
+  color: ${({ theme }) => theme.tz.color.emberDeep};
+ }
+ .iv-head .od-btn:focus-visible,
+ .iv-head .od-icon-btn:focus-visible {
+  outline: none;
+  box-shadow: ${({ theme }) => theme.tz.focusRing};
  }
  iframe {
   flex: 1;
@@ -1416,6 +1427,7 @@ export default function OrderDetails({ params }: IDParams) {
               return_deadline={details.return_deadline}
               server_time={details.server_time}
               isCorporate={isCorporateOrder}
+              isCorporateShop={isCorporateInvoice}
              />
             ))}
            </div>
@@ -1426,7 +1438,7 @@ export default function OrderDetails({ params }: IDParams) {
            deliveredAt={details.delivered_at}
            returnStatus={returnDetails[0]?.return_status ?? null}
            returnRecord={returnDetails[0] ?? null}
-           isCorporate={isCorporateOrder}
+           isCorporate={isCorporateInvoice}
            timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
           />
          </Fragment>
@@ -1521,8 +1533,9 @@ export default function OrderDetails({ params }: IDParams) {
     </div>
    </OD>
 
-   {/* Invoice viewer — corporate shop / employee orders only */}
-   {invoiceUrl && isCorporateInvoice && (
+   {/* Invoice viewer — corporate shop / employee orders only. Portalled to <body>
+       so the sticky site header (and the page's own layers) can't cover its top. */}
+   {invoiceUrl && isCorporateInvoice && createPortal(
     <InvoiceDialog
      role="dialog"
      aria-modal="true"
@@ -1547,7 +1560,8 @@ export default function OrderDetails({ params }: IDParams) {
       </div>
       <iframe src={invoiceUrl} title={`Invoice ${order.Order.invoice_id ?? params.id}`} />
      </div>
-    </InvoiceDialog>
+    </InvoiceDialog>,
+    document.body
    )}
   </Fragment>
  );

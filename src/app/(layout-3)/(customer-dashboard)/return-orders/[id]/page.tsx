@@ -594,6 +594,7 @@ export default function OrderDetails({ params }: IDParams) {
               return_deadline={details.return_deadline}
               server_time={details.server_time}
               isCorporate={order?.Order?.payment_method === "corporate_credit"}
+              isCorporateShop={Boolean(order?.Order?.is_corporate)}
              />
             ))}
 
@@ -603,7 +604,7 @@ export default function OrderDetails({ params }: IDParams) {
              deliveredAt={details.delivered_at ?? getEstimateDate}
              returnStatus={returnDetails[0]?.return_status ?? null}
              returnRecord={returnDetails[0] ?? null}
-             isCorporate={order?.Order?.payment_method === "corporate_credit"}
+             isCorporate={Boolean(order?.Order?.is_corporate) || order?.Order?.payment_method === "corporate_credit"}
              timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
             />
             </Box>

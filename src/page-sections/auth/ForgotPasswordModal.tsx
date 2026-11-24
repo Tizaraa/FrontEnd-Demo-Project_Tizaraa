@@ -33,6 +33,8 @@ export default function ForgotPasswordModal({
  const [loading, setLoading] = useState(false);
  const [linkSent, setLinkSent] = useState(false);
  const { secondsLeft, start, stop } = useResetCountdown();
+ // Link lifetime set by the admin; the API sends it as expires_in (seconds)
+ const [linkMinutes, setLinkMinutes] = useState(1);
 
  if (!isOpen) return null;
 
@@ -61,8 +63,10 @@ export default function ForgotPasswordModal({
     `${ApiBaseUrl.localApiUrl}forgot-password`,
     { email: email.trim() },
    );
+   const expiresIn = Number(response.data.expires_in) || 60;
    setLinkSent(true);
-   start(response.data.expires_in ?? 60);
+   setLinkMinutes(Math.max(1, Math.round(expiresIn / 60)));
+   start(expiresIn);
    toast.success(response.data.message);
   } catch (error) {
    const message =
@@ -190,7 +194,7 @@ export default function ForgotPasswordModal({
       <p style={helperStyle}>
        {expired
         ? "The reset link has expired. Send a new one to continue."
-        : `We sent a reset link to ${email}. It is valid for 1 minute only.`}
+        : `We sent a reset link to ${email}. It is valid for ${linkMinutes} ${linkMinutes === 1 ? "minute" : "minutes"} only.`}
       </p>
       <FlexBox
        justifyContent="space-between"

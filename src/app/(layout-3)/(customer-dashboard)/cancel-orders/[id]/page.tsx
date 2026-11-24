@@ -134,6 +134,8 @@ export default function OrderDetails({ params }: IDParams) {
       productType: "Local",
       status: formatStatus(raw.order_status),
       payment_method: raw.payment_method,
+      // corporate shop or company-credit order (API flag); retail otherwise
+      is_corporate: Boolean(raw.is_corporate),
       payment_status: raw.payment_status,
       discount_amount: raw.discount_amount,
       promo_code: raw.promo_code,
@@ -641,7 +643,7 @@ export default function OrderDetails({ params }: IDParams) {
              <OrderStatus
               orderStatus={details?.status ?? getStatus}
               deliveredAt={getEstimateDate}
-              isCorporate={order?.Order?.payment_method === "corporate_credit"}
+              isCorporate={Boolean(order?.Order?.is_corporate) || order?.Order?.payment_method === "corporate_credit"}
               timeline={(details as any).timeline ?? order?.Order?.timeline ?? []}
              />
             </Box>

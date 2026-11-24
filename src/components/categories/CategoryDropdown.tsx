@@ -227,6 +227,7 @@ export default function CategoryDropdown({
 
  return (
   <StyledCategoryDropdown open={open} position={position}>
+   <div className="cat-list">
    {navigations.map((item) => {
     const MegaMenu = megaMenu[item.menuComponent as keyof typeof megaMenu];
 
@@ -243,6 +244,7 @@ export default function CategoryDropdown({
      </CategoryMenuItem>
     );
    })}
+   </div>
   </StyledCategoryDropdown>
  );
 }

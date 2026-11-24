@@ -83,6 +83,15 @@ export const StyledCategoryDropdown = styled.div.withConfig({
   visibility 200ms;
  z-index: 98;
 
+ /* Scroll the rows inside the card. This div is not positioned, so the
+    sub-menu (anchored to the card) is not clipped by it. */
+ .cat-list {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  ${thinScrollbar}
+ }
+
  @media (prefers-reduced-motion: reduce) {
   transition: none;
   transform: none;
