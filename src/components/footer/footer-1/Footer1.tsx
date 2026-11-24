@@ -329,13 +329,18 @@ export default function Footer1() {
        </div>
        {g.title === "Earn With Tizaraa" && (
         <div className="footer-verified">
-         <h3 className="footer-heading as-title">Verified business</h3>
-         <dl>
-          <div>
+         <h3 className="footer-heading as-title">
+          <span className="verified-shield">
+           <Ico d={ICON.check} size={15} />
+          </span>
+          Verified business
+         </h3>
+         <dl className="verified-cards">
+          <div className="verified-card">
            <dt>DBID</dt>
            <dd>144381902</dd>
           </div>
-          <div>
+          <div className="verified-card">
            <dt>Trade License</dt>
            <dd>TRAD/DNCC/010245/2024</dd>
           </div>

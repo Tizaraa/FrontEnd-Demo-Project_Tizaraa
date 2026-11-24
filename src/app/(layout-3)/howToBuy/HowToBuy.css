@@ -1,0 +1,497 @@
+/* ==========================================================================
+   Tizaraa How to Buy Page Styling (Modern Navy Theme & Animations)
+   ========================================================================== */
+
+.howtobuy-page-wrapper {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  color: #1e293b;
+  padding-bottom: 80px;
+}
+
+/* 1. Hero Header Banner */
+.howtobuy-hero {
+  background: radial-gradient(120% 120% at 15% 0%, #1d4f8c 0%, transparent 55%),
+    linear-gradient(150deg, #0e3460 0%, #0b1a33 60%, #090d18 100%);
+  position: relative;
+  padding: 68px 32px 64px;
+  text-align: center;
+  color: #ffffff;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  isolation: isolate;
+  animation: lp-rise 700ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.howtobuy-hero::before,
+.howtobuy-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.howtobuy-hero::before {
+  top: -40%;
+  right: -10%;
+  width: 50%;
+  height: 120%;
+  background: #f05023;
+  opacity: 0.35;
+  animation: lp-drift 16s ease-in-out infinite;
+}
+
+.howtobuy-hero::after {
+  bottom: -60%;
+  left: -10%;
+  width: 45%;
+  height: 120%;
+  background: #2b6cb0;
+  opacity: 0.45;
+  animation: lp-drift 20s ease-in-out -8s infinite;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.hero-chip-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ff9a5c;
+  background: rgba(240, 80, 35, 0.12);
+  border: 1px solid rgba(240, 80, 35, 0.28);
+  padding: 6px 14px;
+  border-radius: 30px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(6px);
+  animation: lp-rise 600ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #f05023;
+  box-shadow: 0 0 8px #f05023;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin: 0 0 14px;
+  color: #ffffff !important;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+.hero-title .title-accent {
+  background: linear-gradient(110deg, #ff9a5c 0%, #f05023 40%, #ffd2b8 50%, #f05023 60%, #ff9a5c 100%) !important;
+  background-size: 250% 100% !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: lp-shine 2s cubic-bezier(0.2, 0, 0, 1) 400ms both;
+}
+
+.hero-subtitle {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #cbd5e1 !important;
+  margin: 0 auto 28px;
+  max-width: 620px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  animation: lp-rise 700ms cubic-bezier(0.2, 0, 0, 1) 120ms both;
+}
+
+/* Language Switcher Tabs */
+.lang-switcher {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 4px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  animation: lp-rise 700ms cubic-bezier(0.2, 0, 0, 1) 220ms both;
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.lang-btn.active {
+  background: #f05023;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(240, 80, 35, 0.4);
+}
+
+/* 2. Container & Layout */
+.main-content-container {
+  max-width: 1100px;
+  margin: -32px auto 0;
+  padding: 0 20px;
+  position: relative;
+  z-index: 3;
+}
+
+/* 3. Video / Media Showcase Card */
+.video-showcase-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  box-shadow: 0 12px 36px -4px rgba(14, 52, 96, 0.08);
+  margin-bottom: 36px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-showcase-card:hover {
+  box-shadow: 0 18px 44px -4px rgba(14, 52, 96, 0.12);
+}
+
+.video-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.video-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.video-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4444;
+  font-size: 20px;
+}
+
+.video-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.video-subtitle {
+  font-size: 13.5px;
+  color: #64748b;
+  margin: 2px 0 0;
+}
+
+.video-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: #f1f5f9;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.video-wrapper {
+  position: relative;
+  padding-bottom: 52%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #000;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* 4. Section Heading */
+.section-headline {
+  text-align: center;
+  margin: 40px 0 28px;
+}
+
+.section-headline h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 8px;
+  letter-spacing: -0.3px;
+}
+
+.section-headline p {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* 5. Modern Steps Grid */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.step-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 300ms cubic-bezier(0.2, 0, 0, 1), box-shadow 300ms ease, border-color 300ms ease;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+}
+
+.step-card:hover {
+  transform: translateY(-4px);
+  border-color: #cbd5e1;
+  box-shadow: 0 12px 28px -4px rgba(14, 52, 96, 0.1);
+}
+
+.step-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.step-number-pill {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(240, 80, 35, 0.12), rgba(240, 80, 35, 0.05));
+  color: #f05023;
+  border: 1px solid rgba(240, 80, 35, 0.22);
+}
+
+.step-icon-bubble {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.step-card:hover .step-icon-bubble {
+  transform: scale(1.08);
+  background: #fff6f1;
+  border-color: #fbd5c6;
+}
+
+.step-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 10px;
+  line-height: 1.35;
+}
+
+.step-desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #475569;
+  margin: 0;
+  flex: 1;
+}
+
+/* 6. Contact & Assistance Banner */
+.howtobuy-contact-banner {
+  background: radial-gradient(120% 120% at 20% 0%, #1e4b85 0%, transparent 60%),
+    linear-gradient(145deg, #0e3460 0%, #0a1728 100%);
+  border-radius: 20px;
+  padding: 36px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-shadow: 0 16px 40px rgba(14, 52, 96, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  flex-wrap: wrap;
+}
+
+.contact-banner-content h3 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff !important;
+  margin: 0 0 6px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.contact-banner-content p {
+  margin: 0;
+  font-size: 14.5px;
+  color: #cbd5e1 !important;
+}
+
+.contact-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.banner-call-btn {
+  background: #f05023;
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 22px;
+  border-radius: 12px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(240, 80, 35, 0.35);
+}
+
+.banner-call-btn:hover {
+  background: #c2400f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(240, 80, 35, 0.45);
+}
+
+.banner-secondary-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.banner-secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+
+/* 7. Animations */
+@keyframes lp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes lp-fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes lp-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(8%, 6%, 0) scale(1.12);
+  }
+}
+
+@keyframes lp-shine {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0% 0;
+  }
+}
+
+/* Scroll reveal classes */
+.howtobuy-page-wrapper.reveal-ready .video-showcase-card,
+.howtobuy-page-wrapper.reveal-ready .step-card,
+.howtobuy-page-wrapper.reveal-ready .howtobuy-contact-banner {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 600ms cubic-bezier(0.2, 0, 0, 1), transform 600ms cubic-bezier(0.2, 0, 0, 1), box-shadow 300ms, border-color 300ms;
+}
+
+.howtobuy-page-wrapper.reveal-ready .is-in {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .howtobuy-page-wrapper *,
+  .howtobuy-page-wrapper *::before,
+  .howtobuy-page-wrapper *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .howtobuy-page-wrapper.reveal-ready .video-showcase-card,
+  .howtobuy-page-wrapper.reveal-ready .step-card,
+  .howtobuy-page-wrapper.reveal-ready .howtobuy-contact-banner {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .howtobuy-hero {
+    padding: 48px 20px 48px;
+  }
+  .hero-title {
+    font-size: 26px;
+  }
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+  .howtobuy-contact-banner {
+    padding: 24px 20px;
+  }
+}

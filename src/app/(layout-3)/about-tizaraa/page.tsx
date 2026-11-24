@@ -1,257 +1,269 @@
-import Head from "next/head";
-import "../about-tizaraa/about.css";
+"use client";
 
-export default function AboutUs() {
- return (
-  <>
-   <Head>
-    <title>About Us | Tizaraa</title>
-    <meta
-     name="description"
-     content="Learn about Tizaraa's story, mission, and what makes us your ideal online shopping destination"
-    />
-   </Head>
+import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import "./about.css";
 
-   <main className="container">
-    {/* Hero Section */}
-    <section className="hero">
-     <h1 className="mainTitle">About Tizaraa</h1>
-     <div className="section">
-      <h2 className="sectionTitle">Our Story</h2>
-      <p className="sectionText">
-       Welcome to Tizaraa, your go-to destination for a seamless and diverse
-       online shopping experience. Founded in [Year], Tizaraa was born out of a
-       passion for connecting buyers with quality products from trusted sellers
-       across the globe.
-      </p>
-     </div>
-    </section>
+export default function AboutUsPage() {
+  const [lang, setLang] = useState<"en" | "bn">("en");
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-    {/* Mission Section */}
-    <section className="section">
-     <h2 className="sectionTitle">Mission & Vision</h2>
-     <p className="sectionText">
-      At Tizaraa, our mission is to provide a reliable and user-friendly
-      platform that empowers both buyers and sellers. We strive to create a
-      vibrant online marketplace where everyone can discover unique products,
-      build lasting connections, and experience the joy of hassle-free
-      transactions.
-     </p>
-    </section>
+  useEffect(() => {
+    const root = wrapperRef.current;
+    if (!root) return;
 
-    {/* Trade License */}
-    <section className="section">
-     <h2 className="sectionTitle">Trade License</h2>
-     <p className="sectionText">
-      Tizaraa is a legally registered business with the appropriate trade
-      licenses to operate in the e-commerce space. Our Trade License Number is{" "}
-      <strong>TRAD/DNCC/010245/2024</strong>. We are committed to complying with
-      all local regulations and standards to ensure a safe and reliable shopping
-      experience.
-     </p>
+    root.classList.add("reveal-ready");
+    const reveal = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-in");
+            reveal.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.08 }
+    );
 
-     <h2 className="sectionTitle">Digital Business Identification (DBID)</h2>
-     <p className="sectionText">
-      As a registered digital commerce entity, Tizaraa holds a valid Digital
-      Business Identification Number: <strong>144381902</strong>. We are
-      committed to complying with all local regulations and standards to ensure
-      a safe and reliable shopping experience.
-     </p>
-    </section>
+    root
+      .querySelectorAll(
+        ".about-story-card, .trust-badge-card, .feature-card, .commitment-card, .delivery-quick-card, .about-contact-banner"
+      )
+      .forEach((el) => reveal.observe(el));
 
-    {/* What Sets Us Apart */}
-    <section className="section">
-     <h2 className="sectionTitle">What Sets Us Apart</h2>
+    return () => {
+      reveal.disconnect();
+    };
+  }, [lang]);
 
-     <div className="featureGrid">
-      <div className="featureCard">
-       <h3 className="featureTitle">Curated Selection</h3>
-       <p>
-        We take pride in curating a collection of products that align with our
-        commitment to quality, innovation, and style. Every item in our
-        inventory is handpicked to ensure it meets our high standards.
-       </p>
-      </div>
+  return (
+    <div className="about-page-wrapper" ref={wrapperRef}>
+      {/* Hero Banner */}
+      <header className="about-hero">
+        <div className="about-hero-content">
 
-      <div className="featureCard">
-       <h3 className="featureTitle">Customer-Centric Approach</h3>
-       <p>
-        At Tizaraa, customers are at the heart of everything we do. Our
-        dedicated customer support team is always ready to assist you with any
-        questions or needs.
-       </p>
-      </div>
+          <h1 className="about-title">
+            {lang === "en" ? (
+              <>
+                About <span className="title-accent">Tizaraa</span>
+              </>
+            ) : (
+              <>
+                টিজারা <span className="title-accent">সম্পর্কে জানুন</span>
+              </>
+            )}
+          </h1>
 
-      <div className="featureCard">
-       <h3 className="featureTitle">Secure Shopping</h3>
-       <p>
-        We've invested in the latest technology to ensure your transactions are
-        safe and your personal information is protected.
-       </p>
-      </div>
+          <p className="about-subtitle">
+            {lang === "en"
+              ? "Connecting millions of shoppers with verified merchants and genuine products through technology, trust, and exceptional service."
+              : "প্রযুক্তি, বিশ্বাস এবং সেরা সেবার সমন্বয়ে কোটি ক্রেতাকে বিশ্বস্ত বিক্রেতা ও আসল পণ্যের সাথে সংযুক্ত করছি।"}
+          </p>
 
-      <div className="featureCard">
-       <h3 className="featureTitle">Innovation and Technology</h3>
-       <p>
-        Tizaraa embraces the latest in e-commerce technology to provide a
-        modern, efficient, and reliable platform.
-       </p>
-      </div>
-     </div>
-    </section>
+          {/* Language Switcher Tabs */}
+          <div className="lang-switcher">
+            <button
+              type="button"
+              className={`lang-btn ${lang === "en" ? "active" : ""}`}
+              onClick={() => setLang("en")}
+            >
+              🇬🇧 English
+            </button>
+            <button
+              type="button"
+              className={`lang-btn ${lang === "bn" ? "active" : ""}`}
+              onClick={() => setLang("bn")}
+            >
+              🇧🇩 বাংলা
+            </button>
+          </div>
+        </div>
+      </header>
 
-    {/* Our Commitment */}
-    <section className="section">
-     <h2 className="sectionTitle">Our Commitment</h2>
+      {/* Main Content */}
+      <main className="container main-content-container">
+        {/* Story Section Card */}
+        <section className="about-story-card">
+          <div className="story-icon-box">📖</div>
+          <div className="story-text-box">
+            <h2>{lang === "en" ? "Our Story" : "আমাদের গল্প"}</h2>
+            <p>
+              {lang === "en"
+                ? "Welcome to Tizaraa, your premier destination for a seamless and diverse online shopping experience. Founded in 2024, Tizaraa was born out of a passion for connecting buyers with high-quality, authentic products from trusted, vetted sellers across Bangladesh and beyond."
+                : "তিজারা একটি আধুনিক অনলাইন মার্কেটপ্লেস, যেখানে ক্রেতা ও বিক্রেতারা নির্বিঘ্নে ও নিরাপদে লেনদেনের অভিজ্ঞতা উপভোগ করতে পারেন। বিশ্বস্ত বিক্রেতাদের মানসম্মত ও আসল পণ্য সরাসরি গ্রাহকের দোরগোড়ায় পৌঁছে দেয়ার প্রত্যয় নিয়ে আমাদের পথচলা।"}
+            </p>
+          </div>
+        </section>
 
-     <div className="commitmentGrid">
-      <div className="commitmentCard">
-       <h3 className="featureTitle">Quality Assurance</h3>
-       <p>
-        Tizaraa is committed to ensuring the quality of products on our
-        platform. We work closely with sellers to maintain high standards.
-       </p>
-      </div>
+        {/* Mission & Vision Card */}
+        <section className="about-story-card">
+          <div className="story-icon-box">🎯</div>
+          <div className="story-text-box">
+            <h2>{lang === "en" ? "Mission & Vision" : "মিশন ও ভিশন"}</h2>
+            <p>
+              {lang === "en"
+                ? "Our mission is to build a reliable, accessible, and user-friendly digital ecosystem that empowers both everyday consumers and forward-thinking merchants. We strive to create a vibrant marketplace where anyone can discover unique products, experience hassle-free delivery, and enjoy 100% genuine customer protection."
+                : "আমাদের লক্ষ্য হলো একটি নির্ভরযোগ্য, প্রযুক্তিনির্ভর ও সহজ অনলাইন শপিং প্ল্যাটফর্ম গড়ে তোলা, যা ক্রেতা ও বিক্রেতা উভয়কেই ক্ষমতায়ন করে। গ্রাহকের সন্তুষ্টি ও আস্থা বজায় রেখে দেশের ই-কমার্স সেক্টরে ইতিবাচক পরিবর্তন আনাই আমাদের প্রধান ভিশন।"}
+            </p>
+          </div>
+        </section>
 
-      <div className="commitmentCard">
-       <h3 className="featureTitle">Community Building</h3>
-       <p>
-        Beyond transactions, Tizaraa is a community. Join us in building
-        connections and sharing experiences.
-       </p>
-      </div>
-     </div>
-    </section>
+        {/* Verified Licensing & Trust Cards */}
+        <div className="about-trust-grid">
+          <div className="trust-badge-card">
+            <div className="trust-icon-pill">📜</div>
+            <div className="trust-content">
+              <h3>{lang === "en" ? "Government Trade License" : "সরকারি ট্রেড লাইসেন্স"}</h3>
+              <span className="trust-license-num">TRAD/DNCC/010245/2024</span>
+              <p>
+                {lang === "en"
+                  ? "Fully registered business compliant with all municipal e-commerce regulations."
+                  : "ঢাকা উত্তর সিটি কর্পোরেশনের আওতাভুক্ত পূর্ণাঙ্গ ও বৈধ ট্রেড লাইসেন্সপ্রাপ্ত প্রতিষ্ঠান।"}
+              </p>
+            </div>
+          </div>
 
-    {/* Shipping Information */}
-    <section className="section">
-     <h2 className="sectionTitle">Shipping Information</h2>
-     <p className="sectionText">
-      We are committed to delivering your orders in a timely manner. Here's our
-      shipping policy:
-     </p>
-     <ul className="shippingList">
-      <li>Inside Dhaka: Delivery within 3 business days</li>
-      <li>Outside Dhaka: Delivery within 5 business days</li>
-     </ul>
-    </section>
+          <div className="trust-badge-card">
+            <div className="trust-icon-pill">🛡️</div>
+            <div className="trust-content">
+              <h3>{lang === "en" ? "Digital Commerce ID (DBID)" : "ডিজিটাল কমার্স আইডি (DBID)"}</h3>
+              <span className="trust-license-num">144381902</span>
+              <p>
+                {lang === "en"
+                  ? "Ministry of Commerce certified digital business identification for consumer trust."
+                  : "গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের বাণিজ্য মন্ত্রণালয় কর্তৃক অনুমোদিত ডিজিটাল কমার্স আইডি।"}
+              </p>
+            </div>
+          </div>
+        </div>
 
-    {/*  ============================================  */}
+        {/* What Sets Us Apart */}
+        <div className="section-headline">
+          <h2>{lang === "en" ? "What Sets Tizaraa Apart" : "কেন তিজারা সবার চেয়ে আলাদা"}</h2>
+          <p>
+            {lang === "en"
+              ? "Discover the core principles that make us the preferred marketplace for smart shoppers"
+              : "গ্রাহকের সন্তুষ্টি ও সেরা অনলাইন শপিং নিশ্চিত করতে আমাদের বিশেষ সুবিধাসমূহ"}
+          </p>
+        </div>
 
-    {/* Hero Section - Bangla */}
-    <div className="section bangla-section">
-     <h2 className="sectionTitle">আমাদের গল্প</h2>
-     <p className="sectionText">
-      তিজারা একটি অনলাইন মার্কেটপ্লেস, যেখানে ক্রেতা ও বিক্রেতারা নির্বিঘ্নে ও
-      নিরাপদে কেনাকাটার অভিজ্ঞতা উপভোগ করতে পারেন। ২০২৫-এ যাত্রা শুরুর মাধ্যমে,
-      আমরা এমন একটি প্ল্যাটফর্ম হিসেবে নিজেদের গড়ে তুলছি, যা বিশ্বস্ত
-      বিক্রেতাদের মানসম্মত পণ্য ক্রেতাদের কাছে সরবরাহ করবে এবং একটু সুসম্পর্ক
-      গড়ে তুলবে।
-     </p>
+        <div className="feature-grid">
+          <div className="feature-card">
+            <div className="feature-icon-wrap">✨</div>
+            <h3>{lang === "en" ? "Curated Quality Selection" : "বাছাইকৃত মানসম্মত পণ্য"}</h3>
+            <p>
+              {lang === "en"
+                ? "Every item on our platform undergoes strict vetting to ensure only 100% genuine and high-grade goods reach you."
+                : "আমাদের প্রতিটি পণ্য কঠোর মান নিয়ন্ত্রণ ও যাচাইয়ের মধ্য দিয়ে যায়, যাতে আপনি সবসময় আসল পণ্য পান।"}
+            </p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon-wrap">🤝</div>
+            <h3>{lang === "en" ? "Customer-Centric Care" : "গ্রাহক-বান্ধব সেবা"}</h3>
+            <p>
+              {lang === "en"
+                ? "Dedicated 6-days-a-week hotline and instant live support to answer queries and resolve order requests promptly."
+                : "সপ্তাহে ৬ দিন নিবেদিত কল সেন্টার ও চ্যাট সাপোর্ট, যা আপনার যেকোনো জিজ্ঞাসা ও সমস্যায় পাশে থাকে।"}
+            </p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon-wrap">🔒</div>
+            <h3>{lang === "en" ? "Bank-Grade Secure Shopping" : "নিরাপদ পেমেন্ট গেটওয়ে"}</h3>
+            <p>
+              {lang === "en"
+                ? "End-to-end encryption with Cash on Delivery, bKash, Nagad, and secure credit card checkouts."
+                : "সর্বোচ্চ স্তরের এনক্রিপশন ও ক্যাশ অন ডেলিভারি, বিকাশ ও কার্ডের মাধ্যমে শতভাগ নিরাপদ লেনদেন।"}
+            </p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon-wrap">⚡</div>
+            <h3>{lang === "en" ? "Modern Technology & Speed" : "আধুনিক প্রযুক্তি ও গতি"}</h3>
+            <p>
+              {lang === "en"
+                ? "Ultra-fast Next.js architecture, real-time live order tracking, and intuitive mobile shopping experience."
+                : "আল্ট্রা-ফাস্ট প্ল্যাটফর্ম এবং প্রতিটি পার্সেল ট্র্যাকিংয়ের জন্য রিয়েল-টাইম অর্ডার ট্র্যাকিং প্রযুক্তি।"}
+            </p>
+          </div>
+        </div>
+
+        {/* Commitment Section */}
+        <div className="section-headline">
+          <h2>{lang === "en" ? "Our Core Commitments" : "আমাদের প্রতিশ্রুতি"}</h2>
+          <p>
+            {lang === "en"
+              ? "Uncompromising dedication to product authenticity and community growth"
+              : "মানের ক্ষেত্রে কোনো আপোষ নয় এবং একটি বিশ্বস্ত ই-কমার্স পরিবেশ গড়ে তোলা"}
+          </p>
+        </div>
+
+        <div className="commitment-grid">
+          <div className="commitment-card">
+            <h3>🛡️ {lang === "en" ? "Quality Assurance Guarantee" : "গুণগত মানে আপোষহীন নিশ্চয়তা"}</h3>
+            <p>
+              {lang === "en"
+                ? "Tizaraa is deeply committed to ensuring product authenticity. We partner directly with verified merchants, brand authorized distributors, and local manufacturers with easy return and warranty policies."
+                : "আমরা সরাসরি ভেরিফাইড মার্চেন্ট, অথরাইজড ডিস্ট্রিবিউটর ও প্রস্তুতকারকদের সাথে কাজ করি। কোনো পণ্যে ত্রুটি থাকলে ঝামেলাহীন রিপ্লেসমেন্ট ও রিটার্ন সুবিধা নিশ্চিত করা হয়।"}
+            </p>
+          </div>
+
+          <div className="commitment-card">
+            <h3>🌐 {lang === "en" ? "Vibrant Connected Community" : "একটি সংযুক্ত ডিজিটাল কমিউনিটি"}</h3>
+            <p>
+              {lang === "en"
+                ? "Beyond ordinary transactions, Tizaraa empowers local micro-entrepreneurs and connects shoppers with genuine value, creating a transparent and sustainable e-commerce network."
+                : "তিজারা কেবল একটি শপিং সাইট নয়—এটি হাজারো দেশীয় উদ্যোক্তা ও স্মার্ট ক্রেতার একটি মেলবন্ধন, যা বাংলাদেশের ডিজিটাল অর্থনীতিকে এগিয়ে নিয়ে যাচ্ছে।"}
+            </p>
+          </div>
+        </div>
+
+        {/* Delivery Timeline Quick Strip */}
+        <div className="delivery-quick-card">
+          <div className="delivery-quick-left">
+            <h3>🚚 {lang === "en" ? "Nationwide Delivery Timeline" : "ডেলিভারি সময়সীমা"}</h3>
+            <p>
+              {lang === "en"
+                ? "Fast and reliable doorstep delivery to all 64 districts in Bangladesh"
+                : "সমগ্র বাংলাদেশে দ্রুততম হোম ডেলিভারি নিশ্চয়তা"}
+            </p>
+          </div>
+          <div className="delivery-badges-group">
+            <div className="delivery-badge">
+              <span className="badge-dot-green" />
+              <span>{lang === "en" ? "Inside Dhaka: 2 - 3 Days" : "ঢাকার ভেতরে: ২ - ৩ কার্যদিবস"}</span>
+            </div>
+            <div className="delivery-badge">
+              <span className="badge-dot-green" />
+              <span>{lang === "en" ? "Outside Dhaka: 3 - 5 Days" : "ঢাকার বাইরে: ৩ - ৫ কার্যদিবস"}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Contact / Help Banner */}
+        <section className="about-contact-banner">
+          <div>
+            <h3>{lang === "en" ? "Have Questions or Need Assistance?" : "কোনো প্রশ্ন বা সহায়তা প্রয়োজন?"}</h3>
+            <p>
+              {lang === "en"
+                ? "Our support team is always available to help you make informed shopping decisions."
+                : "আমাদের কাস্টমার কেয়ার টিম শনি থেকে বৃহস্পতি (সকাল ৯টা - সন্ধ্যা ৬টা) আপনার সহযোগিতায় প্রস্তুত।"}
+            </p>
+          </div>
+          <div className="banner-actions">
+            <a href="tel:+8801792223444" className="banner-call-btn">
+              <span>📞 01792223444</span>
+            </a>
+            <Link href="/helpCenter" className="banner-secondary-btn">
+              {lang === "en" ? "Help Center" : "হেল্প সেন্টার"}
+            </Link>
+            <Link href="/contact" className="banner-secondary-btn">
+              {lang === "en" ? "Contact Us" : "যোগাযোগ করুন"}
+            </Link>
+          </div>
+        </section>
+      </main>
     </div>
-
-    {/* Mission Section - Bangla */}
-    <div className="section bangla-section">
-     <h2 className="sectionTitle">মিশন ও ভিশন</h2>
-     <p className="sectionText">
-      আমাদের লক্ষ্য হলো একটি বিশ্বাসযোগ্য, সহজে ব্যবহারযোগ্য এবং প্রযুক্তিনির্ভর
-      অনলাইন মার্কেটপ্লেস তৈরি করা, যেখানে ক্রেতা ও বিক্রেতা উভয়ই বিভিন্ন
-      সুযোগ-সুবিধার পাশাপাশি অভিনব একটি শপিং অভিজ্ঞতা পাবেন।
-     </p>
-    </div>
-
-    {/* Trade License - Bangla */}
-    <div className="section bangla-section">
-     <h2 className="sectionTitle">ট্রেড লাইসেন্স ও বৈধতা</h2>
-     <p className="sectionText">
-      তিজারা একটি বৈধভাবে নিবন্ধিত ব্যবসা প্রতিষ্ঠান, যার ট্রেড লাইসেন্স নম্বর{" "}
-      <strong>TRAD/DNCC/010245/2024</strong>। আমরা বাংলাদেশের প্রযোজ্য আইন ও
-      ই-কমার্স নীতিমালা অনুযায়ী পরিচালিত হচ্ছি এবং গ্রাহকদের একটি সুরক্ষিত ও
-      নির্ভরযোগ্য কেনাকাটার অভিজ্ঞতা প্রদানে প্রতিশ্রুতিবদ্ধ।
-     </p>
-    </div>
-
-    {/* What Sets Us Apart - Bangla */}
-    <div className="section bangla-section">
-     <h2 className="sectionTitle">আমাদের বৈশিষ্ট্য</h2>
-     <div className="featureGrid">
-      <div className="featureCard">
-       <h3 className="featureTitle">মানসম্পন্ন পণ্যের সংগ্রহ</h3>
-       <p>
-        আমরা প্রতিটি যথাযথ বাছাই পদ্ধতি অনুসরণের মাধ্যমে আমাদের প্ল্যাটফর্মে
-        যুক্ত করি। গুণমান, নান্দনিকতা ও কার্যকারিতার দিক বিবেচনা করেই আমরা
-        আমাদের ইনভেন্টরি গড়ে তুলি, যেন ক্রেতারা সর্বোত্তম পণ্য গ্রহণ করতে
-        পারেন।
-       </p>
-      </div>
-      <div className="featureCard">
-       <h3 className="featureTitle">গ্রাহক-কেন্দ্রিক সেবা</h3>
-       <p>
-        আমাদের সেবার কেন্দ্রে রয়েছে আমাদের সম্মানিত গ্রাহকরা। পণ্যের তথ্য,
-        অর্ডার সংক্রান্ত সহযোগিতা কিংবা পরামর্শ - আমাদের অভিজ্ঞ কাস্টমার সাপোর্ট
-        টিম সবসময় প্রস্তুত থাকছে সহায়তার জন্য।
-       </p>
-      </div>
-      <div className="featureCard">
-       <h3 className="featureTitle">নিরাপদ এবং সুবিধাজনক কেনাকাটা</h3>
-       <p>
-        তিজারা সেরা নিরাপত্তা প্রযুক্তি ব্যবহার করে ক্রেতাদের ব্যাক্তিগত ও
-        লেনদেন সংক্রান্ত তথ্য সুরক্ষিত রাখে। আপনার ব্যক্তিগত গোপনীয়তা এবং
-        লেনদেনের নিরাপত্তা আমাদের সর্বোচ্চ অগ্রাধিকার।
-       </p>
-      </div>
-      <div className="featureCard">
-       <h3 className="featureTitle">উদ্ভাবন ও প্রযুক্তির সমন্বয়</h3>
-       <p>
-        আমরা সর্বদা চেষ্টা করি আধুনিক প্রযুক্তির সঙ্গে তাল মিলিয়ে একটি উন্নত,
-        সহজ ও দক্ষ অনলাইন শপিং প্ল্যাটফর্ম গড়ে তুলতে। আমাদের ওয়েবসাইট ও
-        অ্যাপের ব্যবহারযোগ্যতা নিয়মিত উন্নত করা হয়, যেন আপনার অভিজ্ঞতা
-        সর্বোচ্চ মানের হয়।
-       </p>
-      </div>
-     </div>
-    </div>
-
-    {/* Our Commitment - Bangla */}
-    <div className="section bangla-section">
-     <h2 className="sectionTitle">আমাদের প্রতিশ্রুতি</h2>
-     <div className="commitmentGrid">
-      <div className="commitmentCard">
-       <h3 className="featureTitle">গুণগত মানে আপোষ নয়</h3>
-       <p>
-        আমরা আমাদের প্ল্যাটফর্মে পণ্যের গুণগত মান বজায় রাখার জন্য সর্বোচ্চ
-        গুরুত্ব দিয়ে থাকি। এজন্য আমরা নিয়মিতভাবে আমাদের বিক্রেতা ও পণ্য যাচাই
-        করি।
-       </p>
-      </div>
-      <div className="commitmentCard">
-       <h3 className="featureTitle">একটি সংযুক্ত কমিউনিটি</h3>
-       <p>
-        তিজারা শুধু একটি কেনাকাটার জায়গা নয় - এটি একটি অনলাইন কমিউনিটি। যেখানে
-        বিক্রেতা ও ক্রেতা পরস্পরের সঙ্গে সংযোগ স্থাপন করে, অভিজ্ঞতা ভাগ করে নেয়
-        এবং একসঙ্গে একটি নির্ভরযোগ্য ই-কমার্স পরিবেশ গড়ে তোলে।
-       </p>
-      </div>
-     </div>
-    </div>
-
-    {/* Shipping Information - Bangla */}
-    <div className="section bangla-section">
-     <h2 className="sectionTitle">শিপিং সংক্রান্ত তথ্য</h2>
-     <p className="sectionText">
-      আমরা সময়মত আপনার অর্ডার সরবরাহ করতে প্রতিশ্রুতিবদ্ধ। আমাদের শিপিং নীতি
-      এখানে দেওয়া হল:
-     </p>
-     <ul className="shippingList">
-      <li>ঢাকার ভিতরে: ৩ কার্যদিবসের মধ্যে ডেলিভারি</li>
-      <li>ঢাকার বাইরে: ৫ কার্যদিবসের মধ্যে ডেলিভারি</li>
-     </ul>
-     <p className="sectionText" style={{ marginTop: "1rem" }}>
-      আপনার অনলাইন কেনাকাটাকে আরও সহজ, নিরাপদ ও আনন্দদায়ক করে তুলতে তিজারা
-      আপনার পাশে রয়েছে সবসময়।
-     </p>
-    </div>
-   </main>
-  </>
- );
+  );
 }
