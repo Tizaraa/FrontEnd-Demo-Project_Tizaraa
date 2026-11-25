@@ -340,7 +340,7 @@ export default function CorporatePickupToken({ orderId, invoiceNo }: Props) {
       ctx.fillStyle = "#000000";
       ctx.fillText("Payment", padding, currentY);
       ctx.fillStyle = "#000000";
-      ctx.font = "bold 11px monospace, sans-serif";
+      ctx.font = "bold 13px monospace, sans-serif";
       ctx.textAlign = "right";
       ctx.fillText("Cash on Delivery (COD)", width - padding, currentY);
       ctx.font = "12px monospace, sans-serif";
