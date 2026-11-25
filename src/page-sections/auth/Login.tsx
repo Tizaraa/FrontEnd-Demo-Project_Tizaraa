@@ -1390,7 +1390,7 @@ export default function Login() {
 
       {/* Password Field */}
       <TextField
-       mb="0.5rem"
+       mb="0.35rem"
        fullwidth
        name="password"
        label="Password"
@@ -1415,6 +1415,19 @@ export default function Login() {
         </IconButton>
        }
       />
+
+      {/* Global Login note in italics */}
+      <p
+       style={{
+        margin: "0 0 0.75rem",
+        fontSize: "11.5px",
+        fontStyle: "italic",
+        color: "#64748b",
+        lineHeight: "1.45",
+       }}
+      >
+       * Universal Login: Customers, Sellers, Corporate Sellers, and Corporate Employees can all sign in here using their registered credentials.
+      </p>
 
       {/* Display any API errors */}
       {apiError && <AuthErrorText>{apiError}</AuthErrorText>}

@@ -284,7 +284,7 @@ export default function OrderDetails({ params }: IDParams) {
  if (loading) {
   return (
    <Typography>
-    <Loader />
+    <Loader inline />
    </Typography>
   );
  }

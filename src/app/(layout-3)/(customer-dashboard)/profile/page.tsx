@@ -315,7 +315,7 @@ const ErrorBox = styled.div`
 
 // Same Tizaraa loader for retail users and corporate employees
 function LoadingSkeleton() {
- return <Loader />;
+ return <Loader inline />;
 }
 
 export default function Profile() {
