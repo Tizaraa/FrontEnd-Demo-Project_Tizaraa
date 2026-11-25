@@ -53,6 +53,7 @@ export const pickupTokenFor = (invoiceNo: string): string => {
 const TokenDropdownWrapper = styled.div`
   position: relative;
   display: inline-block;
+  z-index: 50;
 `;
 
 const MainButton = styled.button`
@@ -95,14 +96,14 @@ const MainButton = styled.button`
 
 const MenuDropdown = styled.div`
   position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  z-index: 1000;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 99999;
   min-width: 220px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.15), 0 8px 12px -6px rgba(0, 0, 0, 0.1);
   padding: 6px;
   display: flex;
   flex-direction: column;
@@ -112,8 +113,8 @@ const MenuDropdown = styled.div`
   @media (max-width: 600px) {
     min-width: 200px;
     max-width: calc(100vw - 32px);
-    left: 0;
-    right: auto;
+    right: 0;
+    left: auto;
   }
 
   @keyframes fadeIn {
@@ -241,6 +242,9 @@ export default function CorporatePickupToken({ orderId, invoiceNo }: Props) {
   const getPdfBlob = async (): Promise<Blob> => {
     const response = await axios.get(`user/order/${orderId}/pickup-token`, {
       responseType: "blob",
+      headers: {
+        Accept: "application/pdf",
+      },
     });
     return response.data;
   };

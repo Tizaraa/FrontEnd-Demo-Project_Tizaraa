@@ -281,10 +281,14 @@ const OD = styled.div`
 
  /* items card */
  .od-card {
+  position: relative;
+  z-index: 5;
   padding: 20px 22px;
   animation-delay: 80ms;
  }
  .od-shop {
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
