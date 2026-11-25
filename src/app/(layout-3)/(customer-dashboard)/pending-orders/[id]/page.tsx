@@ -87,9 +87,13 @@ export default function OrderDetails({ params }: IDParams) {
  // Corporate orders are collected at the shop counter, so the seller's
  // "processing" state means the order is packed and waiting — the pill has to
  // read the same way the tracker does.
+ const isCorporateOrder =
+  Boolean(order?.Order?.is_corporate) ||
+  order?.Order?.payment_method === "corporate_credit";
+
  const getStatusLabel = (status: string) => {
   if (
-   order?.Order?.payment_method === "corporate_credit" &&
+   isCorporateOrder &&
    status === "Processing"
   ) {
    return "Packed";
@@ -306,7 +310,7 @@ export default function OrderDetails({ params }: IDParams) {
  if (loading) {
   return (
    <Typography>
-    <Loader />
+    <Loader inline />
    </Typography>
   );
  }
@@ -564,9 +568,9 @@ export default function OrderDetails({ params }: IDParams) {
                </Chip>
               </Box>
 
-              {/* Pickup token — only once the seller has marked the corporate order packed */}
-              {order?.Order?.payment_method === "corporate_credit" &&
-               details?.status === "Processing" && (
+              {/* Pickup token — available once packed and remains visible after delivered */}
+              {isCorporateOrder &&
+               (details?.status === "Processing" || details?.status === "Delivered") && (
                 <Box m="6px">
                  <CorporatePickupToken orderId={params.id} invoiceNo={order.Order.invoice_id} />
                 </Box>
@@ -576,7 +580,7 @@ export default function OrderDetails({ params }: IDParams) {
 
             </div>
 
-            {order?.Order?.payment_method === "corporate_credit" &&
+            {isCorporateOrder &&
              details?.status === "Pending" && (
               <Box
                mx="1rem"
@@ -607,7 +611,7 @@ export default function OrderDetails({ params }: IDParams) {
               delivered_at={details.delivered_at}
               return_deadline={details.return_deadline}
               server_time={details.server_time}
-              isCorporate={order?.Order?.payment_method === "corporate_credit"}
+              isCorporate={isCorporateOrder}
               isCorporateShop={Boolean(order?.Order?.is_corporate)}
              />
             ))}

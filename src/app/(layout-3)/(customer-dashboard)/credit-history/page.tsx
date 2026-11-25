@@ -1795,7 +1795,7 @@ export default function CreditHistoryPage() {
  if (loading) {
   return (
    <Typography>
-    <Loader />
+    <Loader inline />
    </Typography>
   );
  }

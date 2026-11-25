@@ -34,6 +34,7 @@ import { Chip } from "@component/Chip";
 import authService from "services/authService";
 import { useRouter } from "next/navigation";
 import Loader from "@component/loader";
+import CorporatePickupToken from "@component/orders/CorporatePickupToken";
 // import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 // const LoaderWrapper = styled.div`
@@ -334,7 +335,7 @@ export default function OrderDetails({ params }: IDParams) {
  if (loading) {
   return (
    <Typography>
-    <Loader />
+    <Loader inline />
    </Typography>
   );
  }
@@ -591,6 +592,13 @@ export default function OrderDetails({ params }: IDParams) {
                 <Small color="white">{details?.status}</Small>
                </Chip>
               </Box>
+
+              {/* Pickup token — available for corporate orders */}
+              {(order?.Order?.payment_method === "corporate_credit" || Boolean(order?.Order?.is_corporate)) && (
+               <Box m="6px">
+                <CorporatePickupToken orderId={params.id} invoiceNo={order.Order.invoice_id} />
+               </Box>
+              )}
              </div>
             </div>
 
