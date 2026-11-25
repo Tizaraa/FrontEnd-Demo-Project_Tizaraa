@@ -1545,7 +1545,7 @@ export default function CreditHistoryPage() {
    ["Total Credit Limit", credit.credit_limit],
    ["Used Credit", credit.credit_used],
    ["Remaining Credit", credit.credit_available],
-   ["Due Amount", credit.total_due_amount],
+   ["Spent Amount", credit.total_due_amount],
    ["Paid Amount", credit.paid_amount],
    ["Outstanding Due Balance", credit.due_amount],
    ["Payment Due Date", credit.current_period?.due_date ?? "—"],
@@ -1731,7 +1731,7 @@ export default function CreditHistoryPage() {
       <div class="totals-box">
        <p><span>Total Credit Limit</span><span>${currency(credit.credit_limit)}</span></p>
        <p><span>Remaining Credit</span><span>${currency(credit.credit_available)}</span></p>
-       <p><span>Due Amount</span><span>${currency(credit.total_due_amount)}</span></p>
+       <p><span>Spent Amount</span><span>${currency(credit.total_due_amount)}</span></p>
        <p><span>Paid Amount</span><span>${currency(credit.paid_amount)}</span></p>
        <p class="total"><span>Outstanding Due Balance</span><span>${currency(credit.due_amount)}</span></p>
       </div>
@@ -2071,7 +2071,7 @@ export default function CreditHistoryPage() {
       <StatTile index={0} tone="navy" label="Total credit limit" value={num(credit.credit_limit)} caption="Assigned limit" icon="M2 5h20v14H2zM2 10h20" />
       <StatTile index={1} tone="info" label="Used credit" value={num(credit.credit_used)} caption="This period's usage" icon="M3 3v18h18M7 15l4-4 3 3 5-6" />
       <StatTile index={2} tone="success" label="Remaining credit" value={num(credit.credit_available)} caption="Available balance" icon="M20 6 9 17l-5-5" />
-      <StatTile index={3} tone="warning" label="Due amount" value={num(credit.total_due_amount)} caption="Total delivered (settled + unsettled)" icon="M12 8v4l3 2M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z" />
+      <StatTile index={3} tone="warning" label="Spent Amount" value={num(credit.total_due_amount)} caption="Total delivered (settled + unsettled)" icon="M12 8v4l3 2M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z" />
       <StatTile index={4} tone="success" label="Paid amount" value={num(credit.paid_amount)} caption="Settled by seller" icon="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
       <StatTile
        index={5}
