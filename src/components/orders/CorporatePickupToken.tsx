@@ -241,6 +241,9 @@ export default function CorporatePickupToken({ orderId, invoiceNo }: Props) {
   const getPdfBlob = async (): Promise<Blob> => {
     const response = await axios.get(`user/order/${orderId}/pickup-token`, {
       responseType: "blob",
+      headers: {
+        Accept: "application/pdf",
+      },
     });
     return response.data;
   };
