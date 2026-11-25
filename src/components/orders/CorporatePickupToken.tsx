@@ -276,21 +276,21 @@ export default function CorporatePickupToken({ orderId, invoiceNo }: Props) {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width, height);
 
-    ctx.strokeStyle = "#e2e8f0";
+    ctx.strokeStyle = "#000000";
     ctx.lineWidth = 1;
     ctx.strokeRect(10, 10, width - 20, height - 20);
 
-    ctx.fillStyle = "#0f172a";
+    ctx.fillStyle = "#000000";
     ctx.font = "bold 22px monospace, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText("Tizaraa", width / 2, 45);
 
-    ctx.fillStyle = "#64748b";
+    ctx.fillStyle = "#000000";
     ctx.font = "bold 11px monospace, sans-serif";
     ctx.fillText("CORPORATE SHOP", width / 2, 65);
 
     const drawDashedLine = (y: number) => {
-      ctx.strokeStyle = "#94a3b8";
+      ctx.strokeStyle = "#000000";
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 4]);
       ctx.beginPath();
@@ -304,12 +304,12 @@ export default function CorporatePickupToken({ orderId, invoiceNo }: Props) {
     drawDashedLine(currentY);
 
     currentY += 26;
-    ctx.fillStyle = "#475569";
+    ctx.fillStyle = "#000000";
     ctx.font = "11px monospace, sans-serif";
     ctx.fillText("ORDER TOKEN · CORPORATE EMPLOYEE COPY", width / 2, currentY);
 
     currentY += 46;
-    ctx.fillStyle = "#ea580c";
+    ctx.fillStyle = "#000000";
     ctx.font = "bold 34px monospace, sans-serif";
     ctx.fillText(token, width / 2, currentY);
 
@@ -320,27 +320,27 @@ export default function CorporatePickupToken({ orderId, invoiceNo }: Props) {
     ctx.font = "12px monospace, sans-serif";
     ctx.textAlign = "left";
 
-    ctx.fillStyle = "#64748b";
+    ctx.fillStyle = "#000000";
     ctx.fillText("Employee", padding, currentY);
-    ctx.fillStyle = "#0f172a";
+    ctx.fillStyle = "#000000";
     ctx.textAlign = "right";
     ctx.fillText(employee.length > 24 ? employee.slice(0, 24) + "..." : employee, width - padding, currentY);
 
     currentY += 22;
     ctx.textAlign = "left";
-    ctx.fillStyle = "#64748b";
+    ctx.fillStyle = "#000000";
     ctx.fillText("Order no.", padding, currentY);
-    ctx.fillStyle = "#0f172a";
+    ctx.fillStyle = "#000000";
     ctx.textAlign = "right";
     ctx.fillText(`#${invoiceNo}`, width - padding, currentY);
 
     if (tokenData?.isCod || tokenData?.paymentMethod === "cod") {
       currentY += 20;
       ctx.textAlign = "left";
-      ctx.fillStyle = "#64748b";
+      ctx.fillStyle = "#000000";
       ctx.fillText("Payment", padding, currentY);
-      ctx.fillStyle = "#c2410c";
-      ctx.font = "bold 11px monospace, sans-serif";
+      ctx.fillStyle = "#000000";
+      ctx.font = "bold 13px monospace, sans-serif";
       ctx.textAlign = "right";
       ctx.fillText("Cash on Delivery (COD)", width - padding, currentY);
       ctx.font = "12px monospace, sans-serif";
@@ -351,7 +351,7 @@ export default function CorporatePickupToken({ orderId, invoiceNo }: Props) {
 
     currentY += 20;
     ctx.textAlign = "left";
-    ctx.fillStyle = "#64748b";
+    ctx.fillStyle = "#000000";
     ctx.font = "bold 11px monospace, sans-serif";
     ctx.fillText("ITEM", padding, currentY);
     ctx.textAlign = "right";
@@ -361,7 +361,7 @@ export default function CorporatePickupToken({ orderId, invoiceNo }: Props) {
     items.forEach((item) => {
       currentY += 22;
       ctx.textAlign = "left";
-      ctx.fillStyle = "#1e293b";
+      ctx.fillStyle = "#000000";
       const itemName = `${item.quantity}x ${item.name}`;
       ctx.fillText(itemName.length > 25 ? itemName.slice(0, 25) + "..." : itemName, padding, currentY);
       ctx.textAlign = "right";
@@ -374,7 +374,7 @@ export default function CorporatePickupToken({ orderId, invoiceNo }: Props) {
     currentY += 24;
     ctx.font = "bold 13px monospace, sans-serif";
     ctx.textAlign = "left";
-    ctx.fillStyle = "#0f172a";
+    ctx.fillStyle = "#000000";
     ctx.fillText("ORDER TOTAL", padding, currentY);
     ctx.textAlign = "right";
     ctx.fillText(`BDT ${Number(orderTotal).toFixed(2)}`, width - padding, currentY);
@@ -383,18 +383,18 @@ export default function CorporatePickupToken({ orderId, invoiceNo }: Props) {
       currentY += 22;
       ctx.font = "12px monospace, sans-serif";
       ctx.textAlign = "left";
-      ctx.fillStyle = "#64748b";
+      ctx.fillStyle = "#000000";
       ctx.fillText("Credit Limit", padding, currentY);
       ctx.textAlign = "right";
-      ctx.fillStyle = "#0f172a";
+      ctx.fillStyle = "#000000";
       ctx.fillText(`BDT ${Number(credit.limit).toFixed(2)}`, width - padding, currentY);
 
       currentY += 20;
       ctx.textAlign = "left";
-      ctx.fillStyle = "#64748b";
+      ctx.fillStyle = "#000000";
       ctx.fillText("Available Credit", padding, currentY);
       ctx.textAlign = "right";
-      ctx.fillStyle = "#16a34a";
+      ctx.fillStyle = "#000000";
       ctx.font = "bold 12px monospace, sans-serif";
       ctx.fillText(`BDT ${Number(credit.available).toFixed(2)}`, width - padding, currentY);
     }
@@ -404,7 +404,7 @@ export default function CorporatePickupToken({ orderId, invoiceNo }: Props) {
 
     currentY += 28;
     ctx.font = "11px monospace, sans-serif";
-    ctx.fillStyle = "#64748b";
+    ctx.fillStyle = "#000000";
     ctx.textAlign = "center";
     ctx.fillText("Show this token at the pickup counter.", width / 2, currentY);
 
