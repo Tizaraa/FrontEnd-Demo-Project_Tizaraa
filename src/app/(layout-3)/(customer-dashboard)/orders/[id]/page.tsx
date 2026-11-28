@@ -1,6 +1,5 @@
 "use client";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { format } from "date-fns";
 import { currency } from "@utils/utils";
 import axios from "@lib/axiosClient";
@@ -282,10 +281,14 @@ const OD = styled.div`
 
  /* items card */
  .od-card {
+  position: relative;
+  z-index: 5;
   padding: 20px 22px;
   animation-delay: 80ms;
  }
  .od-shop {
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -474,108 +477,6 @@ const OD = styled.div`
   }
  }
 `;
-
-const InvoiceDialog = styled.div`
- position: fixed;
- inset: 0;
- z-index: 1000;
- display: flex;
- align-items: center;
- justify-content: center;
- padding: 16px;
- background: rgba(20, 21, 32, 0.5);
- backdrop-filter: blur(4px);
- -webkit-backdrop-filter: blur(4px);
-
- .iv-box {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 820px;
-  height: min(90vh, 1000px);
-  overflow: hidden;
-  border-radius: 18px;
-  background: ${({ theme }) => theme.tz.color.paper};
-  box-shadow: 0 24px 60px rgba(20, 21, 32, 0.3);
-  animation: ${odRise} 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
- }
- .iv-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 12px 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.tz.color.lineSoft};
- }
- .iv-head > div {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 8px;
- }
- .iv-head strong {
-  min-width: 0;
-  overflow-wrap: anywhere;
- }
- .iv-head .od-btn {
-  display: inline-flex;
-  align-items: center;
-  min-height: 36px;
-  padding: 0 14px;
-  border-radius: 999px;
-  background: ${({ theme }) => theme.tz.color.emberDeep};
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
- }
- .iv-head .od-icon-btn {
-  display: inline-grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid ${({ theme }) => theme.tz.color.line};
-  border-radius: 10px;
-  background: ${({ theme }) => theme.tz.color.paper};
-  cursor: pointer;
- }
- .iv-head .od-icon-btn svg {
-  width: 16px;
-  height: 16px;
- }
- /* rendered in a portal, so the page wrapper's hover/focus rules don't reach here */
- .iv-head .od-icon-btn:hover {
-  border-color: ${({ theme }) => theme.tz.color.ember};
-  color: ${({ theme }) => theme.tz.color.emberDeep};
- }
- .iv-head .od-btn:focus-visible,
- .iv-head .od-icon-btn:focus-visible {
-  outline: none;
-  box-shadow: ${({ theme }) => theme.tz.focusRing};
- }
- iframe {
-  flex: 1;
-  width: 100%;
-  border: 0;
- }
-
- @media (max-width: 560px) {
-  .iv-head .od-icon-btn {
-   width: 40px;
-   height: 40px;
-  }
-  .iv-head .od-btn {
-   min-height: 40px;
-  }
- }
-
- @media (prefers-reduced-motion: reduce) {
-  .iv-box {
-   animation: none;
-  }
- }
-`;
-// import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 export default function OrderDetails({ params }: IDParams) {
  const [order, setOrder] = useState(null);
@@ -1296,8 +1197,8 @@ export default function OrderDetails({ params }: IDParams) {
  const itemCount = shops.reduce((n, [, d]) => n + (d?.order_items?.length ?? 0), 0);
  const statusLabel = getStatusLabel(order.Order.status);
  const statusColor = getColor(order.Order.status);
- const isCorporateOrder = order?.Order?.payment_method === "corporate_credit";
- const isCorporateInvoice = isCorporateOrder || Boolean(order?.Order?.is_corporate);
+ const isCorporateOrder = order?.Order?.payment_method === "corporate_credit" || Boolean(order?.Order?.is_corporate);
+ const isCorporateInvoice = isCorporateOrder;
  const fmt = (d?: string | null) => (d ? format(new Date(d), "dd MMM yyyy, hh:mm a") : "N/A");
 
  const copyId = async () => {
@@ -1399,8 +1300,8 @@ export default function OrderDetails({ params }: IDParams) {
             <span className="od-chip" style={{ ["--tone" as any]: getColor(details?.status) }}>
              {getStatusLabel(details?.status)}
             </span>
-            {/* Pickup token — only once the seller has marked the corporate order packed */}
-            {isCorporateOrder && details?.status === "Processing" && (
+            {/* Pickup token — available once packed and remains visible after delivered */}
+            {isCorporateOrder && (details?.status === "Processing" || details?.status === "Delivered") && (
              <CorporatePickupToken orderId={params.id} invoiceNo={order.Order.invoice_id} />
             )}
            </header>
@@ -1522,8 +1423,8 @@ export default function OrderDetails({ params }: IDParams) {
       </div>
      )}
 
-     {/* Retail: invoice shown inline under the button, same as the Delivered order page */}
-     {invoiceUrl && !isCorporateInvoice && (
+     {/* Invoice shown inline under the button, identical to the Delivered order page */}
+     {invoiceUrl && (
       <iframe
        src={invoiceUrl}
        title={`Invoice ${order.Order.invoice_id ?? params.id}`}
@@ -1532,37 +1433,6 @@ export default function OrderDetails({ params }: IDParams) {
      )}
     </div>
    </OD>
-
-   {/* Invoice viewer — corporate shop / employee orders only. Portalled to <body>
-       so the sticky site header (and the page's own layers) can't cover its top. */}
-   {invoiceUrl && isCorporateInvoice && createPortal(
-    <InvoiceDialog
-     role="dialog"
-     aria-modal="true"
-     aria-label={`Invoice ${order.Order.invoice_id ?? params.id}`}
-     onClick={(e) => {
-      if (e.target === e.currentTarget) setInvoiceUrl(null);
-     }}
-    >
-     <div className="iv-box">
-      <div className="iv-head">
-       <strong>Invoice #{order.Order.invoice_id}</strong>
-       <div>
-        <a className="od-btn od-btn--solid" href={invoiceUrl} download={`invoice-${order.Order.invoice_id ?? params.id}.pdf`}>
-         Download
-        </a>
-        <button type="button" className="od-icon-btn" onClick={() => setInvoiceUrl(null)} aria-label="Close invoice">
-         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-          <path d="M18 6 6 18M6 6l12 12" />
-         </svg>
-        </button>
-       </div>
-      </div>
-      <iframe src={invoiceUrl} title={`Invoice ${order.Order.invoice_id ?? params.id}`} />
-     </div>
-    </InvoiceDialog>,
-    document.body
-   )}
   </Fragment>
  );
 }

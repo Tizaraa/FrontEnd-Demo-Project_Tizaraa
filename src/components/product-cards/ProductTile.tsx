@@ -184,6 +184,11 @@ const Tile = styled.article<{ $row?: boolean }>`
    font-size: 18px;
   }
 
+  .tile-footer {
+   max-width: 220px;
+   margin-top: 4px;
+  }
+
   @media (max-width: 650px) {
    grid-template-columns: 112px 1fr;
 
@@ -197,6 +202,10 @@ const Tile = styled.article<{ $row?: boolean }>`
 
    .tile-price-now {
     font-size: 16px;
+   }
+
+   .tile-footer {
+    max-width: 100%;
    }
   }
  `}

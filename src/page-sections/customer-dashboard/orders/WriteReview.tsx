@@ -1069,10 +1069,19 @@ export default function WriteReview({
         type="button"
         className="ir-btn"
         onClick={isCounterReturn ? () => setIsCorporateReturnOpen(true) : handleReturnClick}
+        title={isCounterReturn ? "Return instructions & details" : "Request return"}
        >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-         <path d="M9 14 4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3" />
-        </svg>
+        {isCounterReturn ? (
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12.01" y2="8" />
+         </svg>
+        ) : (
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M9 14 4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3" />
+         </svg>
+        )}
         Return
        </button>
       )}

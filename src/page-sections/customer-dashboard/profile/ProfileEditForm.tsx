@@ -1010,19 +1010,36 @@ export default function ProfileEditForm() {
   name: yup.string().trim().required("Name is required"),
   phone: yup
    .string()
-   .required("Phone is required")
-   .matches(/^01[3-9]\d{8}$/, "Enter a valid 11-digit phone number (e.g. 01712345678)"),
-  birth_date: yup.date().required("Birthdate is required"),
-  gender: yup.string().required("Gender is required"),
+   .nullable()
+   .notRequired()
+   .test("valid-phone", "Enter a valid 11-digit phone number (e.g. 01712345678)", (val) => {
+    if (!val) return true;
+    return /^01[3-9]\d{8}$/.test(val);
+   }),
+  birth_date: yup.string().nullable().notRequired(),
+  gender: yup.string().nullable().notRequired(),
  });
 
  const handleFormSubmit = async (values: typeof INITIAL_VALUES) => {
   const authtoken = localStorage.getItem("token");
   const formData = new FormData();
-  formData.append("name", values.name);
-  formData.append("phone", values.phone);
-  formData.append("birth_date", values.birth_date);
-  formData.append("gender", values.gender);
+  formData.append("name", values.name.trim());
+
+  // Only send phone if it has a value, or if it changed
+  if (values.phone && values.phone.trim()) {
+   const cleanPhone = values.phone.replace(/\D/g, "");
+   // Only send phone if it actually changed from original profile to prevent false unique checks
+   if (cleanPhone !== profile.phone?.replace(/\D/g, "")) {
+    formData.append("phone", cleanPhone);
+   }
+  }
+
+  if (values.birth_date) {
+   formData.append("birth_date", values.birth_date);
+  }
+  if (values.gender) {
+   formData.append("gender", values.gender);
+  }
   if (values.image) {
    formData.append("image", values.image);
   }

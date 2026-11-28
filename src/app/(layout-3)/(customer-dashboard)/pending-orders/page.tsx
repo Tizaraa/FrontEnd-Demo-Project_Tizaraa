@@ -260,7 +260,7 @@ export default function OrderList() {
   if (loading) {
     return (
       <Typography>
-        <Loader />
+        <Loader inline />
       </Typography>
     );
   }

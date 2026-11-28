@@ -1077,7 +1077,6 @@ const ProductDetails = ({
  return (
   <Box>
    <Info>
-    {brandName && <span className="pi-brand">{brandName}</span>}
     <h1 className="pi-title">{title}</h1>
 
     <div className="pi-meta">
