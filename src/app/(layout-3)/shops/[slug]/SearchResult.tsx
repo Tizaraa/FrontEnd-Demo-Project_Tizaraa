@@ -1024,7 +1024,7 @@ function ShopEmpty({ searching }: { searching: boolean }) {
  );
 }
 
-const productsPerPage = 10;
+const productsPerPage = 12; // must match ShopRepository::shopProductsForFrontend in customer-api
 
 export default function SearchResult({ sortOptions, slug }) {
  const router = useRouter();
